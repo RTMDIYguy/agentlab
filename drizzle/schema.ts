@@ -73,3 +73,24 @@ export const blogComments = mysqlTable("blogComments", {
 
 export type BlogComment = typeof blogComments.$inferSelect;
 export type InsertBlogComment = typeof blogComments.$inferInsert;
+
+// Blog articles with publishing and scheduling support
+export const blogArticles = mysqlTable("blogArticles", {
+  id: int("id").autoincrement().primaryKey(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(), // URL-friendly slug
+  title: varchar("title", { length: 255 }).notNull(),
+  excerpt: text("excerpt"), // Short description for listings
+  content: text("content").notNull(), // Full article content (markdown)
+  category: varchar("category", { length: 100 }).default("General").notNull(),
+  authorId: int("authorId").notNull(), // User who wrote the article
+  status: mysqlEnum("status", ["draft", "scheduled", "published"]).default("draft").notNull(),
+  publishedAt: timestamp("publishedAt"), // When article was/will be published
+  scheduledFor: timestamp("scheduledFor"), // When to publish (for scheduled posts)
+  featuredImage: varchar("featuredImage", { length: 500 }), // Featured image URL
+  views: int("views").default(0).notNull(), // View count
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BlogArticle = typeof blogArticles.$inferSelect;
+export type InsertBlogArticle = typeof blogArticles.$inferInsert;

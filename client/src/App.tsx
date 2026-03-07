@@ -11,6 +11,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import About from "./pages/About";
 import Blog from "./pages/Blog";
 import BlogArticle from "./pages/BlogArticle";
+import ArticleEditor from "./pages/ArticleEditor";
+import BlogManager from "./pages/BlogManager";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -20,6 +22,9 @@ function Router() {
       <Route path={"/about"} component={About} />
       <Route path={"/blog"} component={Blog} />
       <Route path={"/blog/:id"} component={BlogArticle} />
+      <Route path={"/article/new"} component={ArticleEditor} />
+      <Route path={"/article/:slug"} component={ArticleEditor} />
+      <Route path={"/blog-manager"} component={BlogManager} />
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/dashboard/settings"} component={Settings} />
       <Route path={"/admin"} component={AdminDashboard} />

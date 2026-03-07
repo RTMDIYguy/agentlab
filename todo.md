@@ -111,3 +111,12 @@
 - [x] Build nested comment UI component
 - [x] Add reply form with parent context
 - [x] Integrate threaded comments into blog article page
+
+## Blog Management System (Completed)
+- [x] Create database schema for blog articles with scheduling
+- [x] Add article creation/editing/deletion procedures
+- [x] Build article editor UI with rich text support
+- [x] Add scheduling interface with date/time picker
+- [x] Create blog management dashboard
+- [x] Implement scheduled post publishing system
+- [x] Add article draft/published status management

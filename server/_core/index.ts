@@ -8,6 +8,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { constructWebhookEvent, handleCheckoutSessionCompleted, handleSubscriptionUpdated, handleSubscriptionDeleted, handlePaymentIntentSucceeded, handlePaymentIntentFailed } from "../stripe/webhook";
+import { startScheduledPublisher } from "../blog/scheduled-publisher";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -95,6 +96,9 @@ async function startServer() {
   } else {
     serveStatic(app);
   }
+
+  // Start scheduled post publisher
+  startScheduledPublisher();
 
   const preferredPort = parseInt(process.env.PORT || "3000");
   const port = await findAvailablePort(preferredPort);
