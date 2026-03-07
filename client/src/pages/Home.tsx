@@ -1,9 +1,14 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Zap, Brain, Network, Clock, Shield, Cpu } from "lucide-react";
 import { useState } from "react";
+import { getLoginUrl } from "@/const";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 
 export default function Home() {
+  const { user, isAuthenticated, logout } = useAuth();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
 
   const capabilities = [
@@ -83,6 +88,7 @@ export default function Home() {
         "Monthly updates",
       ],
       highlighted: false,
+      stripeId: "starter",
     },
     {
       name: "Professional",
@@ -98,6 +104,7 @@ export default function Home() {
         "Analytics dashboard",
       ],
       highlighted: true,
+      stripeId: "professional",
     },
     {
       name: "Enterprise",
@@ -114,6 +121,7 @@ export default function Home() {
         "SLA guarantee",
       ],
       highlighted: false,
+      stripeId: "enterprise",
     },
   ];
 
@@ -144,6 +152,34 @@ export default function Home() {
     },
   ];
 
+  const createCheckoutMutation = trpc.stripe.createCheckoutSession.useMutation();
+
+  const handlePricingClick = (planId: string) => {
+    if (!isAuthenticated) {
+      window.location.href = getLoginUrl();
+      return;
+    }
+
+    toast.loading("Redirecting to checkout...");
+    createCheckoutMutation.mutate(
+      {
+        plan: planId as "starter" | "professional" | "enterprise",
+        billingCycle,
+      },
+      {
+        onSuccess: (data) => {
+          toast.dismiss();
+          window.open(data.checkoutUrl, "_blank");
+        },
+        onError: (error) => {
+          toast.dismiss();
+          toast.error("Failed to create checkout session. Please try again.");
+          console.error("Checkout error:", error);
+        },
+      }
+    );
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -162,8 +198,17 @@ export default function Home() {
             <a href="#contact" className="text-foreground hover:text-primary transition-colors">Support</a>
           </div>
           <div className="flex items-center gap-4">
-            <Button variant="outline" className="hidden sm:inline-flex">Sign In</Button>
-            <Button className="bg-primary hover:bg-primary/90">Get Started</Button>
+            {isAuthenticated ? (
+              <>
+                <span className="text-sm text-muted-foreground">{user?.name}</span>
+                <Button variant="outline" size="sm" onClick={logout}>Sign Out</Button>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" className="hidden sm:inline-flex" onClick={() => window.location.href = getLoginUrl()}>Sign In</Button>
+                <Button className="bg-primary hover:bg-primary/90" onClick={() => window.location.href = getLoginUrl()}>Get Started</Button>
+              </>
+            )}
           </div>
         </div>
       </nav>
@@ -189,7 +234,7 @@ export default function Home() {
                 AgentLab is at the forefront of AI agent technology, developing intelligent autonomous systems that transform how businesses operate. Our cutting-edge AI agents deliver unprecedented efficiency and innovation across industries.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Button size="lg" className="bg-primary hover:bg-primary/90 text-white">
+                <Button size="lg" className="bg-primary hover:bg-primary/90 text-white" onClick={() => window.location.href = getLoginUrl()}>
                   <Zap className="w-5 h-5 mr-2" />
                   Get Started
                 </Button>
@@ -333,7 +378,10 @@ export default function Home() {
                   </span>
                   <span className="text-muted-foreground ml-2">/{billingCycle === "monthly" ? "mo" : "yr"}</span>
                 </div>
-                <Button className={`w-full mb-8 ${plan.highlighted ? "bg-primary hover:bg-primary/90" : ""}`}>
+                <Button 
+                  className={`w-full mb-8 ${plan.highlighted ? "bg-primary hover:bg-primary/90" : ""}`}
+                  onClick={() => handlePricingClick(plan.stripeId)}
+                >
                   Start Free Trial
                 </Button>
                 <ul className="space-y-4">
