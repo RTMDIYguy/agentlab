@@ -69,3 +69,14 @@
 - [x] Add billing address management
 - [x] Add password/security settings
 - [x] Add settings route to navigation
+
+## Admin Dashboard Feature (Completed)
+- [x] Create admin analytics queries (MRR, churn, customer count)
+- [x] Add admin procedures to Stripe router
+- [x] Build admin dashboard layout with header
+- [x] Create subscription analytics charts
+- [x] Create customer management table
+- [x] Implement customer details modal
+- [x] Add customer status management (activate/suspend/cancel)
+- [x] Add admin role check and protection
+- [x] Test admin dashboard functionality

@@ -137,3 +137,83 @@ export const stripeRouter = router({
       return { pdfUrl };
     }),
 });
+
+
+/**
+ * Admin procedures for analytics and customer management
+ */
+export const adminRouter = router({
+  /**
+   * Get subscription analytics (admin only)
+   */
+  getAnalytics: protectedProcedure.query(async ({ ctx }) => {
+    const user = ctx.user;
+    if (!user || user.role !== "admin") throw new Error("Admin access required");
+
+    const {
+      getSubscriptionCountByStatus,
+      calculateMRR,
+      getChurnRate,
+      getTotalRevenue,
+    } = await import("./db");
+
+    const [statusCounts, mrr, churnRate, totalRevenue] = await Promise.all([
+      getSubscriptionCountByStatus(),
+      calculateMRR(),
+      getChurnRate(),
+      getTotalRevenue(),
+    ]);
+
+    return {
+      subscriptionCounts: statusCounts,
+      mrr,
+      churnRate,
+      totalRevenue,
+      timestamp: new Date(),
+    };
+  }),
+
+  /**
+   * Get all customers with subscriptions (admin only)
+   */
+  getAllCustomers: protectedProcedure.query(async ({ ctx }) => {
+    const user = ctx.user;
+    if (!user || user.role !== "admin") throw new Error("Admin access required");
+
+    const { getAllCustomersWithSubscriptions } = await import("./db");
+    return getAllCustomersWithSubscriptions();
+  }),
+
+  /**
+   * Get customer details (admin only)
+   */
+  getCustomerDetails: protectedProcedure
+    .input(z.object({ userId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const user = ctx.user;
+      if (!user || user.role !== "admin") throw new Error("Admin access required");
+
+      const { getCustomerWithSubscription } = await import("./db");
+      return getCustomerWithSubscription(input.userId);
+    }),
+
+  /**
+   * Update customer subscription status (admin only)
+   */
+  updateCustomerStatus: protectedProcedure
+    .input(
+      z.object({
+        userId: z.number(),
+        newStatus: z.enum(["active", "canceled", "past_due"]),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = ctx.user;
+      if (!user || user.role !== "admin") throw new Error("Admin access required");
+
+      const { updateCustomerSubscriptionStatus } = await import("./db");
+      await updateCustomerSubscriptionStatus(input.userId, input.newStatus);
+
+      return { success: true, message: "Customer status updated" };
+    }),
+});
