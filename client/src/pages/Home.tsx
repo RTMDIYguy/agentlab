@@ -196,6 +196,7 @@ export default function Home() {
             <a href="#capabilities" className="text-foreground hover:text-primary transition-colors">About</a>
             <a href="#blog" className="text-foreground hover:text-primary transition-colors">Blog</a>
             <a href="#contact" className="text-foreground hover:text-primary transition-colors">Support</a>
+            {isAuthenticated && <a href="/dashboard" className="text-foreground hover:text-primary transition-colors">Dashboard</a>}
           </div>
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
