@@ -72,3 +72,51 @@ export async function getSubscription(subscriptionId: string) {
 export async function cancelSubscription(subscriptionId: string) {
   return stripe.subscriptions.cancel(subscriptionId);
 }
+
+/**
+ * Update subscription to a new plan
+ */
+export async function updateSubscriptionPlan(
+  subscriptionId: string,
+  newPriceId: string
+) {
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+  
+  if (!subscription.items.data[0]) {
+    throw new Error("Subscription has no items");
+  }
+
+  return stripe.subscriptions.update(subscriptionId, {
+    items: [
+      {
+        id: subscription.items.data[0].id,
+        price: newPriceId,
+      },
+    ],
+  });
+}
+
+/**
+ * Get customer invoices
+ */
+export async function getCustomerInvoices(customerId: string) {
+  return stripe.invoices.list({
+    customer: customerId,
+    limit: 100,
+  });
+}
+
+/**
+ * Get invoice PDF URL
+ */
+export async function getInvoicePdfUrl(invoiceId: string) {
+  const invoice = await stripe.invoices.retrieve(invoiceId);
+  return invoice.hosted_invoice_url;
+}
+
+/**
+ * Get customer by ID
+ */
+export async function getCustomer(customerId: string) {
+  return stripe.customers.retrieve(customerId);
+}

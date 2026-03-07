@@ -111,3 +111,29 @@ export async function updatePaymentStatus(stripePaymentIntentId: string, status:
     .set({ status })
     .where(eq(payments.stripePaymentIntentId, stripePaymentIntentId));
 }
+
+/**
+ * Cancel subscription
+ */
+export async function cancelSubscription(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  return db
+    .update(subscriptions)
+    .set({ status: "canceled", canceledAt: new Date() })
+    .where(eq(subscriptions.userId, userId));
+}
+
+/**
+ * Update subscription plan
+ */
+export async function updateSubscriptionPlan(userId: number, newPlan: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  return db
+    .update(subscriptions)
+    .set({ plan: newPlan })
+    .where(eq(subscriptions.userId, userId));
+}

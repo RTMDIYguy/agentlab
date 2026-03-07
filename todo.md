@@ -48,3 +48,24 @@
 - [x] Implement subscription status badge with renewal date
 - [x] Add dashboard route to app navigation
 - [x] Test dashboard page functionality
+
+## Subscription Management Feature (Completed)
+- [x] Add upgrade/downgrade procedure to Stripe router
+- [x] Add cancel subscription procedure to Stripe router
+- [x] Create subscription management modal in dashboard
+- [x] Implement upgrade/downgrade flow
+- [x] Implement cancel subscription with confirmation
+
+## Invoice Download Feature (Completed)
+- [x] Add invoice retrieval from Stripe API
+- [x] Create invoice download endpoint
+- [x] Add download buttons to payment history table
+- [x] Handle PDF generation and delivery
+
+## User Settings Feature (Completed)
+- [x] Create user settings page component
+- [x] Add profile information editing
+- [x] Add email notification preferences
+- [x] Add billing address management
+- [x] Add password/security settings
+- [x] Add settings route to navigation

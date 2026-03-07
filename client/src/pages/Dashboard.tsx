@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { formatDate } from "date-fns";
-import { CheckCircle2, AlertCircle, Clock, CreditCard, LogOut } from "lucide-react";
+import { CheckCircle2, AlertCircle, Clock, CreditCard, LogOut, Download, Settings } from "lucide-react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
 
@@ -16,8 +16,12 @@ export default function Dashboard() {
     trpc.stripe.getCurrentSubscription.useQuery();
   const { data: payments, isLoading: paymentsLoading } =
     trpc.stripe.getPaymentHistory.useQuery();
+  const { data: invoices, isLoading: invoicesLoading } =
+    trpc.stripe.getInvoices.useQuery();
 
   const logoutMutation = trpc.auth.logout.useMutation();
+  const updatePlanMutation = trpc.stripe.updateSubscriptionPlan.useMutation();
+  const cancelMutation = trpc.stripe.cancelSubscription.useMutation();
 
   const handleLogout = async () => {
     try {
@@ -164,16 +168,39 @@ export default function Dashboard() {
 
                   {/* Action Buttons */}
                   <div className="flex gap-3 pt-4 border-t border-border">
-                    <Button variant="outline" disabled>
-                      Upgrade Plan
-                    </Button>
-                    <Button variant="outline" disabled>
-                      Manage Billing
-                    </Button>
                     {subscription.status === "active" && (
-                      <Button variant="outline" className="ml-auto" disabled>
-                        Cancel Subscription
-                      </Button>
+                      <>
+                        <Button
+                          variant="outline"
+                          onClick={() => navigate("/dashboard/upgrade")}
+                        >
+                          Upgrade Plan
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => navigate("/dashboard/settings")}
+                        >
+                          <Settings className="w-4 h-4 mr-2" />
+                          Settings
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="ml-auto text-red-600 hover:text-red-700"
+                          disabled={cancelMutation.isPending}
+                          onClick={async () => {
+                            if (confirm("Are you sure you want to cancel your subscription?")) {
+                              try {
+                                await cancelMutation.mutateAsync();
+                                toast.success("Subscription canceled");
+                              } catch (error) {
+                                toast.error("Failed to cancel subscription");
+                              }
+                            }
+                          }}
+                        >
+                          Cancel Subscription
+                        </Button>
+                      </>
                     )}
                   </div>
                 </div>
@@ -213,6 +240,7 @@ export default function Dashboard() {
                         <th className="text-left py-3 px-4 font-semibold text-foreground">Amount</th>
                         <th className="text-left py-3 px-4 font-semibold text-foreground">Status</th>
                         <th className="text-left py-3 px-4 font-semibold text-foreground">Description</th>
+                        <th className="text-right py-3 px-4 font-semibold text-foreground">Invoice</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -248,6 +276,24 @@ export default function Dashboard() {
                           </td>
                           <td className="py-4 px-4 text-muted-foreground text-sm">
                             {payment.description || "Subscription payment"}
+                          </td>
+                          <td className="py-4 px-4 text-right">
+                            {invoices && invoices.length > 0 && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={async () => {
+                                  const invoice = invoices.find((inv) =>
+                                    Math.abs(inv.date.getTime() - new Date(payment.createdAt).getTime()) < 86400000
+                                  );
+                                  if (invoice && invoice.pdfUrl) {
+                                    window.open(invoice.pdfUrl, "_blank");
+                                  }
+                                }}
+                              >
+                                <Download className="w-4 h-4" />
+                              </Button>
+                            )}
                           </td>
                         </tr>
                       ))}
