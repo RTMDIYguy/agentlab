@@ -95,3 +95,11 @@
 - [x] Add placeholder article about future of AI agents
 - [x] Add blog route to navigation
 - [x] Test blog functionality
+
+## Blog Comments Feature (Completed)
+- [x] Create database schema for blog comments
+- [x] Create tRPC procedures for comments (create, read, delete)
+- [x] Build comment section UI component
+- [x] Add comment form with validation
+- [x] Add comment display with author info
+- [x] Integrate comments into blog article page

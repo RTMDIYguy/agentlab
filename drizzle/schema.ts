@@ -59,3 +59,16 @@ export const payments = mysqlTable("payments", {
 
 export type Payment = typeof payments.$inferSelect;
 export type InsertPayment = typeof payments.$inferInsert;
+// Blog comments for user engagement
+export const blogComments = mysqlTable("blogComments", {
+  id: int("id").autoincrement().primaryKey(),
+  articleId: varchar("articleId", { length: 255 }).notNull(), // Article ID from blog data
+  userId: int("userId").notNull(), // User who posted the comment
+  content: text("content").notNull(), // Comment text
+  status: mysqlEnum("status", ["pending", "approved", "rejected"]).default("approved").notNull(), // Moderation status
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BlogComment = typeof blogComments.$inferSelect;
+export type InsertBlogComment = typeof blogComments.$inferInsert;

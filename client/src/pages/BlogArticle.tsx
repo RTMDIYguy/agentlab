@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useLocation, useRoute } from "wouter";
 import { ArrowLeft, Calendar, User, Clock, Share2 } from "lucide-react";
+import BlogCommentSection from "@/components/BlogCommentSection";
 
 // Article content data
 const articleContent: Record<string, any> = {
@@ -257,6 +258,9 @@ export default function BlogArticle() {
               </div>
             </div>
           </div>
+
+          {/* Comments Section */}
+          <BlogCommentSection articleId={articleId} />
 
           {/* Related Articles */}
           {article.relatedArticles && article.relatedArticles.length > 0 && (
