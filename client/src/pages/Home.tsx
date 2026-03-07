@@ -192,8 +192,8 @@ export default function Home() {
             <span className="font-bold text-lg text-foreground">AgentLab</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
-            <a href="#" className="text-foreground hover:text-primary transition-colors">Home</a>
-            <a href="#capabilities" className="text-foreground hover:text-primary transition-colors">About</a>
+            <a href="/" className="text-foreground hover:text-primary transition-colors">Home</a>
+            <a href="/about" className="text-foreground hover:text-primary transition-colors">About</a>
             <a href="#blog" className="text-foreground hover:text-primary transition-colors">Blog</a>
             <a href="#contact" className="text-foreground hover:text-primary transition-colors">Support</a>
             {isAuthenticated && <a href="/dashboard" className="text-foreground hover:text-primary transition-colors">Dashboard</a>}

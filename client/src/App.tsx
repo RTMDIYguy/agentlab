@@ -8,12 +8,14 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import AdminDashboard from "./pages/AdminDashboard";
+import About from "./pages/About";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/about"} component={About} />
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/dashboard/settings"} component={Settings} />
       <Route path={"/admin"} component={AdminDashboard} />
