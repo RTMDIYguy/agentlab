@@ -103,3 +103,11 @@
 - [x] Add comment form with validation
 - [x] Add comment display with author info
 - [x] Integrate comments into blog article page
+
+## Threaded Comments Feature (Completed)
+- [x] Update database schema to support parent comment references
+- [x] Add reply creation tRPC procedure
+- [x] Add nested comment fetching procedure
+- [x] Build nested comment UI component
+- [x] Add reply form with parent context
+- [x] Integrate threaded comments into blog article page

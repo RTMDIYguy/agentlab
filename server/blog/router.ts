@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
-import { createComment, getArticleComments, deleteComment, getCommentCount } from "./db";
+import { createComment, getArticleComments, deleteComment, getCommentCount, createReply, getCommentReplies, getTopLevelComments } from "./db";
 import { TRPCError } from "@trpc/server";
 
 export const blogRouter = router({
@@ -84,6 +84,80 @@ export const blogRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to delete comment",
+        });
+      }
+    }),
+
+  // Get top-level comments for an article (threaded)
+  getThreadedComments: publicProcedure
+    .input(z.object({ articleId: z.string() }))
+    .query(async ({ input }) => {
+      try {
+        const comments = await getTopLevelComments(input.articleId);
+        return comments;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch threaded comments",
+        });
+      }
+    }),
+
+  // Get replies for a specific comment
+  getCommentReplies: publicProcedure
+    .input(z.object({ commentId: z.number() }))
+    .query(async ({ input }) => {
+      try {
+        const replies = await getCommentReplies(input.commentId);
+        return replies;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch comment replies",
+        });
+      }
+    }),
+
+  // Create a reply to a comment
+  createReply: protectedProcedure
+    .input(
+      z.object({
+        articleId: z.string(),
+        parentCommentId: z.number(),
+        content: z.string().min(1).max(5000),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        if (input.content.trim().length === 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Reply cannot be empty",
+          });
+        }
+
+        await createReply(
+          input.articleId,
+          ctx.user.id,
+          input.content,
+          input.parentCommentId
+        );
+
+        return {
+          success: true,
+          message: "Reply posted successfully",
+        };
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+        if (error instanceof Error && error.message === "Parent comment not found") {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Parent comment not found",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create reply",
         });
       }
     }),

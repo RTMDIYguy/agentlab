@@ -64,6 +64,7 @@ export const blogComments = mysqlTable("blogComments", {
   id: int("id").autoincrement().primaryKey(),
   articleId: varchar("articleId", { length: 255 }).notNull(), // Article ID from blog data
   userId: int("userId").notNull(), // User who posted the comment
+  parentCommentId: int("parentCommentId"), // Parent comment ID for threaded replies (null for top-level)
   content: text("content").notNull(), // Comment text
   status: mysqlEnum("status", ["pending", "approved", "rejected"]).default("approved").notNull(), // Moderation status
   createdAt: timestamp("createdAt").defaultNow().notNull(),

@@ -1,4 +1,4 @@
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, isNull } from "drizzle-orm";
 import { blogComments } from "../../drizzle/schema";
 import { getDb } from "../db";
 
@@ -73,4 +73,94 @@ export async function getCommentCount(articleId: string) {
     );
 
   return result.length;
+}
+
+export async function createReply(
+  articleId: string,
+  userId: number,
+  content: string,
+  parentCommentId: number
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Verify parent comment exists
+  const parentComment = await db
+    .select()
+    .from(blogComments)
+    .where(eq(blogComments.id, parentCommentId))
+    .limit(1);
+
+  if (!parentComment[0]) {
+    throw new Error("Parent comment not found");
+  }
+
+  const result = await db.insert(blogComments).values({
+    articleId,
+    userId,
+    content,
+    parentCommentId,
+    status: "approved",
+  });
+
+  return result;
+}
+
+export async function getCommentReplies(parentCommentId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const replies = await db
+    .select()
+    .from(blogComments)
+    .where(
+      and(
+        eq(blogComments.parentCommentId, parentCommentId),
+        eq(blogComments.status, "approved")
+      )
+    )
+    .orderBy(desc(blogComments.createdAt));
+
+  return replies;
+}
+
+export async function getTopLevelComments(articleId: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const comments = await db
+    .select()
+    .from(blogComments)
+    .where(
+      and(
+        eq(blogComments.articleId, articleId),
+        eq(blogComments.status, "approved"),
+        isNull(blogComments.parentCommentId)
+      )
+    )
+    .orderBy(desc(blogComments.createdAt));
+
+  return comments;
+}
+
+export async function getCommentWithReplies(commentId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const comment = await db
+    .select()
+    .from(blogComments)
+    .where(eq(blogComments.id, commentId))
+    .limit(1);
+
+  if (!comment[0]) {
+    throw new Error("Comment not found");
+  }
+
+  const replies = await getCommentReplies(commentId);
+
+  return {
+    ...comment[0],
+    replies,
+  };
 }

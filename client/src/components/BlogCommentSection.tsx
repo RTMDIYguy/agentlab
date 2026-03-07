@@ -5,6 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { MessageCircle, Send, Trash2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import NestedComment from "./NestedComment";
 
 interface BlogCommentSectionProps {
   articleId: string;
@@ -15,8 +16,8 @@ export default function BlogCommentSection({ articleId }: BlogCommentSectionProp
   const [commentText, setCommentText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch comments
-  const { data: comments = [], refetch: refetchComments, isLoading } = trpc.blog.getComments.useQuery(
+  // Fetch threaded comments (top-level only)
+  const { data: comments = [], refetch: refetchComments, isLoading } = trpc.blog.getThreadedComments.useQuery(
     { articleId },
     { enabled: !!articleId }
   );
@@ -151,42 +152,12 @@ export default function BlogCommentSection({ articleId }: BlogCommentSectionProp
           </div>
         ) : comments && comments.length > 0 ? (
           comments.map((comment) => (
-            <Card
+            <NestedComment
               key={comment.id}
-              className="p-6 border border-border hover:border-primary/50 transition-colors"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold text-sm">
-                    {comment.id % 10}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground">User #{comment.userId}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(comment.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                  </div>
-                </div>
-                {user?.id === comment.userId && (
-                  <button
-                    onClick={() => handleDeleteComment(comment.id)}
-                    className="text-muted-foreground hover:text-red-500 transition-colors p-2"
-                    title="Delete comment"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-              <p className="text-foreground leading-relaxed whitespace-pre-wrap">
-                {comment.content}
-              </p>
-            </Card>
+              comment={comment}
+              articleId={articleId}
+              onCommentDeleted={refetchComments}
+            />
           ))
         ) : (
           <div className="text-center py-12">
