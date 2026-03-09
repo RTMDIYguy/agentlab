@@ -13,6 +13,9 @@ import Blog from "./pages/Blog";
 import BlogArticle from "./pages/BlogArticle";
 import ArticleEditor from "./pages/ArticleEditor";
 import BlogManager from "./pages/BlogManager";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import Cookies from "./pages/Cookies";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -28,6 +31,9 @@ function Router() {
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/dashboard/settings"} component={Settings} />
       <Route path={"/admin"} component={AdminDashboard} />
+      <Route path={"/privacy"} component={Privacy} />
+      <Route path={"/terms"} component={Terms} />
+      <Route path={"/cookies"} component={Cookies} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
