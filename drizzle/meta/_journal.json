@@ -36,6 +36,13 @@
       "when": 1772920694894,
       "tag": "0004_overconfident_clint_barton",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1773176739300,
+      "tag": "0005_first_hydra",
+      "breakpoints": true
     }
   ]
 }

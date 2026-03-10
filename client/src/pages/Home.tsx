@@ -528,7 +528,7 @@ export default function Home() {
               <ul className="space-y-2 text-muted-foreground text-sm">
                 <li><a href="/help" className="hover:text-primary transition-colors">Help Center</a></li>
                 <li><a href="/help#contact" className="hover:text-primary transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Status</a></li>
+                <li><a href="/status" className="hover:text-primary transition-colors">Status</a></li>
               </ul>
             </div>
           </div>

@@ -143,3 +143,23 @@
 - [x] Add support information and contact details
 - [x] Link Help Center to footer support link
 - [x] Test Help Center functionality
+
+## Contact Form Backend (Completed)
+- [x] Create contact submissions database table
+- [x] Add tRPC procedure for contact form submission
+- [x] Implement email notification to support team
+- [x] Add form validation and error handling
+- [x] Connect Help Center contact form to backend
+
+## Live Chat Widget (In Progress)
+- [ ] Integrate live chat widget library
+- [ ] Configure chat widget settings
+- [ ] Add chat widget to site header/footer
+- [ ] Test chat widget functionality
+
+## System Status Page (Completed)
+- [x] Create status page component
+- [x] Add uptime monitoring data
+- [x] Create incident history section
+- [x] Add maintenance schedule section
+- [x] Link status page to footer

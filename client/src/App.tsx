@@ -17,6 +17,7 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Cookies from "./pages/Cookies";
 import HelpCenter from "./pages/HelpCenter";
+import Status from "./pages/Status";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -35,8 +36,9 @@ function Router() {
       <Route path={"/privacy"} component={Privacy} />
       <Route path={"/terms"} component={Terms} />
       <Route path={"/cookies"} component={Cookies} />
-      <Route path={"/help"} component={HelpCenter} />
-      <Route path={"/404"} component={NotFound} />
+      <Route path="/help" component={HelpCenter} />
+      <Route path="/status" component={Status} />
+      <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
