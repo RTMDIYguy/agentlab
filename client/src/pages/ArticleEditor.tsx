@@ -24,7 +24,7 @@ export default function ArticleEditor() {
   // Fetch article if editing
   const { data: article, isLoading } = trpc.articles.getBySlug.useQuery(
     { slug: slug || "" },
-    { enabled: !!slug }
+    { enabled: !!slug && slug !== "new" }
   );
 
   // Mutations
@@ -35,6 +35,7 @@ export default function ArticleEditor() {
     },
     onError: (error) => {
       toast.error(error.message || "Failed to create article");
+      setIsSubmitting(false);
     },
   });
 
@@ -45,54 +46,52 @@ export default function ArticleEditor() {
     },
     onError: (error) => {
       toast.error(error.message || "Failed to update article");
+      setIsSubmitting(false);
     },
   });
 
-  // Load article data when editing
+  // Load article data when fetched
   useEffect(() => {
     if (article) {
       setTitle(article.title);
       setExcerpt(article.excerpt || "");
       setContent(article.content);
       setCategory(article.category);
-      setStatus(article.status as any);
+      setStatus(article.status as "draft" | "scheduled" | "published");
+      setFeaturedImage(article.featuredImage || "");
       if (article.scheduledFor) {
         setScheduledFor(new Date(article.scheduledFor).toISOString().slice(0, 16));
       }
-      setFeaturedImage(article.featuredImage || "");
     }
   }, [article]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isAuthenticated) {
-      toast.error("Please log in to create articles");
-      return;
-    }
-
     if (!title.trim() || !content.trim()) {
       toast.error("Title and content are required");
-      return;
-    }
-
-    if (status === "scheduled" && !scheduledFor) {
-      toast.error("Please select a date and time for scheduled posts");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      const slugFromTitle = title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
+      const articleSlug = slug === "new" ? title.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "") : (slug || "");
 
-      const scheduledDate = scheduledFor ? new Date(scheduledFor) : undefined;
-
-      if (slug) {
-        // Update
+      if (slug === "new") {
+        // Create new article
+        await createMutation.mutateAsync({
+          title,
+          excerpt,
+          content,
+          slug: articleSlug,
+          category,
+          status,
+          scheduledFor: status === "scheduled" && scheduledFor ? new Date(scheduledFor) : undefined,
+          featuredImage: featuredImage || undefined,
+        });
+      } else {
+        // Update existing article
         await updateMutation.mutateAsync({
           articleId: article?.id || 0,
           title,
@@ -100,30 +99,50 @@ export default function ArticleEditor() {
           content,
           category,
           status,
-          scheduledFor: scheduledDate,
-          featuredImage: featuredImage || undefined,
-        });
-      } else {
-        // Create
-        await createMutation.mutateAsync({
-          title,
-          excerpt,
-          content,
-          slug: slugFromTitle,
-          category,
-          status,
-          scheduledFor: scheduledDate,
+          scheduledFor: status === "scheduled" && scheduledFor ? new Date(scheduledFor) : undefined,
           featuredImage: featuredImage || undefined,
         });
       }
-    } finally {
-      setIsSubmitting(false);
+    } catch (error) {
+      console.error("Error submitting article:", error);
     }
   };
 
-  if (isLoading) {
+  const handleSaveDraft = async () => {
+    setStatus("draft");
+    await handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+  };
+
+  const handleSchedule = async () => {
+    if (!scheduledFor) {
+      toast.error("Please select a date and time to schedule");
+      return;
+    }
+    setStatus("scheduled");
+    await handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+  };
+
+  const handlePublish = async () => {
+    setStatus("published");
+    await handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+  };
+
+  if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-background py-8">
+        <div className="container max-w-4xl">
+          <Card className="p-8 border border-border text-center">
+            <p className="text-foreground mb-4">Please log in to write articles.</p>
+            <Button className="bg-primary hover:bg-primary/90">Sign In</Button>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  if (slug && slug !== "new" && isLoading) {
+    return (
+      <div className="min-h-screen bg-background py-8 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -132,176 +151,142 @@ export default function ArticleEditor() {
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="container max-w-4xl">
-        <button
-          onClick={() => navigate("/blog-manager")}
-          className="flex items-center gap-2 text-primary hover:text-primary/80 mb-6"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Blog Manager
-        </button>
-
-        <Card className="p-8 border border-border">
-          <h1 className="text-3xl font-bold text-foreground mb-6">
-            {slug ? "Edit Article" : "Create New Article"}
+        <div className="flex items-center gap-4 mb-8">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/blog-manager")}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </Button>
+          <h1 className="text-3xl font-bold text-foreground">
+            {slug === "new" ? "Write New Article" : "Edit Article"}
           </h1>
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Title */}
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Article Title *
-              </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter article title..."
-                className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                disabled={isSubmitting}
-              />
-            </div>
-
-            {/* Excerpt */}
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Excerpt
-              </label>
-              <textarea
-                value={excerpt}
-                onChange={(e) => setExcerpt(e.target.value)}
-                placeholder="Brief summary of your article..."
-                rows={2}
-                className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                disabled={isSubmitting}
-              />
-              <p className="text-xs text-muted-foreground mt-1">{excerpt.length}/500 characters</p>
-            </div>
-
-            {/* Content */}
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Content * (Markdown supported)
-              </label>
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Write your article content here... Markdown is supported."
-                rows={12}
-                className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary font-mono text-sm resize-none"
-                disabled={isSubmitting}
-              />
-            </div>
-
-            {/* Category and Featured Image */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <Card className="p-6 border border-border">
+            <div className="space-y-4">
+              {/* Title */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Category
-                </label>
+                <label className="block text-sm font-medium text-foreground mb-2">Title</label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Enter article title"
+                  className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
+                  required
+                />
+              </div>
+
+              {/* Excerpt */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Excerpt</label>
+                <textarea
+                  value={excerpt}
+                  onChange={(e) => setExcerpt(e.target.value)}
+                  placeholder="Brief summary of your article (optional)"
+                  rows={2}
+                  className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+
+              {/* Content */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Content (Markdown)</label>
+                <textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Write your article content here (supports Markdown)"
+                  rows={12}
+                  className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary font-mono text-sm"
+                  required
+                />
+              </div>
+
+              {/* Category */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Category</label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                  disabled={isSubmitting}
+                  className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option>General</option>
-                  <option>Technology</option>
+                  <option>AI Technology</option>
                   <option>Business</option>
-                  <option>Case Study</option>
                   <option>Tutorial</option>
+                  <option>News</option>
                 </select>
               </div>
 
+              {/* Featured Image */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Featured Image URL
-                </label>
+                <label className="block text-sm font-medium text-foreground mb-2">Featured Image URL</label>
                 <input
                   type="url"
                   value={featuredImage}
                   onChange={(e) => setFeaturedImage(e.target.value)}
                   placeholder="https://example.com/image.jpg"
-                  className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                  disabled={isSubmitting}
+                  className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
-            </div>
 
-            {/* Status and Scheduling */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Status
-                </label>
-                <select
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value as any)}
-                  className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                  disabled={isSubmitting}
-                >
-                  <option value="draft">Draft</option>
-                  <option value="scheduled">Scheduled</option>
-                  <option value="published">Publish Now</option>
-                </select>
-              </div>
-
+              {/* Scheduled Date */}
               {status === "scheduled" && (
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Publish Date & Time
-                  </label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Schedule For</label>
                   <input
                     type="datetime-local"
                     value={scheduledFor}
                     onChange={(e) => setScheduledFor(e.target.value)}
-                    className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                    disabled={isSubmitting}
+                    className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
                   />
                 </div>
               )}
             </div>
+          </Card>
 
-            {/* Submit Buttons */}
-            <div className="flex gap-3 pt-6 border-t border-border">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate("/blog-manager")}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </Button>
+          {/* Action Buttons */}
+          <div className="flex gap-3 flex-wrap">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleSaveDraft}
+              disabled={isSubmitting}
+              className="flex items-center gap-2"
+            >
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              Save Draft
+            </Button>
 
-              <Button
-                type="submit"
-                className="bg-primary hover:bg-primary/90 flex items-center gap-2 ml-auto"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Saving...
-                  </>
-                ) : status === "scheduled" ? (
-                  <>
-                    <Clock className="w-4 h-4" />
-                    Schedule Post
-                  </>
-                ) : status === "published" ? (
-                  <>
-                    <Send className="w-4 h-4" />
-                    Publish Now
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4" />
-                    Save Draft
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-        </Card>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setStatus("scheduled");
+              }}
+              className="flex items-center gap-2"
+            >
+              <Clock className="w-4 h-4" />
+              Schedule
+            </Button>
+
+            <Button
+              type="button"
+              onClick={handlePublish}
+              disabled={isSubmitting}
+              className="bg-primary hover:bg-primary/90 flex items-center gap-2"
+            >
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              Publish Now
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );
