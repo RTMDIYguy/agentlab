@@ -319,7 +319,7 @@ export default function HelpCenter() {
                   <Mail className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h4 className="font-semibold text-foreground mb-1">Email</h4>
-                    <p className="text-muted-foreground">support@agentlab.ai</p>
+                    <p className="text-muted-foreground">info@unclerobertconsulting.com</p>
                     <p className="text-sm text-muted-foreground mt-1">We respond within 24 hours</p>
                   </div>
                 </div>
@@ -330,7 +330,7 @@ export default function HelpCenter() {
                   <Phone className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h4 className="font-semibold text-foreground mb-1">Phone</h4>
-                    <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                    <p className="text-muted-foreground">+1 (816) 301-1048</p>
                     <p className="text-sm text-muted-foreground mt-1">Mon-Fri, 9am-6pm EST</p>
                   </div>
                 </div>
@@ -341,8 +341,8 @@ export default function HelpCenter() {
                   <MapPin className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h4 className="font-semibold text-foreground mb-1">Office</h4>
-                    <p className="text-muted-foreground">123 Tech Street</p>
-                    <p className="text-muted-foreground">San Francisco, CA 94105</p>
+                    <p className="text-muted-foreground">1335 N Liberty St</p>
+                    <p className="text-muted-foreground">Independence, MO 64050</p>
                   </div>
                 </div>
               </Card>
