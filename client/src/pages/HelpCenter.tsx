@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { ChevronDown, Search, BookOpen, MessageSquare, Mail, Phone, MapPin } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { LiveChat } from "@/components/LiveChat";
 
 function ContactFormComponent() {
   const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
@@ -81,6 +82,7 @@ export default function HelpCenter() {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [showChatWidget, setShowChatWidget] = useState(false);
 
   const faqs = [
     {
@@ -298,6 +300,36 @@ export default function HelpCenter() {
               </Card>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Live Chat Widget Section */}
+      <section className="py-8 bg-primary/5 border-t border-b border-border">
+        <div className="container max-w-6xl">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-2xl font-bold text-foreground mb-2">Need Instant Help?</h3>
+              <p className="text-muted-foreground">Chat with our support team in real-time for immediate assistance</p>
+            </div>
+            <Button
+              onClick={() => setShowChatWidget(!showChatWidget)}
+              className="bg-primary hover:bg-primary/90 text-white flex items-center gap-2 whitespace-nowrap"
+            >
+              <MessageSquare className="w-4 h-4" />
+              {showChatWidget ? "Close Chat" : "Start Chat"}
+            </Button>
+          </div>
+          {showChatWidget && (
+            <div className="mt-6 bg-white rounded-lg border border-border shadow-lg p-6 min-h-96">
+              <div className="flex flex-col items-center justify-center h-full text-center">
+                <MessageSquare className="w-16 h-16 mx-auto mb-4 text-primary/30" />
+                <h4 className="text-lg font-semibold text-foreground mb-2">Live Chat Ready</h4>
+                <p className="text-muted-foreground mb-2">Chat widget will appear here once configured with your Crisp Website ID</p>
+                <p className="text-sm text-muted-foreground">To enable live chat, update the CRISP_WEBSITE_ID in the LiveChat component with your actual Crisp website ID</p>
+                <LiveChat />
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
