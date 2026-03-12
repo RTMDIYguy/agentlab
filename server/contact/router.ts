@@ -1,7 +1,13 @@
 import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
-import { createContactSubmission, getContactSubmissions, getStatusIncidents, getMaintenanceSchedule } from "./db";
-import { notifyOwner } from "../_core/notification";
+import {
+  createContactSubmission,
+  getContactSubmissions,
+  getStatusIncidents,
+  getMaintenanceSchedule,
+  markContactSubmissionAsRead,
+} from "./db";
+import { sendContactFormEmail, sendContactFormReply } from "./email-service";
 
 export const contactRouter = router({
   // Submit contact form
@@ -17,7 +23,7 @@ export const contactRouter = router({
     .mutation(async ({ input }) => {
       try {
         // Save to database
-        await createContactSubmission({
+        const submission = await createContactSubmission({
           name: input.name,
           email: input.email,
           subject: input.subject,
@@ -25,13 +31,35 @@ export const contactRouter = router({
           status: "new",
         });
 
-        // Send notification to owner
-        await notifyOwner({
-          title: `New Contact Form Submission from ${input.name}`,
-          content: `Email: ${input.email}\nSubject: ${input.subject}\n\nMessage:\n${input.message}`,
+        // Send email notification to support team
+        const emailSent = await sendContactFormEmail({
+          name: input.name,
+          email: input.email,
+          subject: input.subject,
+          message: input.message,
         });
 
-        return { success: true, message: "Your message has been sent successfully" };
+        // Send automated reply to user
+        const replySent = await sendContactFormReply(input.email, input.name);
+
+        if (!emailSent) {
+          console.warn(
+            "[Contact Router] Failed to send contact form email to support team"
+          );
+        }
+
+        if (!replySent) {
+          console.warn(
+            "[Contact Router] Failed to send auto-reply to user"
+          );
+        }
+
+        return {
+          success: true,
+          message:
+            "Your message has been sent successfully. We'll get back to you soon!",
+          submissionId: (submission as any).insertId,
+        };
       } catch (error) {
         console.error("Error submitting contact form:", error);
         throw new Error("Failed to submit contact form");
@@ -52,6 +80,23 @@ export const contactRouter = router({
       } catch (error) {
         console.error("Error fetching contact submissions:", error);
         return [];
+      }
+    }),
+
+  // Mark submission as read (admin only)
+  markAsRead: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user?.role !== "admin") {
+        throw new Error("Unauthorized");
+      }
+
+      try {
+        await markContactSubmissionAsRead(input.id);
+        return { success: true, message: "Submission marked as read" };
+      } catch (error) {
+        console.error("Error marking submission as read:", error);
+        throw new Error("Failed to mark submission as read");
       }
     }),
 
