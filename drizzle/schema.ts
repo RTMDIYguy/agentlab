@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, boolean } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -140,3 +140,83 @@ export const maintenanceSchedule = mysqlTable("maintenanceSchedule", {
 
 export type MaintenanceSchedule = typeof maintenanceSchedule.$inferSelect;
 export type InsertMaintenanceSchedule = typeof maintenanceSchedule.$inferInsert;
+
+// Newsletter subscribers
+export const newsletterSubscribers = mysqlTable("newsletterSubscribers", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  name: varchar("name", { length: 255 }),
+  status: mysqlEnum("status", ["subscribed", "unsubscribed", "bounced", "complained"]).default("subscribed").notNull(),
+  verificationToken: varchar("verificationToken", { length: 255 }),
+  verifiedAt: timestamp("verifiedAt"),
+  unsubscribeToken: varchar("unsubscribeToken", { length: 255 }).unique(),
+  unsubscribedAt: timestamp("unsubscribedAt"),
+  source: varchar("source", { length: 100 }).default("website").notNull(), // 'website', 'homepage', 'popup', 'import'
+  tags: text("tags"), // JSON array of tags for segmentation
+  preferences: text("preferences"), // JSON object for email preferences
+  lastEmailSentAt: timestamp("lastEmailSentAt"),
+  bounceCount: int("bounceCount").default(0).notNull(),
+  complaintCount: int("complaintCount").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
+export type InsertNewsletterSubscriber = typeof newsletterSubscribers.$inferInsert;
+
+// Newsletter campaigns
+export const newsletterCampaigns = mysqlTable("newsletterCampaigns", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  subject: varchar("subject", { length: 255 }).notNull(),
+  content: text("content").notNull(), // HTML content
+  templateId: int("templateId"),
+  status: mysqlEnum("status", ["draft", "scheduled", "sending", "sent", "paused", "failed"]).default("draft").notNull(),
+  recipientCount: int("recipientCount").default(0).notNull(),
+  sentCount: int("sentCount").default(0).notNull(),
+  openCount: int("openCount").default(0).notNull(),
+  clickCount: int("clickCount").default(0).notNull(),
+  bounceCount: int("bounceCount").default(0).notNull(),
+  complaintCount: int("complaintCount").default(0).notNull(),
+  unsubscribeCount: int("unsubscribeCount").default(0).notNull(),
+  scheduledFor: timestamp("scheduledFor"),
+  sentAt: timestamp("sentAt"),
+  createdBy: int("createdBy").notNull(), // User ID who created the campaign
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NewsletterCampaign = typeof newsletterCampaigns.$inferSelect;
+export type InsertNewsletterCampaign = typeof newsletterCampaigns.$inferInsert;
+
+// Newsletter templates
+export const newsletterTemplates = mysqlTable("newsletterTemplates", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  content: text("content").notNull(), // HTML template with placeholders
+  previewUrl: varchar("previewUrl", { length: 500 }),
+  category: varchar("category", { length: 100 }).default("general").notNull(),
+  isDefault: boolean("isDefault").default(false).notNull(),
+  createdBy: int("createdBy").notNull(), // User ID who created the template
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NewsletterTemplate = typeof newsletterTemplates.$inferSelect;
+export type InsertNewsletterTemplate = typeof newsletterTemplates.$inferInsert;
+
+// Newsletter campaign events (for tracking opens, clicks, bounces)
+export const newsletterEvents = mysqlTable("newsletterEvents", {
+  id: int("id").autoincrement().primaryKey(),
+  campaignId: int("campaignId").notNull(),
+  subscriberId: int("subscriberId").notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  eventType: mysqlEnum("eventType", ["sent", "open", "click", "bounce", "complaint", "unsubscribe"]).notNull(),
+  linkUrl: varchar("linkUrl", { length: 500 }), // For click events
+  metadata: text("metadata"), // JSON for additional data
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type NewsletterEvent = typeof newsletterEvents.$inferSelect;
+export type InsertNewsletterEvent = typeof newsletterEvents.$inferInsert;

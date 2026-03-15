@@ -43,6 +43,13 @@
       "when": 1773176739300,
       "tag": "0005_first_hydra",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1773605000249,
+      "tag": "0006_strange_invisible_woman",
+      "breakpoints": true
     }
   ]
 }
