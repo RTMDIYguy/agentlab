@@ -6,6 +6,7 @@ import { useState } from "react";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 export default function Home() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -479,19 +480,13 @@ export default function Home() {
 
       {/* Newsletter Section */}
       <section className="py-16 bg-gradient-to-r from-primary/10 to-accent/10 border-t border-border">
-        <div className="container max-w-2xl text-center">
-          <h3 className="text-2xl font-bold text-foreground mb-3">Subscribe to receive future updates</h3>
-          <p className="text-muted-foreground mb-6">
-            No spam guaranteed, So please don't send any spam mail.
-          </p>
-          <div className="flex gap-2">
-            <input
-              type="email"
-              placeholder="your@email.com"
-              className="flex-1 px-4 py-3 border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-            <Button className="bg-primary hover:bg-primary/90">Subscribe</Button>
-          </div>
+        <div className="container max-w-2xl">
+          <NewsletterSignup
+            variant="card"
+            title="Stay Updated with AgentLab"
+            description="Get the latest insights on AI agents, automation trends, and exclusive updates delivered to your inbox."
+            showIcon={true}
+          />
         </div>
       </section>
 

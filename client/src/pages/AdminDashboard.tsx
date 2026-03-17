@@ -29,6 +29,7 @@ import {
   LogOut,
   ChevronRight,
   Search,
+  Mail,
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -108,15 +109,25 @@ export default function AdminDashboard() {
             <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
             <p className="text-sm text-muted-foreground">Subscription Analytics & Customer Management</p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleLogout}
-            disabled={logoutMutation.isPending}
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Sign Out
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/newsletter-manager")}
+            >
+              <Mail className="w-4 h-4 mr-2" />
+              Newsletter
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              disabled={logoutMutation.isPending}
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
         </div>
       </div>
 

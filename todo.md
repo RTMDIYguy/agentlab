@@ -192,3 +192,11 @@
 - [x] Add subscriber list export functionality
 - [x] Implement newsletter analytics tracking
 - [x] Add unit tests for newsletter backend (27 tests passing)
+
+## Newsletter Integration (Complete)
+- [x] Integrate NewsletterSignup component to homepage and footer
+- [x] Create newsletter verification page at /newsletter/verify
+- [x] Create newsletter unsubscribe page at /newsletter/unsubscribe
+- [x] Add newsletter manager link to admin navigation
+- [x] Test newsletter verification flow end-to-end
+- [x] Test newsletter unsubscribe flow end-to-end (38 integration tests passing)

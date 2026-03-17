@@ -19,6 +19,9 @@ import Terms from "./pages/Terms";
 import Cookies from "./pages/Cookies";
 import HelpCenter from "./pages/HelpCenter";
 import Status from "./pages/Status";
+import NewsletterVerify from "./pages/NewsletterVerify";
+import NewsletterUnsubscribe from "./pages/NewsletterUnsubscribe";
+import NewsletterManager from "./pages/NewsletterManager";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -39,6 +42,9 @@ function Router() {
       <Route path={"/cookies"} component={Cookies} />
       <Route path="/help" component={HelpCenter} />
       <Route path="/status" component={Status} />
+      <Route path="/newsletter/verify" component={NewsletterVerify} />
+      <Route path="/newsletter/unsubscribe" component={NewsletterUnsubscribe} />
+      <Route path="/newsletter-manager" component={NewsletterManager} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
