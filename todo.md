@@ -200,3 +200,19 @@
 - [x] Add newsletter manager link to admin navigation
 - [x] Test newsletter verification flow end-to-end
 - [x] Test newsletter unsubscribe flow end-to-end (38 integration tests passing)
+
+## UI/UX Improvements (Complete)
+- [x] Darken newsletter form input borders for visibility against light blue background
+- [x] Replace hero background circles/circuits graphic with AI Native Agency visual
+- [x] Test newsletter form visibility on light backgrounds
+
+## Services Page - Marketing Department (Complete)
+- [x] Review marketing workflow document and plan page structure
+- [x] Create services page layout with department showcase
+- [x] Build marketing department workflows display
+- [x] Implement tiered pricing (Basic, Mid-range, Premium)
+- [x] Add workflow inclusions per tier
+- [x] Create pricing comparison table
+- [x] Add CTA buttons for each tier
+- [x] Test services page responsiveness
+- [x] Create unit tests for services page (46 tests passing)

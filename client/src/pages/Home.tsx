@@ -223,12 +223,17 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-20 pb-32">
         <div className="absolute inset-0 z-0">
-          <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663132466342/g5zLrreBZqqfDrbKLrwsy5/hero-background-hXP2HEXwNGeiUCVUjiEqze.webp"
-            alt="Hero background"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
+          <iframe 
+            src="https://claude.site/public/artifacts/5d26a2f7-e12f-4152-9ff5-37fcd89e30c3/embed" 
+            title="AI Native Agency Concept" 
+            width="100%" 
+            height="100%"
+            frameBorder="0" 
+            allow="clipboard-write" 
+            allowFullScreen
+            className="w-full h-full"
+          ></iframe>
+          <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-white/10 to-transparent"></div>
         </div>
         
         <div className="container relative z-10">

@@ -22,12 +22,14 @@ import Status from "./pages/Status";
 import NewsletterVerify from "./pages/NewsletterVerify";
 import NewsletterUnsubscribe from "./pages/NewsletterUnsubscribe";
 import NewsletterManager from "./pages/NewsletterManager";
+import Services from "./pages/Services";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/services"} component={Services} />
       <Route path={"/about"} component={About} />
       <Route path={"/blog"} component={Blog} />
       <Route path={"/blog/:id"} component={BlogArticle} />

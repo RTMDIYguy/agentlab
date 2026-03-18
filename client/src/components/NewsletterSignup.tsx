@@ -78,7 +78,7 @@ export function NewsletterSignup({
                 placeholder="Your name (optional)"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                className="w-full px-4 py-2 border-2 border-slate-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm bg-white"
               />
               <input
                 type="email"
@@ -86,7 +86,7 @@ export function NewsletterSignup({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                className="w-full px-4 py-2 border-2 border-slate-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm bg-white"
               />
               <Button
                 type="submit"
@@ -121,7 +121,7 @@ export function NewsletterSignup({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="flex-1 px-3 py-2 border border-border rounded text-xs focus:outline-none focus:ring-2 focus:ring-primary"
+              className="flex-1 px-3 py-2 border-2 border-slate-400 rounded text-xs focus:outline-none focus:ring-2 focus:ring-primary bg-white"
             />
             <Button
               type="submit"
@@ -167,7 +167,7 @@ export function NewsletterSignup({
               placeholder="Your name (optional)"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+              className="w-full px-4 py-2 border-2 border-slate-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm bg-white"
             />
             <input
               type="email"
@@ -175,7 +175,7 @@ export function NewsletterSignup({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+              className="w-full px-4 py-2 border-2 border-slate-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm bg-white"
             />
             <Button
               type="submit"
