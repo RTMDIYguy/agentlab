@@ -221,20 +221,56 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-20 pb-32">
-        <div className="absolute inset-0 z-0">
-          <iframe 
-            src="https://claude.site/public/artifacts/5d26a2f7-e12f-4152-9ff5-37fcd89e30c3/embed" 
-            title="AI Native Agency Concept" 
-            width="100%" 
-            height="100%"
-            frameBorder="0" 
-            allow="clipboard-write" 
-            allowFullScreen
-            className="w-full h-full"
-          ></iframe>
-          <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-white/10 to-transparent"></div>
+      <section className="relative overflow-hidden pt-20 pb-32 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+        <div className="absolute inset-0 z-0 opacity-40">
+          <svg className="w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style={{stopColor: '#3b82f6', stopOpacity: 0.4}} />
+                <stop offset="100%" style={{stopColor: '#06b6d4', stopOpacity: 0.2}} />
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            
+            {/* Central hub */}
+            <circle cx="600" cy="400" r="80" fill="url(#grad1)" stroke="#3b82f6" strokeWidth="2" filter="url(#glow)" />
+            <text x="600" y="415" textAnchor="middle" className="text-sm font-bold" fill="#1e40af" fontSize="16" fontWeight="bold">AI Native</text>
+            
+            {/* Department nodes */}
+            {/* Marketing */}
+            <line x1="600" y1="400" x2="300" y2="200" stroke="#3b82f6" strokeWidth="1" opacity="0.3" />
+            <circle cx="300" cy="200" r="50" fill="#3b82f6" opacity="0.2" stroke="#3b82f6" strokeWidth="2" />
+            <text x="300" y="210" textAnchor="middle" fontSize="12" fontWeight="600" fill="#1e40af">Marketing</text>
+            
+            {/* Sales */}
+            <line x1="600" y1="400" x2="900" y2="200" stroke="#06b6d4" strokeWidth="1" opacity="0.3" />
+            <circle cx="900" cy="200" r="50" fill="#06b6d4" opacity="0.2" stroke="#06b6d4" strokeWidth="2" />
+            <text x="900" y="210" textAnchor="middle" fontSize="12" fontWeight="600" fill="#0891b2">Sales</text>
+            
+            {/* Operations */}
+            <line x1="600" y1="400" x2="200" y2="600" stroke="#8b5cf6" strokeWidth="1" opacity="0.3" />
+            <circle cx="200" cy="600" r="50" fill="#8b5cf6" opacity="0.2" stroke="#8b5cf6" strokeWidth="2" />
+            <text x="200" y="610" textAnchor="middle" fontSize="12" fontWeight="600" fill="#6d28d9">Operations</text>
+            
+            {/* Finance */}
+            <line x1="600" y1="400" x2="1000" y2="600" stroke="#ec4899" strokeWidth="1" opacity="0.3" />
+            <circle cx="1000" cy="600" r="50" fill="#ec4899" opacity="0.2" stroke="#ec4899" strokeWidth="2" />
+            <text x="1000" y="610" textAnchor="middle" fontSize="12" fontWeight="600" fill="#be185d">Finance</text>
+            
+            {/* Connecting circuits */}
+            <path d="M 300 250 Q 450 300 600 350" stroke="#3b82f6" strokeWidth="1" fill="none" opacity="0.2" strokeDasharray="5,5" />
+            <path d="M 900 250 Q 750 300 600 350" stroke="#06b6d4" strokeWidth="1" fill="none" opacity="0.2" strokeDasharray="5,5" />
+            <path d="M 250 550 Q 400 450 600 400" stroke="#8b5cf6" strokeWidth="1" fill="none" opacity="0.2" strokeDasharray="5,5" />
+            <path d="M 950 550 Q 800 450 600 400" stroke="#ec4899" strokeWidth="1" fill="none" opacity="0.2" strokeDasharray="5,5" />
+          </svg>
         </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-white/50 via-white/30 to-white/20 z-0"></div>
         
         <div className="container relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
