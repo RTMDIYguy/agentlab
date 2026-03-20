@@ -24,14 +24,16 @@ import NewsletterUnsubscribe from "./pages/NewsletterUnsubscribe";
 import NewsletterManager from "./pages/NewsletterManager";
 import Services from "./pages/Services";
 import Features from "./pages/Features";
+import Pricing from "./pages/Pricing";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
+            <Route path={"/"}  component={Home} />
       <Route path={"/services"} component={Services} />
       <Route path={"/features"} component={Features} />
+      <Route path={"/pricing"} component={Pricing} />
       <Route path={"/about"} component={About} />
       <Route path={"/blog"} component={Blog} />
       <Route path={"/blog/:id"} component={BlogArticle} />

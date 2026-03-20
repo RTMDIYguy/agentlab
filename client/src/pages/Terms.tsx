@@ -1,3 +1,4 @@
+import { PageLayout } from "@/components/PageLayout";
 export default function Terms() {
   return (
     <div className="min-h-screen bg-background py-12">

@@ -1,3 +1,4 @@
+import { PageLayout } from "@/components/PageLayout";
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, AlertCircle, Clock, AlertTriangle } from "lucide-react";

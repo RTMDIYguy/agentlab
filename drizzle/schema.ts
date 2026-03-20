@@ -220,3 +220,85 @@ export const newsletterEvents = mysqlTable("newsletterEvents", {
 
 export type NewsletterEvent = typeof newsletterEvents.$inferSelect;
 export type InsertNewsletterEvent = typeof newsletterEvents.$inferInsert;
+
+
+// Shopping cart items (temporary storage for quote building)
+export const cartItems = mysqlTable("cartItems", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  department: varchar("department", { length: 64 }).notNull(), // 'marketing', 'sales', 'operations', 'finance'
+  tier: varchar("tier", { length: 64 }).notNull(), // 'basic', 'professional', 'enterprise'
+  monthlyPrice: int("monthlyPrice").notNull(), // Price in cents
+  quantity: int("quantity").default(1).notNull(),
+  metadata: text("metadata"), // JSON for additional workflow details
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CartItem = typeof cartItems.$inferSelect;
+export type InsertCartItem = typeof cartItems.$inferInsert;
+
+// Orders (completed purchases)
+export const orders = mysqlTable("orders", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  orderNumber: varchar("orderNumber", { length: 64 }).notNull().unique(), // Human-readable order ID
+  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }).unique(),
+  paymentMethod: mysqlEnum("paymentMethod", ["stripe", "paypal"]).notNull(),
+  status: mysqlEnum("status", ["pending", "completed", "failed", "refunded"]).default("pending").notNull(),
+  subtotal: int("subtotal").notNull(), // Total before tax/fees in cents
+  tax: int("tax").default(0).notNull(),
+  total: int("total").notNull(), // Final amount in cents
+  currency: varchar("currency", { length: 3 }).default("USD").notNull(),
+  billingEmail: varchar("billingEmail", { length: 320 }).notNull(),
+  billingName: varchar("billingName", { length: 255 }).notNull(),
+  billingAddress: text("billingAddress"), // JSON
+  invoiceUrl: varchar("invoiceUrl", { length: 500 }), // Stripe invoice URL
+  receiptUrl: varchar("receiptUrl", { length: 500 }), // Stripe receipt URL
+  metadata: text("metadata"), // JSON for additional order data
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Order = typeof orders.$inferSelect;
+export type InsertOrder = typeof orders.$inferInsert;
+
+// Order line items (individual departments/tiers in an order)
+export const orderItems = mysqlTable("orderItems", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("orderId").notNull(),
+  department: varchar("department", { length: 64 }).notNull(),
+  tier: varchar("tier", { length: 64 }).notNull(),
+  monthlyPrice: int("monthlyPrice").notNull(),
+  quantity: int("quantity").default(1).notNull(),
+  lineTotal: int("lineTotal").notNull(), // monthlyPrice * quantity
+  metadata: text("metadata"), // JSON for workflow details
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type OrderItem = typeof orderItems.$inferSelect;
+export type InsertOrderItem = typeof orderItems.$inferInsert;
+
+// Quote requests (for tracking quote builder submissions)
+export const quotes = mysqlTable("quotes", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId"), // Null if not authenticated
+  email: varchar("email", { length: 320 }).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  company: varchar("company", { length: 255 }),
+  status: mysqlEnum("status", ["draft", "sent", "viewed", "accepted", "rejected"]).default("draft").notNull(),
+  subtotal: int("subtotal").notNull(),
+  tax: int("tax").default(0).notNull(),
+  total: int("total").notNull(),
+  items: text("items").notNull(), // JSON array of quote items
+  notes: text("notes"),
+  expiresAt: timestamp("expiresAt"),
+  viewedAt: timestamp("viewedAt"),
+  acceptedAt: timestamp("acceptedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Quote = typeof quotes.$inferSelect;
+export type InsertQuote = typeof quotes.$inferInsert;
