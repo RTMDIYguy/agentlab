@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Check, ArrowRight } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { PageLayout } from "@/components/PageLayout";
 
 type Department = "marketing" | "sales" | "operations" | "finance";
 type Tier = "basic" | "professional" | "enterprise";
@@ -182,7 +183,7 @@ export default function Features() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <PageLayout>
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-br from-slate-50 to-blue-50">
         <div className="container">
@@ -302,6 +303,6 @@ export default function Features() {
           </div>
         </div>
       </section>
-    </div>
+    </PageLayout>
   );
 }

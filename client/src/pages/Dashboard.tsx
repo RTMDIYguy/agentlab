@@ -6,6 +6,7 @@ import { formatDate } from "date-fns";
 import { CheckCircle2, AlertCircle, Clock, CreditCard, LogOut, Download, Settings } from "lucide-react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
+import { PageLayout } from "@/components/PageLayout";
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
@@ -76,9 +77,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-card border-b border-border sticky top-0 z-40">
+    <PageLayout>
+      {/* Dashboard Header */}
+      <div className="bg-card border-b border-border">
         <div className="container flex items-center justify-between py-4">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
@@ -364,6 +365,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

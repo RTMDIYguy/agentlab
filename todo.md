@@ -289,3 +289,23 @@
 - [ ] Test order confirmation and receipt generation
 - [ ] Test authentication dialog trigger
 - [ ] Create comprehensive unit tests for all flows
+
+
+## Layout Consistency Audit & Fixes (In Progress)
+- [ ] Audit all pages for Navigation and Footer components
+- [ ] Create PageLayout wrapper component for consistent header/footer
+- [ ] Apply PageLayout to Dashboard page
+- [ ] Apply PageLayout to Features page
+- [ ] Apply PageLayout to Services page
+- [ ] Apply PageLayout to About page
+- [ ] Apply PageLayout to Blog page
+- [ ] Apply PageLayout to Blog article detail pages
+- [ ] Apply PageLayout to Settings page
+- [ ] Apply PageLayout to Admin Dashboard page
+- [ ] Apply PageLayout to Help Center page
+- [ ] Apply PageLayout to Newsletter Manager page
+- [ ] Apply PageLayout to all legal pages (Privacy, Terms, Cookies)
+- [ ] Apply PageLayout to Status page
+- [ ] Test navigation flow across all pages
+- [ ] Verify footer links work on all pages
+- [ ] Create unit tests for layout consistency
