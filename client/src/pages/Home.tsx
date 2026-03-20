@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Zap, Brain, Network, Clock, Shield, Cpu } from "lucide-react";
@@ -183,42 +184,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-border">
-        <div className="container flex items-center justify-between py-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">AL</span>
-            </div>
-            <span className="font-bold text-lg text-foreground">AgentLab</span>
-          </div>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="/" className="text-foreground hover:text-primary transition-colors">Home</a>
-            <a href="/about" className="text-foreground hover:text-primary transition-colors">About</a>
-            <a href="/blog" className="text-foreground hover:text-primary transition-colors">Blog</a>
-            <a href="#contact" className="text-foreground hover:text-primary transition-colors">Support</a>
-            {isAuthenticated && (
-              <>
-                <a href="/dashboard" className="text-foreground hover:text-primary transition-colors">Dashboard</a>
-                <a href="/blog-manager" className="text-foreground hover:text-primary transition-colors">Blog Manager</a>
-              </>
-            )}
-          </div>
-          <div className="flex items-center gap-4">
-            {isAuthenticated ? (
-              <>
-                <span className="text-sm text-muted-foreground">{user?.name}</span>
-                <Button variant="outline" size="sm" onClick={logout}>Sign Out</Button>
-              </>
-            ) : (
-              <>
-                <Button variant="outline" className="hidden sm:inline-flex" onClick={() => window.location.href = getLoginUrl()}>Sign In</Button>
-                <Button className="bg-primary hover:bg-primary/90" onClick={() => window.location.href = getLoginUrl()}>Get Started</Button>
-              </>
-            )}
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-20 pb-32 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">

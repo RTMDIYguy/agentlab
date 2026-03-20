@@ -216,3 +216,76 @@
 - [x] Add CTA buttons for each tier
 - [x] Test services page responsiveness
 - [x] Create unit tests for services page (46 tests passing)
+
+
+## Navigation Restructuring (In Progress)
+- [ ] Replace About link with Features link in main navigation
+- [ ] Add About as nested child under Home
+- [ ] Add Dashboard as nested child under Home (visible only when signed in)
+- [ ] Move Blog Manager as nested child under Blog
+- [ ] Implement hover-triggered nested menu display
+- [ ] Test navigation on desktop and mobile
+
+## Features Page Build (In Progress)
+- [ ] Create Features page with department selector tabs
+- [ ] Build Marketing department workflows and pricing display
+- [ ] Build Sales department workflows and pricing display
+- [ ] Build Operations department workflows and pricing display
+- [ ] Build Finance department workflows and pricing display
+- [ ] Implement department switcher with smooth transitions
+- [ ] Add workflow descriptions and feature lists per tier
+- [ ] Create pricing comparison table for selected department
+
+## Pricing Page & Quote Builder (In Progress)
+- [ ] Create Pricing page with aggregated department pricing
+- [ ] Build interactive quote builder interface
+- [ ] Implement department and tier selection
+- [ ] Add workflow customization options
+- [ ] Create dynamic pricing calculator
+- [ ] Add "Add to Cart" functionality from pricing page
+- [ ] Display quote summary before checkout
+
+## Shopping Cart System (In Progress)
+- [ ] Create cart data model in database
+- [ ] Build cart management tRPC procedures
+- [ ] Create cart UI component with item management
+- [ ] Implement cart persistence
+- [ ] Add quantity and tier modification in cart
+- [ ] Create cart summary and totals display
+
+## Checkout & Payment Integration (In Progress)
+- [ ] Create checkout page layout
+- [ ] Integrate Stripe payment processing
+- [ ] Add PayPal as backup payment option
+- [ ] Implement payment method selection UI
+- [ ] Create billing address collection form
+- [ ] Add order creation on successful payment
+- [ ] Implement webhook handling for payment confirmation
+
+## Order Management & Receipts (In Progress)
+- [ ] Create order model in database
+- [ ] Build order tracking system
+- [ ] Create order confirmation page
+- [ ] Implement invoice/receipt generation
+- [ ] Add email receipt sending
+- [ ] Create receipt download functionality
+- [ ] Build order history page for users
+
+## Authentication on Quote Submission (In Progress)
+- [ ] Create authentication dialog component
+- [ ] Implement sign up form in dialog
+- [ ] Implement login form in dialog
+- [ ] Add social login options
+- [ ] Trigger dialog on quote submission if not authenticated
+- [ ] Redirect to checkout after authentication
+
+## Testing & Validation (In Progress)
+- [ ] Test navigation menu interactions
+- [ ] Test department switching on Features page
+- [ ] Test quote builder calculations
+- [ ] Test cart add/remove/update operations
+- [ ] Test Stripe payment flow
+- [ ] Test PayPal payment flow
+- [ ] Test order confirmation and receipt generation
+- [ ] Test authentication dialog trigger
+- [ ] Create comprehensive unit tests for all flows

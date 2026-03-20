@@ -23,6 +23,7 @@ import NewsletterVerify from "./pages/NewsletterVerify";
 import NewsletterUnsubscribe from "./pages/NewsletterUnsubscribe";
 import NewsletterManager from "./pages/NewsletterManager";
 import Services from "./pages/Services";
+import Features from "./pages/Features";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -30,6 +31,7 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/services"} component={Services} />
+      <Route path={"/features"} component={Features} />
       <Route path={"/about"} component={About} />
       <Route path={"/blog"} component={Blog} />
       <Route path={"/blog/:id"} component={BlogArticle} />
