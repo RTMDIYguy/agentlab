@@ -1,7 +1,7 @@
-import { PageLayout } from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
+import { PageLayout } from "@/components/PageLayout";
 import {
   Users,
   Target,
@@ -100,42 +100,7 @@ export default function About() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-border">
-        <div className="container flex items-center justify-between py-4">
-          <button
-            onClick={() => navigate("/")}
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-          >
-            <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">AL</span>
-            </div>
-            <span className="font-bold text-lg text-foreground">AgentLab</span>
-          </button>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#mission" className="text-foreground hover:text-primary transition-colors">
-              Mission
-            </a>
-            <a href="#team" className="text-foreground hover:text-primary transition-colors">
-              Team
-            </a>
-            <a href="#values" className="text-foreground hover:text-primary transition-colors">
-              Values
-            </a>
-            <a href="#achievements" className="text-foreground hover:text-primary transition-colors">
-              Achievements
-            </a>
-          </div>
-          <Button
-            onClick={() => navigate("/")}
-            className="bg-primary hover:bg-primary/90"
-          >
-            Back to Home
-          </Button>
-        </div>
-      </nav>
-
+    <PageLayout>
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-primary/10 to-accent/10 border-b border-border">
         <div className="container max-w-4xl">
@@ -396,6 +361,6 @@ export default function About() {
           </div>
         </div>
       </footer>
-    </div>
+    </PageLayout>
   );
 }
