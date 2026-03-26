@@ -1,0 +1,73 @@
+media:
+  input: client/public/images
+  output: /images
+
+content:
+  - name: blog
+    label: Blog Posts
+    type: collection
+    path: content/blog
+    view:
+      fields: [title, date, author, tags]
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: date
+        label: Publish Date
+        type: date
+        required: true
+      - name: author
+        label: Author
+        type: string
+        default: Uncle Robert Consulting
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: excerpt
+        label: Excerpt
+        type: text
+      - name: body
+        label: Content
+        type: rich-text
+
+  - name: site_settings
+    label: Site Settings
+    type: file
+    path: content/settings.json
+    fields:
+      - name: site_name
+        label: Site Name
+        type: string
+        default: AgentLab
+      - name: tagline
+        label: Tagline
+        type: string
+      - name: contact_email
+        label: Contact Email
+        type: string
+
+  - name: services
+    label: Services
+    type: collection
+    path: content/services
+    fields:
+      - name: title
+        label: Service Title
+        type: string
+        required: true
+      - name: description
+        label: Description
+        type: text
+      - name: icon
+        label: Icon Name
+        type: string
+      - name: featured
+        label: Featured
+        type: boolean
+        default: false
+      - name: body
+        label: Full Description
+        type: rich-text
