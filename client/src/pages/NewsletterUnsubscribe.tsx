@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useRoute } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
+import { PageLayout } from "@/components/PageLayout";
 
 export default function NewsletterUnsubscribe() {
   const [, params] = useRoute("/newsletter/unsubscribe?token=:token");
@@ -43,6 +44,7 @@ export default function NewsletterUnsubscribe() {
   }, [params?.token]);
 
   return (
+    <PageLayout>
     <div className="min-h-screen bg-gradient-to-br from-background to-card flex items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md p-8">
         <div className="text-center">
@@ -116,5 +118,6 @@ export default function NewsletterUnsubscribe() {
         </div>
       </Card>
     </div>
+    </PageLayout>
   );
 }
