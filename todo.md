@@ -151,11 +151,11 @@
 - [x] Add form validation and error handling
 - [x] Connect Help Center contact form to backend
 
-## Live Chat Widget (In Progress)
-- [ ] Integrate live chat widget library
-- [ ] Configure chat widget settings
-- [ ] Add chat widget to site header/footer
-- [ ] Test chat widget functionality
+## Live Chat Widget (Complete)
+- [x] Integrate live chat widget library (Crisp Chat API)
+- [x] Configure chat widget settings
+- [x] Add chat widget to site header/footer
+- [x] Test chat widget functionality
 
 ## System Status Page (Completed)
 - [x] Create status page component
@@ -218,32 +218,32 @@
 - [x] Create unit tests for services page (46 tests passing)
 
 
-## Navigation Restructuring (In Progress)
-- [ ] Replace About link with Features link in main navigation
-- [ ] Add About as nested child under Home
-- [ ] Add Dashboard as nested child under Home (visible only when signed in)
-- [ ] Move Blog Manager as nested child under Blog
-- [ ] Implement hover-triggered nested menu display
-- [ ] Test navigation on desktop and mobile
+## Navigation Restructuring (Complete)
+- [x] Replace About link with Features link in main navigation
+- [x] Add About as nested child under Home
+- [x] Add Dashboard as nested child under Home (visible only when signed in)
+- [x] Move Blog Manager as nested child under Blog
+- [x] Implement hover-triggered nested menu display
+- [x] Test navigation on desktop and mobile
 
-## Features Page Build (In Progress)
-- [ ] Create Features page with department selector tabs
-- [ ] Build Marketing department workflows and pricing display
-- [ ] Build Sales department workflows and pricing display
-- [ ] Build Operations department workflows and pricing display
-- [ ] Build Finance department workflows and pricing display
-- [ ] Implement department switcher with smooth transitions
-- [ ] Add workflow descriptions and feature lists per tier
-- [ ] Create pricing comparison table for selected department
+## Features Page Build (Complete)
+- [x] Create Features page with department selector tabs
+- [x] Build Marketing department workflows and pricing display
+- [x] Build Sales department workflows and pricing display
+- [x] Build Operations department workflows and pricing display
+- [x] Build Finance department workflows and pricing display
+- [x] Implement department switcher with smooth transitions
+- [x] Add workflow descriptions and feature lists per tier
+- [x] Create pricing comparison table for selected department
 
-## Pricing Page & Quote Builder (In Progress)
-- [ ] Create Pricing page with aggregated department pricing
-- [ ] Build interactive quote builder interface
-- [ ] Implement department and tier selection
-- [ ] Add workflow customization options
-- [ ] Create dynamic pricing calculator
-- [ ] Add "Add to Cart" functionality from pricing page
-- [ ] Display quote summary before checkout
+## Pricing Page & Quote Builder (Complete)
+- [x] Create Pricing page with aggregated department pricing
+- [x] Build interactive quote builder interface
+- [x] Implement department and tier selection
+- [x] Add workflow customization options
+- [x] Create dynamic pricing calculator
+- [x] Add "Add to Cart" functionality from pricing page
+- [x] Display quote summary before checkout
 
 ## Shopping Cart System (In Progress)
 - [ ] Create cart data model in database
@@ -291,21 +291,28 @@
 - [ ] Create comprehensive unit tests for all flows
 
 
-## Layout Consistency Audit & Fixes (Partial Complete)
+## Layout Consistency Audit & Fixes (Complete)
 - [x] Audit all pages for Navigation and Footer components
 - [x] Create PageLayout wrapper component for consistent header/footer
 - [x] Apply PageLayout to Dashboard page
 - [x] Apply PageLayout to Features page
-- [ ] Apply PageLayout to Services page
-- [ ] Apply PageLayout to About page
-- [ ] Apply PageLayout to Blog page
-- [ ] Apply PageLayout to Blog article detail pages
-- [ ] Apply PageLayout to Settings page
-- [ ] Apply PageLayout to Admin Dashboard page
-- [ ] Apply PageLayout to Help Center page
-- [ ] Apply PageLayout to Newsletter Manager page
-- [ ] Apply PageLayout to all legal pages (Privacy, Terms, Cookies)
-- [ ] Apply PageLayout to Status page
+- [x] Apply PageLayout to Services page
+- [x] Apply PageLayout to About page
+- [x] Apply PageLayout to Blog page
+- [x] Apply PageLayout to Blog article detail pages
+- [x] Apply PageLayout to ArticleEditor page
+- [x] Apply PageLayout to BlogManager page
+- [x] Apply PageLayout to ComponentShowcase page
+- [x] Apply PageLayout to Home page
+- [x] Apply PageLayout to NewsletterUnsubscribe page
+- [x] Apply PageLayout to NewsletterVerify page
+- [x] Apply PageLayout to NotFound page
+- [x] Apply PageLayout to Settings page
+- [x] Apply PageLayout to Admin Dashboard page
+- [x] Apply PageLayout to Help Center page
+- [x] Apply PageLayout to Newsletter Manager page
+- [x] Apply PageLayout to all legal pages (Privacy, Terms, Cookies)
+- [x] Apply PageLayout to Status page
 - [x] Test navigation flow across all pages
 - [x] Verify footer links work on all pages
 - [x] Create unit tests for layout consistency (22 tests passing)

@@ -169,6 +169,7 @@ import {
   Sun,
   X,
 } from "lucide-react";
+import { PageLayout } from "@/components/PageLayout";
 import { useState } from "react";
 import { toast as sonnerToast } from "sonner";
 import { AIChatBox, type Message } from "@/components/AIChatBox";
@@ -227,6 +228,7 @@ export default function ComponentsShowcase() {
   };
 
   return (
+    <PageLayout>
     <div className="min-h-screen bg-background text-foreground">
       <main className="container max-w-6xl mx-auto">
         <div className="space-y-2 justify-between flex">
@@ -1427,11 +1429,7 @@ export default function ComponentsShowcase() {
         </div>
       </main>
 
-      <footer className="border-t py-6 mt-12">
-        <div className="container text-center text-sm text-muted-foreground">
-          <p>Shadcn/ui Component Showcase</p>
-        </div>
-      </footer>
     </div>
+    </PageLayout>
   );
 }
