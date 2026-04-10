@@ -46,6 +46,12 @@ export function Navigation() {
                   >
                     Dashboard
                   </a>
+                  <a
+                    href="/ops-agent"
+                    className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                  >
+                    Ops Agent
+                  </a>
                   <div className="border-t border-border my-1"></div>
                 </>
               )}
