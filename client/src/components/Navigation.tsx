@@ -52,6 +52,12 @@ export function Navigation() {
                   >
                     Ops Agent
                   </a>
+                  <a
+                    href="/agent-workstation"
+                    className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                  >
+                    Agent Workstation
+                  </a>
                   <div className="border-t border-border my-1"></div>
                 </>
               )}
