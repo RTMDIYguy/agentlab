@@ -15,10 +15,11 @@ skills/
   seo-optimization.md                    # Keyword validation + on-page SEO automation
   multi-channel-adaptation.md            # Per-channel adaptation rules
   performance-analytics.md               # 7-Point Scorecard + Optimize/Retire decision tree
-assets/
-  seven-point-scorecard.md               # GREEN/YELLOW/RED thresholds for all metrics
-  notion-content-calendar-schema.md      # Required Notion DB fields and formulas
-  url-brand-voice-notes.md               # URC brand voice and tone notes
+  assets/
+    seven-point-scorecard.md               # GREEN/YELLOW/RED thresholds for all metrics
+    notion-content-calendar-schema.md      # Required Notion DB fields and formulas
+    url-brand-voice-notes.md               # URC brand voice and tone notes
+    agent-versions.md                      # Agent prompt/version ledger
 src/
   canary/run-canary.mjs                  # Verification driver
   automation/notion-to-jira.mjs          # Topic approval → Jira+GCal
@@ -41,6 +42,8 @@ This bundle targets **Standard** conformance per `Journey_kit.md` v1.0:
 - [x] Setup uses recommended h3 subsections (Models, Services, Parameters, Environment)
 - [x] Summary and description differ
 - [x] No placeholder text in body
+- [x] Visible change log in frontmatter and body
+- [x] `kit-auth/1.0` policy and connector matrix present
 
 **Full** conformance items still to complete before the registry will accept the bundle as Full:
 
@@ -67,3 +70,27 @@ When converting the next workflow (suggested order: MKT-01 Lead Gen, MKT-02 Emai
 5. Map the Step 7 Performance Tracking content (or its analog) into Validation + outputs frontmatter
 6. Wire `src/` to the actual automation scenarios that already exist in Make / Zapier / GoHighLevel
 7. Run a canary, then promote to Active
+
+## Change-control check
+
+Before promoting any edit to this kit, run:
+
+```bash
+pnpm change-control:check
+```
+
+Every behavior-changing edit should update:
+
+1. `docs/operations/change-control-register.md`
+2. this kit's `changeLog` frontmatter and `## Change Log`
+3. `assets/agent-versions.md` when an agent prompt or harness changes
+
+## Auth standard
+
+This kit uses `kit-auth/1.0`, defined in:
+
+`../docs/operations/kit-auth-standard.md`
+
+Every required connector must declare its auth method, setup mode, scopes or
+capabilities, validation test, fallback path, revocation path, and missing-impact
+note before the workflow can be certified.

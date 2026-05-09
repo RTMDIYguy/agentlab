@@ -73,4 +73,4 @@ The agent must stop and ask for human input if:
 
 ## Versioning
 
-This prompt is `drafting-agent v1.0`. Update the version any time the system prompt changes; track changes in `assets/agent-versions.md` (TODO).
+This prompt is `drafting-agent v1.0.0`. Update the version any time the system prompt changes; track changes in `assets/agent-versions.md`.
