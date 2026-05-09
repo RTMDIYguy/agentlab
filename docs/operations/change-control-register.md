@@ -1,0 +1,88 @@
+# Change Control Register
+
+Date started: 2026-05-07
+
+## Purpose
+
+This register stops fast operational changes from leaking past the audit trail.
+It is intentionally file-based so it stays free, local, and agent-readable.
+
+Use this when changing:
+
+- kit manifests
+- workflow source files
+- agent prompts
+- tracker schemas
+- operating architecture docs
+- CRM-lite, finance, or funnel control files
+
+## Rule
+
+Every meaningful change needs one visible entry before the work is considered done.
+
+Small typo fixes can be grouped. Anything that changes behavior, ownership,
+workflow steps, automations, source-of-truth status, or required tools needs its
+own entry.
+
+## Log Distribution Rule
+
+Station a log beside the workflow, kit, tracker, or automation it verifies when
+that local placement helps someone run or debug the work.
+
+If the log is a compliance, audit, certification, readiness, or cross-workflow
+evidence record and does not need to live beside a specific artifact, place it
+in:
+
+`C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Compliance Audits`
+
+That folder is the temporary compliance-audit home until it is promoted into
+the Operations SOP structure.
+
+## Change Scheduling
+
+Use scheduled changes whenever possible. This is not meant to slow the work
+down; it prevents five good ideas from firing at once and hiding the one that
+breaks the system.
+
+Scheduled changes live in `docs/operations/scheduled-change-queue.md`.
+
+Use the fast lane only when a change is needed to unblock testing,
+certification, packaging, or market release. Fast-lane changes still need a
+change-control entry before the session ends.
+
+## Required Entry Fields
+
+| Field | Meaning |
+| --- | --- |
+| Date | YYYY-MM-DD |
+| Change ID | Stable ID such as `CC-2026-05-07-001` |
+| Area | Kit, Finance, CRM-lite, Book Funnel, Event, Agent, Automation, Site |
+| Files | Main files changed |
+| Summary | What changed in plain English |
+| Reason | Why the change was needed |
+| Source of Truth Impact | New, updated, deprecated, or none |
+| Automation Impact | n8n, script, manual, none |
+| Reviewer | Person or agent that checked it |
+| Status | Proposed, Active, Superseded, Reverted |
+
+## Current Entries
+
+| Date | Change ID | Area | Files | Summary | Reason | Source of Truth Impact | Automation Impact | Reviewer | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-07 | CC-2026-05-07-001 | Kit / Agent | `mkt-06-content-creation-dissemination/kit.md`; `mkt-06-content-creation-dissemination/assets/agent-versions.md`; `scripts/verify-change-control.mjs`; `package.json` | Added file-based change-control register, kit changelog standard, agent version ledger, and validation script. | The audit found MKT-06 could change while still appearing to be version `1.0.0`; this creates a free guardrail against quiet edits. | Updated: MKT-06 kit and change-control register now carry the visible audit trail. | Script: `pnpm change-control:check` | codex | Active |
+| 2026-05-07 | CC-2026-05-07-002 | Operations / Compliance | `docs/operations/change-control-register.md`; `docs/operations/scheduled-change-queue.md`; `AGENTS.md`; `scripts/verify-change-control.mjs` | Added log distribution rule, scheduled-change queue, and mission priority reminder. | The workflow packaging push is being delayed by scattered logs, surprise changes, and tool friction; the system needs a lightweight control lane that preserves speed. | Updated: compliance audit logs now route to `AI Native Agency Deepened\Compliance Audits` unless they must stay with their artifact. | Script: `pnpm change-control:check` | codex | Active |
+| 2026-05-07 | CC-2026-05-07-003 | Kit / Auth / Packaging | `docs/operations/kit-auth-standard.md`; `docs/operations/kit-auth-standard-audit-2026-05-07.md`; `docs/operations/notion-tracker-update-2026-05-07-kit-auth-standard.md`; `mkt-06-content-creation-dissemination/kit.md`; `mkt-06-content-creation-dissemination/README.md`; `scripts/verify-change-control.mjs` | Added `kit-auth/1.0` standard and embedded MKT-06 auth policy/connector matrix. | One-click and agentic installs need a flexible but certifiable auth contract across 15-20 connector variations. | Updated: Kit standard now requires auth method, setup mode, validation, fallback, revocation, and missing-impact fields. | Script: `pnpm change-control:check`; Notion tracker update prepared | codex | Active |
+| 2026-05-07 | CC-2026-05-07-004 | Kit Standard | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Journey_Kit.md`; `docs/operations/change-control-register.md`; `docs/operations/scheduled-change-queue.md`; `docs/operations/kit-auth-standard-audit-2026-05-07.md`; `scripts/verify-change-control.mjs` | Added `kit-auth/1.0` fields and connector contract to the canonical `Journey_Kit.md` standard. | The canonical kit standard lives one folder up in `AI Native Agency Deepened`; the repo-local auth doc needed to be reflected there. | Updated: `Journey_Kit.md` now carries the auth contract for future kits. | Script: `pnpm change-control:check`; Compliance Audits copy updated | codex | Active |
+| 2026-05-09 | CC-2026-05-09-001 | Operations / Automation | `C:\Users\thebo\MACHINE.md`; `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Compliance Audits\n8n-node-lts-repair-2026-05-09.md`; `docs/operations/change-control-register.md`; `docs/operations/scheduled-change-queue.md` | Documented the Node.js LTS change that restored npm-installed n8n. | n8n failed to render because the npm package install was incomplete under Node 25.9.0; moving to Node 24.15.0 LTS unblocked local workflow automation. | Updated: `MACHINE.md` now records Node 24.15.0 LTS as the n8n-safe runtime and warns about Node 25.x. | n8n; npm; manual stack repair | codex + operator | Active |
+
+## Completion Checklist
+
+Before ending a change session:
+
+- [ ] Add or update the relevant changelog entry.
+- [ ] If an agent prompt changed, update `assets/agent-versions.md`.
+- [ ] If a kit changed, update `changeLog` frontmatter and `## Change Log`.
+- [ ] Put compliance/audit/certification logs in the Compliance Audits folder unless they must stay local to the artifact.
+- [ ] Move non-urgent work into `docs/operations/scheduled-change-queue.md`.
+- [ ] Run `pnpm change-control:check`.
+- [ ] Report changed files and any failed checks.

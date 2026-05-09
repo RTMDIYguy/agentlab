@@ -8,6 +8,153 @@ summary: >
 version: 1.0.0
 owner: uncle-robert-consulting
 license: UNLICENSED
+changeLog:
+  - date: 2026-05-07
+    changeId: CC-2026-05-07-001
+    version: 1.0.0
+    type: control
+    summary: Added visible change-control register, kit changelog section, agent version ledger, and validation script.
+    author: codex
+  - date: 2026-05-07
+    changeId: CC-2026-05-07-003
+    version: 1.0.0
+    type: auth-standard
+    summary: Added kit-auth/1.0 policy and connector auth matrix for one-click and agentic installation.
+    author: codex
+authStandard: kit-auth/1.0
+authPolicy:
+  noPlaintextSecrets: true
+  preferOAuth: true
+  requireValidationTest: true
+  requireLeastPrivilegeScopes: true
+  requireRevocationPath: true
+  requireFallbackPath: true
+auth:
+  connectors:
+    - id: notion
+      service: Notion
+      required: true
+      method: oauth2-delegated
+      setupMode: platform-prompt
+      grantedBy: buyer
+      scopes:
+        - content calendar database read/write
+        - performance tracker database read/write
+      validation:
+        test: notion-database-read-write
+        expected: Content Calendar and Performance Tracker can be read and a test row can be created or updated
+      fallback: api-key-vault
+      revocation: Disconnect Notion credential in the automation platform or revoke integration access in Notion
+      missingImpact: Content planning, status tracking, and performance feedback loop cannot run
+    - id: atlassian
+      service: Jira and Confluence
+      required: true
+      method: oauth2-delegated
+      setupMode: platform-prompt
+      grantedBy: buyer
+      scopes:
+        - Jira issue read/write
+        - Confluence page read/write
+      validation:
+        test: atlassian-profile-and-test-ticket
+        expected: Site URL resolves on atlassian.net and a test issue can be created or updated
+      fallback: api-key-vault
+      revocation: Revoke Atlassian app access or delete API token
+      missingImpact: Workflow status routing, review handoffs, and SOP updates cannot run
+    - id: microsoft-365
+      service: Microsoft Graph
+      required: true
+      method: oauth2-delegated
+      setupMode: platform-prompt
+      grantedBy: buyer
+      scopes:
+        - Mail.Send
+        - Calendars.ReadWrite
+        - Files.ReadWrite
+      validation:
+        test: graph-profile-calendar-file-check
+        expected: User profile resolves and test calendar/file operations are available
+      fallback: oauth2-admin
+      revocation: Remove app consent in Microsoft Entra or disconnect platform credential
+      missingImpact: Outlook, calendar, Teams, and OneDrive steps cannot run
+    - id: github
+      service: GitHub
+      required: true
+      method: oauth2-delegated
+      setupMode: platform-prompt
+      grantedBy: buyer
+      scopes:
+        - repository contents read/write
+        - pull request read/write
+      validation:
+        test: github-repo-branch-check
+        expected: Target content repo is visible and a test branch can be created or listed
+      fallback: pat-vault
+      revocation: Revoke OAuth app access or delete fine-grained PAT
+      missingImpact: Versioned artifacts, branches, and distribution logs cannot be written
+    - id: klaviyo
+      service: Klaviyo
+      required: true
+      method: api-key-vault
+      setupMode: vault-entry
+      grantedBy: buyer
+      scopes:
+        - lists read
+        - templates read/write
+        - campaigns read/write
+      validation:
+        test: klaviyo-list-template-check
+        expected: Required lists and newsletter template resolve
+      fallback: manual-fallback
+      revocation: Rotate or revoke Klaviyo API key
+      missingImpact: Email/SMS preview and distribution steps cannot run
+    - id: hubspot
+      service: HubSpot
+      required: true
+      method: oauth2-delegated
+      setupMode: platform-prompt
+      grantedBy: buyer
+      scopes:
+        - contacts.read
+        - contacts.write
+        - deals.read
+      validation:
+        test: hubspot-contact-property-check
+        expected: Contacts can be read and content attribution properties are available
+      fallback: api-key-vault
+      revocation: Disconnect HubSpot app or revoke private app token
+      missingImpact: CRM attribution and content-influenced lead reporting cannot run
+    - id: analytics
+      service: Google Analytics 4 and Search Console
+      required: true
+      method: oauth2-delegated
+      setupMode: platform-prompt
+      grantedBy: buyer
+      scopes:
+        - analytics readonly
+        - search console readonly
+      validation:
+        test: google-property-access-check
+        expected: GA4 property and Search Console site can be queried
+      fallback: service-account
+      revocation: Revoke Google OAuth app access or remove service account
+      missingImpact: Day-7 and Day-30 performance scoring is incomplete
+    - id: n8n-or-make
+      service: n8n or Make.com
+      required: true
+      method: connection-prompt
+      setupMode: platform-prompt
+      grantedBy: buyer
+      scopes:
+        - workflow import
+        - workflow execute
+        - credential prompts
+      validation:
+        test: workflow-template-import-check
+        expected: Workflow template imports and required credential prompts appear
+      fallback: manual-fallback
+      revocation: Delete workflow credentials and revoke connected apps
+      missingImpact: One-click installation and workflow execution cannot run
 tags:
   - marketing
   - content
@@ -315,6 +462,9 @@ fileManifest:
   - path: README.md
     role: bundle overview and how to use
     description: Quickstart, install, and conformance status
+  - path: ../docs/operations/kit-auth-standard.md
+    role: standard
+    description: kit-auth/1.0 connector auth contract for one-click and agentic installs
   - path: examples/canary-test-asset.md
     role: example
     description: Worked example of the 10-step canary verification run, derived from MKT-06-Canary-Verification-Runbook.md
@@ -342,6 +492,9 @@ fileManifest:
   - path: assets/url-brand-voice-notes.md
     role: asset
     description: URC brand voice and tone notes used for drafting and pre-screening
+  - path: assets/agent-versions.md
+    role: asset
+    description: Version ledger for MKT-06 agent prompts and harness contracts
   - path: src/canary/run-canary.mjs
     role: source
     description: Canary verification driver — pulls evidence across Notion/Jira/Klaviyo/GA4/HubSpot and writes MKT-06-Canary-Evidence-Log.csv
@@ -441,6 +594,13 @@ failures:
     scope: general
 
 ---
+
+## Change Log
+
+| Date | Change ID | Version | Type | Summary | Author |
+| --- | --- | --- | --- | --- | --- |
+| 2026-05-07 | CC-2026-05-07-001 | 1.0.0 | control | Added visible change-control register, kit changelog section, agent version ledger, and validation script. | codex |
+| 2026-05-07 | CC-2026-05-07-003 | 1.0.0 | auth-standard | Added kit-auth/1.0 policy and connector auth matrix for one-click and agentic installation. | codex |
 
 ## Goal
 

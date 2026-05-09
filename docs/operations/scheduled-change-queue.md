@@ -1,0 +1,47 @@
+# Scheduled Change Queue
+
+Date started: 2026-05-07
+
+## Purpose
+
+This queue gives planned changes a place to wait without slowing down urgent
+workflow testing, certification, packaging, and market release.
+
+## Priority Rule
+
+Every hand on deck stays focused on:
+
+1. testing workflows
+2. certifying workflows
+3. packaging workflows
+4. getting them to market
+
+Changes that do not directly support that path should be scheduled, not fired
+immediately.
+
+## Lanes
+
+| Lane | Use For | Rule |
+| --- | --- | --- |
+| Fast Lane | Fixes that unblock testing, certification, packaging, or release | Do the work, then log it before the session ends |
+| Scheduled | Useful improvements that can wait | Add a row here before implementation |
+| Parked | Interesting but distracting ideas | Capture only the minimum; revisit after release work |
+
+## Queue
+
+| Date Added | Change ID | Lane | Area | Proposed Change | Reason | Target Window | Owner | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-07 | CC-2026-05-07-002 | Fast Lane | Operations / Compliance | Add log distribution rule and scheduled-change queue. | Needed to stop scattered audit files and surprise edits from delaying workflow certification. | 2026-05-07 | codex | Active |
+| 2026-05-07 | CC-2026-05-07-003 | Fast Lane | Kit / Auth / Packaging | Add flexible kit auth standard and MKT-06 connector matrix. | Required to support one-click and agentic installs without making buyers manually chase API keys. | 2026-05-07 | codex | Active |
+| 2026-05-07 | CC-2026-05-07-004 | Fast Lane | Kit Standard | Patch canonical `Journey_Kit.md` with `kit-auth/1.0`. | Needed because `Journey_Kit.md` is the actual kit standard source of truth. | 2026-05-07 | codex | Active |
+| 2026-05-09 | CC-2026-05-09-001 | Fast Lane | Operations / Automation | Document Node.js LTS change and n8n npm repair. | n8n is part of the active workflow testing environment; restoring it directly unblocked certification and packaging work. | 2026-05-09 | codex + operator | Active |
+
+## Intake Checklist
+
+Before implementing a non-urgent change:
+
+- [ ] Does this directly unblock workflow testing, certification, packaging, or release?
+- [ ] Does it reduce tool cost or manual drag?
+- [ ] Does it preserve Microsoft 365 as the operating backbone?
+- [ ] Does it avoid adding a paid tool unless the time savings are obvious?
+- [ ] Is there a clear rollback or superseded path?
