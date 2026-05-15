@@ -62,6 +62,21 @@ openclaw agent --session-id test --message "Say hello" --local
 But the assistant response path still needs model/runtime tuning before it is
 operational.
 
+## 2026-05-15 Reboot Update
+
+After the outage/reboot, the OpenClaw browser dashboard opened at:
+
+`http://127.0.0.1:18789/overview`
+
+The first orientation attempt using a paragraph that pointed to `MACHINE.md`
+was misunderstood. Use the shorter, stricter orientation prompt in:
+
+`docs/operations/openclaw-agent-orientation-2026-05-15.md`
+
+The next OpenClaw test should ask only for an orientation proof or staging
+recommendation. Do not ask OpenClaw to edit, stage, commit, push, or delete
+files until it has proven it can read the machine and repo context correctly.
+
 ## Important Cleanup Note
 
 Do not delete `C:\Users\thebo\.ollama\models` yet.
@@ -77,4 +92,6 @@ reclaim roughly 24 GB.
 - [ ] Confirm OpenClaw gateway health after reboot.
 - [ ] Tune OpenClaw for a lightweight local model profile or attach a cloud/API model.
 - [ ] Run a successful `openclaw agent` smoke test.
+- [ ] Run the 2026-05-15 orientation prompt and confirm it identifies the
+      machine context, repo context, staging candidates, and no-stage files.
 - [ ] Remove the old C: Ollama model store only after E: usage is verified.

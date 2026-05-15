@@ -26,6 +26,9 @@ src/
   automation/jira-status-router.mjs      # Jira status → Teams/GitHub/Klaviyo
   automation/seven-point-scorer.mjs      # Day-7 / Day-30 scoring
   agents/drafting-agent.md               # Prompt + harness contract
+n8n/
+  mkt-06-content-creation-dissemination.workflow.json
+                                           # Importable n8n v1 template with safe checkpoints and first HubSpot read node
 ```
 
 ## Conformance status
@@ -49,15 +52,22 @@ This bundle targets **Standard** conformance per `Journey_kit.md` v1.0:
 
 - [ ] `src/` files are spec stubs — replace with tested source from existing Make.com scenarios, Zapier zaps, and AI-agent prompts
 - [ ] `verification` command (`node src/canary/run-canary.mjs`) needs the real implementation; current stub documents the contract only
+- [ ] n8n template imports and activates; first read-only HubSpot service node is wired after Step 7 and validated against the local self-hosted n8n instance
 - [ ] Atlassian domain typo (`atlasian.net` → `atlassian.net`) must be fixed before the Jira prerequisite check passes
 - [ ] Klaviyo prerequisite check requires the named lists/templates to be provisioned
 
 ## How to use
 
 1. Validate the manifest against the kit/1.0 schema: `npx @agent-kit/schema validate kit.md`
-2. Run the canary: `node src/canary/run-canary.mjs --label internal-verification --date $(date +%F)`
-3. Capture the 10-checkpoint evidence chain to `MKT-06-Canary-Evidence-Log.csv`
-4. Pass / Pass-with-Workarounds → promote MKT-06 to Active in `../../Master Workflow Index.md`
+2. Import the n8n template: `n8n/mkt-06-content-creation-dissemination.workflow.json`
+3. Run the canary: `node src/canary/run-canary.mjs --label internal-verification --date $(date +%F)`
+4. Capture the 10-checkpoint evidence chain to `MKT-06-Canary-Evidence-Log.csv`
+5. Pass / Pass-with-Workarounds → promote MKT-06 to Active in `../../Master Workflow Index.md`
+
+## n8n live-node status
+
+- HubSpot: read-only attribution check wired after `09 Step 7 Tracker Placeholder`; local credential `MKT-06 HubSpot Service Key`; activation validated in n8n workflow `swOyb5rDcWKYIArS`; webhook harness execution `11` completed successfully with zero returned contact items.
+- Remaining services: Notion, Jira/Confluence, Microsoft 365, Klaviyo, GitHub, GA4, YouTube, and GoHighLevel still need one-at-a-time wiring and read/write safety tests.
 
 ## Pattern for replication
 

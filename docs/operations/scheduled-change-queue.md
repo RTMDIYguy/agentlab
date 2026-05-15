@@ -37,6 +37,7 @@ immediately.
 | 2026-05-09 | CC-2026-05-09-001 | Fast Lane | Operations / Automation | Document Node.js LTS change and n8n npm repair. | n8n is part of the active workflow testing environment; restoring it directly unblocked certification and packaging work. | 2026-05-09 | codex + operator | Active |
 | 2026-05-09 | CC-2026-05-09-002 | Fast Lane | Kit / Testing | Take MKT-06 into a controlled testing environment and run the first canary viability test. | MKT-06 is the first workflow intended for market and must prove install/run/evidence viability before packaging claims expand. | Next MKT-06 work session | URC + codex | Active |
 | 2026-05-10 | CC-2026-05-10-001 | Fast Lane | Operations / Automation | Reclaim E: for AI storage and move Ollama/OpenClaw toward a usable local setup. | Local AI tooling supports workflow testing and reduces pressure on C: while keeping low-cost model options available. | 2026-05-10, follow-up after reboot | codex + operator | Active |
+| 2026-05-15 | CC-2026-05-15-001 | Fast Lane | Operations / Packaging / Agent | Package active workflow docs for GitHub resilience and give OpenClaw a constrained orientation prompt. | The power outage showed that local-only access is an operational risk; OpenClaw also needs exact file-based instructions before it can help safely. | 2026-05-15 | codex + operator | Active |
 
 ## Intake Checklist
 

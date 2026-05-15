@@ -1,0 +1,11 @@
+id,name,completed,skipped,evidenceUrl,fallback,notes
+1,notion_planning_item,false,true,,Manual capture — TODO,
+2,jira_ticket,false,true,,Manual capture — TODO,
+3,source_draft,false,true,,Manual capture — TODO,
+4,github_artifact,false,true,,Manual capture — TODO,
+5,editorial_approval,false,true,,Manual capture — TODO,
+6,seo_complete,false,true,,Manual capture — TODO,
+7,adaptation,false,true,,Manual capture — TODO,
+8,klaviyo_preview,false,true,,Manual capture — TODO,
+9,step7_tracker_row,false,true,,Manual capture — TODO,
+10,final_decision,true,false,,,Auto-classified by run-canary.mjs spec stub. Required-fail count: 0.

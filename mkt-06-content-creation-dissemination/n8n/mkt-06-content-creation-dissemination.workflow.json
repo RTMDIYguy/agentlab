@@ -1,0 +1,437 @@
+{
+  "name": "MKT-06 - Content Creation & Dissemination",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "7b7a31c1-6c42-4e48-b2ea-893fe22ac801",
+      "name": "Manual Canary Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "formTitle": "MKT-06 Content Brief Intake",
+        "formDescription": "Internal test intake for MKT-06 content creation and dissemination.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Title",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Slug",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Primary Keyword",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Target Persona",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Channel Targets",
+              "placeholder": "blog,email,linkedin,instagram",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Publish Date",
+              "fieldType": "date",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Internal Test Only",
+              "fieldType": "checkbox",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "155b6c76-ae0a-43b9-8eb0-bb29285a4b90",
+      "name": "Form Brief Intake",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -900,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# MKT-06 - Content Creation & Dissemination\n\nSafe v1 n8n template converted from the repo kit. This workflow uses internal-test defaults and placeholder handoff nodes. Wire service credentials only after each checkpoint has a validation test and fallback path.",
+        "height": 280,
+        "width": 420,
+        "color": 5
+      },
+      "id": "9c668791-42c5-4fc8-b623-6fdf51f94117",
+      "name": "Workflow Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -960,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"workflow_id\": \"MKT-06\",\n  \"workflow_name\": \"Content Creation & Dissemination\",\n  \"run_mode\": \"internal_canary\",\n  \"canary_id\": \"WF6-CANARY-LOCAL\",\n  \"status\": \"intake_received\",\n  \"brief\": {\n    \"title\": \"WF6 Canary Test - Internal Verification\",\n    \"slug\": \"wf6-canary-test-internal-verification\",\n    \"primary_keyword\": \"ai native content engine\",\n    \"target_persona\": \"Founder/operator validating URC workflow packaging\",\n    \"channel_targets\": [\"blog\", \"email\", \"linkedin\", \"instagram\"],\n    \"content_format\": \"Blog\",\n    \"publish_date\": \"2026-05-12\",\n    \"internal_test_only\": true\n  },\n  \"safety\": {\n    \"allow_live_email_send\": false,\n    \"allow_live_sms_send\": false,\n    \"allow_external_publish\": false,\n    \"requires_human_approval_before_distribution\": true\n  }\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "40db0c42-c721-40c5-a362-02f8af9daa08",
+      "name": "Normalize Content Brief",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -620,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"checkpoint\": \"01_notion_planning_item\",\n  \"system_of_record\": \"Notion Content Calendar\",\n  \"status\": \"placeholder_ready\",\n  \"required_evidence\": [\"Notion page URL\", \"owner\", \"publish date\", \"channel targets\"],\n  \"next_live_node\": \"Notion: create or update content calendar item\",\n  \"manual_fallback\": \"Create the Notion row manually using assets/notion-content-calendar-schema.md\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "c3901c60-f3d0-44b1-8d69-e257d34cc40a",
+      "name": "01 Planning Item Placeholder",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -360,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"checkpoint\": \"02_jira_ticket\",\n  \"system_of_record\": \"Jira\",\n  \"status\": \"placeholder_ready\",\n  \"required_statuses\": [\"To Do\", \"In Progress\", \"In Review\", \"Approved\", \"SEO Complete\", \"Adaptation Complete\", \"Published\"],\n  \"next_live_node\": \"Jira: create issue and update transitions\",\n  \"manual_fallback\": \"Create a Jira ticket manually and capture ticket URL plus status history\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "a81d44b3-8ad5-447c-b862-7316c693bd1d",
+      "name": "02 Jira Ticket Placeholder",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -100,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"checkpoint\": \"03_source_draft\",\n  \"system_of_record\": \"Google Docs or OneDrive\",\n  \"status\": \"placeholder_ready\",\n  \"required_evidence\": [\"draft URL or file path\", \"linked Jira ticket\", \"linked Notion item\"],\n  \"next_live_node\": \"Microsoft 365 or Google Docs: create draft from approved brief\",\n  \"manual_fallback\": \"Create the draft in OneDrive/Word and paste the link into the evidence log\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "e24158b6-19e6-44db-909a-34afe483a2fd",
+      "name": "03 Source Draft Placeholder",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"checkpoint\": \"04_github_artifact\",\n  \"system_of_record\": \"GitHub content repo\",\n  \"status\": \"placeholder_ready\",\n  \"branch_pattern\": \"content/{ticket-id}/{slug}\",\n  \"next_live_node\": \"GitHub: create branch and commit content artifact\",\n  \"manual_fallback\": \"Commit or attach the artifact manually and capture branch, commit SHA, or PR URL\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "5c077bcc-9d86-4047-8518-cdc0288da8bd",
+      "name": "04 GitHub Artifact Placeholder",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        420,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"checkpoint\": \"05_editorial_approval\",\n  \"system_of_record\": \"Teams or Notion comments\",\n  \"status\": \"human_gate_required\",\n  \"max_revision_cycles\": 2,\n  \"next_live_node\": \"Teams: request editorial review and capture approval\",\n  \"manual_fallback\": \"Record reviewer, timestamp, and approval outcome in the evidence log\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "b0f3a9e9-61ef-48f3-910e-f86662d3628a",
+      "name": "05 Editorial Gate Placeholder",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        680,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"checkpoint\": \"06_seo_complete\",\n  \"system_of_record\": \"Confluence or Notion SEO report\",\n  \"status\": \"placeholder_ready\",\n  \"onpage_seo_score_target\": 85,\n  \"next_live_node\": \"SEO agent or checklist: generate optimization report\",\n  \"manual_fallback\": \"Run the SEO checklist manually and capture score plus report URL\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "3a60632e-25e2-4fb0-8d5f-4d3e027b234d",
+      "name": "06 SEO Complete Placeholder",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        940,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"checkpoint\": \"07_adaptation\",\n  \"system_of_record\": \"Drive, OneDrive, or GitHub adaptations folder\",\n  \"status\": \"placeholder_ready\",\n  \"minimum_channel_adaptations\": 4,\n  \"preferred_canary_variants\": [\"email\", \"linkedin\"],\n  \"next_live_node\": \"AI adaptation agent: create channel-specific assets\",\n  \"manual_fallback\": \"Create at least one email variant and one social variant manually\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "2ec4033e-41f9-4178-8763-c852ec196a58",
+      "name": "07 Adaptation Placeholder",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"checkpoint\": \"08_klaviyo_preview\",\n  \"system_of_record\": \"Klaviyo\",\n  \"status\": \"distribution_hold\",\n  \"preview_list_id\": \"XbByas\",\n  \"allow_live_send\": false,\n  \"next_live_node\": \"Klaviyo: create preview campaign only\",\n  \"manual_fallback\": \"Create a Klaviyo preview or screenshot draft campaign before any live send\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "86eba038-9292-441c-b91f-c668580b2a4e",
+      "name": "08 Distribution Preview Placeholder",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1460,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"checkpoint\": \"09_step7_tracker_row\",\n  \"system_of_record\": \"Notion Content Performance Tracker\",\n  \"status\": \"placeholder_ready\",\n  \"review_offsets_days\": [7, 30],\n  \"scorecard\": \"assets/seven-point-scorecard.md\",\n  \"next_live_node\": \"Notion: create performance tracker row and schedule Day-7/Day-30 checks\",\n  \"manual_fallback\": \"Create the tracker row manually and document any missing metrics\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "f6910eea-b0b6-42a2-b94a-7f4e576562e1",
+      "name": "09 Step 7 Tracker Placeholder",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1720,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"checkpoint\": \"10_final_decision\",\n  \"system_of_record\": \"MKT-06 canary evidence log\",\n  \"status\": \"ready_for_review\",\n  \"allowed_decisions\": [\"Pass\", \"Pass with Manual Workarounds\", \"Fail\"],\n  \"go_no_go_required_evidence\": [\"Jira proof\", \"draft proof\", \"distribution proof\", \"Step 7 tracking proof\"],\n  \"recommended_decision_for_template_run\": \"Pass with Manual Workarounds\",\n  \"next_step\": \"Replace placeholders with live n8n service nodes one checkpoint at a time\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "bfa2960b-f07e-40f3-ba92-8be41421f8e9",
+      "name": "10 Final Decision Placeholder",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1980,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "resource": "contact",
+        "operation": "getRecentlyCreatedUpdated",
+        "returnAll": false,
+        "limit": 1,
+        "additionalFields": {}
+      },
+      "id": "e2fd6cb9-a94a-4f5e-b95d-fd24ed79d154",
+      "name": "09A HubSpot Attribution Read Check",
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        1900,
+        540
+      ],
+      "credentials": {
+        "hubspotAppToken": {
+          "id": "B21tckPSe9yki6YK",
+          "name": "MKT-06 HubSpot Service Key"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Canary Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Content Brief",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form Brief Intake": {
+      "main": [
+        [
+          {
+            "node": "Normalize Content Brief",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Content Brief": {
+      "main": [
+        [
+          {
+            "node": "01 Planning Item Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "01 Planning Item Placeholder": {
+      "main": [
+        [
+          {
+            "node": "02 Jira Ticket Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "02 Jira Ticket Placeholder": {
+      "main": [
+        [
+          {
+            "node": "03 Source Draft Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "03 Source Draft Placeholder": {
+      "main": [
+        [
+          {
+            "node": "04 GitHub Artifact Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "04 GitHub Artifact Placeholder": {
+      "main": [
+        [
+          {
+            "node": "05 Editorial Gate Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "05 Editorial Gate Placeholder": {
+      "main": [
+        [
+          {
+            "node": "06 SEO Complete Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "06 SEO Complete Placeholder": {
+      "main": [
+        [
+          {
+            "node": "07 Adaptation Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "07 Adaptation Placeholder": {
+      "main": [
+        [
+          {
+            "node": "08 Distribution Preview Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "08 Distribution Preview Placeholder": {
+      "main": [
+        [
+          {
+            "node": "09 Step 7 Tracker Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "09 Step 7 Tracker Placeholder": {
+      "main": [
+        [
+          {
+            "node": "09A HubSpot Attribution Read Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "09A HubSpot Attribution Read Check": {
+      "main": [
+        [
+          {
+            "node": "10 Final Decision Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "source": "mkt-06-content-creation-dissemination/kit.md"
+  },
+  "tags": []
+}
