@@ -1,0 +1,88 @@
+{
+  "name": "MKT03: Assessment Scoring & PDF (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "typeform:watchResponses",
+      "version": 1,
+      "parameters": {
+        "formId": "YOUR_FORM_ID"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "docraptor:createDocument",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "document_content": "<h1>Diagnostic Results for {{1.answers.firstName}}</h1><p>Your score is {{1.calculated.score}}.</p>",
+        "document_type": "pdf",
+        "test": true
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "gmail:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{1.answers.email}}",
+        "subject": "Your Diagnostic Results",
+        "content": "Hi {{1.answers.firstName}},\n\nAttached is your personalized report.",
+        "attachments": [
+          {
+            "fileName": "Results.pdf",
+            "data": "{{2.data}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "hubspot:createUpdateContact",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "email": "{{1.answers.email}}",
+        "properties": [
+          {
+            "property": "firstname",
+            "value": "{{1.answers.firstName}}"
+          },
+          {
+            "property": "assessment_score",
+            "value": "{{1.calculated.score}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

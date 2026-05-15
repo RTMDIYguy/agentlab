@@ -1,0 +1,81 @@
+{
+  "name": "SALES03: Pipeline Stall & Alert (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "hubspot:searchDeals",
+      "version": 1,
+      "parameters": {
+        "filterGroups": [
+          {
+            "filters": [
+              {
+                "propertyName": "dealstage",
+                "operator": "EQ",
+                "value": "proposal_sent"
+              },
+              {
+                "propertyName": "days_in_stage",
+                "operator": "GTE",
+                "value": "7"
+              }
+            ]
+          }
+        ]
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a sales manager. Analyze this stalled deal and recommend the best intervention strategy (e.g., send value resource, offer discount, call)."
+          },
+          {
+            "role": "user",
+            "content": "Deal: {{1.properties.dealname}}\nValue: {{1.properties.amount}}\nNotes: {{1.properties.recent_notes}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "slack:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "@{{1.properties.deal_owner_slack_handle}}"
+      },
+      "mapper": {
+        "text": "⚠️ *Stalled Deal Alert!* ⚠️\n{{1.properties.dealname}} has been stuck in 'Proposal Sent' for over 7 days.\n\n*AI Recommendation:*\n{{2.choices[0].message.content}}\n\n*Action Required:* Please follow up today."
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

@@ -38,6 +38,7 @@ immediately.
 | 2026-05-09 | CC-2026-05-09-002 | Fast Lane | Kit / Testing | Take MKT-06 into a controlled testing environment and run the first canary viability test. | MKT-06 is the first workflow intended for market and must prove install/run/evidence viability before packaging claims expand. | Next MKT-06 work session | URC + codex | Active |
 | 2026-05-10 | CC-2026-05-10-001 | Fast Lane | Operations / Automation | Reclaim E: for AI storage and move Ollama/OpenClaw toward a usable local setup. | Local AI tooling supports workflow testing and reduces pressure on C: while keeping low-cost model options available. | 2026-05-10, follow-up after reboot | codex + operator | Active |
 | 2026-05-15 | CC-2026-05-15-001 | Fast Lane | Operations / Packaging / Agent | Package active workflow docs for GitHub resilience and give OpenClaw a constrained orientation prompt. | The power outage showed that local-only access is an operational risk; OpenClaw also needs exact file-based instructions before it can help safely. | 2026-05-15 | codex + operator | Active |
+| 2026-05-15 | CC-2026-05-15-002 | Fast Lane | Workflow Packaging / Marketing | Import the 45-workflow registry and first Marketing workflow source batch into repo-native folders. | The repo needs online-readable workflow sources before agents can continue packaging without local-only archive access. | 2026-05-15 | codex + operator | Active |
 
 ## Intake Checklist
 

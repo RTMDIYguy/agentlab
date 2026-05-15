@@ -1,0 +1,37 @@
+{
+  "name": "CUL04: Team Roles & Culture (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "typeform:watchResponses",
+      "version": 1,
+      "parameters": {
+        "form": "team-feedback"
+      }
+    },
+    {
+      "id": 2,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4o"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Analyze team feedback for culture alignment and role clarity."
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "module": "notion:createPage",
+      "version": 1,
+      "parameters": {
+        "database_id": "CULTURE_INDEX"
+      }
+    }
+  ]
+}

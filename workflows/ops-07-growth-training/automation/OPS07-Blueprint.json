@@ -1,0 +1,62 @@
+{
+  "name": "OPS07: L&D Approval Workflow (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "typeform:watchResponses",
+      "version": 1,
+      "parameters": {
+        "form_id": "LD_REQUEST_FORM"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "slack:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "management-approvals"
+      },
+      "mapper": {
+        "text": "📚 **New L&D Request from {{1.answers.name}}**\n\n**Resource:** {{1.answers.resource_name}}\n**Cost:** ${{1.answers.cost}}\n**Reason:** {{1.answers.reason}}\n\nPlease review and approve in the tracker: [Link to Tracker]"
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "google-sheets:addRow",
+      "version": 1,
+      "parameters": {
+        "spreadsheet_id": "YOUR_HR_SPREADSHEET_ID",
+        "sheet": "L&D Requests"
+      },
+      "mapper": {
+        "Date": "{{now}}",
+        "Name": "{{1.answers.name}}",
+        "Resource": "{{1.answers.resource_name}}",
+        "Cost": "{{1.answers.cost}}",
+        "Status": "Pending Approval"
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

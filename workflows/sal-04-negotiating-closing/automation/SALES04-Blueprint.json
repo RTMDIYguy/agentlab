@@ -1,0 +1,124 @@
+{
+  "name": "SALES04: Contract Trigger & Follow-Up (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "hubspot:watchDeals",
+      "version": 1,
+      "parameters": {
+        "pipeline": "default",
+        "stage": "verbal_commitment"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "pandadoc:createDocument",
+      "version": 1,
+      "parameters": {
+        "template_uuid": "YOUR_CONTRACT_TEMPLATE_ID"
+      },
+      "mapper": {
+        "name": "Master Services Agreement - {{1.properties.company}}",
+        "recipients": [
+          {
+            "email": "{{1.properties.contact_email}}",
+            "first_name": "{{1.properties.contact_name}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "gmail:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{1.properties.contact_email}}",
+        "subject": "Great chatting! Here are the next steps for {{1.properties.company}}",
+        "content": "Hi {{1.properties.contact_name}},<br><br>Great speaking with you today. I'm really excited that we're moving forward!..."
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "builtin:BasicSleep",
+      "version": 1,
+      "parameters": {
+        "delay": 172800
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "pandadoc:getDocumentStatus",
+      "version": 1,
+      "parameters": {
+        "document_id": "{{2.id}}"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 6,
+      "module": "builtin:Router",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 1500,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 7,
+      "module": "gmail:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{1.properties.contact_email}}",
+        "subject": "Action Required: {{1.properties.company}} Agreement",
+        "content": "Hi {{1.properties.contact_name}},<br><br>Just checking in on the agreement I sent over..."
+      },
+      "metadata": {
+        "designer": {
+          "x": 1800,
+          "y": -150
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}
