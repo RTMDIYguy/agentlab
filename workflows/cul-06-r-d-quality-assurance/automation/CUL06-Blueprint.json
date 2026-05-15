@@ -1,0 +1,37 @@
+{
+  "name": "CUL06: Weekly Operating Rhythm (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "clock:schedule",
+      "version": 1,
+      "parameters": {
+        "schedule": "every_monday"
+      }
+    },
+    {
+      "id": 2,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4o"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Compile weekly KPI metrics and generate a team-wide memo."
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "module": "slack:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "general"
+      }
+    }
+  ]
+}

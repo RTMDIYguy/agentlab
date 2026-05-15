@@ -1,0 +1,84 @@
+{
+  "name": "SALES06: Funding Pipeline Alerts (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "hubspot:watchDeals",
+      "version": 1,
+      "parameters": {
+        "pipeline": "funding_pipeline",
+        "stage": "application_submitted"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "builtin:BasicSleep",
+      "version": 1,
+      "parameters": {
+        "delay": 1209600
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "hubspot:getDeal",
+      "version": 1,
+      "parameters": {
+        "deal_id": "{{1.id}}"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "builtin:Router",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "slack:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "leadership-team"
+      },
+      "mapper": {
+        "text": "⏰ *Funding Follow-Up Reminder!*\nIt's been 14 days since we submitted the application/pitch for {{1.properties.dealname}}.\n\n*Action:* Please send a check-in email to the contact to ensure they received all materials and ask if they need any due diligence docs."
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": -150
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

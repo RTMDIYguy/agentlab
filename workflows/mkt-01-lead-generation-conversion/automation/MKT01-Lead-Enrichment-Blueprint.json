@@ -1,0 +1,110 @@
+{
+  "name": "MKT01: Lead Enrichment & Routing (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "webhook:webhooks",
+      "version": 1,
+      "parameters": {
+        "hook": "YOUR_WEBHOOK_URL"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "apollo:enrichPerson",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "email": "{{1.email}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Evaluate this lead based on enrichment data. Provide a score 1-100."
+          },
+          {
+            "role": "user",
+            "content": "{{2.person}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "hubspot:createUpdateContact",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "email": "{{1.email}}",
+        "properties": [
+          {
+            "property": "firstname",
+            "value": "{{1.firstName}}"
+          },
+          {
+            "property": "company",
+            "value": "{{2.person.organization.name}}"
+          },
+          {
+            "property": "leadscore",
+            "value": "{{3.choices[0].message.content}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "slack:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "sales-alerts"
+      },
+      "mapper": {
+        "text": "🔥 *Hot Lead Alert!*\n*Name:* {{1.firstName}}\n*Company:* {{2.person.organization.name}}\n*Score:* {{3.choices[0].message.content}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 0
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

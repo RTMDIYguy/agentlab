@@ -1,0 +1,93 @@
+{
+  "name": "SALES02: Onboarding Trigger & Setup (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "hubspot:watchDeals",
+      "version": 1,
+      "parameters": {
+        "pipeline": "default",
+        "stage": "closed_won"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "clickup:createFolder",
+      "version": 1,
+      "parameters": {
+        "space_id": "YOUR_CLIENT_SPACE_ID"
+      },
+      "mapper": {
+        "name": "{{1.properties.company}} - Client Portal"
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "clickup:createTaskFromTemplate",
+      "version": 1,
+      "parameters": {
+        "list_id": "{{2.id}}",
+        "template_id": "YOUR_ONBOARDING_TEMPLATE_ID"
+      },
+      "mapper": {
+        "name": "Phase 1: Onboarding for {{1.properties.company}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "gmail:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{1.properties.contact_email}}",
+        "subject": "Welcome to [Agency Name]! Let's get started. 🚀",
+        "content": "Hi {{1.properties.contact_name}},<br><br>It's official! We're thrilled to partner with {{1.properties.company}}... [Insert Full Asset 1 Copy Here]"
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "slack:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "operations-team"
+      },
+      "mapper": {
+        "text": "🎉 *New Client Alert!* {{1.properties.company}} just closed!\nWelcome email sent and ClickUp portal generated. Please prepare for the kickoff call."
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 0
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

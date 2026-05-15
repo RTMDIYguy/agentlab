@@ -1,0 +1,94 @@
+{
+  "name": "MKT02: Nurture Sequence Enrollment (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "hubspot:watchContacts",
+      "version": 1,
+      "parameters": {
+        "property": "lifecyclestage",
+        "value": "marketingqualifiedlead"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "hubspot:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{1.properties.email}}",
+        "subject": "Here's your requested resource",
+        "content": "Hi {{1.properties.firstname}},\n\nWelcome to our nurture sequence. As promised..."
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "builtin:BasicSleep",
+      "version": 1,
+      "parameters": {
+        "delay": 259200
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "hubspot:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{1.properties.email}}",
+        "subject": "The framework for success",
+        "content": "Hi {{1.properties.firstname}},\n\nHere is the framework we discussed..."
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "hubspot:updateContact",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "email": "{{1.properties.email}}",
+        "properties": [
+          {
+            "property": "nurture_status",
+            "value": "Active - Email 2 Sent"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 0
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

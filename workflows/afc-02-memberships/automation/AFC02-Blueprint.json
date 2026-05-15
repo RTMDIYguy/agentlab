@@ -1,0 +1,37 @@
+{
+  "name": "AFC02: Memberships (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "hubspot:watchContacts",
+      "version": 1,
+      "parameters": {
+        "property": "membership_tier"
+      }
+    },
+    {
+      "id": 2,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4o"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Generate a customized onboarding packet for the new membership tier."
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "module": "slack:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "vip-members"
+      }
+    }
+  ]
+}

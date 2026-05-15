@@ -1,0 +1,86 @@
+{
+  "name": "SALES05: Passive Income Funnel (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gumroad:watchSales",
+      "version": 1,
+      "parameters": {
+        "product_id": "YOUR_PRODUCT_ID"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "hubspot:createUpdateContact",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "email": "{{1.email}}",
+        "properties": [
+          {
+            "property": "firstname",
+            "value": "{{1.first_name}}"
+          },
+          {
+            "property": "lifecyclestage",
+            "value": "customer"
+          },
+          {
+            "property": "purchased_products",
+            "value": "{{1.product_name}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "hubspot:addContactToList",
+      "version": 1,
+      "parameters": {
+        "list_id": "BUYERS_LIST_ID"
+      },
+      "mapper": {
+        "email": "{{1.email}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "slack:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "passive-income-wins"
+      },
+      "mapper": {
+        "text": "💰 *Cha-Ching! New Digital Product Sale!*\n{{1.first_name}} just bought {{1.product_name}} for ${{1.price}}."
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "name": "MKT04: Review Request & Referral Trigger",
+  "flow": [
+    {
+      "id": 1,
+      "module": "hubspot:watchCrmObjects",
+      "version": 1,
+      "parameters": {
+        "type": "deal",
+        "property": "dealstage",
+        "operator": "EQ",
+        "value": "closedwon"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "builtin:BasicSleep",
+      "version": 1,
+      "parameters": {
+        "delay": 259200
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "hubspot:searchCrmObjects",
+      "version": 1,
+      "parameters": {
+        "type": "contact"
+      },
+      "mapper": {
+        "filters": [
+          {
+            "propertyName": "associatedcompanyid",
+            "operator": "EQ",
+            "value": "{{1.properties.associatedcompanyid}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "hubspot:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{3.properties.email}}",
+        "subject": "How did we do?",
+        "content": "Hi {{3.properties.firstname}},\n\nIt's been a few days since we closed our deal. Could you leave us a review?\n\n[Link]"
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

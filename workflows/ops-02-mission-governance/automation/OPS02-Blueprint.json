@@ -1,0 +1,37 @@
+{
+  "name": "OPS02: Knowledge Base & SOPs (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "github:watchCommits",
+      "version": 1,
+      "parameters": {
+        "repo": "agency-deepened"
+      }
+    },
+    {
+      "id": 2,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4o"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Generate a summary of the SOP updates and notify the team."
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "module": "notion:createPage",
+      "version": 1,
+      "parameters": {
+        "database_id": "KNOWLEDGE_BASE"
+      }
+    }
+  ]
+}

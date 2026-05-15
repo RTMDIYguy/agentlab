@@ -1,0 +1,87 @@
+{
+  "name": "OPS08: Automated NPS Collection (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "clickup:watchTasks",
+      "version": 1,
+      "parameters": {
+        "list_id": "YOUR_PROJECTS_LIST_ID"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "builtin:Filter",
+      "version": 1,
+      "parameters": {
+        "condition": "{{1.status.status}} = 'Completed'"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "gmail:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{1.custom_fields.Client_Email}}",
+        "subject": "How did we do on {{1.name}}?",
+        "content": "Hi {{1.custom_fields.Client_Name}},<br><br>Your project is complete! Could you take 60 seconds to let us know how we did? <br><br><a href='YOUR_SURVEY_LINK'>Click here for a 3-question survey.</a><br><br>Thank you!"
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "typeform:watchResponses",
+      "version": 1,
+      "parameters": {
+        "form_id": "NPS_SURVEY_FORM"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 300
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "slack:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "client-wins-and-feedback"
+      },
+      "mapper": {
+        "text": "📊 **New Client Feedback!**\n\n**Client:** {{4.answers.client_name}}\n**Score:** {{4.answers.score}}/10\n**Feedback:** \"{{4.answers.feedback}}\""
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 300
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

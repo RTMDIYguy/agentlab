@@ -1,0 +1,80 @@
+{
+  "name": "MKT06: Content Distribution (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "rss:watchRSSFeed",
+      "version": 1,
+      "parameters": {
+        "url": "https://yourwebsite.com/feed"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a social media manager. Write a punchy, engaging LinkedIn post summarizing this new blog article. Do not use hashtags. Include the link at the end."
+          },
+          {
+            "role": "user",
+            "content": "Title: {{1.title}}\nLink: {{1.link}}\nDescription: {{1.description}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "linkedin:createPost",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "text": "{{2.choices[0].message.content}}",
+        "visibility": "PUBLIC"
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": -150
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "twitter:createTweet",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "text": "New post! {{1.title}}\n\n{{1.link}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 150
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}
