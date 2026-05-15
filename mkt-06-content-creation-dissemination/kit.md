@@ -21,6 +21,18 @@ changeLog:
     type: auth-standard
     summary: Added kit-auth/1.0 policy and connector auth matrix for one-click and agentic installation.
     author: codex
+  - date: 2026-05-12
+    changeId: CC-2026-05-12-001
+    version: 1.0.0
+    type: n8n-template
+    summary: Added importable n8n v1 workflow template with safe canary checkpoints and placeholder live-service handoffs.
+    author: codex
+  - date: 2026-05-13
+    changeId: CC-2026-05-13-001
+    version: 1.0.0
+    type: n8n-live-node
+    summary: Wired first read-only HubSpot attribution check node into the MKT-06 n8n template and validated it in the local self-hosted n8n instance.
+    author: codex
 authStandard: kit-auth/1.0
 authPolicy:
   noPlaintextSecrets: true
@@ -510,6 +522,9 @@ fileManifest:
   - path: src/agents/drafting-agent.md
     role: source
     description: Prompt and harness contract for the AI Drafting Agent (Claude Code-compatible)
+  - path: n8n/mkt-06-content-creation-dissemination.workflow.json
+    role: n8n-template
+    description: Importable n8n v1 workflow template for MKT-06 with manual/form intake, safe canary defaults, placeholder checkpoint handoffs, and the first read-only HubSpot attribution check
 
 selfContained: false
 
@@ -601,6 +616,8 @@ failures:
 | --- | --- | --- | --- | --- | --- |
 | 2026-05-07 | CC-2026-05-07-001 | 1.0.0 | control | Added visible change-control register, kit changelog section, agent version ledger, and validation script. | codex |
 | 2026-05-07 | CC-2026-05-07-003 | 1.0.0 | auth-standard | Added kit-auth/1.0 policy and connector auth matrix for one-click and agentic installation. | codex |
+| 2026-05-12 | CC-2026-05-12-001 | 1.0.0 | n8n-template | Added importable n8n v1 workflow template with safe canary checkpoints and placeholder live-service handoffs. | codex |
+| 2026-05-13 | CC-2026-05-13-001 | 1.0.0 | n8n-live-node | Wired first read-only HubSpot attribution check node into the MKT-06 n8n template and validated it in the local self-hosted n8n instance. | codex |
 
 ## Goal
 
