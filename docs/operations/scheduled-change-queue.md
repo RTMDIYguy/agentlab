@@ -39,6 +39,7 @@ immediately.
 | 2026-05-10 | CC-2026-05-10-001 | Fast Lane | Operations / Automation | Reclaim E: for AI storage and move Ollama/OpenClaw toward a usable local setup. | Local AI tooling supports workflow testing and reduces pressure on C: while keeping low-cost model options available. | 2026-05-10, follow-up after reboot | codex + operator | Active |
 | 2026-05-15 | CC-2026-05-15-001 | Fast Lane | Operations / Packaging / Agent | Package active workflow docs for GitHub resilience and give OpenClaw a constrained orientation prompt. | The power outage showed that local-only access is an operational risk; OpenClaw also needs exact file-based instructions before it can help safely. | 2026-05-15 | codex + operator | Active |
 | 2026-05-15 | CC-2026-05-15-002 | Fast Lane | Workflow Packaging / Marketing | Import the 45-workflow registry and first Marketing workflow source batch into repo-native folders. | The repo needs online-readable workflow sources before agents can continue packaging without local-only archive access. | 2026-05-15 | codex + operator | Active |
+| 2026-05-16 | CC-2026-05-16-001 | Fast Lane | Documentation / Workflow Packaging | Update root README to align with the workflow registry, source-inventory docs, and active package location. | Recent import commits changed user-facing navigation and packaging context, but the root repo entrypoint still reflected an early project state. | 2026-05-16 | oz | Active |
 
 ## Intake Checklist
 
