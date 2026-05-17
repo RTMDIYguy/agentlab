@@ -1,0 +1,116 @@
+{
+  "name": "MKT08: Social Media Scheduling & Engagement Monitor (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "google-sheets:watchRows",
+      "version": 1,
+      "parameters": {
+        "spreadsheetId": "YOUR_CONTENT_CALENDAR_ID",
+        "sheetName": "Queue"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a social media manager for a professional consulting brand. Given a content brief and target platform, write a post optimized for that platform. LinkedIn: professional, no hashtags, max 1300 characters. Twitter/X: punchy, max 280 characters. Include a call-to-action. Generate an idempotency key as a SHA-256 of the post text."
+          },
+          {
+            "role": "user",
+            "content": "Platform: {{1.platform}}\nBrief: {{1.contentBrief}}\nCTA: {{1.cta}}\nLink: {{1.link}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "builtin:Router",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "linkedin:createPost",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "text": "{{2.choices[0].message.content}}",
+        "visibility": "PUBLIC"
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": -150
+        },
+        "note": "Route: platform = LinkedIn"
+      }
+    },
+    {
+      "id": 5,
+      "module": "twitter:createTweet",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "text": "{{2.choices[0].message.content}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 150
+        },
+        "note": "Route: platform = Twitter"
+      }
+    },
+    {
+      "id": 6,
+      "module": "google-sheets:updateRow",
+      "version": 1,
+      "parameters": {
+        "spreadsheetId": "YOUR_CONTENT_CALENDAR_ID"
+      },
+      "mapper": {
+        "values": {
+          "status": "Published",
+          "publishedDate": "{{formatDate(now; 'YYYY-MM-DD HH:mm')}}"
+        }
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 0
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

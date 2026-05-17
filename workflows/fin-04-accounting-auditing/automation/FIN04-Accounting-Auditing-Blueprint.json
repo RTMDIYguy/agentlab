@@ -1,0 +1,128 @@
+{
+  "name": "FIN04: Month-End Close & Reconciliation (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "schedule:trigger",
+      "version": 1,
+      "parameters": {
+        "interval": "1d",
+        "time": "07:00",
+        "note": "Active from the 25th through the 5th of next month"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "quickbooks:getUncategorizedTransactions",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": -150
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "quickbooks:getBankReconciliation",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "period": "currentMonth"
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 150
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are an accounting close specialist. Given uncategorized transaction count and bank reconciliation status, determine month-end close readiness. Rules: uncategorized count must be 0 to proceed; reconciliation difference must be $0.00. Return JSON: {closeReady: boolean, uncategorizedCount: number, reconDifference: number, blockers: string[], nextAction: string}."
+          },
+          {
+            "role": "user",
+            "content": "Uncategorized: {{2.count}}\nReconciliation Difference: {{3.difference}}\nDate: {{formatDate(now; 'YYYY-MM-DD')}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "builtin:Router",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 6,
+      "module": "microsoft-teams:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "finance-alerts"
+      },
+      "mapper": {
+        "text": "⚠️ *Month-End Close Blockers*\n*Uncategorized:* {{4.choices[0].message.content.uncategorizedCount}}\n*Recon Difference:* ${{4.choices[0].message.content.reconDifference}}\n*Next Action:* {{4.choices[0].message.content.nextAction}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": -150
+        },
+        "note": "Route: closeReady == false"
+      }
+    },
+    {
+      "id": 7,
+      "module": "email:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "cpa@example.com",
+        "subject": "Month-End Close Complete — Financial Health Pack Ready",
+        "body": "The month-end close for {{formatDate(now; 'MMMM YYYY')}} is complete. P&L and Balance Sheet are available in the Finance Department folder."
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 150
+        },
+        "note": "Route: closeReady == true"
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

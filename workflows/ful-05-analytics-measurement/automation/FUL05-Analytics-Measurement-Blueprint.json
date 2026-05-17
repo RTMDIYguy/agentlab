@@ -1,0 +1,120 @@
+{
+  "name": "FUL05: ROI Dashboard Refresh & Client Report (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "schedule:trigger",
+      "version": 1,
+      "parameters": {
+        "interval": "1d",
+        "time": "06:00"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "http:makeRequest",
+      "version": 1,
+      "parameters": {
+        "url": "YOUR_MAKE_EXECUTION_LOG_API",
+        "method": "GET"
+      },
+      "mapper": {
+        "query": {
+          "period": "last30days",
+          "status": "success"
+        }
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        },
+        "note": "Pull execution counts from Make.com API for workflow usage metrics"
+      }
+    },
+    {
+      "id": 3,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are an ROI analyst for a workflow automation consultancy. Given execution log data, calculate: (1) total executions this period, (2) estimated time saved (assume 15 min per manual equivalent), (3) estimated cost saved (time saved * $50/hr), (4) data freshness check — flag if any data source is > 24 hours stale. Write a plain-language summary suitable for a non-technical client. Include a glossary of terms used. Return JSON: {totalExecutions, timeSavedHours, costSaved, dataFreshness, clientSummary, glossary: {term: definition}}."
+          },
+          {
+            "role": "user",
+            "content": "Execution data: {{2.body}}\nBaseline date: {{YOUR_BASELINE_DATE}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "google-sheets:appendRow",
+      "version": 1,
+      "parameters": {
+        "spreadsheetId": "YOUR_FUL05_TRACKER_ID"
+      },
+      "mapper": {
+        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{3.choices[0].message.content.totalExecutions}}", "{{3.choices[0].message.content.timeSavedHours}}", "{{3.choices[0].message.content.costSaved}}"]
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": -150
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "builtin:Router",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 150
+        }
+      }
+    },
+    {
+      "id": 6,
+      "module": "email:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{YOUR_CLIENT_EMAIL}}",
+        "subject": "Monthly ROI Summary — {{formatDate(now; 'MMMM YYYY')}}",
+        "body": "{{3.choices[0].message.content.clientSummary}}\n\nGlossary:\n{{3.choices[0].message.content.glossary}}\n\nWant to walk through this together? Book 15 minutes: {{YOUR_BOOKING_URL}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 150
+        },
+        "note": "Route: monthly (1st of month only)"
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

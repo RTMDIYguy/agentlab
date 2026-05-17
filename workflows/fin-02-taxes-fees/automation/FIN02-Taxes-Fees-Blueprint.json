@@ -1,0 +1,116 @@
+{
+  "name": "FIN02: Tax Deadline & Payment Tracker (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "schedule:trigger",
+      "version": 1,
+      "parameters": {
+        "interval": "1d",
+        "time": "08:00"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "google-sheets:getRows",
+      "version": 1,
+      "parameters": {
+        "spreadsheetId": "YOUR_FIN02_TRACKER_ID",
+        "sheetName": "Deadlines"
+      },
+      "mapper": {
+        "filter": "dueDate <= TODAY + 30"
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a tax compliance assistant. Given upcoming tax deadlines, determine which are within 7 days (URGENT), within 15 days (UPCOMING), or within 30 days (PLANNED). Return JSON array with fields: {obligation, dueDate, status, daysRemaining, estimatedAmount}."
+          },
+          {
+            "role": "user",
+            "content": "Today: {{formatDate(now; 'YYYY-MM-DD')}}\nDeadlines: {{2.rows}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "builtin:Router",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "microsoft-teams:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "finance-alerts"
+      },
+      "mapper": {
+        "text": "🚨 *URGENT Tax Deadline*\n{{3.choices[0].message.content}}\n*Action:* Execute EFTPS/state payment before deadline."
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": -150
+        },
+        "note": "Route: any item status == URGENT"
+      }
+    },
+    {
+      "id": 6,
+      "module": "outlook:createEvent",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "subject": "Tax Payment Due: {{3.choices[0].message.content}}",
+        "reminderMinutes": 1440
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 150
+        },
+        "note": "Route: status == UPCOMING (create calendar reminder)"
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

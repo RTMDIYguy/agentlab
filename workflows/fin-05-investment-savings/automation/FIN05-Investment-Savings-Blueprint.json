@@ -1,0 +1,115 @@
+{
+  "name": "FIN05: Profit Transfer & Reserve Monitor (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "schedule:trigger",
+      "version": 1,
+      "parameters": {
+        "interval": "1d",
+        "time": "08:00",
+        "note": "Primary action on 1st business day; daily monitoring otherwise"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "plaid:getAccountBalances",
+      "version": 1,
+      "parameters": {
+        "accounts": ["operating", "tax", "profit"]
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a financial planning assistant. Given account balances and the monthly fixed costs figure, calculate: (1) operating reserve coverage in months, (2) whether the profit transfer has been executed this month, (3) whether the Plaid connection is healthy. Flag: RESERVE_LOW if coverage < 3 months, TRANSFER_PENDING if no profit transfer yet this month and today is after the 3rd, PLAID_ERROR if any account shows stale data. Return JSON: {reserveMonths: number, transferStatus: string, plaidHealth: string, alerts: string[]}."
+          },
+          {
+            "role": "user",
+            "content": "Balances: {{2.accounts}}\nMonthly Fixed Costs: $8500\nToday: {{formatDate(now; 'YYYY-MM-DD')}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "builtin:Router",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "microsoft-teams:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "finance-alerts"
+      },
+      "mapper": {
+        "text": "💰 *Investment & Savings Alert*\n*Reserve Coverage:* {{3.choices[0].message.content.reserveMonths}} months\n*Transfer Status:* {{3.choices[0].message.content.transferStatus}}\n*Alerts:* {{3.choices[0].message.content.alerts}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": -150
+        },
+        "note": "Route: any alerts present"
+      }
+    },
+    {
+      "id": 6,
+      "module": "google-sheets:appendRow",
+      "version": 1,
+      "parameters": {
+        "spreadsheetId": "YOUR_FIN05_TRACKER_ID"
+      },
+      "mapper": {
+        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{3.choices[0].message.content}}"]
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 150
+        },
+        "note": "Route: always (daily log)"
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "name": "FUL02: Client Health Assessment & Intervention (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "schedule:trigger",
+      "version": 1,
+      "parameters": {
+        "interval": "1w",
+        "day": "Thursday",
+        "time": "09:00"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "google-sheets:getRows",
+      "version": 1,
+      "parameters": {
+        "spreadsheetId": "YOUR_FUL02_DASHBOARD_ID",
+        "sheetName": "ActiveClients"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a client success manager. Given a list of active clients with their last contact date, payment status, and open tickets, assign a health flag: GREEN (contact < 7 days, payment current, 0 open tickets), YELLOW (contact 7-14 days OR 1 open ticket), RED (contact > 14 days OR payment overdue OR > 1 open ticket). For YELLOW/RED clients, draft a proactive check-in message. Return JSON array: [{client, healthFlag, lastContact, daysSinceContact, openTickets, paymentStatus, checkInDraft}]."
+          },
+          {
+            "role": "user",
+            "content": "Clients: {{2.rows}}\nToday: {{formatDate(now; 'YYYY-MM-DD')}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "builtin:Router",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "clickup:createTask",
+      "version": 1,
+      "parameters": {
+        "listId": "YOUR_INTERVENTIONS_LIST_ID"
+      },
+      "mapper": {
+        "name": "🔴 RED Client Intervention: {{3.choices[0].message.content[].client}}",
+        "priority": 1,
+        "dueDate": "{{addDays(now; 1)}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": -200
+        },
+        "note": "Route: healthFlag == RED"
+      }
+    },
+    {
+      "id": 6,
+      "module": "email:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{3.choices[0].message.content[].client.email}}",
+        "subject": "Quick check-in from Uncle Robert Consulting",
+        "body": "{{3.choices[0].message.content[].checkInDraft}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 0
+        },
+        "note": "Route: healthFlag == YELLOW or RED"
+      }
+    },
+    {
+      "id": 7,
+      "module": "google-sheets:updateRow",
+      "version": 1,
+      "parameters": {
+        "spreadsheetId": "YOUR_FUL02_DASHBOARD_ID"
+      },
+      "mapper": {
+        "values": {
+          "healthFlag": "{{3.choices[0].message.content[].healthFlag}}",
+          "lastAssessment": "{{formatDate(now; 'YYYY-MM-DD')}}"
+        }
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 200
+        },
+        "note": "Route: always (update dashboard)"
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}
