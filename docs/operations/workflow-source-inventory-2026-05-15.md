@@ -32,11 +32,11 @@ This import pass mainly stages `urc_internal` source plus `automation_scaffold` 
 | CUL-06 | `workflows/cul-06-r-d-quality-assurance/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
 | CUL-07 | `workflows/cul-07-strategy-planning/` | urc_internal + automation_scaffold | tracker template |
 | CUL-08 | `workflows/cul-08-tech-and-it/` | urc_internal + automation_scaffold | tracker template |
-| FIN-01 | `workflows/fin-01-pricing-expenses/` | urc_internal + automation_scaffold | docx text extraction, tracker template |
-| FIN-02 | `workflows/fin-02-taxes-fees/` | urc_internal + automation_scaffold | docx text extraction, tracker template |
-| FIN-03 | `workflows/fin-03-accounts-receivable-payable/` | urc_internal + automation_scaffold | docx text extraction, tracker template |
-| FIN-04 | `workflows/fin-04-accounting-auditing/` | urc_internal + automation_scaffold | docx text extraction, tracker template |
-| FIN-05 | `workflows/fin-05-investment-savings/` | urc_internal + automation_scaffold | docx text extraction, tracker template |
+| FIN-01 | `workflows/fin-01-pricing-expenses/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
+| FIN-02 | `workflows/fin-02-taxes-fees/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
+| FIN-03 | `workflows/fin-03-accounts-receivable-payable/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
+| FIN-04 | `workflows/fin-04-accounting-auditing/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
+| FIN-05 | `workflows/fin-05-investment-savings/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
 | SAL-01 | `workflows/sal-01-proposals-contracts/` | urc_internal + automation_scaffold | docx text extraction, assets/csv, automation blueprint, tracker template |
 | SAL-02 | `workflows/sal-02-onboarding/` | urc_internal + automation_scaffold | docx text extraction, assets/csv, automation blueprint, tracker template |
 | SAL-03 | `workflows/sal-03-deals-discounts/` | urc_internal + automation_scaffold | docx text extraction, assets/csv, automation blueprint, tracker template |
@@ -49,14 +49,14 @@ This import pass mainly stages `urc_internal` source plus `automation_scaffold` 
 | MKT-04 | `workflows/mkt-04-reviews-referrals/` | urc_internal + automation_scaffold | docx text extraction, assets/csv, automation blueprint, tracker template |
 | MKT-05 | `workflows/mkt-05-outreach-engagement/` | urc_internal + automation_scaffold | docx text extraction, assets/csv, automation blueprint, tracker template |
 | MKT-06 | `workflows/mkt-06-content-creation-dissemination/` | urc_internal + automation_scaffold | docx text extraction, assets/csv, automation blueprint, tracker template |
-| MKT-07 | `workflows/mkt-07-paid-advertising-ppc/` | urc_internal + automation_scaffold | tracker template |
-| MKT-08 | `workflows/mkt-08-social-media-management/` | folder shell only | folder shell only |
+| MKT-07 | `workflows/mkt-07-paid-advertising-ppc/` | urc_internal + automation_scaffold | automation blueprint, tracker template |
+| MKT-08 | `workflows/mkt-08-social-media-management/` | automation_scaffold | automation blueprint |
 | MKT-09 | `workflows/mkt-09-event-webinar-marketing/` | folder shell only | folder shell only |
-| FUL-01 | `workflows/ful-01-display-packaging/` | urc_internal + automation_scaffold | docx text extraction, tracker template |
-| FUL-02 | `workflows/ful-02-client-success/` | urc_internal + automation_scaffold | docx text extraction, tracker template |
-| FUL-03 | `workflows/ful-03-customer-service/` | urc_internal + automation_scaffold | docx text extraction, tracker template |
-| FUL-04 | `workflows/ful-04-feedback-testimonials/` | urc_internal + automation_scaffold | docx text extraction, tracker template |
-| FUL-05 | `workflows/ful-05-analytics-measurement/` | urc_internal + automation_scaffold | docx text extraction, tracker template |
+| FUL-01 | `workflows/ful-01-display-packaging/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
+| FUL-02 | `workflows/ful-02-client-success/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
+| FUL-03 | `workflows/ful-03-customer-service/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
+| FUL-04 | `workflows/ful-04-feedback-testimonials/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
+| FUL-05 | `workflows/ful-05-analytics-measurement/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
 | AFC-01 | `workflows/afc-01-subscriptions/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
 | AFC-02 | `workflows/afc-02-memberships/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
 | AFC-03 | `workflows/afc-03-long-term-contracts/` | urc_internal + automation_scaffold | docx text extraction, automation blueprint, tracker template |
@@ -66,7 +66,8 @@ This import pass mainly stages `urc_internal` source plus `automation_scaffold` 
 
 - MKT-06 remains the certified active package at `mkt-06-content-creation-dissemination/`; the `workflows/mkt-06-*` folder is a source-import mirror for the complete registry.
 - Some departments only had department-level source documents, so those text extractions are repeated in each matching workflow folder until a per-workflow kit is created.
-- MKT-08 and MKT-09 did not have clean matching source artifacts in the first archive pass and are currently folder shells.
+- MKT-08 now has an automation scaffold, but still does not have a clean matching source artifact from the archive pass.
+- MKT-09 did not have a clean matching source artifact or automation blueprint in the archive pass and is currently a folder shell.
 
 ## Automation JSON Inventory
 
@@ -90,6 +91,8 @@ These department `/Automations` JSON files are staged in this import pass.
 | `Marketing Department\Automations\MKT04-Review-Trigger-Blueprint.json` | `workflows\mkt-04-reviews-referrals\automation\MKT04-Review-Trigger-Blueprint.json` |
 | `Marketing Department\Automations\MKT05-Outreach-Response-Blueprint.json` | `workflows\mkt-05-outreach-engagement\automation\MKT05-Outreach-Response-Blueprint.json` |
 | `Marketing Department\Automations\MKT06-Content-Distribution-Blueprint.json` | `workflows\mkt-06-content-creation-dissemination\automation\MKT06-Content-Distribution-Blueprint.json` |
+| `Marketing Department\Automations\MKT07-Paid-Advertising-Blueprint.json` | `workflows\mkt-07-paid-advertising-ppc\automation\MKT07-Paid-Advertising-Blueprint.json` |
+| `Marketing Department\Automations\MKT08-Social-Media-Blueprint.json` | `workflows\mkt-08-social-media-management\automation\MKT08-Social-Media-Blueprint.json` |
 | `operations Department\Automations\OPS01-Blueprint.json` | `workflows\ops-01-vision-purpose\automation\OPS01-Blueprint.json` |
 | `operations Department\Automations\OPS02-Blueprint.json` | `workflows\ops-02-mission-governance\automation\OPS02-Blueprint.json` |
 | `operations Department\Automations\OPS03-Blueprint.json` | `workflows\ops-03-documentation-sop-standards\automation\OPS03-Blueprint.json` |
@@ -104,8 +107,18 @@ These department `/Automations` JSON files are staged in this import pass.
 | `Sales Department\Automations\SALES04-Blueprint.json` | `workflows\sal-04-negotiating-closing\automation\SALES04-Blueprint.json` |
 | `Sales Department\Automations\SALES05-Blueprint.json` | `workflows\sal-05-passive-active-income-streams\automation\SALES05-Blueprint.json` |
 | `Sales Department\Automations\SALES06-Blueprint.json` | `workflows\sal-06-fund-raising\automation\SALES06-Blueprint.json` |
+| `Finance Department\Automations\FIN01-Pricing-Expenses-Blueprint.json` | `workflows\fin-01-pricing-expenses\automation\FIN01-Pricing-Expenses-Blueprint.json` |
+| `Finance Department\Automations\FIN02-Taxes-Fees-Blueprint.json` | `workflows\fin-02-taxes-fees\automation\FIN02-Taxes-Fees-Blueprint.json` |
+| `Finance Department\Automations\FIN03-AR-AP-Blueprint.json` | `workflows\fin-03-accounts-receivable-payable\automation\FIN03-AR-AP-Blueprint.json` |
+| `Finance Department\Automations\FIN04-Accounting-Auditing-Blueprint.json` | `workflows\fin-04-accounting-auditing\automation\FIN04-Accounting-Auditing-Blueprint.json` |
+| `Finance Department\Automations\FIN05-Investment-Savings-Blueprint.json` | `workflows\fin-05-investment-savings\automation\FIN05-Investment-Savings-Blueprint.json` |
+| `Fulfillment Department\Automations\FUL01-Deliverable-Tracking-Blueprint.json` | `workflows\ful-01-display-packaging\automation\FUL01-Deliverable-Tracking-Blueprint.json` |
+| `Fulfillment Department\Automations\FUL02-Client-Success-Blueprint.json` | `workflows\ful-02-client-success\automation\FUL02-Client-Success-Blueprint.json` |
+| `Fulfillment Department\Automations\FUL03-Customer-Service-Blueprint.json` | `workflows\ful-03-customer-service\automation\FUL03-Customer-Service-Blueprint.json` |
+| `Fulfillment Department\Automations\FUL04-Feedback-Testimonials-Blueprint.json` | `workflows\ful-04-feedback-testimonials\automation\FUL04-Feedback-Testimonials-Blueprint.json` |
+| `Fulfillment Department\Automations\FUL05-Analytics-Measurement-Blueprint.json` | `workflows\ful-05-analytics-measurement\automation\FUL05-Analytics-Measurement-Blueprint.json` |
 
-Departments with no `/Automations` JSON found in this scan: Finance Department, Fulfillment Department.
+No full department remains without `/Automations` JSON after the 2026-05-17 recovery import. MKT-09 is the known individual workflow still missing a clean automation blueprint.
 
 ## Next Client-Facing Import Lane
 

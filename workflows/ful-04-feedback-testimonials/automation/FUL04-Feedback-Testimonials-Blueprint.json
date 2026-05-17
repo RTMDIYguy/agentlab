@@ -1,0 +1,121 @@
+{
+  "name": "FUL04: NPS Survey & Testimonial Capture (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "stripe:watchPayments",
+      "version": 1,
+      "parameters": {
+        "event": "invoice.paid"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "builtin:Sleep",
+      "version": 1,
+      "parameters": {
+        "duration": 604800,
+        "note": "7-day delay after final payment before sending NPS survey"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "email:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{1.customer.email}}",
+        "subject": "How did we do? — {{1.metadata.projectName}}",
+        "body": "Hi {{1.customer.name}},\n\nNow that your {{1.metadata.projectName}} workflow is live, we would love to hear how the experience went.\n\nIt takes 60 seconds: {{YOUR_NPS_FORM_URL}}\n\nThank you for trusting Uncle Robert Consulting.\n\n— Robert"
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "google-forms:watchResponses",
+      "version": 1,
+      "parameters": {
+        "formId": "YOUR_NPS_FORM_ID"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 300
+        },
+        "note": "Separate trigger branch for incoming NPS responses"
+      }
+    },
+    {
+      "id": 5,
+      "module": "builtin:Router",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 300
+        }
+      }
+    },
+    {
+      "id": 6,
+      "module": "email:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{4.respondentEmail}}",
+        "subject": "May we share your feedback?",
+        "body": "Hi {{4.respondentName}},\n\nThank you for your kind words! We would love to feature your feedback on our website and LinkedIn.\n\nHere is exactly how it would appear:\n\n\"{{4.testimonialText}}\" — {{4.respondentName}}, {{4.company}}\n\nClick here to approve: {{YOUR_APPROVAL_LINK}}\n\nThank you!\n— Robert"
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 200
+        },
+        "note": "Route: NPS score >= 9 (testimonial candidate)"
+      }
+    },
+    {
+      "id": 7,
+      "module": "google-sheets:appendRow",
+      "version": 1,
+      "parameters": {
+        "spreadsheetId": "YOUR_FUL04_TRACKER_ID"
+      },
+      "mapper": {
+        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{4.respondentName}}", "{{4.npsScore}}", "{{4.testimonialText}}", "Pending Approval"]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 400
+        },
+        "note": "Route: NPS score >= 8 (all strong scores logged)"
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

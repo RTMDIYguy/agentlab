@@ -1,0 +1,114 @@
+{
+  "name": "MKT07: Paid Advertising Budget & Performance Monitor (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "schedule:trigger",
+      "version": 1,
+      "parameters": {
+        "interval": "4h"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "google-ads:getCampaignPerformance",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "dateRange": "TODAY",
+        "metrics": ["cost", "conversions", "impressions", "clicks"]
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are an ad ops analyst. Given daily spend data, calculate budget pacing against the monthly cap. If spend exceeds 80% of the monthly budget before the 20th of the month, flag as OVERPACING. If any campaign has zero conversions with spend above $50, flag as UNDERPERFORMING. Return a JSON object with fields: status (OK|OVERPACING|UNDERPERFORMING), spendToDate, monthlyBudget, pacingPercent, flaggedCampaigns[]."
+          },
+          {
+            "role": "user",
+            "content": "Campaign data: {{2.campaigns}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "builtin:Router",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "microsoft-teams:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "marketing-alerts"
+      },
+      "mapper": {
+        "text": "🚨 *Ad Budget Alert*\n*Status:* {{3.choices[0].message.content}}\n*Action:* Review campaign pacing immediately."
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": -150
+        },
+        "note": "Route: status != OK"
+      }
+    },
+    {
+      "id": 6,
+      "module": "google-sheets:appendRow",
+      "version": 1,
+      "parameters": {
+        "spreadsheetId": "YOUR_MKT07_TRACKER_ID"
+      },
+      "mapper": {
+        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{3.choices[0].message.content}}"]
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 150
+        },
+        "note": "Route: always (log all checks)"
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}

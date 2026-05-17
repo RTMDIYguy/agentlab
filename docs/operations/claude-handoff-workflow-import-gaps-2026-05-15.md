@@ -23,12 +23,16 @@ client-facing templates into one source.
 
 ## Missing Or Incomplete
 
-- MKT-08 Social Media Management: folder shell only; no clean matching source
-  artifact found in first archive pass.
+- MKT-08 Social Media Management: automation scaffold recovered on
+  2026-05-17; no clean matching source artifact found in first archive pass.
 - MKT-09 Event & Webinar Marketing: folder shell only; no clean matching source
   artifact found in first archive pass.
-- Finance Department: no `/Automations/*.json` files found in the scan.
-- Fulfillment Department: no `/Automations/*.json` files found in the scan.
+- Finance Department: `/Automations/*.json` files recovered and imported on
+  2026-05-17.
+- Fulfillment Department: `/Automations/*.json` files recovered and imported on
+  2026-05-17.
+- MKT-07 Paid Advertising & PPC: automation scaffold recovered and imported on
+  2026-05-17.
 - Client-facing `/Workflows` folders still need a dedicated import pass.
 - Some departments only had department-level source docs, so source text is
   repeated in multiple workflow folders until per-workflow kit conversion.

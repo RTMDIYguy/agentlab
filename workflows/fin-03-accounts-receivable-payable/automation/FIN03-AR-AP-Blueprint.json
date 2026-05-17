@@ -1,0 +1,129 @@
+{
+  "name": "FIN03: AR/AP Aging Monitor & Reminder (Make.com Blueprint)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "schedule:trigger",
+      "version": 1,
+      "parameters": {
+        "interval": "1d",
+        "time": "09:00"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "stripe:listInvoices",
+      "version": 1,
+      "parameters": {
+        "status": "open"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": -150
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "quickbooks:getBillsDue",
+      "version": 1,
+      "parameters": {
+        "dueWithin": 14
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 150
+        }
+      }
+    },
+    {
+      "id": 4,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a cash flow analyst. Given open AR invoices and upcoming AP bills, classify each as: OVERDUE (past due), DUE_SOON (within 7 days), SCHEDULED (8-14 days). For AR items, draft a brief, professional payment reminder. Deduplicate AP items by vendor+invoice_number+amount. Return JSON: {ar: [{client, amount, daysPastDue, status, reminderDraft}], ap: [{vendor, amount, dueDate, status, isDuplicate}]}."
+          },
+          {
+            "role": "user",
+            "content": "AR Invoices: {{2.invoices}}\nAP Bills: {{3.bills}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 5,
+      "module": "builtin:Router",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 6,
+      "module": "email:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{4.choices[0].message.content.ar[].client.email}}",
+        "subject": "Payment Reminder — Invoice {{4.choices[0].message.content.ar[].invoiceId}}",
+        "body": "{{4.choices[0].message.content.ar[].reminderDraft}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": -150
+        },
+        "note": "Route: AR status == OVERDUE"
+      }
+    },
+    {
+      "id": 7,
+      "module": "microsoft-teams:createMessage",
+      "version": 1,
+      "parameters": {
+        "channel": "finance-alerts"
+      },
+      "mapper": {
+        "text": "💰 *AP Run Reminder*\nBills due within 7 days:\n{{4.choices[0].message.content}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 150
+        },
+        "note": "Route: any AP status == DUE_SOON (Friday AP run prep)"
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1
+  }
+}
