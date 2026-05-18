@@ -15,7 +15,7 @@ description: >
   package that points at six URC Marketing source workflows but only
   implements the minimum dependencies needed to make MKT-06 actually move
   revenue for a small founder-led business.
-version: 0.1.0-draft
+version: 0.2.0-draft
 owner: uncle-robert-consulting
 license: UNLICENSED
 status: draft
@@ -46,6 +46,16 @@ changeLog:
       Normalized follow-up language to three total outreach/follow-up
       touches so the template matches the MKT-05 maximum 3-touch source
       rule.
+    author: codex
+  - date: 2026-05-17
+    changeId: CC-2026-05-17-002
+    version: 0.2.0-draft
+    type: packaging
+    summary: >
+      Added the Standard-tier Make.com Magic Template Link lane with
+      template.md, a draft Make.com blueprint, and a publisher checklist.
+      The public link remains pending until the scenario is created,
+      shared from Make.com, and tested from a second account or team.
     author: codex
 tags:
   - marketing
@@ -119,8 +129,14 @@ failures:
 tools:
   - name: Markdown editor
     purpose: Fill in the templates in assets/
+  - name: Make.com
+    purpose: Optional Standard-tier automation host for the Magic Template Link
+  - name: OpenAI
+    purpose: Optional Standard-tier drafting support for signal brief, content prompts, and follow-up language
   - name: Microsoft 365 or Google Workspace
     purpose: Optional operating backbone for content drafts, email follow-up, and proof tracker
+  - name: HubSpot
+    purpose: Optional CRM-lite contact update in the Standard-tier Make.com scenario
   - name: LinkedIn
     purpose: Primary outreach and content channel for most founders
   - name: Email client
@@ -143,13 +159,43 @@ authPolicy:
   requireRevocationPath: true
   requireFallbackPath: true
 auth:
-  connectors: []
+  connectors:
+    - id: make
+      name: Make.com
+      required: true
+      setupMode: public-sharing-link
+      missingImpact: >
+        Buyer cannot use the Magic Template Link and should run the manual
+        Markdown package instead.
+      fallback: assets/
+    - id: openai
+      name: OpenAI
+      required: true
+      setupMode: make-oauth-or-api-key
+      missingImpact: >
+        Scenario can capture intake, but cannot draft the setup packet.
+      fallback: Manual founder-positioning and content brief templates.
+    - id: hubspot
+      name: HubSpot
+      required: false
+      setupMode: make-connection
+      missingImpact: >
+        CRM-lite contact update is skipped; buyer can use Microsoft 365,
+        Google Workspace, or the proof capture Markdown template.
+      fallback: assets/proof-capture-template.md
+    - id: microsoft365
+      name: Microsoft 365
+      required: false
+      setupMode: make-connection
+      missingImpact: >
+        Email summary and tracker-row outputs are skipped; buyer can copy
+        the Make run output manually.
+      fallback: assets/content-brief-template.md
   notes: >
-    The thin slice intentionally does not require any third-party connector.
-    Founders run it from a Markdown editor plus their existing email and
-    LinkedIn accounts. Connector matrix will be added when the package is
-    upgraded out of draft and bound to a specific tool stack (for example
-    Notion, Mailchimp, or HubSpot for the proof log).
+    The manual thin slice still does not require any third-party connector.
+    The Standard-tier Magic Template Link is optional and requires Make.com
+    plus OpenAI, with HubSpot and Microsoft 365 modules treated as removable
+    or configurable buyer-side conveniences.
 verification: null
 verificationNotes: >
   Verification is manual at the draft stage. The package is considered to
@@ -158,7 +204,10 @@ verificationNotes: >
   (c) one outreach list of 10 or more names is contacted with at least
   one human touch, (d) one three-touch outreach and follow-up sequence has fired,
   and (e) proof-capture-template.md has at least one logged reply,
-  objection, testimonial, referral, or traction note.
+  objection, testimonial, referral, or traction note. The Standard-tier
+  Magic Template Link is not considered live until template.md contains the
+  real Make.com public sharing link and the install has been tested from a
+  second account or team.
 ---
 
 # Founder Signal System — Draft Kit Manifest
@@ -292,7 +341,9 @@ batch.
 This draft does not ship with an automated verification script. Validation
 is manual per the criteria in frontmatter `verificationNotes`. Once a
 founder runs the package end-to-end and produces a populated proof log,
-the kit can be promoted from `0.1.0-draft` toward Standard conformance.
+the kit can be promoted from `0.2.0-draft` toward Standard conformance.
+The Make.com link lane also requires a public sharing link in `template.md`
+and a successful install test from a second Make.com account or team.
 
 ## Change Log
 
@@ -304,3 +355,8 @@ the kit can be promoted from `0.1.0-draft` toward Standard conformance.
 - **2026-05-16 — 0.1.0-draft — CC-2026-05-16-001 — correction**
   Normalized follow-up language to three total outreach/follow-up touches
   so the template matches the MKT-05 maximum 3-touch source rule.
+- **2026-05-17 — 0.2.0-draft — CC-2026-05-17-002 — packaging**
+  Added the Standard-tier Make.com Magic Template Link lane with `template.md`,
+  `automation/Founder-Signal-System-Make-Blueprint.json`, and
+  `automation/make-public-template-publisher-checklist.md`. The link remains
+  pending until Make.com public sharing is generated and tested.

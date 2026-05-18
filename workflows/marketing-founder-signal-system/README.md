@@ -118,9 +118,15 @@ other workflows so the wedge can actually move revenue.
 workflows/marketing-founder-signal-system/
   README.md                                # This file
   kit.md                                   # kit/1.0 draft manifest
+  template.md                              # Standard-tier Make.com link placeholder and buyer setup instructions
   source-map.md                            # Maps each step to source workflows
   implementation-checklist.md              # 5-day setup sprint
   offer-one-pager.md                       # Sales-facing one-pager
+  automation/
+    Founder-Signal-System-Make-Blueprint.json       # Draft Make.com scenario build spec, not direct import
+    make-scenario-manual-build.md                   # Manual rebuild path for Make.com free tier
+    make-public-template-publisher-checklist.md     # Steps to publish the public sharing link
+    n8n-v1-runtime-handoff.md                       # n8n handoff for active v1 runtime
   assets/
     intake-questions.md                    # Founder diagnostic questions
     content-brief-template.md              # Per-cycle content brief
@@ -138,6 +144,30 @@ workflows/marketing-founder-signal-system/
 5. After the first proof cycle, decide which adjacent Marketing workflow to
    add next. Common next adds: MKT-08 social, MKT-07 paid, or graduating the
    nurture from MKT-02 into a full sequence library.
+
+## Standard-Tier Make.com Template
+
+The Standard-tier Magic Template Link is being staged in `template.md`.
+The repo now includes a draft Make.com blueprint at
+`automation/Founder-Signal-System-Make-Blueprint.json` plus a publisher
+checklist at `automation/make-public-template-publisher-checklist.md`.
+
+This link is not live yet. To activate it, publish the scenario from Make.com,
+generate the public sharing link, test it from a second account or team, and
+replace the placeholder in `template.md`.
+
+The manual Markdown package remains the fallback and should be used whenever a
+buyer does not want to connect Make.com, OpenAI, HubSpot, or Microsoft 365.
+
+## n8n V1 Runtime
+
+As of 2026-05-17, n8n is the preferred v1 runtime for this package. Robert
+confirmed local n8n is running and Workflow 06 exists there with a recent test.
+Use `automation/n8n-v1-runtime-handoff.md` to clone or adapt the tested MKT-06
+pattern into the Founder Signal intake flow.
+
+Make.com remains deferred as a future Standard-tier public sharing link because
+the free plan blocked activation even after the scenario was manually built.
 
 ## Source Authority
 
