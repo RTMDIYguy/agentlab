@@ -1,0 +1,148 @@
+{
+  "name": "Founder Signal System: Intake to Signal Brief (Make.com Blueprint)",
+  "description": "Standard-tier scenario build spec for the Founder Signal System. This file documents the intended modules and mappings, but it is not a Make.com-importable blueprint because Make requires platform-generated module identifiers.",
+  "status": "draft",
+  "importableInMake": false,
+  "buildInstructions": "Use make-public-template-publisher-checklist.md to rebuild this manually in the Make.com scenario editor. Do not import this JSON directly.",
+  "version": "0.1.0-draft",
+  "flow": [
+    {
+      "id": 1,
+      "module": "webhook:webhooks",
+      "version": 1,
+      "parameters": {
+        "hook": "FOUNDER_INTAKE_WEBHOOK"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        },
+        "notes": "Receives one founder intake submission. Expected fields: founder_name, email, company, offer, ideal_customer, painful_problem, desired_outcome, proof_points, exclusions, primary_channel, notification_email."
+      }
+    },
+    {
+      "id": 2,
+      "module": "openai:createCompletion",
+      "version": 1,
+      "parameters": {
+        "model": "gpt-4o-mini"
+      },
+      "mapper": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are the Founder Signal System setup assistant for Uncle Robert Consulting. Create practical, buyer-ready setup outputs from the founder intake. Keep the founder's voice human. Do not invent proof. Do not recommend paid ads, large-list automation, or a website rebuild."
+          },
+          {
+            "role": "user",
+            "content": "Create a Founder Signal setup packet from this intake. Return sections titled Signal Brief, Content Cycle Prompt, Outreach Angle, Three-Touch Follow-Up Draft, Proof Loop Fields, and Next Cycle Question.\n\nFounder: {{1.founder_name}}\nEmail: {{1.email}}\nCompany: {{1.company}}\nOffer: {{1.offer}}\nIdeal customer: {{1.ideal_customer}}\nPainful problem: {{1.painful_problem}}\nDesired outcome: {{1.desired_outcome}}\nProof points: {{1.proof_points}}\nExclusions: {{1.exclusions}}\nPrimary channel: {{1.primary_channel}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        },
+        "notes": "Generates the first signal brief and operating prompts. Buyer must review before publishing or sending outreach."
+      }
+    },
+    {
+      "id": 3,
+      "module": "hubspot:createUpdateContact",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "email": "{{1.email}}",
+        "properties": [
+          {
+            "property": "firstname",
+            "value": "{{1.founder_name}}"
+          },
+          {
+            "property": "company",
+            "value": "{{1.company}}"
+          },
+          {
+            "property": "lifecyclestage",
+            "value": "lead"
+          },
+          {
+            "property": "founder_signal_status",
+            "value": "Setup packet drafted"
+          },
+          {
+            "property": "founder_signal_primary_channel",
+            "value": "{{1.primary_channel}}"
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": -170
+        },
+        "notes": "Optional CRM-lite update. Remove or disable this module if the buyer does not use HubSpot."
+      }
+    },
+    {
+      "id": 4,
+      "module": "microsoft365email:sendEmail",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "to": "{{ifempty(1.notification_email; 1.email)}}",
+        "subject": "Founder Signal setup packet for {{1.company}}",
+        "body": "Founder Signal setup packet\n\n{{2.choices[0].message.content}}\n\nReview before publishing content or sending outreach. Keep the first outreach batch to 10-25 named contacts and three total touches."
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 170
+        },
+        "notes": "Optional Microsoft 365 notification. Replace with Gmail, Slack, Teams, or manual output if needed."
+      }
+    },
+    {
+      "id": 5,
+      "module": "microsoft365excel:addRow",
+      "version": 1,
+      "parameters": {
+        "workbook": "FOUNDER_SIGNAL_TRACKER",
+        "worksheet": "Proof Loop"
+      },
+      "mapper": {
+        "date": "{{now}}",
+        "founder": "{{1.founder_name}}",
+        "company": "{{1.company}}",
+        "email": "{{1.email}}",
+        "status": "Setup packet drafted",
+        "primary_channel": "{{1.primary_channel}}",
+        "next_action": "Review signal brief, publish first content asset, send first 5 outreach messages",
+        "setup_packet": "{{2.choices[0].message.content}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        },
+        "notes": "Optional Microsoft 365 tracker row. This supports the proof loop without forcing a paid CRM."
+      }
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "sequential": false,
+      "confidential": false,
+      "dataloss": false,
+      "freshVariables": false
+    },
+    "notes": "Draft blueprint for building the Make.com public sharing scenario. Before market use, import or recreate in Make.com, validate module IDs and mappings, replace placeholder workbook/sheet values, publish a public sharing link, and update template.md."
+  }
+}
