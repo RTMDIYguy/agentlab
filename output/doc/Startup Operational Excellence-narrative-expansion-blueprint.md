@@ -249,6 +249,17 @@ Scene idea:
 The founder is busy but cash still feels tight. Uncle Robert walks him through
 hidden costs, tool spend, delayed invoicing, underpricing, and weak follow-up.
 
+Add the live bootstrapper lesson from 2026-05-19:
+
+Sam reaches the "Bootstrap Limit Wall" - the place where free and trial tools
+have preserved motion but can no longer carry the next stage without funding.
+Uncle Robert explains this from lived experience as a self-funded bootstrapper
+who became a free bootstrapper when funding ran out. The lesson is not "stay
+free forever" or "raise money immediately." The lesson is to map the wall so
+founders can reach signal before spend and use revenue, deposits, sponsorship,
+or qualified pipeline to make paid-tool upgrades deliberate instead of
+desperate.
+
 Original detail to preserve:
 
 - direct and indirect costs
@@ -261,6 +272,8 @@ Original detail to preserve:
 - cross-sell and up-sell
 - revenue pipeline
 - strategic partnerships
+- free/trial tool limits as funding thresholds
+- revenue as bottleneck-removal funding
 
 Readable conversion:
 
@@ -268,6 +281,24 @@ Use the line:
 
 > Profit is not just a number at the bottom of a report. In a small business,
 > profit is breathing room.
+
+Use the named concept:
+
+> The Bootstrap Limit Wall
+
+Signpost framework:
+
+1. Motion: are real people seeing the offer?
+2. Signal: are they opening, replying, clicking, booking, referring, objecting,
+   or paying?
+3. Constraint: what breaks first if this works?
+4. Manual bridge: can we carry it by hand for one more small batch?
+5. Funding trigger: what paid upgrade becomes justified by actual demand?
+
+Chapter takeaway:
+
+> Free is a runway, not a religion. Reach signal before spend, then let revenue
+> fund the tools that remove proven bottlenecks.
 
 ### Chapter 5: Building a Company That Learns
 
@@ -295,6 +326,169 @@ Use the living-system idea:
 
 > We do things differently now because we know more now.
 
+### Chapter 6: The Rhythm That Keeps the Business Alive
+
+Scene idea:
+
+Sam has learned the pieces of the operating system, but Uncle Robert helps him
+see that a system only stays alive if the founder returns to it on purpose.
+The chapter turns the operating architecture into a weekly rhythm.
+
+Original detail to preserve:
+
+- weekly operating cadence
+- dashboard discipline
+- revenue pipeline review
+- content and market signal
+- community and relationship building
+- delivery and aftercare
+- finance and cash review
+- continuous learning
+- practical metrics
+- next-action accountability
+
+Readable conversion:
+
+Use the line:
+
+> The business needs a meeting with you.
+
+Weekly rhythm:
+
+1. Monday: pipeline and promises.
+2. Tuesday: content and signal.
+3. Wednesday: community and conversations.
+4. Thursday: delivery and aftercare.
+5. Friday: cash, learning, and next week.
+
+Chapter takeaway:
+
+> The system stays alive when the business has a weekly rhythm for money,
+> promises, people, learning, and the next right action.
+
+### Chapter 7: Building a Business That Can Be Trusted
+
+Scene idea:
+
+Sam begins to see that the operating system is not only about getting through
+the week. It is about making the business legible, trustworthy, and eventually
+ownable beyond the founder's personal memory and presence.
+
+Original detail to preserve:
+
+- business legibility
+- offer clarity
+- visible customer path
+- financial clarity
+- documented standards
+- proof capture
+- risk visibility
+- owner dashboard
+- transferability without forcing an exit
+- stewardship instead of control
+
+Readable conversion:
+
+Use the line:
+
+> Ownership begins with legibility.
+
+Practical review:
+
+1. Can the offer be explained clearly?
+2. Can the customer path be shown from first contact to aftercare?
+3. Can someone find leads, projects, and invoices without asking the founder?
+4. Do prices include the real cost of delivery, support, tools, admin, and
+   founder time?
+5. Is proof captured when the work creates trust?
+
+Chapter takeaway:
+
+> A business becomes ownable when its value, promises, proof, risks, and
+> rhythms are visible enough for trust to travel beyond the founder.
+
+### Chapter 8: The Founder Becomes the Steward
+
+Scene idea:
+
+Sam recognizes that the business has changed him. At the beginning, he carried
+too much in memory, effort, and anxiety. Now Uncle Robert helps him see that
+the work of operational excellence is also the work of becoming a steward.
+
+Original detail to preserve:
+
+- founder transformation
+- stewardship
+- servant leadership
+- trust
+- documented promises
+- learning loops
+- founder sustainability
+- growth without losing the soul
+- the wall-mapping lesson for the next founder
+- what comes after the first operating system
+
+Readable conversion:
+
+Use the line:
+
+> The founder becomes a steward when the business stops consuming all of him
+> and starts carrying the systems that let his care, judgment, and promises
+> travel farther.
+
+Practical review:
+
+1. What am I still carrying in memory that the business should carry in a
+   system?
+2. Where am I using pressure as proof of leadership?
+3. What promise needs clearer ownership, timing, proof, or follow-up?
+4. What hard wall have I reached that another founder should see sooner?
+5. What one system would give me more room to lead like a human being?
+
+Chapter takeaway:
+
+> The founder becomes a steward when the business stops consuming all of him
+> and starts carrying the systems that let his care, judgment, and promises
+> travel farther.
+
+### Conclusion: Build the System That Lets the Promise Live
+
+Scene idea:
+
+Return from Sam's story to the reader. The conclusion should feel like Uncle
+Robert sitting beside the founder at the end of the first season of work,
+reminding him that the goal was never perfection. The goal was a truthful,
+trustworthy, teachable business that can carry its promises.
+
+Original detail to preserve:
+
+- first operating system
+- business friction as information
+- free tools as runway, not religion
+- systems as human trust infrastructure
+- one visible improvement
+- stewardship
+- business promises beyond founder memory, mood, and exhaustion
+
+Readable conversion:
+
+Use the line:
+
+> Build the system that lets the promise live.
+
+Practical review:
+
+1. Follow one customer request from first contact to final follow-up.
+2. Identify where it waits, repeats, hides, or depends on memory.
+3. Choose one visible improvement.
+4. Return to the system and update it as truth becomes clearer.
+
+Closing takeaway:
+
+> Startup operational excellence is the practice of making the business
+> truthful, trustworthy, teachable, and strong enough to carry its promises
+> beyond the founder's memory, mood, and exhaustion.
+
 ## Detail Preservation Strategy
 
 The current voice draft is about 4,362 words. The original is about 51,817
@@ -309,7 +503,7 @@ Recommended target:
 Recommended first full pass:
 
 - 30,000-35,000 words
-- 5 chapters at 5,000-6,000 words each
+- 6 to 7 chapters at roughly 3,000-6,000 words each
 - front matter and closing at 2,000-3,000 words total
 - detailed diagnostic material moved into sidebars and appendices
 
@@ -351,6 +545,10 @@ Working production assumption:
 - Primary edition: Kindle eBook
 - Secondary edition: paperback after the manuscript is stable
 - Working print trim size: 6" x 9" unless Robert chooses otherwise
+- Human review copies: maintain matching DOCX and PDF exports from the same
+  manuscript version before upload
+- Cover design: may be produced in Calibre or Canva, but final cover assets
+  must be checked against current KDP requirements
 - Interior graphics: use only when they teach, summarize, or clarify
 - Interior graphics style: consistent, simple, readable in grayscale, and
   reproducible across ebook and print
@@ -374,6 +572,8 @@ metadata:
 - AI-assisted writing disclosure: included in front/back matter
 - AI-assisted graphics disclosure: included if graphics are used
 - Composite character disclosure: included because Sam is a teaching composite
+- Metadata must match across the manuscript, DOCX properties, PDF export,
+  Calibre library record, cover file, graphics inventory, and Amazon KDP entry
 
 ### Graphics Standard
 
@@ -389,6 +589,8 @@ All graphics should have:
 - no misleading AI-generated "case result" imagery
 - source notes identifying whether the image is human-created, AI-assisted, or
   generated from a diagram/checklist
+- final graphics inventory listing file name, placement, caption, alt text,
+  source, and whether the asset is ebook-only, print-only, or both
 
 For Kindle eBook production, images should be high resolution and tested in
 Kindle Previewer or KDP Previewer before upload. For print, avoid relying on
@@ -408,6 +610,24 @@ Current official KDP guidance requires attention to:
 
 The production pass must verify current KDP requirements again before final
 export because Amazon standards can change.
+
+### Pre-Upload Quality Gate
+
+Do not treat the book as ready for Amazon upload until these checks pass:
+
+1. DOCX and PDF human-review copies are generated from the same manuscript
+   version.
+2. Metadata is identical across DOCX, PDF, Calibre, cover files, graphics
+   inventory, and the planned Amazon KDP fields.
+3. Front matter includes the required AI-assisted writing, AI-assisted graphics
+   if used, and composite-character disclosures.
+4. Ebook table of contents, headings, page breaks, image placement, captions,
+   alt text, and links are checked in Calibre plus Kindle Previewer or KDP
+   Previewer.
+5. Paperback trim, margins, bleed, cover dimensions, spine rules, and PDF
+   export settings are checked before any print upload.
+6. The final production folder contains only clean upload assets and review
+   copies, not rough drafts or abandoned graphics.
 
 ### Calibre Handoff Rule
 
