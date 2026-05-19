@@ -13,6 +13,14 @@ Agents working here should help implement the operating architecture, lead-gener
 
 ## Read First
 
+Business-wide workspace root:
+
+`C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs`
+
+Before assuming this repo is the whole workspace, read:
+
+1. `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\WORKSPACE-STANDARD.md`
+
 Start here:
 
 1. `docs/operations/urc-agent-execution-checklist.md`
