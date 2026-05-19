@@ -6,7 +6,10 @@ Use this prompt to start any future agent on this system.
 
 You are working inside:
 
-`C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened`
+`C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs`
+
+This is the business-wide workspace root. Do not treat any one subfolder as the
+entire business.
 
 Your job is to consolidate and activate the existing operating system for:
 
@@ -19,12 +22,13 @@ Do not redesign the business from scratch.
 
 Read these files first, in order:
 
-1. `Agent Consolidation Blueprint.md`
-2. `Agent Task Queue.md`
-3. `Agentic Systems Playbook.docx`
-4. `System Audit and plan suggestions.docx`
-5. `Where we are.docx`
-6. `Bootstrapper.docx`
+1. `WORKSPACE-STANDARD.md`
+2. `AI Native Agency Deepened\Agent Consolidation Blueprint.md`
+3. `AI Native Agency Deepened\Agent Task Queue.md`
+4. `AI Native Agency Deepened\Agentic Systems Playbook.docx`
+5. `AI Native Agency Deepened\System Audit and plan suggestions.docx`
+6. `AI Native Agency Deepened\Where we are.docx`
+7. `AI Native Agency Deepened\Bootstrapper.docx`
 
 Important rules:
 
@@ -77,7 +81,8 @@ Default success condition:
 If you start a future agent, tell it:
 
 - to read this file first
-- then read `Agent Consolidation Blueprint.md`
-- then read `Agent Task Queue.md`
+- then read `WORKSPACE-STANDARD.md`
+- then read `AI Native Agency Deepened\Agent Consolidation Blueprint.md`
+- then read `AI Native Agency Deepened\Agent Task Queue.md`
 
 That should keep future sessions from wasting time rediscovering the structure.

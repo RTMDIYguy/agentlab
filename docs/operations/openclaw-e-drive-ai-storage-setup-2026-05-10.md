@@ -77,6 +77,63 @@ The next OpenClaw test should ask only for an orientation proof or staging
 recommendation. Do not ask OpenClaw to edit, stage, commit, push, or delete
 files until it has proven it can read the machine and repo context correctly.
 
+## 2026-05-18 Update Repair
+
+OpenClaw was updated from `2026.5.7` to `2026.5.12`.
+
+The package update completed, but the post-update service refresh failed:
+
+- completion cache update timed out
+- gateway service environment refresh returned a non-zero exit code
+- the gateway service initially reported stopped / unreachable on
+  `127.0.0.1:18789`
+
+Root cause found during repair:
+
+- the gateway service definition was still marked as installed by OpenClaw
+  `2026.5.7`, while the active CLI was `2026.5.12`
+
+Repair command used:
+
+```powershell
+openclaw gateway start
+```
+
+That command repaired the gateway service definition and started the gateway.
+
+Verification after repair:
+
+- `openclaw --version` reports `OpenClaw 2026.5.12`
+- `openclaw status` reports the gateway reachable at `ws://127.0.0.1:18789`
+- `openclaw gateway status --deep --require-rpc` reports CLI and gateway both
+  on `2026.5.12`
+- `openclaw health` reports the gateway event loop OK
+- ports `18789` and `18791` are listening under the OpenClaw gateway process
+
+Remaining limitation:
+
+- `openclaw completion --write-state` still timed out after the update. Shell
+  tab completion may be stale, but the gateway itself is running.
+
+## 2026-05-18 Workspace Orientation Update
+
+OpenClaw's storage/model lane may live under `E:\AI\OpenClaw`, but the business
+workspace does not.
+
+The pasteable OpenClaw orientation prompt now tells OpenClaw to treat this as
+the business-wide workspace root:
+
+`C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs`
+
+It also now tells OpenClaw to read:
+
+1. `C:\Users\thebo\MACHINE.md`
+2. `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\WORKSPACE-STANDARD.md`
+3. the repo-specific `AGENTS.md` and operations files
+
+This should help OpenClaw stop acting as if `agent-lab-site`, `AI Native Agency
+Deepened`, or `E:\AI\OpenClaw` is the entire business workspace.
+
 ## Important Cleanup Note
 
 Do not delete `C:\Users\thebo\.ollama\models` yet.
@@ -94,4 +151,6 @@ reclaim roughly 24 GB.
 - [ ] Run a successful `openclaw agent` smoke test.
 - [ ] Run the 2026-05-15 orientation prompt and confirm it identifies the
       machine context, repo context, staging candidates, and no-stage files.
+- [ ] Retry `openclaw completion --write-state` after the next clean shell or
+      reboot if tab completion matters.
 - [ ] Remove the old C: Ollama model store only after E: usage is verified.

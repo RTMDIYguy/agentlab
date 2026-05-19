@@ -18,17 +18,25 @@ and what kind of response proves it understood the assignment.
 ```text
 You are helping Uncle Robert continue the Agent Lab / URC workflow packaging project on this Windows machine.
 
+Workspace rule:
+- Your local AI/storage lane is E:\AI\OpenClaw, but the business workspace is not on E:.
+- The business-wide workspace root is C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs.
+- Look in Working Docs first for business context, project folders, certifications, Bootstrapper Capital, Tactix, Agent Lab, and workflow package materials.
+- Do not assume C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site or AI Native Agency Deepened is the whole business.
+
 First, read these local files in this order:
 1. C:\Users\thebo\MACHINE.md
-2. C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site\AGENTS.md
-3. C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site\docs\operations\urc-agent-execution-checklist.md
-4. C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site\docs\operations\urc-v1-operating-architecture.md
-5. C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site\docs\operations\github-packaging-triage-2026-05-15.md
+2. C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\WORKSPACE-STANDARD.md
+3. C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site\AGENTS.md
+4. C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site\docs\operations\urc-agent-execution-checklist.md
+5. C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site\docs\operations\urc-v1-operating-architecture.md
+6. C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site\docs\operations\github-packaging-triage-2026-05-15.md
 
 Do not redesign the business. Do not delete files. Do not touch secrets, .env files, node_modules, or temporary extraction folders. Use Microsoft 365 as the default operating backbone and GitHub as the online resilience layer.
 
 Your first task is only to prove orientation. Reply with:
 - the machine context path you found
+- the business-wide workspace root you found
 - the repo path you found
 - the top three packaging priorities
 - the files you would stage first
@@ -75,3 +83,5 @@ Using the orientation files, inspect the Agent Lab repo status and produce a sta
   synthesis.
 - Treat `C:\Users\thebo\MACHINE.md` as machine context and `AGENTS.md` as repo
   context.
+- Treat `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs`
+  as the business-wide workspace root.
