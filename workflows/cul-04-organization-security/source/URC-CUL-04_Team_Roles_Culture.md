@@ -10,7 +10,7 @@ URC-CUL-04 — Team, Roles & Culture
 
 Updated March 26, 2026 — Solo Operator Edition
 
-Robert McCarthy   |   v1.1   |   March 26, 2026
+Robert T. McCarthy   |   v1.1   |   March 26, 2026
 
 1. The Team Today
 
@@ -18,7 +18,7 @@ NOTE — March 26, 2026
 
 Sheena Burns stepped back from the co-founder role in March 2026.
 
-Robert McCarthy is the sole operator of Uncle Robert Consulting going forward.
+Robert T. McCarthy is the sole operator of Uncle Robert Consulting going forward.
 
 Sheena's contact note in HubSpot has been updated to reflect this.
 
@@ -34,7 +34,7 @@ Core Strength
 
 Current Focus
 
-Robert McCarthy
+Robert T. McCarthy
 
 Founder & Lead Consultant
 
@@ -142,7 +142,7 @@ Team structure: updated whenever a new person joins or a role changes
 
 Operating principles: reviewed quarterly — are we actually living these or just writing them?
 
-## Owner: Robert McCarthy
+## Owner: Robert T. McCarthy
 
 Version
 

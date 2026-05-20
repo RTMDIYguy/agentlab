@@ -10,7 +10,7 @@ URC-FUL-03 — Customer Service
 
 Tiered Issue Resolution — Fast, Consistent, and Human Where It Counts
 
-Robert McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
+Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
 
 1. Why This Workflow Exists
 
@@ -216,7 +216,7 @@ FAQ / knowledge base: updated whenever a new question is answered more than twic
 
 Service recovery log: every Tier 3 incident documented — what happened, how it was resolved, what to prevent next time
 
-## Owner: Robert McCarthy
+## Owner: Robert T. McCarthy
 
 Version
 

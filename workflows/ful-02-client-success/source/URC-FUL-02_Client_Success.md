@@ -10,7 +10,7 @@ URC-FUL-02 — Client Success
 
 Proactive Health Monitoring, Check-Ins, and Outcome Delivery
 
-Robert McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
+Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
 
 1. Why This Workflow Exists
 
@@ -280,7 +280,7 @@ Client health scores: updated after every meaningful client interaction
 
 QBR process: reviewed after each QBR — what worked, what to sharpen?
 
-## Owner: Robert McCarthy (Sheena joins QBR calls for Tier 3 clients when available)
+## Owner: Robert T. McCarthy (Sheena joins QBR calls for Tier 3 clients when available)
 
 Version
 

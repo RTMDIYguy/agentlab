@@ -6,7 +6,7 @@ Packaging status: Imported source; kit conversion pending
 
 - Department: Culture
 - Automation level: 65-75%
-- Owner: Robert McCarthy
+- Owner: Robert T. McCarthy
 - Trigger: Monthly QA cycle; quarterly R&D sprint
 - Cycle time: Tool eval: 2-week trial; QA: every deliverable
 

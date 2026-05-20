@@ -6,7 +6,7 @@ Packaging status: Imported source; kit conversion pending
 
 - Department: Culture
 - Automation level: 50-60%
-- Owner: Robert McCarthy
+- Owner: Robert T. McCarthy
 - Trigger: Annual or business model update
 - Cycle time: Mission: annual; AI policy: semi-annual
 

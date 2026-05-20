@@ -6,7 +6,7 @@ Packaging status: Imported source; kit conversion pending
 
 - Department: Finance
 - Automation level: 75%
-- Owner: Robert McCarthy
+- Owner: Robert T. McCarthy
 - Trigger: Last business day of month
 - Cycle time: Month-end close: within 5 business days
 

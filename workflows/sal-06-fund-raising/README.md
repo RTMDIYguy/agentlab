@@ -6,7 +6,7 @@ Packaging status: Imported source; kit conversion pending
 
 - Department: Sales
 - Automation level: 80-85%
-- Owner: Robert McCarthy
+- Owner: Robert T. McCarthy
 - Trigger: Quarterly planning; growth initiative
 - Cycle time: Application: 2-8 weeks; investor: 3-12 months
 

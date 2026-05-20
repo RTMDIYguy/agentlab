@@ -10,7 +10,7 @@ URC-CUL-05 — The YC & Investor Story
 
 Updated March 26, 2026 — Solo Founder Edition
 
-Robert McCarthy   |   v1.1   |   March 26, 2026
+Robert T. McCarthy   |   v1.1   |   March 26, 2026
 
 1. Why This Document Exists
 
@@ -114,7 +114,7 @@ Before every investor or YC conversation — read this document and update anyth
 
 After every investor conversation — log what was asked and how to sharpen the answers
 
-## Owner: Robert McCarthy
+## Owner: Robert T. McCarthy
 
 Version
 

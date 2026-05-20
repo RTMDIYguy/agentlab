@@ -8,7 +8,7 @@ UNCLE ROBERT CONSULTING LLC
 
 URC-SAL-04 — Proposal & Close
 
-## Owner: Robert McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
+## Owner: Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
 
 1. Why This Document Exists
 
@@ -34,7 +34,7 @@ Prepared for: [Client Name]
 
 Date: [Date]
 
-Prepared by: Robert McCarthy (and Sheena Burns if co-led)
+Prepared by: Robert T. McCarthy (and Sheena Burns if co-led)
 
 WHAT WE HEARD
 
@@ -170,7 +170,7 @@ Proposal template: reviewed every quarter — does it still reflect our offers a
 
 Follow-up sequence: adjusted based on what's working — if 48-hour follow-ups are getting responses, note it
 
-## Owner: Robert McCarthy
+## Owner: Robert T. McCarthy
 
 Version
 

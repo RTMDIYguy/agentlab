@@ -6,7 +6,7 @@ Packaging status: Imported source; kit conversion pending
 
 - Department: Finance
 - Automation level: 65%
-- Owner: Robert McCarthy
+- Owner: Robert T. McCarthy
 - Trigger: 1st business day of month; drift detected
 - Cycle time: Transfers: monthly; monitoring: daily
 

@@ -6,7 +6,7 @@ Packaging status: Imported source; kit conversion pending
 
 - Department: Sales
 - Automation level: 85-90% (passive)
-- Owner: Robert McCarthy
+- Owner: Robert T. McCarthy
 - Trigger: Quarterly planning cycle
 - Cycle time: Passive product launch: 2-4 weeks; ongoing optimization
 

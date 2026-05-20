@@ -2,7 +2,7 @@
 
 Chapter 4 Expanded Draft: Sam Version
 
-by Robert McCarthy
+by Robert T. McCarthy
 
 Draft date: May 19, 2026
 

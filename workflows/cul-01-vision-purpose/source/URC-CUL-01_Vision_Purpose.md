@@ -10,7 +10,7 @@ URC-CUL-01 — Vision & Purpose
 
 Two-Horizon Edition — Updated March 26, 2026
 
-Robert McCarthy   |   v1.1   |   March 26, 2026
+Robert T. McCarthy   |   v1.1   |   March 26, 2026
 
 1. Why This Document Exists
 
@@ -24,7 +24,7 @@ Sheena Burns stepped back from the co-founder role in March 2026.
 
 This was a personal decision and the relationship remains warm.
 
-Robert McCarthy is the sole operator of URC going forward.
+Robert T. McCarthy is the sole operator of URC going forward.
 
 References to Sheena as an active co-founder throughout this document have been updated accordingly.
 
@@ -34,7 +34,7 @@ The door remains open for her return — this is noted where relevant.
 
 TODAY
 
-A hands-on AI consulting practice founded by Robert McCarthy.
+A hands-on AI consulting practice founded by Robert T. McCarthy.
 
 One active client (Holmes Media). Warm relationships with Five Aces and William Hopkins.
 
@@ -44,7 +44,7 @@ A proven ability to help small businesses capture leads, follow up automatically
 
 Zero outside investment. Zero debt. Operating lean and building toward something real.
 
-Sole operator: Robert McCarthy.
+Sole operator: Robert T. McCarthy.
 
 Our Vision Today
 
@@ -168,7 +168,7 @@ This document: reviewed quarterly — does Horizon 1 still reflect reality? Has 
 
 North star metrics: reviewed monthly alongside the pipeline rhythm from SAL-05
 
-## Owner: Robert McCarthy
+## Owner: Robert T. McCarthy
 
 Version
 

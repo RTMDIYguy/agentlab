@@ -1,2 +1,2 @@
 workflow_id,canary_name,test_date,owner,status,notion_url,jira_ticket,jira_status_history,draft_url_or_path,github_branch_or_commit,editorial_proof,seo_proof,adaptation_proof,klaviyo_or_distribution_proof,step7_tracker_proof,manual_workarounds,final_result,next_actions
-MKT-06,WF6 Canary Test - Internal Verification,,Robert McCarthy,Testing,,,,,,,,,,,,,
+MKT-06,WF6 Canary Test - Internal Verification,,Robert T. McCarthy,Testing,,,,,,,,,,,,,

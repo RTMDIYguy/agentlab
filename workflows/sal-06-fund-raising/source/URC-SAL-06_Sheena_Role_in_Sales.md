@@ -8,7 +8,7 @@ UNCLE ROBERT CONSULTING LLC
 
 URC-SAL-06 — Sheena's Role in Sales
 
-## Owner: Robert McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
+## Owner: Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
 
 1. Why This Document Exists
 
@@ -140,7 +140,7 @@ This document: reviewed by both Robert and Sheena every quarter — does Sheena'
 
 The weekly check-in: permanent standing rhythm, not reviewed away
 
-## Owner: Robert McCarthy and Sheena Burns — jointly
+## Owner: Robert T. McCarthy and Sheena Burns — jointly
 
 Version
 

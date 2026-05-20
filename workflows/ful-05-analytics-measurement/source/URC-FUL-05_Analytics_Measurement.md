@@ -10,7 +10,7 @@ URC-FUL-05 — Analytics & Measurement
 
 The Numbers That Tell the Truth About How URC Is Performing
 
-Robert McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
+Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
 
 1. Why This Workflow Exists
 
@@ -290,7 +290,7 @@ Monthly review: first Friday of each month — 45 minutes
 
 Metrics framework: reviewed quarterly — are we tracking the right things for our current stage?
 
-## Owner: Robert McCarthy
+## Owner: Robert T. McCarthy
 
 Version
 

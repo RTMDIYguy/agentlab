@@ -6,7 +6,7 @@ Packaging status: Imported source; kit conversion pending
 
 - Department: Finance
 - Automation level: 80%
-- Owner: Robert McCarthy
+- Owner: Robert T. McCarthy
 - Trigger: Expense submitted or receipt uploaded
 - Cycle time: Processing: same day to 48 hrs; review: quarterly
 

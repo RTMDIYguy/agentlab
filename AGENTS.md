@@ -47,6 +47,7 @@ If the task relates to the broader business archive and recovered files, also re
 - Keep `Tactix` as the fulfillment and Upwork arm.
 - Prefer low-cost and free routes wherever possible.
 - Automate first, review exceptions, and use paid human help only where judgment, compliance, or leverage truly requires it.
+- Do not treat missing tools as a reason to skip verification. Check tool availability, use an equivalent, install a safe local/runtime dependency when appropriate, or give Robert the exact command/link needed. Defer to human review only after the tooling path has been tried or explicitly blocked.
 - Keep the main execution focus on testing, certifying, packaging, and taking workflows to market.
 
 ## Change Control

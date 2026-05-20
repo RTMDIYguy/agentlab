@@ -8,7 +8,7 @@ UNCLE ROBERT CONSULTING LLC
 
 URC-SAL-03 — Discovery Call Process
 
-## Owner: Robert McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
+## Owner: Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
 
 1. Why This Document Exists
 
@@ -158,7 +158,7 @@ This document: reviewed after every 5 discovery calls — what questions worked,
 
 LEARN framework: a living tool, not a script. Robert and Sheena adapt it to their natural voices over time.
 
-## Owner: Robert McCarthy and Sheena Burns
+## Owner: Robert T. McCarthy and Sheena Burns
 
 Version
 
