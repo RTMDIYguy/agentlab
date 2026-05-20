@@ -10,7 +10,7 @@ URC-FUL-01 — Display & Packaging
 
 How Every URC Deliverable Is Presented, Named, and Delivered
 
-Robert McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
+Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
 
 1. Why This Workflow Exists
 
@@ -220,7 +220,7 @@ Template library: reviewed quarterly — any new deliverable types need a templa
 
 Quality gate checklist: reviewed whenever a quality issue traces back to packaging
 
-## Owner: Robert McCarthy
+## Owner: Robert T. McCarthy
 
 Version
 

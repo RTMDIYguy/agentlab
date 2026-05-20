@@ -8,7 +8,7 @@ UNCLE ROBERT CONSULTING LLC
 
 URC-SAL-01 — Offer Clarity & Positioning
 
-## Owner: Robert McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
+## Owner: Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
 
 1. Why This Document Exists
 
@@ -164,7 +164,7 @@ This document is reviewed quarterly and whenever pricing or service scope change
 
 Any change to pricing requires both Robert and Sheena to agree — this is a co-founder decision
 
-## Owner: Robert McCarthy and Sheena Burns
+## Owner: Robert T. McCarthy and Sheena Burns
 
 Version
 

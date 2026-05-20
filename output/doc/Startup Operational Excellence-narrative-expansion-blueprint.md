@@ -544,7 +544,10 @@ Working production assumption:
 
 - Primary edition: Kindle eBook
 - Secondary edition: paperback after the manuscript is stable
-- Working print trim size: 6" x 9" unless Robert chooses otherwise
+- Working print trim size: 8.5" x 11", matched to `The Bootstrappers Guide to
+  the World`
+- Working print margins: 0.75" top/bottom and 0.5" left/right, matched to the
+  shipped Bootstrapper DOCX
 - Human review copies: maintain matching DOCX and PDF exports from the same
   manuscript version before upload
 - Cover design: may be produced in Calibre or Canva, but final cover assets
@@ -561,14 +564,19 @@ All manuscript, cover, graphic, and export files should use the same core
 metadata:
 
 - Title: Startup Operational Excellence
-- Subtitle: TBD
-- Author: Robert McCarthy
+- Subtitle: A Practical Mentor Guide for Building a Business with its Own Soul
+- Author: Robert T. McCarthy
 - Publisher / imprint: Uncle Robert Consulting LLC, unless changed before
   publication
-- Series: TBD, if this becomes part of a broader Uncle Robert / Ownable OS
-  business series
+- Series: none; this is a stand-alone book
 - Language: English
 - Edition: Draft until publication-ready
+- Categories: Business Startup; Bootstrapping, matched to the shipped
+  Bootstrapper Calibre OPF subjects and mapped to closest KDP categories during
+  setup
+- Keywords: business startup; bootstrapping; startup operational excellence;
+  SOE; StartupOperationalExcellence; small business systems; founder
+  operations; operational excellence; Ownable
 - AI-assisted writing disclosure: included in front/back matter
 - AI-assisted graphics disclosure: included if graphics are used
 - Composite character disclosure: included because Sam is a teaching composite

@@ -8,7 +8,7 @@ UNCLE ROBERT CONSULTING LLC
 
 URC-SAL-02 — Referral Activation System
 
-## Owner: Robert McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
+## Owner: Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
 
 1. Why This Document Exists
 
@@ -188,7 +188,7 @@ HubSpot referral tracking: audited quarterly to identify top referral sources
 
 This document: reviewed semi-annually or whenever a new significant relationship is established
 
-## Owner: Robert McCarthy
+## Owner: Robert T. McCarthy
 
 Version
 

@@ -22,7 +22,7 @@ Do not derail urgent work. Just name the loose thread and suggest a next action.
 
 | Project | Status | Primary File | Supporting Files | Last Touched | Next Action |
 | --- | --- | --- | --- | --- | --- |
-| Startup Operational Excellence rewrite | Active | `Startup Operational Excellence-working manuscript ch1-8 plus conclusion.docx` | `Startup Operational Excellence-narrative-expansion-blueprint.md`; `Startup Operational Excellence-Chapter 1 expanded Sam draft.docx`; `Startup Operational Excellence-Chapter 2 expanded Sam draft.docx`; `Startup Operational Excellence-Chapter 3 expanded Sam draft.docx`; `Startup Operational Excellence-Chapter 4 expanded Sam draft.docx`; `Startup Operational Excellence-Chapter 4 expanded Sam draft.md`; `Startup Operational Excellence-Chapter 5 expanded Sam draft.docx`; `Startup Operational Excellence-Chapter 5 expanded Sam draft.md`; `Startup Operational Excellence-Chapter 6 expanded Sam draft.docx`; `Startup Operational Excellence-Chapter 6 expanded Sam draft.md`; `Startup Operational Excellence-Chapter 7 expanded Sam draft.docx`; `Startup Operational Excellence-Chapter 7 expanded Sam draft.md`; `Startup Operational Excellence-Chapter 8 expanded Sam draft.docx`; `Startup Operational Excellence-Chapter 8 expanded Sam draft.md`; `Startup Operational Excellence-Conclusion Sam draft.docx`; `Startup Operational Excellence-Conclusion Sam draft.md`; `Startup Operational Excellence-Uncle Robert narrative draft.docx`; `Startup Operational Excellence-voice-sample.docx`; `Startup Operational Excellence-narrative-draft.docx` | 2026-05-19 | Reconcile front matter and required disclosures, draft or intentionally defer appendices, then review Chapters 4-8 for depth and continuity from `docs/operations/startup-operational-excellence-book-control.md`. |
+| Startup Operational Excellence rewrite | Active | `production-calibre-handoff-2026-05-20\Startup Operational Excellence-Calibre handoff manuscript.docx` | `production-calibre-handoff-2026-05-20\Startup Operational Excellence-Calibre handoff manuscript.pdf`; `production-calibre-handoff-2026-05-20\Startup Operational Excellence - signed review copy.docx`; `production-calibre-handoff-2026-05-20\Startup Operational Excellence - signed review copy.pdf`; `production-calibre-handoff-2026-05-20\README-Calibre-Handoff.md`; `production-calibre-handoff-2026-05-20\cover-assets\SOE Cover Graphic - cropped no strip 1600x2000.jpg`; `production-calibre-handoff-2026-05-20\graphics\startup-operational-excellence\graphics-inventory.md`; `production-calibre-handoff-2026-05-20\graphics\startup-operational-excellence\SOE-graphics-contact-sheet.png`; `Startup Operational Excellence-working manuscript full draft with graphics.docx`; `Startup Operational Excellence-working manuscript full draft with graphics.pdf`; `graphics/startup-operational-excellence/graphics-inventory.md`; `graphics/startup-operational-excellence/SOE-graphics-contact-sheet.png`; `Startup Operational Excellence-working manuscript full draft with appendices.docx`; `Startup Operational Excellence-working manuscript full draft with appendices.pdf`; `Startup Operational Excellence-narrative-expansion-blueprint.md`; `Startup Operational Excellence-Front Matter draft.docx`; `Startup Operational Excellence-Front Matter draft.md`; `Startup Operational Excellence-Appendices draft.docx`; `Startup Operational Excellence-Appendices draft.md`; `Startup Operational Excellence-production-metadata-and-graphics-plan.md` | 2026-05-20 | Robert can add his signature to the signed-review Word copy and send it for feedback; after feedback, import/export final files through KDP workflow. |
 
 ## File Roles
 
@@ -39,7 +39,17 @@ Do not derail urgent work. Just name the loose thread and suggest a next action.
 - `Startup Operational Excellence-working manuscript ch1-8.docx`
   - Previous assembled manuscript through Chapter 8.
 - `Startup Operational Excellence-working manuscript ch1-8 plus conclusion.docx`
-  - Current assembled manuscript through Chapter 8 and conclusion.
+  - Previous assembled manuscript through Chapter 8 and conclusion.
+- `Startup Operational Excellence-working manuscript full draft with appendices.docx`
+  - Current full draft with reader front matter, Chapters 1-8, conclusion, and appendices.
+- `Startup Operational Excellence-working manuscript full draft with appendices.pdf`
+  - PDF review copy exported from the current full draft DOCX.
+- `Startup Operational Excellence-working manuscript full draft with graphics.docx`
+  - Current full draft with eight interior graphics inserted into Chapters 1-8.
+- `Startup Operational Excellence-working manuscript full draft with graphics.pdf`
+  - PDF review copy exported from the graphics draft DOCX.
+- `graphics/startup-operational-excellence/`
+  - Interior graphics folder containing PNG figures, contact sheet, and graphics inventory.
 - `Startup Operational Excellence-narrative-expansion-blueprint.md`
   - Approved rewrite direction, production guidance, and KDP / Calibre notes.
 - `Startup Operational Excellence-Chapter 1 expanded Sam draft.docx`
@@ -72,6 +82,16 @@ Do not derail urgent work. Just name the loose thread and suggest a next action.
   - Closing / conclusion draft.
 - `Startup Operational Excellence-Conclusion Sam draft.md`
   - Markdown source for closing / conclusion draft.
+- `Startup Operational Excellence-Front Matter draft.docx`
+  - Reader-facing front matter and disclosure draft.
+- `Startup Operational Excellence-Front Matter draft.md`
+  - Markdown source for reader-facing front matter.
+- `Startup Operational Excellence-Appendices draft.docx`
+  - Appendix worksheet pack.
+- `Startup Operational Excellence-Appendices draft.md`
+  - Markdown source for appendix worksheet pack.
+- `Startup Operational Excellence-production-metadata-and-graphics-plan.md`
+  - Production metadata, graphics inventory, and KDP readiness control sheet.
 - `Startup Operational Excellence-Uncle Robert narrative draft.docx`
   - Early narrative direction draft.
 - `Startup Operational Excellence-voice-sample.docx`

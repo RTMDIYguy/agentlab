@@ -8,7 +8,7 @@ This Markdown file is a text extraction of the source `.docx` for GitHub-readabl
 
 URC-MKT-01 — Lead Generation & Conversion
 
-Owner: Robert McCarthy, Founder & CEO   |   Version: v1.0   |   Updated: March 21, 2026
+Owner: Robert T. McCarthy, Founder & CEO   |   Version: v1.0   |   Updated: March 21, 2026
 
 1. Document Purpose
 

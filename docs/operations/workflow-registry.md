@@ -24,25 +24,25 @@ This import pass prioritizes getting the URC/internal set and available automati
 | OPS-06 | Tech & IT | Operations | N/A - Framework | Head of Operations | Tool adoption or monthly review | Registry: monthly; audit: annual | Imported source |
 | OPS-07 | Growth & Training | Operations | N/A - Framework | Founder/CEO | New hire or quarterly skills review | Onboarding: 5-day sprint; training: ongoing | Imported source |
 | OPS-08 | R&D & Quality Assurance | Operations | N/A - Framework | Head of Operations | Monthly QA cycle or R&D sprint | QA: before every deliverable; R&D: quarterly | Imported source |
-| CUL-01 | Vision & Purpose | Culture | 60-70% | Robert McCarthy | Annual strategy session | Vision: annual; OKRs: quarterly | Imported source |
-| CUL-02 | Mission & Governance | Culture | 50-60% | Robert McCarthy | Annual or business model update | Mission: annual; AI policy: semi-annual | Imported source |
+| CUL-01 | Vision & Purpose | Culture | 60-70% | Robert T. McCarthy | Annual strategy session | Vision: annual; OKRs: quarterly | Imported source |
+| CUL-02 | Mission & Governance | Culture | 50-60% | Robert T. McCarthy | Annual or business model update | Mission: annual; AI policy: semi-annual | Imported source |
 | CUL-03 | Documentation & SOP | Culture | 75-85% | Robert + SOP Owner | New workflow or quarterly audit | Creation: 1-3 hours; review: quarterly | Imported source |
-| CUL-04 | Organization & Security | Culture | 60-70% | Robert McCarthy | New hire, role change, breach | Org chart: quarterly; access: semi-annual | Imported source |
-| CUL-05 | Growth & Training | Culture | 70-80% | Robert McCarthy | New hire confirmed | Onboarding: 5-day sprint; training: 2 hrs/week | Imported source |
-| CUL-06 | R&D & Quality Assurance | Culture | 65-75% | Robert McCarthy | Monthly QA cycle; quarterly R&D sprint | Tool eval: 2-week trial; QA: every deliverable | Imported source |
-| CUL-07 | Strategy & Planning | Culture | 55-65% | Robert McCarthy | December annually; end of each quarter | Annual plan: December; monthly check: 30 min | Imported source |
+| CUL-04 | Organization & Security | Culture | 60-70% | Robert T. McCarthy | New hire, role change, breach | Org chart: quarterly; access: semi-annual | Imported source |
+| CUL-05 | Growth & Training | Culture | 70-80% | Robert T. McCarthy | New hire confirmed | Onboarding: 5-day sprint; training: 2 hrs/week | Imported source |
+| CUL-06 | R&D & Quality Assurance | Culture | 65-75% | Robert T. McCarthy | Monthly QA cycle; quarterly R&D sprint | Tool eval: 2-week trial; QA: every deliverable | Imported source |
+| CUL-07 | Strategy & Planning | Culture | 55-65% | Robert T. McCarthy | December annually; end of each quarter | Annual plan: December; monthly check: 30 min | Imported source |
 | CUL-08 | Tech and IT | Culture | 70-80% | Robert + Tech Lead | Immediate agency setup; monthly thereafter | Registry: monthly; audit: December | Imported source |
-| FIN-01 | Pricing & Expenses | Finance | 80% | Robert McCarthy | Expense submitted or receipt uploaded | Processing: same day to 48 hrs; review: quarterly | Imported source |
+| FIN-01 | Pricing & Expenses | Finance | 80% | Robert T. McCarthy | Expense submitted or receipt uploaded | Processing: same day to 48 hrs; review: quarterly | Imported source |
 | FIN-02 | Taxes & Fees | Finance | 70% | Robert + CPA | 30/15/7 days before deadline | Quarterly estimated payments; annual filing | Imported source |
 | FIN-03 | Accounts Receivable & Payable | Finance | 85% | Robert + Finance | Milestone complete (AR) or invoice received (AP) | Invoice: same day; AP runs: weekly | Imported source |
-| FIN-04 | Accounting & Auditing | Finance | 75% | Robert McCarthy | Last business day of month | Month-end close: within 5 business days | Imported source |
-| FIN-05 | Investment & Savings | Finance | 65% | Robert McCarthy | 1st business day of month; drift detected | Transfers: monthly; monitoring: daily | Imported source |
+| FIN-04 | Accounting & Auditing | Finance | 75% | Robert T. McCarthy | Last business day of month | Month-end close: within 5 business days | Imported source |
+| FIN-05 | Investment & Savings | Finance | 65% | Robert T. McCarthy | 1st business day of month; drift detected | Transfers: monthly; monitoring: daily | Imported source |
 | SAL-01 | Proposals & Contracts | Sales | 85-90% | Robert + Account Managers | MQL handoff from Marketing | Draft: 24-72 hrs; signed: within 7 days | Imported source |
 | SAL-02 | OnBoarding | Sales | 80-85% | Account Manager assigned | Contract fully executed | 3-7 days from signature to active project | Imported source |
 | SAL-03 | Deals & Discounts | Sales | 85-90% | Robert (approvals) | Stall detected or discount requested | Auto-approval: < 5 min; escalation: < 4 hrs | Imported source |
 | SAL-04 | Negotiating & Closing | Sales | 80-85% | Account Manager + Robert | Proposal delivered, 48 hrs no response | Follow-up: daily until response; close: 3-21 days | Imported source |
-| SAL-05 | Passive & Active Income Streams | Sales | 85-90% (passive) | Robert McCarthy | Quarterly planning cycle | Passive product launch: 2-4 weeks; ongoing optimization | Imported source |
-| SAL-06 | Fund Raising | Sales | 80-85% | Robert McCarthy | Quarterly planning; growth initiative | Application: 2-8 weeks; investor: 3-12 months | Imported source |
+| SAL-05 | Passive & Active Income Streams | Sales | 85-90% (passive) | Robert T. McCarthy | Quarterly planning cycle | Passive product launch: 2-4 weeks; ongoing optimization | Imported source |
+| SAL-06 | Fund Raising | Sales | 80-85% | Robert T. McCarthy | Quarterly planning; growth initiative | Application: 2-8 weeks; investor: 3-12 months | Imported source |
 | MKT-01 | Lead Generation & Conversion | Marketing | 90-95% | Marcus + Robert | Campaign scheduled or budget allocated | 24-72 hrs: lead capture to MQL | Imported source |
 | MKT-02 | Email/SMS Nurture | Marketing | 85-90% | Marcus + Robert | Lead qualified as Warm/Cold | 30-90 day sequences; continuous | Imported source |
 | MKT-03 | Polls & Assessments | Marketing | 90-95% | Marcus + Robert | Campaign planning cycle | Real-time + immediate follow-up | Imported source |

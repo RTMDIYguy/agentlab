@@ -43,7 +43,21 @@ Key working files:
 | `Startup Operational Excellence-Chapter 8 expanded Sam draft.docx` | Expanded Chapter 8 | Draft complete |
 | `Startup Operational Excellence-working manuscript ch1-8.docx` | Combined front matter plus Chapters 1-8 | Previous working manuscript |
 | `Startup Operational Excellence-Conclusion Sam draft.docx` | Closing / conclusion draft | Draft complete |
-| `Startup Operational Excellence-working manuscript ch1-8 plus conclusion.docx` | Combined front matter, Chapters 1-8, and conclusion | Working manuscript |
+| `Startup Operational Excellence-working manuscript ch1-8 plus conclusion.docx` | Combined front matter, Chapters 1-8, and conclusion | Previous working manuscript |
+| `Startup Operational Excellence-Front Matter draft.docx` | Reader-facing front matter and disclosures | Draft complete |
+| `Startup Operational Excellence-Appendices draft.docx` | Appendix worksheet pack | Draft complete |
+| `Startup Operational Excellence-working manuscript full draft with appendices.docx` | Full draft with reader front matter, Chapters 1-8, conclusion, and appendices | Working manuscript |
+| `Startup Operational Excellence-working manuscript full draft with appendices.pdf` | PDF review copy exported from the full draft DOCX, currently 103 pages | Review copy |
+| `Startup Operational Excellence-working manuscript full draft with graphics.docx` | Full draft with eight interior graphics inserted | Working manuscript |
+| `Startup Operational Excellence-working manuscript full draft with graphics.pdf` | PDF review copy exported from the graphics draft DOCX, currently 107 pages | Review copy |
+| `production-calibre-handoff-2026-05-20\Startup Operational Excellence-Calibre handoff manuscript.docx` | Clean DOCX source for Calibre import after human read and removal of stray production note | Calibre handoff |
+| `production-calibre-handoff-2026-05-20\Startup Operational Excellence-Calibre handoff manuscript.pdf` | Matching PDF review/reference copy exported from the clean handoff DOCX | Calibre handoff |
+| `production-calibre-handoff-2026-05-20\Startup Operational Excellence - signed review copy.docx` | Word review copy with orange-text cover page for signature and human feedback | Review copy |
+| `production-calibre-handoff-2026-05-20\Startup Operational Excellence - signed review copy.pdf` | Matching proof PDF exported from the signed review DOCX | Review copy |
+| `production-calibre-handoff-2026-05-20\README-Calibre-Handoff.md` | Calibre metadata, blurb draft, and import notes | Calibre handoff |
+| `production-calibre-handoff-2026-05-20\cover-assets\SOE Cover Graphic - cropped no strip 1600x2000.jpg` | Current preferred cover background candidate for Calibre/Canva; 1600 x 2000 px | Cover candidate |
+| `Startup Operational Excellence-production-metadata-and-graphics-plan.md` | Metadata, graphics inventory, and KDP readiness plan | Draft |
+| `graphics/startup-operational-excellence/` | Interior graphics, contact sheet, and graphics inventory | Draft complete |
 
 Do not overwrite `Startup Operational Excellence-merged.docx`.
 
@@ -86,13 +100,17 @@ Current expanded chapter counts:
 | Chapter 7 | 2,525 | Draft complete |
 | Chapter 8 | 2,316 | Draft complete |
 | Conclusion | 1,380 | Draft complete |
+| Front matter | 437 | Draft complete |
+| Appendices | 1,466 | Draft complete |
 | Combined manuscript ch. 1-3 | 15,801 | Previous working manuscript |
 | Combined manuscript ch. 1-4 | 18,880 | Previous working manuscript |
 | Combined manuscript ch. 1-5 | 21,567 | Previous working manuscript |
 | Combined manuscript ch. 1-6 | 24,027 | Previous working manuscript |
 | Combined manuscript ch. 1-7 | 26,504 | Previous working manuscript |
 | Combined manuscript ch. 1-8 | 28,781 | Previous working manuscript |
-| Combined manuscript ch. 1-8 plus conclusion | 30,137 | Working |
+| Combined manuscript ch. 1-8 plus conclusion | 30,137 | Previous working manuscript |
+| Full draft with appendices | 33,446 | Working |
+| Full draft with graphics | 33,557 | Working |
 
 ## Cadence
 
@@ -114,10 +132,10 @@ If time is limited, do one of these minimum moves:
 
 Primary next task:
 
-1. Reconcile front matter and required disclosures
-2. Draft or intentionally defer appendices
-3. Review and expand Chapters 4-8 if needed to reach the approved depth target
-4. Assemble the next full manuscript pass
+1. Review reader-facing front matter and appendix worksheet flow
+2. Decide whether to refine any figure before human review
+3. Prepare final human review packet after graphics approval
+4. Continue into cover / blurb / KDP setup assets
 
 Chapter 4 should cover:
 
@@ -259,11 +277,27 @@ Working assumptions:
 
 - primary edition: Kindle eBook
 - secondary edition: paperback after manuscript stabilizes
-- likely paperback trim: 6" x 9", unless changed before production
+- paperback trim: 8.5" x 11", matched to the shipped `The Bootstrappers Guide
+  to the World` PDF/DOCX
+- print margins: 0.75" top/bottom and 0.5" left/right, matched to the shipped
+  Bootstrapper DOCX
 - cover can be produced through Calibre or Canva, with the final cover asset
   checked against Amazon KDP requirements before upload
 - human review packet should include matching DOCX and PDF copies generated
   from the same manuscript version
+- series: none; this is a stand-alone book
+- categories: Business Startup; Bootstrapping, matched to the shipped
+  Bootstrapper Calibre OPF subjects and mapped to closest KDP categories during
+  setup
+- keywords: business startup; bootstrapping; startup operational excellence;
+  SOE; StartupOperationalExcellence; small business systems; founder
+  operations; operational excellence; Ownable
+
+Positioning note:
+
+Robert confirmed on 2026-05-20 that this book predates his reading of
+`Ownable OS`. Its fit as a prequel should be treated as organic and
+providential, not as a planned series relationship or derivative claim.
 
 Pre-upload quality gate:
 
@@ -295,13 +329,20 @@ Pre-upload quality gate:
 | 2026-05-19 | SOE-2026-05-19-004 | Added Chapter 7, `Building a Business That Can Be Trusted`, and assembled the working manuscript through Chapters 1-7. | Complete |
 | 2026-05-19 | SOE-2026-05-19-005 | Added Chapter 8, `The Founder Becomes the Steward`, and assembled the working manuscript through Chapters 1-8. | Complete |
 | 2026-05-19 | SOE-2026-05-19-006 | Added the conclusion, `Build the System That Lets the Promise Live`, and assembled the working manuscript through conclusion. | Complete |
+| 2026-05-20 | SOE-2026-05-20-001 | Added reader-facing front matter, appendices A-G, a production metadata and graphics plan, assembled the full draft with appendices, and exported a matching PDF review copy. | Complete |
+| 2026-05-20 | SOE-2026-05-20-002 | Matched print trim/margins to `The Bootstrappers Guide to the World`, set subtitle, stand-alone series status, categories, and keyword guidance. | Complete |
+| 2026-05-20 | SOE-2026-05-20-003 | Created eight interior graphics, inserted them into Chapters 1-8 with captions and alt text, exported a matching graphics PDF review copy, installed PyMuPDF for PDF rendering, caught and corrected an initial contents-page insertion issue, and visually reviewed the corrected figure pages. | Complete |
+| 2026-05-20 | SOE-2026-05-20-004 | Removed the stray Calibre/KDP production note after Chapter 3, created the clean Calibre handoff DOCX/PDF packet, copied graphics inventory into the packet, and drafted Calibre metadata/import notes. | Complete |
+| 2026-05-20 | SOE-2026-05-20-005 | Updated the author name to `Robert T. McCarthy` across the book production files, refreshed the main PDFs, and verified the old author string no longer appears in DOCX/PDF production artifacts. | Complete |
+| 2026-05-20 | SOE-2026-05-20-006 | Added the AI-generated cover graphic, created a cleaned background candidate, replaced the preferred candidate with a cropped no-strip version after blur artifacts were found, and copied cover assets into the Calibre handoff packet. | Complete |
+| 2026-05-20 | SOE-2026-05-20-007 | Created a signed-review Word/PDF copy with rich orange cover wording in honor of Kayla, removed inherited blank opening page breaks, corrected the visible author disclosure, and tightened the contents flow before the foreword. | Complete |
 
 ## Completion Criteria For First Full Draft
 
 - Chapters 1-8 expanded in approved narrative pattern
 - closing drafted
 - front matter reconciled
-- appendices drafted or intentionally deferred
+- appendices drafted
 - combined manuscript refreshed
 - word count target reviewed
 - disclosure language included

@@ -8,7 +8,7 @@ UNCLE ROBERT CONSULTING LLC
 
 URC-SAL-05 — Pipeline Management
 
-## Owner: Robert McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
+## Owner: Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
 
 1. Why This Document Exists
 
@@ -190,7 +190,7 @@ Monthly pipeline audit: last Friday of the month — review all four metrics, id
 
 This document: reviewed quarterly or whenever the pipeline stages need updating
 
-## Owner: Robert McCarthy (Sheena to be briefed monthly on pipeline status)
+## Owner: Robert T. McCarthy (Sheena to be briefed monthly on pipeline status)
 
 Version
 

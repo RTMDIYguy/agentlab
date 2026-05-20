@@ -6,7 +6,7 @@ Packaging status: Imported source; kit conversion pending
 
 - Department: Culture
 - Automation level: 55-65%
-- Owner: Robert McCarthy
+- Owner: Robert T. McCarthy
 - Trigger: December annually; end of each quarter
 - Cycle time: Annual plan: December; monthly check: 30 min
 

@@ -6,7 +6,7 @@ Packaging status: Imported source; kit conversion pending
 
 - Department: Culture
 - Automation level: 70-80%
-- Owner: Robert McCarthy
+- Owner: Robert T. McCarthy
 - Trigger: New hire confirmed
 - Cycle time: Onboarding: 5-day sprint; training: 2 hrs/week
 
