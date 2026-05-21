@@ -19,7 +19,7 @@ Packaging status: Active package lives at ../../mkt-06-content-creation-dissemin
 
 ## Next Packaging Step
 
-Convert this imported source into a `kit.md` package using the MKT-06 package as the standard.
+Use `kit.md` as the operative package file. Certification still requires a live or controlled manual run, placeholder binding, and variant review.
 
 ## Variant Note
 

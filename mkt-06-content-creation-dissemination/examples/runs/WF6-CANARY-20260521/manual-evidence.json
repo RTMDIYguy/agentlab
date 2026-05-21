@@ -1,0 +1,50 @@
+{
+  "1": {
+    "completed": true,
+    "evidenceUrl": "mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/content-brief.md",
+    "notes": "Local content brief created with topic, persona, channels, owner, due dates, source signals, and CTA."
+  },
+  "2": {
+    "completed": false,
+    "skipped": true,
+    "fallback": "Manual task record created in local canary packet because live Jira/Planner proof is not wired yet.",
+    "evidenceUrl": "mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/local-task-record.md"
+  },
+  "3": {
+    "completed": true,
+    "evidenceUrl": "mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/source-draft.md",
+    "notes": "Source draft created from current book and LinkedIn execution signals."
+  },
+  "4": {
+    "completed": false,
+    "skipped": true,
+    "fallback": "Repository proof is this local canary packet until the changes are committed.",
+    "evidenceUrl": "mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/README.md"
+  },
+  "5": {
+    "completed": true,
+    "evidenceUrl": "mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/editorial-approval.md",
+    "notes": "Internal pre-screen approved for canary use."
+  },
+  "6": {
+    "completed": true,
+    "evidenceUrl": "mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/seo-checklist.md",
+    "notes": "Manual score 86/100."
+  },
+  "7": {
+    "completed": true,
+    "evidenceUrl": "mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/adaptations",
+    "notes": "Email and LinkedIn variants created."
+  },
+  "8": {
+    "completed": false,
+    "skipped": true,
+    "fallback": "Distribution preview represented by local email/social adaptation files; Klaviyo preview remains a live-service gap.",
+    "evidenceUrl": "mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/distribution-preview.md"
+  },
+  "9": {
+    "completed": true,
+    "evidenceUrl": "mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/performance-tracker-row.md",
+    "notes": "Local Step 7 tracker row shape created."
+  }
+}

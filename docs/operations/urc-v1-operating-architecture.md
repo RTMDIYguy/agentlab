@@ -15,7 +15,10 @@ The goal is to reduce tool sprawl, clarify brand roles, and establish one practi
 
 Use one system per job.
 
-- `Microsoft 365` is the primary operating backbone.
+- `Microsoft 365` is the preferred operating backbone when paid access is
+  available. During free-bootstrap periods, use free Microsoft accounts, local
+  files, repo-tracked CSV/Markdown, Reach, Gmail, or other free/low-cost tools
+  as manual bridges without pretending they are the final operating layer.
 - `Frappe` is the financial system of record.
 - `Notion` is a lightweight dashboard and planning layer only.
 - The book is an authority and conversion asset.
@@ -78,7 +81,7 @@ Its job is to:
 
 ### Microsoft 365
 
-Use `Microsoft 365` for:
+Use paid `Microsoft 365` for these jobs when access is available:
 
 - Outlook
 - Calendar
@@ -90,7 +93,15 @@ Use `Microsoft 365` for:
 - Forms
 - Lists
 
-This is the default collaboration and document home.
+This is the preferred collaboration and document home.
+
+Current constraint, added 2026-05-21:
+
+Paid Microsoft 365 access is not assumed available because the bill could not
+be maintained. Until it is restored, use free Microsoft accounts and local /
+repo-tracked files as the operating bridge. Do not design workflows that
+require paid Microsoft 365 features unless the workflow also has a manual or
+free fallback.
 
 ### Frappe
 

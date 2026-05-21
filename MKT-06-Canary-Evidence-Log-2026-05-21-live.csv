@@ -1,0 +1,11 @@
+id,name,completed,skipped,evidenceUrl,fallback,notes
+1,notion_planning_item,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-LIVE-CANARY-20260521/content-brief.md,,Live Independence Chapter outreach brief captured.
+2,jira_ticket,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-LIVE-CANARY-20260521/task-record.md,,Repo-tracked outreach run and status history used as the live/manual task record.
+3,source_draft,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-LIVE-CANARY-20260521/source-draft.md,,Source draft exists in the outreach run file with Touch 1; Touch 2; and Touch 3 copy.
+4,github_artifact,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-LIVE-CANARY-20260521/README.md,,Repo packet and outreach run files provide repository evidence.
+5,editorial_approval,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-LIVE-CANARY-20260521/editorial-approval.md,,Robert proceeded with send and asked to continue follow-up rather than rewrite.
+6,seo_complete,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-LIVE-CANARY-20260521/seo-and-positioning-check.md,,Private outreach positioning check passed; public SEO scoring not applicable.
+7,adaptation,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-LIVE-CANARY-20260521/adaptation-proof.md,,Touch 1; Touch 2; Touch 3; and Batch 2 adaptations exist.
+8,klaviyo_preview,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-LIVE-CANARY-20260521/distribution-proof.md,,Reach/manual email send produced a 60% open-rate signal with no replies yet.
+9,step7_tracker_row,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-LIVE-CANARY-20260521/performance-tracker-row.md,,Step 7 tracker row captures sent count; open rates; replies; and next actions.
+10,final_decision,true,false,,,Auto-classified by run-canary.mjs spec stub. Required-fail count: 0.

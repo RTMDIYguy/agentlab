@@ -1,6 +1,6 @@
 # SAL-04 - Negotiating & Closing
 
-Packaging status: Imported source; kit conversion pending
+Packaging status: Consolidated kit draft created; certification pending
 
 ## Registry Metadata
 
@@ -19,7 +19,7 @@ Packaging status: Imported source; kit conversion pending
 
 ## Next Packaging Step
 
-Convert this imported source into a `kit.md` package using the MKT-06 package as the standard.
+Use `kit.md` as the operative package file. Certification still requires a live or controlled manual run, placeholder binding, and variant review.
 
 ## Variant Note
 

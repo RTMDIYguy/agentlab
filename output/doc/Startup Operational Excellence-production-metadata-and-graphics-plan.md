@@ -82,6 +82,37 @@ spine, and front cover. The final print cover depends on final trim, paper
 type, and page count. KDP notes that cover text must match the title setup
 details and that spine text requires at least 79 pages.
 
+## Reader Feedback / Pre-KDP Revision Signals
+
+First outside-reader feedback was received from David Wagstaff, founder of
+Eprenz, on 2026-05-21 and saved in the Calibre handoff packet.
+
+Source file:
+
+`production-calibre-handoff-2026-05-20/reader-feedback/David Wagstaff Book review.txt`
+
+Production implications:
+
+- Strengthen the opening reader experience so founders feel understood before
+  they encounter compliance/disclosure material or operational diagnosis.
+- Review whether the disclosure/legal material should remain first or move
+  after a more human opening while still preserving required transparency.
+- Check cover title contrast and warmth before final KDP cover export; the
+  current direction may read more subdued/corporate than Robert's public voice.
+- Preserve the practical mentor voice and lived experience that David called
+  out as the book's strength.
+
+Launch-positioning article:
+
+- Source: `production-calibre-handoff-2026-05-20/marketing-assets/Why Robert T. McCarthy’s New Book Is a Survival Guide for Modern Founders.docx`
+- Use: Amazon description, LinkedIn launch posts, back-cover copy, and outreach
+  language.
+- Strong angles: "survival guide for modern founders," "the wall at the end of
+  free," "visibility creates improvement," "trust machine," and systems as
+  compassionate infrastructure.
+- Constraint: treat as AI-assisted marketing language, not third-party review
+  or testimonial copy.
+
 ## Interior Graphics Standard
 
 Use graphics only when they teach, summarize, or clarify.
@@ -143,6 +174,7 @@ Current signed review copy:
 - `production-calibre-handoff-2026-05-20/Startup Operational Excellence - signed review copy.docx`
 - `production-calibre-handoff-2026-05-20/Startup Operational Excellence - signed review copy.pdf`
 - Cover wording uses rich orange title and author text in honor of Kayla.
+- Dedication added 2026-05-21 before the copyright/use notice.
 - Purpose: shareable human-feedback copy before final KDP upload.
 
 ## Source Notes

@@ -134,18 +134,30 @@ It also now tells OpenClaw to read:
 This should help OpenClaw stop acting as if `agent-lab-site`, `AI Native Agency
 Deepened`, or `E:\AI\OpenClaw` is the entire business workspace.
 
-## Important Cleanup Note
+## 2026-05-21 Ollama Model Store Migration
 
-Do not delete `C:\Users\thebo\.ollama\models` yet.
+Robert confirmed OpenClaw is a working business-useful path through Ollama, so
+the OpenClaw/Ollama stack is protected from abandoned-tool cleanup.
 
-Keep the C: copy until after a sign-out/reboot confirms Ollama consistently uses
-`E:\AI\Ollama\Models`. Once confirmed, the old C: model store can be removed to
-reclaim roughly 24 GB.
+Current result:
+
+- User-level `OLLAMA_MODELS` is set to `E:\AI\Ollama\Models`.
+- Ollama was restarted with `OLLAMA_MODELS=E:\AI\Ollama\Models`.
+- `ollama list` returned `llama3.2:1b`, `llama3.2:3b`,
+  `qwen3.6:latest`, and `qwen3.5:cloud`.
+- `http://127.0.0.1:11434/api/tags` returned the same model list.
+- The old C: model store at `C:\Users\thebo\.ollama\models` was removed after
+  confirming the large qwen blob existed on E: and in a D: backup.
+- Backup location:
+  `D:\Retired C Drive Builds\2026-05-21\Ollama C models backup\models`
+
+This reclaimed the largest C: drive pressure point while preserving the working
+OpenClaw/Ollama path.
 
 ## Follow-Up Checklist
 
 - [ ] Reboot or sign out/in so user-level `OLLAMA_MODELS` is picked up normally.
-- [ ] Confirm `ollama list` still reads from `E:\AI\Ollama\Models`.
+- [x] Confirm `ollama list` reads from the E: model inventory in the current session.
 - [ ] Confirm OpenClaw gateway health after reboot.
 - [ ] Tune OpenClaw for a lightweight local model profile or attach a cloud/API model.
 - [ ] Run a successful `openclaw agent` smoke test.
@@ -153,4 +165,4 @@ reclaim roughly 24 GB.
       machine context, repo context, staging candidates, and no-stage files.
 - [ ] Retry `openclaw completion --write-state` after the next clean shell or
       reboot if tab completion matters.
-- [ ] Remove the old C: Ollama model store only after E: usage is verified.
+- [x] Remove the old C: Ollama model store after E: usage and D: backup were verified.

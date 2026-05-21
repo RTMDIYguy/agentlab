@@ -8,6 +8,19 @@ Uncle Robert Consulting LLC
 
 Draft review edition
 
+# Dedication
+
+Dedicated to my Lord and Saviour Jesus Christ, without whom this book could not
+exist. He introduced the concept of servant leadership.
+
+To my niece Kayla, without whom this agency would not exist, and to my
+co-founder and best friend Sheena Burns, without whom I would have given up on
+this effort months ago.
+
+Special thanks to Pastor Pete, my spiritual cover and mentor, and to Sharyn
+Spitznagel, the coach and mentor who has been along for the ride since it all
+started.
+
 # Copyright And Use Notice
 
 Copyright 2026 Robert T. McCarthy. All rights reserved.

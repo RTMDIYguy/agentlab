@@ -51,7 +51,8 @@ This bundle targets **Standard** conformance per `Journey_kit.md` v1.0:
 **Full** conformance items still to complete before the registry will accept the bundle as Full:
 
 - [ ] `src/` files are spec stubs — replace with tested source from existing Make.com scenarios, Zapier zaps, and AI-agent prompts
-- [ ] `verification` command (`node src/canary/run-canary.mjs`) needs the real implementation; current stub documents the contract only
+- [x] `verification` command supports a local manual evidence baseline via `--mode manual --evidence-file`
+- [ ] Live-service verification still needs the real API implementation; current live adapters document the contract only
 - [ ] n8n template imports and activates; first read-only HubSpot service node is wired after Step 7 and validated against the local self-hosted n8n instance
 - [ ] Atlassian domain typo (`atlasian.net` → `atlassian.net`) must be fixed before the Jira prerequisite check passes
 - [ ] Klaviyo prerequisite check requires the named lists/templates to be provisioned
@@ -60,9 +61,43 @@ This bundle targets **Standard** conformance per `Journey_kit.md` v1.0:
 
 1. Validate the manifest against the kit/1.0 schema: `npx @agent-kit/schema validate kit.md`
 2. Import the n8n template: `n8n/mkt-06-content-creation-dissemination.workflow.json`
-3. Run the canary: `node src/canary/run-canary.mjs --label internal-verification --date $(date +%F)`
-4. Capture the 10-checkpoint evidence chain to `MKT-06-Canary-Evidence-Log.csv`
-5. Pass / Pass-with-Workarounds → promote MKT-06 to Active in `../../Master Workflow Index.md`
+3. Run the live canary when credentials are ready: `node src/canary/run-canary.mjs --label internal-verification --date $(date +%F)`
+4. For local/manual baseline runs, use: `node src/canary/run-canary.mjs --mode manual --label internal-verification --date 2026-05-21 --evidence-file examples/runs/WF6-CANARY-20260521/manual-evidence.json`
+5. Capture the 10-checkpoint evidence chain to `MKT-06-Canary-Evidence-Log.csv` or a dated evidence log
+6. Pass / Pass-with-Workarounds with live proof → promote MKT-06 to Active in `../../Master Workflow Index.md`
+
+## Current canary baseline
+
+- Date: 2026-05-21
+- Run packet: `examples/runs/WF6-CANARY-20260521/`
+- Evidence log: `MKT-06-Canary-Evidence-Log-2026-05-21.csv`
+- Result: `Pass with Manual Workarounds`
+- Classification: local canary baseline, not full live-service activation
+- Next proof needed: live task record, live document link, controlled distribution preview/test send, and live Step 7 tracker row
+
+## Current live/manual canary
+
+- Date: 2026-05-21
+- Run packet: `examples/runs/WF6-LIVE-CANARY-20260521/`
+- Evidence log: `MKT-06-Canary-Evidence-Log-2026-05-21-live.csv`
+- Result: `Pass with Manual Workarounds`
+- Classification: controlled manual workflow usable for field execution
+- Remaining certification gap: platform-native Reach proof, per-contact
+  send/open/reply/bounce export, and one addressable task/tracker link
+
+Use this canary as the baseline example for future manual field runs. Copy its
+evidence shape before adding new channels or automation.
+
+## Next field run prepared
+
+- Planned run: Independence Chapter Batch 2 Touch 1
+- Planned send window: 2026-05-25, operator-confirmed because it is Memorial
+  Day in the United States
+- Run packet: `examples/runs/WF6-NEXT-BATCH-20260525/`
+- Reusable send proof checklist: `examples/manual-send-proof-checklist.md`
+- Reusable performance tracker shape:
+  `examples/performance-tracker-row-template.md`
+- Status: ready for manual send proof and first performance signal
 
 ## n8n live-node status
 

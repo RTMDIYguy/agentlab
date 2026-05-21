@@ -17,6 +17,8 @@ Status: Ready for Calibre test import
 | `cover-assets/SOE Cover Graphic - clean background.jpg` | Earlier cleaned candidate; not preferred because the removed strip area can show blur artifacts. |
 | `cover-assets/SOE Cover Graphic - clean background.png` | Lossless version of the earlier cleaned candidate. |
 | `cover-assets/SOE Cover Graphic.png` | Original AI-generated cover graphic source. |
+| `reader-feedback/David Wagstaff Book review.txt` | First outside-reader feedback file received 2026-05-21. |
+| `reader-feedback-log.md` | Structured feedback log and pre-KDP revision signals. |
 
 ## Metadata
 
@@ -61,3 +63,12 @@ Inside, readers will learn how to map customer promises, separate value from mot
 - Added the AI-generated cover source, an earlier cleaned background version, and a preferred cropped no-strip version that removes the generated bottom title strip without blur patching.
 - Added a signed-review Word copy with a cover page using rich orange title/author text in honor of Kayla.
 - Tightened front-matter cleanup by removing inherited blank opening page breaks and fixing the visible AI-assisted writing disclosure to use `Robert T. McCarthy`.
+- Added Robert's dedication to Jesus Christ, Kayla, Sheena Burns, Pastor Pete,
+  and Sharyn Spitznagel before the copyright/use notice.
+
+## Reader Feedback Logged
+
+- 2026-05-21: David Wagstaff, founder of Eprenz, sent first-impression review
+  comments on the signed review copy. The main production signals are to make
+  the opening feel more emotionally welcoming before compliance/instructional
+  material and to review cover title contrast/warmth before KDP upload.

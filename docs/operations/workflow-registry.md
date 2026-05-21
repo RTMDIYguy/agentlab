@@ -48,7 +48,7 @@ This import pass prioritizes getting the URC/internal set and available automati
 | MKT-03 | Polls & Assessments | Marketing | 90-95% | Marcus + Robert | Campaign planning cycle | Real-time + immediate follow-up | Imported source |
 | MKT-04 | Reviews & Referrals | Marketing | 85-90% | Marcus + Robert | Positive NPS (>=8) or milestone reached | Trigger-based; continuous | Imported source |
 | MKT-05 | Outreach & Engagement | Marketing | 80-85% | Marcus + Account Managers | Sales territory defined or campaign planned | 7-14 day sequences; continuous | Imported source |
-| MKT-06 | Content Creation & Dissemination | Marketing | 75-80% | Marcus + Robert | Content calendar; trending topic detected | Draft: 4-8 hrs; distribution: ongoing | Active package |
+| MKT-06 | Content Creation & Dissemination | Marketing | 75-80% | Marcus + Robert | Content calendar; trending topic detected | Draft: 4-8 hrs; distribution: ongoing | Active package; live/manual Independence Chapter canary passed with manual workarounds on 2026-05-21 |
 | MKT-07 | Paid Advertising & PPC | Marketing | 85-90% | Marcus + Robert | Marketing calendar or pipeline gap | Launch: 48-72 hrs; optimization: daily | Imported source + automation |
 | MKT-08 | Social Media Management | Marketing | 80-85% | Marcus + Robert | 25th of prior month (calendar planning) | 30-day calendar; daily posts | Automation scaffold only |
 | MKT-09 | Event & Webinar Marketing | Marketing | 80-85% | Robert (live) + Marcus (logistics) | Monthly planning session | Planned 30 days out; follow-up 14 days after | Folder shell |
