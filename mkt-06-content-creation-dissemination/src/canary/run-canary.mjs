@@ -27,7 +27,7 @@
  *   GA4_SERVICE_ACCOUNT_JSON, YOUTUBE_OAUTH_REFRESH_TOKEN
  */
 
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { argv, exit } from "node:process";
 
 // --- Argument parsing -------------------------------------------------------
@@ -41,6 +41,8 @@ const args = Object.fromEntries(
 
 const label = args.label ?? "internal-verification";
 const date = args.date ?? new Date().toISOString().slice(0, 10);
+const mode = args.mode ?? "live";
+const evidenceFile = args["evidence-file"];
 const canaryId = `WF6-CANARY-${date.replace(/-/g, "")}`;
 const testAssetTitle = `WF6 Canary Test — ${label.replace(/-/g, " ")} — ${date}`;
 
@@ -56,10 +58,12 @@ const REQUIRED_SECRETS = [
   "GITHUB_TOKEN",
 ];
 
-const missing = REQUIRED_SECRETS.filter((name) => !process.env[name]);
-if (missing.length > 0) {
-  console.error(`[canary] Missing required env vars: ${missing.join(", ")}`);
-  exit(2);
+if (mode !== "manual") {
+  const missing = REQUIRED_SECRETS.filter((name) => !process.env[name]);
+  if (missing.length > 0) {
+    console.error(`[canary] Missing required env vars: ${missing.join(", ")}`);
+    exit(2);
+  }
 }
 
 // --- Atlassian domain sanity check ------------------------------------------
@@ -67,7 +71,7 @@ if (missing.length > 0) {
 // Hard-fail before running any Jira write to surface this clearly.
 
 const ATLASSIAN_SITE = process.env.ATLASSIAN_SITE_URL ?? "unclerobertconsulting.atlassian.net";
-if (ATLASSIAN_SITE.includes("atlasian.net")) {
+if (mode !== "manual" && ATLASSIAN_SITE.includes("atlasian.net")) {
   console.error(
     `[canary] ATLASSIAN_SITE_URL contains 'atlasian.net' (typo). ` +
       `Correct domain is 'atlassian.net' with double 's'. Fix before running canary.`
@@ -99,49 +103,121 @@ const CHECKPOINTS = [
   { id: 10, name: "final_decision", required: true },
 ];
 
+let manualEvidence = {};
+
+if (mode === "manual") {
+  if (!evidenceFile) {
+    console.error("[canary] Manual mode requires --evidence-file <path>");
+    exit(2);
+  }
+
+  if (!existsSync(evidenceFile)) {
+    console.error(`[canary] Manual evidence file not found: ${evidenceFile}`);
+    exit(2);
+  }
+
+  try {
+    manualEvidence = JSON.parse(readFileSync(evidenceFile, "utf8"));
+  } catch (err) {
+    console.error(`[canary] Could not parse manual evidence JSON: ${err.message}`);
+    exit(2);
+  }
+}
+
+function manualCheckpoint(id, fallback) {
+  return manualEvidence[String(id)] ?? manualEvidence[id] ?? fallback;
+}
+
 // --- Adapter contracts (TODO: wire to real APIs) ----------------------------
 
 async function captureNotionPlanningItem() {
+  if (mode === "manual") {
+    return manualCheckpoint(1, {
+      completed: false,
+      skipped: true,
+      fallback: "Manual planning proof not captured in this run",
+    });
+  }
   // TODO: Notion API — find or create the canary item in the Content Calendar DB
   return { completed: false, skipped: true, fallback: "Manual capture — TODO" };
 }
 
 async function captureJiraTicket() {
+  if (mode === "manual") {
+    return manualCheckpoint(2, { completed: false, skipped: false });
+  }
   // TODO: Atlassian API — verify the ticket exists and capture state transitions
   return { completed: false, skipped: true, fallback: "Manual capture — TODO" };
 }
 
 async function captureSourceDraft() {
+  if (mode === "manual") {
+    return manualCheckpoint(3, { completed: false, skipped: false });
+  }
   // TODO: Google Docs / OneDrive — verify the draft URL resolves
   return { completed: false, skipped: true, fallback: "Manual capture — TODO" };
 }
 
 async function captureGitHubArtifact() {
+  if (mode === "manual") {
+    return manualCheckpoint(4, {
+      completed: false,
+      skipped: true,
+      fallback: "Manual repository proof not captured in this run",
+    });
+  }
   // TODO: GitHub API — verify branch and commit SHA in RTMDIYguy/urc-content-assets
   return { completed: false, skipped: true, fallback: "Manual capture — TODO" };
 }
 
 async function captureEditorialApproval() {
+  if (mode === "manual") {
+    return manualCheckpoint(5, {
+      completed: false,
+      skipped: true,
+      fallback: "Manual editorial proof not captured in this run",
+    });
+  }
   // TODO: Microsoft Teams / Notion comments — capture reviewer + timestamp
   return { completed: false, skipped: true, fallback: "Manual capture — TODO" };
 }
 
 async function captureSeoComplete() {
+  if (mode === "manual") {
+    return manualCheckpoint(6, {
+      completed: false,
+      skipped: true,
+      fallback: "Manual SEO proof not captured in this run",
+    });
+  }
   // TODO: Confluence / Notion — verify on-page score and report URL
   return { completed: false, skipped: true, fallback: "Manual capture — TODO" };
 }
 
 async function captureAdaptation() {
+  if (mode === "manual") {
+    return manualCheckpoint(7, {
+      completed: false,
+      skipped: true,
+      fallback: "Manual adaptation proof not captured in this run",
+    });
+  }
   // TODO: GitHub adaptations/{ticket-id}/ — verify variants exist
   return { completed: false, skipped: true, fallback: "Manual capture — TODO" };
 }
 
 async function captureKlaviyoPreview() {
+  if (mode === "manual") {
+    return manualCheckpoint(8, { completed: false, skipped: false });
+  }
   // TODO: Klaviyo API — verify preview campaign on List XbByas
   return { completed: false, skipped: true, fallback: "Manual capture — TODO" };
 }
 
 async function captureStep7TrackerRow() {
+  if (mode === "manual") {
+    return manualCheckpoint(9, { completed: false, skipped: false });
+  }
   // TODO: Notion — verify Performance Tracker row exists for canary asset
   return { completed: false, skipped: true, fallback: "Manual capture — TODO" };
 }

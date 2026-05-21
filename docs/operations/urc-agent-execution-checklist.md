@@ -15,7 +15,10 @@ Do not redesign the business from scratch. Execute the plan in a lightweight, pr
 
 - prefer implementation over brainstorming
 - use existing systems before adding new tools
-- keep `Microsoft 365` as the default operating backbone
+- keep `Microsoft 365` as the preferred operating backbone when paid access is
+  available; when paid access is unavailable, use free Microsoft accounts,
+  local files, repo-tracked CSV/Markdown, Reach, Gmail, or other free/low-cost
+  bridges and record the fallback
 - keep `Frappe` as the finance system of record
 - keep `Notion` limited to lightweight dashboard and planning use
 - treat the book as a funnel asset, not a standalone product
@@ -34,7 +37,8 @@ Do not redesign the business from scratch. Execute the plan in a lightweight, pr
 
 ### 2. Confirm Tool Split
 
-- confirm `Microsoft 365` usage for email, calendar, files, forms, and collaboration
+- confirm whether paid `Microsoft 365` is available; if not, use the approved
+  free-tool bridge for email, calendar, files, forms, and collaboration
 - confirm `Frappe` usage for invoices and payment status
 - confirm `Notion` is not being used as the main archive
 - note any tool overlap or unnecessary duplication

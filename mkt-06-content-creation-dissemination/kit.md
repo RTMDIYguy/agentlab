@@ -33,6 +33,24 @@ changeLog:
     type: n8n-live-node
     summary: Wired first read-only HubSpot attribution check node into the MKT-06 n8n template and validated it in the local self-hosted n8n instance.
     author: codex
+  - date: 2026-05-21
+    changeId: CC-2026-05-21-002
+    version: 1.0.0
+    type: canary-baseline
+    summary: Added manual evidence mode to the canary driver and completed a local canary baseline with a Pass with Manual Workarounds result.
+    author: codex
+  - date: 2026-05-21
+    changeId: CC-2026-05-21-005
+    version: 1.0.0
+    type: live-manual-canary
+    summary: Used the Independence Chapter outreach run as a live/manual MKT-06 canary and recorded Pass with Manual Workarounds.
+    author: codex
+  - date: 2026-05-21
+    changeId: CC-2026-05-21-006
+    version: 1.0.0
+    type: field-hardening
+    summary: Added the next Independence Chapter run packet plus reusable manual send proof and performance tracker templates.
+    author: codex
 authStandard: kit-auth/1.0
 authPolicy:
   noPlaintextSecrets: true
@@ -465,7 +483,8 @@ dependencies:
 
 verification:
   command: "node src/canary/run-canary.mjs --label internal-verification --date $(date +%F)"
-  expected: "exit 0 with all 10 evidence checkpoints captured (Notion, Jira, draft, GitHub, editorial, SEO, adaptation, Klaviyo preview, Step 7 row, final decision)"
+  manualCommand: "node src/canary/run-canary.mjs --mode manual --label internal-verification --date 2026-05-21 --evidence-file examples/runs/WF6-CANARY-20260521/manual-evidence.json"
+  expected: "exit 0 with all 10 evidence checkpoints captured, or intentionally skipped with documented fallback in manual evidence mode (Notion/planning, Jira/task, draft, GitHub, editorial, SEO, adaptation, distribution preview, Step 7 row, final decision)"
 
 fileManifest:
   - path: kit.md
@@ -618,6 +637,9 @@ failures:
 | 2026-05-07 | CC-2026-05-07-003 | 1.0.0 | auth-standard | Added kit-auth/1.0 policy and connector auth matrix for one-click and agentic installation. | codex |
 | 2026-05-12 | CC-2026-05-12-001 | 1.0.0 | n8n-template | Added importable n8n v1 workflow template with safe canary checkpoints and placeholder live-service handoffs. | codex |
 | 2026-05-13 | CC-2026-05-13-001 | 1.0.0 | n8n-live-node | Wired first read-only HubSpot attribution check node into the MKT-06 n8n template and validated it in the local self-hosted n8n instance. | codex |
+| 2026-05-21 | CC-2026-05-21-002 | 1.0.0 | canary-baseline | Added manual evidence mode to `run-canary.mjs`, created `examples/runs/WF6-CANARY-20260521/`, and completed a local canary with `Pass with Manual Workarounds`. | codex |
+| 2026-05-21 | CC-2026-05-21-005 | 1.0.0 | live-manual-canary | Used the Independence Chapter outreach run as the first field canary, created `examples/runs/WF6-LIVE-CANARY-20260521/`, and recorded `Pass with Manual Workarounds` with Reach/manual-email distribution evidence. | codex |
+| 2026-05-21 | CC-2026-05-21-006 | 1.0.0 | field-hardening | Added `examples/runs/WF6-NEXT-BATCH-20260525/`, `examples/manual-send-proof-checklist.md`, and `examples/performance-tracker-row-template.md` so the next manual field send can capture evidence without rebuilding the packet. | codex |
 
 ## Goal
 
@@ -672,7 +694,32 @@ The structured failure list is in the `failures` frontmatter. The narrative acro
 
 ## Validation
 
-Before promoting MKT-06 to Active in the Master Workflow Index, run the canary in `examples/canary-test-asset.md` end-to-end and capture the 10-checkpoint evidence chain (Notion item, Jira ticket through 7 statuses, draft, GitHub artifact, editorial approval, SEO completion, adaptation, Klaviyo preview, Step 7 tracker row, final pass/fail). The canary passes only if every checkpoint is either completed with evidence or intentionally skipped with a documented reason and an approved manual fallback. The post-install verification command is in the `verification` frontmatter and writes `MKT-06-Canary-Evidence-Log.csv` for audit.
+Before promoting MKT-06 to Active in the Master Workflow Index, run the canary in `examples/canary-test-asset.md` end-to-end and capture the 10-checkpoint evidence chain (Notion item, Jira ticket through 7 statuses, draft, GitHub artifact, editorial approval, SEO completion, adaptation, Klaviyo preview, Step 7 tracker row, final pass/fail). The canary passes only if every checkpoint is either completed with evidence or intentionally skipped with a documented reason and an approved manual fallback. The post-install verification command is in the `verification` frontmatter and writes `MKT-06-Canary-Evidence-Log.csv` or a dated evidence log for audit.
+
+Current canary baseline:
+
+- `examples/runs/WF6-CANARY-20260521/`
+- `MKT-06-Canary-Evidence-Log-2026-05-21.csv`
+- Result: `Pass with Manual Workarounds`
+- Scope: local/manual evidence only. Do not treat this as full live-service activation until Jira/Planner, OneDrive/SharePoint, controlled distribution preview, and Step 7 tracker proof are captured with addressable live-system evidence.
+
+Current live/manual canary:
+
+- `examples/runs/WF6-LIVE-CANARY-20260521/`
+- `MKT-06-Canary-Evidence-Log-2026-05-21-live.csv`
+- Result: `Pass with Manual Workarounds`
+- Scope: usable controlled manual workflow. Do not market as fully automated or
+  fully live-service certified until platform-native Reach proof, per-contact
+  metrics, and addressable task/tracker links are captured.
+
+Next field run prepared:
+
+- `examples/runs/WF6-NEXT-BATCH-20260525/`
+- `examples/manual-send-proof-checklist.md`
+- `examples/performance-tracker-row-template.md`
+- Scope: Independence Chapter Batch 2 Touch 1. Confirm send timing because
+  2026-05-25 is Memorial Day in the United States, then capture manual send
+  proof and the first performance signal.
 
 ## Outputs
 

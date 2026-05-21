@@ -12,9 +12,11 @@ condition, telemetry requirement, or tool permission changes.
 | Date | Agent | Version | Change ID | Summary | Reviewer | Status |
 | --- | --- | --- | --- | --- | --- | --- |
 | 2026-05-07 | AI Drafting Agent | 1.0.0 | CC-2026-05-07-001 | Created the version ledger referenced by `src/agents/drafting-agent.md`; no prompt behavior changed. | codex | Active |
+| 2026-05-21 | Canary Verification Driver | 1.1.0 | CC-2026-05-21-002 | Added manual evidence mode so the driver can verify first-pass canaries without live API credentials while preserving required-checkpoint pass/fail logic. | codex | Active |
 
 ## Current Agents
 
 | Agent | Current Version | Source |
 | --- | --- | --- |
 | AI Drafting Agent | 1.0.0 | `src/agents/drafting-agent.md` |
+| Canary Verification Driver | 1.1.0 | `src/canary/run-canary.mjs` |

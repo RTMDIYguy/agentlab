@@ -1,0 +1,11 @@
+id,name,completed,skipped,evidenceUrl,fallback,notes
+1,notion_planning_item,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/content-brief.md,,Local content brief created with topic; persona; channels; owner; due dates; source signals; and CTA.
+2,jira_ticket,false,true,mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/local-task-record.md,Manual task record created in local canary packet because live Jira/Planner proof is not wired yet.,
+3,source_draft,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/source-draft.md,,Source draft created from current book and LinkedIn execution signals.
+4,github_artifact,false,true,mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/README.md,Repository proof is this local canary packet until the changes are committed.,
+5,editorial_approval,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/editorial-approval.md,,Internal pre-screen approved for canary use.
+6,seo_complete,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/seo-checklist.md,,Manual score 86/100.
+7,adaptation,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/adaptations,,Email and LinkedIn variants created.
+8,klaviyo_preview,false,true,mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/distribution-preview.md,Distribution preview represented by local email/social adaptation files; Klaviyo preview remains a live-service gap.,
+9,step7_tracker_row,true,,mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/performance-tracker-row.md,,Local Step 7 tracker row shape created.
+10,final_decision,true,false,,,Auto-classified by run-canary.mjs spec stub. Required-fail count: 0.

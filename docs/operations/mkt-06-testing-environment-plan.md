@@ -3,7 +3,7 @@
 Date started: 2026-05-09
 Change ID: CC-2026-05-09-002
 Owner: URC / Codex
-Status: Testing prep
+Status: Live/manual canary passed with workarounds
 
 ## Purpose
 
@@ -111,18 +111,98 @@ Promote to `Active` only after `Pass` or `Pass with Manual Workarounds`.
 ## Current Known Gaps
 
 - `src/automation/*.mjs` files are spec stubs.
-- `src/canary/run-canary.mjs` records the evidence contract but does not yet call real service APIs.
+- `src/canary/run-canary.mjs` now supports a local manual evidence mode, but live service adapters still do not call real APIs.
 - Klaviyo preview/test-send must be validated.
 - HubSpot, GA4, GoHighLevel, Teams, Outlook, and YouTube analytics are not yet proven for this workflow.
-- The first test should focus on viability and evidence, not full automation coverage.
+- The 2026-05-21 local canary proved viability and evidence shape, not full automation coverage.
+
+## Local Canary Baseline
+
+Date: 2026-05-21
+
+Run packet:
+
+`mkt-06-content-creation-dissemination/examples/runs/WF6-CANARY-20260521/`
+
+Evidence log:
+
+`MKT-06-Canary-Evidence-Log-2026-05-21.csv`
+
+Result:
+
+`Pass with Manual Workarounds`
+
+Interpretation:
+
+MKT-06 is no longer an empty testing prep package. It has a runnable local
+baseline with planning, task, draft, editorial, SEO, adaptation, distribution
+preview workaround, Step 7 tracker shape, and final decision evidence. It
+should remain in `Testing` until the next canary captures live-system proof.
+
+## Live / Manual Canary
+
+Date: 2026-05-21
+
+Run packet:
+
+`mkt-06-content-creation-dissemination/examples/runs/WF6-LIVE-CANARY-20260521/`
+
+Evidence log:
+
+`MKT-06-Canary-Evidence-Log-2026-05-21-live.csv`
+
+Result:
+
+`Pass with Manual Workarounds`
+
+Interpretation:
+
+The Independence Chapter outreach run proves MKT-06 can operate as a controlled
+manual workflow using published content, targeted outreach, manual
+distribution, follow-up preparation, and Step 7 performance capture. It is
+usable for field execution. It is not yet fully automated or fully
+live-service certified.
+
+## Next Field Run
+
+Prepared run:
+
+`mkt-06-content-creation-dissemination/examples/runs/WF6-NEXT-BATCH-20260525/`
+
+Reusable proof checklist:
+
+`mkt-06-content-creation-dissemination/examples/manual-send-proof-checklist.md`
+
+Reusable tracker row:
+
+`mkt-06-content-creation-dissemination/examples/performance-tracker-row-template.md`
+
+Purpose:
+
+Use Independence Chapter Batch 2 Touch 1 to prove the workflow can repeat the
+live/manual send process with less setup friction. Confirm whether the planned
+2026-05-25 send should move because it falls on Memorial Day in the United
+States.
 
 ## Next Session Checklist
 
-- [ ] Confirm which testing environment will host the first MKT-06 canary.
-- [ ] Create the canary planning item.
-- [ ] Create the Jira/task record.
-- [ ] Create the source draft.
-- [ ] Capture approval, SEO, adaptation, and distribution evidence.
-- [ ] Create the Step 7 tracker row.
-- [ ] Complete the evidence log.
-- [ ] Decide `Testing`, `Needs Update`, or `Active`.
+- [x] Confirm first local testing environment.
+- [x] Create the canary planning item.
+- [x] Create the local task record.
+- [x] Create the source draft.
+- [x] Capture approval, SEO, adaptation, and distribution workaround evidence.
+- [x] Create the local Step 7 tracker row.
+- [x] Complete the dated evidence log.
+- [x] Decide `Testing`, `Needs Update`, or `Active`: keep `Testing`; local baseline passed with manual workarounds.
+- [ ] Create live Microsoft 365 or Jira/Planner task proof.
+- [ ] Create live OneDrive/SharePoint source document proof.
+- [ ] Create controlled distribution preview or test-send proof.
+- [ ] Create live Step 7 tracker row.
+- [x] Use a real outreach run as live/manual distribution proof.
+- [x] Capture first real performance signal: Reach 60% open rate, zero replies.
+- [ ] Capture platform-native Reach export/screenshot with per-contact status.
+- [x] Prepare the next Batch 2 field-run packet.
+- [x] Add reusable manual send proof checklist.
+- [x] Add lightweight performance tracker row format.
+- [ ] Complete Batch 2 send proof after the next manual send.
+- [ ] Update Batch 2 tracker row after first open/reply/bounce signal.

@@ -55,6 +55,8 @@ Key working files:
 | `production-calibre-handoff-2026-05-20\Startup Operational Excellence - signed review copy.docx` | Word review copy with orange-text cover page for signature and human feedback | Review copy |
 | `production-calibre-handoff-2026-05-20\Startup Operational Excellence - signed review copy.pdf` | Matching proof PDF exported from the signed review DOCX | Review copy |
 | `production-calibre-handoff-2026-05-20\README-Calibre-Handoff.md` | Calibre metadata, blurb draft, and import notes | Calibre handoff |
+| `production-calibre-handoff-2026-05-20\reader-feedback\David Wagstaff Book review.txt` | First outside-reader feedback source note from David Wagstaff, founder of Eprenz | Reader feedback |
+| `production-calibre-handoff-2026-05-20\marketing-assets\Why Robert T. McCarthy’s New Book Is a Survival Guide for Modern Founders.docx` | AI-assisted article with launch-positioning language for Amazon, LinkedIn, back-cover, and outreach copy | Marketing asset |
 | `production-calibre-handoff-2026-05-20\cover-assets\SOE Cover Graphic - cropped no strip 1600x2000.jpg` | Current preferred cover background candidate for Calibre/Canva; 1600 x 2000 px | Cover candidate |
 | `Startup Operational Excellence-production-metadata-and-graphics-plan.md` | Metadata, graphics inventory, and KDP readiness plan | Draft |
 | `graphics/startup-operational-excellence/` | Interior graphics, contact sheet, and graphics inventory | Draft complete |
@@ -336,6 +338,9 @@ Pre-upload quality gate:
 | 2026-05-20 | SOE-2026-05-20-005 | Updated the author name to `Robert T. McCarthy` across the book production files, refreshed the main PDFs, and verified the old author string no longer appears in DOCX/PDF production artifacts. | Complete |
 | 2026-05-20 | SOE-2026-05-20-006 | Added the AI-generated cover graphic, created a cleaned background candidate, replaced the preferred candidate with a cropped no-strip version after blur artifacts were found, and copied cover assets into the Calibre handoff packet. | Complete |
 | 2026-05-20 | SOE-2026-05-20-007 | Created a signed-review Word/PDF copy with rich orange cover wording in honor of Kayla, removed inherited blank opening page breaks, corrected the visible author disclosure, and tightened the contents flow before the foreword. | Complete |
+| 2026-05-21 | SOE-2026-05-21-001 | Logged first outside-reader feedback from David Wagstaff, founder of Eprenz; next production pass should review opening emotional hook, compliance/disclosure placement, and cover title contrast/warmth before KDP upload. | Active |
+| 2026-05-21 | SOE-2026-05-21-002 | Added dedication to Jesus Christ, Kayla, Sheena Burns, Pastor Pete, and Sharyn Spitznagel in the active Calibre handoff and signed review DOCX/PDF files, then rendered opening pages for QA. | Complete |
+| 2026-05-21 | SOE-2026-05-21-003 | Moved the ChatGPT-generated article about the book into the Calibre handoff packet as a marketing asset and logged its launch-positioning angles. | Complete |
 
 ## Completion Criteria For First Full Draft
 
