@@ -28,6 +28,20 @@ Do not redesign the business from scratch. Execute the plan in a lightweight, pr
 
 ## Checklist
 
+### 0. Check Content Queue Health
+
+- open `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Agent Lab LinkedIn\Content-Queue.md`
+- confirm whether there are at least five ready/reviewable active drafts for
+  the next publishing cycle
+- if fewer than five are available, either add drafts from current work, flag
+  the gap in the run summary, or ask Robert to collect outside-AI contributions
+  from tools that cannot access local files
+- preserve the ALLI-at-top and `#agentlab #AIVoice` posting standards
+
+Output:
+
+- one content queue health note: `healthy`, `needs refill`, or `outside input needed`
+
 ### 1. Confirm Business Hierarchy
 
 - verify `URC` is positioned as the primary business

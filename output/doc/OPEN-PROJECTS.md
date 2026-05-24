@@ -92,6 +92,8 @@ Do not derail urgent work. Just name the loose thread and suggest a next action.
   - Markdown source for appendix worksheet pack.
 - `Startup Operational Excellence-production-metadata-and-graphics-plan.md`
   - Production metadata, graphics inventory, and KDP readiness control sheet.
+- `production-calibre-handoff-2026-05-20/marketing-assets/Startup Operational Excellence - Jeff Holmes presale graphic 2026-05-22.png`
+  - Jeff Holmes social/presale graphic used on LinkedIn and Facebook; source asset for next carousel and CTA variations.
 - `Startup Operational Excellence-Uncle Robert narrative draft.docx`
   - Early narrative direction draft.
 - `Startup Operational Excellence-voice-sample.docx`
