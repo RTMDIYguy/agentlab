@@ -26,6 +26,7 @@ import Services from "./pages/Services";
 import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
 import OpsCleanupAgent from "./pages/OpsCleanupAgent";
+import AssessmentQuestionGenerator from "./pages/AssessmentQuestionGenerator";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -43,6 +44,7 @@ function Router() {
       <Route path={"/blog-manager"} component={BlogManager} />
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/ops-agent"} component={OpsCleanupAgent} />
+      <Route path={"/assessment-generator"} component={AssessmentQuestionGenerator} />
       <Route path={"/dashboard/settings"} component={Settings} />
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/privacy"} component={Privacy} />

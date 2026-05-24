@@ -113,6 +113,19 @@ Launch-positioning article:
 - Constraint: treat as AI-assisted marketing language, not third-party review
   or testimonial copy.
 
+Presale social graphic:
+
+- Source: `production-calibre-handoff-2026-05-20/marketing-assets/Startup Operational Excellence - Jeff Holmes presale graphic 2026-05-22.png`
+- Creator: Jeff Holmes, Holmes Media.
+- Use: LinkedIn/Facebook presale post, early reader interest CTA, carousel
+  source asset, and coming-soon launch banner reference.
+- Strong angles: "Build Better. Lead Deeper. Grow Stronger."; "Transform
+  chaos into clarity"; "Operational excellence begins when the work becomes
+  visible enough to improve and human enough to serve."
+- Constraint: treat the rendered author portrait as a branded author image for
+  campaign graphics, not as a literal documentary photo unless Robert approves
+  that usage in context.
+
 ## Interior Graphics Standard
 
 Use graphics only when they teach, summarize, or clarify.

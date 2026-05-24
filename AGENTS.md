@@ -27,6 +27,13 @@ Start here:
 2. `docs/operations/urc-v1-operating-architecture.md`
 3. `docs/operations/urc-90-day-implementation-plan.md`
 
+Opening routine:
+
+- Check the Agent Lab LinkedIn `Content-Queue.md` for open publishing slots.
+  If the queue has fewer than five ready/reviewable active drafts, refill it,
+  flag the gap, or ask Robert to gather outside-AI contributions from tools
+  that cannot access local files.
+
 If the task relates to the broader business archive and recovered files, also read:
 
 - `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Agent Handoff Prompt.md`
