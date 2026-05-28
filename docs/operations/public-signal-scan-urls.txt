@@ -1,0 +1,8 @@
+# LTEM / OWNABLE / Bootstrapper ecosystem public URLs (starter set)
+https://iltem.org/
+https://bootstrapper.ai/
+https://bootstrapper.ai/pricing
+https://bootstrapper.ai/llms.txt
+https://bootstrapper.ai/llms-full.txt
+https://bootstrappercapital.com/
+
