@@ -9,6 +9,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { constructWebhookEvent, handleCheckoutSessionCompleted, handleSubscriptionUpdated, handleSubscriptionDeleted, handlePaymentIntentSucceeded, handlePaymentIntentFailed } from "../stripe/webhook";
 import { startScheduledPublisher } from "../blog/scheduled-publisher";
+import { registerAICoachesWebhookRoutes } from "../aicoaches/webhook";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -80,6 +81,9 @@ async function startServer() {
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+  // AI Coaches webhook endpoint (expects JSON; optional token via AICOACHES_WEBHOOK_TOKEN)
+  registerAICoachesWebhookRoutes(app);
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
   // tRPC API
