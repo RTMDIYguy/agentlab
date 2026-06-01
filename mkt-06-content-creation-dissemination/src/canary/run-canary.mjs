@@ -28,6 +28,7 @@
  */
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { argv, exit } from "node:process";
 
 // --- Argument parsing -------------------------------------------------------
@@ -43,6 +44,7 @@ const label = args.label ?? "internal-verification";
 const date = args.date ?? new Date().toISOString().slice(0, 10);
 const mode = args.mode ?? "live";
 const evidenceFile = args["evidence-file"];
+const outputFile = args["output-file"];
 const canaryId = `WF6-CANARY-${date.replace(/-/g, "")}`;
 const testAssetTitle = `WF6 Canary Test — ${label.replace(/-/g, " ")} — ${date}`;
 
@@ -58,7 +60,7 @@ const REQUIRED_SECRETS = [
   "GITHUB_TOKEN",
 ];
 
-if (mode !== "manual") {
+if (mode !== "manual" && mode !== "proof") {
   const missing = REQUIRED_SECRETS.filter((name) => !process.env[name]);
   if (missing.length > 0) {
     console.error(`[canary] Missing required env vars: ${missing.join(", ")}`);
@@ -71,7 +73,7 @@ if (mode !== "manual") {
 // Hard-fail before running any Jira write to surface this clearly.
 
 const ATLASSIAN_SITE = process.env.ATLASSIAN_SITE_URL ?? "unclerobertconsulting.atlassian.net";
-if (mode !== "manual" && ATLASSIAN_SITE.includes("atlasian.net")) {
+if (mode !== "manual" && mode !== "proof" && ATLASSIAN_SITE.includes("atlasian.net")) {
   console.error(
     `[canary] ATLASSIAN_SITE_URL contains 'atlasian.net' (typo). ` +
       `Correct domain is 'atlassian.net' with double 's'. Fix before running canary.`
@@ -104,10 +106,11 @@ const CHECKPOINTS = [
 ];
 
 let manualEvidence = {};
+let evidenceBaseDir = process.cwd();
 
-if (mode === "manual") {
+if (mode === "manual" || mode === "proof") {
   if (!evidenceFile) {
-    console.error("[canary] Manual mode requires --evidence-file <path>");
+    console.error(`[canary] ${mode} mode requires --evidence-file <path>`);
     exit(2);
   }
 
@@ -116,10 +119,12 @@ if (mode === "manual") {
     exit(2);
   }
 
+  evidenceBaseDir = dirname(resolve(evidenceFile));
+
   try {
     manualEvidence = JSON.parse(readFileSync(evidenceFile, "utf8"));
   } catch (err) {
-    console.error(`[canary] Could not parse manual evidence JSON: ${err.message}`);
+    console.error(`[canary] Could not parse evidence JSON: ${err.message}`);
     exit(2);
   }
 }
@@ -128,9 +133,58 @@ function manualCheckpoint(id, fallback) {
   return manualEvidence[String(id)] ?? manualEvidence[id] ?? fallback;
 }
 
+function evidenceExists(evidenceUrl) {
+  if (!evidenceUrl) return false;
+  if (/^https?:\/\//i.test(evidenceUrl)) return true;
+
+  const fromCwd = resolve(process.cwd(), evidenceUrl);
+  const fromEvidenceFile = resolve(evidenceBaseDir, evidenceUrl);
+  return existsSync(fromCwd) || existsSync(fromEvidenceFile);
+}
+
+function proofCheckpoint(id) {
+  const result = manualCheckpoint(id, { completed: false, skipped: false });
+  const evidenceUrl = result.evidenceUrl ?? "";
+  const proofErrors = [];
+
+  if (result.completed !== true) {
+    proofErrors.push("checkpoint is not marked completed");
+  }
+
+  if (result.skipped === true) {
+    proofErrors.push("checkpoint is marked skipped");
+  }
+
+  if (result.fallback) {
+    proofErrors.push("checkpoint includes fallback language");
+  }
+
+  if (!evidenceUrl) {
+    proofErrors.push("checkpoint has no evidenceUrl");
+  } else if (!evidenceExists(evidenceUrl)) {
+    proofErrors.push(`evidenceUrl does not resolve: ${evidenceUrl}`);
+  }
+
+  if (proofErrors.length > 0) {
+    return {
+      ...result,
+      completed: false,
+      skipped: false,
+      notes: [result.notes, ...proofErrors].filter(Boolean).join(" | "),
+    };
+  }
+
+  return {
+    ...result,
+    completed: true,
+    skipped: false,
+  };
+}
+
 // --- Adapter contracts (TODO: wire to real APIs) ----------------------------
 
 async function captureNotionPlanningItem() {
+  if (mode === "proof") return proofCheckpoint(1);
   if (mode === "manual") {
     return manualCheckpoint(1, {
       completed: false,
@@ -143,6 +197,7 @@ async function captureNotionPlanningItem() {
 }
 
 async function captureJiraTicket() {
+  if (mode === "proof") return proofCheckpoint(2);
   if (mode === "manual") {
     return manualCheckpoint(2, { completed: false, skipped: false });
   }
@@ -151,6 +206,7 @@ async function captureJiraTicket() {
 }
 
 async function captureSourceDraft() {
+  if (mode === "proof") return proofCheckpoint(3);
   if (mode === "manual") {
     return manualCheckpoint(3, { completed: false, skipped: false });
   }
@@ -159,6 +215,7 @@ async function captureSourceDraft() {
 }
 
 async function captureGitHubArtifact() {
+  if (mode === "proof") return proofCheckpoint(4);
   if (mode === "manual") {
     return manualCheckpoint(4, {
       completed: false,
@@ -171,6 +228,7 @@ async function captureGitHubArtifact() {
 }
 
 async function captureEditorialApproval() {
+  if (mode === "proof") return proofCheckpoint(5);
   if (mode === "manual") {
     return manualCheckpoint(5, {
       completed: false,
@@ -183,6 +241,7 @@ async function captureEditorialApproval() {
 }
 
 async function captureSeoComplete() {
+  if (mode === "proof") return proofCheckpoint(6);
   if (mode === "manual") {
     return manualCheckpoint(6, {
       completed: false,
@@ -195,6 +254,7 @@ async function captureSeoComplete() {
 }
 
 async function captureAdaptation() {
+  if (mode === "proof") return proofCheckpoint(7);
   if (mode === "manual") {
     return manualCheckpoint(7, {
       completed: false,
@@ -207,6 +267,7 @@ async function captureAdaptation() {
 }
 
 async function captureKlaviyoPreview() {
+  if (mode === "proof") return proofCheckpoint(8);
   if (mode === "manual") {
     return manualCheckpoint(8, { completed: false, skipped: false });
   }
@@ -215,6 +276,7 @@ async function captureKlaviyoPreview() {
 }
 
 async function captureStep7TrackerRow() {
+  if (mode === "proof") return proofCheckpoint(9);
   if (mode === "manual") {
     return manualCheckpoint(9, { completed: false, skipped: false });
   }
@@ -226,13 +288,26 @@ async function captureFinalDecision(rows) {
   const requiredFails = rows
     .filter((r) => CHECKPOINTS.find((c) => c.id === r.id)?.required)
     .filter((r) => !r.completed && !r.skipped);
+  const proofFails =
+    mode === "proof"
+      ? rows.filter((r) => !r.completed || r.skipped || r.fallback)
+      : [];
   const decision =
-    requiredFails.length === 0 ? "Pass with Manual Workarounds" : "Fail";
+    mode === "proof"
+      ? proofFails.length === 0
+        ? "Pass"
+        : "Fail"
+      : requiredFails.length === 0
+        ? "Pass with Manual Workarounds"
+        : "Fail";
   return {
     completed: true,
     skipped: false,
     decision,
-    notes: `Auto-classified by run-canary.mjs spec stub. Required-fail count: ${requiredFails.length}.`,
+    notes:
+      mode === "proof"
+        ? `Auto-classified by strict proof mode. Proof-fail count: ${proofFails.length}.`
+        : `Auto-classified by run-canary.mjs spec stub. Required-fail count: ${requiredFails.length}.`,
   };
 }
 
@@ -276,10 +351,11 @@ async function main() {
       ].join(",")
   );
   const csv = [csvHeader, ...csvRows].join("\n");
-  writeFileSync(`MKT-06-Canary-Evidence-Log-${date}.csv`, csv);
+  const logPath = outputFile ?? `MKT-06-Canary-Evidence-Log-${date}.csv`;
+  writeFileSync(logPath, csv);
 
   console.log(`[canary] ${canaryId} — ${testAssetTitle}`);
-  console.log(`[canary] Evidence log written: MKT-06-Canary-Evidence-Log-${date}.csv`);
+  console.log(`[canary] Evidence log written: ${logPath}`);
   console.log(`[canary] Final decision: ${final.decision}`);
 
   exit(final.decision.startsWith("Pass") ? 0 : 1);

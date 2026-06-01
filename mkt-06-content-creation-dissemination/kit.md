@@ -51,6 +51,12 @@ changeLog:
     type: field-hardening
     summary: Added the next Independence Chapter run packet plus reusable manual send proof and performance tracker templates.
     author: codex
+  - date: 2026-05-31
+    changeId: CC-2026-05-31-005
+    version: 1.0.0
+    type: proof-mode
+    summary: Added strict canary proof mode so MKT-06 can distinguish no-workaround evidence from manual fallback evidence.
+    author: codex
 authStandard: kit-auth/1.0
 authPolicy:
   noPlaintextSecrets: true
@@ -640,6 +646,7 @@ failures:
 | 2026-05-21 | CC-2026-05-21-002 | 1.0.0 | canary-baseline | Added manual evidence mode to `run-canary.mjs`, created `examples/runs/WF6-CANARY-20260521/`, and completed a local canary with `Pass with Manual Workarounds`. | codex |
 | 2026-05-21 | CC-2026-05-21-005 | 1.0.0 | live-manual-canary | Used the Independence Chapter outreach run as the first field canary, created `examples/runs/WF6-LIVE-CANARY-20260521/`, and recorded `Pass with Manual Workarounds` with Reach/manual-email distribution evidence. | codex |
 | 2026-05-21 | CC-2026-05-21-006 | 1.0.0 | field-hardening | Added `examples/runs/WF6-NEXT-BATCH-20260525/`, `examples/manual-send-proof-checklist.md`, and `examples/performance-tracker-row-template.md` so the next manual field send can capture evidence without rebuilding the packet. | codex |
+| 2026-05-31 | CC-2026-05-31-005 | 1.0.0 | proof-mode | Added `--mode proof` to the canary driver and a proof-mode regression test so a run can pass without workarounds only when all checkpoints have completed, resolvable evidence and no fallback/skipped language. | codex |
 
 ## Goal
 
