@@ -203,6 +203,16 @@ export default function Services() {
         </div>
       </section>
 
+      <section className="py-8 bg-card border-y border-border">
+        <div className="container">
+          <p className="max-w-4xl mx-auto text-center text-muted-foreground leading-relaxed">
+            We automate repeatable work while keeping human judgment at the checkpoints where
+            quality, security, and privacy matter. Every workflow should make the client more
+            capable, not more dependent on a heavier tool stack.
+          </p>
+        </div>
+      </section>
+
       {/* Workflows Section */}
       <section className="py-20">
         <div className="container">

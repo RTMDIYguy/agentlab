@@ -14,6 +14,16 @@ The standard is servant leadership in practice: every SOP should reduce burden,
 increase clarity, protect trust, and help the next human or agent do the work
 better.
 
+## Operating Manual Relationship
+
+The SOP Manual sits under the broader agency operating manual:
+
+- `docs/operations/agency-operating-manual.md`
+
+Use the agency operating manual as the first orientation document for the whole
+business system. Use this SOP Manual Index when a repeated operating lesson
+needs to become a procedure.
+
 ## Manual Principles
 
 - Use the systems already in place before adding new tools.
@@ -54,7 +64,7 @@ Initial SOP candidates:
 
 | SOP ID | Working Title | Source | Status |
 | --- | --- | --- | --- |
-| SOP-CUL-001 | Servant Leadership Operating Standard | Agent Lab LinkedIn culture docs | Needed |
+| SOP-CUL-001 | Servant Leadership And Agency Values | `docs/operations/SOP-CUL-001-servant-leadership-and-agency-values.md` | Draft exists |
 | SOP-CUL-002 | Agent Contribution And Approval Standard | Agent Lab LinkedIn guidelines | Draft source exists |
 | SOP-CUL-003 | Change-Control And Evidence Logging | `docs/operations/change-control-register.md` | Draft source exists |
 | SOP-CUL-004 | Quarterly SOP Review | OPS-03 / CUL-03 | Needed |
@@ -71,6 +81,7 @@ Initial SOP candidates:
 | SOP-OPS-002 | Monday Pipeline Review | URC weekly cadence | Needed |
 | SOP-OPS-003 | Friday Finance And KPI Review | URC weekly cadence | Needed |
 | SOP-OPS-004 | Mobile / Offline Continuity Handoff | `docs/operations/mobile-chatgpt-continuity-brief.md` | Draft source exists |
+| SOP-OPS-005 | Naming Conventions And Identifier Control | `docs/operations/SOP-OPS-005-naming-conventions-and-identifier-control.md` | Draft exists |
 
 ### 3. Marketing And Public Voice
 

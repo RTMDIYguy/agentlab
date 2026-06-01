@@ -86,10 +86,15 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between">
-          <p className="text-muted-foreground text-sm">
-            © 2025 AgentLab. All rights reserved.
-          </p>
-          <p className="text-muted-foreground text-sm">
+          <div className="text-center md:text-left">
+            <p className="text-muted-foreground text-sm">
+              © 2025 AgentLab. All rights reserved.
+            </p>
+            <p className="text-muted-foreground text-xs mt-2 max-w-2xl">
+              Servant leadership, honest build logs, human judgment, responsible automation, and practical stewardship.
+            </p>
+          </div>
+          <p className="text-muted-foreground text-sm mt-4 md:mt-0">
             Built with <span className="text-primary">❤</span> using Manus
           </p>
         </div>

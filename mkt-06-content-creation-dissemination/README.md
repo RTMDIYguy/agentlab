@@ -63,8 +63,14 @@ This bundle targets **Standard** conformance per `Journey_kit.md` v1.0:
 2. Import the n8n template: `n8n/mkt-06-content-creation-dissemination.workflow.json`
 3. Run the live canary when credentials are ready: `node src/canary/run-canary.mjs --label internal-verification --date $(date +%F)`
 4. For local/manual baseline runs, use: `node src/canary/run-canary.mjs --mode manual --label internal-verification --date 2026-05-21 --evidence-file examples/runs/WF6-CANARY-20260521/manual-evidence.json`
-5. Capture the 10-checkpoint evidence chain to `MKT-06-Canary-Evidence-Log.csv` or a dated evidence log
-6. Pass / Pass-with-Workarounds with live proof → promote MKT-06 to Active in `../../Master Workflow Index.md`
+5. For no-workaround proof runs, use: `node src/canary/run-canary.mjs --mode proof --label strict-proof --date 2026-05-31 --evidence-file examples/runs/<RUN-ID>/manual-evidence.json`
+6. Capture the 10-checkpoint evidence chain to `MKT-06-Canary-Evidence-Log.csv` or a dated evidence log
+7. Pass / Pass-with-Workarounds with live proof → promote MKT-06 to Active in `../../Master Workflow Index.md`
+
+Proof mode is stricter than manual mode. It only returns `Pass` when every
+checkpoint is marked completed, has a concrete evidence URL, resolves to either
+an existing local artifact or HTTP URL, and contains no fallback/skipped
+language.
 
 ## Current canary baseline
 

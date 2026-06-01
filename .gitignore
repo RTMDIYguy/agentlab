@@ -14,6 +14,11 @@ build/
 .env.test.local
 .env.production.local
 
+# Postman exports
+postman/environments/*.json
+!postman/environments/*.example.json
+postman/**/*.local.json
+
 # IDE and editor files
 .vscode/
 .idea/
