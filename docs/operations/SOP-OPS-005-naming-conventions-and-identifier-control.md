@@ -1,8 +1,8 @@
 # SOP-OPS-005: Naming Conventions And Identifier Control
 
 Owner: Operations
-Last updated: 2026-05-30
-Version: v0.1
+Last updated: 2026-06-03
+Version: v0.2
 Status: Draft
 Scope: Internal
 
@@ -92,6 +92,7 @@ Use short codes when an item must connect across systems.
 | `TAC` | Tactix |
 | `BCAP` | Bootstrapper Capital |
 | `BGW` | Bootstrapper's Guide to the World |
+| `SOE` | Startup Operational Excellence |
 
 Department or workflow codes:
 
@@ -99,7 +100,7 @@ Department or workflow codes:
 | --- | --- |
 | `OPS` | Operations |
 | `MKT` | Marketing |
-| `SAL` | Sales / CRM-lite |
+| `SAL` | Sales |
 | `FUL` | Fulfillment / delivery |
 | `FIN` | Finance |
 | `PKG` | Workflow packaging |
@@ -112,16 +113,28 @@ SKUs should connect offers, invoices, fulfillment, and accounting.
 
 Pattern:
 
-`BUSINESS-OFFER-TIER-BILLING`
+`BUSINESS-ASSET-OFFER-VARIANT-DEPTH-BILLING`
 
 Examples:
 
 | SKU | Meaning |
 | --- | --- |
-| `AGL-FSS-BETA-MONTHLY` | Agent Lab Founder Signal System beta monthly plan |
-| `URC-DIAG-FOUNDER-ONEOFF` | URC founder diagnostic one-time service |
-| `BCAP-ROUNDTABLE-SPONSOR-ONEOFF` | Bootstrapper Capital roundtable sponsorship |
-| `TAC-IMPL-SPRINT-ONEOFF` | Tactix implementation sprint |
+| `AGL-FSS-BETA-STD-MONTHLY` | Agent Lab Founder Signal System standard beta monthly plan |
+| `URC-ASMT-QUAL-LITE-FREE` | URC lightweight assessment used as a free lead qualifier |
+| `URC-ASMT-AUDIT-DEEP-ONEOFF` | URC in-depth assessment expanded into a paid audit |
+| `BCAP-ROUND-SPONSOR-STD-ONEOFF` | Bootstrapper Capital standard roundtable sponsorship |
+| `TAC-UPWORK-IMPL-SPRINT-ONEOFF` | Tactix Upwork implementation sprint |
+
+Segment rules:
+
+| Segment | Meaning | Rule |
+| --- | --- | --- |
+| `BUSINESS` | Owning business or authority lane | Use a business code such as `URC`, `AGL`, `TAC`, `BCAP`, `BGW`, or `SOE`. |
+| `ASSET` | Stable product, asset, channel, or system family | Use a short code such as `ASMT`, `FSS`, `ROUND`, `BOOK`, `UPWORK`, or `DIAG`. |
+| `OFFER` | Commercial or operating use | Use a short code such as `QUAL`, `LMAG`, `PROD`, `AUDIT`, `SPRINT`, `SPONSOR`, `WKSP`, or `CONT`. |
+| `VARIANT` | Optional tier or package variant | Use `NONE` when no tier exists; otherwise use `LITE`, `STD`, `PRO`, `BETA`, `CUSTOM`, or another approved code. |
+| `DEPTH` | Work depth or scope | Use `NONE`, `LITE`, `STD`, `DEEP`, `FULL`, or `CUSTOM`. |
+| `BILLING` | Billing model | Use `FREE`, `ONEOFF`, `MONTHLY`, `QUARTERLY`, `ANNUAL`, `REVSHARE`, or `SPONSOR`. |
 
 SKU rules:
 
@@ -130,6 +143,12 @@ SKU rules:
 - Do not reuse a SKU for a materially different deliverable.
 - If the offer changes materially, create a new SKU and mark the old one
   superseded.
+- Use `NONE` for segments that do not apply rather than dropping a segment; this
+  keeps SKUs sortable without forcing tiers where none exist.
+- Create new segment codes only when the existing code list cannot describe the
+  offer without confusion.
+- Every active SKU must map to a revenue category and chart-of-accounts account
+  before it is used in an invoice, proposal, product page, or tracker.
 
 ## Invoice Line Item Standard
 
@@ -173,12 +192,21 @@ Account names should be business-readable:
 - `6100 Software And Tools`
 - `6200 Marketing And Promotion`
 
-Do not treat these as the final accounting system of record until reviewed
-inside the active finance tool.
+URC does not currently have an active finance platform. Until one is chosen,
+owned finance trackers and dashboards are the finance control layer. Those
+trackers must keep SKU, invoice-line, revenue-category, and chart-of-accounts
+fields synchronized from the start so the data can later migrate cleanly into
+an accounting system.
 
 ## API Key And Secret Naming
 
 Secrets should be inventoried without exposing values in docs.
+
+Handling rules, quarantine rules, approved destinations, and the metadata-only
+log live in:
+
+- `docs/operations/secret-handling-standard.md`
+- `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Compliance Audits\secret-handling-log.md`
 
 Use the API key inventory workbook for consolidation:
 
@@ -202,6 +230,9 @@ Rules:
 - Use `local`, `dev`, `staging`, or `prod` environment labels.
 - Mark unknown or stale keys as `review-needed`.
 - Prefer Postman vault or environment variables for values, not loose files.
+- Treat `Keys`, backup-code folders, `.env` files, and credential exports as
+  secret-bearing until classified.
+- Record handling actions in the metadata-only secret handling log.
 
 ## Procedure
 
@@ -213,10 +244,13 @@ Rules:
    instead of renaming it immediately.
 5. For offers, create the SKU before the invoice line item.
 6. For invoice line items, connect the SKU to revenue category and accounting
-   account as soon as those fields exist.
+   account before the item is used.
 7. For secrets, inventory metadata first, then move usable values into Postman
    Desktop or the approved vault surface.
-8. Record material naming-standard changes in change control.
+8. For secret-bearing JSON, classify it before deciding whether it is a
+   credential artifact, workflow blueprint, Postman export, OAuth config, or
+   unknown quarantined file.
+9. Record material naming-standard changes in change control.
 
 ## Success Criteria
 
@@ -224,7 +258,8 @@ Rules:
   OneDrive account container.
 - Legacy folders can be referenced safely by alias.
 - New files and folders sort predictably.
-- Offers, SKUs, invoice lines, and accounting categories can be connected later.
+- Offers, SKUs, invoice lines, revenue categories, and accounting accounts stay
+  connected from creation instead of being reconciled later.
 - Secret locations are inventoried without exposing secret values.
 
 ## Version History
@@ -232,3 +267,5 @@ Rules:
 | Date | Version | Change |
 | --- | --- | --- |
 | 2026-05-30 | v0.1 | Initial SOP created from API key inventory and folder navigation discussion. |
+| 2026-06-03 | v0.2 | Added pointer to the secret-handling standard, metadata-only handling log, and JSON quarantine classification rule. |
+| 2026-06-03 | v0.3 | Added `SOE`, expanded SKU segments for assessment/offer depth and billing variation, and required SKU/accounting synchronization while owned finance trackers are the active control layer. |

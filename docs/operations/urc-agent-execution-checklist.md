@@ -19,12 +19,18 @@ Do not redesign the business from scratch. Execute the plan in a lightweight, pr
   available; when paid access is unavailable, use free Microsoft accounts,
   local files, repo-tracked CSV/Markdown, Reach, Gmail, or other free/low-cost
   bridges and record the fallback
-- keep `Frappe` as the finance system of record
+- use owned finance trackers and dashboards as the current finance control
+  layer until a replacement finance platform is chosen
 - keep `Notion` limited to lightweight dashboard and planning use
-- treat the book as a funnel asset, not a standalone product
+- treat the book as the authority/funnel seed for the larger BGW compendium,
+  blueprint-book, and course line
 - keep `URC` as the main brand
-- keep `Bootstrapper Capital` as the audience and event funnel
+- keep `Bootstrapper Capital` as the audience and event funnel while allowing
+  for a future Ownable OS ecosystem role if change control approves it
 - keep `Tactix` as the fulfillment arm
+- treat Stripe Connect, Azure, Google Cloud, AWS, GitHub, SaaSify, the VPS,
+  KNIME, and similar platforms as evaluation candidates unless a decision
+  record promotes them
 
 ## Checklist
 
@@ -53,8 +59,11 @@ Output:
 
 - confirm whether paid `Microsoft 365` is available; if not, use the approved
   free-tool bridge for email, calendar, files, forms, and collaboration
-- confirm `Frappe` usage for invoices and payment status
+- confirm the active owned finance tracker/dashboard path for invoices,
+  payment status, revenue categories, SKUs, and chart-of-accounts mapping
 - confirm `Notion` is not being used as the main archive
+- confirm whether any cloud, SaaS, marketplace, VPS, or KNIME experiment has
+  become operationally important enough to need an SOP or decision record
 - note any tool overlap or unnecessary duplication
 
 ### 3. Define The Active Offer Ladder
@@ -77,7 +86,7 @@ Output:
 
 Output:
 
-- one CRM-lite recommendation or update plan
+- one Independence Chapter CRM-lite bridge recommendation or update plan
 
 ### 5. Build Or Update The Book Funnel
 
@@ -102,6 +111,21 @@ Output:
 
 - one weekly operating checklist
 
+### 6A. Run Weekly Workflow Audit Bank
+
+- open `docs/operations/weekly-workflow-audit-bank.md`
+- review the active queue from `docs/operations/agency-operating-manual.md`
+- start with `MKT-09` until event type, invite path, RSVP/registration path,
+  follow-up, CRM-lite update, finance handoff if paid, proof loop, and
+  AfterCare/community handoff are defined
+- check process completeness, stack stability, workflow viability,
+  dependencies and handoffs, action responsibilities, and flow efficiency
+
+Output:
+
+- one workflow audit summary with pass/review-needed status and next three
+  fixes
+
 ### 7. Define Phase 1 Actions
 
 Focus on days 1-30:
@@ -122,8 +146,9 @@ Focus on days 31-60:
 
 - launch one founder-facing funnel
 - start one recurring event rhythm
-- standardize CRM-lite updates
-- standardize invoicing in `Frappe`
+- standardize Independence Chapter CRM-lite bridge updates without turning it
+  into the agency CRM
+- standardize invoicing in the owned finance tracker/dashboard layer
 - turn the book into reusable content
 
 Output:
