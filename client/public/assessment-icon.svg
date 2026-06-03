@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Consulting Assessment Generator">
+  <rect width="512" height="512" rx="96" fill="#1d4ed8"/>
+  <path d="M144 148c0-24.3 19.7-44 44-44h136c24.3 0 44 19.7 44 44v216c0 24.3-19.7 44-44 44H188c-24.3 0-44-19.7-44-44V148Z" fill="#f8fafc"/>
+  <path d="M196 184h120M196 240h120M196 296h72" stroke="#1d4ed8" stroke-width="28" stroke-linecap="round"/>
+  <circle cx="344" cy="330" r="56" fill="#0f172a"/>
+  <path d="m374 370 34 34" stroke="#0f172a" stroke-width="28" stroke-linecap="round"/>
+  <path d="M324 330h40M344 310v40" stroke="#f8fafc" stroke-width="18" stroke-linecap="round"/>
+</svg>
