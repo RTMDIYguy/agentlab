@@ -11,6 +11,13 @@ It exists to surface what should be done today: money, client trust, sales
 follow-up, marketing actions, workflow audit prompts, and source-of-truth
 maintenance.
 
+The V1 human navigation layer is:
+
+- `docs/operations/agency-command-center.md`
+
+Use that page as the front door for deciding what to open, check, or work on
+next. Use this folder for generated dated briefs and run evidence.
+
 ## Run
 
 ```bash

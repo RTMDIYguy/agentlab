@@ -8,10 +8,11 @@ Status: v0 operating audit
 This audit bank keeps the 45 registered workflows from silently drifting as the
 tool stack, offer ladder, client path, and finance controls change.
 
-`MKT-09 Event & Webinar Marketing` is the current canary because it is still a
-folder shell while Bootstrapper Capital events are becoming important to the
-revenue path. The same checks should be run across all workflows so weak spots
-are found before they become client, revenue, compliance, or operator burden.
+`MKT-09 Event & Webinar Marketing` is the current canary because it has only a
+v0 runnable slice while Bootstrapper Capital events are becoming important to
+the revenue path. The same checks should be run across all workflows so weak
+spots are found before they become client, revenue, compliance, or operator
+burden.
 
 ## Weekly Trigger
 
@@ -43,7 +44,7 @@ Use one row per workflow reviewed.
 
 | Date | Workflow ID | Audit Lane | Status | Finding | Action | Owner | Due |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| YYYY-MM-DD | MKT-09 | Process steps completeness | Review needed | Folder shell needs event sequence, RSVP path, follow-up, tracker update, and proof loop | Draft MKT-09 event operating slice | Robert + Marcus + agent | TBD |
+| 2026-06-04 | MKT-09 | Process steps completeness | Review needed | v0 RoundTable slice exists, but Google response path, tracker location, and follow-up messages still need live confirmation | Confirm existing assessment response sheet and tracker location | Robert + Marcus + agent | TBD |
 
 ## Priority Order
 
@@ -58,9 +59,10 @@ Start with workflows that touch live revenue, client trust, money, or secrets:
 
 ## MKT-09 Minimum Viable Slice
 
-Before `MKT-09` can be treated as operational, define:
+Before `MKT-09` can be treated as operational, confirm the v0 slice in
+`docs/operations/mkt-09-roundtable-operating-slice.md`:
 
-- event type: roundtable, webinar, workshop, chapter meeting, or course preview
+- event type: RoundTable Chapter meeting already scheduled in Ownable OS
 - audience and offer relationship
 - event source: book, content, outreach, referral, community, or partner
 - invite path

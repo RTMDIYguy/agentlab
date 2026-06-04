@@ -55,12 +55,13 @@ Primary repo:
 Start in this order:
 
 1. `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\WORKSPACE-STANDARD.md`
-2. `docs/operations/agency-operating-manual.md`
-3. `docs/operations/urc-agent-execution-checklist.md`
-4. `docs/operations/urc-v1-operating-architecture.md`
-5. `docs/operations/workflow-registry.md`
-6. `docs/operations/sop-manual-index.md`
-7. `docs/operations/change-control-register.md`
+2. `docs/operations/agency-command-center.md`
+3. `docs/operations/agency-operating-manual.md`
+4. `docs/operations/urc-agent-execution-checklist.md`
+5. `docs/operations/urc-v1-operating-architecture.md`
+6. `docs/operations/workflow-registry.md`
+7. `docs/operations/sop-manual-index.md`
+8. `docs/operations/change-control-register.md`
 
 Owner's Manual build source:
 
@@ -69,6 +70,14 @@ Owner's Manual build source:
 The Owner's Manual is the planned human-facing navigation layer for the whole
 agency and project ecosystem. This operating manual remains the current front
 door until that guide is built and promoted.
+
+Bootstrapper.ai / Ownable OS field guide:
+
+- `docs/operations/bootstrapper-ai-operating-field-guide.md`
+
+Use the field guide when working inside the Independence Chapter page,
+Ownable OS Command Center, Profit Engine CRM, Financial Engine, Value Engine,
+People Engine, or Weekly Close.
 
 ## Business Map
 
@@ -181,7 +190,9 @@ candidate path rather than a chosen route.
 
 | Artifact Type | Human-facing Source | Agent / Versioned Source | Notes |
 | --- | --- | --- | --- |
+| Agency Command Center | Repo Markdown front door | `docs/operations/agency-command-center.md` | V1 human navigation layer for what to open, check, or work on next |
 | Agency manual | Google Drive copy when promoted | `docs/operations/agency-operating-manual.md` | This file is the current repo source |
+| Bootstrapper.ai / Ownable OS field guide | Bootstrapper.ai screens plus future human-facing copy | `docs/operations/bootstrapper-ai-operating-field-guide.md` | Practical navigation guide for Independence Chapter, Ownable OS, CRM, engines, Weekly Close, and local control-layer boundaries |
 | Daily Command Center | Repo Markdown briefs; future scheduled digest | `docs/operations/daily-command-center/`; `scripts/daily-command-center.mjs` | Daily personal-assistant layer that surfaces top actions, marketing/sales moves, handoffs, audit prompts, and money/client-trust checks |
 | SOPs | Operations folder / Google Docs where needed | `docs/operations/sop-manual-index.md` and individual SOP files | Use SOP template for formal versions |
 | Workflow registry | Repo Markdown | `docs/operations/workflow-registry.md` | Registry is the workflow map |
@@ -208,14 +219,17 @@ This is the priority order while live outreach is turning into revenue motion.
 | 7 | FUL-03 Customer Service | Inbound questions need triage before they become hidden work | Manual | Issue intake, tiering, and escalation |
 | 8 | FIN-03 Accounts Receivable & Payable | Money tasks need clear invoice and payment status | Manual / owned finance tracker | Invoice creation, receivables review, payment status, SKU/account mapping |
 | 9 | MKT-04 Reviews & Referrals | Positive outcomes should become proof loops | Manual | Testimonial request, referral ask, proof capture |
-| 10 | MKT-09 Event & Webinar Marketing | Independence Chapter needs a repeatable event lane | Folder shell | Roundtable invite, RSVP, event follow-up |
+| 10 | MKT-09 Event & Webinar Marketing | Independence Chapter needs a repeatable event lane | v0 runnable slice | RoundTable invite, RSVP/assessment response tracking, event follow-up |
 
 This queue is not permanent. It should change when live evidence changes.
 
 Run `docs/operations/weekly-workflow-audit-bank.md` against this queue weekly.
 Start with `MKT-09` until its event type, invite path, RSVP/registration path,
 follow-up sequence, CRM-lite bridge update, finance handoff if paid, proof
-loop, and community/AfterCare handoff are defined.
+loop, and community/AfterCare handoff are defined. The current v0 slice is
+`docs/operations/mkt-09-roundtable-operating-slice.md`: free RoundTable Chapter
+meetings already scheduled in Ownable OS, using the existing Google
+assessment/response path pending live confirmation.
 
 ## SOP Creation Rule
 
@@ -267,7 +281,7 @@ Current automation candidates:
 | Reach reply tracking | Reply or campaign event arrives | Update Independence Chapter bridge stage and next step without replacing the agency CRM stack | Need stable tracker source |
 | Lead dedupe | New lead CSV prepared | Prevent uploading old Reach contacts | Needs simple comparison habit or script |
 | Beta intake routing | Founder requests beta/diagnostic | Route into correct track and follow-up | Needs final intake fields and active form path |
-| Roundtable follow-up | Event attendee or invite reply | Send appropriate follow-up and update stage | Event cadence still forming |
+| RoundTable follow-up | Event attendee or invite reply | Send appropriate follow-up and update stage | v0 slice exists; response path and tracker location still need live confirmation |
 | Finance tracker standardization | New offer, SKU, invoice, payment, or expense appears | Keep owned trackers aligned to SKU, revenue category, and chart-of-accounts fields | No active finance platform; tracker schema must be stable before migration |
 | Owner's Manual maintenance | New source of truth, SOP, tracker, platform candidate, or material project appears | Keep the human navigation layer current enough that Robert, collaborators, auditors, agents, and future operators can find the system | First manual still needs to be built from the blueprint |
 | Daily command brief | Weekday morning or manual run | Produce one practical daily brief from current operating sources | V0 script exists; schedule after Robert confirms the format is useful |
