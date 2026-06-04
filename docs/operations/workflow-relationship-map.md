@@ -163,8 +163,10 @@ graph LR
   MKT04 -->|"referral source"| MKT01
 ```
 
-Review needed: `MKT-09` is still a folder shell, so event follow-up
-relationships should be confirmed when the roundtable workflow is built.
+Review needed: `MKT-09` now has a v0 RoundTable operating slice in
+`docs/operations/mkt-09-roundtable-operating-slice.md`, but event follow-up
+relationships should still be confirmed after the Google response path,
+tracker location, and first follow-up messages are live-tested.
 
 ### Sales
 
@@ -288,7 +290,7 @@ selection.
 | `MKT-06` | `MKT-08`, `MKT-05`, `MKT-09` | Content calendar, trending topic, book or authority asset | Demand creation | Marcus + Robert confirm message lane and CTA | Workflow registry; agency manual |
 | `MKT-08` | `MKT-01` | Social response or campaign signal | Lead capture | Marcus + Robert confirm whether signal becomes a lead | Workflow registry |
 | `MKT-07` | `MKT-01` | Marketing calendar or pipeline gap | Paid lead capture | Marcus + Robert confirm budget, claim safety, and fit | Workflow registry |
-| `MKT-09` | `MKT-01`, `MKT-02` | Event RSVP, attendee, or event follow-up window | Event lead capture and nurture | Robert + Marcus confirm roundtable path and follow-up | Workflow registry; agency manual; Review needed |
+| `MKT-09` | `MKT-01`, `MKT-02` | RoundTable RSVP, assessment response, attendee, or event follow-up window | Event lead capture and nurture | Robert + Marcus confirm Ownable OS event, Google response path, tracker update, and follow-up lane | Workflow registry; agency manual; `docs/operations/mkt-09-roundtable-operating-slice.md`; Review needed |
 | `MKT-05` | `MKT-02` | Reply, warm lead, or outreach sequence result | Nurture enrollment | Marcus + Account Managers confirm stage and next step | Workflow registry; agency manual |
 | `MKT-03` | `MKT-02`, `SAL-01` | Assessment score or workflow pain surfaced | Qualification support | Marcus + Robert confirm whether diagnostic result is sales-ready | Workflow registry |
 | `MKT-02` | `MKT-01`, `SAL-01` | Lead becomes warm or ready for conversation | Qualification and handoff | Marcus + Robert confirm MQL status and stop conditions | Workflow registry; agency manual |
@@ -359,7 +361,7 @@ graph LR
 | 7 | `FUL-03 Customer Service` | Triage layer for inbound questions and recovery work | Manual | Issue intake, tiering, and escalation |
 | 8 | `FIN-03 Accounts Receivable & Payable` | Controls invoice and payment status visibility | Manual / owned finance tracker | Invoice creation, receivables review, payment status, SKU/account mapping |
 | 9 | `MKT-04 Reviews & Referrals` | Converts outcomes into testimonials, referrals, and proof | Manual | Testimonial request, referral ask, proof capture |
-| 10 | `MKT-09 Event & Webinar Marketing` | Builds the Bootstrapper Capital roundtable/event lane | Folder shell | Roundtable invite, RSVP, event follow-up |
+| 10 | `MKT-09 Event & Webinar Marketing` | Builds the Bootstrapper Capital RoundTable / event lane | v0 runnable slice | RoundTable invite, RSVP/assessment response tracking, event follow-up |
 
 ## Coverage Check
 
