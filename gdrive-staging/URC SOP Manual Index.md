@@ -94,7 +94,6 @@ Initial SOP candidates:
 | SOP-OPS-006 | Secret Handling And Credential Continuity | `docs/operations/secret-handling-standard.md` | Draft exists |
 | SOP-OPS-007 | Owner's Manual Maintenance And Public Tour Boundaries | `docs/operations/agency-owners-manual-blueprint.md` | Needed |
 | SOP-OPS-012 | Bootstrapper.ai / Ownable OS Weekly Cockpit | `docs/operations/bootstrapper-ai-operating-field-guide.md` | Draft source exists |
-| SOP-OPS-013 | Google Drive Sync On Repo Update | `docs/operations/SOP-OPS-006-gdrive-sync-on-update.md` | Active — created 2026-06-04 |
 
 ### 3. Marketing And Public Voice
 
