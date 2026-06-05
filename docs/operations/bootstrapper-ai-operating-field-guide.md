@@ -1,7 +1,8 @@
 # Bootstrapper.ai Operating Field Guide
 
 Date created: 2026-06-04
-Status: v0 field guide
+Last updated: 2026-06-05
+Status: v1 field guide
 
 ## Purpose
 
@@ -431,16 +432,17 @@ Ignore or defer:
 
 ## Open Questions
 
-These are the questions Chris's missing manual should have answered.
+Current answers based on the 2026-06-03 walkthrough and platform structure.
+Update each row as new information is confirmed.
 
-| Question | Why It Matters | Next Action |
-| --- | --- | --- |
-| What exactly lives in the full CRM workspace? | Determines whether CRM-lite is a bridge or backup | Open and inventory Profit Engine CRM |
-| Can Bootstrapper.ai export contacts, deals, targets, and weekly close data? | Determines control-layer and audit path | Look for export/download/API options |
-| Which fields should Robert update manually each week? | Prevents blind step-following | Test one weekly close and document fields touched |
-| Are Financial Engine transactions editable/classifiable enough for control use? | Determines finance-tracker duplication | Review account classification and export behavior |
-| Can ProfitFlows be copied, assigned, or customized? | Determines workshop/package path | Open one safe protocol and capture available actions |
-| How does chapter membership connect to URC offers? | Protects brand hierarchy and funnel clarity | Map one lead from chapter to diagnostic to follow-up |
+| Question | Current Answer | Confidence | Next Confirmation Step |
+| --- | --- | --- | --- |
+| What exactly lives in the full CRM workspace? | Documented in CRM Discovery Path section above: Command Center, Inbox, Cold/Warm Outbound, Deals (Lead→Won funnel), Accounts, Contacts, Meetings, Scorecard, Settings. Object types are Accounts, Contacts, Deals, Meetings, Notes, Tasks. Pipeline stages are Lead 10%, Qualified 25%, Proposal 50%, Negotiation 75%, Won 100%. | High — confirmed from screenshots | Create one test record and confirm object relationships survive save/edit cycle |
+| Can Bootstrapper.ai export contacts, deals, targets, and weekly close data? | Settings shows CSV/XLSX Import under Profit Engine CRM. Export path is unconfirmed — import capability does not guarantee export. No API docs were visible in the free plan view. | Low — import confirmed, export unknown | During Day 1 CRM inspection: look for Download, Export, or API tab in Settings. Try right-click on a data table. |
+| Which fields should Robert update manually each week? | Based on the Weekly Close structure: Simple Bets (complete/inconclusive/active), target actuals in Profit Engine, cash/runway snapshot in Financial Engine, lead/call/proposal movement in CRM. Owner hours and team targets in People Engine are weekly if active. | Medium — inferred from platform structure | Run one Weekly Close (Day 5 of sprint) and record every field the platform prompts for |
+| Are Financial Engine transactions editable/classifiable enough for control use? | Account classification is visible and appears interactive (business vs. personal labels). Transaction-level categorization is unconfirmed. Mercury connection is the bank link. Export of classified transactions has not been tested. | Low — classification UI exists, depth unknown | During Day 2: attempt to classify one transaction and look for a bulk export or CSV download of the classified ledger |
+| Can ProfitFlows be copied, assigned, or customized? | ProfitFlows appear as protocol/workflow packages in the Value Engine library. The screenshots show selectable items but no edit, copy, or customize action was confirmed. They may be read-only templates at the free tier. | Low — library visible, edit rights unknown | During Day 3: open one ProfitFlow and look for Edit, Duplicate, Assign to Company, or Add to Sprint actions |
+| How does chapter membership connect to URC offers? | The Offer Ladder Translation table maps this: Chapter content → book/authority entry; Independence Chapter activation journey → founder session / roundtable; Ownable Snapshot + engine gaps → diagnostic; Exit Studio steps + ProfitFlows → workshop; Weekly Close habit → continuity; Selected ProfitFlows + CRM cleanup → consulting sprint. The mechanical link (whether a chapter member record auto-populates CRM or requires manual entry) is unconfirmed. | Medium — conceptual mapping clear, platform plumbing unconfirmed | When opening Profit Engine CRM, check whether a chapter member appears as a Contact or whether the connection requires manual import |
 
 ## First Seven-Day Learning Sprint
 
@@ -511,3 +513,146 @@ The first useful deliverable after that is a one-page CRM bridge decision:
 - what the local CRM-lite still needs to track
 - what fields must match between them
 - what can safely wait
+
+---
+
+## Quick Reference Card
+
+Print or bookmark this. One glance should answer "what do I open and why."
+
+### Where To Go For What
+
+| I need to… | Open this |
+| --- | --- |
+| Start my week / pick my bets | Ownable OS Command Center → Simple Bets |
+| Check my score and business value | Ownable OS Command Center → Ownable Score |
+| See my leads and follow-ups | Profit Engine → CRM → Inbox / Pipeline |
+| Check cash and runway | Financial Engine → Account classification / cash view |
+| Find a workflow or protocol idea | Value Engine → ProfitFlow Library |
+| Review owner hours and team targets | People Engine → Owner Work / Team |
+| Close the week and log outcomes | Ownable OS → Weekly Close |
+| See my chapter activation path | Independence Chapter Home → 90-day card |
+| Test a new integration or dummy record | Sandbox company (create one first) |
+| Understand my exit readiness | Exit Studio / Certification path |
+
+### Weekly Minimum (10 minutes)
+
+Monday: Open Command Center → check Ownable Score, pick 1–3 Simple Bets, scan Profit Engine CRM Inbox.
+
+Friday: Open Weekly Close → mark bets, log movement, set next week's bets.
+
+Daily: One question scan (see Daily Use section).
+
+### Do Not Touch Until Confirmed
+
+- Email and calendar sync (Google OAuth blocked, Microsoft Nylas errored)
+- Instantly / Cold Outbound (connects to live sending)
+- Bulk CSV import into URC CRM (test on sandbox first)
+- Compensation and Quotas (no rep payout process active)
+- Bank account disconnect
+
+### URL Shortcuts (bootstrapper.ai)
+
+| Area | URL |
+| --- | --- |
+| App root | `https://bootstrapper.ai/app` |
+| CRM | `https://bootstrapper.ai/app/crm` |
+| Financial Engine | `https://bootstrapper.ai/app/financial` (confirm) |
+| Ownable OS / Command Center | `https://bootstrapper.ai/app/os` (confirm) |
+| Independence Chapter | `https://bootstrapper.ai/app/chapter` (confirm) |
+
+Confirm the Financial Engine, Ownable OS, and Chapter URLs on first visit — they may differ from the patterns above.
+
+---
+
+## Terminology Glossary
+
+Plain-English definitions for Bootstrapper.ai / Ownable OS terms.
+
+**Ownable OS** — The full operating system layer inside Bootstrapper.ai. It
+includes the Command Center, all five Engines, Weekly Close, and the
+certification/exit path. It is not a separate product — it is the operating
+layer you access once logged in.
+
+**Independence Chapter** — The community membership layer of Bootstrapper.ai.
+Your chapter home shows your activation path, 90-day plan, sponsors, and
+chapter context. It is the entry point, not the cockpit.
+
+**Ownable Score** — A composite score visible in the Command Center that
+reflects the current state of the business across the four Ownable pillars:
+Owner Independence, Risk Governance, Transferability, and Metrics That Matter.
+Do not treat it as a final grade — treat it as a weekly dashboard dial.
+
+**Wedge Equity** — A value metric visible in the Command Center. It represents
+the equity spread or value wedge the platform calculates for the business.
+Exact formula is unconfirmed — verify before citing to clients or prospects.
+
+**Simple Bets** — The weekly operating commitment mechanic. At the start of
+each week you select 1–3 Simple Bets — specific actions tied to Ownable OS
+targets. At Weekly Close you mark each bet complete, inconclusive, or still
+active. This is the core habit the platform is built around.
+
+**ProfitFlow** — A workflow or protocol package in the Value Engine library.
+Each ProfitFlow maps to a business problem, recommends a process, and may
+include implementation steps, workshop modules, or diagnostic questions. Treat
+them as candidates for URC offer development, not finished offers.
+
+**Financial Engine** — The bank-connected cash intelligence layer. It pulls
+from Mercury (and potentially other accounts) to show cash health, runway,
+account classification, and transaction history. It is not a replacement for
+the owned finance tracker until export and classification depth are confirmed.
+
+**Profit Engine** — The CRM and revenue layer. It contains the CRM workspace,
+pipeline, scorecard, and lead/customer targets. The CRM is per-company scoped
+within Bootstrapper.ai.
+
+**Value Engine** — The ProfitFlow protocol library and diagnostic layer. It
+surfaces workflow recommendations, workshop modules, and implementation
+packages based on the business's current Ownable Score and targets.
+
+**People Engine** — The team and owner work layer. It tracks owner hours, base
+pay, team performance targets, and simple compensation visibility.
+
+**Weekly Close** — A structured retrospective inside the Ownable OS Command
+Center. It logs Simple Bet outcomes, lead/revenue/event movement, and engine
+changes, and sets next week's bets. Run it every Friday or end of operating
+week.
+
+**Exit Studio** — The guided pathway toward ownable business readiness and
+capital/exit preparation. It is a sequential journey, not a dashboard. Follow
+the prescribed steps rather than skipping to the end.
+
+**Ownable Certification** — A certification path tied to the Exit Studio that
+validates the business meets Ownable operating standards. Relevant for URC
+client positioning (see the Moran Halfon engagement: Ownable OS + CCPA
+Certification).
+
+**Nylas** — The third-party email and calendar sync layer Bootstrapper.ai uses
+for Microsoft email/calendar integration. Currently erroring with status 31004
+(integration_not_found). Do not retry until Bootstrapper.ai confirms the
+integration is configured.
+
+**CRM Inbox** — A pipeline-aware inbox inside the Profit Engine CRM that
+filters conversations by deal stage and lead status. It requires email/calendar
+sync to populate fully.
+
+**Warm Outbound** — A content workspace inside the CRM for managing social
+publishing, newsletters, and content pillars (connected to Zernio and Beehiiv).
+Treat it as a planning mirror until the Agent Lab LinkedIn queue and content
+guardrails are proven inside the platform.
+
+**Cold Outbound** — The Instantly v2 integration layer inside the CRM for
+managing outbound email sequences. Requires an Instantly API key. Do not
+activate until the outbound lane, list, and copy are ready and compliant.
+
+---
+
+## Where This File Lives
+
+| Copy | Path | Purpose |
+| --- | --- | --- |
+| Source of record | `agent-lab-site/docs/operations/bootstrapper-ai-operating-field-guide.md` | Version-controlled in Git repo — edit here |
+| Working copy | `Working Docs/Bootstrapper Capital/Bootstrapper AI Operating Field Guide.md` | Easy access in agency folder — sync from source after edits |
+
+When updating this guide, edit the source copy in the repo first, then
+overwrite the working copy. Do not maintain two independent versions.
