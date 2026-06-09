@@ -9,6 +9,7 @@ import { contactRouter } from "./contact/router";
 import { newsletterRouter } from "./newsletter/router";
 import { founderIntakeRouter } from "./founder-intake/router";
 import { opsCleanupRouter } from "./ops-cleanup/router";
+import { hubspotRouter } from "./hubspot/router";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -32,6 +33,7 @@ export const appRouter = router({
   newsletter: newsletterRouter,
   founderIntake: founderIntakeRouter,
   opsCleanup: opsCleanupRouter,
+  hubspot: hubspotRouter,
 });
 
 export type AppRouter = typeof appRouter;
