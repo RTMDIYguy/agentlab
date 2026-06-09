@@ -27,6 +27,10 @@ import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
 import OpsCleanupAgent from "./pages/OpsCleanupAgent";
 import AssessmentQuestionGenerator from "./pages/AssessmentQuestionGenerator";
+import Community from "@/pages/Community";
+import AdminEvents from "@/pages/AdminEvents";
+import Book from "@/pages/Book";
+import Bootcamp from "@/pages/Bootcamp";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -56,6 +60,10 @@ function Router() {
       <Route path="/newsletter/unsubscribe" component={NewsletterUnsubscribe} />
       <Route path="/newsletter-manager" component={NewsletterManager} />
       <Route path="/404" component={NotFound} />
+      <Route path="/community" component={Community} />
+      <Route path="/admin/events" component={AdminEvents} />
+      <Route path="/book" component={Book} />
+      <Route path="/bootcamp" component={Bootcamp} />
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
