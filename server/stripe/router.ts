@@ -1,35 +1,70 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../_core/trpc";
-import { createCheckoutSession, createOneTimeCheckoutSession, updateSubscriptionPlan as updateStripeSubscriptionPlan, getCustomerInvoices, getInvoicePdfUrl, getSubscription as getStripeSubscription } from "./checkout";
-import { getSubscriptionByUserId, getPaymentsByUserId, cancelSubscription as cancelSubscriptionDb, updateSubscriptionPlan as updateSubscriptionPlanDb } from "./db";
+import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
+import {
+  createCheckoutSession,
+  createOneTimeCheckoutSession,
+  updateSubscriptionPlan as updateStripeSubscriptionPlan,
+  getCustomerInvoices,
+  getInvoicePdfUrl,
+  getSubscription as getStripeSubscription,
+} from "./checkout";
+import {
+  getSubscriptionByUserId,
+  getPaymentsByUserId,
+  cancelSubscription as cancelSubscriptionDb,
+  updateSubscriptionPlan as updateSubscriptionPlanDb,
+} from "./db";
 import { BillingCycle, PlanId, getPriceId } from "./products";
 
 // Book price ID lives server-side only — never expose in client bundles
 const BOOK_PRICE_ID = "price_1TgRz4GmUFddSefto4jcH4Jv";
+const BOOTCAMP_PRICE_ID = process.env.STRIPE_BOOTCAMP_PRICE_ID || "";
 
 export const stripeRouter = router({
   /**
    * Create a checkout session for one-time book purchase ($59.99)
    * Price ID is kept server-side only for security.
    */
-  createBookCheckout: protectedProcedure
-    .mutation(async ({ ctx }) => {
-      const user = ctx.user;
-      if (!user) throw new Error("User not authenticated");
+  createBookCheckout: publicProcedure.mutation(async ({ ctx }) => {
+    const user = ctx.user;
+    const origin = ctx.req.headers.origin || "https://agentlab.manus.space";
 
-      const origin = ctx.req.headers.origin || "https://agentlab.manus.space";
+    const checkoutUrl = await createOneTimeCheckoutSession({
+      userId: user?.id,
+      userEmail: user?.email || undefined,
+      userName: user?.name || undefined,
+      product: "book",
+      priceId: BOOK_PRICE_ID,
+      successUrl: `${origin}/book?success=true`,
+      cancelUrl: `${origin}/book?canceled=true`,
+    });
 
-      const checkoutUrl = await createOneTimeCheckoutSession({
-        userId: user.id,
-        userEmail: user.email || "",
-        userName: user.name || "User",
-        priceId: BOOK_PRICE_ID,
-        successUrl: `${origin}/book?success=true`,
-        cancelUrl: `${origin}/book?canceled=true`,
-      });
+    return { checkoutUrl };
+  }),
 
-      return { checkoutUrl };
-    }),
+  /**
+   * Create a checkout session for the entry-level $1 bootcamp.
+   */
+  createBootcampCheckout: publicProcedure.mutation(async ({ ctx }) => {
+    if (!BOOTCAMP_PRICE_ID) {
+      throw new Error("Bootcamp checkout is not configured yet.");
+    }
+
+    const user = ctx.user;
+    const origin = ctx.req.headers.origin || "https://agentlab.manus.space";
+
+    const checkoutUrl = await createOneTimeCheckoutSession({
+      userId: user?.id,
+      userEmail: user?.email || undefined,
+      userName: user?.name || undefined,
+      product: "bootcamp",
+      priceId: BOOTCAMP_PRICE_ID,
+      successUrl: `${origin}/bootcamp?success=true`,
+      cancelUrl: `${origin}/bootcamp?canceled=true`,
+    });
+
+    return { checkoutUrl };
+  }),
 
   /**
    * Create a checkout session for subscription purchase
@@ -100,8 +135,14 @@ export const stripeRouter = router({
       const subscription = await getSubscriptionByUserId(user.id);
       if (!subscription) throw new Error("No active subscription found");
 
-      const newPriceId = getPriceId(input.newPlan as PlanId, input.billingCycle as BillingCycle);
-      await updateStripeSubscriptionPlan(subscription.stripeSubscriptionId, newPriceId);
+      const newPriceId = getPriceId(
+        input.newPlan as PlanId,
+        input.billingCycle as BillingCycle
+      );
+      await updateStripeSubscriptionPlan(
+        subscription.stripeSubscriptionId,
+        newPriceId
+      );
       await updateSubscriptionPlanDb(user.id, input.newPlan);
 
       return { success: true, message: "Subscription updated successfully" };
@@ -136,7 +177,7 @@ export const stripeRouter = router({
     if (!subscription) return [];
 
     const invoices = await getCustomerInvoices(subscription.stripeCustomerId);
-    return invoices.data.map((invoice) => ({
+    return invoices.data.map(invoice => ({
       id: invoice.id,
       number: invoice.number,
       amount: invoice.amount_paid,
@@ -164,7 +205,6 @@ export const stripeRouter = router({
     }),
 });
 
-
 /**
  * Admin procedures for analytics and customer management
  */
@@ -174,7 +214,8 @@ export const adminRouter = router({
    */
   getAnalytics: protectedProcedure.query(async ({ ctx }) => {
     const user = ctx.user;
-    if (!user || user.role !== "admin") throw new Error("Admin access required");
+    if (!user || user.role !== "admin")
+      throw new Error("Admin access required");
 
     const {
       getSubscriptionCountByStatus,
@@ -204,7 +245,8 @@ export const adminRouter = router({
    */
   getAllCustomers: protectedProcedure.query(async ({ ctx }) => {
     const user = ctx.user;
-    if (!user || user.role !== "admin") throw new Error("Admin access required");
+    if (!user || user.role !== "admin")
+      throw new Error("Admin access required");
 
     const { getAllCustomersWithSubscriptions } = await import("./db");
     return getAllCustomersWithSubscriptions();
@@ -217,7 +259,8 @@ export const adminRouter = router({
     .input(z.object({ userId: z.number() }))
     .query(async ({ ctx, input }) => {
       const user = ctx.user;
-      if (!user || user.role !== "admin") throw new Error("Admin access required");
+      if (!user || user.role !== "admin")
+        throw new Error("Admin access required");
 
       const { getCustomerWithSubscription } = await import("./db");
       return getCustomerWithSubscription(input.userId);
@@ -235,7 +278,8 @@ export const adminRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const user = ctx.user;
-      if (!user || user.role !== "admin") throw new Error("Admin access required");
+      if (!user || user.role !== "admin")
+        throw new Error("Admin access required");
 
       const { updateCustomerSubscriptionStatus } = await import("./db");
       await updateCustomerSubscriptionStatus(input.userId, input.newStatus);
