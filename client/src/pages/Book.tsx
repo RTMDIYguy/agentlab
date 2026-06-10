@@ -12,8 +12,6 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-const BOOK_PRICE_ID = "price_1TgRz4GmUFddSefto4jcH4Jv"; // $59.99 one-time
-
 const emailSchema = z.object({
   email: z.string().email("Valid email required"),
 });
@@ -61,10 +59,10 @@ export default function Book() {
     },
   });
 
-  const createCheckout = trpc.stripe.createCheckout.useMutation({
-    onSuccess: (data: { url?: string }) => {
-      if (data?.url) {
-        window.location.href = data.url;
+  const createBookCheckout = trpc.stripe.createBookCheckout.useMutation({
+    onSuccess: (data: { checkoutUrl: string }) => {
+      if (data?.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
       }
     },
     onError: () => {
@@ -83,7 +81,7 @@ export default function Book() {
   };
 
   const handleBuy = () => {
-    createCheckout.mutate({ priceId: BOOK_PRICE_ID });
+    createBookCheckout.mutate();
   };
 
   return (
@@ -110,9 +108,9 @@ export default function Book() {
                 size="lg"
                 className="bg-white text-neutral-900 hover:bg-neutral-100"
                 onClick={handleBuy}
-                disabled={createCheckout.isPending}
+                disabled={createBookCheckout.isPending}
               >
-                {createCheckout.isPending ? (
+                {createBookCheckout.isPending ? (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 ) : (
                   <ShoppingCart className="h-4 w-4 mr-2" />
@@ -269,9 +267,9 @@ export default function Book() {
             size="lg"
             className="bg-white text-neutral-900 hover:bg-neutral-100"
             onClick={handleBuy}
-            disabled={createCheckout.isPending}
+            disabled={createBookCheckout.isPending}
           >
-            {createCheckout.isPending ? (
+            {createBookCheckout.isPending ? (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
             ) : (
               <ShoppingCart className="h-4 w-4 mr-2" />

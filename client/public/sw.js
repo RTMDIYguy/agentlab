@@ -25,6 +25,11 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
 
+  // Never cache API or authenticated endpoints — responses may contain
+  // session-specific data that must not be served to other users or stale.
+  const url = new URL(event.request.url);
+  if (url.pathname.startsWith("/api/")) return;
+
   event.respondWith(
     fetch(event.request)
       .then(response => {

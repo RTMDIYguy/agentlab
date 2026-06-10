@@ -52,6 +52,45 @@ export async function createCheckoutSession(
   return session.url;
 }
 
+export interface CreateOneTimeCheckoutSessionParams {
+  userId: number;
+  userEmail: string;
+  userName: string;
+  priceId: string;
+  successUrl: string;
+  cancelUrl: string;
+}
+
+/**
+ * Create a Stripe checkout session for a one-time payment (e.g. book purchase)
+ */
+export async function createOneTimeCheckoutSession(
+  params: CreateOneTimeCheckoutSessionParams
+): Promise<string> {
+  const { userId, userEmail, userName, priceId, successUrl, cancelUrl } = params;
+
+  const session = await stripe.checkout.sessions.create({
+    customer_email: userEmail,
+    client_reference_id: userId.toString(),
+    line_items: [{ price: priceId, quantity: 1 }],
+    mode: "payment",
+    success_url: successUrl,
+    cancel_url: cancelUrl,
+    allow_promotion_codes: true,
+    metadata: {
+      user_id: userId.toString(),
+      customer_email: userEmail,
+      customer_name: userName,
+    },
+  });
+
+  if (!session.url) {
+    throw new Error("Failed to create checkout session: no URL returned");
+  }
+
+  return session.url;
+}
+
 /**
  * Retrieve a checkout session by ID
  */
