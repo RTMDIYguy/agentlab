@@ -20,55 +20,10 @@ async function upsertContact(properties: Record<string, string>) {
 
   if (createRes.ok) return { success: true, created: true };
 
-  // 2. On 409 (contact already exists) → search then patch
+  // 2. On 409 (contact already exists) → treat as success, no patch
+  // Patching here would allow unauthenticated callers to overwrite any
+  // existing contact by supplying a known email address.
   if (createRes.status === 409) {
-    const searchRes = await fetch(`${HUBSPOT_CONTACTS_URL}/search`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${HUBSPOT_PAT}`,
-      },
-      body: JSON.stringify({
-        filterGroups: [
-          {
-            filters: [
-              {
-                propertyName: "email",
-                operator: "EQ",
-                value: properties.email,
-              },
-            ],
-          },
-        ],
-      }),
-    });
-
-    if (!searchRes.ok) {
-      throw new Error(`HubSpot search failed: ${await searchRes.text()}`);
-    }
-
-    const searchData = (await searchRes.json()) as {
-      results: Array<{ id: string }>;
-    };
-    const contactId = searchData.results?.[0]?.id;
-
-    if (!contactId) {
-      throw new Error("HubSpot: 409 but contact not found in search");
-    }
-
-    const patchRes = await fetch(`${HUBSPOT_CONTACTS_URL}/${contactId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${HUBSPOT_PAT}`,
-      },
-      body: JSON.stringify({ properties }),
-    });
-
-    if (!patchRes.ok) {
-      throw new Error(`HubSpot patch failed: ${await patchRes.text()}`);
-    }
-
     return { success: true, created: false };
   }
 

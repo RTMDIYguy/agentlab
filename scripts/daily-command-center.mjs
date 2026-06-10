@@ -86,7 +86,7 @@ function getOpenBuildItems(agencyManual) {
 function getRecentChangeRows(changeControl) {
   return changeControl
     .split(/\r?\n/)
-    .filter((line) => line.startsWith("| 2026-06-03 |"))
+    .filter((line) => /^\| \d{4}-\d{2}-\d{2} \|/.test(line))
     .slice(-5)
     .map((line) => tableRowCells(line))
     .filter((cells) => cells.length >= 8)

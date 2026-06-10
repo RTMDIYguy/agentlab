@@ -1,10 +1,36 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../_core/trpc";
-import { createCheckoutSession, updateSubscriptionPlan as updateStripeSubscriptionPlan, getCustomerInvoices, getInvoicePdfUrl, getSubscription as getStripeSubscription } from "./checkout";
+import { createCheckoutSession, createOneTimeCheckoutSession, updateSubscriptionPlan as updateStripeSubscriptionPlan, getCustomerInvoices, getInvoicePdfUrl, getSubscription as getStripeSubscription } from "./checkout";
 import { getSubscriptionByUserId, getPaymentsByUserId, cancelSubscription as cancelSubscriptionDb, updateSubscriptionPlan as updateSubscriptionPlanDb } from "./db";
 import { BillingCycle, PlanId, getPriceId } from "./products";
 
+// Book price ID lives server-side only — never expose in client bundles
+const BOOK_PRICE_ID = "price_1TgRz4GmUFddSefto4jcH4Jv";
+
 export const stripeRouter = router({
+  /**
+   * Create a checkout session for one-time book purchase ($59.99)
+   * Price ID is kept server-side only for security.
+   */
+  createBookCheckout: protectedProcedure
+    .mutation(async ({ ctx }) => {
+      const user = ctx.user;
+      if (!user) throw new Error("User not authenticated");
+
+      const origin = ctx.req.headers.origin || "https://agentlab.manus.space";
+
+      const checkoutUrl = await createOneTimeCheckoutSession({
+        userId: user.id,
+        userEmail: user.email || "",
+        userName: user.name || "User",
+        priceId: BOOK_PRICE_ID,
+        successUrl: `${origin}/book?success=true`,
+        cancelUrl: `${origin}/book?canceled=true`,
+      });
+
+      return { checkoutUrl };
+    }),
+
   /**
    * Create a checkout session for subscription purchase
    */
