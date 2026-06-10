@@ -30,13 +30,12 @@ made, or how to orient a new agent or operator.
 
 ## 1. Start Here
 
-**Description:** Orientation layer. Answers "where is everything?" for a new human, agent,
-or returning collaborator. Keeps the most important operating rules visible without
-requiring a deep dive.
+**Description:** Orientation layer. Answers "where is everything?" for a new human, agent, or returning collaborator. Keeps the most important operating rules visible without requiring a deep dive.
 
 **Source of truth:** `docs/operations/agency-operating-manual.md`
 
 **Supporting docs:**
+
 - `docs/operations/urc-agent-execution-checklist.md` — rules every agent must follow before acting
 - `docs/operations/urc-v1-operating-architecture.md` — business structure and platform decisions
 - `docs/operations/urc-90-day-implementation-plan.md` — current execution horizon
@@ -48,10 +47,7 @@ requiring a deep dive.
 
 ### Operating Principle
 
-The agency should be built so a capable operator can get in and drive it. That means one
-obvious starting point, named business lanes, visible source-of-truth locations, clear
-workflow ownership, a small number of live offers, documented manual fallbacks, and SOPs
-written from real work, not theory.
+The agency should be built so a capable operator can get in and drive it. That means one obvious starting point, named business lanes, visible source-of-truth locations, clear workflow ownership, a small number of live offers, documented manual fallbacks, and SOPs written from real work, not theory.
 
 ### AI Session Lessons
 
@@ -59,19 +55,16 @@ written from real work, not theory.
 
 **Date logged:** 2026-06-09
 
-Do not close a Claude session at 90% of context capacity assuming you can pick back up
-cleanly. Claude sessions are stateless across context boundaries. The next session opens
-cold with no memory of what was done unless you explicitly pass a handoff prompt.
+Do not close a Claude session at 90% of context capacity assuming you can pick back up cleanly. Claude sessions are stateless across context boundaries. The next session opens cold with no memory of what was done unless you explicitly pass a handoff prompt.
 
 **What to do instead:**
-1. Before the session runs out, write a handoff prompt describing what was accomplished,
-   what is in progress, which files were created or changed, and what the next action is.
+
+1. Before the session runs out, write a handoff prompt describing what was accomplished, what is in progress, which files were created or changed, and what the next action is.
 2. Save that handoff prompt somewhere retrievable (notes file, draft message, anywhere).
 3. Use the remaining session to reach a clean stopping point.
 4. Open the next session with the handoff prompt as the first message.
 
-**The rule:** Use the whole session. Just make sure the handoff prompt is written before it
-runs out — not after.
+**The rule:** Use the whole session. Just make sure the handoff prompt is written before it runs out — not after.
 
 ---
 
@@ -89,13 +82,14 @@ to each other, and what each one owns. The source of truth for "which entity doe
 
 ### Entities
 
-| Entity | Role | Notes |
-|---|---|---|
-| **Uncle Robert Consulting LLC (URC)** | Main operating entity. Consulting, advisory, IP ownership, client invoicing. | All client contracts run through URC. |
-| **Tactix** | Execution pod. Upwork-facing delivery arm. | Handles billable project work; keeps client-facing delivery separate from URC brand. |
-| **Bootstrapper Capital** | Audience, community, and funnel. Roundtables, bootcamps, continuity programs. | Independence Chapter on Bootstrapper.ai. Feeds URC pipeline. |
-| **Agent Lab** | R&D and public demonstration platform. Tests automation, agent workflows, and AI tooling. | Live at agentlab.manus.space. Source repo in this workspace. |
-| **Bootstrapper's Guide to the World (book)** | Authority and conversion asset. 28 bootstrapped business models, $59.99. | Listed in Agent Lab. Feeds Bootstrapper Capital funnel. |
+| Entity                                       | Role                                                                                      | Notes                                                                                                                                                                                                             |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Uncle Robert Consulting LLC (URC)**        | Main operating entity. Consulting, advisory, IP ownership, client invoicing.              | All client contracts run through URC.                                                                                                                                                                             |
+| **Tactix**                                   | Execution pod. Upwork-facing delivery arm.                                                | Handles billable project work; keeps client-facing delivery separate from URC brand.                                                                                                                              |
+| **Bootstrapper Capital**                     | Audience, community, and funnel. Roundtables, bootcamps, continuity programs.             | Independence Chapter on Bootstrapper.ai. Feeds URC pipeline.                                                                                                                                                      |
+| **Agent Lab**                                | R&D and public demonstration platform. Tests automation, agent workflows, and AI tooling. | Live at https://agent-lab.tech Source repo in this workspace at C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site or you can use the URL at https://github.com/RTMDIYguy/agentlab |
+| **Bootstrapper's Guide to the World (book)** | Authority and conversion asset. 28 bootstrapped business models, $59.99.                  | Listed in Agent Lab. Feeds Bootstrapper Capital funnel.                                                                                                                                                           |
+| **Startup Operational Excellence**           | Authority and conversion asset. Unpublished, out for feedback.                            |                                                                                                                                                                                                                   |
 
 ### Offer Ladder (Phase 1 LOCKED v1.0)
 
@@ -129,11 +123,13 @@ Updated when priorities shift, not on a fixed schedule.
 ### Active Tracks (2026-06-10)
 
 **Track 1 — Agent Lab (technical)**
+
 - Codex P1/P2 security fixes: Stripe checkout, HubSpot PATCH vector, service worker caching (completed 2026-06-09/10)
 - Founders Signal System MVP — proximity to beta tester readiness under assessment
 - Lead gen in-house pivot evaluation (Zapier, Make, Apollo all at free tier max)
 
 **Track 2 — URC / Bootstrapper Capital (business)**
+
 - Founder's Roundtable B2B pipeline: 7 of 10 LeadLaps battle cards in hand; multichannel outreach sequence pending
 - Independence Chapter operations on Bootstrapper.ai
 
@@ -156,15 +152,15 @@ by department. The source of truth for "which workflow handles which function."
 
 ### Department Codes
 
-| Code | Department |
-|---|---|
-| OPS | Operations |
-| CUL | Culture / People |
-| FIN | Finance |
-| SAL | Sales |
-| MKT | Marketing |
-| HR | Human Resources |
-| DEL | Delivery / Client Work |
+| Code | Department             |
+| ---- | ---------------------- |
+| OPS  | Operations             |
+| CUL  | Culture / People       |
+| FIN  | Finance                |
+| SAL  | Sales                  |
+| MKT  | Marketing              |
+| HR   | Human Resources        |
+| DEL  | Delivery / Client Work |
 
 ### Registry Summary
 
@@ -179,6 +175,7 @@ The full registry is in `workflow-registry.md`. Current counts as of last import
 ### Two-Track Model
 
 All workflows belong to one of two tracks:
+
 1. **URC / Internal** — agency operations, finance, culture, sales, marketing
 2. **Client-facing** — delivery, onboarding, reporting, communication
 
@@ -211,11 +208,11 @@ Step-by-step procedure, Outputs and success criteria, Version history.
 
 ### Active SOPs (as of 2026-06-10)
 
-| SOP ID | Title | Classification |
-|---|---|---|
-| SOP-OPS-005 | Naming Conventions and Identifier Control | Internal |
-| SOP-OPS-006 | GDrive Sync on Update | Internal |
-| SOP-CUL-001 | Servant Leadership and Agency Values | Internal |
+| SOP ID      | Title                                     | Classification |
+| ----------- | ----------------------------------------- | -------------- |
+| SOP-OPS-005 | Naming Conventions and Identifier Control | Internal       |
+| SOP-OPS-006 | GDrive Sync on Update                     | Internal       |
+| SOP-CUL-001 | Servant Leadership and Agency Values      | Internal       |
 
 See `sop-manual-index.md` for the full list including candidates and deprecated entries.
 
@@ -266,9 +263,11 @@ PDF, Word (.docx), Excel (.xlsx), PowerPoint (.pptx), images (EXIF + OCR), audio
 (wav/mp3 transcription), HTML, CSV, JSON, XML, YouTube URLs, ZIP archives.
 
 **Usage:**
+
 ```
 markitdown path-to-file.pdf > document.md
 ```
+
 ```python
 from markitdown import MarkItDown
 md = MarkItDown()
@@ -291,20 +290,20 @@ that can be piped into any agent workflow.
 Record accounts here when they become operationally load-bearing. Do not record credentials
 — use the vaults defined in Section 8.
 
-| Platform | Purpose | Track | Account owner | Status |
-|---|---|---|---|---|
-| GitHub | Source control — Agent Lab | Internal | Robert | Active |
-| Vercel | Deployment — Agent Lab | Internal | Robert | Active |
-| Stripe | Payments — book + future offers | Both | Robert | Active |
-| HubSpot | CRM / contact capture | Both | Robert | Active |
-| n8n | Automation credentials vault + workflows | Internal | Robert | Active |
-| Zapier | Automation (free tier — at limit) | Internal | Robert | Review needed |
-| Make | Automation (free tier — at limit) | Internal | Robert | Review needed |
-| Apollo | Lead generation (free tier — at limit) | SAL | Robert | Review needed |
-| Bootstrapper.ai | Independence Chapter community | MKT/CUL | Robert | Active |
-| Postman | API testing + credential vault | Internal | Robert | Active |
-| Microsoft 365 | Office backbone (preferred) | Internal | Robert | Active |
-| KNIME | Data / analytics sandbox | Internal | Robert | Evaluation |
+| Platform        | Purpose                                  | Track    | Account owner | Status        |
+| --------------- | ---------------------------------------- | -------- | ------------- | ------------- |
+| GitHub          | Source control — Agent Lab               | Internal | Robert        | Active        |
+| Vercel          | Deployment — Agent Lab                   | Internal | Robert        | Active        |
+| Stripe          | Payments — book + future offers          | Both     | Robert        | Active        |
+| HubSpot         | CRM / contact capture                    | Both     | Robert        | Active        |
+| n8n             | Automation credentials vault + workflows | Internal | Robert        | Active        |
+| Zapier          | Automation (free tier — at limit)        | Internal | Robert        | Review needed |
+| Make            | Automation (free tier — at limit)        | Internal | Robert        | Review needed |
+| Apollo          | Lead generation (free tier — at limit)   | SAL      | Robert        | Review needed |
+| Bootstrapper.ai | Independence Chapter community           | MKT/CUL  | Robert        | Active        |
+| Postman         | API testing + credential vault           | Internal | Robert        | Active        |
+| Microsoft 365   | Office backbone (preferred)              | Internal | Robert        | Active        |
+| KNIME           | Data / analytics sandbox                 | Internal | Robert        | Evaluation    |
 
 ---
 
@@ -339,11 +338,11 @@ platform decision is made:
 
 ### SKU Registry
 
-| SKU | Offer | Price | Platform | Status |
-|---|---|---|---|---|
-| BGW-BOOK-001 | Bootstrapper's Guide to the World | $59.99 | Stripe (one-time) | Active |
-| URC-BOOTCAMP-001 | $1 Bootcamp | $1.00 | TBD | Candidate |
-| URC-OS-001 | Ownable OS (monthly continuity) | $500/mo | TBD | Candidate |
+| SKU              | Offer                             | Price   | Platform          | Status    |
+| ---------------- | --------------------------------- | ------- | ----------------- | --------- |
+| BGW-BOOK-001     | Bootstrapper's Guide to the World | $59.99  | Stripe (one-time) | Active    |
+| URC-BOOTCAMP-001 | $1 Bootcamp                       | $1.00   | TBD               | Candidate |
+| URC-OS-001       | Ownable OS (monthly continuity)   | $500/mo | TBD               | Candidate |
 
 > Note: Stripe Price IDs are server-side only. They are not stored in this document.
 > See [Section 8](#8-secret-and-credential-handling) for the credential handling rule.
@@ -381,11 +380,11 @@ key, or backup code.
 
 Store all credential values in exactly one of the following:
 
-| Vault | Used for |
-|---|---|
-| Postman Vault | API keys used in Postman collections |
-| n8n credentials store | Credentials used inside n8n automation workflows |
-| Password manager | Account passwords, recovery codes, backup codes |
+| Vault                          | Used for                                                |
+| ------------------------------ | ------------------------------------------------------- |
+| Postman Vault                  | API keys used in Postman collections                    |
+| n8n credentials store          | Credentials used inside n8n automation workflows        |
+| Password manager               | Account passwords, recovery codes, backup codes         |
 | Environment variables (`.env`) | Runtime secrets — `.env` is gitignored, never committed |
 
 If a credential type does not fit one of these, document the vault selection decision here
@@ -394,12 +393,14 @@ before storing it anywhere.
 ### What Agents May Do
 
 Agents operating under this standard are authorized to:
+
 - List filenames and classify credential types using filenames, surrounding documentation,
   and redacted metadata
 - Describe which vault a credential should live in
 - Confirm whether a credential is present or absent by referencing metadata
 
 Agents are **not** authorized to:
+
 - Read, print, copy, or relay secret values
 - Generate backup codes or recovery tokens
 - Move credentials between vaults without an explicit logged decision
@@ -427,12 +428,12 @@ where the source files live.
 
 ### Product Registry
 
-| Product | Type | Status | Price | Channel |
-|---|---|---|---|---|
-| Bootstrapper's Guide to the World | Book (digital) | Live | $59.99 | Agent Lab / Stripe |
-| Ownable OS | Workflow package / continuity | Candidate | $500/mo | TBD |
-| $1 Bootcamp | Entry-level program | Candidate | $1 | TBD |
-| Workflow blueprints / compendiums | Document products | Candidate | TBD | TBD |
+| Product                           | Type                          | Status    | Price   | Channel            |
+| --------------------------------- | ----------------------------- | --------- | ------- | ------------------ |
+| Bootstrapper's Guide to the World | Book (digital)                | Live      | $59.99  | Agent Lab / Stripe |
+| Ownable OS                        | Workflow package / continuity | Candidate | $500/mo | TBD                |
+| $1 Bootcamp                       | Entry-level program           | Candidate | $1      | TBD                |
+| Workflow blueprints / compendiums | Document products             | Candidate | TBD     | TBD                |
 
 ### Publishing Standards
 
@@ -464,18 +465,18 @@ each piece does and its current status. Does not contain access credentials.
 
 ### Current Infrastructure Map
 
-| Layer | Tool / Platform | Purpose | Status |
-|---|---|---|---|
-| Source control | GitHub | Agent Lab codebase; ops docs | Active |
-| Deployment | Vercel | Agent Lab frontend + API | Active |
-| Runtime | Node.js / TypeScript (tRPC) | Agent Lab server | Active |
-| Database | SQLite (dev) | Local dev only; production DB TBD | Dev only |
-| Payments | Stripe | Checkout sessions; webhooks | Active |
-| Automation | n8n | Workflow automation; credential vault | Active |
-| Analytics sandbox | KNIME | Data analysis — no production dependency | Evaluation |
-| VPS / cloud | TBD | Server hosting evaluation candidate | Candidate |
-| CRM | HubSpot | Contact capture and pipeline | Active |
-| Office suite | Microsoft 365 | Preferred backbone | Active |
+| Layer             | Tool / Platform             | Purpose                                  | Status     |
+| ----------------- | --------------------------- | ---------------------------------------- | ---------- |
+| Source control    | GitHub                      | Agent Lab codebase; ops docs             | Active     |
+| Deployment        | Vercel                      | Agent Lab frontend + API                 | Active     |
+| Runtime           | Node.js / TypeScript (tRPC) | Agent Lab server                         | Active     |
+| Database          | SQLite (dev)                | Local dev only; production DB TBD        | Dev only   |
+| Payments          | Stripe                      | Checkout sessions; webhooks              | Active     |
+| Automation        | n8n                         | Workflow automation; credential vault    | Active     |
+| Analytics sandbox | KNIME                       | Data analysis — no production dependency | Evaluation |
+| VPS / cloud       | TBD                         | Server hosting evaluation candidate      | Candidate  |
+| CRM               | HubSpot                     | Contact capture and pipeline             | Active     |
+| Office suite      | Microsoft 365               | Preferred backbone                       | Active     |
 
 ### Sandbox Rules
 
@@ -597,19 +598,19 @@ as internal.
 
 Quick reference for what causes this document to need an update.
 
-| Trigger | Section(s) to update |
-|---|---|
-| New workflow goes active | Section 4 + `workflow-registry.md` + change log |
-| Tracker or dashboard becomes source of truth | Section 7 + change log |
-| Tool or platform account becomes load-bearing | Section 6 + change log |
-| Tool removed or deprecated | Section 6 (update status) + change log |
-| SOP promoted to active | Section 5 + `sop-manual-index.md` + change log |
-| Platform moves from evaluation to production | Section 10 + change log |
-| Finance or secret handling rule changes | Section 7 or 8 + `secret-handling-standard.md` + change log |
-| New product goes live or changes price | Section 9 + change log |
-| Public-facing content classification changes | Section 12 + `public-values-placement-guide.md` |
-| Offer pricing changes | Section 3 (current priorities) + Section 9 + change log |
-| Robert cannot find something | Add a link or entry to the appropriate section |
+| Trigger                                       | Section(s) to update                                        |
+| --------------------------------------------- | ----------------------------------------------------------- |
+| New workflow goes active                      | Section 4 + `workflow-registry.md` + change log             |
+| Tracker or dashboard becomes source of truth  | Section 7 + change log                                      |
+| Tool or platform account becomes load-bearing | Section 6 + change log                                      |
+| Tool removed or deprecated                    | Section 6 (update status) + change log                      |
+| SOP promoted to active                        | Section 5 + `sop-manual-index.md` + change log              |
+| Platform moves from evaluation to production  | Section 10 + change log                                     |
+| Finance or secret handling rule changes       | Section 7 or 8 + `secret-handling-standard.md` + change log |
+| New product goes live or changes price        | Section 9 + change log                                      |
+| Public-facing content classification changes  | Section 12 + `public-values-placement-guide.md`             |
+| Offer pricing changes                         | Section 3 (current priorities) + Section 9 + change log     |
+| Robert cannot find something                  | Add a link or entry to the appropriate section              |
 
 ---
 
