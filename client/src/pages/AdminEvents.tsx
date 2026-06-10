@@ -3,7 +3,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Calendar, MapPin, Users, X, Save } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Calendar,
+  MapPin,
+  Users,
+  X,
+  Save,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,7 +52,8 @@ const eventSchema = z.object({
   rsvp_link: z.string().url("Must be a valid URL").optional().or(z.literal("")),
 });
 
-type EventForm = z.infer<typeof eventSchema>;
+type EventFormInput = z.input<typeof eventSchema>;
+type EventForm = z.output<typeof eventSchema>;
 
 interface ChapterEvent extends EventForm {
   id: string;
@@ -65,7 +75,8 @@ const SEED_EVENTS: ChapterEvent[] = [
     date: "2026-07-15",
     time: "6:30 PM",
     location: "KC Public Library — Central Branch",
-    description: "Monthly roundtable for Independence chapter founders. Bring a business problem to solve.",
+    description:
+      "Monthly roundtable for Independence chapter founders. Bring a business problem to solve.",
     capacity: 20,
     status: "upcoming",
     rsvp_link: "",
@@ -100,7 +111,7 @@ export default function AdminEvents() {
     setValue,
     watch,
     formState: { errors },
-  } = useForm<EventForm>({
+  } = useForm<EventFormInput, unknown, EventForm>({
     resolver: zodResolver(eventSchema),
     defaultValues: { status: "draft" },
   });
@@ -121,8 +132,8 @@ export default function AdminEvents() {
 
   const onSubmit = (data: EventForm) => {
     if (editingId) {
-      setEvents((prev) =>
-        prev.map((e) => (e.id === editingId ? { ...e, ...data } : e))
+      setEvents(prev =>
+        prev.map(e => (e.id === editingId ? { ...e, ...data } : e))
       );
       toast.success("Event updated.");
     } else {
@@ -132,14 +143,14 @@ export default function AdminEvents() {
         created_at: new Date().toISOString().split("T")[0],
         attendees: 0,
       };
-      setEvents((prev) => [newEvent, ...prev]);
+      setEvents(prev => [newEvent, ...prev]);
       toast.success("Event created.");
     }
     setDialogOpen(false);
   };
 
   const handleDelete = (id: string) => {
-    setEvents((prev) => prev.filter((e) => e.id !== id));
+    setEvents(prev => prev.filter(e => e.id !== id));
     setDeleteConfirmId(null);
     toast.success("Event deleted.");
   };
@@ -166,10 +177,19 @@ export default function AdminEvents() {
       <div className="max-w-6xl mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total Events", value: events.length },
-          { label: "Upcoming", value: events.filter((e) => e.status === "upcoming").length },
-          { label: "Total RSVPs", value: events.reduce((a, e) => a + e.attendees, 0) },
-          { label: "Drafts", value: events.filter((e) => e.status === "draft").length },
-        ].map((stat) => (
+          {
+            label: "Upcoming",
+            value: events.filter(e => e.status === "upcoming").length,
+          },
+          {
+            label: "Total RSVPs",
+            value: events.reduce((a, e) => a + e.attendees, 0),
+          },
+          {
+            label: "Drafts",
+            value: events.filter(e => e.status === "draft").length,
+          },
+        ].map(stat => (
           <div key={stat.label} className="rounded-lg border bg-card p-4">
             <p className="text-2xl font-bold">{stat.value}</p>
             <p className="text-xs text-muted-foreground mt-0.5">{stat.label}</p>
@@ -194,12 +214,15 @@ export default function AdminEvents() {
             <TableBody>
               {events.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
+                  <TableCell
+                    colSpan={6}
+                    className="text-center py-10 text-muted-foreground"
+                  >
                     No events yet. Create your first one!
                   </TableCell>
                 </TableRow>
               )}
-              {events.map((event) => (
+              {events.map(event => (
                 <TableRow key={event.id}>
                   <TableCell>
                     <div>
@@ -215,7 +238,11 @@ export default function AdminEvents() {
                     <div className="flex items-center gap-1.5 text-sm">
                       <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
                       <span>{event.date}</span>
-                      {event.time && <span className="text-muted-foreground">· {event.time}</span>}
+                      {event.time && (
+                        <span className="text-muted-foreground">
+                          · {event.time}
+                        </span>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -229,7 +256,9 @@ export default function AdminEvents() {
                   <TableCell>
                     <div className="flex items-center gap-1.5 text-sm">
                       <Users className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span>{event.attendees}/{event.capacity ?? "∞"}</span>
+                      <span>
+                        {event.attendees}/{event.capacity ?? "∞"}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -275,14 +304,22 @@ export default function AdminEvents() {
             <div className="space-y-1.5">
               <Label>Title *</Label>
               <Input {...register("title")} />
-              {errors.title && <p className="text-xs text-destructive">{errors.title.message}</p>}
+              {errors.title && (
+                <p className="text-xs text-destructive">
+                  {errors.title.message}
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <Label>Date *</Label>
                 <Input type="date" {...register("date")} />
-                {errors.date && <p className="text-xs text-destructive">{errors.date.message}</p>}
+                {errors.date && (
+                  <p className="text-xs text-destructive">
+                    {errors.date.message}
+                  </p>
+                )}
               </div>
               <div className="space-y-1.5">
                 <Label>Time</Label>
@@ -292,7 +329,10 @@ export default function AdminEvents() {
 
             <div className="space-y-1.5">
               <Label>Location</Label>
-              <Input placeholder="Venue or 'Virtual — Zoom'" {...register("location")} />
+              <Input
+                placeholder="Venue or 'Virtual — Zoom'"
+                {...register("location")}
+              />
             </div>
 
             <div className="space-y-1.5">
@@ -309,7 +349,9 @@ export default function AdminEvents() {
                 <Label>Status *</Label>
                 <Select
                   value={statusValue}
-                  onValueChange={(v) => setValue("status", v as EventForm["status"])}
+                  onValueChange={v =>
+                    setValue("status", v as EventForm["status"])
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -327,11 +369,19 @@ export default function AdminEvents() {
             <div className="space-y-1.5">
               <Label>RSVP Link</Label>
               <Input placeholder="https://..." {...register("rsvp_link")} />
-              {errors.rsvp_link && <p className="text-xs text-destructive">{errors.rsvp_link.message}</p>}
+              {errors.rsvp_link && (
+                <p className="text-xs text-destructive">
+                  {errors.rsvp_link.message}
+                </p>
+              )}
             </div>
 
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setDialogOpen(false)}
+              >
                 <X className="h-4 w-4 mr-1.5" />
                 Cancel
               </Button>
@@ -345,7 +395,10 @@ export default function AdminEvents() {
       </Dialog>
 
       {/* Delete confirm */}
-      <Dialog open={!!deleteConfirmId} onOpenChange={() => setDeleteConfirmId(null)}>
+      <Dialog
+        open={!!deleteConfirmId}
+        onOpenChange={() => setDeleteConfirmId(null)}
+      >
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>Delete Event?</DialogTitle>
@@ -354,8 +407,13 @@ export default function AdminEvents() {
             This action cannot be undone.
           </p>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteConfirmId(null)}>Cancel</Button>
-            <Button variant="destructive" onClick={() => deleteConfirmId && handleDelete(deleteConfirmId)}>
+            <Button variant="outline" onClick={() => setDeleteConfirmId(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => deleteConfirmId && handleDelete(deleteConfirmId)}
+            >
               <Trash2 className="h-4 w-4 mr-1.5" />
               Delete
             </Button>

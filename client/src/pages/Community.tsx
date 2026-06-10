@@ -11,7 +11,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 
 const schema = z.object({
   firstname: z.string().min(1, "First name is required"),
@@ -20,9 +26,7 @@ const schema = z.object({
   company: z.string().optional(),
   what_are_you_building: z.string().min(10, "Tell us a bit more (10+ chars)"),
   referral_code: z.string().optional(),
-  consent: z.literal(true, {
-    errorMap: () => ({ message: "You must agree to continue" }),
-  }),
+  consent: z.boolean().refine(Boolean, "You must agree to continue"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -35,7 +39,7 @@ export default function Community() {
       setSubmitted(true);
       toast.success("You're in! Welcome to the Roundtable.");
     },
-    onError: (err) => {
+    onError: err => {
       toast.error(err.message ?? "Something went wrong. Please try again.");
     },
   });
@@ -84,7 +88,9 @@ export default function Community() {
             KC Bootstrapper Roundtable
           </h1>
           <p className="text-lg md:text-xl text-neutral-300 max-w-2xl mx-auto">
-            A peer group for Kansas City founders building sustainable, profitable businesses — without VC pressure. Honest conversations, real accountability.
+            A peer group for Kansas City founders building sustainable,
+            profitable businesses — without VC pressure. Honest conversations,
+            real accountability.
           </p>
         </motion.div>
       </section>
@@ -93,10 +99,19 @@ export default function Community() {
       <section className="py-12 px-4 bg-muted/40">
         <div className="max-w-3xl mx-auto grid md:grid-cols-3 gap-6 text-center">
           {[
-            { title: "Monthly Meetups", desc: "In-person & virtual sessions with real operators" },
-            { title: "Deal Flow", desc: "Referrals, partnerships, and collab opportunities" },
-            { title: "No BS Advice", desc: "Peers who've been there — not consultants selling you something" },
-          ].map((item) => (
+            {
+              title: "Monthly Meetups",
+              desc: "In-person & virtual sessions with real operators",
+            },
+            {
+              title: "Deal Flow",
+              desc: "Referrals, partnerships, and collab opportunities",
+            },
+            {
+              title: "No BS Advice",
+              desc: "Peers who've been there — not consultants selling you something",
+            },
+          ].map(item => (
             <motion.div
               key={item.title}
               className="bg-background rounded-xl p-6 shadow-sm border"
@@ -128,17 +143,23 @@ export default function Community() {
                   <CardHeader>
                     <CardTitle>Request to Join</CardTitle>
                     <CardDescription>
-                      Tell us a bit about what you're building. We review applications and reach out within a few days.
+                      Tell us a bit about what you're building. We review
+                      applications and reach out within a few days.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                      className="space-y-5"
+                    >
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
                           <Label htmlFor="firstname">First Name *</Label>
                           <Input id="firstname" {...register("firstname")} />
                           {errors.firstname && (
-                            <p className="text-xs text-destructive">{errors.firstname.message}</p>
+                            <p className="text-xs text-destructive">
+                              {errors.firstname.message}
+                            </p>
                           )}
                         </div>
                         <div className="space-y-1.5">
@@ -151,7 +172,9 @@ export default function Community() {
                         <Label htmlFor="email">Email *</Label>
                         <Input id="email" type="email" {...register("email")} />
                         {errors.email && (
-                          <p className="text-xs text-destructive">{errors.email.message}</p>
+                          <p className="text-xs text-destructive">
+                            {errors.email.message}
+                          </p>
                         )}
                       </div>
 
@@ -161,7 +184,9 @@ export default function Community() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <Label htmlFor="what_are_you_building">What are you building? *</Label>
+                        <Label htmlFor="what_are_you_building">
+                          What are you building? *
+                        </Label>
                         <Textarea
                           id="what_are_you_building"
                           rows={4}
@@ -169,29 +194,44 @@ export default function Community() {
                           {...register("what_are_you_building")}
                         />
                         {errors.what_are_you_building && (
-                          <p className="text-xs text-destructive">{errors.what_are_you_building.message}</p>
+                          <p className="text-xs text-destructive">
+                            {errors.what_are_you_building.message}
+                          </p>
                         )}
                       </div>
 
                       <div className="space-y-1.5">
-                        <Label htmlFor="referral_code">Referral Code (optional)</Label>
-                        <Input id="referral_code" {...register("referral_code")} placeholder="e.g. FRIEND-XYZ" />
+                        <Label htmlFor="referral_code">
+                          Referral Code (optional)
+                        </Label>
+                        <Input
+                          id="referral_code"
+                          {...register("referral_code")}
+                          placeholder="e.g. FRIEND-XYZ"
+                        />
                       </div>
 
                       <div className="flex items-start gap-3">
                         <Checkbox
                           id="consent"
                           checked={!!consentValue}
-                          onCheckedChange={(checked) =>
-                            setValue("consent", checked === true ? true : (undefined as unknown as true))
+                          onCheckedChange={checked =>
+                            setValue("consent", checked === true)
                           }
                         />
-                        <label htmlFor="consent" className="text-sm text-muted-foreground leading-snug cursor-pointer">
-                          I agree to receive communications about the KC Bootstrapper Roundtable and related events. No spam, ever.
+                        <label
+                          htmlFor="consent"
+                          className="text-sm text-muted-foreground leading-snug cursor-pointer"
+                        >
+                          I agree to receive communications about the KC
+                          Bootstrapper Roundtable and related events. No spam,
+                          ever.
                         </label>
                       </div>
                       {errors.consent && (
-                        <p className="text-xs text-destructive">{errors.consent.message}</p>
+                        <p className="text-xs text-destructive">
+                          {errors.consent.message}
+                        </p>
                       )}
 
                       <Button
@@ -229,13 +269,16 @@ export default function Community() {
                 </div>
                 <h2 className="text-2xl font-bold mb-2">You're on the list!</h2>
                 <p className="text-muted-foreground mb-8">
-                  We'll review your application and reach out within a couple of days. In the meantime, grab time to chat.
+                  We'll review your application and reach out within a couple of
+                  days. In the meantime, grab time to chat.
                 </p>
 
                 {/* Calendly embed */}
                 <div className="rounded-xl overflow-hidden border shadow-sm bg-background">
                   <div className="p-4 border-b">
-                    <p className="font-medium text-sm">Schedule a quick intro call</p>
+                    <p className="font-medium text-sm">
+                      Schedule a quick intro call
+                    </p>
                   </div>
                   <iframe
                     src="https://calendly.com/thebossrob"

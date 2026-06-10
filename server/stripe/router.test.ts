@@ -1,7 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { stripeRouter } from "./router";
 import { getSubscriptionByUserId, getPaymentsByUserId } from "./db";
-import { createCheckoutSession } from "./checkout";
+import {
+  createCheckoutSession,
+  createOneTimeCheckoutSession,
+} from "./checkout";
+
+vi.hoisted(() => {
+  process.env.STRIPE_SECRET_KEY = "sk_test_mock";
+  process.env.STRIPE_BOOTCAMP_PRICE_ID = "price_bootcamp_test";
+});
 
 // Mock the dependencies
 vi.mock("./db");
@@ -215,6 +223,67 @@ describe("stripeRouter", () => {
           billingCycle: "monthly",
         })
       ).rejects.toThrow("Please login (10001)");
+    });
+  });
+
+  describe("createBookCheckout", () => {
+    it("should create one-time checkout session for anonymous book buyer", async () => {
+      const mockCheckoutUrl = "https://checkout.stripe.com/pay/cs_book_123";
+
+      vi.mocked(createOneTimeCheckoutSession).mockResolvedValue(
+        mockCheckoutUrl
+      );
+
+      const caller = stripeRouter.createCaller({
+        user: null,
+        req: { headers: { origin: "http://localhost:3000" } } as any,
+        res: {} as any,
+      });
+
+      const result = await caller.createBookCheckout();
+
+      expect(result.checkoutUrl).toBe(mockCheckoutUrl);
+      expect(createOneTimeCheckoutSession).toHaveBeenCalledWith(
+        expect.objectContaining({
+          priceId: "price_1TgRz4GmUFddSefto4jcH4Jv",
+          successUrl: "http://localhost:3000/book?success=true",
+          cancelUrl: "http://localhost:3000/book?canceled=true",
+        })
+      );
+      expect(createOneTimeCheckoutSession).toHaveBeenCalledWith(
+        expect.not.objectContaining({
+          userId: expect.anything(),
+          userEmail: expect.anything(),
+          userName: expect.anything(),
+        })
+      );
+    });
+  });
+
+  describe("createBootcampCheckout", () => {
+    it("should create one-time checkout session for anonymous bootcamp buyer", async () => {
+      const mockCheckoutUrl = "https://checkout.stripe.com/pay/cs_bootcamp_123";
+
+      vi.mocked(createOneTimeCheckoutSession).mockResolvedValue(
+        mockCheckoutUrl
+      );
+
+      const caller = stripeRouter.createCaller({
+        user: null,
+        req: { headers: { origin: "http://localhost:3000" } } as any,
+        res: {} as any,
+      });
+
+      const result = await caller.createBootcampCheckout();
+
+      expect(result.checkoutUrl).toBe(mockCheckoutUrl);
+      expect(createOneTimeCheckoutSession).toHaveBeenCalledWith(
+        expect.objectContaining({
+          priceId: "price_bootcamp_test",
+          successUrl: "http://localhost:3000/bootcamp?success=true",
+          cancelUrl: "http://localhost:3000/bootcamp?canceled=true",
+        })
+      );
     });
   });
 });

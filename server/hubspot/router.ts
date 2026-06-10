@@ -1,11 +1,10 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../_core/trpc";
+import { publicProcedure, router } from "../_core/trpc";
 
 // PAT must be set in environment — see .env.example
 const HUBSPOT_PAT = process.env.HUBSPOT_PAT ?? "";
 
-const HUBSPOT_CONTACTS_URL =
-  "https://api.hubapi.com/crm/v3/objects/contacts";
+const HUBSPOT_CONTACTS_URL = "https://api.hubapi.com/crm/v3/objects/contacts";
 
 async function upsertContact(properties: Record<string, string>) {
   // 1. Try create
@@ -27,10 +26,12 @@ async function upsertContact(properties: Record<string, string>) {
     return { success: true, created: false };
   }
 
-  throw new Error(`HubSpot create failed (${createRes.status}): ${await createRes.text()}`);
+  throw new Error(
+    `HubSpot create failed (${createRes.status}): ${await createRes.text()}`
+  );
 }
 
-export const hubspotRouter = createTRPCRouter({
+export const hubspotRouter = router({
   createContact: publicProcedure
     .input(
       z.object({
