@@ -1,9 +1,10 @@
-node_modules/
-dist/
-build/
-.next/
-target/
-vendor/
-*.log
+# Sensitive files
 .env
-.env.local
+
+# Docker volumes (large, contain runtime data)
+postgres-data/
+n8n-data/
+
+# System
+data/
+*.log
