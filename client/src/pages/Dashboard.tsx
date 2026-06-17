@@ -179,7 +179,7 @@ export default function Dashboard() {
                         </Button>
                         <Button
                           variant="outline"
-                          onClick={() => navigate("/dashboard/settings")}
+                          onClick={() => navigate("/pricing")
                         >
                           <Settings className="w-4 h-4 mr-2" />
                           Settings
@@ -337,18 +337,18 @@ export default function Dashboard() {
             <Card className="p-6 border border-border">
               <h3 className="text-lg font-bold text-foreground mb-4">Quick Links</h3>
               <div className="space-y-2">
-                <Button variant="ghost" className="w-full justify-start" disabled>
-                  Edit Profile
-                </Button>
-                <Button variant="ghost" className="w-full justify-start" disabled>
-                  Billing Settings
-                </Button>
-                <Button variant="ghost" className="w-full justify-start" disabled>
-                  Download Invoices
-                </Button>
-                <Button variant="ghost" className="w-full justify-start" disabled>
-                  Support
-                </Button>
+                <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/dashboard/settings")}>
+  Edit Profile
+</Button>
+<Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/dashboard/settings")}>
+  Billing Settings
+</Button>
+<Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/dashboard/settings")}>
+  Download Invoices
+</Button>
+<Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/help")}>
+  Support
+</Button>
               </div>
             </Card>
 
@@ -358,9 +358,9 @@ export default function Dashboard() {
               <p className="text-sm text-muted-foreground mb-4">
                 Check our documentation or contact our support team for assistance.
               </p>
-              <Button variant="outline" className="w-full" disabled>
-                Contact Support
-              </Button>
+              <Button variant="outline" className="w-full" onClick={() => navigate("/help")}>
+  Contact Support
+</Button>
             </Card>
           </div>
         </div>
