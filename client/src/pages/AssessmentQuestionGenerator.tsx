@@ -267,7 +267,7 @@ export default function AssessmentQuestionGenerator() {
         if (b.score !== a.score) return b.score - a.score;
         return (a.question.id + refreshSeed).localeCompare(b.question.id + refreshSeed);
       })
-      .slice(0, count)
+      .slice(0, count || 3) // Safely fall back to 3 if count is evaluated as 0/falsy while typing
       .map(item => item.question);
   }, [count, depth, domain, notes, refreshSeed]);
 
@@ -356,8 +356,14 @@ export default function AssessmentQuestionGenerator() {
                     type="number"
                     min={3}
                     max={8}
-                    value={count}
-                    onChange={event => setCount(Number(event.target.value))}
+                    value={count || ""}
+                    onChange={event => {
+                      const val = event.target.value === "" ? 0 : Number(event.target.value);
+                      setCount(Math.min(8, Math.max(0, val)));
+                    }}
+                    onBlur={() => {
+                      if (count < 3) setCount(3);
+                    }}
                     className="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-blue-700"
                   />
                 </label>
@@ -468,3 +474,4 @@ export default function AssessmentQuestionGenerator() {
     </PageLayout>
   );
 }
+
