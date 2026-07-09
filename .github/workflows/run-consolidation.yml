@@ -1,0 +1,30 @@
+name: Run Kit Consolidation
+
+on:
+  workflow_dispatch: # This adds a manual "Run" button in GitHub
+
+permissions:
+  contents: write # Allows the script to save the kit.md files back to github
+
+jobs:
+  consolidate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Consolidation Script
+        run: node scripts/consolidate-workflow-kits.mjs
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "chore: automatically consolidate all workflow kits"
+          git push
