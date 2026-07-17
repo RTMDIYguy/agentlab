@@ -1,0 +1,27 @@
+{
+  "name": "Consulting Assessment Generator",
+  "short_name": "Assessment",
+  "description": "Generate consulting assessment questions during onboarding and discovery calls.",
+  "start_url": "/assessment-generator",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#1d4ed8",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assessment-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Open Assessment Generator",
+      "short_name": "Generator",
+      "description": "Start an onboarding assessment question session.",
+      "url": "/assessment-generator"
+    }
+  ]
+}

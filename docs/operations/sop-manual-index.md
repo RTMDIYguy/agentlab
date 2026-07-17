@@ -20,6 +20,12 @@ The SOP Manual sits under the broader agency operating manual:
 
 - `docs/operations/agency-operating-manual.md`
 
+The planned human-facing Owner's Manual sits above the SOP library as the
+navigation layer for Robert, collaborators, auditors, future operators, and any
+sanitized public tour-guide derivative:
+
+- `docs/operations/agency-owners-manual-blueprint.md`
+
 Use the agency operating manual as the first orientation document for the whole
 business system. Use this SOP Manual Index when a repeated operating lesson
 needs to become a procedure.
@@ -27,7 +33,10 @@ needs to become a procedure.
 ## Manual Principles
 
 - Use the systems already in place before adding new tools.
-- Keep Microsoft 365 as the default operating backbone.
+- Keep Microsoft 365 as the default office, collaboration, and document
+  backbone when paid access is available.
+- Treat cloud, marketplace, SaaS, VPS, KNIME, and Stripe Connect paths as
+  evaluation candidates until change control promotes them.
 - Keep SOPs short enough to use while doing the work.
 - Link to source artifacts instead of duplicating long material.
 - Mark whether a procedure is internal, client-facing, or both.
@@ -82,6 +91,10 @@ Initial SOP candidates:
 | SOP-OPS-003 | Friday Finance And KPI Review | URC weekly cadence | Needed |
 | SOP-OPS-004 | Mobile / Offline Continuity Handoff | `docs/operations/mobile-chatgpt-continuity-brief.md` | Draft source exists |
 | SOP-OPS-005 | Naming Conventions And Identifier Control | `docs/operations/SOP-OPS-005-naming-conventions-and-identifier-control.md` | Draft exists |
+| SOP-OPS-006 | Secret Handling And Credential Continuity | `docs/operations/secret-handling-standard.md` | Draft exists |
+| SOP-OPS-007 | Owner's Manual Maintenance And Public Tour Boundaries | `docs/operations/agency-owners-manual-blueprint.md` | Needed |
+| SOP-OPS-012 | Bootstrapper.ai / Ownable OS Weekly Cockpit | `docs/operations/bootstrapper-ai-operating-field-guide.md` | Draft source exists |
+| SOP-OPS-013 | Google Drive Sync On Repo Update | `docs/operations/SOP-OPS-006-gdrive-sync-on-update.md` | Active — created 2026-06-04 |
 
 ### 3. Marketing And Public Voice
 
@@ -97,6 +110,7 @@ Initial SOP candidates:
 | SOP-MKT-003 | Founder Signal Content Cycle | `workflows/marketing-founder-signal-system/` | Draft source exists |
 | SOP-MKT-004 | Book-To-Content Repurposing | URC operating architecture | Needed |
 | SOP-MKT-005 | Bootstrapper Capital Event Promotion | Bootstrapper Capital launch checklist | Needed |
+| SOP-MKT-006 | Direct-Response Ad Copy Review | Affiliate CMO drafts + Agent Lab voice guardrails | Needed |
 
 ### 4. Lead Capture And CRM-Lite
 
@@ -109,8 +123,9 @@ Initial SOP candidates:
 | --- | --- | --- | --- |
 | SOP-SAL-001 | CRM-Lite Lead Intake | URC architecture / execution checklist | Needed |
 | SOP-SAL-002 | Founder Diagnostic Follow-Up | Founder Signal System assets | Draft source exists |
-| SOP-SAL-003 | Roundtable RSVP And Follow-Up | Bootstrapper Capital event flow | Needed |
+| SOP-SAL-003 | RoundTable RSVP And Follow-Up | `docs/operations/mkt-09-roundtable-operating-slice.md` | Draft source exists |
 | SOP-SAL-004 | Unbuilt Workflow Purchase Response | `docs/operations/agent-lab-unbuilt-purchase-response.md` | Draft source exists |
+| SOP-SAL-005 | Bootstrapper.ai CRM Workspace Inventory And Bridge | `docs/operations/bootstrapper-ai-operating-field-guide.md` | Draft source exists |
 
 ### 5. Workflow Packaging And Certification
 
@@ -147,10 +162,24 @@ Initial SOP candidates:
 
 | SOP ID | Working Title | Source | Status |
 | --- | --- | --- | --- |
-| SOP-FIN-001 | Invoice Creation And Payment Status | Frappe finance rule / FIN-03 | Needed |
+| SOP-FIN-001 | Invoice Creation And Payment Status | Owned finance tracker / FIN-03 | Needed |
 | SOP-FIN-002 | Weekly Receivables Review | URC weekly cadence / FIN-03 | Needed |
 | SOP-FIN-003 | Tool Spend Review | URC low-cost tooling rule | Needed |
 | SOP-FIN-004 | Paid Tool Justification | URC operating rules | Needed |
+
+### 8. Infrastructure, Analytics, And Platform Evaluation
+
+Purpose: use available learning and sandbox resources without accidentally
+turning experiments into unmanaged production systems.
+
+Initial SOP candidates:
+
+| SOP ID | Working Title | Source | Status |
+| --- | --- | --- | --- |
+| SOP-OPS-008 | VPS Sandbox Use And Promotion Criteria | `docs/operations/urc-v1-operating-architecture.md` | Needed |
+| SOP-OPS-009 | KNIME Analytics And Evidence Workflow | `docs/operations/urc-v1-operating-architecture.md` | Needed |
+| SOP-OPS-010 | SaaS Platform Evaluation Decision Record | `docs/operations/urc-v1-operating-architecture.md` | Needed |
+| SOP-OPS-011 | Weekly Workflow Audit Bank | `docs/operations/weekly-workflow-audit-bank.md`; `docs/operations/workflow-relationship-map.md`; `docs/operations/workflow-registry.md` | Needed |
 
 ## First Build Order
 
