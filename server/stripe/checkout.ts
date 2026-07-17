@@ -1,7 +1,16 @@
 import Stripe from "stripe";
 import { getPriceId, PlanId, BillingCycle } from "./products";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+let stripeClient: Stripe | null = null;
+
+function getStripeClient() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("Stripe secret key is not configured");
+  }
+
+  stripeClient ??= new Stripe(process.env.STRIPE_SECRET_KEY);
+  return stripeClient;
+}
 
 export interface CreateCheckoutSessionParams {
   userId: number;
@@ -19,11 +28,19 @@ export interface CreateCheckoutSessionParams {
 export async function createCheckoutSession(
   params: CreateCheckoutSessionParams
 ): Promise<string> {
-  const { userId, userEmail, userName, plan, billingCycle, successUrl, cancelUrl } = params;
+  const {
+    userId,
+    userEmail,
+    userName,
+    plan,
+    billingCycle,
+    successUrl,
+    cancelUrl,
+  } = params;
 
   const priceId = getPriceId(plan, billingCycle);
 
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripeClient().checkout.sessions.create({
     customer_email: userEmail,
     client_reference_id: userId.toString(),
     line_items: [
@@ -52,25 +69,74 @@ export async function createCheckoutSession(
   return session.url;
 }
 
+export interface CreateOneTimeCheckoutSessionParams {
+  userId?: number;
+  userEmail?: string;
+  userName?: string;
+  product?: string;
+  priceId: string;
+  successUrl: string;
+  cancelUrl: string;
+}
+
+/**
+ * Create a Stripe checkout session for a one-time payment (e.g. book purchase)
+ */
+export async function createOneTimeCheckoutSession(
+  params: CreateOneTimeCheckoutSessionParams
+): Promise<string> {
+  const {
+    userId,
+    userEmail,
+    userName,
+    product = "one_time",
+    priceId,
+    successUrl,
+    cancelUrl,
+  } = params;
+
+  const session = await getStripeClient().checkout.sessions.create({
+    ...(userEmail ? { customer_email: userEmail } : {}),
+    ...(userId ? { client_reference_id: userId.toString() } : {}),
+    line_items: [{ price: priceId, quantity: 1 }],
+    mode: "payment",
+    success_url: successUrl,
+    cancel_url: cancelUrl,
+    allow_promotion_codes: true,
+    metadata: {
+      product,
+      ...(userId ? { user_id: userId.toString() } : {}),
+      ...(userEmail ? { customer_email: userEmail } : {}),
+      ...(userName ? { customer_name: userName } : {}),
+    },
+  });
+
+  if (!session.url) {
+    throw new Error("Failed to create checkout session: no URL returned");
+  }
+
+  return session.url;
+}
+
 /**
  * Retrieve a checkout session by ID
  */
 export async function getCheckoutSession(sessionId: string) {
-  return stripe.checkout.sessions.retrieve(sessionId);
+  return getStripeClient().checkout.sessions.retrieve(sessionId);
 }
 
 /**
  * Retrieve subscription details
  */
 export async function getSubscription(subscriptionId: string) {
-  return stripe.subscriptions.retrieve(subscriptionId);
+  return getStripeClient().subscriptions.retrieve(subscriptionId);
 }
 
 /**
  * Cancel a subscription
  */
 export async function cancelSubscription(subscriptionId: string) {
-  return stripe.subscriptions.cancel(subscriptionId);
+  return getStripeClient().subscriptions.cancel(subscriptionId);
 }
 
 /**
@@ -80,13 +146,14 @@ export async function updateSubscriptionPlan(
   subscriptionId: string,
   newPriceId: string
 ) {
-  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-  
+  const subscription =
+    await getStripeClient().subscriptions.retrieve(subscriptionId);
+
   if (!subscription.items.data[0]) {
     throw new Error("Subscription has no items");
   }
 
-  return stripe.subscriptions.update(subscriptionId, {
+  return getStripeClient().subscriptions.update(subscriptionId, {
     items: [
       {
         id: subscription.items.data[0].id,
@@ -100,7 +167,7 @@ export async function updateSubscriptionPlan(
  * Get customer invoices
  */
 export async function getCustomerInvoices(customerId: string) {
-  return stripe.invoices.list({
+  return getStripeClient().invoices.list({
     customer: customerId,
     limit: 100,
   });
@@ -110,7 +177,7 @@ export async function getCustomerInvoices(customerId: string) {
  * Get invoice PDF URL
  */
 export async function getInvoicePdfUrl(invoiceId: string) {
-  const invoice = await stripe.invoices.retrieve(invoiceId);
+  const invoice = await getStripeClient().invoices.retrieve(invoiceId);
   return invoice.hosted_invoice_url;
 }
 
@@ -118,5 +185,5 @@ export async function getInvoicePdfUrl(invoiceId: string) {
  * Get customer by ID
  */
 export async function getCustomer(customerId: string) {
-  return stripe.customers.retrieve(customerId);
+  return getStripeClient().customers.retrieve(customerId);
 }

@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import {
   Clipboard,
   Copy,
+  FileText,
   Gauge,
   MessageSquareText,
   RefreshCcw,
@@ -21,6 +22,14 @@ type Question = {
   skill: string;
   evaluation: string;
   signals: string[];
+};
+
+type Finding = {
+  domain: string;
+  score: number;
+  gap: string;
+  recommendation: string;
+  evidence: string[];
 };
 
 const depthLabels: Record<Depth, string> = {
@@ -595,6 +604,39 @@ const callObjectives = [
   "Follow-up consultation",
 ];
 
+const domainProfiles: Record<string, { gap: string; recommendation: string }> = {
+  Operations: {
+    gap: "Work appears to depend on informal handoffs, remembered steps, or unclear delivery flow.",
+    recommendation:
+      "Map the current delivery path, identify the slowest handoff, and define a visible status model before adding more tools.",
+  },
+  Sales: {
+    gap: "Lead movement and follow-up reliability may be inconsistent enough to lose warm opportunities.",
+    recommendation:
+      "Define the lead stages, owner, next-action rules, and follow-up timing so every interested prospect has a clear path.",
+  },
+  Marketing: {
+    gap: "Marketing activity may not be tied tightly enough to conversations, opportunities, or revenue signals.",
+    recommendation:
+      "Connect each campaign or content theme to a CTA, tracking field, and weekly review metric.",
+  },
+  Finance: {
+    gap: "Spending decisions may be ahead of the current financial control layer or revenue proof.",
+    recommendation:
+      "Set upgrade thresholds for tools, subscriptions, and outside help based on cash, opportunity value, and capacity.",
+  },
+  Technology: {
+    gap: "The toolchain likely contains manual copying, duplicate entry, or automation candidates without governance.",
+    recommendation:
+      "Choose one high-relief repetitive task, document the field flow, and automate it with an approval or exception path.",
+  },
+  Leadership: {
+    gap: "Decision rights, ownership, or key knowledge may be too dependent on individual memory.",
+    recommendation:
+      "Capture the key responsibilities, decision points, and recurring operating cadence in a short SOP or checklist.",
+  },
+};
+
 function scoreQuestion(question: Question, notes: string, domain: string, depth: Depth) {
   const normalized = notes.toLowerCase();
   const signalHits = question.signals.filter(signal => normalized.includes(signal)).length;
@@ -614,20 +656,61 @@ function inferSignals(notes: string) {
   return Array.from(unique.entries()).map(([signal, domain]) => ({ signal, domain }));
 }
 
+function buildFindings(notes: string): Finding[] {
+  const normalized = notes.toLowerCase();
+  const findings = Object.entries(domainProfiles)
+    .map(([domain, profile]) => {
+      const questions = questionBank.filter(question => question.domain === domain);
+      const evidence = Array.from(
+        new Set(
+          questions.flatMap(question =>
+            question.signals.filter(signal => normalized.includes(signal)),
+          ),
+        ),
+      );
+
+      return {
+        domain,
+        score: evidence.length,
+        gap: profile.gap,
+        recommendation: profile.recommendation,
+        evidence,
+      };
+    })
+    .filter(finding => finding.score > 0)
+    .sort((a, b) => b.score - a.score || a.domain.localeCompare(b.domain));
+
+  return findings.slice(0, 4);
+}
+
 function buildExportText(
   clientName: string,
   objective: string,
   domain: string,
   depth: Depth,
   selectedQuestions: Question[],
+  findings: Finding[],
 ) {
   const title = clientName.trim() || "Client";
   const lines = [
-    `${title} Assessment Questions`,
+    `${title} Assessment Report`,
     `Objective: ${objective}`,
     `Focus: ${domain}`,
     `Depth: ${depthLabels[depth]}`,
     "",
+    "Likely Gaps",
+    ...(findings.length
+      ? findings.flatMap((finding, index) => [
+          `${index + 1}. ${finding.domain}: ${finding.gap}`,
+          `Evidence signals: ${finding.evidence.join(", ")}`,
+          `Recommended next step: ${finding.recommendation}`,
+          "",
+        ])
+      : [
+          "No strong gap signals detected yet. Add more call notes or ask another round of diagnostic questions.",
+          "",
+        ]),
+    "Suggested Questions",
     ...selectedQuestions.flatMap((question, index) => [
       `${index + 1}. ${question.text}`,
       `Skill: ${question.skill}`,
@@ -650,6 +733,7 @@ export default function AssessmentQuestionGenerator() {
   const [copied, setCopied] = useState(false);
 
   const signals = useMemo(() => inferSignals(notes), [notes]);
+  const findings = useMemo(() => buildFindings(notes), [notes]);
 
   const selectedQuestions = useMemo(() => {
     return [...questionBank]
@@ -666,11 +750,11 @@ export default function AssessmentQuestionGenerator() {
   }, [count, depth, domain, notes, refreshSeed]);
 
   const exportText = useMemo(
-    () => buildExportText(clientName, objective, domain, depth, selectedQuestions),
-    [clientName, depth, domain, objective, selectedQuestions],
+    () => buildExportText(clientName, objective, domain, depth, selectedQuestions, findings),
+    [clientName, depth, domain, findings, objective, selectedQuestions],
   );
 
-  const copyQuestions = async () => {
+  const copyReport = async () => {
     await navigator.clipboard.writeText(exportText);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1800);
@@ -691,11 +775,11 @@ export default function AssessmentQuestionGenerator() {
           </div>
           <button
             type="button"
-            onClick={copyQuestions}
+            onClick={copyReport}
             className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-blue-700 px-4 text-sm font-semibold text-white transition hover:bg-blue-800"
           >
             <Copy className="h-4 w-4" />
-            {copied ? "Copied" : "Copy Questions"}
+            {copied ? "Copied" : "Copy Report"}
           </button>
         </div>
 
@@ -858,6 +942,55 @@ export default function AssessmentQuestionGenerator() {
             </div>
           </section>
         </div>
+
+        <section className="mt-5 rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+              <FileText className="h-4 w-4 text-blue-700" />
+              Results Draft
+            </div>
+            <div className="text-xs text-slate-500">
+              Generated from current notes and detected signals
+            </div>
+          </div>
+
+          {findings.length ? (
+            <div className="grid gap-3 lg:grid-cols-2">
+              {findings.map(finding => (
+                <article
+                  key={finding.domain}
+                  className="rounded-md border border-slate-200 bg-slate-50 p-4"
+                >
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <h2 className="text-base font-semibold text-slate-950">{finding.domain}</h2>
+                    <span className="rounded-md bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
+                      {finding.score} signals
+                    </span>
+                  </div>
+                  <div className="space-y-3 text-sm leading-6">
+                    <div>
+                      <div className="font-semibold text-slate-800">Likely gap</div>
+                      <p className="text-slate-600">{finding.gap}</p>
+                    </div>
+                    <div>
+                      <div className="font-semibold text-slate-800">Suggested next step</div>
+                      <p className="text-slate-600">{finding.recommendation}</p>
+                    </div>
+                    <div>
+                      <div className="font-semibold text-slate-800">Evidence signals</div>
+                      <p className="text-slate-600">{finding.evidence.join(", ")}</p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-md border border-dashed border-slate-300 bg-slate-50 p-5 text-sm leading-6 text-slate-600">
+              Add notes from the call and this section will draft likely gaps, evidence signals,
+              and practical next steps. The report stays conservative until enough signals appear.
+            </div>
+          )}
+        </section>
       </div>
     </PageLayout>
   );
