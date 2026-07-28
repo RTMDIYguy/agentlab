@@ -1,5 +1,6 @@
 import os
 import json
+from datetime import datetime
 from google.cloud import storage
 from google.cloud import aiplatform
 
@@ -11,7 +12,6 @@ def initialize_vertex_ai():
     aiplatform.init(project=PROJECT_ID, location=LOCATION)
 
 def download_and_process_workflows():
-    # Grab the bucket name from the environment variables defined in config.yaml
     bucket_name = os.environ.get("BUCKET_NAME")
     if not bucket_name:
         print("Error: BUCKET_NAME environment variable is not defined.")
@@ -22,39 +22,38 @@ def download_and_process_workflows():
     
     try:
         bucket = storage_client.bucket(bucket_name)
-        # Scan the root level of your bucket for any JSON configurations
         blobs = bucket.list_blobs()
         
-        json_blobs = [b for b in blobs if b.name.endswith('.json')]
+        # Only read JSON files from the root directory (skip any in folders)
+        json_blobs = [b for b in blobs if b.name.endswith('.json') and '/' not in b.name]
         
         if not json_blobs:
             print("No workflow definition files (.json) discovered in the bucket root.")
             return
 
-        print(f"Identified {len(json_blobs)} JSON definition file(s). Downloading...")
+        print(f"Identified {len(json_blobs)} JSON definition file(s).")
         
         for blob in json_blobs:
             print(f"Downloading processing schema: {blob.name}")
-            # Pull the data directly into memory to read it instantly
             file_contents = blob.download_as_text()
             
             try:
                 workflow_data = json.loads(file_contents)
-                execute_ai_steps(workflow_data)
+                # Process the workflow and pass the bucket object to save outputs
+                execute_ai_steps(workflow_data, bucket, blob.name)
             except json.JSONDecodeError:
                 print(f"Skipping file {blob.name}: Content is not valid JSON format.")
                 
     except Exception as e:
         print(f"Failed to access or download files from bucket storage system: {str(e)}")
 
-def execute_ai_steps(workflow_data):
+def execute_ai_steps(workflow_data, bucket, original_filename):
     workflow_name = workflow_data.get("name", "Unnamed Workflow Agent")
     model_name = workflow_data.get("model", "gemini-1.5-flash")
     prompt = workflow_data.get("prompt", "")
     
     print(f"\n==========================================")
     print(f"Running Agent Task: {workflow_name}")
-    print(f"Target Infrastructure Model: {model_name}")
     print(f"==========================================")
     
     if not prompt:
@@ -63,14 +62,19 @@ def execute_ai_steps(workflow_data):
 
     try:
         from vertexai.generative_models import GenerativeModel
-        print("Invoking Vertex AI Foundation Model API layers...")
-        
         model = GenerativeModel(model_name)
         response = model.generate_content(prompt)
         
-        print("\n--- Model Response Output ---")
-        print(response.text)
-        print("-----------------------------\n")
+        print("Model execution completed successfully.")
+        
+        # Save output results back to the bucket
+        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        base_name = os.path.splitext(original_filename)[0]
+        output_blob_name = f"outputs/{base_name}_response_{timestamp}.txt"
+        
+        print(f"Uploading generative result text to: gs://{bucket.name}/{output_blob_name}")
+        output_blob = bucket.blob(output_blob_name)
+        output_blob.upload_from_string(response.text, content_type="text/plain")
         
     except Exception as e:
         print(f"Runtime execution failure processing AI steps: {str(e)}")

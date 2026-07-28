@@ -1,0 +1,42 @@
+name: Build and Deploy to Artifact Registry
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: project-36330a6c-5e91-4901-9dd
+  REGION: us-central1
+  GAR_LOCATION: us-central1-docker.pkg.dev
+  REPOSITORY: workflow-registry
+  IMAGE: agentlab
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+
+    - name: Configure Docker Login
+      run: |
+        gcloud auth configure-docker ${{ env.GAR_LOCATION }} --quiet
+
+    - name: Build and Push Container Image
+      run: |
+        TAG="${{ env.GAR_LOCATION }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:latest"
+        docker build -t $TAG .
+        docker push $TAG
