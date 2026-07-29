@@ -1,0 +1,55 @@
+name: Martin Cloud Maintenance Agent
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  martin-cloud-action:
+    # Only run when issue title contains 'martin:' OR labeled 'martin'
+    if: "contains(github.event.issue.title, 'martin:') || contains(github.event.issue.labels.*.name, 'martin')"
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run Martin Cloud Loop
+        run: node scripts/martin-github-agent.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Check for repo changes
+        id: git-check
+        run: |
+          git status --porcelain
+          echo "changes=$(git status --porcelain | wc -l)" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request with Cleanup
+        if: steps.git-check.outputs.changes > 0
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore(martin-cloud): auto-organize and cleanup files"
+          branch: "martin-cloud/cleanup-run"
+          title: "🤖 Martin-Cloud Auto Repository Maintenance Summary"
+          body: |
+            Hello Robert! I have completed your repository organization request. 
+            
+            Here is my file maintenance summary. Please review my edits below and merge this PR to synchronize it directly back down to your machine!
+            
+            ---
+            *Automatically launched by GitHub Action workflow triggered by Issue #${{ github.event.issue.number }}*
+          delete-branch: true
