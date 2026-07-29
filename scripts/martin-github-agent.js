@@ -74,13 +74,22 @@ async function callLLM(prompt, systemPrompt) {
 
 // Main autonomous loop
 async function runAgent() {
-  if (!EVENT_PAYLOAD || !EVENT_PAYLOAD.issue) {
-    console.error("No active GitHub issue payload found. Exiting.");
+  if (!EVENT_PAYLOAD) {
+    console.error("No active GITHUB_EVENT_PATH found. Exiting.");
     process.exit(1);
   }
 
-  const issueTitle = EVENT_PAYLOAD.issue.title;
-  const issueBody = EVENT_PAYLOAD.issue.body || '';
+  // Double check payload structure to be extremely robust
+  console.log("Payload top keys:", Object.keys(EVENT_PAYLOAD));
+  
+  const issue = EVENT_PAYLOAD.issue || EVENT_PAYLOAD;
+  if (!issue || (!issue.title && !EVENT_PAYLOAD.title)) {
+    console.error("Payload content does not contain an issue definition:", EVENT_PAYLOAD);
+    process.exit(1);
+  }
+
+  const issueTitle = issue.title || EVENT_PAYLOAD.title || 'Initial cloud connection test';
+  const issueBody = issue.body || EVENT_PAYLOAD.body || '';
   const request = `Issue: ${issueTitle}\n\nDetails:\n${issueBody}`;
 
   const systemPrompt = `You are Martin, the autonomous repository maintenance agent. 
