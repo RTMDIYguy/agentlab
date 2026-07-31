@@ -80,6 +80,39 @@ const questionBank: Question[] = [
 const domains = ["Auto", ...Array.from(new Set(questionBank.map(q => q.domain)))];
 const callObjectives = ["Initial onboarding", "Systems audit", "Automation discovery", "Growth bottleneck review", "Follow-up consultation"];
 
+const domainProfiles: Record<string, { gap: string; recommendation: string }> = {
+  Operations: {
+    gap: "Work appears to depend on informal handoffs, remembered steps, or unclear delivery flow.",
+    recommendation:
+      "Map the current delivery path, identify the slowest handoff, and define a visible status model before adding more tools.",
+  },
+  Sales: {
+    gap: "Lead movement and follow-up reliability may be inconsistent enough to lose warm opportunities.",
+    recommendation:
+      "Define the lead stages, owner, next-action rules, and follow-up timing so every interested prospect has a clear path.",
+  },
+  Marketing: {
+    gap: "Marketing activity may not be tied tightly enough to conversations, opportunities, or revenue signals.",
+    recommendation:
+      "Connect each campaign or content theme to a CTA, tracking field, and weekly review metric.",
+  },
+  Finance: {
+    gap: "Spending decisions may be ahead of the current financial control layer or revenue proof.",
+    recommendation:
+      "Set upgrade thresholds for tools, subscriptions, and outside help based on cash, opportunity value, and capacity.",
+  },
+  Technology: {
+    gap: "The toolchain likely contains manual copying, duplicate entry, or automation candidates without governance.",
+    recommendation:
+      "Choose one high-relief repetitive task, document the field flow, and automate it with an approval or exception path.",
+  },
+  Leadership: {
+    gap: "Decision rights, ownership, or key knowledge may be too dependent on individual memory.",
+    recommendation:
+      "Capture the key responsibilities, decision points, and recurring operating cadence in a short SOP or checklist.",
+  },
+};
+
 function scoreQuestion(question: Question, notes: string, domain: string, depth: Depth) {
   const normalized = notes.toLowerCase();
   const signalHits = question.signals.filter(signal => normalized.includes(signal)).length;
@@ -97,6 +130,33 @@ function inferSignals(notes: string) {
   const unique = new Map<string, string>();
   hits.forEach(item => unique.set(item.signal, item.domain));
   return Array.from(unique.entries()).map(([signal, domain]) => ({ signal, domain }));
+}
+
+function buildFindings(notes: string): Finding[] {
+  const normalized = notes.toLowerCase();
+  const findings = Object.entries(domainProfiles)
+    .map(([domain, profile]) => {
+      const questions = questionBank.filter(question => question.domain === domain);
+      const evidence = Array.from(
+        new Set(
+          questions.flatMap(question =>
+            question.signals.filter(signal => normalized.includes(signal)),
+          ),
+        ),
+      );
+
+      return {
+        domain,
+        score: evidence.length,
+        gap: profile.gap,
+        recommendation: profile.recommendation,
+        evidence,
+      };
+    })
+    .filter(finding => finding.score > 0)
+    .sort((a, b) => b.score - a.score || a.domain.localeCompare(b.domain));
+
+  return findings.slice(0, 4);
 }
 
 export default function AssessmentQuestionGenerator() {
@@ -121,6 +181,8 @@ export default function AssessmentQuestionGenerator() {
       }));
   }, [signals]);
 
+  const findings = useMemo(() => buildFindings(notes), [notes]);
+
   const selectedQuestions = useMemo(() => {
     return [...questionBank]
       .map(q => ({ question: q, score: scoreQuestion(q, notes, domain, depth) }))
@@ -134,7 +196,7 @@ export default function AssessmentQuestionGenerator() {
 
   const masterReportText = useMemo(() => {
     const title = clientName.trim() || "Client";
-    const diagnosticSection = activeInsights.length 
+    const diagnosticSection = activeInsights.length
       ? activeInsights.flatMap((ins, i) => [
           `DIAGNOSTIC ARCHETYPE #${i + 1}: [Domain: ${ins.domain} / Tag: ${ins.signal}]`,
           `Identified Systemic Gap: ${ins.gap}`,
@@ -142,6 +204,16 @@ export default function AssessmentQuestionGenerator() {
           ""
         ])
       : ["No core structural gaps explicitly auto-detected from current live notes yet."];
+
+    const findingsSection = findings.length
+      ? findings.flatMap((finding, i) => [
+          `DOMAIN GAP #${i + 1}: ${finding.domain} (${finding.score} evidence signals)`,
+          `Likely Gap: ${finding.gap}`,
+          `Recommended Next Step: ${finding.recommendation}`,
+          `Evidence Signals: ${finding.evidence.join(", ")}`,
+          ""
+        ])
+      : ["No strong domain-level gap signals detected yet. Add more call notes for a fuller picture."];
 
     return [
       `==================================================`,
@@ -159,6 +231,9 @@ export default function AssessmentQuestionGenerator() {
       `### SYSTEMIC GAPS & NEXT STEPS SYNTHESIS`,
       `--------------------------------------------------`,
       ...diagnosticSection,
+      `### DOMAIN GAP FINDINGS`,
+      `--------------------------------------------------`,
+      ...findingsSection,
       `### UTILIZED EVALUATION ASSESSMENT QUESTIONS`,
       `--------------------------------------------------`,
       ...selectedQuestions.flatMap((q, idx) => [
@@ -168,7 +243,7 @@ export default function AssessmentQuestionGenerator() {
         ""
       ])
     ].join("\n");
-  }, [clientName, objective, depth, domain, notes, activeInsights, selectedQuestions]);
+  }, [clientName, objective, depth, domain, notes, activeInsights, findings, selectedQuestions]);
 
   const copyQuestions = async () => {
     await navigator.clipboard.writeText(masterReportText);
@@ -264,7 +339,7 @@ export default function AssessmentQuestionGenerator() {
                 </label>
 
                 <label className="text-sm font-medium text-slate-700">
-                  Focus Focus
+                  Focus
                   <select
                     value={domain}
                     onChange={event => setDomain(event.target.value)}
@@ -432,525 +507,16 @@ export default function AssessmentQuestionGenerator() {
             </div>
           </section>
         </div>
-      </div>
-    </PageLayout>
-  );
-}
 
-    evaluation: "Looks for sequence clarity, hidden handoffs, undocumented steps, and delay points.",
-    signals: ["workflow", "handoff", "delivery", "onboarding", "process"],
-  },
-  {
-    id: "ops-2",
-    domain: "Operations",
-    depth: "diagnostic",
-    text: "Where does work most often slow down, get rechecked, or require someone to chase an update?",
-    skill: "Bottleneck Identification",
-    evaluation: "Assesses whether the client can name friction points and distinguish symptoms from root causes.",
-    signals: ["delay", "bottleneck", "follow up", "status", "rework", "chase"],
-  },
-  {
-    id: "ops-3",
-    domain: "Operations",
-    depth: "executive",
-    text: "If the business doubled next quarter, which part of the operating system would break first?",
-    skill: "Scalability Assessment",
-    evaluation: "Reveals the highest-risk constraint in people, process, tools, or decision flow.",
-    signals: ["scale", "growth", "capacity", "team", "break"],
-  },
-  {
-    id: "sales-1",
-    domain: "Sales",
-    depth: "exploratory",
-    text: "How does a new lead usually enter the business, and what has to happen before they become a qualified opportunity?",
-    skill: "Lead Path Mapping",
-    evaluation: "Checks whether the client has a defined path from attention to qualification.",
-    signals: ["lead", "prospect", "referral", "inquiry", "pipeline"],
-  },
-  {
-    id: "sales-2",
-    domain: "Sales",
-    depth: "diagnostic",
-    text: "Which follow-up step is most likely to be missed when someone shows interest?",
-    skill: "Follow-Up Reliability",
-    evaluation: "Identifies lost revenue risk from inconsistent nurture, ownership, or timing.",
-    signals: ["follow up", "reply", "email", "call", "missed", "nurture"],
-  },
-  {
-    id: "sales-3",
-    domain: "Sales",
-    depth: "executive",
-    text: "What would make the current sales process easier to trust without adding more meetings?",
-    skill: "Sales System Design",
-    evaluation: "Tests whether the client needs better tracking, clearer stages, stronger handoffs, or decision rules.",
-    signals: ["trust", "meeting", "crm", "stage", "decision"],
-  },
-  {
-    id: "marketing-1",
-    domain: "Marketing",
-    depth: "exploratory",
-    text: "What are you currently publishing or sharing that reliably starts useful conversations?",
-    skill: "Content Signal Review",
-    evaluation: "Looks for proof that content is tied to audience response rather than activity volume.",
-    signals: ["content", "linkedin", "post", "campaign", "engagement"],
-  },
-  {
-    id: "marketing-2",
-    domain: "Marketing",
-    depth: "diagnostic",
-    text: "How do you connect marketing activity to leads, booked calls, or revenue opportunities today?",
-    skill: "Marketing Attribution",
-    evaluation: "Assesses whether the client can trace marketing effort to business outcomes.",
-    signals: ["roi", "analytics", "lead", "revenue", "conversion", "campaign"],
-  },
-  {
-    id: "marketing-3",
-    domain: "Marketing",
-    depth: "executive",
-    text: "Which market message is strongest enough that the business should build repeatable campaigns around it?",
-    skill: "Positioning Judgment",
-    evaluation: "Tests clarity of offer, audience, pain point, and proof.",
-    signals: ["positioning", "message", "offer", "audience", "proof"],
-  },
-  {
-    id: "finance-1",
-    domain: "Finance",
-    depth: "exploratory",
-    text: "Which numbers do you review every week before deciding what the business can afford to do next?",
-    skill: "Financial Visibility",
-    evaluation: "Surfaces whether the client has a working control layer for cash, revenue, and obligations.",
-    signals: ["cash", "budget", "expense", "invoice", "revenue"],
-  },
-  {
-    id: "finance-2",
-    domain: "Finance",
-    depth: "diagnostic",
-    text: "Where do expenses, subscriptions, or tool costs become hard to justify against current revenue?",
-    skill: "Cost Control",
-    evaluation: "Identifies free-bootstrap or paid-tool limit walls before they become emergencies.",
-    signals: ["subscription", "tool", "cost", "credit", "bill", "budget"],
-  },
-  {
-    id: "finance-3",
-    domain: "Finance",
-    depth: "executive",
-    text: "What revenue signal would justify upgrading the next paid tool or hiring outside help?",
-    skill: "Investment Threshold Design",
-    evaluation: "Tests whether spending decisions are tied to revenue, capacity, and timing.",
-    signals: ["upgrade", "hire", "funding", "investment", "revenue"],
-  },
-  {
-    id: "technology-1",
-    domain: "Technology",
-    depth: "exploratory",
-    text: "Which tools does the team rely on every day, and where does information have to be copied by hand?",
-    skill: "Toolchain Mapping",
-    evaluation: "Finds integration gaps, duplicate data entry, and tool sprawl.",
-    signals: ["tool", "software", "spreadsheet", "copy", "manual", "integration"],
-  },
-  {
-    id: "technology-2",
-    domain: "Technology",
-    depth: "diagnostic",
-    text: "What repetitive task would create the most relief if it were automated safely?",
-    skill: "Automation Opportunity Sizing",
-    evaluation: "Separates high-leverage automation candidates from convenience automations.",
-    signals: ["automate", "automation", "repeat", "manual", "relief", "task"],
-  },
-  {
-    id: "technology-3",
-    domain: "Technology",
-    depth: "executive",
-    text: "Where would automation create risk if the approval step or exception path were not designed well?",
-    skill: "Automation Governance",
-    evaluation: "Checks for judgment gates, compliance needs, exception handling, and rollback plans.",
-    signals: ["approval", "risk", "exception", "compliance", "automation"],
-  },
-  {
-    id: "leadership-1",
-    domain: "Leadership",
-    depth: "exploratory",
-    text: "Who makes the final call when priorities conflict, and how does the team know the decision was made?",
-    skill: "Decision Flow",
-    evaluation: "Reveals unclear ownership, decision latency, and communication gaps.",
-    signals: ["decision", "priority", "owner", "team", "communication"],
-  },
-  {
-    id: "leadership-2",
-    domain: "Leadership",
-    depth: "diagnostic",
-    text: "Which responsibilities live in someone's head instead of in a process the team can repeat?",
-    skill: "Knowledge Capture",
-    evaluation: "Identifies key-person dependency and documentation needs.",
-    signals: ["knowledge", "training", "sop", "documentation", "responsibility"],
-  },
-  {
-    id: "leadership-3",
-    domain: "Leadership",
-    depth: "executive",
-    text: "What operating habit would most improve trust between leadership, staff, and clients?",
-    skill: "Operating Culture",
-    evaluation: "Surfaces cadence, transparency, accountability, and service expectations.",
-    signals: ["trust", "cadence", "accountability", "client", "staff"],
-  },
-];
-
-const domains = ["Auto", ...Array.from(new Set(questionBank.map(question => question.domain)))];
-const callObjectives = [
-  "Initial onboarding",
-  "Systems audit",
-  "Automation discovery",
-  "Growth bottleneck review",
-  "Follow-up consultation",
-];
-
-const domainProfiles: Record<string, { gap: string; recommendation: string }> = {
-  Operations: {
-    gap: "Work appears to depend on informal handoffs, remembered steps, or unclear delivery flow.",
-    recommendation:
-      "Map the current delivery path, identify the slowest handoff, and define a visible status model before adding more tools.",
-  },
-  Sales: {
-    gap: "Lead movement and follow-up reliability may be inconsistent enough to lose warm opportunities.",
-    recommendation:
-      "Define the lead stages, owner, next-action rules, and follow-up timing so every interested prospect has a clear path.",
-  },
-  Marketing: {
-    gap: "Marketing activity may not be tied tightly enough to conversations, opportunities, or revenue signals.",
-    recommendation:
-      "Connect each campaign or content theme to a CTA, tracking field, and weekly review metric.",
-  },
-  Finance: {
-    gap: "Spending decisions may be ahead of the current financial control layer or revenue proof.",
-    recommendation:
-      "Set upgrade thresholds for tools, subscriptions, and outside help based on cash, opportunity value, and capacity.",
-  },
-  Technology: {
-    gap: "The toolchain likely contains manual copying, duplicate entry, or automation candidates without governance.",
-    recommendation:
-      "Choose one high-relief repetitive task, document the field flow, and automate it with an approval or exception path.",
-  },
-  Leadership: {
-    gap: "Decision rights, ownership, or key knowledge may be too dependent on individual memory.",
-    recommendation:
-      "Capture the key responsibilities, decision points, and recurring operating cadence in a short SOP or checklist.",
-  },
-};
-
-function scoreQuestion(question: Question, notes: string, domain: string, depth: Depth) {
-  const normalized = notes.toLowerCase();
-  const signalHits = question.signals.filter(signal => normalized.includes(signal)).length;
-  const domainScore = domain === "Auto" || question.domain === domain ? 6 : 0;
-  const depthScore = question.depth === depth ? 4 : 0;
-  return domainScore + depthScore + signalHits * 3;
-}
-
-function inferSignals(notes: string) {
-  const normalized = notes.toLowerCase();
-  const hits = questionBank
-    .flatMap(question => question.signals.map(signal => ({ signal, domain: question.domain })))
-    .filter(item => normalized.includes(item.signal));
-
-  const unique = new Map<string, string>();
-  hits.forEach(item => unique.set(item.signal, item.domain));
-  return Array.from(unique.entries()).map(([signal, domain]) => ({ signal, domain }));
-}
-
-function buildFindings(notes: string): Finding[] {
-  const normalized = notes.toLowerCase();
-  const findings = Object.entries(domainProfiles)
-    .map(([domain, profile]) => {
-      const questions = questionBank.filter(question => question.domain === domain);
-      const evidence = Array.from(
-        new Set(
-          questions.flatMap(question =>
-            question.signals.filter(signal => normalized.includes(signal)),
-          ),
-        ),
-      );
-
-      return {
-        domain,
-        score: evidence.length,
-        gap: profile.gap,
-        recommendation: profile.recommendation,
-        evidence,
-      };
-    })
-    .filter(finding => finding.score > 0)
-    .sort((a, b) => b.score - a.score || a.domain.localeCompare(b.domain));
-
-  return findings.slice(0, 4);
-}
-
-function buildExportText(
-  clientName: string,
-  objective: string,
-  domain: string,
-  depth: Depth,
-  selectedQuestions: Question[],
-  findings: Finding[],
-) {
-  const title = clientName.trim() || "Client";
-  const lines = [
-    `${title} Assessment Report`,
-    `Objective: ${objective}`,
-    `Focus: ${domain}`,
-    `Depth: ${depthLabels[depth]}`,
-    "",
-    "Likely Gaps",
-    ...(findings.length
-      ? findings.flatMap((finding, index) => [
-          `${index + 1}. ${finding.domain}: ${finding.gap}`,
-          `Evidence signals: ${finding.evidence.join(", ")}`,
-          `Recommended next step: ${finding.recommendation}`,
-          "",
-        ])
-      : [
-          "No strong gap signals detected yet. Add more call notes or ask another round of diagnostic questions.",
-          "",
-        ]),
-    "Suggested Questions",
-    ...selectedQuestions.flatMap((question, index) => [
-      `${index + 1}. ${question.text}`,
-      `Skill: ${question.skill}`,
-      `Evaluation: ${question.evaluation}`,
-      "",
-    ]),
-  ];
-
-  return lines.join("\n");
-}
-
-export default function AssessmentQuestionGenerator() {
-  const [clientName, setClientName] = useState("");
-  const [objective, setObjective] = useState(callObjectives[0]);
-  const [domain, setDomain] = useState("Auto");
-  const [depth, setDepth] = useState<Depth>("diagnostic");
-  const [count, setCount] = useState(5);
-  const [notes, setNotes] = useState("");
-  const [refreshSeed, setRefreshSeed] = useState(0);
-  const [copied, setCopied] = useState(false);
-
-  const signals = useMemo(() => inferSignals(notes), [notes]);
-  const findings = useMemo(() => buildFindings(notes), [notes]);
-
-  const selectedQuestions = useMemo(() => {
-    return [...questionBank]
-      .map(question => ({
-        question,
-        score: scoreQuestion(question, notes, domain, depth),
-      }))
-      .sort((a, b) => {
-        if (b.score !== a.score) return b.score - a.score;
-        return (a.question.id + refreshSeed).localeCompare(b.question.id + refreshSeed);
-      })
-      .slice(0, count)
-      .map(item => item.question);
-  }, [count, depth, domain, notes, refreshSeed]);
-
-  const exportText = useMemo(
-    () => buildExportText(clientName, objective, domain, depth, selectedQuestions, findings),
-    [clientName, depth, domain, findings, objective, selectedQuestions],
-  );
-
-  const copyReport = async () => {
-    await navigator.clipboard.writeText(exportText);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
-  };
-
-  return (
-    <PageLayout className="bg-slate-50">
-      <div className="container py-6 lg:py-8">
-        <div className="mb-5 flex flex-col gap-3 border-b border-slate-200 pb-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <div className="mb-2 inline-flex items-center gap-2 text-xs font-semibold uppercase text-blue-700">
-              <Sparkles className="h-4 w-4" />
-              Internal Client Tool
-            </div>
-            <h1 className="text-3xl font-semibold text-slate-950">
-              Consulting Assessment Question Generator
-            </h1>
-          </div>
-          <button
-            type="button"
-            onClick={copyReport}
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-blue-700 px-4 text-sm font-semibold text-white transition hover:bg-blue-800"
-          >
-            <Copy className="h-4 w-4" />
-            {copied ? "Copied" : "Copy Report"}
-          </button>
-        </div>
-
-        <div className="grid gap-5 xl:grid-cols-[0.92fr_1.08fr]">
-          <section className="space-y-4">
-            <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-900">
-                <Clipboard className="h-4 w-4 text-blue-700" />
-                Call Setup
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="text-sm font-medium text-slate-700">
-                  Client
-                  <input
-                    value={clientName}
-                    onChange={event => setClientName(event.target.value)}
-                    className="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-blue-700"
-                    placeholder="Client or company name"
-                  />
-                </label>
-
-                <label className="text-sm font-medium text-slate-700">
-                  Objective
-                  <select
-                    value={objective}
-                    onChange={event => setObjective(event.target.value)}
-                    className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none focus:border-blue-700"
-                  >
-                    {callObjectives.map(item => (
-                      <option key={item}>{item}</option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="text-sm font-medium text-slate-700">
-                  Focus
-                  <select
-                    value={domain}
-                    onChange={event => setDomain(event.target.value)}
-                    className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none focus:border-blue-700"
-                  >
-                    {domains.map(item => (
-                      <option key={item}>{item}</option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="text-sm font-medium text-slate-700">
-                  Question Count
-                  <input
-                    type="number"
-                    min={3}
-                    max={8}
-                    value={count}
-                    onChange={event => setCount(Number(event.target.value))}
-                    className="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-blue-700"
-                  />
-                </label>
-              </div>
-
-              <div className="mt-4">
-                <div className="mb-2 text-sm font-medium text-slate-700">Depth</div>
-                <div className="grid grid-cols-3 gap-2">
-                  {(Object.keys(depthLabels) as Depth[]).map(item => (
-                    <button
-                      key={item}
-                      type="button"
-                      onClick={() => setDepth(item)}
-                      className={`h-10 rounded-md border px-2 text-sm font-medium transition ${
-                        depth === item
-                          ? "border-blue-700 bg-blue-700 text-white"
-                          : "border-slate-300 bg-white text-slate-700 hover:border-blue-700"
-                      }`}
-                    >
-                      {depthLabels[item]}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="mb-3 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <MessageSquareText className="h-4 w-4 text-blue-700" />
-                  Live Notes
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setRefreshSeed(seed => seed + 1)}
-                  className="inline-flex h-8 items-center gap-2 rounded-md border border-slate-300 px-3 text-xs font-medium text-slate-700 hover:border-blue-700 hover:text-blue-700"
-                >
-                  <RefreshCcw className="h-3.5 w-3.5" />
-                  Refresh
-                </button>
-              </div>
-              <textarea
-                value={notes}
-                onChange={event => setNotes(event.target.value)}
-                rows={13}
-                className="w-full resize-none rounded-md border border-slate-300 px-3 py-3 text-sm leading-6 text-slate-900 outline-none focus:border-blue-700"
-                placeholder="Type short notes as the client talks: missed follow-ups, manual copying, onboarding delays, tool costs, unclear ownership..."
-              />
-
-              <div className="mt-3 min-h-12 text-xs text-slate-600">
-                {signals.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {signals.slice(0, 10).map(item => (
-                      <span
-                        key={`${item.domain}-${item.signal}`}
-                        className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1"
-                      >
-                        {item.domain}: {item.signal}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <span>Signal tags appear here as notes mention workflow, leads, tools, costs, automation, ownership, or follow-up.</span>
-                )}
-              </div>
-            </div>
-          </section>
-
-          <section className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                <Gauge className="h-4 w-4 text-blue-700" />
-                Suggested Next Questions
-              </div>
-              <div className="text-xs text-slate-500">
-                {domain} · {depthLabels[depth]}
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {selectedQuestions.map((question, index) => (
-                <article
-                  key={question.id}
-                  className="rounded-md border border-slate-200 bg-slate-50 p-4"
-                >
-                  <div className="mb-2 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase text-slate-500">
-                    <span>{index + 1}</span>
-                    <span>{question.domain}</span>
-                    <span>{depthLabels[question.depth]}</span>
-                  </div>
-                  <p className="text-base font-semibold leading-7 text-slate-950">{question.text}</p>
-                  <div className="mt-3 grid gap-2 text-sm leading-6 md:grid-cols-2">
-                    <div>
-                      <div className="font-semibold text-slate-800">Skill</div>
-                      <div className="text-slate-600">{question.skill}</div>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-slate-800">Evaluation</div>
-                      <div className="text-slate-600">{question.evaluation}</div>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
-        </div>
-
+        {/* Domain Gap Findings — aggregated per-domain view */}
         <section className="mt-5 rounded-md border border-slate-200 bg-white p-4 shadow-sm">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
               <FileText className="h-4 w-4 text-blue-700" />
-              Results Draft
+              Domain Gap Findings
             </div>
             <div className="text-xs text-slate-500">
-              Generated from current notes and detected signals
+              Aggregated from current notes and detected signals across all domains
             </div>
           </div>
 
@@ -987,7 +553,7 @@ export default function AssessmentQuestionGenerator() {
           ) : (
             <div className="rounded-md border border-dashed border-slate-300 bg-slate-50 p-5 text-sm leading-6 text-slate-600">
               Add notes from the call and this section will draft likely gaps, evidence signals,
-              and practical next steps. The report stays conservative until enough signals appear.
+              and practical next steps per domain. Stays conservative until enough signals appear.
             </div>
           )}
         </section>
