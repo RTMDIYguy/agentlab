@@ -126,3 +126,16 @@ Stop and ask for direction if:
 - a task risks overwriting important business material
 - multiple conflicting source files exist
 - a requested change would materially alter the brand hierarchy
+
+## Autonoma Test Data
+
+Autonoma is an end-to-end test runner that drives the real UI against this
+app. Before each test run it seeds realistic data (and tears it down after)
+through `POST /api/autonoma` (`server/_core/autonomaSdk.ts`), using factories
+in `server/_core/autonoma/factories.ts` that call this app's own creation
+paths (`upsertUser`, `createArticle`, `subscribeToNewsletter`, etc.) so real
+validation, hashing, and side effects run — not raw inserts.
+
+When you add a model or change how one is created, add or update its
+matching factory in `server/_core/autonoma/factories.ts` (including
+teardown) so seeded test data keeps matching the app's real behavior.
