@@ -24,6 +24,12 @@ importers:
 
   .:
     dependencies:
+      '@autonoma-ai/sdk':
+        specifier: ^0.2.9
+        version: 0.2.9(zod@4.4.3)
+      '@autonoma-ai/server-express':
+        specifier: ^0.2.9
+        version: 0.2.9(zod@4.4.3)
       '@aws-sdk/client-s3':
         specifier: ^3.1061.0
         version: 3.1061.0
@@ -437,6 +443,14 @@ packages:
 
   '@anthropic-ai/sdk@0.39.0':
     resolution: {integrity: sha512-eMyDIPRZbt1CCLErRCi3exlAvNkBtRe+kW5vvJyef93PmNr/clstYgHhtvmkxN82nlKgzyGPCyGxrm0JQ1ZIdg==}
+
+  '@autonoma-ai/sdk@0.2.9':
+    resolution: {integrity: sha512-GOgbPPpyZYxmuxEO1SCTIORjfjoi7T2V2mDrsh7pVUwUcf7Vtq6dZIK7lAEMPKLyNLIq5uiPkUY3xFQu9NKowQ==}
+    peerDependencies:
+      zod: ^3.23.0 || ^4.0.0
+
+  '@autonoma-ai/server-express@0.2.9':
+    resolution: {integrity: sha512-amO2q8xw2VEZju7yw9OK54XwiVqGG2BEp3E6cng499Oc8Ot9cehfpOP5qeNMG00GbStz78aT/F/R7f/Yqn0YvA==}
 
   '@aws-crypto/crc32@5.2.0':
     resolution: {integrity: sha512-nLbCWqQNgUiwwtFsen1AdzAtvuLRsQS8rYgMuxCrdKf9kOssamGLuPwyTY9wyYblNr9+1XM8v6zoDTPPSIeANg==}
@@ -5042,6 +5056,16 @@ snapshots:
       node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
+
+  '@autonoma-ai/sdk@0.2.9(zod@4.4.3)':
+    dependencies:
+      zod: 4.4.3
+
+  '@autonoma-ai/server-express@0.2.9(zod@4.4.3)':
+    dependencies:
+      '@autonoma-ai/sdk': 0.2.9(zod@4.4.3)
+    transitivePeerDependencies:
+      - zod
 
   '@aws-crypto/crc32@5.2.0':
     dependencies:
