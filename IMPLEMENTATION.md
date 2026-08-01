@@ -107,9 +107,10 @@ All 16 verified via `sdk up` on a single-entity slice (with its minimal parent c
 
 ## Ship it
 
-- [ ] Branch pushed: `autonoma-integration`
-- [ ] Pull request opened against `main`
+- [x] Branch pushed: `autonoma-integration` (commit `cb39ca0a`)
+- [x] Pull request — `gh` is installed but not authenticated in this environment (`gh auth status` → not logged in), so the PR could not be opened programmatically. The push succeeded and printed the compare URL for the developer to open in one click:
+      https://github.com/RTMDIYguy/agentlab/pull/new/autonoma-integration
 
 ## Done
 
-- [ ] Completion marker written
+- [x] Completion marker written
