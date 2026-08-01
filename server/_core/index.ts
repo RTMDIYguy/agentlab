@@ -8,7 +8,14 @@ import { registerAutonomaSdkRoutes } from "./autonomaSdk";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
-import { constructWebhookEvent, handleCheckoutSessionCompleted, handleSubscriptionUpdated, handleSubscriptionDeleted, handlePaymentIntentSucceeded, handlePaymentIntentFailed } from "../stripe/webhook";
+import {
+  constructWebhookEvent,
+  handleCheckoutSessionCompleted,
+  handleSubscriptionUpdated,
+  handleSubscriptionDeleted,
+  handlePaymentIntentSucceeded,
+  handlePaymentIntentFailed,
+} from "../stripe/webhook";
 import { startScheduledPublisher } from "../blog/scheduled-publisher";
 import { registerAICoachesWebhookRoutes } from "../aicoaches/webhook";
 
@@ -34,22 +41,28 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  // Autonoma SDK endpoint (discover/up/down) under /api/autonoma. MUST be
+  // registered BEFORE express.json() — it verifies an HMAC over the raw
+  // request bytes.
+  registerAutonomaSdkRoutes(app);
   // Stripe webhook endpoint MUST be registered BEFORE express.json()
   app.post(
     "/api/stripe/webhook",
     express.raw({ type: "application/json" }),
     async (req, res) => {
       const signature = req.headers["stripe-signature"] as string;
-      
+
       try {
         const event = constructWebhookEvent(req.body as Buffer, signature);
-        
+
         // Handle test events for verification
         if (event.id.startsWith("evt_test_")) {
-          console.log("[Webhook] Test event detected, returning verification response");
+          console.log(
+            "[Webhook] Test event detected, returning verification response"
+          );
           return res.json({ verified: true });
         }
-        
+
         // Handle different event types
         switch (event.type) {
           case "checkout.session.completed":
@@ -70,15 +83,17 @@ async function startServer() {
           default:
             console.log(`[Webhook] Unhandled event type: ${event.type}`);
         }
-        
+
         res.json({ received: true });
       } catch (error) {
         console.error("[Webhook] Error processing event:", error);
-        res.status(400).json({ error: "Webhook signature verification failed" });
+        res
+          .status(400)
+          .json({ error: "Webhook signature verification failed" });
       }
     }
   );
-  
+
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
@@ -87,8 +102,6 @@ async function startServer() {
   registerAICoachesWebhookRoutes(app);
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
-  // Autonoma SDK endpoint (discover/up/down) under /api/autonoma
-  registerAutonomaSdkRoutes(app);
   // tRPC API
   app.use(
     "/api/trpc",
