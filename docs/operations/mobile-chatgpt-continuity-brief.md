@@ -23,7 +23,7 @@ Current priority: move from planning into execution, especially lead generation,
 
 Repo folder on the main PC:
 
-`C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site`
+`C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\agentlab`
 
 GitHub remote:
 

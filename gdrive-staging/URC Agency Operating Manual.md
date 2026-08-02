@@ -50,7 +50,7 @@ Business-wide workspace root:
 
 Primary repo:
 
-`C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site`
+`C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\agentlab`
 
 Start in this order:
 

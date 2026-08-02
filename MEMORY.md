@@ -13,7 +13,7 @@ This is the working-memory layer. It is intentionally short. For rules, see
 
 - Business: Uncle Robert Consulting (URC) - main business and operating system owner
 - Brands: URC, Agent Lab, Bootstrapper Capital, Tactix, Bootstrapper's Guide to the World
-- Repo root: `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site`
+- Repo root: `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\agentlab`
 - Business root: `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs`
 - Current stack: Reach, Gmail, Google Drive, repo Markdown, owned finance trackers, limited Notion
 - Microsoft 365 paid access is not assumed; free / local bridges are the rule
@@ -23,29 +23,25 @@ This is the working-memory layer. It is intentionally short. For rules, see
 - `MKT-09 Event & Webinar Marketing` - v0 runnable slice in `docs/operations/mkt-09-roundtable-operating-slice.md`. Still needs confirmed Google response path, tracker location, and follow-up copy.
 - `MKT-06 Content Creation & Dissemination` - active package; content queue needs refill.
 - Daily Command Center - first live test passed 2026-06-04.
+- 48-Hour LinkedIn Authority System - completely revived and verified 2026-08-02.
 
-## Top Active Priorities (Week of 2026-06-04)
+## Top Active Priorities (Week of 2026-08-02)
 
-1. Money and client-trust check before any tool experiment.
-2. Refill Agent Lab LinkedIn content queue to the standard minimum: 5 ideas, 3 complete drafts, 1 in Review.
-3. Advance `MKT-09` RoundTable response tracker and follow-up copy.
-4. Resume `MKT-05` outreach and `MKT-02` nurture after the morning restart block.
-5. Mark secrets, credentials, and account metadata without exposing values, per `docs/operations/secret-handling-standard.md`.
+1. Launch FSS Beta-Tester campaigns using pre-written Batch 1-5 content.
+2. Direct targeted outreach to BizBuySell-Brokers-Leads-List.csv using Affiliate CMO copy decks.
+3. Integrate Replit and custom React sites with the newly verified GSheets n8n tracker loops.
 
 ## Active TODOs
 
 | Item | Owner | Status |
 | --- | --- | --- |
-| Refill Agent Lab LinkedIn content queue | Agent | Needed |
-| Confirm `MKT-09` next RoundTable, Google response path, tracker location | Robert + agent | Needed |
+| Refill Agent Lab LinkedIn content queue with new seed ideas | Agent | Needed |
+| Stage the first set of LinkedIn post drafts from Batch 1 in Pulse Social | Robert + agent | Needed |
+| Set GSheets credentials inside the n8n active campaign node | Robert | Needed |
 | Draft SOP for Reach outreach batch setup and monitoring | Agent | Needed |
 | Draft SOP for Google Drive client-folder packet population | Agent | Needed |
-| Decide Independence Chapter CRM-lite bridge location and required columns | Robert + agent | Needed |
 | Reconcile Independence Chapter messaging against MVP beta messaging | Robert + agent | Needed |
-| Build first repo-native Owner's Manual from `docs/operations/agency-owners-manual-blueprint.md` | Robert + agent | Needed |
-| Test Markdown Monster as a blog-first / RSS-to-LinkedIn-draft publishing bridge | Robert + agent | Scheduled (CC-2026-06-04-014) |
 | Run weekly workflow audit bank for the active queue | Robert + agent | Needed |
-| Stage GDrive-tracked doc updates from this session for upload | Robert | Pending |
 
 ## Recent Decisions
 

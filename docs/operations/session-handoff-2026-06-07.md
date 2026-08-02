@@ -27,7 +27,7 @@ Platform for founder operations. Key modules:
 ## Source-of-Record Files
 
 All operations docs live in the GitHub repo that syncs to:
-`C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site\`
+`C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\agentlab\`
 
 Key files:
 - `docs/operations/bootstrapper-ai-operating-field-guide.md` — v1 field guide (June 5). Full CRM inspection from June 3, sync blocker details, 7-day sprint plan, safety rules, glossary
@@ -133,4 +133,4 @@ All created 2026-04-29, LinkedIn first-touch, owned by Robert McCarthy:
 - **RAM**: 8GB total, tight. Docker Desktop should stay closed during Cowork sessions (frees ~400 MB). WSL2 issue is resolved.
 - **Codex auth**: Parked. Has conflict between claude.ai session and ANTHROPIC_API_KEY. Fix = run `claude /logout` in Codex terminal, keep API key. Not a priority.
 - **Broken hook (check-sql-files.py)**: Fires on every PostToolUse:Edit in Codex. Cosmetic only, no work blocked. Low priority.
-- **Agent Lab site**: GitHub repo at `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site\`. Source of record for all operations docs.
+- **Agent Lab site**: GitHub repo at `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\agentlab\`. Source of record for all operations docs.

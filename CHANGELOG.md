@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the agent-lab-site repo are documented here.
+All notable changes to the AI Native Agency Deepened/agentlab repo are documented here.
 
 ---
 
