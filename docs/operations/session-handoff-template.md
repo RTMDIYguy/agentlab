@@ -137,6 +137,6 @@ wrong, things that worked especially well.
 
 ---
 
-*Template location: `agent-lab-site/docs/operations/session-handoff-template.md`*
+*Template location: `AI Native Agency Deepened/agentlab/docs/operations/session-handoff-template.md`*
 *Copy this file, rename it with today's date, fill it out, and save it to the repo.*
 *Example: `session-handoff-2026-06-05.md`*

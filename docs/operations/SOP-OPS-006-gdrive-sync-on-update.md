@@ -81,7 +81,7 @@ Ask: does this change touch any tracked file?
 Create or confirm the local staging folder exists:
 
 ```
-C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\agent-lab-site\gdrive-staging\
+C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\agentlab\gdrive-staging\
 ```
 
 For each changed tracked file:
