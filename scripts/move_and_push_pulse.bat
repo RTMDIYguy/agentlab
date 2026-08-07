@@ -1,0 +1,16 @@
+@echo off
+echo Moving extracted folders from C:\app to OneDrive...
+xcopy "C:\app\backend" "E:\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Pulse Social\backend" /E /I /H /Y
+xcopy "C:\app\frontend" "E:\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Pulse Social\frontend" /E /I /H /Y
+echo Cleaning up C:\app...
+rd /S /Q "C:\app"
+
+cd /d "E:\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Pulse Social"
+echo Staging folders in Git...
+git add backend
+git add frontend
+echo Committing full codebase...
+git commit -m "Add full extracted React frontend and FastAPI backend codebases"
+echo Pushing to GitHub...
+git push origin main
+echo Move and push completed successfully!

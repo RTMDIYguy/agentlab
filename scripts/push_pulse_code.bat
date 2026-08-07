@@ -1,0 +1,16 @@
+@echo off
+cd /d "E:\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Pulse Social"
+echo Initializing Git in local directory...
+git init
+git config --local user.name "RTMDIYguy"
+git remote remove origin >nul 2>&1
+echo Adding remote origin for RTMDIYguy/pulse-social...
+git remote add origin https://github.com/RTMDIYguy/pulse-social.git
+git branch -M main
+echo Staging files for commit...
+git add .
+echo Committing files...
+git commit -m "Initial commit of Pulse Social Media Scheduler (reconstructed from DOCX)"
+echo Pushing codebase to private GitHub repo...
+git push -u origin main -f
+echo Git push process complete.
