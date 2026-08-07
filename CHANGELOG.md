@@ -6,6 +6,23 @@ All notable changes to the AI Native Agency Deepened/agentlab repo are documente
 
 ## [Unreleased]
 
+### 2026-08-07 — Session 7 (Cowork / Claude)
+
+**Operations & Spreadsheet Integration**
+- Created `scripts/incorporate_records.py` Python sync script. It utilizes Node.js shared-stream copying to safely duplicate `Uncle Robert Records.xlsx` (bypassing OneDrive and Windows Excel exclusive read locks) and parse live tracker data from sheets `Apps Builds`, `Accomplished TW`, `New Accounts Added TW`, `Lead List`, and the `90-Day Posting Calendar`.
+- Reconfigured Desktop `command-center-html.html` to inject these live tracking cards dynamically via `<!-- EXCEL RECORDS START -->` markers.
+- Modified `scripts/daily-command-center.mjs` to run the Excel synchronizer automatically at start. Now, executing `pnpm daily-command:center` updates both the desktop dashboard and today's brief simultaneously.
+- Created `docs/operations/session-handoff-2026-08-07.md` handoff and logged today's command brief at `docs/operations/daily-command-center/2026-08-07-command-brief.md`.
+
+**Marketing & Pulse Social Scheduler App**
+- Recovered, restructured, and built the complete `Pulse Social` React/FastAPI codebase from your 2,664-paragraph Word backup document (`Pulse Social App.docx`) using a python XML extractor.
+- Created your private GitHub repository `RTMDIYguy/pulse-social` and committed the code there.
+- Deployed your Python FastAPI container to Google Cloud Run, connected directly to your cloud MongoDB Atlas database, with Claude Sonnet 4.5 AI caption generation fully integrated.
+- Configured Vercel's framework settings (Root Directory = `frontend`, Framework = Create React App) and resolved all compilation blockers (wrote mounting templates `index.js` and `public/index.html`, added missing Shadcn UI files `sonner.jsx`, `calendar.jsx`, `popover.jsx`, `tabs.jsx`, and `dropdown-menu.jsx`, and wrote a Python cleanup script `clean_jsx_escapes.py` to strip escaped quotes `\"` from all 14 pages).
+- **Successfully compiled and deployed the frontend on Vercel**! Your interactive app is live at: [https://pulse-social-agentlab-projects.vercel.app](https://pulse-social-agentlab-projects.vercel.app)!
+
+---
+
 ### 2026-06-10 — Session 6 (Cowork / Claude)
 
 **Operations**

@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { execSync } from "node:child_process";
 
 const root = process.cwd();
 const today = new Intl.DateTimeFormat("en-CA", {
@@ -214,6 +215,13 @@ ${renderList(changes)}
 }
 
 async function main() {
+  console.log("Synchronizing Excel activities from Desktop...");
+  try {
+    execSync("python scripts/incorporate_records.py", { stdio: "inherit" });
+  } catch (error) {
+    console.error("Warning: Excel synchronization failed:", error.message);
+  }
+
   const [
     agencyManual,
     executionChecklist,
