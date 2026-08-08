@@ -20,7 +20,8 @@ All notable changes to the AI Native Agency Deepened/agentlab repo are documente
 - Deployed your Python FastAPI container to Google Cloud Run, connected directly to your cloud MongoDB Atlas database, with Claude Sonnet 4.5 AI caption generation fully integrated.
 - Configured Vercel's framework settings (Root Directory = `frontend`, Framework = Create React App) and resolved all compilation blockers (wrote mounting templates `index.js` and `public/index.html`, added missing Shadcn UI files `sonner.jsx`, `calendar.jsx`, `popover.jsx`, `tabs.jsx`, and `dropdown-menu.jsx`, and wrote a Python cleanup script `clean_jsx_escapes.py` to strip escaped quotes `\"` from all 14 pages).
 - **Successfully compiled and deployed the frontend on Vercel**! Your interactive app is live at: [https://pulse-social-agentlab-projects.vercel.app](https://pulse-social-agentlab-projects.vercel.app)!
-
+- **Replaced Mock Data with Live API Integrations (Phase 3 & 4)**: Integrated actual OAuth 2.0 flows for LinkedIn and Facebook. The backend APScheduler now automatically pushes scheduled posts directly to the live LinkedIn UGC API and Facebook Graph API. 
+- Implemented a background Real-time Analytics Engine that queries LinkedIn and Meta every 2 hours to pull live engagement data (Likes, Comments, Shares) and syncs it securely to the Analytics dashboard graphs.
 ---
 
 ### 2026-06-10 — Session 6 (Cowork / Claude)
