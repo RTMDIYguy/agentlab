@@ -318,8 +318,8 @@ These lessons should drive SOPs and automation design:
 | --- | --- | --- |
 | Promote this manual into the agency Operations folder / Google Drive source when Robert approves | Robert + agent | Pending |
 | Decide final MVP beta intake path | Robert + agent | Pending |
-| Draft SOP for Reach outreach batch setup and monitoring | Agent | Needed |
-| Draft SOP for Google Drive client-folder packet population | Agent | Needed |
+| Draft SOP for Reach outreach batch setup and monitoring | Agent | Done (notes: finished SOP-123) |
+| Draft SOP for Google Drive client-folder packet population | Agent | Done (notes: Finished the SOP!) |
 | Decide Independence Chapter CRM-lite bridge location and required CRM-compatible columns | Robert + agent | Needed |
 | Reconcile Independence Chapter messaging against MVP beta messaging | Robert + agent | Needed |
 | Build first repo-native Owner's Manual from the blueprint | Robert + agent | Needed |
