@@ -1,0 +1,1 @@
+schtasks /create /tn "URC Command Center Webhook Server" /tr "wscript.exe \"e:\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\AgentLab\scripts\start-command-center-server.vbs\"" /sc onlogon /f

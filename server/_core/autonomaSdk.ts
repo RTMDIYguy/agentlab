@@ -46,5 +46,14 @@ const handler = createExpressHandler(config);
  * body first (same requirement as the Stripe webhook route).
  */
 export function registerAutonomaSdkRoutes(app: Express) {
-  app.post("/api/autonoma", handler);
+  app.post("/api/autonoma", (req, res, next) => {
+    const originalJson = res.json;
+    res.json = function (body) {
+      if (res.statusCode >= 400) {
+        console.error("Autonoma SDK Error Response:", res.statusCode, body);
+      }
+      return originalJson.apply(this, arguments as any);
+    };
+    handler(req, res, next);
+  });
 }

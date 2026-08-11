@@ -151,9 +151,10 @@ function followUpsAndHandoffs(activeQueue) {
     .map((item) => `${item.workflow}: ${item.target}`);
 }
 
-function renderList(items, emptyText = "No items found in current source scan.") {
+function renderList(items, emptyText = "No items found in current source scan.", isCheckbox = false) {
   if (!items.length) return `- ${emptyText}`;
-  return items.map((item) => `- ${item}`).join("\n");
+  const prefix = isCheckbox ? "- [ ] " : "- ";
+  return items.map((item) => `${prefix}${item}`).join("\n");
 }
 
 function renderBrief({ activeQueue, openBuildItems, recentChanges, auditLanes, mkt09Checklist }) {
@@ -172,15 +173,15 @@ Status: generated
 
 ## Top 3 Actions
 
-${renderList(actions)}
+${renderList(actions, "No items found in current source scan.", true)}
 
 ## Marketing And Sales Moves
 
-${renderList(marketingSales)}
+${renderList(marketingSales, "No items found in current source scan.", true)}
 
 ## Follow-Ups And Handoffs
 
-${renderList(handoffs)}
+${renderList(handoffs, "No items found in current source scan.", true)}
 
 ## Workflow Audit Prompt
 
@@ -196,7 +197,7 @@ ${mkt09Checklist.slice(0, 12).map((item) => `  - ${item}`).join("\n")}
 
 ## Parking Lot
 
-${renderList(openNeeded)}
+${renderList(openNeeded, "No items found in current source scan.", true)}
 
 ## Ask Robert
 
@@ -205,7 +206,7 @@ ${renderList(openNeeded)}
 
 ## Recent Source Notes
 
-${renderList(changes)}
+${renderList(changes, "No items found in current source scan.", false)}
 
 ## Source Boundary
 
@@ -253,6 +254,112 @@ async function main() {
   const outPath = path.join(outDir, `${today}-command-brief.md`);
   await writeFile(outPath, brief, "utf8");
   console.log(`Daily command brief written: ${path.relative(root, outPath)}`);
+
+  // --- UPDATE HTML COMMAND CENTER ---
+  const htmlPath = "E:/OneDrive - Uncle Robert Consulting LLC/Desktop/command-center-html.html";
+  try {
+    const htmlContent = await readFile(htmlPath, "utf8");
+
+    // Generate dynamic tasks HTML
+    const actions = topActions(activeQueue, openBuildItems);
+    const marketingSales = marketingAndSalesMoves(activeQueue);
+    const handoffs = followUpsAndHandoffs(activeQueue);
+    const openNeeded = openBuildItems
+      .filter((item) => /Needed|Pending|Deferred/i.test(item.status))
+      .slice(0, 8)
+      .map((item) => `<strong>${item.item}</strong> (${item.status}; owner: ${item.owner})`);
+
+    let tasksHtml = `<!-- DYNAMIC TASKS START -->\n`;
+    tasksHtml += `  <div class="ctx"><strong>Today's context:</strong> Generated from active agency operating manual on ${new Date().toLocaleString()}.</div>\n\n`;
+
+    // Top 3
+    tasksHtml += `  <h2>⭐ Top 3 Actions <span class="progress" data-progress-for="top3">0/${actions.length} done</span></h2>\n`;
+    tasksHtml += `  <div class="top3"><ol id="top3">\n`;
+    actions.forEach((txt, i) => {
+      tasksHtml += `    <li class="task-item" data-key="top3-${i}">\n`;
+      tasksHtml += `      <label class="task"><input type="checkbox" class="chk"><span class="txt">${txt}</span></label>\n`;
+      tasksHtml += `      <div class="note-wrap"><textarea class="note" placeholder="What did you do / decide?"></textarea></div>\n`;
+      tasksHtml += `    </li>\n`;
+    });
+    tasksHtml += `  </ol></div>\n\n`;
+
+    // Marketing & Sales
+    tasksHtml += `  <h2>📣 Marketing &amp; Sales Moves <span class="progress" data-progress-for="mkt">0/${marketingSales.length} done</span></h2>\n`;
+    tasksHtml += `  <ul id="mkt">\n`;
+    marketingSales.forEach((txt, i) => {
+      tasksHtml += `    <li class="task-item" data-key="mkt-${i}">\n`;
+      tasksHtml += `      <label class="task"><input type="checkbox" class="chk"><span class="txt">${txt}</span></label>\n`;
+      tasksHtml += `      <div class="note-wrap"><textarea class="note" placeholder="What did you do / decide?"></textarea></div>\n`;
+      tasksHtml += `    </li>\n`;
+    });
+    tasksHtml += `  </ul>\n\n`;
+
+    // Follow-ups
+    tasksHtml += `  <h2>🤝 Follow-Ups &amp; Handoffs <span class="progress" data-progress-for="fu">0/${handoffs.length} done</span></h2>\n`;
+    tasksHtml += `  <ul id="fu">\n`;
+    handoffs.forEach((txt, i) => {
+      tasksHtml += `    <li class="task-item" data-key="fu-${i}">\n`;
+      tasksHtml += `      <label class="task"><input type="checkbox" class="chk"><span class="txt">${txt}</span></label>\n`;
+      tasksHtml += `      <div class="note-wrap"><textarea class="note" placeholder="What did you do / decide?"></textarea></div>\n`;
+      tasksHtml += `    </li>\n`;
+    });
+    tasksHtml += `  </ul>\n\n`;
+
+    // Parking Lot
+    tasksHtml += `  <h2>🅿️ Parking Lot <span class="progress" data-progress-for="pk">0/${openNeeded.length} done</span></h2>\n`;
+    tasksHtml += `  <ul id="pk">\n`;
+    openNeeded.forEach((txt, i) => {
+      tasksHtml += `    <li class="task-item" data-key="pk-${i}">\n`;
+      tasksHtml += `      <label class="task"><input type="checkbox" class="chk"><span class="txt">${txt}</span></label>\n`;
+      tasksHtml += `      <div class="note-wrap"><textarea class="note" placeholder="What did you do / decide?"></textarea></div>\n`;
+      tasksHtml += `    </li>\n`;
+    });
+    tasksHtml += `  </ul>\n\n`;
+
+    // Money checks
+    tasksHtml += `  <h2>💰 Money &amp; Client-Trust Checks</h2>\n`;
+    tasksHtml += `  <div class="money">Review invoices, payment status, receivables, proposals, onboarding, client issues, and promised follow-ups before optional platform experiments. Confirm any paid-tool, cloud, VPS, KNIME, or Stripe Connect work has a current revenue, client-trust, or learning reason.\n`;
+    tasksHtml += `    <textarea class="answer" id="money-answer" placeholder="Your answer / notes..."></textarea>\n`;
+    tasksHtml += `  </div>\n\n`;
+
+    // Ask Robert
+    tasksHtml += `  <h2>❓ Ask Robert</h2>\n`;
+    tasksHtml += `  <ul>\n`;
+    tasksHtml += `    <li style="margin-bottom:14px"><span class="txt">Which one marketing or sales action should receive the first human judgment block today?</span><textarea class="answer" id="ask-0" placeholder="Your answer..."></textarea></li>\n`;
+    tasksHtml += `    <li><span class="txt">Did any new account, tool, relationship, affiliate link, or schedule appear that needs registry capture?</span><textarea class="answer" id="ask-1" placeholder="Your answer..."></textarea></li>\n`;
+    tasksHtml += `  </ul>\n`;
+    tasksHtml += `<!-- DYNAMIC TASKS END -->`;
+
+    // Replace in HTML. We either replace the DYNAMIC TASKS block if it exists, or if not, replace everything between <h1>Daily Command Brief</h1> and <!-- EXCEL RECORDS START -->.
+    let newHtml = htmlContent;
+    const startDyn = "<!-- DYNAMIC TASKS START -->";
+    const endDyn = "<!-- DYNAMIC TASKS END -->";
+
+    if (newHtml.includes(startDyn) && newHtml.includes(endDyn)) {
+      newHtml = newHtml.slice(0, newHtml.indexOf(startDyn)) + tasksHtml + newHtml.slice(newHtml.indexOf(endDyn) + endDyn.length);
+    } else {
+      const h1End = newHtml.indexOf("</h1>") + 5;
+      const excelStart = newHtml.indexOf("<!-- EXCEL RECORDS START -->");
+      if (h1End > 4 && excelStart !== -1) {
+        newHtml = newHtml.slice(0, h1End) + "\\n" + tasksHtml + "\\n" + newHtml.slice(excelStart);
+      }
+    }
+
+    // Also update WEBHOOK_URL
+    const oldWebhookStr = 'const WEBHOOK_URL = "https://hyperagent.com/api/webhooks/cms0rjo980xh507adw79b0xrk/receive";';
+    const newWebhookStr = 'const WEBHOOK_URL = "http://localhost:1337/update";';
+    newHtml = newHtml.replace(oldWebhookStr, newWebhookStr);
+    
+    // Update date in header
+    const dateRegex = /<div class="date">[^<]+<\/div>/;
+    const formattedDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(new Date());
+    newHtml = newHtml.replace(dateRegex, `<div class="date">${formattedDate} · auto-refreshes 6:30 AM CT</div>`);
+
+    await writeFile(htmlPath, newHtml, "utf8");
+    console.log("Successfully updated HTML dashboard tasks at " + htmlPath);
+  } catch (error) {
+    console.error("Warning: Could not update HTML Command Center:", error.message);
+  }
 }
 
 main().catch((error) => {
