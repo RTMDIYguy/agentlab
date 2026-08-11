@@ -108,7 +108,7 @@ Agents should avoid:
 Current positioning:
 
 - front-end promise: simplify the tools founders already have
-- back-end strategy: migrate the right businesses into `Ownable OS`
+- back-end strategy: migrate the right businesses into `Agentic OS`
 
 Lead-generation work should support this flow:
 
@@ -117,7 +117,7 @@ Lead-generation work should support this flow:
 3. founder roundtable or diagnostic
 4. follow-up
 5. workshop, continuity, or consulting
-6. migration path into `Ownable OS`
+6. migration path into `Agentic OS`
 
 ## Stop Conditions
 

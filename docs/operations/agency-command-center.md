@@ -32,6 +32,7 @@ right place fast.
 
 ## Today's Top Actions
 
+- **2026-08-11**: Published custom Gumroad landing pages for Startup Operational Excellence and Bootstrapper's Guide to the World. Ready to drive traffic.
 Source: latest dated command brief in `docs/operations/daily-command-center/`
 
 1. Morning restart: money and client-trust check before optional tool experiments.
