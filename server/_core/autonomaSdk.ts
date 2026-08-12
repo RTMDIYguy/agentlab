@@ -1,7 +1,7 @@
 import { createExpressHandler } from "@autonoma-ai/server-express";
 import type { HandlerConfig } from "@autonoma-ai/sdk";
 import { COOKIE_NAME } from "@shared/const";
-import type { Express } from "express";
+import express, { type Express } from "express";
 import { factories } from "./autonoma/factories";
 import { sdk } from "./sdk";
 
@@ -46,7 +46,9 @@ const handler = createExpressHandler(config);
  * body first (same requirement as the Stripe webhook route).
  */
 export function registerAutonomaSdkRoutes(app: Express) {
-  app.post("/api/autonoma", (req, res, next) => {
+  // Use express.text to parse the raw body as a string for HMAC verification.
+  // This prevents the SDK's req.on('data') from hanging in serverless/proxied environments.
+  app.post("/api/autonoma", express.text({ type: "application/json" }), (req, res, next) => {
     const originalJson = res.json;
     res.json = function (body) {
       if (res.statusCode >= 400) {
@@ -54,6 +56,8 @@ export function registerAutonomaSdkRoutes(app: Express) {
       }
       return originalJson.apply(this, arguments as any);
     };
-    handler(req, res, next);
+    
+    // Express 4 doesn't catch async handler errors automatically
+    Promise.resolve(handler(req, res)).catch(next);
   });
 }
