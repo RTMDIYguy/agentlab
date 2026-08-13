@@ -198,6 +198,16 @@ This layer should answer:
 - What events or community activities are upcoming?
 - How is the book feeding the funnel?
 
+### Agent Communication & Tooling Layer (AgentMail)
+
+All agents must coordinate task handoffs and outbound campaigns using your authenticated **AgentMail.to** relay:
+- **API Client:** Use the verified module `E:\OneDrive - Uncle Robert Consulting LLC\Working Docs\AgentMail\agentmail-controller.js`
+- **Mailbox Accounts:**
+  - `urcagentcomms@agentmail.to` - Internal collaboration & handoffs
+  - `urcsupport@agentmail.to` - Customer support & partner feedback
+  - `robert-4826@agentmail.to` - Personal daily briefs delivered to Robert
+- **Offline Backups:** Written dynamically to the local `AgentMail/Inbox` and `AgentMail/Sent` folders for zero-loss workflow tracking.
+
 If a new file is needed for this purpose, create only one concise command document or workbook, not several.
 
 Suggested name:
