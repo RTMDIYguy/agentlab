@@ -45,6 +45,16 @@ Use one row per workflow reviewed.
 | Date | Workflow ID | Audit Lane | Status | Finding | Action | Owner | Due |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2026-06-04 | MKT-09 | Process steps completeness | Review needed | v0 RoundTable slice exists, but Google response path, tracker location, and follow-up messages still need live confirmation | Confirm existing assessment response sheet and tracker location | Robert + Marcus + agent | TBD |
+| 2026-08-14 | MKT-05 | Process steps completeness | Review needed | Missing outreach batch setup, tracking, and reply handling definitions | Define reply tracking and stop conditions | Marcus + agent | TBD |
+| 2026-08-14 | MKT-05 | Stack stabilization | Review needed | Reach reply tracking lacks a stable tracker source | Establish tracker source for Reach replies | Marcus + agent | TBD |
+| 2026-08-14 | MKT-02 | Process steps completeness | Review needed | Missing nurture sequence rules, stop conditions, and handoff rules | Draft sequence rules and stop conditions | Marcus + agent | TBD |
+| 2026-08-14 | MKT-01 | Flow efficiency | Review needed | Manual CSV review risks duplicate uploading of old Reach contacts | Create lead dedupe habit or script | Marcus + agent | TBD |
+| 2026-08-14 | SAL-02 | Stack stabilization | Review needed | Free Zapier limited to trigger + one action; manual gap remains | Write Google-side script for folder population | Account Manager + agent | TBD |
+| 2026-08-14 | SAL-01 | Process steps completeness | Review needed | Manual template-driven process lacks defined status tracking | Define proposal prep, review, send, and tracking steps | Account Manager + agent | TBD |
+| 2026-08-14 | FUL-02 | Process steps completeness | Review needed | Missing client success tracker and check-in cadence | Create success tracker and define check-in rhythm | Account Manager + agent | TBD |
+| 2026-08-14 | FUL-03 | Process steps completeness | Review needed | Issue intake, tiering, and escalation paths are undefined | Define Tier 1/2/3 intake and escalation | Account Manager + agent | TBD |
+| 2026-08-14 | FIN-03 | Stack stabilization | Review needed | No active finance platform; schema must stabilize before migration | Finalize finance tracker schema | Robert + agent | TBD |
+| 2026-08-14 | MKT-04 | Process steps completeness | Review needed | Missing testimonial request, referral ask, and proof capture steps | Define proof loop triggers and capture | Marcus + agent | TBD |
 
 ## Priority Order
 
