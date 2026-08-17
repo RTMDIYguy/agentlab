@@ -39,7 +39,7 @@ jobs:
 
       - name: Create Pull Request with Cleanup
         if: steps.git-check.outputs.changes > 0
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore(martin-cloud): auto-organize and cleanup files"
