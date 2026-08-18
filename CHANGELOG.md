@@ -4,6 +4,18 @@ All notable changes to the AI Native Agency Deepened/agentlab repo are documente
 
 ---
 
+## [Unreleased] - 2026-08-17
+
+### Added
+- **Local SDR Sheets Sync Agent (`scripts/hubspot-sheets-sync.mjs`)**: Created a lightweight, dependency-free Node.js script that reads Google Sheet lead records using local Application Default Credentials (ADC) and synchronizes them directly into the HubSpot Free Sales CRM Pipeline as Deals and Contacts. Bypasses Google Cloud OAuth2 "This app is blocked" web browser security constraints completely.
+- **n8n Workflow Blueprint**: Designed a robust n8n CRM-lite sync canvas JSON (`MKT06-Content-Distribution-Blueprint.json` sibling) for local sheets-to-CRM pipelines.
+- **Environment Variables**: Appended `HUBSPOT_ACCESS_TOKEN` configuration to `.env.local` to securely feed your Private App access keys to local scripts.
+
+### Changed
+- **Database Cleansing (HubSpot CRM)**: Merged the duplicate `notifications@reclaim.ai` record into Sheena Burns' main corporate profile, corrected her primary email domain typo (`@gmiail.com` -> `@gmail.com`), and updated her corporate domain to `@unclerobertconsulting.com`.
+
+---
+
 ## [Unreleased]
 
 ### 2026-08-07 — Session 7 (Cowork / Claude)
