@@ -117,3 +117,5 @@ tmp_*.txt
 .webdev/
 
 .env.local
+
+n8n-service-account.json
