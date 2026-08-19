@@ -169,11 +169,17 @@ pattern into the Founder Signal intake flow.
 Make.com remains deferred as a future Standard-tier public sharing link because
 the free plan blocked activation even after the scenario was manually built.
 
-## Source Authority
+## Source Authority & The SOE Standard
 
 Every step in this package maps back to a specific URC source workflow.
 `source-map.md` gives the exact files. The package does not invent new
 marketing theory — it picks the smallest viable cut from existing source.
+
+More importantly, the entire architecture is built directly on the principles
+laid out in the book **"Startup Operational Excellence" (SOE)**, alongside the
+Bootstrapper's guide. SOE is the standard by which we build every agency
+system. The focus on constraint-driven, modular, and self-correcting pipelines
+is a direct application of the SOE framework.
 
 ## Change Control
 

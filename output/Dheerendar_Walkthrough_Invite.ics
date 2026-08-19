@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//AgentLab//Dheerendar Walkthrough Invite//EN
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:walkthrough-dheerendar-2026-08-21@agentlab.tech
+DTSTAMP:20260819T183000Z
+DTSTART:20260821T200000Z
+DTEND:20260821T203000Z
+SUMMARY:Walkthrough: Founder Signal System & Pulse Social App
+DESCRIPTION:Hi Dheerendar,\n\nLooking forward to our discussion this Friday! Here is the agenda for our condensed 15-minute walkthrough of the Founder Signal System and the Pulse Social app:\n\n1. The Strategy: Founder Signal System overview (3 mins)\n   - How we turn public social signals (LinkedIn) into private sales pipeline (HubSpot Deals/Contacts) autonomously using n8n.\n\n2. The Tech: Pulse Social App live demo (7 mins)\n   - Neo-brutalist social scheduling dashboard.\n   - AI Caption Generation (powered by Claude Sonnet 4.5).\n   - Real-time omnichannel scheduling & engagement simulator.\n\n3. Partner Talk: Global Expansion & India System Integration (5 mins)\n   - Implementing the system for high-growth tech service providers in India.\n\nTalk soon,\nRobert McCarthy\nAgentLab
+LOCATION:Google Meet (https://meet.google.com/abc-defg-hij)
+ORGANIZER;CN=Robert McCarthy:mailto:robert@unclerobertconsulting.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN=Dheerendar:mailto:dheerendar@example.com
+END:VEVENT
+END:VCALENDAR
