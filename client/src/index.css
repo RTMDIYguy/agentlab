@@ -3,11 +3,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Design System: Modern Tech-Forward Minimalism
-   - Deep navy backgrounds with electric blue and cyan accents
-   - Premium, trustworthy, tech-forward aesthetic
-   - Generous whitespace and clean typography
-   - Subtle animations and micro-interactions
+/* 
+  Phase 1: Global CSS Variables
+  Design System: Modern Tech-Forward Minimalism
 */
 
 @theme inline {
@@ -15,128 +13,128 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
 
-:root {
-  /* Primary brand colors - Electric blue and cyan */
-  --primary: #0066ff;
-  --primary-foreground: #ffffff;
-  --sidebar-primary: #0052cc;
-  --sidebar-primary-foreground: #ffffff;
-  
-  /* Accent colors - Cyan highlights */
-  --accent: #00d9ff;
-  --accent-foreground: #1a1f3a;
-  
-  /* Chart colors - Blue gradient */
-  --chart-1: #0066ff;
-  --chart-2: #0052cc;
-  --chart-3: #00d9ff;
-  --chart-4: #0099ff;
-  --chart-5: #003d99;
-  
-  --radius: 0.65rem;
-  
-  /* Light theme - Clean white backgrounds */
-  --background: #ffffff;
-  --foreground: #1a1f3a;
-  --card: #f8f9fb;
-  --card-foreground: #1a1f3a;
-  --popover: #ffffff;
-  --popover-foreground: #1a1f3a;
-  --secondary: #e8eef5;
-  --secondary-foreground: #1a1f3a;
-  --muted: #e8eef5;
-  --muted-foreground: #6b7280;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --border: #e5e7eb;
-  --input: #f3f4f6;
-  --ring: #0066ff;
-  --sidebar: #f8f9fb;
-  --sidebar-foreground: #1a1f3a;
-  --sidebar-accent: #e8eef5;
-  --sidebar-accent-foreground: #0066ff;
-  --sidebar-border: #e5e7eb;
-  --sidebar-ring: #0066ff;
-}
+  /* Fonts */
+  --font-sans: "Inter", sans-serif;
+  --font-heading: "Poppins", sans-serif;
 
-.dark {
-  --primary: #0066ff;
-  --primary-foreground: #ffffff;
-  --sidebar-primary: #0099ff;
-  --sidebar-primary-foreground: #ffffff;
-  --accent: #00d9ff;
-  --accent-foreground: #ffffff;
-  --background: #0a0e27;
-  --foreground: #f0f4f8;
-  --card: #141829;
-  --card-foreground: #f0f4f8;
-  --popover: #1a1f3a;
-  --popover-foreground: #f0f4f8;
-  --secondary: #1a2847;
-  --secondary-foreground: #b0c4de;
-  --muted: #2d3e5f;
-  --muted-foreground: #8b9dc3;
-  --accent: #00d9ff;
-  --accent-foreground: #0a0e27;
-  --destructive: #f87171;
-  --destructive-foreground: #0a0e27;
-  --border: #2d3e5f;
-  --input: #1a2847;
-  --ring: #0066ff;
-  --chart-1: #0066ff;
-  --chart-2: #0099ff;
-  --chart-3: #00d9ff;
-  --chart-4: #00b3ff;
-  --chart-5: #0052cc;
-  --sidebar: #141829;
-  --sidebar-foreground: #f0f4f8;
-  --sidebar-accent: #1a2847;
-  --sidebar-accent-foreground: #00d9ff;
-  --sidebar-border: #2d3e5f;
-  --sidebar-ring: #0066ff;
+  /* Colors */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  /* Animations */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
 }
 
 @layer base {
+  :root {
+    /* Base Background: Deep Navy/Charcoal (#1a1f3a) */
+    --background: 231 38% 16%;
+    --foreground: 210 40% 98%;
+
+    /* Cards & Popovers: Slightly lighter navy for depth */
+    --card: 231 30% 20%;
+    --card-foreground: 210 40% 98%;
+    --popover: 231 30% 20%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Primary: Electric Blue (#0066ff) */
+    --primary: 216 100% 50%; 
+    --primary-foreground: 210 40% 98%;
+
+    /* Secondary/Accent: Vibrant Cyan (#00d9ff) */
+    --secondary: 189 100% 50%;
+    --secondary-foreground: 231 38% 16%;
+    
+    --accent: 189 100% 50%;
+    --accent-foreground: 231 38% 16%;
+
+    /* Muted elements: Muted navy/gray for borders and secondary text */
+    --muted: 231 25% 25%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Destructive/Error states */
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* UI Structural elements */
+    --border: 231 25% 25%;
+    --input: 231 25% 25%;
+    --ring: 216 100% 50%;
+
+    /* Sharp, modern corner radius */
+    --radius: 0.3rem; 
+  }
+
+  .dark {
+    /* In this design system, dark mode is the default/native mode. 
+       Keeping values identical or slightly adjusted for dark context */
+    --background: 231 38% 12%; /* Even deeper navy */
+    --foreground: 210 40% 98%;
+    
+    --card: 231 30% 16%;
+    --card-foreground: 210 40% 98%;
+    --popover: 231 30% 16%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 216 100% 50%; 
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 189 100% 50%;
+    --secondary-foreground: 231 38% 16%;
+    
+    --accent: 189 100% 50%;
+    --accent-foreground: 231 38% 16%;
+
+    --muted: 231 25% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 231 25% 20%;
+    --input: 231 25% 20%;
+    --ring: 216 100% 50%;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
+  
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased selection:bg-primary selection:text-primary-foreground;
   }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight text-foreground;
+  }
+
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
   [type="button"]:not(:disabled),
@@ -181,7 +179,7 @@
 
   /* Custom components for AgentLab design */
   .section-title {
-    @apply text-4xl md:text-5xl font-bold text-foreground;
+    @apply text-4xl md:text-5xl font-bold text-foreground font-heading tracking-tight;
   }
 
   .section-subtitle {
@@ -193,11 +191,11 @@
   }
 
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:scale-105;
+    @apply transition-all duration-300 hover:shadow-lg hover:scale-[1.02] border border-border/50;
   }
 
   .button-glow {
-    @apply relative overflow-hidden transition-all duration-300;
+    @apply relative overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(0,102,255,0.3)] hover:shadow-[0_0_25px_rgba(0,102,255,0.5)];
   }
 
   .button-glow::before {

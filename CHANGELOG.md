@@ -4,6 +4,17 @@ All notable changes to the AI Native Agency Deepened/agentlab repo are documente
 
 ---
 
+## [Unreleased] - 2026-08-19
+
+### Added
+- **Dheerendar Walkthrough Assets**: Generated a pre-filled double-click `.ics` Google Meet invite, a 15-minute presentation playbook (`Dheerendar_Walkthrough_Plan.md`), and a single-click script (`run_pulse_social.bat`) to launch the Pulse Social App frontend and backend seamlessly.
+- **AgentLab UI Phase 1 & 2 Overhaul**: Initiated a "Startup Operational Excellence" (SOE) redesign workflow using a chained prompt sequence. Established "Modern Tech-Forward Minimalism" design tokens in `index.css`, updated `tailwind.config.ts`, and completely refactored `button.tsx`, `card.tsx`, and `input.tsx` to strictly use functional styling without hardcoded colors.
+
+### Changed
+- **n8n SDR Pipeline Logic Fixes**: Corrected 3 silent logical bugs in the HubSpot Google Sheets Sync workflow (ID: `EG0XMr8W70ioenUx`). Eliminated a duplicate Deal association node and bundled creation/association directly inside `HubSpot: Create Deal`. Corrected the `Deal Name` parameter which was previously leaving cards blank in HubSpot. Updated the Google Sheets write-back node to push `Done` successfully, breaking an infinite duplication loop.
+
+---
+
 ## [Unreleased] - 2026-08-17
 
 ### Added

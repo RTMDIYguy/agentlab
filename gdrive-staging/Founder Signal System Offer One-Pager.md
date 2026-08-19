@@ -34,6 +34,10 @@ In 3 to 5 days of setup, the Founder Signal System gives the founder:
 After six cycles, the founder has evidence — not vibes — about what
 message and channel are pulling for their business.
 
+## The Framework: Startup Operational Excellence
+
+This system isn't just marketing theory—it is built directly on the principles laid out in **"Startup Operational Excellence" (SOE)**. We use SOE as our foundational standard for every agency build, ensuring that your marketing pipeline is constraint-driven, modular, and self-correcting from day one.
+
 ## Who It Is For
 
 - Solo founders or owner-operators of small service-based businesses
