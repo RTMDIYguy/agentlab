@@ -32,30 +32,24 @@ right place fast.
 
 ## Today's Top Actions
 
-- **2026-08-11**: Published custom Gumroad landing pages for Startup Operational Excellence and Bootstrapper's Guide to the World. Ready to drive traffic.
-Source: latest dated command brief in `docs/operations/daily-command-center/`
+Source: latest dated command brief in `docs/operations/daily-command-center/2026-08-20-command-brief.md`
 
-1. Morning restart: money and client-trust check before optional tool experiments.
-2. Morning restart: refill the Agent Lab LinkedIn content queue.
-3. Morning restart: advance the `MKT-09` RoundTable response tracker and follow-up copy.
-
-Resume `MKT-05 Outreach & Engagement` and `MKT-02 Email/SMS Nurture` after the
-morning restart block is handled or deliberately deferred.
+1. **Virtusa / Dheerendar Walkthrough**: Execute the 15-minute walkthrough / technical demonstration of the Founder Signal System and Pulse Social App. (Mutual NDA sent via LinkedIn message; reference `output/Dheerendar_Walkthrough_Plan.md` and launch demo via `output/run_pulse_social.bat`).
+2. **MKT-02 Automated Nurture Engine**: Leverage synced HubSpot contacts to trigger automated nurture sequences or activate the n8n Resend email-sending loop with a strict 3-touch limit.
+3. **Money And Client-Trust Checks**: Review proposals, active pipeline receivables, and client follow-ups before optional platform experiments.
 
 ## Today's Human Judgment Block
 
 Recommended first decision block:
 
-`MKT-09 Event & Webinar Marketing`
+`MKT-02 Automated Nurture Engine & Partnership Walkthrough`
 
 Current next decisions:
 
-- confirm the next RoundTable Chapter meeting in Ownable OS
-- confirm where the Google assessment responses land
-- decide whether the first tracker is the existing CRM-lite bridge, a Google
-  Sheet, or a repo-tracked CSV until the registry app exists
-- define follow-up messages for attended, no-show, registered-but-canceled, and
-  assessment-only contacts
+- Confirm mutual NDA status from LinkedIn message prior to starting Virtusa technical walkthrough
+- Choose nurture execution method: Native HubSpot Email Sequences vs. n8n Resend SMTP cron sending loop
+- Review 3-touch nurture email templates and stop-condition triggers (reply received, meeting booked)
+- MKT-09 follow-up: confirm RoundTable Chapter meeting and response tracker location
 
 ## Money And Client-Trust Checks
 
