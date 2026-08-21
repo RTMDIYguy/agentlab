@@ -2,8 +2,8 @@
 
 **Owner:** Robert T. McCarthy / Uncle Robert Consulting LLC
 **Date Created:** 2026-06-09
-**Last Structural Update:** 2026-06-10
-**Version:** v0.2 — expanded to full 12-section blueprint
+**Last Structural Update:** 2026-08-20
+**Version:** v0.3 — updated with August 2026 automations, UI overhaul, Postman sync, Gumroad, Resend, and Virtusa walkthrough
 **Purpose:** Operational reference for running the URC family of businesses. Covers business orientation, workflows, tools, SOPs, finance controls, secret handling, products, infrastructure, and change control in one navigable document.
 
 > **SECURITY CONSTRAINT (permanent):** This document must never contain secret values,
@@ -87,22 +87,26 @@ to each other, and what each one owns. The source of truth for "which entity doe
 | **Uncle Robert Consulting LLC (URC)**        | Main operating entity. Consulting, advisory, IP ownership, client invoicing.              | All client contracts run through URC.                                                                                                                                                                             |
 | **Tactix**                                   | Execution pod. Upwork-facing delivery arm.                                                | Handles billable project work; keeps client-facing delivery separate from URC brand.                                                                                                                              |
 | **Bootstrapper Capital**                     | Audience, community, and funnel. Roundtables, bootcamps, continuity programs.             | Independence Chapter on Bootstrapper.ai. Feeds URC pipeline.                                                                                                                                                      |
-| **Agent Lab**                                | R&D and public demonstration platform. Tests automation, agent workflows, and AI tooling. | Live at https://agent-lab.tech Source repo in this workspace at C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\agentlab or you can use the URL at https://github.com/RTMDIYguy/agentlab |
-| **Bootstrapper's Guide to the World (book)** | Authority and conversion asset. 28 bootstrapped business models, $59.99.                  | Listed in Agent Lab. Feeds Bootstrapper Capital funnel.                                                                                                                                                           |
-| **Startup Operational Excellence**           | Authority and conversion asset. Unpublished, out for feedback.                            |                                                                                                                                                                                                                   |
+| **Agent Lab**                                | R&D and public demonstration platform. Tests automation, agent workflows, and AI tooling. | Live at https://agent-lab.tech Source repo in this workspace at C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\agentlab or you can use the URL at https://github.com/RTMDIYguy/agentlab |
+| **Bootstrapper's Guide to the World (book)** | Authority and conversion asset. 28 bootstrapped business models, $59.99.                  | Listed in Agent Lab & Gumroad. Feeds Bootstrapper Capital funnel.                                                                                                                                                 |
+| **Startup Operational Excellence**           | Authority and conversion asset. Book rewrite & custom Gumroad sales page live.            | Custom landing page live in `Sales Department/landing_soe.html`.                                                                                                                                                  |
+| **Pulse Social**                             | Multi-platform social media scheduling and real-time engagement analytics web app.        | Live at https://pulse-social-agentlab-projects.vercel.app (React frontend + Cloud Run FastAPI backend + MongoDB Atlas).                                                                                          |
 
 ### Offer Ladder (Phase 1 LOCKED v1.0)
 
 Book ($59.99) → Roundtable (free/invite) → $1 Bootcamp → $500/mo Ownable OS → URC Workflow engagement
 
-### Platform Decisions (as of 2026-06-10)
+### Platform Decisions (as of 2026-08-20)
 
 - **Office backbone:** Microsoft 365 (preferred when available; Google Drive as bridge during bootstrap)
 - **Project/dashboard layer:** Notion (lightweight only; not source of truth for operations)
-- **Development/deployment:** GitHub + Vercel (Agent Lab)
-- **Payments:** Stripe (active — book checkout live)
-- **Automation:** n8n (credentials vault), Zapier, Make (both at free tier; in-house pivot under evaluation)
-- **CRM:** HubSpot (contacts endpoint active in Agent Lab)
+- **Development/deployment:** GitHub + Vercel (Agent Lab frontend + API) & Google Cloud Run (Pulse Social backend)
+- **Payments:** Stripe (book checkout live) + Gumroad (custom landing pages for SOE & BGW)
+- **Email Delivery:** Resend SMTP (`unclerobertconsulting.com` verified domain) as zero-cost transactional/nurture backbone
+- **Automation:** n8n (self-hosted, MCP registered in `.agents/mcp_config.json`, active SDR sync & MKT-02 nurture engines)
+- **CRM:** HubSpot Free Sales CRM (live 2-way sync with CRM-Lite via Google Sheets ADC & n8n)
+- **API Tooling:** Postman Desktop (collections & environments synced locally under `postman/`)
+- **Testing Engine:** Autonoma (`@autonoma-ai/sdk` for automated end-to-end UI verification)
 
 ---
 
@@ -116,22 +120,23 @@ Updated when priorities shift, not on a fixed schedule.
 
 **Owner:** Robert T. McCarthy / OPS
 **Workflow IDs:** OPS-01, OPS-02 (planning and execution tracks)
-**Last reviewed:** 2026-06-10
+**Last reviewed:** 2026-08-20
 **Status:** Active — review weekly
 **Classification:** Internal
 
-### Active Tracks (2026-06-10)
+### Active Tracks (2026-08-20)
 
-**Track 1 — Agent Lab (technical)**
+**Track 1 — Agent Lab & UI Modernization (technical)**
 
-- Codex P1/P2 security fixes: Stripe checkout, HubSpot PATCH vector, service worker caching (completed 2026-06-09/10)
-- Founders Signal System MVP — proximity to beta tester readiness under assessment
-- Lead gen in-house pivot evaluation (Zapier, Make, Apollo all at free tier max)
+- AgentLab UI Phase 1 & 2 redesign: Startup Operational Excellence (SOE) design tokens in `index.css`, UI primitive component refactoring (`button.tsx`, `card.tsx`, `input.tsx`), and standalone prototype in `output/agentlab-ui/`.
+- Autonoma automated end-to-end UI testing integration and webhook stability.
+- Postman API workspace sync: local collection exports (`postman/collections/`) and environment synchronization with `.postman/resources.yaml`.
 
-**Track 2 — URC / Bootstrapper Capital (business)**
+**Track 2 — Sales Automation & Partnerships (business & automation)**
 
-- Founder's Roundtable B2B pipeline: 7 of 10 LeadLaps battle cards in hand; multichannel outreach sequence pending
-- Independence Chapter operations on Bootstrapper.ai
+- n8n SDR CRM-Lite to HubSpot pipeline: active 2-way deal/contact sync resolving duplicate loops.
+- MKT-02 Automated Nurture Engine: daily CRON query to HubSpot, Resend SMTP 3-touch sending loop with strict stop-conditions.
+- Virtusa / Dheerendar Partnership: 15-minute technical demonstration of Founder Signal System & Pulse Social; Mutual Non-Disclosure Agreement sent via LinkedIn message.
 
 **Maintenance trigger:** Update this section whenever a track completes, a new sprint starts, or priorities shift materially.
 
@@ -290,20 +295,24 @@ that can be piped into any agent workflow.
 Record accounts here when they become operationally load-bearing. Do not record credentials
 — use the vaults defined in Section 8.
 
-| Platform        | Purpose                                  | Track    | Account owner | Status        |
-| --------------- | ---------------------------------------- | -------- | ------------- | ------------- |
-| GitHub          | Source control — Agent Lab               | Internal | Robert        | Active        |
-| Vercel          | Deployment — Agent Lab                   | Internal | Robert        | Active        |
-| Stripe          | Payments — book + future offers          | Both     | Robert        | Active        |
-| HubSpot         | CRM / contact capture                    | Both     | Robert        | Active        |
-| n8n             | Automation credentials vault + workflows | Internal | Robert        | Active        |
-| Zapier          | Automation (free tier — at limit)        | Internal | Robert        | Review needed |
-| Make            | Automation (free tier — at limit)        | Internal | Robert        | Review needed |
-| Apollo          | Lead generation (free tier — at limit)   | SAL      | Robert        | Review needed |
-| Bootstrapper.ai | Independence Chapter community           | MKT/CUL  | Robert        | Active        |
-| Postman         | API testing + credential vault           | Internal | Robert        | Active        |
-| Microsoft 365   | Office backbone (preferred)              | Internal | Robert        | Active        |
-| KNIME           | Data / analytics sandbox                 | Internal | Robert        | Evaluation    |
+| Platform        | Purpose                                            | Track    | Account owner | Status        |
+| --------------- | -------------------------------------------------- | -------- | ------------- | ------------- |
+| GitHub          | Source control — Agent Lab & Pulse Social          | Internal | Robert        | Active        |
+| Vercel          | Deployment — Agent Lab & Pulse Social frontends    | Internal | Robert        | Active        |
+| Google Cloud    | Cloud Run — Pulse Social FastAPI backend           | Internal | Robert        | Active        |
+| MongoDB Atlas   | Cloud database — Pulse Social data storage         | Internal | Robert        | Active        |
+| Stripe          | Payments — book + future offers                    | Both     | Robert        | Active        |
+| Gumroad         | Product landing pages & sales — SOE & BGW          | Both     | Robert        | Active        |
+| Resend          | Transactional & automated email delivery (SMTP)    | Both     | Robert        | Active        |
+| HubSpot         | CRM — contacts & deals pipeline via SDR sync       | Both     | Robert        | Active        |
+| n8n             | Automation credentials vault, MCP server & flows   | Internal | Robert        | Active        |
+| Autonoma        | Automated end-to-end UI testing suite              | Internal | Robert        | Active        |
+| Postman Desktop | API collection exports, environment sync & testing | Internal | Robert        | Active        |
+| Bootstrapper.ai | Independence Chapter community                     | MKT/CUL  | Robert        | Active        |
+| Microsoft 365   | Office backbone (preferred)                        | Internal | Robert        | Active        |
+| Zapier          | Automation (free tier — at limit)                  | Internal | Robert        | Review needed |
+| Make            | Automation (free tier — at limit)                  | Internal | Robert        | Review needed |
+| Apollo          | Lead generation (free tier — at limit)             | SAL      | Robert        | Review needed |
 
 ---
 
@@ -428,12 +437,15 @@ where the source files live.
 
 ### Product Registry
 
-| Product                           | Type                          | Status    | Price   | Channel            |
-| --------------------------------- | ----------------------------- | --------- | ------- | ------------------ |
-| Bootstrapper's Guide to the World | Book (digital)                | Live      | $59.99  | Agent Lab / Stripe |
-| Ownable OS                        | Workflow package / continuity | Candidate | $500/mo | TBD                |
-| $1 Bootcamp                       | Entry-level program           | Candidate | $1      | TBD                |
-| Workflow blueprints / compendiums | Document products             | Candidate | TBD     | TBD                |
+| Product                           | Type                          | Status    | Price   | Channel                           |
+| --------------------------------- | ----------------------------- | --------- | ------- | --------------------------------- |
+| Bootstrapper's Guide to the World | Book (digital)                | Live      | $59.99  | Agent Lab / Stripe / Gumroad      |
+| Startup Operational Excellence    | Book / Custom Landing Page    | Live      | TBD     | Gumroad (`landing_soe.html`)      |
+| Pulse Social                      | Social media scheduler webapp | Live      | SaaS    | Vercel / Cloud Run / MongoDB      |
+| Virtusa / Dheerendar Walkthrough  | Demo & Evaluation Package     | Active    | B2B     | Mutual NDA / Live Tech Walkthrough|
+| Ownable OS                        | Workflow package / continuity | Candidate | $500/mo | TBD                               |
+| $1 Bootcamp                       | Entry-level program           | Candidate | $1      | TBD                               |
+| Workflow blueprints / compendiums | Document products             | Candidate | TBD     | TBD                               |
 
 ### Publishing Standards
 
@@ -465,18 +477,19 @@ each piece does and its current status. Does not contain access credentials.
 
 ### Current Infrastructure Map
 
-| Layer             | Tool / Platform             | Purpose                                  | Status     |
-| ----------------- | --------------------------- | ---------------------------------------- | ---------- |
-| Source control    | GitHub                      | Agent Lab codebase; ops docs             | Active     |
-| Deployment        | Vercel                      | Agent Lab frontend + API                 | Active     |
-| Runtime           | Node.js / TypeScript (tRPC) | Agent Lab server                         | Active     |
-| Database          | SQLite (dev)                | Local dev only; production DB TBD        | Dev only   |
-| Payments          | Stripe                      | Checkout sessions; webhooks              | Active     |
-| Automation        | n8n                         | Workflow automation; credential vault    | Active     |
-| Analytics sandbox | KNIME                       | Data analysis — no production dependency | Evaluation |
-| VPS / cloud       | TBD                         | Server hosting evaluation candidate      | Candidate  |
-| CRM               | HubSpot                     | Contact capture and pipeline             | Active     |
-| Office suite      | Microsoft 365               | Preferred backbone                       | Active     |
+| Layer             | Tool / Platform                  | Purpose                                  | Status     |
+| ----------------- | -------------------------------- | ---------------------------------------- | ---------- |
+| Source control    | GitHub                           | Agent Lab codebase; ops docs             | Active     |
+| Deployment        | Vercel                           | Agent Lab & Pulse Social frontends       | Active     |
+| Cloud Compute     | Google Cloud Run                 | Pulse Social FastAPI container backend   | Active     |
+| Database          | SQLite (dev) / MongoDB (cloud)   | Agent Lab local dev; Pulse Social cloud  | Active     |
+| Email Sending     | Resend SMTP                      | Automated MKT-02 nurture sends           | Active     |
+| Payments          | Stripe & Gumroad                 | Checkout sessions; custom landing pages  | Active     |
+| Automation        | n8n                              | SDR sync & nurture workflows; MCP server | Active     |
+| Testing Suite     | Autonoma                         | Automated UI test runner & verification  | Active     |
+| CRM               | HubSpot                          | Contact capture and 2-way deal pipeline  | Active     |
+| Office suite      | Microsoft 365                    | Preferred backbone                       | Active     |
+| Analytics sandbox | KNIME                            | Data analysis — no production dependency | Evaluation |
 
 ### Sandbox Rules
 
