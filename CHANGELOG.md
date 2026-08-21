@@ -4,6 +4,16 @@ All notable changes to the AI Native Agency Deepened/agentlab repo are documente
 
 ---
 
+## [Unreleased] - 2026-08-21
+
+### Added
+- **Hamarashops Partnership**: Established a revenue-sharing cross-promotional partnership with Dheerendar (HAMARASHOPS.ai). Medical services AI (MedLM) marketed to doctors in exchange for Founder Signal System marketed to companies in India.
+- **Hamarashops Assets**: Created `Hamarashops_Partnership` directory to track strategy PDFs, outreach templates, plans, and NDAs.
+- **HubSpot CRM Ecosystem Architecture**: Implemented a master `Lead / Campaign Source` custom property on Deals. Enables single-pipeline tagging for AgentLab roundtables, app betas, signal systems, URC, and Hamarashops partnership leads, bypassing the free tier 1-pipeline limit.
+- **Healthcare Outreach Template**: Created targeted outreach messaging for CMIOs and Clinical Directors focusing on automating clinical documentation and reducing physician burnout.
+
+---
+
 ## [Unreleased] - 2026-08-20
 
 ### Added

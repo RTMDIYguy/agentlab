@@ -25,19 +25,18 @@ This is the working-memory layer. It is intentionally short. For rules, see
 - Daily Command Center - first live test passed 2026-06-04.
 - 48-Hour LinkedIn Authority System - completely revived and verified 2026-08-02.
 
-## Top Active Priorities (Week of 2026-08-02)
+## Top Active Priorities (Week of 2026-08-21)
 
-1. Launch FSS Beta-Tester campaigns using pre-written Batch 1-5 content.
-2. Direct targeted outreach to BizBuySell-Brokers-Leads-List.csv using Affiliate CMO copy decks.
-3. Integrate Replit and custom React sites with the newly verified GSheets n8n tracker loops.
+1. Launch Hamarashops Partnership outreach to healthcare CMIOs and Clinical Directors.
+2. Launch FSS Beta-Tester campaigns using pre-written Batch 1-5 content, properly tagging deals with `Lead / Campaign Source`.
+3. Direct targeted outreach to BizBuySell-Brokers-Leads-List.csv using Affiliate CMO copy decks.
+4. Integrate Replit and custom React sites with the newly verified GSheets n8n tracker loops.
 
 ## Active TODOs
 
 | Item | Owner | Status |
 | --- | --- | --- |
-| Refill Agent Lab LinkedIn content queue with new seed ideas | Agent | Needed |
-| Stage the first set of LinkedIn post drafts from Batch 1 in Pulse Social | Robert + agent | Needed |
-| Set GSheets credentials inside the n8n active campaign node | Robert | Needed |
+| Configure n8n to tag incoming leads with the new `Lead / Campaign Source` property | Robert | Needed |
 | Draft SOP for Reach outreach batch setup and monitoring | Agent | Needed |
 | Draft SOP for Google Drive client-folder packet population | Agent | Needed |
 | Reconcile Independence Chapter messaging against MVP beta messaging | Robert + agent | Needed |
@@ -45,6 +44,8 @@ This is the working-memory layer. It is intentionally short. For rules, see
 
 ## Recent Decisions
 
+- 2026-08-21: Established revenue-sharing cross-promotional partnership with Dheerendar (HAMARASHOPS.ai).
+- 2026-08-21: Added `Lead / Campaign Source` custom property to Deals to enable single-pipeline tracking for multiple campaigns, bypassing free tier limits.
 - 2026-06-04: Daily Command Center moves to morning restart block (CC-2026-06-04-013).
 - 2026-06-04: Content queue health corrected from `healthy` to `needs refill` (CC-2026-06-04-012).
 - 2026-06-04: Microsoft/Nylas and Google OAuth sync issues are Bootstrapper.ai app-side blockers, not Robert setup issues (CC-2026-06-04-011).
