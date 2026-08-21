@@ -1,0 +1,667 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/folders/:folderId?populate=true
+  method: GET
+  queryParams:
+    populate: "true"
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    folderId: 65a99e60-8e0a-4b6e-b79c-7d8264cc5caa
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+          "meta": {
+              "model": "folder",
+              "populate": true,
+              "changeset": false,
+              "action": "find"
+          },
+          "data": {
+              "owner": "12345678",
+              "lastUpdatedBy": "12345678",
+              "lastRevision": 32546182786,
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "folder": null,
+              "id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+              "name": "Test Folder",
+              "description": "This is a test collection folder.",
+              "variables": null,
+              "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                      {
+                          "key": "value",
+                          "value": "XXX"
+                      },
+                      {
+                          "key": "key",
+                          "value": "x-api-key"
+                      }
+                  ]
+              },
+              "events": null,
+              "order": [
+                  "81b49e05-0b87-4ca4-ac8c-091aaedafea3",
+                  "929acf24-4234-45e1-59cf-dc2b27ea7603",
+                  "3cfc2ac8-00a9-47d2-415d-049773f23268"
+              ],
+              "folders_order": [
+                  "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+                  "5c341de9-5751-461f-b7bd-af86bbae740c"
+              ],
+              "createdAt": "2022-08-29T16:49:19.964Z",
+              "updatedAt": "2022-08-29T16:49:19.964Z",
+              "folders": [
+                  {
+                      "owner": "12345678",
+                      "lastUpdatedBy": "12345678",
+                      "lastRevision": 32588211132,
+                      "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "folder": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+                      "id": "5c341de9-5751-461f-b7bd-af86bbae740c",
+                      "name": "Test Folder",
+                      "description": "This is a test collection folder.",
+                      "variables": null,
+                      "auth": null,
+                      "events": null,
+                      "order": [
+                          "d924b1a5-6cf7-4dcf-a326-37dc9b91e295",
+                          "f0dd54db-8ad7-4b32-9e0b-5a0b5b52f78b"
+                      ],
+                      "folders_order": [],
+                      "createdAt": "2023-09-13T21:56:35.000Z",
+                      "updatedAt": "2023-09-15T16:26:54.000Z"
+                  },
+                  {
+                      "owner": "12345678",
+                      "lastUpdatedBy": "12345678",
+                      "lastRevision": 32588208043,
+                      "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "folder": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+                      "id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+                      "name": "Test Folder 2",
+                      "description": "This is another test collection folder.",
+                      "variables": null,
+                      "auth": null,
+                      "events": null,
+                      "order": [
+                          "6e5b9306-9e22-4d27-8a70-50692c19ad75"
+                      ],
+                      "folders_order": [],
+                      "createdAt": "2023-09-13T21:54:44.000Z",
+                      "updatedAt": "2023-09-15T16:26:42.000Z"
+                  }
+              ],
+              "requests": [
+                  {
+                      "owner": "12345678",
+                      "lastUpdatedBy": "12345678",
+                      "lastRevision": 32545633807,
+                      "folder": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+                      "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "id": "3ac0e7be-86d9-443b-895d-2c2d959942d7",
+                      "name": "Test A",
+                      "dataMode": "raw",
+                      "data": null,
+                      "auth": null,
+                      "events": null,
+                      "rawModeData": "{\n    \"name\": \"Test\",\n    \"description\": \"This is a test.\"\n}",
+                      "descriptionFormat": null,
+                      "description": null,
+                      "variables": null,
+                      "headers": "",
+                      "method": "PUT",
+                      "pathVariables": {},
+                      "url": "http://postman-echo.com/v1/request",
+                      "preRequestScript": null,
+                      "tests": null,
+                      "currentHelper": null,
+                      "helperAttributes": null,
+                      "queryParams": [],
+                      "headerData": [],
+                      "pathVariableData": [],
+                      "protocolProfileBehavior": {
+                          "disableBodyPruning": true
+                      },
+                      "dataDisabled": false,
+                      "responses_order": [
+                          "6d9ec96b-1fec-4455-a9cc-f50d6ceb4997"
+                      ],
+                      "createdAt": "2022-10-05T13:16:49.000Z",
+                      "updatedAt": "2023-09-13T14:08:04.000Z",
+                      "dataOptions": {
+                          "raw": {
+                              "language": "json"
+                          }
+                      },
+                      "responses": [
+                          {
+                              "owner": "12345678",
+                              "lastUpdatedBy": "12345678",
+                              "lastRevision": 32545778004,
+                              "request": "3ac0e7be-86d9-443b-895d-2c2d959942d7",
+                              "id": "6d9ec96b-1fec-4455-a9cc-f50d6ceb4997",
+                              "name": "Test B",
+                              "status": null,
+                              "responseCode": {
+                                  "code": 200,
+                                  "name": "OK"
+                              },
+                              "time": null,
+                              "headers": [
+                                  {
+                                      "key": "Content-Type",
+                                      "name": "Content-Type",
+                                      "value": "application/json",
+                                      "description": "",
+                                      "type": "text"
+                                  }
+                              ],
+                              "cookies": null,
+                              "mime": null,
+                              "text": "{\n    \"id\": \"1234\",\n    \"user\": \"test-user\"\n}",
+                              "language": "json",
+                              "rawDataType": null,
+                              "requestObject": "{\"data\":null,\"dataMode\":\"raw\",\"dataOptions\":{\"raw\":{\"language\":\"json\"}},\"headerData\":[{\"key\":\"Content-Type\",\"name\":\"Content-Type\",\"value\":\"application/json\",\"description\":\"\",\"type\":\"text\"}],\"method\":\"PUT\",\"pathVariableData\":[],\"queryParams\":[],\"url\":\"https://postman-echo.com/v1/request\",\"headers\":\"Content-Type: application/json\\n\",\"pathVariables\":{},\"protocolProfileBehavior\":{\"disableBodyPruning\":true},\"rawModeData\":\"{\\n    \\\"firstName\\\": \\\"Test\\\",\\n    \\\"lastName\\\": \\\"User\\\"\\n}\",\"graphqlModeData\":{}}",
+                              "createdAt": "2023-09-12T15:20:20.000Z",
+                              "updatedAt": "2023-09-13T14:13:44.000Z"
+                          }
+                      ]
+                  },
+                  {
+                      "owner": "12345678",
+                      "lastUpdatedBy": "12345678",
+                      "lastRevision": 32546060484,
+                      "folder": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+                      "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "id": "929acf24-4234-45e1-59cf-dc2b27ea7603",
+                      "name": "Test B",
+                      "dataMode": "raw",
+                      "data": null,
+                      "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                              {
+                                  "key": "value",
+                                  "value": "XXX",
+                                  "type": "string"
+                              },
+                              {
+                                  "key": "key",
+                                  "value": "api-key",
+                                  "type": "string"
+                              }
+                          ]
+                      },
+                      "events": [
+                          {
+                              "listen": "test",
+                              "script": {
+                                  "id": "a8608e1a-ce4b-4129-8c89-930d26ae0f6a",
+                                  "exec": [
+                                      "pm.test(\"Status code is 200\", function () {",
+                                      "    pm.response.to.have.status(200);",
+                                      "});"
+                                  ],
+                                  "type": "text/javascript"
+                              }
+                          },
+                          {
+                              "listen": "prerequest",
+                              "script": {
+                                  "id": "5b4bb273-5878-4bd7-a296-94a256783a66",
+                                  "exec": [
+                                      ""
+                                  ],
+                                  "type": "text/javascript"
+                              }
+                          }
+                      ],
+                      "rawModeData": "{\n    \"name\": \"Test API\",\n    \"description\": \"This is a test API.\"\n}",
+                      "descriptionFormat": null,
+                      "description": null,
+                      "variables": null,
+                      "headers": "",
+                      "method": "POST",
+                      "pathVariables": {},
+                      "url": "https://postman-echo.com/v1/post",
+                      "preRequestScript": null,
+                      "tests": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});",
+                      "currentHelper": "apikeyAuth",
+                      "helperAttributes": "{\"id\":\"apikey\",\"key\":\"api-key\",\"value\":\"XXX\"}",
+                      "queryParams": [],
+                      "headerData": [],
+                      "pathVariableData": [],
+                      "protocolProfileBehavior": {
+                          "disableBodyPruning": true
+                      },
+                      "dataDisabled": false,
+                      "responses_order": [
+                          "3c36a13f-2785-49ff-a969-1520769b28f5"
+                      ],
+                      "createdAt": "2023-09-07T14:03:52.000Z",
+                      "updatedAt": "2023-09-13T14:26:58.000Z",
+                      "dataOptions": {
+                          "raw": {
+                              "language": "json"
+                          }
+                      },
+                      "responses": [
+                          {
+                              "owner": "12345678",
+                              "lastUpdatedBy": "12345678",
+                              "lastRevision": 32546199268,
+                              "request": "929acf24-4234-45e1-59cf-dc2b27ea7603",
+                              "id": "3c36a13f-2785-49ff-a969-1520769b28f5",
+                              "name": "Successful Response",
+                              "status": null,
+                              "responseCode": null,
+                              "time": null,
+                              "headers": [
+                                  {
+                                      "key": "Content-Type",
+                                      "name": "Content-Type",
+                                      "value": "application/json",
+                                      "description": "",
+                                      "type": "text"
+                                  }
+                              ],
+                              "cookies": null,
+                              "mime": null,
+                              "text": "{\n    \"id\": \"test-api\",\n    \"name\": \"Test API\",\n    \"description\": \"This is a test API.\",\n    \"is_public\": false,\n    \"created_at\": \"2022-01-28T11:50:56.000Z\",\n    \"updated_at\": \"2022-01-28T11:50:56.000Z\",\n    \"performance\": {\n        \"collection\": \"12ece9e1-2abf-4edc-8e34-de66e74114d2\",\n        \"environment\": \"12ece9e1-2abf-4edc-8e34-de66e74114d2\"\n    }\n}",
+                              "language": "json",
+                              "rawDataType": null,
+                              "requestObject": "{\"data\":null,\"dataMode\":\"raw\",\"dataOptions\":{\"raw\":{\"language\":\"json\"}},\"headerData\":[],\"method\":\"POST\",\"pathVariableData\":[],\"queryParams\":[],\"url\":\"https://postman-echo.com/post\",\"headers\":\"\",\"pathVariables\":{},\"protocolProfileBehavior\":{\"disableBodyPruning\":true},\"rawModeData\":\"{\\n    \\\"name\\\": \\\"Test API\\\",\\n    \\\"description\\\": \\\"This is a test API.\\\"\\n}\",\"graphqlModeData\":{}}",
+                              "createdAt": "2023-09-12T15:21:55.000Z",
+                              "updatedAt": "2023-09-13T14:33:26.000Z"
+                          }
+                      ]
+                  },
+                  {
+                      "owner": "12345678",
+                      "lastUpdatedBy": "12345678",
+                      "lastRevision": 32545561759,
+                      "folder": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+                      "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "id": "fb620884-9745-4244-b875-6c33a8acc771",
+                      "name": "Test A",
+                      "dataMode": "raw",
+                      "data": null,
+                      "auth": {
+                          "type": "bearer",
+                          "bearer": [
+                              {
+                                  "key": "token",
+                                  "value": "TEST",
+                                  "type": "string"
+                              }
+                          ]
+                      },
+                      "events": [
+                          {
+                              "listen": "test",
+                              "script": {
+                                  "id": "b12101c5-fe85-4722-adf0-a1e900eab708",
+                                  "exec": [
+                                      "pm.test(\"Status code is 200\", function () {",
+                                      "    pm.response.to.have.status(200);",
+                                      "});"
+                                  ],
+                                  "type": "text/javascript"
+                              }
+                          },
+                          {
+                              "listen": "prerequest",
+                              "script": {
+                                  "id": "7b34bf6b-f440-4768-a486-4ce96e997cb7",
+                                  "exec": [
+                                      "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                      "    console.log(response.json());",
+                                      "});"
+                                  ],
+                                  "type": "text/javascript"
+                              }
+                          }
+                      ],
+                      "rawModeData": "",
+                      "descriptionFormat": "markdown",
+                      "description": "This is a test API.",
+                      "variables": null,
+                      "headers": "Accept: application/vnd.example.v1+json\n",
+                      "method": "GET",
+                      "pathVariables": {},
+                      "url": "https://postman-echo.com/v1/request?id={{id}}",
+                      "preRequestScript": "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {\n    console.log(response.json());\n});",
+                      "tests": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});",
+                      "currentHelper": "bearerAuth",
+                      "helperAttributes": "{\"id\":\"bearer\",\"token\":\"TEST\"}",
+                      "queryParams": [
+                          {
+                              "key": "id",
+                              "value": "{{id}}",
+                              "equals": true,
+                              "description": "The API's ID.",
+                              "enabled": true
+                          }
+                      ],
+                      "headerData": [
+                          {
+                              "key": "Accept",
+                              "value": "application/vnd.example.v1+json",
+                              "description": null,
+                              "type": "text",
+                              "enabled": true
+                          }
+                      ],
+                      "pathVariableData": [],
+                      "protocolProfileBehavior": {
+                          "disableBodyPruning": true
+                      },
+                      "dataDisabled": false,
+                      "responses_order": [
+                          "ee4ab273-1f36-f8de-adfc-02ad1cd126dc",
+                          "33745d7c-0cb3-4097-b038-6d9a08886ae1"
+                      ],
+                      "createdAt": "2022-10-05T13:09:24.000Z",
+                      "updatedAt": "2023-09-13T14:04:37.000Z",
+                      "dataOptions": {
+                          "raw": {
+                              "language": "json"
+                          }
+                      },
+                      "responses": [
+                          {
+                              "owner": "12345678",
+                              "lastUpdatedBy": "12345678",
+                              "lastRevision": 32545559961,
+                              "request": "fb620884-9745-4244-b875-6c33a8acc771",
+                              "id": "33745d7c-0cb3-4097-b038-6d9a08886ae1",
+                              "name": "Not Found",
+                              "status": null,
+                              "responseCode": {
+                                  "name": "Not Found",
+                                  "code": 404
+                              },
+                              "time": null,
+                              "headers": [
+                                  {
+                                      "key": "Content-Type",
+                                      "name": "Content-Type",
+                                      "value": "application/json",
+                                      "description": "",
+                                      "type": "text"
+                                  }
+                              ],
+                              "cookies": null,
+                              "mime": null,
+                              "text": "{\n    \"title\": \"Not Found\",\n    \"detail\": \"Requested API does not exist\",\n    \"type\": \"about:blank\"\n}",
+                              "language": "json",
+                              "rawDataType": null,
+                              "requestObject": "{\"data\":null,\"dataMode\":\"raw\",\"dataOptions\":{\"raw\":{\"language\":\"json\"}},\"headerData\":[{\"key\":\"Accept\",\"value\":\"application/vnd.example.v1+json\",\"description\":\"\",\"type\":\"text\",\"enabled\":true}],\"method\":\"GET\",\"pathVariableData\":[],\"queryParams\":[{\"key\":\"id\",\"value\":\"test-api\",\"equals\":true,\"description\":null,\"enabled\":true}],\"url\":\"https://postman-echo.com/v1/request?id=test-api\",\"headers\":\"Accept: application/vnd.example.v1+json\\n\",\"pathVariables\":{},\"protocolProfileBehavior\":{\"disableBodyPruning\":true},\"rawModeData\":\"\",\"graphqlModeData\":{}}",
+                              "createdAt": "2023-08-22T12:53:12.000Z",
+                              "updatedAt": "2023-09-13T14:04:32.000Z"
+                          },
+                          {
+                              "owner": "12345678",
+                              "lastUpdatedBy": "12345678",
+                              "lastRevision": 32545561807,
+                              "request": "fb620884-9745-4244-b875-6c33a8acc771",
+                              "id": "ee4ab273-1f36-f8de-adfc-02ad1cd126dc",
+                              "name": "Successful Response",
+                              "status": null,
+                              "responseCode": {
+                                  "code": 200,
+                                  "name": "OK"
+                              },
+                              "time": null,
+                              "headers": [
+                                  {
+                                      "key": "date",
+                                      "value": "Thu, 07 Sep 2023 12:41:59 GMT"
+                                  },
+                                  {
+                                      "key": "content-type",
+                                      "value": "application/json; charset=utf-8"
+                                  },
+                                  {
+                                      "key": "content-length",
+                                      "value": "468"
+                                  },
+                                  {
+                                      "key": "etag",
+                                      "value": "W/\"1d4-JuAIw8ssoFCtGzk/UwITxaiSbrc\""
+                                  },
+                                  {
+                                      "key": "set-cookie",
+                                      "value": "sails.sid=s%3A6p_NXpI3OZeGE35bI6i5Uq3XgHHxcsdJ.dQVpBE%2BJ9wHWainkqe6F6dkdv7UKoshSZY7sdZ5sbzo; Path=/ HttpOnly"
+                                  }
+                              ],
+                              "cookies": null,
+                              "mime": null,
+                              "text": "{\n  \"args\": {},\n  \"data\": {\n    \"field\": \"Value\"\n  },\n  \"files\": {},\n  \"form\": {},\n  \"headers\": {\n    \"x-forwarded-proto\": \"https\",\n    \"x-forwarded-port\": \"443\",\n    \"host\": \"postman-echo.com\",\n    \"x-amzn-trace-id\": \"Root=1-64f9c517-36db304817c774d740619baa\",\n    \"content-length\": \"22\",\n    \"user-agent\": \"curl/7.88.1\",\n    \"accept\": \"*/*\",\n    \"content-type\": \"application/json\"\n  },\n  \"json\": {\n    \"field\": \"Value\"\n  },\n  \"url\": \"https://postman-echo.com/post\"\n}\n",
+                              "language": "json",
+                              "rawDataType": null,
+                              "requestObject": "{\n  \"name\": \"Request\",\n  \"description\": \"\",\n  \"url\": \"https://postman-echo.com/post\",\n  \"method\": \"POST\",\n  \"headers\": [\n    {\n      \"key\": \"Host\",\n      \"value\": \"postman-echo.com\"\n    },\n    {\n      \"key\": \"user-agent\",\n      \"value\": \"curl/7.88.1\"\n    },\n    {\n      \"key\": \"accept\",\n      \"value\": \"*/*\"\n    },\n    {\n      \"key\": \"content-type\",\n      \"value\": \"application/json\"\n    },\n    {\n      \"key\": \"content-length\",\n      \"value\": \"22\"\n    }\n  ],\n  \"dataMode\": \"raw\",\n  \"rawModeData\": \"{\\n  \\\"field\\\": \\\"Value\\\"\\n}\",\n  \"dataOptions\": {\n    \"raw\": {\n      \"language\": \"json\"\n    }\n  }\n}",
+                              "createdAt": "2023-09-12T18:34:27.000Z",
+                              "updatedAt": "2023-09-13T14:04:37.000Z"
+                          }
+                      ]
+                  },
+                  {
+                      "owner": "12345678",
+                      "lastUpdatedBy": "12345678",
+                      "lastRevision": 32545799957,
+                      "folder": "35cda0a4-23fb-4add-a352-fc1b0f96fbd1",
+                      "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "id": "b0e4627a-f359-415e-8f2e-4a86b2506fb5",
+                      "name": "Test E",
+                      "dataMode": "raw",
+                      "data": null,
+                      "auth": {
+                          "type": "bearer",
+                          "bearer": [
+                              {
+                                  "key": "token",
+                                  "value": "TEST",
+                                  "type": "string"
+                              }
+                          ]
+                      },
+                      "events": null,
+                      "rawModeData": "{\n    \"username\": \"test-user\",\n    \"firstName\": \"Test\",\n    \"lastName\": \"User\"\n}",
+                      "descriptionFormat": null,
+                      "description": "This is an example PATCH request.",
+                      "variables": null,
+                      "headers": "",
+                      "method": "PATCH",
+                      "pathVariables": {},
+                      "url": "https://postman-echo.com/get?id={{id}}",
+                      "preRequestScript": null,
+                      "tests": null,
+                      "currentHelper": "bearerAuth",
+                      "helperAttributes": "{\"id\":\"bearer\",\"token\":\"TEST\"}",
+                      "queryParams": [
+                          {
+                              "key": "id",
+                              "value": "{{id}}",
+                              "equals": true,
+                              "description": "The user's ID.",
+                              "enabled": true
+                          }
+                      ],
+                      "headerData": [],
+                      "pathVariableData": [],
+                      "protocolProfileBehavior": {
+                          "disableBodyPruning": true
+                      },
+                      "dataDisabled": false,
+                      "responses_order": [
+                          "d47ba091-90b3-4f3a-9e33-09000784bc8f"
+                      ],
+                      "createdAt": "2023-09-13T14:05:22.000Z",
+                      "updatedAt": "2023-09-13T14:14:41.000Z",
+                      "dataOptions": {
+                          "raw": {
+                              "language": "json"
+                          }
+                      },
+                      "responses": [
+                          {
+                              "owner": "12345678",
+                              "lastUpdatedBy": "12345678",
+                              "lastRevision": 32545769906,
+                              "request": "b0e4627a-f359-415e-8f2e-4a86b2506fb5",
+                              "id": "d47ba091-90b3-4f3a-9e33-09000784bc8f",
+                              "name": "Successful Response",
+                              "status": null,
+                              "responseCode": {
+                                  "code": 200,
+                                  "name": "OK"
+                              },
+                              "time": null,
+                              "headers": [
+                                  {
+                                      "key": "Content-Type",
+                                      "name": "Content-Type",
+                                      "value": "application/json",
+                                      "description": "",
+                                      "type": "text"
+                                  }
+                              ],
+                              "cookies": null,
+                              "mime": null,
+                              "text": "{\n    \"id\": \"1234\",\n    \"user\": \"test-user\"\n}",
+                              "language": "json",
+                              "rawDataType": null,
+                              "requestObject": "{\"data\":null,\"dataMode\":\"raw\",\"dataOptions\":{\"raw\":{\"language\":\"json\"}},\"headerData\":[{\"key\":\"Content-Type\",\"name\":\"Content-Type\",\"value\":\"application/json\",\"description\":\"\",\"type\":\"text\"}],\"method\":\"GET\",\"pathVariableData\":[],\"queryParams\":[{\"key\":\"id\",\"value\":\"1234\",\"equals\":true,\"description\":\"Optional. The user's ID.\",\"enabled\":true}],\"url\":\"https://postman-echo.com/get?id=1234\",\"headers\":\"Content-Type: application/json\\n\",\"pathVariables\":{},\"protocolProfileBehavior\":{\"disableBodyPruning\":true},\"rawModeData\":\"{\\n    \\\"firstName\\\": \\\"Test\\\",\\n    \\\"lastName\\\": \\\"User\\\"\\n}\",\"graphqlModeData\":{}}",
+                              "createdAt": "2023-09-13T14:05:22.000Z",
+                              "updatedAt": "2023-09-13T14:13:21.000Z"
+                          }
+                      ]
+                  },
+                  {
+                      "owner": "12345678",
+                      "lastUpdatedBy": "12345678",
+                      "lastRevision": 32546157840,
+                      "folder": "35cda0a4-23fb-4add-a352-fc1b0f96fbd1",
+                      "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "id": "f9805781-69c1-4332-be32-bda89eb765aa",
+                      "name": "Test D",
+                      "dataMode": null,
+                      "data": null,
+                      "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                              {
+                                  "key": "value",
+                                  "value": "XXX",
+                                  "type": "string"
+                              },
+                              {
+                                  "key": "key",
+                                  "value": "api-key",
+                                  "type": "string"
+                              }
+                          ]
+                      },
+                      "events": [
+                          {
+                              "listen": "prerequest",
+                              "script": {
+                                  "id": "120f2410-edbf-45b2-a21e-1e76335a3c71",
+                                  "exec": [
+                                      "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                      "    console.log(response.json());",
+                                      "});"
+                                  ],
+                                  "type": "text/javascript"
+                              }
+                          },
+                          {
+                              "listen": "test",
+                              "script": {
+                                  "id": "3300c158-1bdd-4d99-a532-191a037a4d4a",
+                                  "exec": [
+                                      "pm.test(\"Status code is 200\", function () {",
+                                      "    pm.response.to.have.status(200);",
+                                      "});"
+                                  ],
+                                  "type": "text/javascript"
+                              }
+                          }
+                      ],
+                      "rawModeData": null,
+                      "descriptionFormat": null,
+                      "description": "This is an example GET request.",
+                      "variables": null,
+                      "headers": "",
+                      "method": "GET",
+                      "pathVariables": {},
+                      "url": "https://postman-echo.com/get?id={{id}}",
+                      "preRequestScript": "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {\n    console.log(response.json());\n});",
+                      "tests": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});",
+                      "currentHelper": "apikeyAuth",
+                      "helperAttributes": "{\"id\":\"apikey\",\"key\":\"api-key\",\"value\":\"XXX\"}",
+                      "queryParams": [
+                          {
+                              "key": "id",
+                              "value": "{{id}}",
+                              "equals": true,
+                              "description": "Optional. The user's ID.",
+                              "enabled": true
+                          }
+                      ],
+                      "headerData": [],
+                      "pathVariableData": [],
+                      "protocolProfileBehavior": {
+                          "disableBodyPruning": true
+                      },
+                      "dataDisabled": false,
+                      "responses_order": [
+                          "e4eda8a5-eef0-4fb7-b2c6-dd5bd3d67dd3"
+                      ],
+                      "createdAt": "2023-08-22T12:52:01.000Z",
+                      "updatedAt": "2023-09-13T14:31:25.000Z",
+                      "responses": [
+                          {
+                              "owner": "12345678",
+                              "lastUpdatedBy": "12345678",
+                              "lastRevision": 32545767296,
+                              "request": "f9805781-69c1-4332-be32-bda89eb765aa",
+                              "id": "e4eda8a5-eef0-4fb7-b2c6-dd5bd3d67dd3",
+                              "name": "Successful Response",
+                              "status": null,
+                              "responseCode": {
+                                  "code": 200,
+                                  "name": "OK"
+                              },
+                              "time": null,
+                              "headers": [
+                                  {
+                                      "key": "Content-Type",
+                                      "name": "Content-Type",
+                                      "value": "application/json",
+                                      "description": "",
+                                      "type": "text"
+                                  }
+                              ],
+                              "cookies": null,
+                              "mime": null,
+                              "text": "{\n    \"id\": \"1234\",\n    \"user\": \"test-user\",\n    \"firstName\": \"Test\",\n    \"lastName\": \"User\"\n}",
+                              "language": "json",
+                              "rawDataType": null,
+                              "requestObject": "{\"data\":null,\"dataMode\":null,\"dataOptions\":{\"raw\":{\"language\":\"json\"}},\"headerData\":[{\"key\":\"Content-Type\",\"name\":\"Content-Type\",\"value\":\"application/json\",\"description\":\"\",\"type\":\"text\"}],\"method\":\"GET\",\"pathVariableData\":[],\"queryParams\":[{\"key\":\"id\",\"value\":\"1234\",\"equals\":true,\"description\":\"Optional. The user's ID.\",\"enabled\":true}],\"url\":\"https://postman-echo.com/get?id=1234\",\"headers\":\"Content-Type: application/json\\n\",\"pathVariables\":{},\"protocolProfileBehavior\":{\"disableBodyPruning\":true}}",
+                              "createdAt": "2023-09-07T14:39:52.000Z",
+                              "updatedAt": "2023-09-13T14:13:08.000Z"
+                          }
+                      ]
+                  }
+              ]
+          }
+      }
+order: 2000

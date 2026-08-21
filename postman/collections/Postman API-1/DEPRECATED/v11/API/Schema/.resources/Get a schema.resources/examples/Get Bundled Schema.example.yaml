@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/schemas/:schemaId?versionId=66ae9950-0869-4e65-96b0-1e0e47e771af&bundled=true
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  queryParams:
+    versionId: 66ae9950-0869-4e65-96b0-1e0e47e771af
+    bundled: "true"
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    schemaId: 5381f010-c4c1-11ed-afa1-0242ac120002
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "id": "ae2b9ab2-28f2-401d-912f-eca09a78e98b",
+          "type": "openapi:3",
+          "createdBy": "2345",
+          "updatedBy": "2345",
+          "createdAt": "2022-03-29T11:37:15Z",
+          "updatedAt": "2022-03-29T11:37:15Z",
+          "content": "openapi: '3.0.0'\ninfo:\n  version: '1.0.0'\n  title: 'Sample API'\n  description: Buy or rent spacecrafts\n\npaths:\n  /spacecrafts/{spacecraftId}:\n    parameters:\n      - name: spacecraftId\n        description: The unique identifier of the spacecraft\n        in: path\n        required: true\n        schema:\n          $ref: '#/components/schemas/SpacecraftId'\n    get:\n      summary: Read a spacecraft\n      responses:\n        '200':\n          description: The spacecraft corresponding to the provided `spacecraftId`\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/Spacecraft'\n        404:\n          description: No spacecraft found for the provided `spacecraftId`\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/Error'\n        500:\n          description: Unexpected error\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/Error'\ncomponents:\n  schemas:\n    SpacecraftId:\n      description: The unique identifier of a spacecraft\n      type: string\n    Spacecraft:\n      type: object\n      required:\n        - id\n        - names\n        - type\n      properties:\n        id:\n          $ref: '#/components/schemas/SpacecraftId'\n        name:\n          type: string\n        type:\n          type: string\n          enum:\n            - capsule\n            - probe\n            - satellite\n            - spaceplane\n            - station\n        description:\n          type: string\n    Error:\n      type: object\n      required:\n        - message\n      properties:\n        message:\n          description: A human readable error message\n          type: string\n  securitySchemes:\n    ApiKey:\n      type: apiKey\n      in: header\n      name: X-Api-Key\nsecurity:\n  - ApiKey: []"
+      }
+order: 2000

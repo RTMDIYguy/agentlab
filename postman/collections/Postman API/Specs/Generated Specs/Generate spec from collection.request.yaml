@@ -1,0 +1,22 @@
+$kind: http-request
+description: Generates an API specification for the given collection. The response contains a polling link to the task status.
+url: "{{baseUrl}}/collections/:collectionUid/generations/:elementType"
+method: POST
+pathVariables:
+  - key: collectionUid
+    value: ""
+    description: The collection's unique ID.
+  - key: elementType
+    value: spec
+    description: The `spec` value.
+body:
+  type: json
+  content: |-
+    {
+        "name": "{{specName}}",
+        "type": "{{specType}}",
+        "format": "{{formatType}}"
+    }
+settings: {}
+examples: ./.resources/Generate spec from collection.resources/examples
+order: 1000

@@ -1,0 +1,19 @@
+$kind: http-request
+description: "[Creates](https://learning.postman.com/docs/administration/managing-your-team/create-teams/) a Postman team in your organization."
+url: "{{baseUrl}}/teams"
+method: POST
+headers:
+  - key: identifierType
+    value: scim
+    disabled: true
+    description: Use SCIM user and group IDs instead of Postman user IDs.
+body:
+  type: json
+  content: |-
+    {
+        "name": "{{name}}",
+        "description": "{{description}}"
+    }
+settings: {}
+examples: ./.resources/Create a team.resources/examples
+order: 4000

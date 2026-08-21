@@ -1,0 +1,36 @@
+$kind: http-request
+description: |-
+  Updates the roles of users, groups, or teams in a collection. On success, this returns an HTTP `204 No Content` response.
+
+  **Note:**
+
+  - Only users assigned the `EDITOR` [role](https://learning.postman.com/docs/collaborating-in-postman/roles-and-permissions/#collection-roles) in the collection can use this endpoint.
+      
+  - This endpoint does not support the external [Partner or Guest roles](https://learning.postman.com/docs/collaborating-in-postman/roles-and-permissions/#team-roles).
+url: "{{baseUrl}}/collections/:collectionId/roles"
+method: PATCH
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+body:
+  type: json
+  content: |-
+    {
+        "roles": [
+            {
+                "op": "update",
+                "path": "{{pathValue}}",
+                "value": [
+                    {
+                        "id": {{id}},
+                        "role": "{{collectionRoleId}}"
+                    }
+                ]
+            }
+        ]
+    }
+settings:
+  disabledSystemHeaders: []
+examples: ./.resources/Update a collection's roles.resources/examples
+order: 2000

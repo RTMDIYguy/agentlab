@@ -1,0 +1,32 @@
+$kind: http-request
+description: Gets all Postman teams in your organization.
+url: "{{baseUrl}}/teams"
+method: GET
+headers:
+  - key: identifierType
+    value: scim
+    disabled: true
+    description: Use SCIM user and group IDs instead of Postman user IDs.
+queryParams:
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The pointer to the first record of the set of paginated results. To view the next response, use the `nextCursor` value for this parameter.
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of rows to return in the response.
+  - key: settings
+    value: ""
+    disabled: true
+    description: If true, returns team settings in the response.
+  - key: userRoles
+    value: ""
+    disabled: true
+    description: If true, returns the team's assigned user roles in the response.
+body:
+  type: json
+  content: ""
+settings: {}
+examples: ./.resources/Get all teams.resources/examples
+order: 6000

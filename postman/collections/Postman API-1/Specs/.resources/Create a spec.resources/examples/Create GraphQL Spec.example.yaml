@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs?workspaceId=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  queryParams:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Sample API",
+          "type": "GRAPHQL",
+          "files": [
+              {
+                  "path": "index.graphql",
+                  "content": "schema {\n  query: Query\n  mutation: Mutation\n}\n\ntype User {\n  id: String!\n  name: String\n}\n\ntype Query {\n  user(id: String): User\n}\n\ntype Mutation {\n  addUser(name: String!): User!\n}"
+              }
+          ]
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Sample API",
+          "type": "GRAPHQL",
+          "updatedAt": "2025-03-15T13:48:28.000Z",
+          "createdAt": "2025-03-15T13:48:28.000Z",
+          "createdBy": 12345678,
+          "updatedBy": 12345678,
+          "id": "b4fc1bdc-6587-4f9b-95c9-f768146089b4"
+      }
+order: 5000

@@ -1,0 +1,14 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId/files/:filePath
+  method: DELETE
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+    filePath: components/schemas/spacecrafts.json
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 2000

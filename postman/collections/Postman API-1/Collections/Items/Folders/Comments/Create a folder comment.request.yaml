@@ -1,0 +1,32 @@
+$kind: http-request
+description: |-
+  Creates a comment on a folder.
+
+  **Note:**
+
+  This endpoint accepts a max of 10,000 characters.
+url: "{{baseUrl}}/collections/:collectionUid/folders/:folderUid/comments"
+method: POST
+pathVariables:
+  - key: collectionUid
+    value: ""
+    description: The collection's unique ID.
+  - key: folderUid
+    value: ""
+    description: The folder's unique ID.
+body:
+  type: json
+  content: |-
+    {
+        "body": "{{comment}}",
+        "threadId": {{threadId}},
+        "tags": {
+            "{{userName}}": {
+                "type": "user",
+                "id": "{{userId}}"
+            }
+        }
+    }
+settings: {}
+examples: ./.resources/Create a folder comment.resources/examples
+order: 2000

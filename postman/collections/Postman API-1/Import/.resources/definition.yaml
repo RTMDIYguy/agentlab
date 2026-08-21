@@ -1,0 +1,3 @@
+$kind: collection
+description: The **Import** endpoints enable you to manage [importing and exporting](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/) Postman data.
+order: 9000

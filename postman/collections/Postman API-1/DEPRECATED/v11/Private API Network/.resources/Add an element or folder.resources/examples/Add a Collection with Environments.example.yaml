@@ -1,0 +1,43 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "id": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "parentFolderId": 1,
+              "environments": [
+                    "120403-c6cf0fe2-c637-4d30-a640-ed64ec6d0ddb",
+                    "7084-461d8126-22c8-43ed-b99d-27e8a34d8eef"
+                  ]
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "addedAt": "2022-12-07T18:22:15.000Z",
+          "addedBy": 12345678,
+          "createdBy": 12345678,
+          "createdAt": "2022-12-07T18:22:15.000Z",
+          "updatedBy": 12345678,
+          "updatedAt": "2022-12-07T18:22:15.000Z",
+          "type": "collection",
+          "id": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+          "name": "Billing API Collection",
+          "summary": null,
+          "description": null,
+          "href": "https://api.getpostman.com/collections/12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+          "parentFolderId": 1,
+          "environments": [
+              "120403-c6cf0fe2-c637-4d30-a640-ed64ec6d0ddb",
+              "7084-461d8126-22c8-43ed-b99d-27e8a34d8eef"
+          ]
+      }
+order: 3000

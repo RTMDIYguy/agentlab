@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/responses/:responseId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    responseId: 16473433-f4a74a54-c003-c27a-8d79-e91c6ea2c5d1
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Bad Request",
+          "responseCode": {
+              "code": 400,
+              "name": "Bad Request"
+          }
+      }
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "Unauthorized",
+              "message": "Unauthorized",
+              "details": {
+                  "model": "response",
+                  "model_id": "cc364734-7dfd-4bfc-897d-be763dcdbb07",
+                  "owner": "12345678"
+              }
+          }
+      }
+order: 4000

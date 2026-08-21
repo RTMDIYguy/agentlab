@@ -1,0 +1,24 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentUid/pulls
+  method: POST
+  pathVariables:
+    environmentUid: 12345678-5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      {
+          "source": "12345678-d9c7dc8f-904e-4bba-99b5-4d490aae1957"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "title": "The environment Id is not a forked environment.",
+          "detail": {}
+      }
+order: 2000

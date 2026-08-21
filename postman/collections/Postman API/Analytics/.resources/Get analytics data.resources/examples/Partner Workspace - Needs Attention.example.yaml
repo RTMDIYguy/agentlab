@@ -1,0 +1,98 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=needs_attention&view=detailed&duration=last_30_days&limit=3
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: needs_attention
+    view: detailed
+    duration: last_30_days
+    limit: "3"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "user_id",
+                              "type": "STRING",
+                              "description": "Unique identifier of the user."
+                          },
+                          {
+                              "name": "request_type",
+                              "type": "STRING",
+                              "description": "Type of issue or request pattern detected for the user."
+                          },
+                          {
+                              "name": "timestamp",
+                              "type": "TIMESTAMP",
+                              "format": "YYYY-MM-DDTHH:MM:SSZ",
+                              "description": "Time when the request event was recorded."
+                          },
+                          {
+                              "name": "collection_name",
+                              "type": "STRING",
+                              "description": "Name of the collection associated with the request, if available."
+                          },
+                          {
+                              "name": "request_name",
+                              "type": "STRING",
+                              "description": "Display name of the request attempted by the user."
+                          },
+                          {
+                              "name": "request_identifier_id",
+                              "type": "STRING",
+                              "description": "Unique identifier for the specific request instance."
+                          },
+                          {
+                              "name": "partner_id",
+                              "type": "STRING",
+                              "description": "Identifier of the partner associated with the request, if applicable."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "12345678",
+                          "no_success_on_tried_request",
+                          "2025-08-20T14:32:00Z",
+                          "Payments Gateway API",
+                          "Create Payment",
+                          "12345678-850fc79d-c756-480d-83ea-b0c05683088e",
+                          null
+                      ],
+                      [
+                          "87654321",
+                          "high_non_200OK_rate_for_partner",
+                          "2025-08-20T13:50:00Z",
+                          null,
+                          null,
+                          null,
+                          "56781234"
+                      ],
+                      [
+                          "12345678",
+                          "no_success_on_tried_request",
+                          "2025-08-19T21:40:00Z",
+                          "Integration API",
+                          "Rotate Integration Key",
+                          "12345678-7ac0f3bb-025b-48c4-adfa-e73bc0c00a32",
+                          null
+                      ]
+                  ],
+                  "pagination": {
+                      "total": 110,
+                      "limit": 3,
+                      "offset": 0,
+                      "has_more": true
+                  }
+              }
+          }
+      }
+order: 27000

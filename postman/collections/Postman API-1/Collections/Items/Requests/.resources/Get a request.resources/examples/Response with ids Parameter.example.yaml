@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/requests/:requestId?ids=true
+  method: GET
+  queryParams:
+    ids: "true"
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    requestId: e12d2aa6-85c8-4e6c-aad0-1adcfe05c958
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+          "meta": {
+              "model": "request",
+              "populate": false,
+              "changeset": false,
+              "action": "find"
+          },
+          "data": {
+              "owner": "12345678",
+              "folder": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+              "responses_order": [
+                  "773e5707-4a56-45de-b31d-c68a6f74d1c6",
+                  "3ce18318-9d74-4805-956e-7fda0b830bea"
+              ]
+          }
+      }
+order: 5000

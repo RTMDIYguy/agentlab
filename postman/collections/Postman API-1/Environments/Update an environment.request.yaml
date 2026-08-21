@@ -1,0 +1,31 @@
+$kind: http-request
+description: |-
+  Updates specific environment properties, such as its name and variables.
+
+  **Note:**
+
+  - You can only perform one type of operation at a time. For example, you cannot perform an `add` and `replace` operation in the same call.
+      
+  - The request body size cannot exceed the maximum allowed size of 30MB.
+      
+  - If you receive an HTTP `411 Length Required` error response, manually pass the `Content-Length` header and its value in the request header.
+      
+  - To add a description to an existing variable, use the `add` operation.
+url: "{{baseUrl}}/environments/:environmentId"
+method: PATCH
+pathVariables:
+  - key: environmentId
+    value: ""
+    description: The environment's ID.
+body:
+  type: json
+  content: |-
+    [
+        {
+            "op": "{{operationType}}",
+            "path": "{{environmentPath}}",
+            "value": "{{value}}"
+        }
+    ]
+examples: ./.resources/Update an environment.resources/examples
+order: 5000

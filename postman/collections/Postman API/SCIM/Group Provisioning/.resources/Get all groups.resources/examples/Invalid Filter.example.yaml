@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Groups?startIndex=1&count=2&filter=displayName ne "TestAPI"
+  method: GET
+  queryParams:
+    startIndex: "1"
+    count: "2"
+    filter: displayName ne "TestAPI"
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:Error"
+          ],
+          "detail": "You’ve used filter(s) that Postman doesn’t support.",
+          "status": "400"
+      }
+order: 5000

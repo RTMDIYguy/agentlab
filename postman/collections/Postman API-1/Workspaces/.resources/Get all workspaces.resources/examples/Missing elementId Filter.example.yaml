@@ -1,0 +1,17 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces?elementType=collection
+  method: GET
+  queryParams:
+    elementType: collection
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "name": "badRequest",
+          "message": "elementId is required when elementType is provided"
+      }
+order: 7000

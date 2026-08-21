@@ -1,0 +1,11 @@
+$kind: http-request
+description: Gets information about a user on the Postman team.
+url: "{{baseUrl}}/users/:userId"
+method: GET
+pathVariables:
+  - key: userId
+    value: ""
+    description: The user's ID.
+settings: {}
+examples: ./.resources/Get a team user.resources/examples
+order: 3000

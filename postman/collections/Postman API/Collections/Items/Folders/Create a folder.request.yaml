@@ -1,0 +1,42 @@
+$kind: http-request
+description: |-
+  Creates a folder in a collection. For a complete list of properties and information, see the [Postman Collection Format documentation](https://schema.postman.com/collection/json/v2.1.0/draft-07/docs/index.html).
+
+  You can use this endpoint to to import requests and responses into a newly-created folder. To do this, include the `requests` field and the list of request objects in the request body. For more information, see the provided examples.
+
+  **Note:**
+
+  - This request uses example values in the request body for context when creating collection folders. For additional ways to create a folder, see the collection's examples.
+      
+  - It is recommended that you pass the `name` property in the request body. If you do not, the system uses a null value. As a result, this creates a folder with a blank name.
+url: "{{baseUrl}}/collections/:collectionId/folders"
+method: POST
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+body:
+  type: json
+  content: |-
+    {
+        "name": "Test Folder",
+        "description": "This is a test collection folder.",
+        "auth": {
+            "type": "basic",
+            "basic": [
+                {
+                    "key": "password",
+                    "value": "{{basicAuthPassword}}"
+                },
+                {
+                    "key": "username",
+                    "value": "{{basicAuthUsername}}"
+                }
+            ]
+        },
+        "order": [],
+        "folders_order": []
+    }
+settings: {}
+examples: ./.resources/Create a folder.resources/examples
+order: 3000

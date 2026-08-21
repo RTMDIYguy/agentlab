@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionUid/responses/:responseUid/comments/:commentId
+  method: PUT
+  pathVariables:
+    collectionUid: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+    responseUid: 12345678-cc364734-7dfd-4bfc-897d-be763dcdbb07
+    commentId: "46814"
+  body:
+    type: json
+    content: |-
+      {
+      	"body": "This is an updated example. @alex-cruz",
+          "tags": {
+              "@alex-cruz": {
+                  "type": "user",
+                  "id": "87654321"
+                  }
+              }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "id": 46814,
+              "threadId": 12345,
+              "status": "Open",
+              "createdBy": 12345678,
+              "createdAt": "2024-01-18T11:30:40.000Z",
+              "updatedAt": "2024-01-18T11:30:40.000Z",
+              "body": "This is an updated example. @alex-cruz"
+          }
+      }
+order: 2000

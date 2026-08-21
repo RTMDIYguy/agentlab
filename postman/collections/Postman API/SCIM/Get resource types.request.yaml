@@ -1,0 +1,6 @@
+$kind: http-request
+description: Gets all the resource types supported by Postman's SCIM API.
+url: "{{baseUrl}}/scim/v2/ResourceTypes"
+method: GET
+examples: ./.resources/Get resource types.resources/examples
+order: 3000

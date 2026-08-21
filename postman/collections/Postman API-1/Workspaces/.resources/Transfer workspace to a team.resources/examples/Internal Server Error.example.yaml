@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/transfers
+  method: PATCH
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a
+  body:
+    type: json
+    content: |-
+      {
+          "destination": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+          "source": "d56bc95f-57c5-47cc-bd99-75c4ad96a6dd"
+      }
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/internal-server-error",
+          "title": "Internal Server Error",
+          "detail": "An error has occurred on the server.",
+          "status": 500
+      }
+order: 6000

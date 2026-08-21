@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/requests/:requestId
+  method: DELETE
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    requestId: e12d2aa6-85c8-4e6c-aad0-1adcfe05c958
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "instanceNotFoundError",
+              "message": "We could not find the request you are looking for",
+              "details": {
+                  "model": "request",
+                  "model_id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+                  "owner": "12345678"
+              }
+          }
+      }
+order: 2000

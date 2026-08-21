@@ -1,0 +1,51 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "elements": [
+              {
+                  "addedAt": "2024-11-29T06:31:24.000Z",
+                  "addedBy": 12345678,
+                  "createdBy": 12345678,
+                  "createdAt": "2024-11-29T06:31:24.000Z",
+                  "updatedBy": 12345678,
+                  "updatedAt": "2024-11-29T06:31:24.000Z",
+                  "type": "workspace",
+                  "id": "5360b75f-447e-467c-9299-12fd6c92450d",
+                  "parentFolderId": 0,
+                  "name": "Billing Team Workspace",
+                  "summary": "The Billing team's workspace.",
+                  "description": null,
+                  "href": "https://api.getpostman.com/workspaces/1f0df51a-8658-4ee8-a2a1-d2567dfa09a9"
+              },
+              {
+                  "addedAt": "2024-11-29T06:31:26.000Z",
+                  "addedBy": 12345678,
+                  "createdBy": 12345678,
+                  "createdAt": "2024-11-29T06:31:26.000Z",
+                  "updatedBy": 12345678,
+                  "updatedAt": "2024-11-29T06:31:26.000Z",
+                  "type": "workspace",
+                  "id": "360b75f-447e-467c-9299-12fd3c92450d",
+                  "parentFolderId": 0,
+                  "name": "Test Workspace",
+                  "summary": "This is a test workspace.",
+                  "description": null,
+                  "href": "https://api.getpostman.com/workspaces/41f6dc6d-d8ab-45c6-8506-74a25acf5d5f"
+              }
+          ],
+          "folders": [],
+          "meta": {
+              "limit": 1000,
+              "offset": 0,
+              "totalCount": 2
+          }
+      }
+order: 1000

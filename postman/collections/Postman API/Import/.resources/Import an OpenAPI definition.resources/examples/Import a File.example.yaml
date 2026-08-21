@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/import/openapi
+  method: POST
+  body:
+    type: formdata
+    content:
+      - type: text
+        key: type
+        value: file
+        description: (Required) The `file` type value.
+      - type: file
+        key: input
+        src: ""
+        description: (Required) A file containing a OpenAPI specification file and the applicable Content-Type.
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collections": [
+              {
+                  "id": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "name": "Sample API",
+                  "uid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+              }
+          ]
+      }
+order: 6000

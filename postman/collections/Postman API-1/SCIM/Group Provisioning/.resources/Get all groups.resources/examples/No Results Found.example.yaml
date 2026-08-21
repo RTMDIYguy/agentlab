@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Groups?startIndex=1&count=2
+  method: GET
+  queryParams:
+    startIndex: "1"
+    count: "2"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+          ],
+          "totalResults": 0,
+          "startIndex": 1,
+          "itemsPerPage": 0,
+          "Resources": []
+      }
+order: 3000

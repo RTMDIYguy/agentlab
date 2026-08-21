@@ -1,0 +1,136 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/audit/logs
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "trails": [
+              {
+                  "id": 12,
+                  "ip": "192.0.2.0",
+                  "userAgent": "PostmanRuntime/7.29.0 Postman/5.5.4 ChromeApp",
+                  "action": "user.login_password_success",
+                  "timestamp": "2022-11-10T18:31:32.000Z",
+                  "message": "taylor-lee successfully logged in using the Postman password.",
+                  "data": {
+                      "actor": {
+                          "name": "Taylor Lee",
+                          "username": "taylor.lee",
+                          "email": "taylor.lee@example.com",
+                          "id": 12345678,
+                          "active": true
+                      },
+                      "user": {
+                          "name": "Taylor Lee",
+                          "username": "taylor.lee",
+                          "email": "taylor.lee@example.com",
+                          "id": 12345678
+                      },
+                      "team": {
+                          "name": "Postman-Testing",
+                          "id": 125648
+                      }
+                  }
+              },
+              {
+                  "id": 13,
+                  "ip": "192.0.2.0",
+                  "userAgent": null,
+                  "action": "team.scim_add_member",
+                  "timestamp": "2022-11-10T17:19:03.000Z",
+                  "message": "Taylor Lee provisioned user Alex Cruz",
+                  "data": {
+                      "actor": {
+                          "name": "Taylor Lee",
+                          "username": "taylor.lee",
+                          "email": "taylor.lee@example.com",
+                          "id": 12345678,
+                          "active": true
+                      },
+                      "user": {
+                          "name": "Alex Cruz",
+                          "username": "alex.cruz",
+                          "email": "alex.cruz@example.com",
+                          "id": 87654321
+                      },
+                      "team": {
+                          "name": "Test-API",
+                          "id": 1234
+                      }
+                  }
+              },
+              {
+                  "id": 14,
+                  "ip": null,
+                  "userAgent": null,
+                  "action": "user.authaccount.linked",
+                  "timestamp": "2022-11-10T17:19:02.000Z",
+                  "message": "Taylor Lee created account linkage for user.",
+                  "data": {
+                      "actor": {
+                          "name": "Taylor Lee",
+                          "username": "taylor.lee",
+                          "email": "taylor.lee@example.com",
+                          "id": 12345678,
+                          "active": true
+                      },
+                      "user": {
+                          "name": "Alex Cruz",
+                          "username": "alex.cruz",
+                          "email": "alex.cruz@example.com",
+                          "id": 87654321
+                      },
+                      "team": {
+                          "name": "Test-API",
+                          "id": 1234
+                      },
+                      "variables": {
+                          "auth_type": "okta",
+                          "auth_uid": "8f868a0353fd46cbadfe8a6ab3853b94",
+                          "authaccount_uid": "f97535389e8447ae8006b2795a2059e1"
+                      }
+                  }
+              },
+              {
+                  "id": 15,
+                  "ip": "192.0.2.0",
+                  "userAgent": null,
+                  "action": "team.create_group",
+                  "timestamp": "2022-11-10T15:54:47.000Z",
+                  "message": "Taylor Lee created group Test-API.",
+                  "data": {
+                      "actor": {
+                          "name": "Taylor Lee",
+                          "username": "taylor.lee",
+                          "email": "taylor.lee@example.com",
+                          "id": 12345678,
+                          "active": true
+                      },
+                      "user": {
+                          "name": "Taylor Lee",
+                          "username": "taylor.lee",
+                          "email": "taylor.lee@example.com",
+                          "id": 12345678
+                      },
+                      "team": {
+                          "name": "API-Testing",
+                          "id": 11
+                      },
+                      "variables": {
+                          "groupId": "1234",
+                          "groupName": "Test-API",
+                          "groupVisibility": "team"
+                      }
+                  }
+              }
+          ],
+          "nextCursor": 95427049
+      }
+order: 1000

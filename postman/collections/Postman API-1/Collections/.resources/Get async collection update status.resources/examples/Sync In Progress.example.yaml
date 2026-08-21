@@ -1,0 +1,17 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-updates-tasks/:taskId
+  method: GET
+  pathVariables:
+    taskId: 66ae9950-0869-4e65-96b0-1e0e47e771af
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "id": "66ae9950-0869-4e65-96b0-1e0e47e771af",
+          "status": "in-progress"
+      }
+order: 3000

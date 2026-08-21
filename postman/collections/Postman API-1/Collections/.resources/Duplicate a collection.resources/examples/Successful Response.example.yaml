@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/duplicates
+  method: POST
+  pathVariables:
+    collectionId: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+          "suffix": "Copy"
+      }
+response:
+  statusCode: 202
+  statusText: Accepted
+  body:
+    type: json
+    content: |-
+      {
+          "task": {
+              "id": "12345678-d2584d81-3283-42d5-9d84-b897257adcf0",
+              "status": "processing"
+          }
+      }
+order: 1000

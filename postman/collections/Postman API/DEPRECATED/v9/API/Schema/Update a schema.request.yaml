@@ -1,0 +1,42 @@
+$kind: http-request
+description: |-
+  **This endpoint is deprecated in Postman v10 and higher.**
+
+  Updates an API definition. The request body must contain a `schema` object with the following properties:
+
+  - `type` — A **string** value that contains the API definition's type. One of:
+      - `openapi3_1`
+      - `openapi3`
+      - `openapi2`
+      - `openapi1`
+      - `raml`
+      - `raml1`
+      - `wsdl1`
+      - `wsdl2`
+      - `graphql`
+      - `proto2`
+      - `graphql`
+      - `proto3`
+  - `language` — A **string** value that contains the API definition's language. One of:
+      - OpenAPI and RAML — `json` or `yaml`
+      - GraphQL — `graphql`
+      - WSDL — `xml`
+      - Protobuf — `proto`
+  - `schema` — Optional. A **string** value that contains the API definition's contents.
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}/schemas/{{schemaId}}
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+    	"schema": {
+    		"language": "{{apiDefinitionLanguage}}",
+            "schema": "{{apiDefinition}}",
+    		"type": "{{apiDefinitionType}}"
+    	}
+    }
+settings: {}
+examples: ./.resources/Update a schema.resources/examples
+order: 4000

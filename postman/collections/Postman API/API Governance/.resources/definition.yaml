@@ -1,0 +1,3 @@
+$kind: collection
+description: The **API Governance** endpoints enable you to manage the [governance of your API](https://learning.postman.com/docs/api-governance/api-governance-overview/). Governance helps you to identify inconsistencies or weaknesses in your APIs and recommend possible fixes or improvements that follow industry best practices.
+order: 3000

@@ -1,0 +1,44 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/comments
+  method: GET
+  pathVariables:
+    apiId: 5360b75f-447e-467c-9299-12fd6c92450d
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": [
+              {
+                  "id": 46818,
+                  "threadId": 12345,
+                  "status": "Open",
+                  "createdBy": 12345678,
+                  "createdAt": "2024-01-18T12:00:54.000Z",
+                  "updatedAt": "2024-01-18T12:00:54.000Z",
+                  "body": "This is also an example."
+              },
+              {
+                  "id": 46817,
+                  "threadId": 67890,
+                  "status": "Resolved",
+                  "createdBy": 87654321,
+                  "createdAt": "2024-01-18T11:48:01.000Z",
+                  "updatedAt": "2024-01-18T11:48:01.000Z",
+                  "body": "Another example."
+              },
+              {
+                  "id": 46814,
+                  "threadId": 23456,
+                  "status": "Open",
+                  "createdBy": 12345678,
+                  "createdAt": "2024-01-18T11:30:40.000Z",
+                  "updatedAt": "2024-01-18T11:30:40.000Z",
+                  "body": "This is an example."
+              }
+          ]
+      }
+order: 1000

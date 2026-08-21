@@ -1,0 +1,18 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Users
+  method: GET
+response:
+  statusCode: 429
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:Error"
+          ],
+          "detail": "That’s 300 attempts in less than a minute. Wait for a minute and then try again.",
+          "status": 429
+      }
+order: 11000

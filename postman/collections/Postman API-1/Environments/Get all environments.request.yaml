@@ -1,0 +1,11 @@
+$kind: http-request
+description: Gets information about all of your [environments](https://learning.postman.com/docs/sending-requests/managing-environments/).
+url: "{{baseUrl}}/environments"
+method: GET
+queryParams:
+  - key: workspace
+    value: ""
+    disabled: true
+    description: Return only results found in the given workspace ID.
+examples: ./.resources/Get all environments.resources/examples
+order: 7000

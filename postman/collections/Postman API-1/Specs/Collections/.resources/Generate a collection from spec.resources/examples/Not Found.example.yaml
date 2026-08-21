@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId/generations/:elementType
+  method: POST
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+    elementType: collection
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Sample API",
+          "options": {
+              "enableOptionalParameters": true,
+              "folderStrategy": "Tags"
+          }
+      }
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "type": "instanceNotFoundError",
+          "title": "Resource not found",
+          "status": 404,
+          "detail": "Entity that you are trying to access does not exist."
+      }
+order: 3000

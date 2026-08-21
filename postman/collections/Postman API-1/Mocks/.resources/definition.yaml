@@ -1,0 +1,3 @@
+$kind: collection
+description: The **Mocks** endpoints enable you to manage your [mock servers](https://learning.postman.com/docs/designing-and-developing-your-api/mocking-data/setting-up-mock/).
+order: 10000

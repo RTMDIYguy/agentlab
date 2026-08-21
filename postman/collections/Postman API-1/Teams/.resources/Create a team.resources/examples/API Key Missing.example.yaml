@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Testing@Team",
+          "description": "API testing team."
+      }
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Unauthorized",
+          "instance": "/teams",
+          "status": 401,
+          "type": "https://api.postman.com/problems/unauthorized",
+          "detail": "Unauthorized"
+      }
+order: 6000

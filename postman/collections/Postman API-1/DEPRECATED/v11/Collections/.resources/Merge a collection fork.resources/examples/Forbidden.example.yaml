@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/merge
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "strategy": "deleteSource",
+          "source": "12345678-09547fef-a9a5-4e00-998b-aa563e8db69a",
+          "destination": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "forbiddenError",
+              "message": "You do not have enough permissions to perform this action."
+          }
+      }
+order: 3000

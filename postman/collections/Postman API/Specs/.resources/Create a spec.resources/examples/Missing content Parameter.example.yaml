@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs?workspaceId=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  queryParams:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Sample API",
+          "type": "OPENAPI:3.0",
+          "files": [
+              {
+                  "path": "index.json"
+              }
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "invalidParamError",
+          "title": "Invalid request body",
+          "status": 400,
+          "detail": "The body parameter content is missing from the request."
+      }
+order: 12000

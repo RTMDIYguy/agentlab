@@ -1,0 +1,24 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "api": {
+              "id": "5360b75f-447e-467c-9299-12fd6c92450d",
+              "parentFolderId": 1
+          }
+      }
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "name": "instanceNotFoundError",
+          "message": "Instance not found for the model NetworkEntity, id 5360b75f-447e-467c-9299-12fd6c92450d"
+      }
+order: 7000

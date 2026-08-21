@@ -1,0 +1,13 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/public-documentations
+  method: DELETE
+  pathVariables:
+    collectionId: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 1000

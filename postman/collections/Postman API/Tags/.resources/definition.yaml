@@ -1,0 +1,3 @@
+$kind: collection
+description: The **Tags** endpoints enable you to manage Postman's tagging feature. You can add tags to collections, APIs, and workspaces. Tags enable users [search Postman elements](https://learning.postman.com/docs/getting-started/navigating-postman/#search-postman) using these tags. Tagging is available on Postman [<b>Enterprise</b> plans](https://www.postman.com/pricing/).
+order: 18000

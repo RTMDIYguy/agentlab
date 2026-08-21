@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/oauth2/token/revoke
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "token": "PMAK-68e8XXX"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Date: Fri, 10 Oct 2025 06:08:31 GMT
+    Content-Type: application/json
+    Content-Length: "2"
+    Connection: keep-alive
+    ETag: W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"
+    Vary: Accept-Encoding
+  body:
+    type: json
+    content: |-
+      {
+          "success": "true"
+      }
+order: 1000

@@ -1,0 +1,32 @@
+$kind: http-request
+description: |-
+  Creates a new [workspace](https://learning.postman.com/docs/collaborating-in-postman/using-workspaces/creating-workspaces/).
+
+  **Note:**
+
+  - This endpoint returns a 403 `Forbidden` response if the user does not have permission to create workspaces. [Admins and Super Admins](https://learning.postman.com/docs/collaborating-in-postman/roles-and-permissions/#team-roles) can configure workspace permissions to restrict users and/or user groups from creating workspaces or require approvals for the creation of team workspaces.
+      
+  - Private and [Partner Workspaces](https://learning.postman.com/docs/collaborating-in-postman/using-workspaces/partner-workspaces/) are available on Postman [<b>Team</b> and <b>Enterprise</b> plans](https://www.postman.com/pricing).
+      
+  - There are rate limits when publishing public workspaces.
+      
+  - Public team workspace names must be unique.
+      
+  - The `teamId` property must be passed in the request body if [Postman Organizations](https://learning.postman.com/docs/administration/onboarding-checklist) is enabled.
+url: "{{baseUrl}}/workspaces"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "workspace": {
+            "name": "{{workspaceName}}",
+            "type": "{{workspaceType}}",
+            "description": "{{workspaceDescription}}",
+            "about": "{{workspaceSummary}}",
+            "teamId": "{{teamId}}" // Required if Postman Organizations is enabled.
+        }
+    }
+settings: {}
+examples: ./.resources/Create a workspace.resources/examples
+order: 7000

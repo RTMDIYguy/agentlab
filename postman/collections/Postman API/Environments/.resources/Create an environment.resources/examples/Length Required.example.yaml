@@ -1,0 +1,42 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments?workspace=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  queryParams:
+    workspace: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "name": "Test Environment",
+              "values": [
+                  {
+                      "key": "collectionId",
+                      "value": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "enabled": true,
+                      "type": "default"
+                  },
+                  {
+                      "key": "variable_1",
+                      "value": "The variable_1 value.",
+                      "enabled": false,
+                      "type": "default"
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 411
+  statusText: Length Required
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/length-required",
+          "title": "Length Required",
+          "detail": "A valid Content-Length header is required",
+          "status": 411,
+          "instance": "/"
+      }
+order: 4000

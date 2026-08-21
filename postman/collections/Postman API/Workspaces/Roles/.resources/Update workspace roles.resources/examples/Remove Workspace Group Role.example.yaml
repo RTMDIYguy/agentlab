@@ -1,0 +1,44 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/roles
+  method: PATCH
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "roles": [
+              {
+                  "op": "remove",
+                  "path": "/usergroup",
+                  "value": [
+                      {
+                          "id": "1234",
+                          "role": "1"
+                      }
+                  ]
+              }
+          ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "roles": [
+              {
+                  "group": [
+                      "1234"
+                  ],
+                  "user": [
+                      "12345678"
+                  ],
+                  "id": "3",
+                  "displayName": "Admin"
+              }
+          ]
+      }
+order: 5000

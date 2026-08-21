@@ -1,0 +1,24 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/spec-migrations
+  method: GET
+  pathVariables:
+    - key: apiId
+      value: "123"
+      description: The API's ID.
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "invalidParamsError",
+              "message": "The specified parameter is in an invalid format",
+              "details": {
+                  "param": "apiId"
+              }
+          }
+      }
+order: 3000

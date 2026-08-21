@@ -1,0 +1,79 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "total": 5,
+              "nextCursor": null
+          },
+          "data": [
+              {
+                  "id": "0eac9b7d-0603-4f16-8a4a-76c78df8fe26",
+                  "name": "Supply - stage (1.0.1)",
+                  "version": "1.0.1",
+                  "sourceEnvironment": "stage",
+                  "systemEnvironmentId": null,
+                  "status": "discovered",
+                  "endpointsCount": 6,
+                  "discoverySource": "api_gateway_app",
+                  "tags": [],
+                  "discoveredAt": "2026-02-12T04:01:26.000Z"
+              },
+              {
+                  "id": "0eab2aa4-d39b-49eb-a17b-d6c7b7eb9c9d",
+                  "name": "Order - stage (3.0.0)",
+                  "version": "3.0.0",
+                  "sourceEnvironment": "stage",
+                  "systemEnvironmentId": null,
+                  "status": "discovered",
+                  "endpointsCount": 2,
+                  "discoverySource": "api_gateway_app",
+                  "tags": [],
+                  "discoveredAt": "2026-02-12T04:01:26.000Z"
+              },
+              {
+                  "id": "a6aa80f3-bc34-4314-abc4-22c4fc5fd15d",
+                  "name": "Jelly Bean Wiki (IBM - 9) - sandbox (1.0.0)",
+                  "version": "1.0.0",
+                  "sourceEnvironment": "sandbox",
+                  "systemEnvironmentId": null,
+                  "status": "discovered",
+                  "endpointsCount": 3,
+                  "discoverySource": "api_gateway_app",
+                  "tags": [],
+                  "discoveredAt": "2026-02-12T04:01:26.000Z"
+              },
+              {
+                  "id": "5f5bda12-63e2-47d2-8824-ed5889de571a",
+                  "name": "Jelly Bean Wiki (IBM - 8) - sandbox (1.0.0)",
+                  "version": "1.0.0",
+                  "sourceEnvironment": "sandbox",
+                  "systemEnvironmentId": null,
+                  "status": "discovered",
+                  "endpointsCount": 3,
+                  "discoverySource": "api_gateway_app",
+                  "tags": [],
+                  "discoveredAt": "2026-02-12T04:01:26.000Z"
+              },
+              {
+                  "id": "339f3be5-0a91-47d5-a8c3-90d644752f5e",
+                  "name": "Jelly Bean Wiki (IBM - 7) - sandbox (1.0.0)",
+                  "version": "1.0.0",
+                  "sourceEnvironment": null,
+                  "systemEnvironmentId": null,
+                  "status": "discovered",
+                  "endpointsCount": 3,
+                  "discoverySource": "api_gateway_app",
+                  "tags": [],
+                  "discoveredAt": "2026-02-12T04:01:26.000Z"
+              }
+          ]
+      }
+order: 1000

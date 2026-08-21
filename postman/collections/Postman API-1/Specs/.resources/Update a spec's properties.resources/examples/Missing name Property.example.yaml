@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId
+  method: PATCH
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+  body:
+    type: json
+    content: ""
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "title": "Malformed request",
+          "status": 400,
+          "detail": "Required property `name` is missing from the request."
+      }
+order: 2000

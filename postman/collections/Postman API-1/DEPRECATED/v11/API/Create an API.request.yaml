@@ -1,0 +1,23 @@
+$kind: http-request
+description: Creates an API.
+url: "{{baseUrl}}/apis?workspaceId={{workspaceId}}"
+method: POST
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+queryParams:
+  - key: workspaceId
+    value: "{{workspaceId}}"
+    description: The workspace ID.
+body:
+  type: json
+  content: |-
+    {
+        "name": "{{apiName}}",
+        "summary": "{{apiSummary}}",
+        "description": "{{apiDescription}}"
+    }
+settings: {}
+examples: ./.resources/Create an API.resources/examples
+order: 8000

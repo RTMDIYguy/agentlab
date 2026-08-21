@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/tags
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 6fd634a3-79ba-451d-8f07-56a953f96667
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/unauthorized",
+          "title": "Unauthorized",
+          "status": 401
+      }
+order: 3000

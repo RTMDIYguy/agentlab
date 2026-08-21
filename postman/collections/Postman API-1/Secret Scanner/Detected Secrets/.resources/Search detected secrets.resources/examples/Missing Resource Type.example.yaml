@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/detected-secrets-queries
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "resolved": false,
+          "resources": [
+              {
+                  "ids": [
+                      "12345678-400005df-3cad-480c-a027-ea68aed35b60"
+                    ]
+              }
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "type": "BAD_REQUEST",
+          "title": "Invalid resources specified",
+          "instance": "",
+          "status": 400,
+          "detail": "one or more `resources` are invalid."
+      }
+order: 9000

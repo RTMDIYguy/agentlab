@@ -1,0 +1,32 @@
+$kind: http-request
+description: |-
+  Gets a collection attached to an API. You can use the `versionId` query parameter to get a collection published in a version.
+
+  **Note:**
+
+  - You cannot use this endpoint to get a Git-linked API collection. Collections in a Git-linked API are stored in the linked Git repository, not in the Postman cloud. This endpoint only has access to Postman servers.
+      
+  - You can get a collection published in an API version with the `versionId` query parameter.
+      
+  - The `versionId` query parameter is a **required** parameter for API viewers.
+url: "{{baseUrl}}/apis/:apiId/collections/:collectionUid"
+method: GET
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+queryParams:
+  - key: versionId
+    value: ""
+    disabled: true
+    description: The API's version ID.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+  - key: collectionUid
+    value: "{{collectionUid}}"
+    description: The collection's unique ID.
+settings: {}
+examples: ./.resources/Get a collection.resources/examples
+order: 2000

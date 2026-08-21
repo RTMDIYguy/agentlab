@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/unclassified
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "unclassified": [
+              {
+                  "id": "2a9b8fa8-88b7-4b86-8372-8e3f6f6e07f2",
+                  "name": "Test",
+                  "updatedAt": "2023-01-19T14:50:05.000Z",
+                  "collectionId": "7732157-a8bcd149-2b01-4b4c-8c14-c7d05be77745"
+              }
+          ]
+      }
+order: 1000

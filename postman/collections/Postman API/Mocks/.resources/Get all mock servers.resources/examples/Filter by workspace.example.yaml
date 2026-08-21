@@ -1,0 +1,63 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks?workspace=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: GET
+  queryParams:
+    workspace: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "mocks": [
+              {
+                  "id": "e3d951bf-873f-49ac-a658-b2dcb91d3289",
+                  "owner": "12345678",
+                  "deactivated": false,
+                  "uid": "12345678-e3d951bf-873f-49ac-a658-b2dcb91d3289",
+                  "collection": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "mockUrl": "https://e3d951bf-873f-49ac-a658-b2dcb91d3289.mock.pstmn.io",
+                  "name": "Test Mock A",
+                  "config": {
+                      "headers": [],
+                      "matchBody": false,
+                      "matchQueryParams": true,
+                      "matchWildcards": true,
+                      "delay": {
+                          "type": "fixed",
+                          "duration": 140000
+                      },
+                      "serverResponseId": null
+                  },
+                  "createdAt": "2022-07-25T20:54:30.000Z",
+                  "updatedAt": "2022-07-25T20:54:30.000Z",
+                  "isPublic": false,
+                  "environment": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e"
+              },
+              {
+                  "id": "c929c990-59f1-480a-aea4-c37e25c8785d",
+                  "owner": "12345678",
+                  "deactivated": false,
+                  "uid": "12345678-b86af87f-7e1f-4476-85bb-c1f71424fd5e",
+                  "collection": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "mockUrl": "https://c929c990-59f1-480a-aea4-c37e25c8785d.mock.pstmn.io",
+                  "name": "Test",
+                  "config": {
+                      "headers": [],
+                      "matchBody": false,
+                      "matchHeader": false,
+                      "matchQueryParams": true,
+                      "matchWildcards": true,
+                      "delay": null,
+                      "serverResponseId": null
+                  },
+                  "createdAt": "2023-06-30T12:57:40.000Z",
+                  "updatedAt": "2023-06-30T12:57:40.000Z",
+                  "isPublic": false,
+                  "environment": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e"
+              }
+          ]
+      }
+order: 3000

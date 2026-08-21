@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/settings
+  method: PUT
+  pathVariables:
+    teamId: "123"
+  body:
+    type: json
+    content: |-
+      {
+          "settings" : {
+              "rfa_for_add_member": "enabled",
+              "rfa_for_add_collaborator": "enabled"
+          }
+      }
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Unauthorized",
+          "instance": "/teams",
+          "status": 401,
+          "type": "https://api.postman.com/problems/unauthorized",
+          "detail": "Unauthorized"
+      }
+order: 3000

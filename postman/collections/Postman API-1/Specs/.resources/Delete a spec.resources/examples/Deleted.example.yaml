@@ -1,0 +1,13 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId
+  method: DELETE
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 1000

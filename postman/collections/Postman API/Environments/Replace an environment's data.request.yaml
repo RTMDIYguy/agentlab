@@ -1,0 +1,34 @@
+$kind: http-request
+description: |-
+  Replaces all the contents of an environment with the given information.
+
+  **Note:**
+
+  - The request body size cannot exceed the maximum allowed size of 30MB.
+      
+  - If you receive an HTTP `411 Length Required` error response, manually pass the `Content-Length` header and its value in the request header.
+url: "{{baseUrl}}/environments/:environmentId"
+method: PUT
+pathVariables:
+  - key: environmentId
+    value: ""
+    description: The environment's ID.
+body:
+  type: json
+  content: |-
+    {
+        "environment": {
+            "name": "{{environmentName}}",
+            "values": [
+                {
+                    "key": "{{environmentVariableName}}",
+                    "value": "{{environmentVariableValue}}",
+                    "enabled": true,
+                    "type": "{{environmentType}}",
+                    "description": "{{environmentVariableDescription}}"
+                }
+            ]
+        }
+    }
+examples: ./.resources/Replace an environment's data.resources/examples
+order: 6000

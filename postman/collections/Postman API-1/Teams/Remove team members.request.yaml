@@ -1,0 +1,27 @@
+$kind: http-request
+description: Removes entities, such as users or organizations, from your Postman team. On success, this returns an HTTP `204 No Content` response.
+url: "{{baseUrl}}/teams/:teamId/bulk-members"
+method: DELETE
+headers:
+  - key: identifierType
+    value: scim
+    disabled: true
+    description: Use SCIM user and group IDs instead of Postman user IDs.
+pathVariables:
+  - key: teamId
+    value: ""
+    description: The team's ID.
+body:
+  type: json
+  content: |-
+    {
+        "entities": [
+            {
+                "entityType": "{{entityType}}",
+                "entityId": "{{entityId}}"
+            }
+        ]
+    }
+settings: {}
+examples: ./.resources/Remove team members.resources/examples
+order: 7000

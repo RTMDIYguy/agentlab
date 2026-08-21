@@ -1,0 +1,51 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/roles
+  method: PATCH
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "roles": [
+              {
+                  "op": "add",
+                  "path": "/partner",
+                  "value": [
+                      {
+                          "id": "87654321",
+                          "role": "4"
+                      }
+                  ]
+              },
+              {
+                  "op": "remove",
+                  "path": "/partner",
+                  "value": [
+                      {
+                          "id": "43215678",
+                          "role": "4"
+                      }
+                  ]
+              }
+          ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "roles": [
+              {
+                  "id": "4",
+                  "displayName": "Viewer",
+                  "partner": [
+                      "87654321"
+                  ]
+              }
+          ]
+      }
+order: 6000

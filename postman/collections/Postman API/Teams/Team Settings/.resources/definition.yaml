@@ -1,0 +1,3 @@
+$kind: collection
+description: These endpoints enable you to manage your Postman team's settings.
+order: 3000

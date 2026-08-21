@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionUid/generations/:elementType
+  method: GET
+  pathVariables:
+    collectionUid: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+    elementType: spec
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "nextCursor": null
+          },
+          "specs": [
+              {
+                  "id": "e8a015e0-f472-4bb3-a523-57ce7c4583ef",
+                  "name": "Sample API",
+                  "state": "in-sync",
+                  "createdAt": "2022-03-29T11:37:15Z",
+                  "updatedAt": "2022-03-29T11:37:15Z",
+                  "createdBy": 12345678,
+                  "updatedBy": 12345678
+              }
+          ]
+      }
+order: 1000

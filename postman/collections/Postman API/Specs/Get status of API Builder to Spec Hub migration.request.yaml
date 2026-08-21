@@ -1,0 +1,11 @@
+$kind: http-request
+description: Returns the status of an API Builder definition’s migration to Spec Hub.
+url: "{{baseUrl}}/apis/:apiId/spec-migrations"
+method: GET
+pathVariables:
+  - key: apiId
+    value: ""
+    description: The API's ID.
+settings: {}
+examples: ./.resources/Get status of API Builder to Spec Hub migration.resources/examples
+order: 13000

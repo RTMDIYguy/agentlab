@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/access-requests
+  method: POST
+  pathVariables:
+    teamId: "123"
+  body:
+    type: json
+    content: |-
+      {
+          "entityList": [
+              {
+                  "entityType": "user",
+                  "entityId": "12345678"
+              }
+          ],
+          "role": "TEAM_MANAGER",
+          "reason": "Needs the manager role.",
+          "requestType": "UPGRADE_ROLE"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "result": [
+              {
+                  "entityType": "user",
+                  "entityId": 12345678,
+                  "role": "TEAM_MANAGER",
+                  "status": "Skipped",
+                  "reason": "Entity has this role"
+              }
+          ]
+      }
+order: 1000

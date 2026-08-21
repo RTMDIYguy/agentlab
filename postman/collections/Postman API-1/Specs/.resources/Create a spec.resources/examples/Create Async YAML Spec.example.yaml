@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs?workspaceId=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  queryParams:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Streetlights API",
+          "type": "ASYNCAPI:2.0",
+          "files": [
+              {
+                  "path": "index.yaml",
+                  "content": "asyncapi: '2.5.0'\ninfo:\n  title: Streetlights API\n  version: '1.0.0'\n  description: |\n    The Smartylighting Streetlights API allows you\n    to remotely manage the city lights.\n  license:\n    name: Apache 2.0\n    url: 'https://www.apache.org/licenses/LICENSE-2.0'\n  contact:\n    name: Streetlights API Developers\n    url: https://example.com/contact\n    email: contact@example.com\n  termsOfService: https://www.apache.org/licenses/LICENSE-2.0\nservers:\n  mosquitto:\n    url: mqtt://test.mosquitto.org\n    protocol: mqtt\nchannels:\n  light/measured:\n    publish:\n      summary: Inform about environmental lighting conditions for a particular streetlight\n      operationId: onLightMeasured\n      message:\n        name: LightMeasured\n        payload:\n          $ref: '#/components/schemas/LightMeasuredPayloadSchema'\n        examples:\n          - payload:\n              id: 1\n              lumens: 1\n              sentAt: 2023-09-01T18:00:00Z\ncomponents:\n  schemas:\n    LightMeasuredPayloadSchema:\n      type: object\n      description: Payload for LightMeasured API\n      required:\n        - id\n        - lumens\n        - sentAt\n      properties:\n        id:\n          type: integer\n          minimum: 0\n          description: Id of the streetlight\n        lumens:\n          type: integer\n          minimum: 0\n          description: Light intensity measured in lumens\n        sentAt:\n          type: string\n          format: date-time\n          description: Date and time when the message was sent\n          minLength: 20\n          maxLength: 29"
+              }
+          ]
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Sample API",
+          "type": "ASYNCAPI:2.0",
+          "updatedAt": "2025-03-15T13:48:28.000Z",
+          "createdAt": "2025-03-15T13:48:28.000Z",
+          "createdBy": 12345678,
+          "updatedBy": 12345678,
+          "id": "b4fc1bdc-6587-4f9b-95c9-f768146089b4"
+      }
+order: 4000

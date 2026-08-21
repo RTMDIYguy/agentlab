@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/schemas/16bb367e-fafb-4ef3-933b-ee3d971866fb
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "schema": {
+              "id": "16bb367e-fafb-4ef3-933b-ee3d971866fb",
+              "type": "openapi3",
+              "language": "json",
+              "createdAt": "2022-07-01T20:12:31.000Z",
+              "updatedAt": "2022-07-01T20:13:04.000Z",
+              "createdBy": "12345678",
+              "updatedBy": "12345678",
+              "schema": "{\n  \"openapi\": \"3.0.0\",\n  \"info\": {\n    \"version\": \"1.0.0\",\n    \"title\": \"Test API\"\n  },\n  \"servers\": [\n    {\n      \"url\": \"http://locahost:3000\"\n    }\n  ],\n  \"paths\": {\n    \"/user\": {\n      \"get\": {\n        \"summary\": \"List all users\",\n        \"operationId\": \"listUser\",\n        \"parameters\": [\n          {\n            \"name\": \"id\",\n            \"in\": \"query\",\n            \"required\": true,\n            \"description\": \"The user's ID.\",\n            \"example\": 1234,\n            \"schema\": {\n              \"type\": \"integer\",\n              \"format\": \"int32\"\n            }\n          }\n        ],\n        \"responses\": {\n          \"200\": {\n            \"description\": \"Information about the user.\",\n            \"headers\": {\n              \"x-next\": {\n                \"description\": \"A link to the next page of responses.\",\n                \"schema\": {\n                  \"type\": \"string\"\n                }\n              }\n            },\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/User\"\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  },\n  \"components\": {\n    \"schemas\": {\n      \"User\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"id\",\n          \"name\"\n        ],\n        \"properties\": {\n          \"id\": {\n            \"type\": \"integer\",\n            \"format\": \"int64\"\n          },\n          \"name\": {\n            \"type\": \"string\"\n          },\n          \"tag\": {\n            \"type\": \"string\"\n          }\n        }\n      },\n      \"Error\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"code\",\n          \"message\"\n        ],\n        \"properties\": {\n          \"code\": {\n            \"type\": \"integer\",\n            \"format\": \"int32\"\n          },\n          \"message\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+              "apiVersion": "a9879d02-74bf-425a-bbec-6d27aa135507"
+          }
+      }
+order: 1000

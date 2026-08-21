@@ -1,0 +1,114 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/requests
+  method: POST
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Example GET Request",
+          "description": "This is an example GET request.",
+          "url": "https://postman-echo.com/get?param=value",
+          "method": "GET",
+          "headers": [
+              {
+                  "key": "Host",
+                  "value": "postman-echo.com"
+              },
+              {
+                  "key": "user-agent",
+                  "value": "curl/7.88.1"
+              },
+              {
+                  "key": "accept",
+                  "value": "*/*"
+              },
+              {
+                  "key": "content-type",
+                  "value": "application/json"
+              }
+          ],
+          "queryParams": [
+              {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "equals": true,
+                  "description": "Optional. The user's ID.",
+                  "enabled": true
+              }
+          ],
+          "dataMode": "raw",
+          "rawModeData": null,
+          "dataOptions": {
+              "raw": {
+                  "language": "json"
+              }
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+          "meta": {
+              "model": "request",
+              "action": "import"
+          },
+          "data": {
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "method": "GET",
+              "headers": [
+                  {
+                      "key": "Host",
+                      "value": "postman-echo.com"
+                  },
+                  {
+                      "key": "user-agent",
+                      "value": "curl/7.88.1"
+                  },
+                  {
+                      "key": "accept",
+                      "value": "*/*"
+                  },
+                  {
+                      "key": "content-type",
+                      "value": "application/json"
+                  }
+              ],
+              "dataMode": "raw",
+              "url": "https://postman-echo.com/get?param=value",
+              "name": "Example GET Request",
+              "description": "This is an example GET request.",
+              "owner": "12345678",
+              "folder": null,
+              "responses_order": [],
+              "id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+              "lastUpdatedBy": "12345678",
+              "queryParams": [
+                  {
+                      "key": "id",
+                      "value": "{{id}}",
+                      "equals": true,
+                      "description": "Optional. The user's ID.",
+                      "enabled": true
+                  }
+              ],
+              "headerData": [],
+              "createdAt": "2023-09-07T13:33:17.912Z",
+              "updatedAt": "2023-09-07T13:33:17.912Z",
+              "rawModeData": null,
+              "dataOptions": {
+                  "raw": {
+                      "language": "json"
+                  }
+              },
+              "responses": []
+          },
+          "revision": 32456338071
+      }
+order: 1000

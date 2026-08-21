@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis
+  method: POST
+  headers:
+    Accept: application/vnd.api.v10+json
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Test API",
+          "summary": "Test API Schema",
+          "description": "This is a test API."
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "paramMissingError",
+          "title": "Parameter is missing in the request.",
+          "detail": "Parameter, workspaceId is missing in the request."
+      }
+order: 2000

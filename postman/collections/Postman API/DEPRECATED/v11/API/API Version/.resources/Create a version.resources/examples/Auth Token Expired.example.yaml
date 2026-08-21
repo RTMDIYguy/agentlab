@@ -1,0 +1,42 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/versions
+  method: POST
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Release 1.5",
+          "releaseNotes": "This is the first public release update.",
+          "collections": [
+              {
+                  "filePath": "path/to/collection1.json"
+              },
+              {
+                  "filePath": "path/to/collection2.json"
+              }
+
+          ],
+          "schemas": [
+              {
+                  "directoryPath": "postman/schemas"
+              }
+          ],
+          "branch": "develop"
+      }
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "type": "Unauthorized",
+          "title": "You are not permitted to perform the action.",
+          "detail": "Please use the Postman app to link your OAuth token with the API. Head over here, https://postman.postman.co/api/4ca6c9ae-da02-11ed-afa1-0242ac120002"
+      }
+order: 6000

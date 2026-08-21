@@ -1,0 +1,25 @@
+$kind: http-request
+description: Updates and replaces a workspace's global [variables](https://learning.postman.com/docs/sending-requests/variables/#variable-scopes). This endpoint replaces all existing global variables with the variables you pass in the request body.
+url: "{{baseUrl}}/workspaces/:workspaceId/global-variables"
+method: PUT
+pathVariables:
+  - key: workspaceId
+    value: ""
+    description: The workspace's ID.
+body:
+  type: json
+  content: |-
+    {
+        "values": [
+            {
+                "key": "{{keyName}}",
+                "type": "{{keyType}}",
+                "value": "{{keyValue}}",
+                "enabled": true,
+                "description": "{{variableDescription}}"
+            }
+        ]
+    }
+settings: {}
+examples: ./.resources/Update global variables.resources/examples
+order: 2000

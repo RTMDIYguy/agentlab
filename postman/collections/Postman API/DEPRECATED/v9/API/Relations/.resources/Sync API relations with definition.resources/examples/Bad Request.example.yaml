@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/4ebb45f8-7bb3-4a63-9c42-0b1602818293/versions/5e154147-b571-4ffe-a6ac-df2ab3b6e5ba/:relationType/:entityId/syncWithSchema
+  method: PUT
+  pathVariables:
+    relationType: unclassified
+    entityId: 12345678-b4abc083-3ee2-4fc2-8959-29a7653a1c91
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "instanceNotFoundError",
+              "message": "We could not find the API version you are looking for"
+          }
+      }
+order: 2000

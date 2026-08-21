@@ -1,0 +1,46 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/folders/:folderId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    folderId: 65a99e60-8e0a-4b6e-b79c-7d8264cc5caa
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Test Folder",
+          "description": "This is a test folder."
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+              "auth": null,
+              "name": "Test Folder",
+              "order": [],
+              "owner": "12345678",
+              "events": null,
+              "folder": null,
+              "updatedAt": "2022-08-29T16:49:19.964Z",
+              "createdAt": "2022-08-29T16:49:19.964Z",
+              "variables": null,
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "description": "This is a test folder.",
+              "lastRevision": 24977100955,
+              "folders_order": [],
+              "lastUpdatedBy": "12345678"
+          },
+          "meta": {
+              "model": "folder",
+              "action": "update"
+          },
+          "model_id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+          "revision": 24977103385
+      }
+order: 1000

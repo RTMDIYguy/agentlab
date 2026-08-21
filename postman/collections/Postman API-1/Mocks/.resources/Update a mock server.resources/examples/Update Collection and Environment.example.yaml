@@ -1,0 +1,41 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks/:mockId
+  method: PUT
+  pathVariables:
+    mockId: 12345678-e3d951bf-873f-49ac-a658-b2dcb91d3289
+  body:
+    type: json
+    content: |-
+      {
+          "mock": {
+              "environment": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e",
+              "collection": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "mock": {
+              "id": "e3d951bf-873f-49ac-a658-b2dcb91d3289",
+              "owner": "12345678",
+              "uid": "12345678-e3d951bf-873f-49ac-a658-b2dcb91d3289",
+              "collection": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "mockUrl": "https://e3d951bf-873f-49ac-a658-b2dcb91d3289.mock.pstmn.io",
+              "name": "Test Mock",
+              "config": {
+                  "headers": [],
+                  "matchBody": false,
+                  "matchQueryParams": true,
+                  "matchWildcards": true
+              },
+              "createdAt": "2022-06-09T19:38:06.000Z",
+              "updatedAt": "2022-06-13T18:55:25.000Z",
+              "environment": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e"
+          }
+      }
+order: 2000

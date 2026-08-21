@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/schemas/:schemaId/files/:filePath
+  method: PUT
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    schemaId: 2fdc8ea1-d02e-4e50-989e-6fa28f42b995
+    filePath: posts.graphql
+  body:
+    type: json
+    content: |-
+      {
+          "content": "type Query {\r\n  allPosts: [Post]\r\n  allUsers: [User]\r\n  postById(id: Int!): Post\r\n  userById(id: Int!): User\r\n}\r\n\r\ntype Mutation {\r\n  createPost(input: CreatePostInput!): CreatePostPayload\r\n  createUser(input: CreateUserInput!): CreateUserPayload\r\n}\r\n\r\ntype Post {\r\n  id: Int!\r\n  title: String\r\n  body: String\r\n  createdDate: Datetime\r\n  authorId: Int!\r\n  userByAuthorId: User\r\n}\r\n\r\ntype User {\r\n  id: Int!\r\n  username: String\r\n  createdDate: Datetime\r\n  postsByAuthorId: [Post]\r\n}\r\n\r\ntype CreatePostPayload {\r\n  clientMutationId: String\r\n  post: Post\r\n  userByAuthorId: User\r\n}\r\n\r\ninput CreatePostInput {\r\n  clientMutationId: String\r\n  post: PostInput!\r\n}\r\n\r\ninput PostInput {\r\n  id: Int\r\n  title: String\r\n  body: String\r\n  createdDate: Datetime\r\n  authorId: Int!\r\n}\r\n\r\ntype CreateUserPayload {\r\n  clientMutationId: String\r\n  user: User\r\n}\r\n\r\ninput CreateUserInput {\r\n  clientMutationId: String\r\n  user: UserInput!\r\n}\r\n\r\ninput UserInput {\r\n  id: Int\r\n  username: String\r\n  createdDate: Datetime\r\n}\r\n\r\nscalar Datetime\r\n"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "updatedAt": "2024-07-18T13:26:22.000Z",
+          "path": "posts.graphql",
+          "updatedBy": "20891195",
+          "createdBy": "20891195",
+          "root": {
+              "enabled": true
+          },
+          "id": "2fdc8ea1-d02e-4e50-989e-6fa28f42b995",
+          "name": "posts.graphql",
+          "createdAt": "2024-07-18T13:24:55.000Z"
+      }
+order: 3000

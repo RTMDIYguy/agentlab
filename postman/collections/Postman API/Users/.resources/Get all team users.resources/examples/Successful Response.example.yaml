@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/users
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": [
+              {
+                  "id": 1,
+                  "name": "Taylor Lee",
+                  "username": "taylor-lee",
+                  "email": "taylor.lee@example.com",
+                  "roles": [
+                      "admin",
+                      "user"
+                  ],
+                  "joinedAt": "2022-11-23T14:38:25.000Z"
+              },
+              {
+                  "id": 2,
+                  "name": "Alex Cruz",
+                  "username": "alex-cruz",
+                  "email": "alex.cruz@example.com",
+                  "roles": [
+                      "user"
+                  ],
+                  "joinedAt": "2022-11-24T10:18:11.000Z"
+              }
+          ]
+      }
+order: 1000

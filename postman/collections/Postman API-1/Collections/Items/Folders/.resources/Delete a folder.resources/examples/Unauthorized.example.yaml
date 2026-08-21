@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/folders/:folderId
+  method: DELETE
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    folderId: 65a99e60-8e0a-4b6e-b79c-7d8264cc5caa
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "Unauthorized",
+              "message": "Unauthorized",
+              "details": {
+                  "model": "folder",
+                  "model_id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+                  "owner": "12345678"
+              }
+          }
+      }
+order: 3000

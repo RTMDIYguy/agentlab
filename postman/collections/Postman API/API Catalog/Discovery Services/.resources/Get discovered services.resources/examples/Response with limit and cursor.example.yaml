@@ -1,0 +1,58 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services?limit=3&cursor=eyJpZCI6MjJ9
+  method: GET
+  queryParams:
+    limit: "3"
+    cursor: eyJpZCI6MjJ9
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "total": 26,
+              "nextCursor": "eyJpZCI6MjJ9"
+          },
+          "items": [
+              {
+                  "id": "0eac9b7d-0603-4f16-8a4a-76c78df8fe26",
+                  "name": "Supply - stage (1.0.1)",
+                  "version": "1.0.1",
+                  "sourceEnvironment": "stage",
+                  "systemEnvironmentId": null,
+                  "status": "discovered",
+                  "endpointsCount": 6,
+                  "discoverySource": "api_gateway_app",
+                  "tags": [],
+                  "discoveredAt": "2026-02-12T04:01:26.000Z"
+              },
+              {
+                  "id": "7e83e0d9-66ab-4e1f-a1e7-56c75f5ca95e",
+                  "name": "Supply - stage (1.0.0)",
+                  "version": "1.0.0",
+                  "sourceEnvironment": "stage",
+                  "systemEnvironmentId": null,
+                  "status": "discovered",
+                  "endpointsCount": 5,
+                  "discoverySource": "api_gateway_app",
+                  "tags": [],
+                  "discoveredAt": "2026-02-12T04:01:26.000Z"
+              },
+              {
+                  "id": "1478fe99-a3a6-47aa-a6f7-61591f959ce9",
+                  "name": "Supply - sandbox (1.0.0)",
+                  "version": "1.0.0",
+                  "sourceEnvironment": "sandbox",
+                  "systemEnvironmentId": null,
+                  "status": "discovered",
+                  "endpointsCount": 6,
+                  "discoverySource": "api_gateway_app",
+                  "tags": [],
+                  "discoveredAt": "2026-02-12T04:01:26.000Z"
+              }
+          ]
+      }
+order: 5000

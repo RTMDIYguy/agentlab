@@ -1,0 +1,41 @@
+$kind: http-request
+description: |-
+  Gets information about an API.
+
+  **Note:**
+
+  - Git-connected APIs will **only** return the `versions` and `gitInfo` query responses. This is because schema and collection information is stored in the connected Git repository. The `gitInfo` object only lists the repository and folder locations of the files.
+  - API viewers can only use the `versions` option in the `include` query parameter.
+url: "{{baseUrl}}/apis/:apiId"
+method: GET
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+queryParams:
+  - key: include
+    value: ""
+    disabled: true
+    description: "A comma-separated list of one or more of the following additional resources to include in the response. Use this parameter to query for element links to the API, such as collections and schemas:
+
+      - `collections` — Query for linked Postman collections.
+
+      - `versions` — Query for linked versions.
+
+      - `schemas` — Query for linked schemas.
+
+      - `gitInfo` — Query for information about the API’s git-linked repository. This query only returns the linked repository  and folder locations of the files. It does **not** return `collections` or `schemas` information.
+
+
+      **Note:**
+
+      API viewers can only use the `versions` option.
+
+      \        "
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+settings: {}
+examples: ./.resources/Get an API.resources/examples
+order: 7000

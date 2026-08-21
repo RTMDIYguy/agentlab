@@ -1,0 +1,51 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/folders/:folderId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    folderId: 65a99e60-8e0a-4b6e-b79c-7d8264cc5caa
+  body:
+    type: json
+    content: |-
+      {
+          "folders_order": [
+              "b73b4c0c-881b-47e6-8887-6dabab1fd2d1",
+              "abcc80b2-8a1c-45e5-ab1b-becc385b4dbd"
+          ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "folders_order": [
+                  "b73b4c0c-881b-47e6-8887-6dabab1fd2d1",
+                  "abcc80b2-8a1c-45e5-ab1b-becc385b4dbd"
+              ],
+              "id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+              "auth": null,
+              "name": "Test Folder",
+              "order": [],
+              "owner": "12345678",
+              "events": null,
+              "folder": null,
+              "updatedAt": "2022-08-29T16:49:19.964Z",
+              "createdAt": "2022-08-29T16:49:19.964Z",
+              "variables": null,
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "description": "This is a test folder.",
+              "lastRevision": 24977100955,
+              "lastUpdatedBy": "12345678"
+          },
+          "meta": {
+              "model": "folder",
+              "action": "update"
+          },
+          "model_id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+          "revision": 24977103385
+      }
+order: 3000

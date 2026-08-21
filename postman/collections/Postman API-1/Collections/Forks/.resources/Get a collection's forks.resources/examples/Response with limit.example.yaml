@@ -1,0 +1,53 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/forks?limit=5
+  method: GET
+  queryParams:
+    limit: "5"
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": [
+              {
+                  "forkName": "Collection Fork",
+                  "forkId": "12345678-667df1ad-2ee3-7890-b678-7742d82e2e1f",
+                  "createdBy": "12345678",
+                  "createdAt": "2023-11-15T08:12:27.000Z"
+              },
+              {
+                  "forkName": "Test Fork",
+                  "forkId": "87654321-38j9f1ad-2ee3-7890-dv5h-7742d82e2e1f",
+                  "createdBy": "Alex Cruz",
+                  "createdAt": "2023-11-16T09:16:15.000Z"
+              },
+                      {
+                  "forkName": "My Fork",
+                  "forkId": "12345678-667df1ad-2gnm-7890-b678-7742d82e2e1f",
+                  "createdBy": "Taylor Lee",
+                  "createdAt": "2023-10-03T10:00:07.000Z"
+              },
+              {
+                  "forkName": "Testing",
+                  "forkId": "12345678-667df1ad-2ee3-ifb0-b678-7742d82e2e1f",
+                  "createdBy": "Taylor Lee",
+                  "createdAt": "2023-12-18T00:02:25.000Z"
+              },
+              {
+                  "forkName": "Example Fork",
+                  "forkId": "87654321-667df1ad-efbh-7880-b678-7742d82e2e1f",
+                  "createdBy": "Alex Cruz",
+                  "createdAt": "2023-12-29T02:28:11.000Z"
+              }
+          ],
+          "meta": {
+              "total": 10,
+              "nextCursor": "eyJpZCI6MzMyNzksImZvcmtzQWZ0ZXIiOjIwfQ=="
+          }
+      }
+order: 4000

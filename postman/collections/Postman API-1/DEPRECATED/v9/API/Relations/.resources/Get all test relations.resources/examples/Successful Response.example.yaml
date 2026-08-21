@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/test
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "test": [
+              {
+                  "id": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "name": "Test Collection",
+                  "updatedAt": "2022-07-08T18:32:23.000Z",
+                  "collectionId": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+              }
+          ]
+      }
+order: 1000

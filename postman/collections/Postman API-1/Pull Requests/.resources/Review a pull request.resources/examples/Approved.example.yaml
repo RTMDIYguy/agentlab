@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/pull-requests/:pullRequestId/tasks
+  method: POST
+  pathVariables:
+    pullRequestId: 4e1a6609-1a29-4037-a411-89ecc14c6cd8
+  body:
+    type: json
+    content: |-
+      {
+          "action": "approve"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "id": "4e1a6609-1a29-4037-a411-89ecc14c6cd8",
+          "reviewedBy": {
+              "id": 12345678,
+              "name": "Taylor Lee",
+              "username": "taylor-lee"
+          },
+          "status": "approved",
+          "updatedAt": "2024-02-21T08:19:09.000Z"
+      }
+order: 1000

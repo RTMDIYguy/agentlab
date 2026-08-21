@@ -1,0 +1,30 @@
+$kind: http-request
+description: |-
+  Imports an OpenAPI definition into Postman as a new [Postman Collection](https://learning.postman.com/docs/getting-started/creating-the-first-collection/).
+
+  **Note:**
+
+  - The Postman web app does not support the `file` input method type.
+      
+  - If you do not include the `workspace` query parameter, the system imports the definition into the oldest personal Internal workspace you own.
+url: "{{baseUrl}}/import/openapi?workspace="
+method: POST
+queryParams:
+  - key: workspace
+    value: ""
+    description: |-
+      The workspace ID in which to import the OpenAPI specification.
+
+      If you do not include this parameter, the system imports the definition into the oldest personal Internal workspace you own.
+body:
+  type: json
+  content: |-
+    {
+        "type": "{{APIspecificationType}}",
+        "input": "{{APIspecification}}",
+        "options": {
+            "{{optionName}}": "{{optionvalue}}"
+        }
+    }
+examples: ./.resources/Import an OpenAPI definition.resources/examples
+order: 1000

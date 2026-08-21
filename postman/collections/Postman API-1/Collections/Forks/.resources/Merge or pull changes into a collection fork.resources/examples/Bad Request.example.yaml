@@ -1,0 +1,24 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-merges
+  method: PUT
+  body:
+    type: json
+    content: |-
+      {
+          "strategy": "default",
+          "destination": "20891195-b04fa319-3e7e-4fa3-b6a2-f5b29ad67583"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "title": "Malformed request",
+          "status": 400,
+          "detail": "Some validation errors occurred"
+      }
+order: 2000

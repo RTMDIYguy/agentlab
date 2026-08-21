@@ -1,0 +1,100 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/requests/:requestId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    requestId: e12d2aa6-85c8-4e6c-aad0-1adcfe05c958
+  body:
+    type: json
+    content: |-
+      {
+          "auth": "noauth",
+          "currentHelper": null,
+          "helperAttributes": null,
+          "owner": "12345678",
+          "lastUpdatedBy": "12345678",
+          "lastRevision": 32368133476,
+          "folder": null,
+          "collection": "c05fb60e-bb28-4e7b-9cf7-55ada6ab320c",
+          "name": "Example POST Request",
+          "dataMode": "raw",
+          "data": null,
+          "events": null,
+          "rawModeData": "{\n    \"field\": \"Value\"\n}",
+          "descriptionFormat": null,
+          "description": "This is an example POST request.",
+          "variables": null,
+          "headers": null,
+          "method": "POST",
+          "pathVariables": null,
+          "url": "https://postman-echo.com/post",
+          "preRequestScript": null,
+          "tests": null,
+          "queryParams": [],
+          "headerData": [],
+          "pathVariableData": [],
+          "protocolProfileBehavior": null,
+          "dataDisabled": false,
+          "responses_order": [],
+          "createdAt": "2023-09-01T07:59:25.000Z",
+          "updatedAt": "2023-09-01T09:29:54.000Z",
+          "dataOptions": {
+              "raw": {
+                  "language": "json"
+              }
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+          "meta": {
+              "model": "request",
+              "action": "update"
+          },
+          "data": {
+              "id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+              "name": "Example POST Request",
+              "dataMode": "raw",
+              "data": null,
+              "auth": "noauth",
+              "events": null,
+              "rawModeData": "{\n    \"field\": \"Value\"\n}",
+              "descriptionFormat": null,
+              "description": "This is an example POST request.",
+              "variables": null,
+              "headers": null,
+              "method": "POST",
+              "pathVariables": null,
+              "url": "https://postman-echo.com/post",
+              "preRequestScript": null,
+              "tests": null,
+              "currentHelper": null,
+              "helperAttributes": null,
+              "queryParams": [],
+              "headerData": [],
+              "pathVariableData": [],
+              "protocolProfileBehavior": null,
+              "dataDisabled": false,
+              "responses_order": [],
+              "createdAt": "2023-09-01T07:59:25.000Z",
+              "updatedAt": "2023-09-08T12:30:29.000Z",
+              "owner": "12345678",
+              "lastUpdatedBy": "12345678",
+              "lastRevision": 32473087936,
+              "folder": null,
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "dataOptions": {
+                  "raw": {
+                      "language": "json"
+                  }
+              }
+          },
+          "revision": 32473098909
+      }
+order: 1000

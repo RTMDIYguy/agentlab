@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/invitations
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "action": "remove_partner",
+          "targetEntity": "team",
+          "targetEntityId": "123",
+          "target": {
+              "userIds": [
+                  "56781234"
+              ]
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "targetEntity": "team",
+          "targetEntityId": "123",
+          "action": "remove_partner",
+          "results": [
+              {
+                  "userId": "56781234",
+                  "status": "REMOVED"
+              }
+          ]
+      }
+order: 4000

@@ -1,0 +1,3 @@
+$kind: collection
+description: The **Analytics** endpoints enable you to explore Postman's [analytics reports](http://postman.postman.co/analytics/overview) programmatically. They provide visibility into usage patterns, workspace and collection activity, API performance, license distribution, and partner onboarding flow. Use these endpoints to incorporate analytics directly into your pipelines, dashboards, and internal agents.
+order: 1000

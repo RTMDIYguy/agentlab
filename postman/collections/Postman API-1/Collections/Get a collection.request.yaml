@@ -1,0 +1,20 @@
+$kind: http-request
+description: Gets information about a collection. For a complete list of this endpoint's possible values, use the [collection.json schema file](https://schema.postman.com/json/collection/v2.1.0/collection.json).
+url: "{{baseUrl}}/collections/:collectionId"
+method: GET
+queryParams:
+  - key: access_key
+    value: ""
+    disabled: true
+    description: A collection's read-only access key. Using this query parameter does not require an API key to call the endpoint.
+  - key: model
+    value: minimal
+    disabled: true
+    description: Return a list of only the collection's root-level request (`rootLevelRequests`) and folder (`rootLevelFolders`) IDs instead of the full collection element data.
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+settings: {}
+examples: ./.resources/Get a collection.resources/examples
+order: 12000

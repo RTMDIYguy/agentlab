@@ -1,0 +1,50 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private/:elementType/:elementId
+  method: PUT
+  pathVariables:
+    elementType: collection
+    elementId: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "parentFolderId": 1,
+              "environments": {
+                  "$add": [
+                      "660a6sa-c8sa37-46ca-9sa1d8-7e8c669d1",
+                      "02466-c837-46ca-9sa1d8-7e669d1"
+                  ],
+                  "$remove": [
+                      "024660a6-c837-46ca-9sa1d8-7e8dd7c669d1"
+                  ]
+              }
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "addedAt": "2022-12-07T18:22:15.000Z",
+          "addedBy": 12345678,
+          "createdBy": 12345678,
+          "createdAt": "2022-12-07T18:22:15.000Z",
+          "updatedBy": 12345678,
+          "updatedAt": "2022-12-07T18:22:15.000Z",
+          "type": "collection",
+          "id": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+          "name": "Billing API Collection",
+          "summary": "The Billing API collection.",
+          "description": null,
+          "href": "https://api.getpostman.com/collections/12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+          "parentFolderId": 1,
+          "environments": [
+              "660a6sa-c8sa37-46ca-9sa1d8-7e8c669d1",
+              "02466-c837-46ca-9sa1d8-7e669d1"
+          ]
+      }
+order: 3000

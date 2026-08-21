@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private/:elementType/:elementId
+  method: DELETE
+  pathVariables:
+    elementType: api
+    elementId: 5360b75f-447e-467c-9299-12fd6c92450d
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "forbiddenError",
+              "message": "You do not have enough permissions to perform this action."
+          }
+      }
+order: 7000

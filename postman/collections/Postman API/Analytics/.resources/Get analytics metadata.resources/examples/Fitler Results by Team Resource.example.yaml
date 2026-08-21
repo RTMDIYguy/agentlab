@@ -1,0 +1,54 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics-metadata?resources=team
+  method: GET
+  queryParams:
+    resources: team
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "description": "Metadata for analytics APIs delivering usage, success, workspace and team trend insights in Postman",
+              "resources": [
+                  {
+                      "resource": "team",
+                      "description": "Team-level metrics and insights on team activity, license consumption, and organizational workspace trends",
+                      "metrics": [
+                          {
+                              "metric": "user_api_journey",
+                              "description": "Tracks user progression through the API adoption funnel, showing active users, API users, new API users, successful users, and error-only users. Helps teams understand user onboarding effectiveness and identify users needing support."
+                          },
+                          {
+                              "metric": "workspace_distribution",
+                              "description": "Distribution of workspace types (team, private, partner, public) over time."
+                          },
+                          {
+                              "metric": "internal_workspace_distribution",
+                              "description": "Distribution of internal workspaces created into team-shared and private categories."
+                          },
+                          {
+                              "metric": "license_consumption",
+                              "description": "Tracks how licenses are used across roles (members, partners, guests) and identifies unused seats."
+                          },
+                          {
+                              "metric": "members",
+                              "description": "Detailed team member list including profile, role and invitation metadata."
+                          },
+                          {
+                              "metric": "last_autoflex_cycle",
+                              "description": "Detailed team members captured in the most recent AutoFlex billing cycle."
+                          },
+                          {
+                              "metric": "partner_engagement_funnel",
+                              "description": "Partner engagement funnel, providing insights into partner activation and onboarding. Helps organizations measure the effectiveness of their partner programs and identify engagement opportunities."
+                          }
+                      ]
+                  }
+              ]
+          }
+      }
+order: 3000

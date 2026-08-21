@@ -1,0 +1,10 @@
+$kind: http-request
+description: Deletes a collection.
+url: "{{baseUrl}}/collections/:collectionId"
+method: DELETE
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+examples: ./.resources/Delete a collection.resources/examples
+order: 16000

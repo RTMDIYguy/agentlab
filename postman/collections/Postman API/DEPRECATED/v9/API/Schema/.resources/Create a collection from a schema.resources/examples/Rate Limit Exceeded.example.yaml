@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/be50acd7-414e-4d65-9443-f919b847e29a/versions/56d5f9ac-69a7-4255-8343-cde8ea25ef8b/schemas/f087f7b9-018f-447f-ba64-74cb981957ce/collections
+  method: POST
+  queryParams:
+    - key: workspace
+      value: c90a3482-f80d-43d6-9dfb-0830f5e43605
+      disabled: true
+      description: |-
+        Optional. The workspace ID in which to created the collection.
+
+        If you do not include this query parameter, the system defaults to the "My Workspace" workspace.
+  body:
+    type: json
+    content: |-
+      {
+      	"name": "Test Collection",
+      	"relations": [
+      		{
+      			"type": "mocks"
+      		}	
+      	]
+      }
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "error": "rateLimited",
+          "message": "Rate limit exceeded. Please retry after 1669048687"
+      }
+order: 6000

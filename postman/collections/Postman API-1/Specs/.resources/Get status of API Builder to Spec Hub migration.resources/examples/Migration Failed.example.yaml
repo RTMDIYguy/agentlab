@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/spec-migrations
+  method: GET
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "status": "FAILED",
+          "details": {
+              "reason": "Moving to Spec Hub failed. Please try again or contact support."
+          }
+      }
+order: 2000

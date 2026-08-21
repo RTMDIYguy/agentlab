@@ -1,0 +1,11 @@
+$kind: http-request
+description: |-
+  **This endpoint is for Postman v10 and higher.**
+
+  Gets all of an API version's unclassified relations.
+
+  Unclassified relations are used for documentation and testing. This is the default relation type.
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}/unclassified
+method: GET
+examples: ./.resources/Get unclassified relations.resources/examples
+order: 1000

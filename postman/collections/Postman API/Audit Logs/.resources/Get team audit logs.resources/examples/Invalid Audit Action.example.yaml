@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/audit/logs?action=Created API Key
+  method: GET
+  queryParams:
+    action: Created API Key
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "InvalidAuditAction",
+              "message": "Invalid audit action format. Expected format: prefix.action_name (e.g., user.login)."
+          }
+      }
+order: 5000

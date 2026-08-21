@@ -1,0 +1,32 @@
+$kind: http-request
+name: Update a user
+description: |-
+  Updates a user in Postman.
+
+  ### Reactivating users
+
+  By setting the `active` property from `false` to `true`, this reactivates an account. This allows the account to authenticate in to Postman and adds the account back on to your Postman team.
+url: "{{baseUrl}}/scim/v2/Users/:userId"
+method: PATCH
+pathVariables:
+  - key: userId
+    value: ""
+    description: The user's SCIM ID.
+body:
+  type: json
+  content: |-
+    {
+        "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+        ],
+        "Operations": [
+            {
+                "op": "replace",
+                "value": {
+                    "active": true
+                }
+            }
+        ]
+    }
+examples: ./.resources/Update a user-1.resources/examples
+order: 5000

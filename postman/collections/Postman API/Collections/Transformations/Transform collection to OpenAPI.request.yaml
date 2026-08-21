@@ -1,0 +1,24 @@
+$kind: http-request
+description: |-
+  Transforms an existing Postman Collection into a stringified OpenAPI definition.
+
+  **Note:**
+
+  This does **not** create an API.
+url: "{{baseUrl}}/collections/:collectionId/transformations"
+method: GET
+queryParams:
+  - key: format
+    value: json
+    disabled: true
+    description: |-
+      Return the OpenAPI definition in the given format:
+      - `json` (default)
+      - `yaml`
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+settings: {}
+examples: ./.resources/Transform collection to OpenAPI.resources/examples
+order: 1000

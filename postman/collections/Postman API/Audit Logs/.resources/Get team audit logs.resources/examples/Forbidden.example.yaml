@@ -1,0 +1,17 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/audit/logs
+  method: GET
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "ForbiddenRequest",
+              "message": "You do not have permissions to view team Audit logs"
+          }
+      }
+order: 7000

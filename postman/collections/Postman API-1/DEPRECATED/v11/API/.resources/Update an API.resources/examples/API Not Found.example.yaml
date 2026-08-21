@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId
+  method: PUT
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 5360b75f-447e-467c-9299-12fd6c92450d
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Test API A",
+          "summary": "Test API A Schema",
+          "description": "This is Test API A."
+      }
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "type": "instanceNotFoundError",
+          "title": "We could not find the API you are looking for",
+          "detail": "We could not find the API you are looking for."
+      }
+order: 5000

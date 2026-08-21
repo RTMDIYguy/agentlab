@@ -1,0 +1,3 @@
+$kind: collection
+description: The endpoints in this folder are only available in Postman v11. They are considered deprecated and no longer in active development.
+order: 1000

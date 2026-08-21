@@ -1,0 +1,35 @@
+$kind: http-request
+description: |-
+  Updates a workspace's property, such as its name or visibility.
+
+  **Note:**
+
+  - This endpoint does <u>not</u> support the following workspace visibility changes:
+      
+      - `private` to `public`, `public` to `private`, and `private` to `personal` for **Free** and **Solo** [plans](https://www.postman.com/pricing/).
+          
+      - `public` to `personal` for team users only.
+          
+  - There are rate limits when publishing public workspaces.
+      
+  - Public team workspace names must be unique.
+url: "{{baseUrl}}/workspaces/:workspaceId"
+method: PUT
+pathVariables:
+  - key: workspaceId
+    value: ""
+    description: The workspace's ID.
+body:
+  type: json
+  content: |-
+    {
+        "workspace": {
+            "name": "{{workspaceName}}",
+            "type": "{{workspaceType}}",
+            "description": "{{workspaceDescription}}",
+            "about": "{{workspaceSummary}}"
+        }
+    }
+settings: {}
+examples: ./.resources/Update a workspace.resources/examples
+order: 6000

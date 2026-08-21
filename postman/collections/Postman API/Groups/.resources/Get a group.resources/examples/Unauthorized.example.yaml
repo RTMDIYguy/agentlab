@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/groups/:groupId
+  method: GET
+  pathVariables:
+    - key: groupId
+      value: "123"
+      description: The group's ID.
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/unauthorized",
+          "title": "Unauthorized",
+          "detail": "Unauthorized",
+          "status": 401
+      }
+order: 3000

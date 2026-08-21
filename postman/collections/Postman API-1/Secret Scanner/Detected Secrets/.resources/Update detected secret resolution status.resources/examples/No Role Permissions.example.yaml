@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/detected-secrets/:secretId
+  method: PUT
+  pathVariables:
+    secretId: MTc0ODA0Mw==
+  body:
+    type: json
+    content: |-
+      {
+          "resolution": "ACCEPTED_RISK",
+          "workspaceId": "e361eeb4-00dd-4225-9774-6146a2555999"
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "instance": "",
+          "status": 403,
+          "title": "Only members with Superadmin, Admin, or Workspace Admin roles can view the detected secrets.",
+          "type": "FORBIDDEN"
+      }
+order: 3000

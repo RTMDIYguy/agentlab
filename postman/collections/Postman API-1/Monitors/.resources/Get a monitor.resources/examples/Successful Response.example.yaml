@@ -1,0 +1,76 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors/:monitorId
+  method: GET
+  pathVariables:
+    monitorId: 12345678-1e6b6cb7-f13d-4000-acb7-0695757174a8
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "monitor": {
+              "id": "1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+              "name": "Test Monitor",
+              "uid": "12345678-1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+              "owner": 12345678,
+              "active": true,
+              "notificationLimit": 1,
+              "collectionUid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "environmentUid": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e",
+              "options": {
+                  "strictSSL": true,
+                  "followRedirects": true,
+                  "requestTimeout": 3000,
+                  "requestDelay": 1
+              },
+              "notifications": {
+                  "onError": [
+                      {
+                          "email": "taylor.lee@example.com"
+                      }
+                  ],
+                  "onFailure": [
+                      {
+                          "email": "taylor.lee@example.com"
+                      }
+                  ]
+              },
+              "distribution": [
+                  {
+                      "region": "us-east"
+                  }
+              ],
+              "schedule": {
+                  "cron": "0 0 * * * *",
+                  "timezone": "America/Chicago",
+                  "nextRun": "2025-06-18T05:00:00.000Z"
+              },
+              "retry": {
+                  "attempts": 1
+              },
+              "lastRun": {
+                  "status": "success",
+                  "startedAt": "2025-06-17T18:39:52.852Z",
+                  "finishedAt": "2025-06-17T18:39:53.707Z",
+                  "jobId": "e72dc3de-e4ac-407c-b1cc-2c5b6efced68",
+                  "stats": {
+                      "assertions": {
+                          "total": 5,
+                          "failed": 0
+                      },
+                      "requests": {
+                          "total": 3
+                      },
+                      "runCount": 42,
+                      "errorCount": 0,
+                      "abortedCount": 2,
+                      "responseLatency": 850,
+                      "responseSize": 2048
+      		    }
+              }
+      	}
+      }
+order: 1000

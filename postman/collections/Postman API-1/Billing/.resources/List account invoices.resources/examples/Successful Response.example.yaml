@@ -1,0 +1,33 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/accounts/:accountId/invoices?status=PAID
+  method: GET
+  queryParams:
+    status: PAID
+  pathVariables:
+    accountId: "123456"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": [
+              {
+                  "id": "inv_7UDSYBJPGQU93N7M",
+                  "status": "PAID",
+                  "issuedAt": "2023-10-12",
+                  "totalAmount": {
+                      "value": 440,
+                      "currency": "USD"
+                  },
+                  "links": {
+                      "web": {
+                          "href": "https://pay.postman.com/invoices/pay?invoice_public_id=inv_7UDSYBJPGQU93N7M"
+                      }
+                  }
+              }
+          ]
+      }
+order: 1000

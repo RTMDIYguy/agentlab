@@ -1,0 +1,3 @@
+$kind: collection
+description: The **Pull Requests** endpoints enable you to manage your [pull requests](https://learning.postman.com/docs/collaborating-in-postman/using-version-control/creating-pull-requests/) in Postman. Pull requests allow reviewers to look at your changes. Reviewers can make comments on your changes and will decide whether to approve them and merge them into the parent element.
+order: 14000

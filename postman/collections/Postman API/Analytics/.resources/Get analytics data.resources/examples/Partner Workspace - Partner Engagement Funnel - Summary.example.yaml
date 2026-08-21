@@ -1,0 +1,58 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=team&metrics=partner_engagement_funnel&view=summary&duration=last_180_days
+  method: GET
+  queryParams:
+    resource: team
+    metrics: partner_engagement_funnel
+    view: summary
+    duration: last_180_days
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "metric",
+                              "type": "STRING",
+                              "description": "Name of the partner engagement metric."
+                          },
+                          {
+                              "name": "count",
+                              "type": "INTEGER",
+                              "description": "Value associated with the specific engagement metric."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "all_partners",
+                          131
+                      ],
+                      [
+                          "workspace_visited",
+                          7
+                      ],
+                      [
+                          "viewed_collection",
+                          6
+                      ],
+                      [
+                          "request_sent",
+                          3
+                      ],
+                      [
+                          "successful_requests_200OK",
+                          3
+                      ]
+                  ]
+              }
+          }
+      }
+order: 35000

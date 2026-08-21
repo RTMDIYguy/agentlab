@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/:elementType/:elementId/tasks/:taskId
+  method: GET
+  pathVariables:
+    elementType: collections
+    elementId: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+    taskId: 66ae9950-0869-4e65-96b0-1e0e47e771af
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "action": "generation",
+              "model": "collection"
+          },
+          "details": {
+              "resources": [
+                  {
+                      "id": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "url": "/collections/e726de58-f1b3-4edd-a8a7-2579dc799d39"
+                  }
+              ]
+          },
+          "status": "completed"
+      }
+order: 2000

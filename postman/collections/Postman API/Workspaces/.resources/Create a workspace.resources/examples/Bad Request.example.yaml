@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "type": "personal",
+              "description": "This is a test personal workspace."
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "invalidParamError",
+              "message": "body should have required property 'name'"
+          }
+      }
+order: 10000

@@ -1,0 +1,22 @@
+$kind: http-request
+description: Gets information about all Postman team members.
+url: "{{baseUrl}}/scim/v2/Users"
+method: GET
+queryParams:
+  - key: startIndex
+    value: "1"
+    disabled: true
+    description: The index entry by which to begin the list of returned results. Must be a value of `1` or greater.
+  - key: filter
+    value: ""
+    disabled: true
+    description: |-
+      Filter results by a specific word or phrase. This query parameter accepts the following:
+      - `userName` — Filter values are case-sensitive, and special characters and spaces must be URL encoded.
+      - `active` — Return only users who are active (`true`) or inactive (`false`).
+  - key: count
+    value: ""
+    disabled: true
+    description: Limit the number of results returned in a single response. By default, the system returns a list of 100 users.
+examples: ./.resources/Get all users.resources/examples
+order: 4000

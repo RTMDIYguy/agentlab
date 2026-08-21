@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/comments/:commentId
+  method: DELETE
+  pathVariables:
+    apiId: 5360b75f-447e-467c-9299-12fd6c92450d
+    commentId: "46814"
+  body:
+    type: json
+    content: ""
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/unauthorized",
+          "title": "Unauthorized",
+          "detail": "Unauthorized",
+          "status": 401
+      }
+order: 2000

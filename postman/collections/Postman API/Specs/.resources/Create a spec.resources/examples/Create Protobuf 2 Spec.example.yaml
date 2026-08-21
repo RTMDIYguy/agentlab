@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs?workspaceId=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  queryParams:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Sample API",
+          "type": "PROTOBUF:2",
+          "files": [
+              {
+                  "path": "index.proto",
+                  "content": "syntax = \"proto2\";\n\npackage com.addressBook;\n\nmessage Person {\n  required string name = 1;\n  required int32 id = 2;\n  optional string email = 3;\n}\n\nmessage AddressBook {\n  repeated Person people = 1;\n}\n\nmessage AddressBookById {\n  required int32 id = 1;\n}\n\nmessage AddressBookByName {\n  required string name = 1;\n}\n\nservice AddressBookService {\n  rpc CreateAddressBook (AddressBook) returns (AddressBook) {}\n  rpc GetAddressBook (AddressBookById) returns (AddressBook) {}\n  rpc ListAddressBook (AddressBookByName) returns (stream AddressBook) {}\n}"
+              }
+          ]
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Sample API",
+          "type": "PROTOBUF:2",
+          "updatedAt": "2025-03-15T13:48:28.000Z",
+          "createdAt": "2025-03-15T13:48:28.000Z",
+          "createdBy": 12345678,
+          "updatedBy": 12345678,
+          "id": "b4fc1bdc-6587-4f9b-95c9-f768146089b4"
+      }
+order: 6000

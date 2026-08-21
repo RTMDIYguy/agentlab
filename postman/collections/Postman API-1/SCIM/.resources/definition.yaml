@@ -1,0 +1,37 @@
+$kind: collection
+description: |-
+  Postman supports [SCIM](https://learning.postman.com/docs/administration/scim-provisioning/scim-provisioning-overview/) (System for Cross-domain Identity Management), which allows you to automate your team's provisioning. You can deploy Postman at scale across your organization and control access to it with your identity provider.
+
+  SCIM provisioning is only available with a Postman [<b>Enterprise</b> plan](https://www.postman.com/pricing).
+
+  **Note:**
+
+  - While all other endpoints in this collection require a Postman API key, **these endpoints require a** [<b>SCIM API key</b>](https://learning.postman.com/docs/administration/scim-provisioning/scim-provisioning-overview/#generating-scim-api-key)**.**
+      
+  - You must be a [Team Admin](http://learning.postman.com/docs/collaborating-in-postman/roles-and-permissions/#team-roles) to enable SCIM.
+      
+  - To use SCIM, you must have only **one** SSO method configured. If you have more than one SSO method enabled, you cannot generate an SCIM API key.
+      
+  - You can only deactivate users with the SCIM API. You cannot permanently delete users with the API.
+      
+  - You must [configure SSO](https://learning.postman.com/docs/administration/sso/admin-sso/) and [enable SCIM](http://learning.postman.com/docs/administration/managing-your-team/configuring-scim/#enabling-scim-provisioning) for your Postman team to use these endpoints.
+      
+
+  ### Rate limits
+
+  For your organization's team, Postman applies per-minute rate limits across all SCIM API endpoints. This helps ensure that you have the best experience using Postman's SCIM API. The rate limits apply as follows:
+
+  - **Write (POST, PUT, PATCH)** — 180 requests per minute.
+      
+  - **Read (GET)** — 300 requests per minute.
+      
+
+  If you reach the rate limit, the API will return an HTTP `429 Too Many Requests` response.
+auth:
+  - id: eed16693-abcb-44eb-a93f-9a0469bf9e35
+    type: apikey
+    name: apikey auth
+    credentials:
+      key: Authorization
+      value: "{{SCIM-apiKey}}"
+order: 15000

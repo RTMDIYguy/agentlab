@@ -1,0 +1,202 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks/:mockId/call-logs?until=2024-06-21T14:39:21.438Z&since=2024-01-21T14:39:21.438Z
+  method: GET
+  queryParams:
+    until: 2024-06-21T14:39:21.438Z
+    since: 2024-01-21T14:39:21.438Z
+  pathVariables:
+    mockId: 12345678-e3d951bf-873f-49ac-a658-b2dcb91d3289
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+      	"call-logs": [
+      		{
+      			"id": "c4505a1e-7261-497c-91ff-db4bd51351a6-9545",
+      			"responseName": "Double check your method and the request path and try again.",
+      			"servedAt": "2022-01-17T06:19:30.000Z",
+      			"request": {
+      				"method": "POST",
+      				"path": "/animals",
+      				"headers": [
+      					{
+      						"key": "content-length",
+      						"value": "50"
+      					},
+      					{
+      						"key": "x-mock-match-request-body",
+      						"value": "true"
+      					},
+      					{
+      						"key": "content-type",
+      						"value": "application/json"
+      					}
+      				],
+      				"body": {
+      					"mode": "raw",
+      					"data": "{\"type\":\"hamster\",\"breed\":\"Syrian Hamster\"}"
+      				}
+      			},
+      			"response": {
+      				"type": "error",
+      				"statusCode": 404,
+      				"headers": [],
+      				"body": {
+      					"data": "{\"error\":{\"name\":\"mockRequestNotFoundError\",\"message\":\"Double check your method and the request path and try again.\"}}"
+      				}
+      			}
+      		},
+      		{
+      			"id": "0f63f54d-665e-436a-95b4-c1302d7685a9-3925",
+      			"responseName": "Bad request",
+      			"servedAt": "2022-01-17T06:19:22.000Z",
+      			"request": {
+      				"method": "POST",
+      				"path": "/animals",
+      				"headers": [
+      					{
+      						"key": "content-length",
+      						"value": "69"
+      					},
+      					{
+      						"key": "x-mock-match-request-body",
+      						"value": "true"
+      					},
+      					{
+      						"key": "content-type",
+      						"value": "application/json"
+      					}
+      				],
+      				"body": {
+      					"mode": "raw",
+      					"data": "{\"type\":\"hamster\",\"breed\":\"Syrian Hamster\",\"age\":\"1 month\"}"
+      				}
+      			},
+      			"response": {
+      				"type": "success",
+      				"statusCode": 400,
+      				"headers": [
+      					{
+      						"description": {
+      							"content": "",
+      							"type": "text/plain"
+      						},
+      						"key": "Content-Type",
+      						"value": "application/json"
+      					}
+      				],
+      				"body": {
+      					"data": "{\n\t\"message\": \"Malformed request. You need to send gender as part of the request.\"\n}"
+      				}
+      			}
+      		},
+      		{
+      			"id": "adab0d30-5c38-43bf-af90-4119925138e2-3795",
+      			"responseName": "Successful addition of animals to the store",
+      			"servedAt": "2022-01-17T06:19:16.000Z",
+      			"request": {
+      				"method": "POST",
+      				"path": "/animals",
+      				"headers": [
+      					{
+      						"key": "content-length",
+      						"value": "88"
+      					},
+      					{
+      						"key": "x-mock-match-request-body",
+      						"value": "true"
+      					},
+      					{
+      						"key": "content-type",
+      						"value": "application/json"
+      					}
+      				],
+      				"body": {
+      					"mode": "raw",
+      					"data": "{\"type\":\"hamster\",\"breed\":\"Syrian Hamster\",\"age\":\"1 month\",\"gender\":\"male\"}"
+      				}
+      			},
+      			"response": {
+      				"type": "success",
+      				"statusCode": 200,
+      				"headers": [
+      					{
+      						"description": {
+      							"content": "",
+      							"type": "text/plain"
+      						},
+      						"key": "Content-Type",
+      						"value": "application/json"
+      					}
+      				],
+      				"body": {
+      					"data": "{\n\t\"message\": \"Animal added successfully to the store\"\n}"
+      				}
+      			}
+      		},
+      		{
+      			"id": "dae50669-f4c1-460a-b3a4-3a2445f4f39d-2468",
+      			"responseName": "Get filtered list of Animals",
+      			"servedAt": "2022-01-17T06:18:26.000Z",
+      			"request": {
+      				"method": "GET",
+      				"path": "/animals?type=dog",
+      				"headers": [],
+      				"body": {}
+      			},
+      			"response": {
+      				"type": "success",
+      				"statusCode": 200,
+      				"headers": [
+      					{
+      						"description": {
+      							"content": "",
+      							"type": "text/plain"
+      						},
+      						"key": "Content-Type",
+      						"value": "application/json"
+      					}
+      				],
+      				"body": {
+      					"data": "[\n\t{\n\t\t\"type\": \"dog\",\n\t\t\"breed\": \"German Sheperd\",\n\t\t\"age\": \"6 months\",\n\t\t\"gender\": \"male\"\n\t},\n\t{\n\t\t\"type\": \"dog\",\n\t\t\"breed\": \"Bulldog\",\n\t\t\"age\": \"1 year\",\n\t\t\"gender\": \"female\"\n\t}\n]"
+      				}
+      			}
+      		},
+      		{
+      			"id": "a5330463-26e1-4812-a962-e44b569a2054-9894",
+      			"responseName": "Get Animals",
+      			"servedAt": "2022-01-17T06:18:06.000Z",
+      			"request": {
+      				"method": "GET",
+      				"path": "/animals",
+      				"headers": [],
+      				"body": {}
+      			},
+      			"response": {
+      				"type": "success",
+      				"statusCode": 200,
+      				"headers": [
+      					{
+      						"description": {
+      							"content": "",
+      							"type": "text/plain"
+      						},
+      						"key": "Content-Type",
+      						"value": "application/json"
+      					}
+      				],
+      				"body": {
+      					"data": "[\n\t{\n\t\t\"type\": \"dog\",\n\t\t\"breed\": \"German Sheperd\",\n\t\t\"age\": \"6 months\",\n\t\t\"gender\": \"male\"\n\t},\n\t{\n\t\t\"type\": \"dog\",\n\t\t\"breed\": \"Bulldog\",\n\t\t\"age\": \"1 year\",\n\t\t\"gender\": \"female\"\n\t},\n\t{\n\t\t\"type\": \"cat\",\n\t\t\"breed\": \"Persian cat\",\n\t\t\"age\": \"3 months\",\n\t\t\"gender\": \"female\"\n\t}\n]"
+      				}
+      			}
+      		}
+      	],
+      	"meta": {
+      		"nextCursor": null
+      	}
+      }
+order: 11000

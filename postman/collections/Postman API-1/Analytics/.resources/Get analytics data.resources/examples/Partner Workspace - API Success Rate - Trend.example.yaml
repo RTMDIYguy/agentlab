@@ -1,0 +1,48 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=success_rate&view=summary&duration=last_30_days
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: success_rate
+    view: summary
+    duration: last_30_days
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "success_rate",
+                              "type": "FLOAT",
+                              "description": "Overall percentage of successful requests."
+                          },
+                          {
+                              "name": "change",
+                              "type": "FLOAT",
+                              "description": "Numeric change in success rate compared to the previous period."
+                          },
+                          {
+                              "name": "change_type",
+                              "type": "STRING",
+                              "description": "Indicates whether the success rate increased or decreased."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          0.962,
+                          0.012,
+                          "increase"
+                      ]
+                  ]
+              }
+          }
+      }
+order: 28000

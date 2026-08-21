@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "name": "Public Workspace",
+              "type": "public",
+              "description": "This is a public workspace.",
+              "about": "Public workspace."
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "workspaceSlugNotUniqueError",
+              "message": "Workspace Slug is not unique in the account context"
+          }
+      }
+order: 9000

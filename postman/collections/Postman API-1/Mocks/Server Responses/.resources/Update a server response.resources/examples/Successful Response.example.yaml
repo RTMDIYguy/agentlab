@@ -1,0 +1,49 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks/:mockId/server-responses/:serverResponseId
+  method: PUT
+  pathVariables:
+    mockId: 12345678-e3d951bf-873f-49ac-a658-b2dcb91d3289
+    serverResponseId: 965cdd16-fe22-4d96-a161-3d05490ac421
+  body:
+    type: json
+    content: |-
+      {
+          "serverResponse": {
+              "name": "Service Unavailable",
+              "statusCode": 503,
+              "headers": [
+                  {
+                      "key": "Content-type",
+                      "value": "application/json"
+                  }
+              ],
+              "language": "json",
+              "body": "{\n    \"message\": \"Service is temporarily unavailable due to maintenance. Please reach out to support if the problem persists.\"\n}"
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "createdAt": "2022-08-02T15:08:03.000Z",
+          "updatedAt": "2022-08-02T15:58:12.000Z",
+          "id": "965cdd16-fe22-4d96-a161-3d05490ac421",
+          "name": "Service Unavailable",
+          "statusCode": 503,
+          "headers": [
+              {
+                  "key": "Content-type",
+                  "value": "application/json"
+              }
+          ],
+          "language": "json",
+          "body": "{\n    \"message\": \"Service is temporarily unavailable due to maintenance. Please reach out to support if the problem persists.\"\n}",
+          "createdBy": "12345678",
+          "updatedBy": "12345678",
+          "mock": "e3d951bf-873f-49ac-a658-b2dcb91d3289"
+      }
+order: 1000

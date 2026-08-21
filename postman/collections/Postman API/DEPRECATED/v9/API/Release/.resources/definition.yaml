@@ -1,0 +1,10 @@
+$kind: collection
+description: |-
+  The API release endpoints let you manage your API's releases.
+
+  ### Important
+
+  **API releases are deprecated as of Postman v10 and higher.**
+
+  You can no longer create releases for collections in Postman v10, but API producers can [publish versions of an API](https://learning.postman.com/docs/designing-and-developing-your-api/versioning-an-api/api-versions/).
+order: 4000

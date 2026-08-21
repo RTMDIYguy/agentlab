@@ -1,0 +1,16 @@
+$kind: http-request
+description: |-
+  Removes a workspace from your team's [Private API Network](https://learning.postman.com/docs/collaborating-in-postman/adding-private-network/).
+
+  **Note:**
+
+  Removing a workspace does not delete it. It only removes it from the Private API Network folder.
+url: "{{baseUrl}}/network/private/workspace/:workspaceId"
+method: DELETE
+pathVariables:
+  - key: workspaceId
+    value: ""
+    description: The workspace's ID.
+settings: {}
+examples: ./.resources/Remove a workspace.resources/examples
+order: 4000

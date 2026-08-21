@@ -1,0 +1,43 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis
+  method: POST
+  queryParams:
+    - key: workspace
+      value: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+      disabled: true
+      description: |-
+        Optional. The workspace ID in which to create the API.
+
+        If you do not use this parameter, the system creates the API in the "My Workspace" workspace.
+  body:
+    type: json
+    content: |-
+      {
+          "api": {
+              "name": "Test API",
+              "summary": "Test API Schema",
+              "description": "This is a test API."
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "api": {
+              "createdAt": "2022-06-29T20:46:58.000Z",
+              "updatedAt": "2022-06-29T20:46:58.000Z",
+              "id": "5360b75f-447e-467c-9299-12fd6c92450d",
+              "name": "Test API",
+              "summary": "Test API Schema",
+              "description": "This is a test API.",
+              "createdBy": "12345678",
+              "updatedBy": "12345678"
+          }
+      }
+order: 1000

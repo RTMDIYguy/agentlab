@@ -1,0 +1,39 @@
+$kind: http-request
+description: |-
+  Gets information about API schema. You can use the `versionId` query parameter to get a schema published in an API version.
+
+  You can use this API to do the following:
+
+  - Get a schema's metadata.
+  - Get all the files in a schema. This only returns the first file in the schema. The endpoint response contains a link to the next set of response results.
+  - Get a schema's contents in multi-file or bundled format.
+      
+
+  **Note:**
+
+  The `versionId` query parameter is a **required** parameter for API viewers.
+url: "{{baseUrl}}/apis/:apiId/schemas/:schemaId"
+method: GET
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+queryParams:
+  - key: versionId
+    value: ""
+    disabled: true
+    description: The API's version ID.
+  - key: bundled
+    value: "true"
+    disabled: true
+    description: If true, return the schema in a bundled format.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+  - key: schemaId
+    value: "{{schemaId}}"
+    description: The API schema's ID.
+settings: {}
+examples: ./.resources/Get a schema.resources/examples
+order: 3000

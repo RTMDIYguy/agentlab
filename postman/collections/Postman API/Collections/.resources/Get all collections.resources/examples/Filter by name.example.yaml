@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections?name=Test Collection
+  method: GET
+  queryParams:
+    name: Test Collection
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collections": [
+              {
+                  "id": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "name": "Test Collection",
+                  "owner": "12345678",
+                  "createdAt": "2022-01-13T10:21:46.000Z",
+                  "updatedAt": "2022-02-12T11:29:56.000Z",
+                  "uid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "isPublic": false,
+                  "fork": {
+                      "label": "Test Fork",
+                      "createdAt": "2022-06-16T19:51:44.069Z",
+                      "from": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+                  }
+              }
+          ]
+      }
+order: 2000

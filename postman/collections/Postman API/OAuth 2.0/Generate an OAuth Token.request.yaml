@@ -1,0 +1,25 @@
+$kind: http-request
+description: |-
+  Generates an OAuth 2.0 access token for a client application using the `client_credentials` grant type. Use this endpoint with backend services or bots to authenticate and authorize API requests without user interaction.
+
+  **Note:**
+
+  This endpoint uses Basic Auth. You must pass a valid client ID and client secret for the username and password, respectively.
+url: "{{baseUrl}}/oauth2/token"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "installationAuthId": "{{installationAuthId}}",
+        "grant_type": "client_credentials",
+        "jwt": "{{jwtToken}}"
+    }
+auth:
+  type: basic
+  credentials:
+    username: "{{clientId}}"
+    password: "{{clientSecret}}"
+settings: {}
+examples: ./.resources/Generate an OAuth Token.resources/examples
+order: 1000

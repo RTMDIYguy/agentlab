@@ -1,0 +1,11 @@
+$kind: http-request
+description: Gets all comments left by users in a collection.
+url: "{{baseUrl}}/collections/:collectionUid/comments"
+method: GET
+pathVariables:
+  - key: collectionUid
+    value: ""
+    description: The collection's unique ID.
+settings: {}
+examples: ./.resources/Get a collection's comments.resources/examples
+order: 1000

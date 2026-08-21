@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId/definition
+  method: GET
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "MalformedSpecification",
+          "title": "Malformed Specification.",
+          "status": 400,
+          "detail": "The spec you are trying to fetch has errors, the definition for the same can't be generated"
+      }
+order: 3000

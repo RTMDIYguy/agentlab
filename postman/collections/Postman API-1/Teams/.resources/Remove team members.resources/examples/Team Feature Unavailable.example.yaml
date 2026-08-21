@@ -1,0 +1,44 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/bulk-members
+  method: DELETE
+  pathVariables:
+    teamId: "123"
+  body:
+    type: json
+    content: |-
+      {
+          "entities": [
+              {
+                  "entityType": "user",
+                  "entityId": "87514321"
+              },
+              {
+                  "entityType": "user",
+                  "entityId": "41674321"
+              },
+              {
+                  "entityType": "group",
+                  "entityId": "89654321"
+              }
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "status": 400,
+          "title": "Bad Request",
+          "detail": {
+              "error": {
+                  "name": "BadRequest",
+                  "message": "Team feature is not available for your organization."
+              }
+          },
+          "instance": "/teams"
+      }
+order: 7000

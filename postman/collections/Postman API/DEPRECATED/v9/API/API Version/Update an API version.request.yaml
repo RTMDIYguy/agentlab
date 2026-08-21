@@ -1,0 +1,21 @@
+$kind: http-request
+description: |-
+  **This endpoint is deprecated in Postman v10 and higher.**
+
+  Updates an API version. Include the following request body properties in the `version` object:
+
+  - `name` — A **string** that contains the API version's name.
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+    	"version": {
+    		"name": "{{apiVersionName}}"
+    	}
+    }
+examples: ./.resources/Update an API version.resources/examples
+order: 4000

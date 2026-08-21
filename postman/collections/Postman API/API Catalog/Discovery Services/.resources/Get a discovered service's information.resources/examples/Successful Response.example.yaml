@@ -1,0 +1,61 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services/:serviceId
+  method: GET
+  pathVariables:
+    serviceId: c6ec74e7-14f8-498c-9470-7a654173bed6
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "id": "c6ec74e7-14f8-498c-9470-7a654173bed6",
+          "organizationId": 123,
+          "discoverySource": "api_gateway_app",
+          "name": "Jelly Bean Wiki (IBM - 10) - sandbox (1.0.0)",
+          "description": null,
+          "version": "1.0.0",
+          "sourceEnvironment": "sandbox",
+          "systemEnvironmentId": null,
+          "tags": [],
+          "status": "discovered",
+          "providerServiceId": "048840c0-1be8-4d9f-a8a6-7429ca50f5ca,989213fc-b1a3-42cb-b0d6-b7843ee5d47d,40d57331-ad73-47a3-87f0-032af447df8e",
+          "providerMetadata": {
+              "title": "Jelly Bean Wiki (IBM - 10) - sandbox (1.0.0)",
+              "environmentId": "048840c0-1be8-4d9f-a8a6-7429ca50f5ca,989213fc-b1a3-42cb-b0d6-b7843ee5d47d",
+              "environmentVersion": "2.0.0",
+              "openApiSpecCanBeDownloaded": true
+          },
+          "apiDefinition": {
+              "format": "openapi_3",
+              "formatVersion": "3.0.1",
+              "contentHash": "8839a589ba50f454a03f58ec761ad26e2d267a8f26bd63cf6298d4643b23ed7e",
+              "content": "eyJvcGVuYXBpIjoiMy4wLjAiLCJpbmZvIjp7InRpdGxlIjoiQ29uZmlnIiwidmVyc2lvbiI6IjEuMC4wIn0sInBhdGhzIjp7Ii9jb25maWciOnsiZ2V0Ijp7InN1bW1hcnkiOiJHZXQgY29uZmlnIn19LCIvY29uZmlnL3trZXl9Ijp7InB1dCI6eyJzdW1tYXJ5IjoiVXBkYXRlIGNvbmZpZyJ9fX19="
+          },
+          "endpoints": [
+              {
+                  "method": "GET",
+                  "path": "/api/recipes",
+                  "description": null
+              },
+              {
+                  "method": "GET",
+                  "path": "/api/mileStones",
+                  "description": null
+              },
+              {
+                  "method": "GET",
+                  "path": "/api/Beans",
+                  "description": null
+              }
+          ],
+          "endpointsCount": 3,
+          "discoveredAt": "2026-02-12T02:04:58.000Z",
+          "discoveredBy": 12345678,
+          "lastSyncedAt": "2026-02-12T02:04:58.000Z",
+          "managedWorkspaceId": null,
+          "integratedAt": null
+      }
+order: 1000

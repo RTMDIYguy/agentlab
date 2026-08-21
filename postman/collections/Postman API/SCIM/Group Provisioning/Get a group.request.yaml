@@ -1,0 +1,11 @@
+$kind: http-request
+description: Gets information about a Postman group within the team.
+url: "{{baseUrl}}/scim/v2/Groups/:groupId"
+method: GET
+pathVariables:
+  - key: groupId
+    value: ""
+    description: The group's ID.
+settings: {}
+examples: ./.resources/Get a group.resources/examples
+order: 3000

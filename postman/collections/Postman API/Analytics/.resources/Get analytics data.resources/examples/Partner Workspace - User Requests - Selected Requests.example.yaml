@@ -1,0 +1,107 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=user_requests&view=detailed&duration=last_180_days&requestId=12345678-ae30eef1-e330-4666-bad2-e48bb22d8790,87654321-37fc31e2-f0bb-42ee-8651-b0fd0115d68a&limit=3
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: user_requests
+    view: detailed
+    duration: last_180_days
+    requestId: 12345678-ae30eef1-e330-4666-bad2-e48bb22d8790,87654321-37fc31e2-f0bb-42ee-8651-b0fd0115d68a
+    limit: "3"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "user_id",
+                              "type": "STRING",
+                              "description": "Unique identifier of the user who sent the request."
+                          },
+                          {
+                              "name": "request_name",
+                              "type": "STRING",
+                              "description": "Human-readable name of the request made by the user."
+                          },
+                          {
+                              "name": "request_id",
+                              "type": "STRING",
+                              "description": "Unique identifier referencing the specific request definition."
+                          },
+                          {
+                              "name": "collection_name",
+                              "type": "STRING",
+                              "description": "Name of the collection associated with the request."
+                          },
+                          {
+                              "name": "collection_id",
+                              "type": "STRING",
+                              "description": "Identifier of the collection associated with the request."
+                          },
+                          {
+                              "name": "workspace_id",
+                              "type": "STRING",
+                              "description": "Identifier of the workspace containing the collection."
+                          },
+                          {
+                              "name": "response_status",
+                              "type": "INTEGER",
+                              "description": "HTTP status code returned for the request."
+                          },
+                          {
+                              "name": "request_ts",
+                              "type": "TIMESTAMP",
+                              "format": "YYYY-MM-DDTHH:MM:SSZ",
+                              "description": "Timestamp when the request was made."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "87654321",
+                          "New Request",
+                          "87654321-37fc31e2-f0bb-42ee-8651-b0fd0115d68a",
+                          "New Collection",
+                          "87654321-91e11daa-8fe1-4e1a-a6da-6cca43251595",
+                          "c303c5b6-066f-4c58-a9ef-cb0c710ccf02",
+                          200,
+                          "2025-07-30T21:55:19.000Z"
+                      ],
+                      [
+                          "12345678",
+                          "Test API",
+                          "12345678-ae30eef1-e330-4666-bad2-e48bb22d8790",
+                          "Test APIs",
+                          "12345678-2f9170b4-a59f-4b44-aa93-e25cafdaa2d1",
+                          "583a1633-d0e5-4890-be85-628c52916152",
+                          200,
+                          "2026-01-13T03:57:18.000Z"
+                      ],
+                      [
+                          "12345678",
+                          "Test API",
+                          "12345678-ae30eef1-e330-4666-bad2-e48bb22d8790",
+                          "Test APIs",
+                          "12345678-2f9170b4-a59f-4b44-aa93-e25cafdaa2d1",
+                          "583a1633-d0e5-4890-be85-628c52916152",
+                          404,
+                          "2026-01-13T03:57:29.000Z"
+                      ]
+                  ],
+                  "pagination": {
+                      "total": 4,
+                      "limit": 100,
+                      "offset": 0,
+                      "has_more": true
+                  }
+              }
+          }
+      }
+order: 31000

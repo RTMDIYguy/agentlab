@@ -1,0 +1,31 @@
+$kind: http-request
+description: Updates a mock server's server response.
+url: "{{baseUrl}}/mocks/:mockId/server-responses/:serverResponseId"
+method: PUT
+pathVariables:
+  - key: mockId
+    value: ""
+    description: The mock's ID.
+  - key: serverResponseId
+    value: ""
+    description: The server response's ID.
+body:
+  type: json
+  content: |-
+    {
+        "serverResponse": {
+            "name": "{{serverStubName}}",
+            "statusCode": 500,
+            "headers": [
+                {
+                    "key": "{{headerKey}}",
+                    "value": "{{headerValue}}"
+                }
+            ],
+            "body": "{{serverStubBody}}",
+            "language": "{{languageType}}"
+        }
+    }
+settings: {}
+examples: ./.resources/Update a server response.resources/examples
+order: 4000

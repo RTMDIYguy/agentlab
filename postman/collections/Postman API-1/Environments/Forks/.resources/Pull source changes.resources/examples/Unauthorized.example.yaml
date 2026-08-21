@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentUid/pulls
+  method: POST
+  pathVariables:
+    environmentUid: 12345678-5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      {
+          "source": "12345678-d9c7dc8f-904e-4bba-99b5-4d490aae1957"
+      }
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "AuthenticationError",
+              "message": "Invalid API Key. Every request requires a valid API Key to be sent."
+          }
+      }
+order: 3000

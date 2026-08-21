@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks/:mockId/server-responses/:serverResponseId
+  method: PUT
+  pathVariables:
+    mockId: 12345678-e3d951bf-873f-49ac-a658-b2dcb91d3289
+    serverResponseId: 965cdd16-fe22-4d96-a161-3d05490ac421
+  body:
+    type: json
+    content: |-
+      {
+          "serverResponse": {}
+      }
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "serverResponseNotFoundError",
+              "header": "Unable to find mock server response",
+              "message": "We could not find the mock server response you are looking for."
+          }
+      }
+order: 3000

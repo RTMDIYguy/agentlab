@@ -1,0 +1,72 @@
+$kind: http-request
+description: |-
+  Gets a mock server's call logs. You can get a maximum of 6.5MB of call logs or a total of 100 call logs, whichever limit is met first in one API call.
+
+  Call logs contain exchanged request and response data made to mock servers. The logs provide visibility into how the mock servers are being used. You can log data to debug, test, analyze, and more, depending upon the use case.
+
+  **Note:**
+
+  Call logs have a retention period based on your [Postman plan](https://www.postman.com/pricing/#mock-calls). For more information, see [this article](https://support.postman.com/hc/en-us/articles/21219973964951-I-can-t-see-my-mock-server-logs-history) in the [Postman Support Center](https://support.postman.com/).
+url: "{{baseUrl}}/mocks/:mockId/call-logs"
+method: GET
+queryParams:
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of rows to return in the response. This value defaults to 100.
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The pointer to the first record of the set of paginated results. To view the next response, use the `nextCursor` value for this parameter.
+  - key: until
+    value: ""
+    disabled: true
+    description: Return only results created until this given time, in [ISO 8601](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) format. This value cannot be earlier than the `since` value.
+  - key: since
+    value: ""
+    disabled: true
+    description: Return only results created since the given time, in [ISO 8601](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) format. This value cannot be later than the `until` value.
+  - key: responseStatusCode
+    value: ""
+    disabled: true
+    description: Return only call logs that match the given HTTP response status code.
+  - key: responseType
+    value: ""
+    disabled: true
+    description: Return only call logs that match the given response type. Matching is not case-sensitive.
+  - key: requestMethod
+    value: ""
+    disabled: true
+    description: Return only call logs that match the given HTTP method. Matching is not case-sensitive.
+  - key: requestPath
+    value: ""
+    disabled: true
+    description: Return only call logs that match the given request path. Matching is not case-sensitive.
+  - key: sort
+    value: ""
+    disabled: true
+    description: |-
+      Sort the results by the given value. If you use this query parameter, you must also use the `direction` parameter.
+
+      If you use this query parameter, you must also use the `direction` parameter.
+  - key: direction
+    value: ""
+    disabled: true
+    description: |-
+      Sort in ascending (`asc`) or descending (`desc`) order. Matching is not case-sensitive.
+
+      If you use this query parameter, you must also use the `sort` parameter.
+  - key: include
+    value: ""
+    disabled: true
+    description: |-
+      Include call log records with header and body data. This query parameter accepts the `request.headers`, `request.body`, `response.headers`, and `response.body` values.
+
+      For multiple include types, comma-separate each value.
+pathVariables:
+  - key: mockId
+    value: ""
+    description: The mock's ID.
+settings: {}
+examples: ./.resources/Get a mock server's call logs.resources/examples
+order: 1000

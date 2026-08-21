@@ -1,0 +1,45 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments?workspace=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  queryParams:
+    workspace: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "name": "Test Environment",
+              "values": [
+                  {
+                      "key": "collectionId",
+                      "value": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "enabled": true,
+                      "type": "default"
+                  },
+                  {
+                      "key": "variable_1",
+                      "value": "The variable_1 value.",
+                      "enabled": false,
+                      "type": "default"
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    X-RateLimit-Limit: "60"
+    X-RateLimit-Remaining: "59"
+    X-RateLimit-Reset: "1631439621"
+    X-RateLimit-RetryAfter: "4"
+    RetryAfter: "4"
+  body:
+    type: json
+    content: |-
+      {
+          "error": "rateLimited",
+          "message": "Rate limit exceeded. Please retry after 1669048687"
+      }
+order: 6000

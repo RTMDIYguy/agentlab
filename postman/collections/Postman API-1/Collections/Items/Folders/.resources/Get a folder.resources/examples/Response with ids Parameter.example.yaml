@@ -1,0 +1,61 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/folders/:folderId?ids=true
+  method: GET
+  queryParams:
+    ids: "true"
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    folderId: 65a99e60-8e0a-4b6e-b79c-7d8264cc5caa
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+          "meta": {
+              "model": "folder",
+              "action": "find",
+              "populate": false,
+              "changeset": false
+          },
+          "data": {
+              "owner": "12345678",
+              "lastUpdatedBy": "12345678",
+              "lastRevision": 24994132707,
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "folder": null,
+              "id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+              "name": "Test Folder",
+              "description": "This is a test collection folder.",
+              "variables": null,
+              "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                      {
+                          "key": "value",
+                          "value": "XXX"
+                      },
+                      {
+                          "key": "key",
+                          "value": "x-api-key"
+                      }
+                  ]
+              },
+              "events": null,
+              "order": [
+                  "81b49e05-0b87-4ca4-ac8c-091aaedafea3",
+                  "929acf24-4234-45e1-59cf-dc2b27ea7603",
+                  "3cfc2ac8-00a9-47d2-415d-049773f23268"
+              ],
+              "createdAt": "2022-08-29T16:49:19.964Z",
+              "updatedAt": "2022-08-29T16:49:19.964Z",
+              "folders_order": [
+                  "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+                  "5c341de9-5751-461f-b7bd-af86bbae740c"
+              ]
+          }
+      }
+order: 3000

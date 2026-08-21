@@ -1,0 +1,102 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "discoveredServices": [
+              {
+                  "name": "analytics-service",
+                  "version": "1.2.0",
+                  "description": "Tracks usage analytics",
+                  "endpoints": [
+                      {
+                          "method": "POST",
+                          "path": "/events",
+                          "description": "Track event"
+                      },
+                      {
+                          "method": "GET",
+                          "path": "/reports",
+                          "description": "Get reports"
+                      }
+                  ]
+              },
+              {
+                  "name": "config-service",
+                  "version": "1.0.0",
+                  "apiDefinition": {
+                      "content": "eyJvcGVuYXBpIjoiMy4wLjAiLCJpbmZvIjp7InRpdGxlIjoiQ29uZmlnIiwidmVyc2lvbiI6IjEuMC4wIn0sInBhdGhzIjp7Ii9jb25maWciOnsiZ2V0Ijp7InN1bW1hcnkiOiJHZXQgY29uZmlnIn19LCIvY29uZmlnL3trZXl9Ijp7InB1dCI6eyJzdW1tYXJ5IjoiVXBkYXRlIGNvbmZpZyJ9fX19="
+                  }
+              },
+              {
+                  "name": "healthcheck"
+              }
+          ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": [
+              {
+                  "id": "b0c1d2e3-f4a5-6789-bcde-890123456789",
+                  "organizationId": 123,
+                  "name": "analytics-service",
+                  "description": "Tracks usage analytics",
+                  "version": "1.2.0",
+                  "sourceEnvironment": null,
+                  "systemEnvironmentId": null,
+                  "tags": [],
+                  "status": "discovered",
+                  "endpointsCount": 2,
+                  "providerServiceId": "analytics-service:1.2.0",
+                  "discoveredAt": "2026-02-12T04:01:26.000Z",
+                  "discoveredBy": 12345678,
+                  "lastSyncedAt": "2026-02-12T04:01:26.000Z"
+              },
+              {
+                  "id": "b0c1d2e3-f4a5-6789-bcde-890123456781",
+                  "organizationId": 123,
+                  "name": "config-service",
+                  "description": null,
+                  "version": "1.0.0",
+                  "sourceEnvironment": null,
+                  "systemEnvironmentId": null,
+                  "tags": [],
+                  "status": "discovered",
+                  "endpointsCount": 2,
+                  "providerServiceId": "config-service:1.0.0",
+                  "discoveredAt": "2026-02-12T04:01:26.000Z",
+                  "discoveredBy": 12345678,
+                  "lastSyncedAt": "2026-02-12T04:01:26.000Z"
+              },
+              {
+                  "id": "b0c1d2e3-f4a5-6789-bcde-890123456789",
+                  "organizationId": 123,
+                  "name": "healthcheck",
+                  "description": null,
+                  "version": null,
+                  "sourceEnvironment": null,
+                  "systemEnvironmentId": null,
+                  "tags": [],
+                  "status": "discovered",
+                  "endpointsCount": 0,
+                  "providerServiceId": "healthcheck:",
+                  "discoveredAt": "2026-02-12T04:01:26.000Z",
+                  "discoveredBy": 12345678,
+                  "lastSyncedAt": "2026-02-12T04:01:26.000Z"
+              }
+          ],
+          "meta": {
+              "total": 3,
+              "created": 3,
+              "updated": 0
+          }
+      }
+order: 5000

@@ -1,0 +1,96 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=user&metrics=active_users&view=detailed&workspaceType=public,partner,internal&limit=5&offset=0
+  method: GET
+  queryParams:
+    resource: user
+    metrics: active_users
+    view: detailed
+    workspaceType: public,partner,internal
+    limit: "5"
+    offset: "0"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "timestamp",
+                              "type": "DATE",
+                              "description": "Date representing the reporting timestamp."
+                          },
+                          {
+                              "name": "user_id",
+                              "type": "STRING",
+                              "description": "Unique identifier assigned to the user."
+                          },
+                          {
+                              "name": "api_requests_count",
+                              "type": "INTEGER",
+                              "description": "Total number of API requests made by the user."
+                          },
+                          {
+                              "name": "team_joining_date",
+                              "type": "DATE",
+                              "description": "Date when the user joined the team."
+                          },
+                          {
+                              "name": "last_active_ts",
+                              "type": "TIMESTAMP",
+                              "description": "Timestamp of the user's most recent activity."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "2025-03-01",
+                          "12345678",
+                          0,
+                          "2022-06-10",
+                          "2025-08-25T18:10:00Z"
+                      ],
+                      [
+                          "2025-04-01",
+                          "87654321",
+                          0,
+                          "2022-08-14",
+                          "2025-08-24T21:30:00Z"
+                      ],
+                      [
+                          "2025-05-01",
+                          "56781234",
+                          0,
+                          "2023-01-03",
+                          "2025-08-23T19:45:00Z"
+                      ],
+                      [
+                          "2025-06-01",
+                          "987612345",
+                          0,
+                          "2022-08-14",
+                          "2025-08-20T10:15:00Z"
+                      ],
+                      [
+                          "2025-07-01",
+                          "132495678",
+                          0,
+                          "2022-06-10",
+                          "2025-08-22T05:45:10Z"
+                      ]
+                  ],
+                  "pagination": {
+                      "total": 42,
+                      "limit": 5,
+                      "offset": 0,
+                      "has_more": true
+                  }
+              }
+          }
+      }
+order: 1000

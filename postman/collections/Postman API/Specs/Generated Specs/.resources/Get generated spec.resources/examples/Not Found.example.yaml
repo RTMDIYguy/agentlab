@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionUid/generations/:elementType
+  method: GET
+  pathVariables:
+    collectionUid: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+    elementType: spec
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "instanceNotFoundError",
+          "title": "Resource not found",
+          "status": 404,
+          "detail": "Entity that you are trying to access does not exist."
+      }
+order: 3000

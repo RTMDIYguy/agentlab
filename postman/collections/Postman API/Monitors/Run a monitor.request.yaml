@@ -1,0 +1,22 @@
+$kind: http-request
+description: |-
+  Runs a monitor and returns its run results.
+
+  **Note:**
+
+  - If you pass the `async=true` query parameter, the response does not return the `stats`, `executions`, and `failures` responses. To get this information for an asynchronous run, call the [GET](https://www.postman.com/postman/workspace/postman-public-workspace/request/12959542-e4167234-9a55-4b15-8146-0487978d952f?ctx=documentation&tab=overview) `/monitors/{id}` endpoint.
+      
+  - If the call exceeds 300 seconds, the endpoint returns an HTTP `202 Accepted` response. Use the [GET](https://www.postman.com/postman/postman-public-workspace/request/7izaj6c/get-a-monitor) `/monitors/{id}` endpoint to check the run's status in the response's `lastRun` property. To avoid this, it is recommended that you include the `async=true` query parameter when using this endpoint.
+url: "{{baseUrl}}/monitors/:monitorId/run"
+method: POST
+queryParams:
+  - key: async
+    value: "true"
+    disabled: true
+    description: If true, runs the monitor asynchronously from the created monitor run task. By default, the server will not respond until the task finishes (`false`).
+pathVariables:
+  - key: monitorId
+    value: ""
+    description: The monitor's ID.
+examples: ./.resources/Run a monitor.resources/examples
+order: 3000

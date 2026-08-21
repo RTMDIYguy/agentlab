@@ -1,0 +1,56 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentId
+  method: PATCH
+  pathVariables:
+    environmentId: 5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      [
+          {
+              "op": "remove",
+              "path": "/values/1"
+          },
+          {
+              "op": "remove",
+              "path": "/values/0"
+          },
+          {
+              "op": "add",
+              "path": "/values/0",
+              "value": {
+                  "key": "x-api-key",
+                  "value": "{{x-api-key}}",
+                  "type": "default",
+                  "enabled": true,
+                  "description": "A valid API key."
+              }
+          }
+      ]
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "id": "5daabc50-8451-43f6-922d-96b403b4f28e",
+              "name": "Test API Environment",
+              "owner": "12345678",
+              "createdAt": "2025-03-10T15:37:00.000Z",
+              "updatedAt": "2025-03-10T15:54:02.000Z",
+              "values": [
+                  {
+                      "key": "x-api-key",
+                      "value": "{{x-api-key}}",
+                      "type": "default",
+                      "enabled": true,
+                      "description": "A valid API key."
+                  }
+              ],
+              "uid": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e"
+          }
+      }
+order: 8000

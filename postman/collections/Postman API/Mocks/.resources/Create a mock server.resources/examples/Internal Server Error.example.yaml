@@ -1,0 +1,34 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+      	"mock": {
+              "name": "Test Mock",
+      		"collection": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+      		"environment": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e",
+              "private": false
+      	}
+      }
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  headers:
+    X-RateLimit-Limit: "60"
+    X-RateLimit-Remaining: "59"
+    X-RateLimit-Reset: "1631439621"
+    X-RateLimit-RetryAfter: "4"
+    RetryAfter: "4"
+  body:
+    type: json
+    content: |-
+      {
+        "error": {
+          "type": "serverError",
+          "message": "Something went wrong with the server"
+        }
+      }
+order: 5000

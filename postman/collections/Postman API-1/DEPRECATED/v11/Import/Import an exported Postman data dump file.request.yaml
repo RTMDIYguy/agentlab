@@ -1,0 +1,32 @@
+$kind: http-request
+description: |-
+  **This endpoint is deprecated.**
+
+  Imports exported Postman data. This endpoint only accepts [export data dump files](https://postman.postman.co/me/export).
+
+  For more information, read our [Exporting data dumps](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#exporting-data-dumps) documentation.
+url: "{{baseUrl}}/import/exported"
+method: POST
+headers:
+  Content-Type: multipart/form-data
+queryParams:
+  - key: workspace
+    value: <string>
+    disabled: true
+    description: |-
+      The workspace ID in which to import the exported Postman data dump file.
+
+      If you do not include this query parameter, the system defaults to the "My Workspace" workspace.
+body:
+  type: formdata
+  content:
+    - type: text
+      key: type
+      value: file
+      description: (Required) The `file` type value.
+    - type: file
+      key: input
+      src: ""
+      description: (Required) A file containing a valid user's export .zip file.
+examples: ./.resources/Import an exported Postman data dump file.resources/examples
+order: 1000

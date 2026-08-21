@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/versions/:versionId
+  method: PUT
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    versionId: 3563baaa-07a2-46ed-9fd2-0e8a3c5f7ec2
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Release 1.5",
+          "releaseNotes": "This is the first public release update."
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "instanceNotFoundError",
+              "message": "API not found. For v10 and later APIs, ensure that your request sends the \"application/vnd.api.v10+json\" Accept header."
+          }
+      }
+order: 2000

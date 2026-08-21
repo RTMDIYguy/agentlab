@@ -1,0 +1,14 @@
+$kind: http-request
+description: |-
+  Gets all of an API version's relations.
+
+  **Note:**
+
+  In Postman v10 and higher, this endpoint returns the following:
+
+  - The `unclassified` relation is for documentation and testing. This is the default relation type.
+  - The `apiDefinition` relation is the relation used for API definitions.
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}/relations
+method: GET
+examples: ./.resources/Get all linked relations.resources/examples
+order: 6000

@@ -1,0 +1,18 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/versions/:versionId
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    versionId: 3563baaa-07a2-46ed-9fd2-0e8a3c5f7ec2
+response:
+  statusCode: 302
+  statusText: Found
+  headers:
+    Location: /apis/5360b75f-447e-467c-9299-12fd6c92450d/tasks/3563baaa-07a2-46ed-9fd2-0e8a3c5f7ec2
+  body:
+    type: text
+    content: ""
+order: 2000

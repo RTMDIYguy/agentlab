@@ -1,0 +1,50 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/bulk-members
+  method: POST
+  pathVariables:
+    teamId: "123"
+  body:
+    type: json
+    content: |-
+      {
+          "add": {
+              "users": {
+                  "12345678": [
+                      "TEAM_MANAGER"
+                  ]
+              }
+          },
+          "remove": {
+              "users": {
+                  "87654321": [
+                      "TEAM_DEVELOPER"
+                  ]
+              }
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "result": [
+              {
+                  "entityType": "user",
+                  "entityId": 12345678,
+                  "role": "TEAM_MANAGER",
+                  "previousRole": null,
+                  "status": "Accepted"
+              },
+              {
+                  "entityType": "user",
+                  "entityId": 87654321,
+                  "role": null,
+                  "previousRole": "TEAM_DEVELOPER",
+                  "status": "Accepted"
+              }
+          ]
+      }
+order: 7000

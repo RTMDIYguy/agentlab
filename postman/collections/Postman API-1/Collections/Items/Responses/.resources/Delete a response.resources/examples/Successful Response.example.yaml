@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/responses/:responseId
+  method: DELETE
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    responseId: cc364734-7dfd-4bfc-897d-be763dcdbb07
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "cc364734-7dfd-4bfc-897d-be763dcdbb07",
+          "meta": {
+              "model": "response",
+              "action": "destroy"
+          },
+          "data": {
+              "id": "cc364734-7dfd-4bfc-897d-be763dcdbb07",
+              "owner": "12345678"
+          },
+          "revision": 24997417224
+      }
+order: 1000

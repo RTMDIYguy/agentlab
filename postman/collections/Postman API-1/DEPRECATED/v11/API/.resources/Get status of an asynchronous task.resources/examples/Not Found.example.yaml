@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/tasks/:taskId
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 5360b75f-447e-467c-9299-12fd6c92450d
+    taskId: 66ae9950-0869-4e65-96b0-1e0e47e771af
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "detail": "Parameter, taskId is in an invalid format.",
+          "title": "The specified parameter is in an invalid format",
+          "type": "invalidParamsError"
+      }
+order: 7000

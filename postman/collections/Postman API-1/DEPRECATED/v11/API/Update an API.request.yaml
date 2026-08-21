@@ -1,0 +1,23 @@
+$kind: http-request
+description: Updates an API.
+url: "{{baseUrl}}/apis/:apiId"
+method: PUT
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+body:
+  type: json
+  content: |-
+    {
+        "name": "{{apiName}}",
+        "summary": "{{apiSummary}}",
+        "description": "{{apiDescription}}"
+    }
+settings: {}
+examples: ./.resources/Update an API.resources/examples
+order: 9000

@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Testing Team",
+          "description": "API testing team."
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "team": {
+              "createdAt": "2025-02-26T08:17:42.000Z",
+              "updatedAt": "2025-02-26T08:17:42.000Z",
+              "id": 123,
+              "name": "Testing Team",
+              "handle": "testing-team",
+              "description": "API testing team.",
+              "organizationId": 1,
+              "createdBy": 12345678,
+              "enabled": true
+          }
+      }
+order: 1000

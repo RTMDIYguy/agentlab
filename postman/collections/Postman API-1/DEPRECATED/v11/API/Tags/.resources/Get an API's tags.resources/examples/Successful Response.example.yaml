@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/tags
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 6fd634a3-79ba-451d-8f07-56a953f96667
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "tags": [
+              {
+                  "slug": "needs-review"
+              }
+          ]
+      }
+order: 1000

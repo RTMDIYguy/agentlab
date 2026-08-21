@@ -1,0 +1,20 @@
+$kind: http-request
+description: Updates a team's settings.
+url: "{{baseUrl}}/teams/:teamId/settings"
+method: PUT
+pathVariables:
+  - key: teamId
+    value: ""
+    description: The team's ID.
+body:
+  type: json
+  content: |-
+    {
+        "settings" : {
+            "rfa_for_add_member": "{{value}}",
+            "rfa_for_add_collaborator": "{{value}}"
+        }
+    }
+settings: {}
+examples: ./.resources/Update team settings.resources/examples
+order: 1000

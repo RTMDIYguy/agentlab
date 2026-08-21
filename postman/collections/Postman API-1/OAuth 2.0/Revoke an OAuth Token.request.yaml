@@ -1,0 +1,20 @@
+$kind: http-request
+description: |-
+  Revokes an active OAuth 2.0 access token and prevents further use of it for authentication. Once revoked, the token can't be used for any API requests.
+
+  **Note:**
+
+  Revocation of an OAuth token is immediate and can't be undone.
+url: "{{baseUrl}}/oauth2/token/revoke"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "token": "{{accessToken}}"
+    }
+auth:
+  type: noauth
+settings: {}
+examples: ./.resources/Revoke an OAuth Token.resources/examples
+order: 2000

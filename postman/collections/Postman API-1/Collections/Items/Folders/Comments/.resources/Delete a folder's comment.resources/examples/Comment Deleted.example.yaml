@@ -1,0 +1,15 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionUid/folders/:folderUid/comments/:commentId
+  method: DELETE
+  pathVariables:
+    collectionUid: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+    folderUid: 12345678-65a99e60-8e0a-4b6e-b79c-7d8264cc5caa
+    commentId: "46814"
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 1000

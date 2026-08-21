@@ -1,0 +1,8 @@
+$kind: collection
+description: |-
+  The **Specs** endpoints enable you to manage your API specifications. With Postman's [Spec Hub](https://learning.postman.com/docs/design-apis/specifications/overview/), you can [create](https://learning.postman.com/docs/design-apis/specifications/create-a-specification/) or [import](https://learning.postman.com/docs/design-apis/specifications/import-a-specification/) your API specifications. You can also [generate collections](https://learning.postman.com/docs/design-apis/specifications/generate-collections/) from or for your API specifications.
+
+  **Note:**
+
+  Postman supports OpenAPI 2.0, 3.0, and 3.1 specifications, AsyncAPI 2.0 specifications, protobuf 2 and protobuf 3 specifications, and GraphQL specifications.
+order: 17000

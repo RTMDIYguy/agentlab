@@ -1,0 +1,47 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/invitations
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "action": "remove_partner",
+          "targetEntity": "workspace",
+          "targetEntityId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+          "target": {
+              "userIds": [
+                  "56781234",
+                  "12348765",
+                  "34567812"
+              ]
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "action": "remove_partner",
+          "targetEntity": "workspace",
+          "targetEntityId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+          "results": [
+              {
+                  "userId": "56781234",
+                  "status": "REMOVED"
+              },
+              {
+                  "userId": "12348765",
+                  "status": "FAILED",
+                  "message": "Failed to remove partner from all workspaces"
+              },
+              {
+                  "userId": "34567812",
+                  "status": "FAILED",
+                  "error": "Partner information not found"
+              }
+          ]
+      }
+order: 5000

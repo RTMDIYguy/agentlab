@@ -1,0 +1,23 @@
+$kind: http-request
+description: |-
+  Updates an API. Include at least one of the following properties in the `api` object:
+
+  *   `name` — A **string** value that contains the API's name.
+  *   `summary` — A **string** value that contains a summary of the API.
+  *   `description` — A **string** value that contains the description of the API.
+url: https://api.getpostman.com/apis/{{apiId}}
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+    	"api": {
+    		"name": "{{apiName}}",
+            "summary": "{{apiSummary}}",
+    		"description": "{{apiDescription}}"
+    	}
+    }
+examples: ./.resources/Update an API.resources/examples
+order: 8000

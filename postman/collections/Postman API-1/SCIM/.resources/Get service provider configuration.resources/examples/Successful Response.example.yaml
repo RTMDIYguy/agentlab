@@ -1,0 +1,50 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/ServiceProviderConfig
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig"
+          ],
+          "documentationUri": "https://learning.postman.com/docs/administration/managing-your-team/configuring-scim",
+          "patch": {
+              "supported": true
+          },
+          "bulk": {
+              "supported": false,
+              "maxOperations": 0,
+              "maxPayloadSize": 0
+          },
+          "filter": {
+              "supported": true,
+              "maxResults": 100
+          },
+          "changePassword": {
+              "supported": false
+          },
+          "sort": {
+              "supported": false
+          },
+          "etag": {
+              "supported": false
+          },
+          "authenticationSchemes": [
+              {
+                  "name": "OAuth Bearer Token",
+                  "description": "Authentication scheme using the OAuth Bearer Token Standard",
+                  "specUri": "http://www.rfc-editor.org/info/rfc6750",
+                  "type": "oauthbearertoken"
+              }
+          ],
+          "meta": {
+              "resourceType": "ServiceProviderConfig",
+              "location": "https://api.getpostman.com/scim/v2/ServiceProviderConfig"
+          }
+      }
+order: 1000

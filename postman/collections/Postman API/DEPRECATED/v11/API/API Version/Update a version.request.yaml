@@ -1,0 +1,34 @@
+$kind: http-request
+description: |-
+  Updates an API version. Include at least one of the following properties in the request body:
+
+  - `name` — A **string** value that contains the version name.
+  - `releaseNotes` — A **string** value that contains the Markdown-supported release notes.
+      
+
+  **Note:**
+
+  This endpoint returns an HTTP `404 Not Found` response when an API version is pending publication.
+url: "{{baseUrl}}/apis/:apiId/versions/:versionId"
+method: PUT
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+  - key: versionId
+    value: "{{versionId}}"
+    description: The API's version ID.
+body:
+  type: json
+  content: |-
+    {
+        "name": "{{apiVersionName}}",
+        "releaseNotes": "{{releaseNotes}}"
+    }
+settings: {}
+examples: ./.resources/Update a version.resources/examples
+order: 4000

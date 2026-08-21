@@ -1,0 +1,25 @@
+$kind: http-request
+description: Copies or moves requests into a collection or folder.
+url: "{{baseUrl}}/collection-requests-transfers"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "ids": [
+            "{{requestUid}}"
+        ],
+        "target": {
+            "model": "{{modelType}}",
+            "id": "{{modelUid}}"
+        },
+        "location": {
+            "position": "{{position}}",
+            "model": "{{modelId}}",
+            "id": "{{modelUid}}"
+        },
+        "mode": "{{modeType}}"
+    }
+settings: {}
+examples: ./.resources/Transfer requests.resources/examples
+order: 2000

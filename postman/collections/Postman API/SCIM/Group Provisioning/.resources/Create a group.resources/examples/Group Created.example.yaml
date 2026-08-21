@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Groups
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:schemas:core:2.0:Group"
+          ],
+          "displayName": "TestAPI",
+          "members": []
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:schemas:core:2.0:Group"
+          ],
+          "id": "561631fq14ed41872a8eea4c8aa2b38cda9749812cc55c00",
+          "displayName": "TestAPI",
+          "members": [],
+          "externalId": "1234",
+          "meta": {
+              "resourceType": "Group",
+              "created": "2022-02-22T04:24:13.000Z",
+              "lastModified": "2022-02-22T04:24:13.000Z"
+          }
+      }
+order: 1000

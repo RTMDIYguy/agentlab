@@ -1,0 +1,44 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/detected-secrets-queries?limit=2
+  method: POST
+  headers:
+    Content-Type: application/json
+  queryParams:
+    limit: "2"
+  body:
+    type: json
+    content: |-
+      {
+          "secretTypes": [
+              "1a7ec5d1-dcba-4ec7-8220-3c1ee490416b",
+              "3b6ec9d2-dabc-5e67-1220-6coie490416b"
+          ],
+          "resolved": true,
+          "statuses": [
+              "ACCEPTED_RISK",
+              "REVOKED"
+          ],
+          "workspaceIds": [
+              "0fe6c2f2-022d-48f7-8e7e-3244369445b0",
+              "80ab14ae-c17d-4fd6-88d5-99bf13f0b7f0"
+          ],
+          "workspaceVisibilities": [
+              "team"
+          ]
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "type": "FORBIDDEN",
+          "title": "This feature is only available with \"Advanced Security Administration\" add-on. Contact your team admin to purchase this add-on.",
+          "instance": "",
+          "status": 403
+      }
+order: 10000

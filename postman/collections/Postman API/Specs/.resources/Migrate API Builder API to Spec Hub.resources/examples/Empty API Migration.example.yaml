@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/spec-migrations
+  method: POST
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    - key: apiId
+      value: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+      description: The API's ID.
+  body:
+    type: json
+    content: |-
+      {
+          "workspaceId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "message": "This API doesn't have any API Definition or Collection",
+          "success": true
+      }
+order: 3000

@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId/files/:filePath
+  method: GET
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+    filePath: components/schemas/spacecrafts.json
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "createdAt": "2025-07-22T18:45:48.000Z",
+          "content": "{\n  \"SpacecraftId\": {\n    \"description\": \"The unique identifier of a spacecraft\",\n    \"type\": \"string\"\n  },\n  \"Spacecraft\": {\n    \"type\": \"object\",\n    \"required\": [\n      \"id\",\n      \"name\",\n      \"type\"\n    ],\n    \"properties\": {\n      \"id\": {\n        \"$ref\": \"../schemas/spacecrafts.json#/SpacecraftId\"\n      },\n      \"name\": {\n        \"type\": \"string\"\n      },\n      \"type\": {\n        \"type\": \"string\",\n        \"enum\": [\n          \"capsule\",\n          \"probe\",\n          \"satellite\",\n          \"spaceplane\",\n          \"station\"\n        ]\n      },\n      \"description\": {\n        \"type\": \"string\"\n      }\n    }\n  },\n  \"Error\": {\n    \"type\": \"object\",\n    \"required\": [\n      \"message\"\n    ],\n    \"properties\": {\n      \"message\": {\n        \"description\": \"A human readable error message\",\n        \"type\": \"string\"\n      }\n    }\n  }\n}",
+          "updatedAt": "2025-07-22T18:47:03.000Z",
+          "createdBy": 12345678,
+          "updatedBy": 12345678,
+          "id": "edc9f9f1-c0df-4a9a-9b5b-d4c7359d92ab",
+          "type": "DEFAULT",
+          "path": "components/schemas/spacecrafts.json",
+          "name": "spacecrafts.json"
+      }
+order: 2000

@@ -1,0 +1,15 @@
+$kind: http-request
+description: |-
+  **This endpoint is deprecated in Postman v10 and higher.**
+
+  Deletes an API version's release.
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}/releases/{{apiReleaseId}}
+method: DELETE
+auth:
+  type: apikey
+  credentials:
+    value: "{{postman-API-key}}"
+    key: X-API-KEY
+settings: {}
+examples: ./.resources/Delete an API release.resources/examples
+order: 5000

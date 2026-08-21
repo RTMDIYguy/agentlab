@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/pull-requests/:pullRequestId
+  method: PUT
+  pathVariables:
+    pullRequestId: 4e1a6609-1a29-4037-a411-89ecc14c6cd8
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Updated PR title",
+          "description": "Updated description of the pull request.",
+          "reviewers": [
+              "12345678",
+              "87654321"
+          ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "id": "4e1a6609-1a29-4037-a411-89ecc14c6cd8",
+          "createdAt": "2024-02-20T09:58:57.000Z",
+          "updatedAt": "2024-02-20T09:58:57.000Z",
+          "sourceId": "87654321-3b79068c-dbe5-41d5-a826-51be4bf646ef",
+          "destinationId": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+          "title": "Updated PR title",
+          "description": "Updated description of the pull request.",
+          "createdBy": "12345678",
+          "status": "open",
+          "forkType": "collection"
+      }
+order: 1000

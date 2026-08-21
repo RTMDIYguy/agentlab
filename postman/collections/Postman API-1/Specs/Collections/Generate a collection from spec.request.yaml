@@ -1,0 +1,31 @@
+$kind: http-request
+description: Creates a collection from the given OpenAPI 2.0, 3.0, or 3.1 specification. The response contains a polling link to the task status.
+url: "{{baseUrl}}/specs/:specId/generations/:elementType"
+method: POST
+pathVariables:
+  - key: specId
+    value: ""
+    description: The spec's ID.
+  - key: elementType
+    value: ""
+    description: The `collection` element type.
+body:
+  type: json
+  content: |-
+    {
+        "name": "{{name}}",
+        "options": {
+            "requestNameSource": "Fallback",
+            "indentCharacter": "Space",
+            "folderStrategy": "Paths",
+            "includeAuthInfoInExample": true,
+            "enableOptionalParameters": true,
+            "keepImplicitHeaders": false,
+            "includeDeprecated": true,
+            "alwaysInheritAuthentication": false,
+            "nestedFolderHierarchy": false
+        }
+    }
+settings: {}
+examples: ./.resources/Generate a collection from spec.resources/examples
+order: 1000

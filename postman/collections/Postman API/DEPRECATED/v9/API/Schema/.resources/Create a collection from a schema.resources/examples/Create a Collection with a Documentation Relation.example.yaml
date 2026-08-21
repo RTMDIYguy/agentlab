@@ -1,0 +1,46 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/be50acd7-414e-4d65-9443-f919b847e29a/versions/56d5f9ac-69a7-4255-8343-cde8ea25ef8b/schemas/f087f7b9-018f-447f-ba64-74cb981957ce/collections
+  method: POST
+  headers:
+    Content-Type: application/json
+  queryParams:
+    - key: workspace
+      value: c90a3482-f80d-43d6-9dfb-0830f5e43605
+      disabled: true
+      description: |-
+        Optional. The workspace ID in which to created the collection.
+
+        If you do not include this query parameter, the system defaults to the "My Workspace" workspace.
+  body:
+    type: json
+    content: |-
+      {
+      	"name": "Test Collection",
+      	"relations": [
+      		{
+      			"type": "documentation"
+      		}	
+      	]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "id": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "uid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+          },
+          "relations": [
+              {
+                  "type": "documentation",
+                  "id": "d86b6c97-fdf9-4c37-825a-49b0223913c7"
+              }
+          ]
+      }
+order: 2000

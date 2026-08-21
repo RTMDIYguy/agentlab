@@ -1,0 +1,575 @@
+$kind: http-request
+description: |-
+  Replaces the contents of a collection asynchronously. Include the collection's ID values in the request body. If you do not, the endpoint removes the existing items and creates new items. Use the GET `/collection-updates-tasks/{taskId}` endpoint to get the collection's update status.
+
+  - For a complete list of properties and information, see the [Postman Collection Format documentation](https://schema.postman.com/collection/json/v2.1.0/draft-07/docs/index.html).
+      
+  - For protocol profile behavior, refer to Postman's [Protocol Profile Behavior](https://github.com/postmanlabs/postman-runtime/blob/develop/docs/protocol-profile-behavior.md) documentation.
+      
+
+  **Note:**
+
+  - The maximum collection size this endpoint accepts cannot exceed 100 MB.
+      
+  - This request uses example values in the request body for context when replacing a collection's data. For additional ways to replace collection data, see the collection's examples.
+      
+  - If you don't include the collection items' ID values from the request body, the endpoint **removes** the existing items and recreates the items with new ID values.
+      
+  - To copy another collection's contents to the given collection, remove all ID values before you pass it in this endpoint. If you do not, this endpoint returns an error. These values include the `id`, `uid`, and `postman_id` values.
+url: "{{baseUrl}}/collections/:collectionId"
+method: PUT
+headers:
+  - key: Prefer
+    value: respond-async
+    description: The `respond-async` header to perform the update asynchronously.
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+body:
+  type: json
+  content: |-
+    {
+        "collection": {
+            "info": {
+                "name": "Users API",
+                "description": "This is a collection of user APIs.",
+                "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+            },
+            "auth": {
+                "type": "apikey",
+                "apikey": [
+                    {
+                        "key": "value",
+                        "value": "{{apiKey}}"
+                    },
+                    {
+                        "key": "key",
+                        "value": "api-key"
+                    },
+                    {
+                        "key": "in",
+                        "value": "header"
+                    }
+                ]
+            },
+            "item": [
+                {
+                    "name": "Users",
+                    "item": [
+                        {
+                            "name": "Update User",
+                            "item": [
+                                {
+                                    "name": "Update user",
+                                    "id": "47df4fbb-71dd-42c1-862f-30238c2e4dd8",
+                                    "protocolProfileBehavior": {
+                                        "disableBodyPruning": true
+                                    },
+                                    "request": {
+                                        "method": "PATCH",
+                                        "header": [],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"name\": \"{{name}}\",\n    \"email\": \"{{emailAddress}}\",\n    \"roles\": [\n        \"{{role}}\"\n    ]\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": {
+                                            "raw": "https://postman-echo.com/users/:userId",
+                                            "protocol": "https",
+                                            "host": [
+                                                "postman-echo",
+                                                "com"
+                                            ],
+                                            "path": [
+                                                "users",
+                                                ":userId"
+                                            ],
+                                            "variable": [
+                                                {
+                                                    "key": "userId",
+                                                    "value": "{{userId}}",
+                                                    "description": "The user's ID."
+                                                }
+                                            ]
+                                        },
+                                        "description": "This is an example GET request."
+                                    },
+                                    "response": [
+                                        {
+                                            "id": "54d73421-9a19-4158-a8dd-deb0b509b965",
+                                            "name": "Successful Response",
+                                            "originalRequest": {
+                                                "method": "GET",
+                                                "header": [
+                                                    {
+                                                        "key": "Content-Type",
+                                                        "value": "application/json",
+                                                        "type": "text"
+                                                    }
+                                                ],
+                                                "body": {
+                                                    "mode": "raw",
+                                                    "raw": "{\n    \"name\": \"Taylor Lee\",\n    \"email\": \"taylor.lee@example.com\",\n    \"roles\": [\n        \"user\",\n        \"admin\"\n    ]\n}",
+                                                    "options": {
+                                                        "raw": {
+                                                            "language": "json"
+                                                        }
+                                                    }
+                                                },
+                                                "url": {
+                                                    "raw": "https://postman-echo.com/users/:userId",
+                                                    "protocol": "https",
+                                                    "host": [
+                                                        "postman-echo",
+                                                        "com"
+                                                    ],
+                                                    "path": [
+                                                        "users",
+                                                        ":userId"
+                                                    ],
+                                                    "variable": [
+                                                        {
+                                                            "key": "userId",
+                                                            "value": "12345678"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "status": "OK",
+                                            "code": 200,
+                                            "_postman_previewlanguage": "json",
+                                            "header": [
+                                                {
+                                                    "key": "Content-Type",
+                                                    "value": "application/json",
+                                                    "description": "",
+                                                    "type": "text",
+                                                    "enabled": true
+                                                }
+                                            ],
+                                            "cookie": [],
+                                            "responseTime": null,
+                                            "body": "{\n    \"id\": \"12345678\",\n    \"name\": \"Taylor Lee\",\n    \"username\": \"taylor-lee\",\n    \"email\": \"taylor.lee@example.com\",\n    \"roles\": [\n        \"user\",\n        \"admin\"\n    ]\n}",
+                                            "uid": "12345678-54d73421-9a19-4158-a8dd-deb0b509b965"
+                                        }
+                                    ],
+                                    "uid": "12345678-47df4fbb-71dd-42c1-862f-30238c2e4dd8"
+                                }
+                            ],
+                            "id": "77a74569-7a63-4a0b-acf0-29f5f608b423",
+                            "event": [
+                                {
+                                    "listen": "prerequest",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": [
+                                            "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                            "    console.log(response.json());",
+                                            "});"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "listen": "test",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": [
+                                            "pm.test(\"Status code is 200\", function () {",
+                                            "    pm.response.to.have.status(200);",
+                                            "});"
+                                        ]
+                                    }
+                                }
+                            ],
+                            "uid": "12345678-77a74569-7a63-4a0b-acf0-29f5f608b423"
+                        },
+                        {
+                            "name": "Get user",
+                            "event": [
+                                {
+                                    "listen": "prerequest",
+                                    "script": {
+                                        "id": "057c7e52-f7c2-4d45-8c55-7e6412d4f96c",
+                                        "exec": [
+                                            "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                            "    console.log(response.json());",
+                                            "});"
+                                        ],
+                                        "type": "text/javascript",
+                                        "packages": {}
+                                    }
+                                },
+                                {
+                                    "listen": "test",
+                                    "script": {
+                                        "id": "673dcace-e82b-495b-bfcd-ec158dac85c1",
+                                        "exec": [
+                                            "pm.test(\"Status code is 200\", function () {",
+                                            "    pm.response.to.have.status(200);",
+                                            "});"
+                                        ],
+                                        "type": "text/javascript",
+                                        "packages": {}
+                                    }
+                                }
+                            ],
+                            "id": "34656a5f-db32-49b3-ae74-5c93cad3054a",
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            },
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "https://postman-echo.com/users?id={{userId}}",
+                                    "protocol": "https",
+                                    "host": [
+                                        "postman-echo",
+                                        "com"
+                                    ],
+                                    "path": [
+                                        "users"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "id",
+                                            "value": "{{userId}}",
+                                            "description": "The user's ID."
+                                        }
+                                    ]
+                                },
+                                "description": "This is an example GET request."
+                            },
+                            "response": [
+                                {
+                                    "id": "be9620c6-48b3-4bb9-9ca3-283f39f0064c",
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "GET",
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json",
+                                                "type": "text"
+                                            }
+                                        ],
+                                        "url": {
+                                            "raw": "https://postman-echo.com/get?id=12345678",
+                                            "protocol": "https",
+                                            "host": [
+                                                "postman-echo",
+                                                "com"
+                                            ],
+                                            "path": [
+                                                "get"
+                                            ],
+                                            "query": [
+                                                {
+                                                    "key": "id",
+                                                    "value": "12345678"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "description": "",
+                                            "type": "text",
+                                            "enabled": true
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "responseTime": null,
+                                    "body": "{\n    \"id\": \"12345678\",\n    \"name\": \"Taylor Lee\",\n    \"username\": \"taylor-lee\",\n    \"email\": \"taylor.lee@example.com\",\n    \"roles\": [\n        \"user\",\n        \"admin\"\n    ],\n    \"joinedAt\": \"2022-11-23T14:38:25.000Z\"\n}",
+                                    "uid": "12345678-be9620c6-48b3-4bb9-9ca3-283f39f0064c"
+                                }
+                            ],
+                            "uid": "12345678-34656a5f-db32-49b3-ae74-5c93cad3054a"
+                        },
+                        {
+                            "name": "Get all users",
+                            "event": [
+                                {
+                                    "listen": "test",
+                                    "script": {
+                                        "id": "70c9a072-f394-4a64-986c-ead9e3c81e16",
+                                        "exec": [
+                                            "pm.test(\"Status code is 200\", function () {",
+                                            "    pm.response.to.have.status(200);",
+                                            "});"
+                                        ],
+                                        "type": "text/javascript",
+                                        "packages": {}
+                                    }
+                                },
+                                {
+                                    "listen": "prerequest",
+                                    "script": {
+                                        "id": "ad2cfb3f-3b00-4728-b83b-dc9c8bd73510",
+                                        "exec": [
+                                            "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                            "    console.log(response.json());",
+                                            "});"
+                                        ],
+                                        "type": "text/javascript",
+                                        "packages": {}
+                                    }
+                                }
+                            ],
+                            "id": "323efcea-d144-4e32-98f0-75120bddffa8",
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            },
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "https://postman-echo.com/users",
+                                    "protocol": "https",
+                                    "host": [
+                                        "postman-echo",
+                                        "com"
+                                    ],
+                                    "path": [
+                                        "users"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "groupId",
+                                            "value": "{{groupId}}",
+                                            "description": "The user group's ID.",
+                                            "disabled": true
+                                        }
+                                    ]
+                                },
+                                "description": "This is a test API."
+                            },
+                            "response": [
+                                {
+                                    "id": "6ff56c59-1b88-48fe-a758-35166bec87eb",
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [
+                                            {
+                                                "key": "Host",
+                                                "value": "postman-echo.com"
+                                            },
+                                            {
+                                                "key": "user-agent",
+                                                "value": "curl/7.88.1"
+                                            },
+                                            {
+                                                "key": "accept",
+                                                "value": "*/*"
+                                            },
+                                            {
+                                                "key": "content-type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "content-length",
+                                                "value": "22"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"field\": \"Value\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": {
+                                            "raw": "https://postman-echo.com/post",
+                                            "protocol": "https",
+                                            "host": [
+                                                "postman-echo",
+                                                "com"
+                                            ],
+                                            "path": [
+                                                "post"
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "date",
+                                            "value": "Thu, 07 Sep 2023 12:41:59 GMT",
+                                            "enabled": true
+                                        },
+                                        {
+                                            "key": "content-type",
+                                            "value": "application/json; charset=utf-8",
+                                            "enabled": true
+                                        },
+                                        {
+                                            "key": "content-length",
+                                            "value": "468",
+                                            "enabled": true
+                                        },
+                                        {
+                                            "key": "etag",
+                                            "value": "W/\"1d4-JuAIw8ssoFCtGzk/UwITxaiSbrc\"",
+                                            "enabled": true
+                                        },
+                                        {
+                                            "key": "set-cookie",
+                                            "value": "sails.sid=s%3A6p_NXpI3OZeGE35bI6i5Uq3XgHHxcsdJ.dQVpBE%2BJ9wHWainkqe6F6dkdv7UKoshSZY7sdZ5sbzo; Path=/ HttpOnly",
+                                            "enabled": true
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "responseTime": null,
+                                    "body": "{\n    \"data\": [\n        {\n            \"id\": \"12345678\",\n            \"name\": \"Taylor Lee\",\n            \"username\": \"taylor-lee\",\n            \"email\": \"taylor.lee@example.com\",\n            \"roles\": [\n                \"admin\",\n                \"user\"\n            ],\n            \"joinedAt\": \"2022-11-23T14:38:25.000Z\"\n        },\n        {\n            \"id\": \"87654321\",\n            \"name\": \"Alex Cruz\",\n            \"username\": \"alex-cruz\",\n            \"email\": \"alex.cruz@example.com\",\n            \"roles\": [\n                \"user\"\n            ],\n            \"joinedAt\": \"2022-11-24T10:18:11.000Z\"\n        }\n    ]\n}",
+                                    "uid": "12345678-6ff56c59-1b88-48fe-a758-35166bec87eb"
+                                },
+                                {
+                                    "id": "d445ff49-bec9-479c-b6fa-25e52e64aa13",
+                                    "name": "No Group Found",
+                                    "originalRequest": {
+                                        "method": "GET",
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/vnd.example.v1+json",
+                                                "type": "text"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": {
+                                            "raw": "http://api.getpostman.com/v1/request?groupId=123",
+                                            "protocol": "http",
+                                            "host": [
+                                                "api",
+                                                "getpostman",
+                                                "com"
+                                            ],
+                                            "path": [
+                                                "v1",
+                                                "request"
+                                            ],
+                                            "query": [
+                                                {
+                                                    "key": "groupId",
+                                                    "value": "123"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "description": "",
+                                            "type": "text",
+                                            "enabled": true
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "responseTime": null,
+                                    "body": "{\n    \"data\": []\n}",
+                                    "uid": "12345678-d445ff49-bec9-479c-b6fa-25e52e64aa13"
+                                }
+                            ],
+                            "uid": "12345678-323efcea-d144-4e32-98f0-75120bddffa8"
+                        }
+                    ],
+                    "id": "0dd70699-7c3e-4c49-acd3-e8352fbec784",
+                    "description": "This is a test folder.",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.variables.get(\"variable_key\");"
+                                ]
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "uid": "12345678-0dd70699-7c3e-4c49-acd3-e8352fbec784"
+                }
+            ],
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "id": "86cc41c1-a9ad-411f-923d-5f1d15344c94",
+                        "type": "text/javascript",
+                        "packages": {},
+                        "exec": [
+                            ""
+                        ]
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "id": "9f48d011-89cb-4a85-9179-b3554aa44aff",
+                        "type": "text/javascript",
+                        "packages": {},
+                        "exec": [
+                            "pm.test(\"Content-Type is present\", function () {",
+                            "    pm.response.to.have.header(\"Content-Type\");",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "variable": [
+                {
+                    "key": "userId",
+                    "value": "12345678",
+                    "description": "The user's ID."
+                }
+            ]
+        }
+    }
+examples: ./.resources/Replace collection's data asynchronously.resources/examples
+order: 18000

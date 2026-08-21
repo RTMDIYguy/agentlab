@@ -1,0 +1,10 @@
+$kind: http-request
+description: Publishes a mock server. Publishing a mock server sets its **Access Control** configuration setting to public.
+url: "{{baseUrl}}/mocks/:mockId/publish"
+method: POST
+pathVariables:
+  - key: mockId
+    value: ""
+    description: The mock's ID.
+examples: ./.resources/Publish a mock server.resources/examples
+order: 8000

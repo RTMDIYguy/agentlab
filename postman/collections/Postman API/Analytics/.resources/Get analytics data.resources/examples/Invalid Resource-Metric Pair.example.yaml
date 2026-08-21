@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=elements_in_workspace&view=detailed&workspace_type=all&duration=last_30_days
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: elements_in_workspace
+    view: detailed
+    workspace_type: all
+    duration: last_30_days
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "title": "Malformed request",
+          "status": 400,
+          "detail": "view='detailed' is not supported for resource 'workspaces' metric 'elements_in_workspace'."
+      }
+order: 36000

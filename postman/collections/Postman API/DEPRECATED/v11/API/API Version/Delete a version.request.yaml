@@ -1,0 +1,23 @@
+$kind: http-request
+description: |-
+  Deletes an API version. On success, this returns an HTTP `204 No Content` response.
+
+  **Note:**
+
+  This endpoint returns an HTTP `404 Not Found` response when an API version is pending publication.
+url: "{{baseUrl}}/apis/:apiId/versions/:versionId"
+method: DELETE
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+  - key: versionId
+    value: "{{versionId}}"
+    description: The API's version ID.
+settings: {}
+examples: ./.resources/Delete a version.resources/examples
+order: 5000

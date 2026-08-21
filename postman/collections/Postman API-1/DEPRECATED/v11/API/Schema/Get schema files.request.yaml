@@ -1,0 +1,36 @@
+$kind: http-request
+description: |-
+  Gets the files in an API schema. You can use the `versionId` query parameter to get schema files published in an API version.
+
+  **Note:**
+
+  The `versionId` query parameter is a **required** parameter for API viewers.
+url: "{{baseUrl}}/apis/:apiId/schemas/:schemaId/files"
+method: GET
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+queryParams:
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of rows to return in the response. This value defaults to `10`.
+  - key: versionId
+    value: ""
+    disabled: true
+    description: The API's version ID.
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The pointer to the first record of the set of paginated results.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+  - key: schemaId
+    value: "{{schemaId}}"
+    description: The API schema's ID.
+settings: {}
+examples: ./.resources/Get schema files.resources/examples
+order: 4000

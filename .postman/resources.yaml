@@ -1,7 +1,13 @@
-# Use this workspace to collaborate
 workspace:
   id: bad726eb-e474-4270-881c-afdcc2177799
-
 localResources:
   specs:
     - ../server/openapi.json
+cloudResources:
+  collections:
+    ../postman/collections/Postman API: 53354553-1b6f2553-d945-4555-8dd4-59c0c123290d
+    ../postman/collections/Postman API-1: 53354553-8d13c24c-fa75-420e-8705-fdddd068bc83
+    ../postman/collections/My Collection: 53354553-bc28c271-b90f-4352-ac80-61e5ccd677d2
+    ../postman/collections/Hostinger API: 53354553-20367349-1f9a-4b42-aee7-ed70e35e8ba0
+  environments:
+    ../postman/environments/Uncle Robert Site.environment.yaml: 53354553-3ff3571a-a339-406a-8ebc-e41351a4c62e

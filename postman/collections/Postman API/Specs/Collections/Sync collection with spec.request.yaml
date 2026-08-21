@@ -1,0 +1,22 @@
+$kind: http-request
+description: |-
+  Syncs a collection generated from an API specification. This is an asynchronous endpoint that returns an HTTP `202 Accepted` response.
+
+  **Note:**
+
+  - This endpoint only supports the OpenAPI 2.0 and 3.0 specification types.
+      
+  - You can only sync collections generated from the given spec ID.
+url: "{{baseUrl}}/collections/:collectionUid/synchronizations?specId="
+method: PUT
+queryParams:
+  - key: specId
+    value: ""
+    description: The spec's ID.
+pathVariables:
+  - key: collectionUid
+    value: ""
+    description: The collection's unique ID.
+settings: {}
+examples: ./.resources/Sync collection with spec.resources/examples
+order: 3000

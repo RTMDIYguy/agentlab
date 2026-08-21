@@ -1,0 +1,26 @@
+$kind: http-request
+description: |-
+  Transfers a [Postman element](https://learning.postman.com/docs/getting-started/basics/postman-elements/) from one workspace to another workspace. Supported elements include collections, environments, mocks, monitors, and Flows modules and actions.
+
+  When copying an element between workspaces, the [activity feed](https://learning.postman.com/docs/collaborating-in-postman/using-workspaces/workspace-activity/) for both workspaces update to reflect the change.
+
+  **Note:**
+
+  This endpoint does not support transferring elements from team workspaces to personal workspaces.
+url: "{{baseUrl}}/workspaces/:workspaceId/element-transfers"
+method: POST
+pathVariables:
+  - key: workspaceId
+    value: ""
+    description: The workspace's ID.
+body:
+  type: json
+  content: |-
+    {
+        "id": "{{elementId}}",
+        "type": "{{elementType}}",
+        "to": "{{workspaceId}}"
+    }
+settings: {}
+examples: ./.resources/Transfer element to a workspace.resources/examples
+order: 1000

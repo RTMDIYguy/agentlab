@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/schemas/:schemaId/files/:filePath
+  method: PUT
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    schemaId: 2fdc8ea1-d02e-4e50-989e-6fa28f42b995
+    filePath: index.yaml
+  body:
+    type: json
+    content: |-
+      {
+          "content": "openapi: \"3.1.0\"\ninfo:\n  version: \"1.0.0\"\n  title: \"Sample API\"\n  description: Buy or rent spacecrafts\n\npaths:\n  /spacecrafts/{spacecraftId}:\n    parameters:\n      - name: spacecraftId\n        description: The unique identifier of the spacecraft\n        in: path\n        required: true\n        schema:\n          $ref: \"#/components/schemas/SpacecraftId\"\n    get:\n      summary: Read a spacecraft\n      responses:\n        \"200\":\n          description: The spacecraft corresponding to the provided `spacecraftId`\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/Spacecraft\"\n        404:\n          description: No spacecraft found for the provided `spacecraftId`\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/Error\"\n        500:\n          description: Unexpected error\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/Error\"\ncomponents:\n  schemas:\n    SpacecraftId:\n      description: The unique identifier of a spacecraft\n      type: string\n    Spacecraft:\n      type: object\n      required:\n        - id\n        - name\n        - type\n      properties:\n        id:\n          $ref: \"#/components/schemas/SpacecraftId\"\n        name:\n          type: string\n        type:\n          type: string\n          enum:\n            - capsule\n            - probe\n            - satellite\n            - spaceplane\n            - station\n        description:\n          type: string\n    Error:\n      type: object\n      required:\n        - message\n      properties:\n        message:\n          description: A human readable error message\n          type: string\n  securitySchemes:\n    ApiKey:\n      type: apiKey\n      in: header\n      name: X-Api-Key\nsecurity:\n  - ApiKey: []\n"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "createdBy": "12345678",
+          "createdAt": "2024-07-18T13:28:40.000Z",
+          "root": {
+              "enabled": true
+          },
+          "updatedAt": "2024-07-18T13:30:42.000Z",
+          "path": "index.yaml",
+          "id": "2fdc8ea1-d02e-4e50-989e-6fa28f42b995",
+          "updatedBy": "12345678",
+          "name": "index.yaml"
+      }
+order: 2000

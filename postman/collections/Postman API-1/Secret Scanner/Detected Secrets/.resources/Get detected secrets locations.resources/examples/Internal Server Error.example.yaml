@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/detected-secrets/OTI3OTYx/locations?workspaceId=e361eeb4-00dd-4225-9774-6146a2555999&limit=2
+  method: GET
+  queryParams:
+    workspaceId: e361eeb4-00dd-4225-9774-6146a2555999
+    limit: "2"
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: json
+    content: |-
+      {
+          "instance": "",
+          "status": 500,
+          "title": "An error occurred",
+          "type": "SERVER_ERROR"
+      }
+order: 11000

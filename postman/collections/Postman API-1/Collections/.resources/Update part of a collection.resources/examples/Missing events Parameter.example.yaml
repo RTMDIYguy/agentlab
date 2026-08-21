@@ -1,0 +1,34 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId
+  method: PATCH
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "events": [
+                  {
+                      "listen": "prerequest",
+                      "script": {
+                          "id": "e74ce0d0-5acd-44b6-a3ae-95f617c1546e"
+                      }
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "badRequest",
+              "message": "Parameters required: ('type', 'exec') for key: 'collection.events.script'"
+          }
+      }
+order: 10000

@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/relations
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "relations": {
+              "apiDefintion": {
+                  "16bb367e-fafb-4ef3-933b-ee3d971866fb": {
+                      "id": "16bb367e-fafb-4ef3-933b-ee3d971866fb"
+                  }
+              },
+              "unclassified": {
+                  "b9bccf0f-e06a-433d-b556-a3cd158f0270": {
+                      "id": "b9bccf0f-e06a-433d-b556-a3cd158f0270",
+                      "name": "Test Collection",
+                      "createdAt": "2023-01-30T17:41:50.000Z",
+                      "updatedAt": "2023-01-19T14:50:05.000Z"
+                  }
+              },
+              "schema": {
+                  "16bb367e-fafb-4ef3-933b-ee3d971866fb": {
+                      "id": "16bb367e-fafb-4ef3-933b-ee3d971866fb"
+                  }
+              }
+          }
+      }
+order: 1000

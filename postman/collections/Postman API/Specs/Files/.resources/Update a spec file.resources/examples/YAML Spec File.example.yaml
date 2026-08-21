@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId/files/:filePath
+  method: PATCH
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+    filePath: schemas.yaml
+  body:
+    type: json
+    content: |-
+      {
+          "content": "SpacecraftId:\n  description: The unique identifier of a spacecraft\n  type: string\nSpacecraft:\n  type: object\n  required:\n  - id\n  - name\n  - type\n  properties:\n    id:\n      \"$ref\": \"#/SpacecraftId\"\n    name:\n      type: string\n    type:\n      type: string\n      enum:\n      - capsule\n      - probe\n      - satellite\n      - spaceplane\n      - station\n    description:\n      type: string\nError:\n  type: object\n  required:\n  - message\n  properties:\n    message:\n      description: A human readable error message\n      type: string\n"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "createdAt": "2025-07-22T19:29:08.000Z",
+          "createdBy": 12345678,
+          "id": "2fdc8ea1-d02e-4e50-989e-6fa28f42b995",
+          "path": "schemas.yaml",
+          "updatedAt": "2025-07-22T19:29:57.000Z",
+          "updatedBy": 12345678,
+          "type": "DEFAULT"
+      }
+order: 2000

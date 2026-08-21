@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks/:mockId
+  method: DELETE
+  pathVariables:
+    mockId: 12345678-e3d951bf-873f-49ac-a658-b2dcb91d3289
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "mock": {
+              "id": "0fca2246-c108-41f5-8454-cc032def329f",
+              "uid": "1679925-0fca2246-c108-41f5-8454-cc032def329f"
+          }
+      }
+order: 1000

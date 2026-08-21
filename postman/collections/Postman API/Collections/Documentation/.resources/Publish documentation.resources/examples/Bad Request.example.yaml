@@ -1,0 +1,66 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/public-documentations
+  method: PUT
+  pathVariables:
+    collectionId: ""
+  body:
+    type: json
+    content: |-
+      {
+          "environmentUid": "12345678-f84a5105-a495-49db-aa6b-db02c9ed1023",
+          "customColor": {
+              "highlight": "EF5B25",
+              "rightSidebar": "303030",
+              "topBar": "FFFFFF"
+          },
+          "documentationLayout": "classic-single-column",
+          "customization": {
+              "metaTags": [
+                  {
+                      "name": "title",
+                      "value": "Billing API"
+                  },
+                  {
+                      "name": "description",
+                      "value": "This documentation contains the endpoints for the Billing API."
+                  }
+              ],
+              "appearance": {
+                  "default": "dark",
+                  "themes": [
+                      {
+                          "name": "dark",
+                          "colors": {
+                              "highlight": "EF5B25",
+                              "rightSidebar": "303030",
+                              "topBar": "FFFFFF"
+                          },
+                          "logo": "<s3_url>/<cloudfront_url>"
+                      },
+                      {
+                          "name": "light",
+                          "colors": {
+                              "highlight": "EF5B25",
+                              "rightSidebar": "303030",
+                              "topBar": "FFFFFF"
+                          },
+                          "logo": "<s3_url>/<cloudfront_url>"
+                      }
+                  ]
+              }
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "title": "Bad Request",
+          "detail": "Collection Id not present",
+          "status": 400
+      }
+order: 2000

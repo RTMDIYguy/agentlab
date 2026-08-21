@@ -1,0 +1,34 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-requests-transfers
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "ids": [
+              "12345678-3a2069a1-aeb6-462c-ada0-8629858199ba"
+          ],
+          "target": {
+              "model": "folder",
+              "id": "12345678-bcb5648b-eecb-4468-ade7-4efb38431bb9"
+          },
+          "location": {
+              "position": "after",
+              "model": "request",
+              "id": "12345678-78749c26-69c7-4c07-8fca-8055d1a732db"
+          },
+          "mode": "move"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "ids": [
+              "12345678-3a2069a1-aeb6-462c-ada0-8629858199ba"
+          ]
+      }
+order: 3000

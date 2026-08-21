@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/schemas/:schemaId/files/:filePath
+  method: GET
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    schemaId: 5381f010-c4c1-11ed-afa1-0242ac120002
+    filePath: s1.json
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "instanceNotFoundError",
+              "message": "API not found. For v10 and later APIs, ensure that your request sends the \"application/vnd.api.v10+json\" Accept header."
+          }
+      }
+order: 4000

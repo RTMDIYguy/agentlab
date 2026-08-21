@@ -1,0 +1,6 @@
+$kind: collection
+description: |-
+  **These endpoints are deprecated**
+
+  The **Postbot** endpoints enable you to programmatically engage with Postman's AI assistant.
+order: 4000

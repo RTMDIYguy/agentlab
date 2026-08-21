@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/detected-secrets/OTI3OTYx/locations?workspaceId=e361eeb4-00dd-4225-9774-6146a2555999&limit=2
+  method: GET
+  queryParams:
+    workspaceId: e361eeb4-00dd-4225-9774-6146a2555999
+    limit: "2"
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "FORBIDDEN",
+          "title": "This feature is only available with \"Advanced Security Administration\" add-on. Contact your team admin to purchase this add-on.",
+          "instance": "",
+          "status": 403
+      }
+order: 9000

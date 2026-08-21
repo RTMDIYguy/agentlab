@@ -1,0 +1,37 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId?include=versions
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  queryParams:
+    include: versions
+  pathVariables:
+    apiId: 5360b75f-447e-467c-9299-12fd6c92450d
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "createdAt": "2022-06-09T14:48:45.000Z",
+          "updatedAt": "2022-06-09T19:50:49.000Z",
+          "id": "5360b75f-447e-467c-9299-12fd6c92450d",
+          "name": "Test API",
+          "summary": "Test API.",
+          "description": "This is a test API.",
+          "createdBy": "12345678",
+          "updatedBy": "12345678",
+          "versions": [
+              {
+                  "id": "18ccb2dc-1746-4945-ba76-8152b37cr123",
+                  "name": "v1.0.0"
+              },
+              {
+                  "id": "5260b75f-447e-467c-9299-12f16c924503",
+                  "name": "v1.0.1"
+              }
+          ]
+      }
+order: 5000

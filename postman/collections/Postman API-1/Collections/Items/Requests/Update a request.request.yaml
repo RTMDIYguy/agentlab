@@ -1,0 +1,100 @@
+$kind: http-request
+description: |-
+  Updates a request in a collection. For a complete list of properties and information, see the [Postman Collection Format documentation](https://schema.postman.com/collection/json/v2.1.0/draft-07/docs/index.html).
+
+  **Note:**
+
+  - This request uses example values in the request body for context when updating collection requests. For additional ways to create a request, see the collection's examples.
+      
+  - You must pass a collection ID (`12ece9e1-2abf-4edc-8e34-de66e74114d2`), not a collection UID (`12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2`), in this endpoint.
+      
+  - This endpoint acts like a PATCH method. It only updates the values that you pass in the request body (for example, the `name` property). The endpoint does **not** update the entire resource.
+      
+  - This endpoint does not support changing the folder of a request.
+url: "{{baseUrl}}/collections/:collectionId/requests/:requestId"
+method: PUT
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+  - key: requestId
+    value: ""
+    description: The request's ID.
+body:
+  type: json
+  content: |-
+    {
+        "name": "POST request",
+        "auth": {
+            "type": "apikey",
+            "apikey": [
+                {
+                    "key": "value",
+                    "value": "XXX"
+                },
+                {
+                    "key": "key",
+                    "value": "api-key"
+                }
+            ]
+        },
+        "events": [
+            {
+                "listen": "test",
+                "script": {
+                    "exec": [
+                        "pm.test(\"Status code is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});"
+                    ],
+                    "type": "text/javascript"
+                }
+            },
+            {
+                "listen": "prerequest",
+                "script": {
+                    "exec": [
+                        ""
+                    ],
+                    "type": "text/javascript"
+                }
+            }
+        ],
+        "dataMode": "raw",
+        "dataOptions": {
+            "raw": {
+                "language": "json"
+            }
+        },
+        "rawModeData": "{\n    \"name\": \"{{value}}\",\n    \"email\": \"{{email}}\",\n    \"username\": \"{{username}}\"\n}",
+        "description": "This is an example request.",
+        "headers": "Content-Type: application/json\n",
+        "method": "POST",
+        "url": "https://postman-echo.com/user/:id?active={{boolean}}",
+        "preRequestScript": "pm.collectionVariables.get(\"id\");",
+        "tests": "pm.test(\"Body matches string\", function () {\n    pm.expect(pm.response.text()).to.include(\"string_you_want_to_search\");\n});",
+        "queryParams": [
+            {
+                "key": "active",
+                "value": true,
+                "description": "",
+                "enabled": false
+            }
+        ],
+        "pathVariables": {
+            "id": "{{value}}"
+        },
+        "pathVariableData": [
+            {
+                "key": "id",
+                "value": "{{value}}",
+                "description": "The user's ID."
+            }
+        ],
+        "protocolProfileBehavior": {
+            "disableBodyPruning": true
+        }
+    }
+settings: {}
+examples: ./.resources/Update a request.resources/examples
+order: 4000

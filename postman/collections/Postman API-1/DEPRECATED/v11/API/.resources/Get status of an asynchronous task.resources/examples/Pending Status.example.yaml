@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/tasks/:taskId
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 5360b75f-447e-467c-9299-12fd6c92450d
+    taskId: 66ae9950-0869-4e65-96b0-1e0e47e771af
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "url": "https://api.getpostman.com/apis/5360b75f-447e-467c-9299-12fd6c92450d/collections/e726de58-f1b3-4edd-a8a7-2579dc799d39/sync",
+              "action": "update",
+              "model": "collection"
+          },
+          "id": "66ae9950-0869-4e65-96b0-1e0e47e771af",
+          "createdAt": "2023-02-12 19:34:49",
+          "updatedAt": "2023-02-12 19:34:49",
+          "status": "pending"
+      }
+order: 1000

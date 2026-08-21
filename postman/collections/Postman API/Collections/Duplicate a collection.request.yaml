@@ -1,0 +1,21 @@
+$kind: http-request
+description: |-
+  Creates a duplicate of the given collection in another workspace.
+
+  Use the GET `/collection-duplicate-tasks/{taskId}` endpoint to get the duplication task's current status.
+url: "{{baseUrl}}/collections/:collectionId/duplicates"
+method: POST
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's unique ID.
+body:
+  type: json
+  content: |-
+    {
+        "workspace": "{{workspaceId}}",
+        "suffix": "{{suffixText}}"
+    }
+settings: {}
+examples: ./.resources/Duplicate a collection.resources/examples
+order: 14000

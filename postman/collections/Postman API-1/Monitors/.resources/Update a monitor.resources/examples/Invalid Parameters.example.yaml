@@ -1,0 +1,39 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors/:monitorId
+  method: PUT
+  pathVariables:
+    monitorId: 12345678-1e6b6cb7-f13d-4000-acb7-0695757174a8
+  body:
+    type: json
+    content: |-
+      {
+      	"monitor": {
+      		"name": "Test Monitor",
+              "collection": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "environment": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e",
+      		"schedule": {
+      			"cron": "*/5 * * * *",
+      			"timezone": "America/Chicago"
+      		}
+      	}
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "parameterNotAllowedError",
+              "message": "The specified parameter cannot be updated.",
+              "details": {
+                  "param": [
+                      "collection",
+                      "environment"
+                  ]
+              }
+          }
+      }
+order: 4000

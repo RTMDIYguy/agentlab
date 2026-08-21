@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/pull-requests/:pullRequestId
+  method: GET
+  pathVariables:
+    pullRequestId: 4e1a6609-1a29-4037-a411-89ecc14c6cd8
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "title": "Forbidden",
+          "detail": "You do not have enough permissions to perform this action.",
+          "status": 403
+      }
+order: 2000

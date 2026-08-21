@@ -1,0 +1,26 @@
+$kind: http-request
+description: Updates a mock server's properties, such as its name or collection.
+url: "{{baseUrl}}/mocks/:mockId"
+method: PUT
+pathVariables:
+  - key: mockId
+    value: ""
+    description: The mock's ID.
+body:
+  type: json
+  content: |-
+    {
+        "mock": {
+            "name": "{{mockName}}",
+            "environment": "{{environmentUid}}",
+            "private": true,
+            "versionTag": "{{apiVersionTagId}}",
+            "collection": "{{collectionId}}",
+            "config": {
+                "serverResponseId": "{{serverResponseId}}"
+            }
+        }
+    }
+settings: {}
+examples: ./.resources/Update a mock server.resources/examples
+order: 9000

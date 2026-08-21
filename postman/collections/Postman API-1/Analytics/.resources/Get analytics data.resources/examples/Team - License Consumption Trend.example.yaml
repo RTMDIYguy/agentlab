@@ -1,0 +1,110 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=team&metrics=license_consumption&view=summary&duration=last_6_months
+  method: GET
+  queryParams:
+    resource: team
+    metrics: license_consumption
+    view: summary
+    duration: last_6_months
+  body:
+    type: json
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "date",
+                              "type": "DATE",
+                              "format": "YYYY-MM-DD",
+                              "description": "Reporting date for team and license metrics."
+                          },
+                          {
+                              "name": "team_members",
+                              "type": "INTEGER",
+                              "description": "Total number of members in the team."
+                          },
+                          {
+                              "name": "active_postman_users",
+                              "type": "INTEGER",
+                              "description": "Count of team members actively using Postman."
+                          },
+                          {
+                              "name": "partners",
+                              "type": "INTEGER",
+                              "description": "Number of partner users associated with the team."
+                          },
+                          {
+                              "name": "guests",
+                              "type": "INTEGER",
+                              "description": "Number of guest users with limited access."
+                          },
+                          {
+                              "name": "unused_licenses",
+                              "type": "INTEGER",
+                              "description": "Number of licenses assigned but not actively used."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "2025-02-01",
+                          600,
+                          430,
+                          170,
+                          85,
+                          25
+                      ],
+                      [
+                          "2025-03-01",
+                          620,
+                          450,
+                          180,
+                          90,
+                          20
+                      ],
+                      [
+                          "2025-04-01",
+                          635,
+                          460,
+                          185,
+                          92,
+                          18
+                      ],
+                      [
+                          "2025-05-01",
+                          640,
+                          475,
+                          190,
+                          95,
+                          15
+                      ],
+                      [
+                          "2025-06-01",
+                          655,
+                          490,
+                          195,
+                          98,
+                          12
+                      ],
+                      [
+                          "2025-07-01",
+                          670,
+                          505,
+                          200,
+                          100,
+                          10
+                      ]
+                  ]
+              }
+          }
+      }
+order: 21000

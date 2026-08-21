@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/secret-types
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "total": 4
+          },
+          "data": [
+              {
+                  "name": "Postman Collection Key",
+                  "id": "04084949-0dda-4735-ace5-f83038f7b200",
+                  "type": "DEFAULT"
+              },
+              {
+                  "name": "Planetscale API Token",
+                  "id": "082351ca-810e-476b-8437-d098b20fba4b",
+                  "type": "DEFAULT"
+              },
+              {
+                  "name": "Open AI API Key",
+                  "id": "0987c237-c1d0-4f07-a1af-a5772facf866",
+                  "type": "DEFAULT"
+              },
+              {
+                  "name": "Picatic API Key",
+                  "id": "0eac968d-f65e-4f3d-9a34-c02138072835",
+                  "type": "DEFAULT"
+              }
+          ]
+      }
+order: 1000

@@ -1,0 +1,47 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/access-requests
+  method: POST
+  pathVariables:
+    teamId: "123"
+  body:
+    type: json
+    content: |-
+      {
+          "entityList": [
+              {
+                  "entityType": "user",
+                  "entityId": "12345678"
+              },
+              {
+                  "entityType": "user",
+                  "entityId": "87654321"
+              },
+              {
+                  "entityType": "group",
+                  "entityId": "1234"
+              }
+          ],
+          "role": "TEAM_DEVELOPER",
+          "reason": "New dev team",
+          "requestType": "REQUEST_TO_ADD_MEMBERS"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "status": 400,
+          "title": "Bad Request",
+          "detail": {
+              "error": {
+                  "name": "BadRequest",
+                  "message": "Team feature is not available for your organization."
+              }
+          },
+          "instance": "/teams"
+      }
+order: 11000

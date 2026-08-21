@@ -1,0 +1,6 @@
+$kind: http-request
+description: Deletes an API.
+url: https://api.getpostman.com/apis/{{apiId}}
+method: DELETE
+examples: ./.resources/Delete an API.resources/examples
+order: 9000

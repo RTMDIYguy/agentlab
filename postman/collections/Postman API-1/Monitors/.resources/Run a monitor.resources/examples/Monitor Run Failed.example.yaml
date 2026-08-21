@@ -1,0 +1,83 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors/:monitorId/run
+  method: POST
+  pathVariables:
+    monitorId: 12345678-1e6b6cb7-f13d-4000-acb7-0695757174a8
+  body:
+    type: formdata
+    content: []
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "run": {
+              "info": {
+                  "jobId": "1ecee76a-e14e-47c0-bddc-256bf690c407",
+                  "monitorId": "1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+                  "name": "Test Monitor",
+                  "collectionUid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "environmentUid": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e",
+                  "status": "failed",
+                  "startedAt": "2022-06-17T20:00:41.659Z",
+                  "finishedAt": "2022-06-17T20:00:42.693Z"
+              },
+              "stats": {
+                  "assertions": {
+                      "total": 1,
+                      "failed": 1
+                  },
+                  "requests": {
+                      "total": 1,
+                      "failed": 0
+                  }
+              },
+              "executions": [
+                  {
+                      "id": 1,
+                      "item": {
+                          "name": "Sample POST Request"
+                      },
+                      "request": {
+                          "method": "POST",
+                          "url": "http://echo.getpostman.com/post",
+                          "headers": {
+                              "Content-Type": "application/json",
+                              "User-Agent": "PostmanRuntime/7.29.0",
+                              "Accept": "*/*",
+                              "Cache-Control": "no-cache",
+                              "Postman-Token": null,
+                              "Host": "echo.getpostman.com",
+                              "Accept-Encoding": "gzip, deflate, br",
+                              "Connection": "keep-alive",
+                              "Content-Length": "0"
+                          },
+                          "body": {
+                              "contentLength": 0
+                          },
+                          "timestamp": "2022-06-17T20:00:42.423Z"
+                      },
+                      "response": {
+                          "code": 200,
+                          "body": {
+                              "contentLength": 50
+                          },
+                          "responseTime": 15,
+                          "responseSize": 50,
+                          "headers": {
+                              "Date": "Fri, 17 Jun 2022 20:00:42 GMT",
+                              "Content-Type": "text/plain",
+                              "Content-Length": "50",
+                              "Connection": "keep-alive",
+                              "Server": null
+                          }
+                      }
+                  }
+              ],
+              "failures": []
+          }
+      }
+order: 4000

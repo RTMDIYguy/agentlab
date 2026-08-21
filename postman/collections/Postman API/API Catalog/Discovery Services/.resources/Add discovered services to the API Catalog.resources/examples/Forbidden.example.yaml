@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "discoveredServices": [
+              {
+                  "name": "payment-service"
+              }
+          ]
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "status": 403,
+          "title": "Forbidden",
+          "detail": "Feature is disabled."
+      }
+order: 9000

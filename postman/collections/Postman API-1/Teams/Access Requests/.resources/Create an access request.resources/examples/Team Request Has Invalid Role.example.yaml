@@ -1,0 +1,45 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/access-requests
+  method: POST
+  pathVariables:
+    teamId: "123"
+  body:
+    type: json
+    content: |-
+      {
+          "entityList": [
+              {
+                  "entityType": "team",
+                  "entityId": "123"
+              }
+          ],
+          "role": "TEAM_MANAGER",
+          "reason": "",
+          "requestType": "REQUEST_TO_ADD_MEMBERS"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "status": 400,
+          "title": "Bad Request",
+          "detail": {
+              "error": "Found invalid entities",
+              "result": [
+                  {
+                      "entityType": "team",
+                      "entityId": "123",
+                      "role": "TEAM_MANAGER",
+                      "status": "Invalid",
+                      "reason": "Members can only be users or usergroups"
+                  }
+              ]
+          },
+          "instance": "/teams/123/access-requests"
+      }
+order: 10000

@@ -1,0 +1,18 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private/:elementType/:elementId
+  method: DELETE
+  pathVariables:
+    elementType: folder
+    elementId: "1234"
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "name": "folderNotEmptyError",
+          "message": "You need to empty this folder before deleting it."
+      }
+order: 8000

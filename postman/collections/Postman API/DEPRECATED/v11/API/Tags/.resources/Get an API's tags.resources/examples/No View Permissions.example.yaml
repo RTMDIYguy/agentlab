@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/tags
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 6fd634a3-79ba-451d-8f07-56a953f96667
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "title": "Access Denied",
+          "status": 403,
+          "detail": "You do not have view permission",
+          "instance": "/tags/apis/12345678-90ca9f5a-c4c4-11ed-afa1-0242ac120002"
+      }
+order: 8000

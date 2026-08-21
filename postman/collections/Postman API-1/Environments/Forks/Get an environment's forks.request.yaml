@@ -1,0 +1,28 @@
+$kind: http-request
+description: Gets all of an environment's forked environments.
+url: "{{baseUrl}}/environments/:environmentUid/forks"
+method: GET
+queryParams:
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The pointer to the first record of the set of paginated results.
+  - key: direction
+    value: ""
+    disabled: true
+    description: Sort results in ascending (`asc`) or descending (`desc`) order.
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of rows to return in the response. This value defaults to 10.
+  - key: sort
+    value: createdAt
+    disabled: true
+    description: Sort the results by the date and time of creation.
+pathVariables:
+  - key: environmentUid
+    value: ""
+    description: The environment's unique ID.
+settings: {}
+examples: ./.resources/Get an environment's forks.resources/examples
+order: 1000

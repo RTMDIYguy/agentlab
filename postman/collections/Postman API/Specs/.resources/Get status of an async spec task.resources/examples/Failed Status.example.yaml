@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/:elementType/:elementId/tasks/:taskId
+  method: GET
+  pathVariables:
+    elementType: collections
+    elementId: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+    taskId: 66ae9950-0869-4e65-96b0-1e0e47e771af
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "details": "Failed to generate collection from specification",
+          "meta": {
+              "model": "collection",
+              "action": "generation"
+          },
+          "status": "failed"
+      }
+order: 3000

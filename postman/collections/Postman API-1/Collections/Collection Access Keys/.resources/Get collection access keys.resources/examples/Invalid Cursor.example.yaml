@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-access-keys?cursor=123
+  method: GET
+  queryParams:
+    cursor: "123"
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "title": "Malformed request",
+          "detail": "Invalid cursor",
+          "status": 400
+      }
+order: 4000

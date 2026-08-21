@@ -1,0 +1,10 @@
+$kind: http-request
+description: Unpublishes a mock server. Unpublishing a mock server sets its **Access Control** configuration setting to private.
+url: "{{baseUrl}}/mocks/:mockId/unpublish"
+method: DELETE
+pathVariables:
+  - key: mockId
+    value: ""
+    description: The mock's ID.
+examples: ./.resources/Unpublish a mock server.resources/examples
+order: 7000

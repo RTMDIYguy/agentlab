@@ -1,0 +1,46 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "discoveredServices": [
+              {
+                  "name": "payment-service"
+              }
+          ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": [
+              {
+                  "id": "cad25cdf-e5af-4d15-bd3b-550db1584374",
+                  "organizationId": 123,
+                  "name": "payment-service",
+                  "description": null,
+                  "version": null,
+                  "sourceEnvironment": null,
+                  "systemEnvironmentId": null,
+                  "tags": [],
+                  "status": "discovered",
+                  "endpointsCount": 0,
+                  "providerServiceId": "payment-service:1.0.0",
+                  "discoveredAt": "2026-02-12T04:01:26.000Z",
+                  "discoveredBy": 12345678,
+                  "lastSyncedAt": "2026-02-12T04:01:26.000Z"
+              }
+          ],
+          "meta": {
+              "total": 1,
+              "created": 1,
+              "updated": 0
+          }
+      }
+order: 1000

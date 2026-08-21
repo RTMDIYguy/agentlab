@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-folders-transfers
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "ids": [
+              "12345678"
+          ],
+          "target": {
+              "model": "collection",
+              "id": "12345678-2ba6b9c4-5327-4c46-9bf3-4ec84b74b720"
+          },
+          "location": {
+              "position": "start",
+              "model": null,
+              "id": null
+          },
+          "mode": "move"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |
+      {
+          "type": "Error",
+          "title": "One or more folder ids provided were not found",
+          "detail": {
+              "missing": [
+                  "12345678"
+              ]
+          }
+      }
+order: 4000

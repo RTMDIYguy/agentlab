@@ -1,0 +1,50 @@
+$kind: http-request
+description: |-
+  Creates a new API version asynchronously and immediately returns an HTTP `202 Accepted` response. The response contains a polling link to the task status API in the `Location` header.
+
+  This endpoint is equivalent to publishing a version in Postman app, which is the snapshot of API collections and schema at a given point in time.
+
+  Include the following properties in the request body:
+
+  - `name` — A **string** value that contains the version name.
+      
+  - `collections` — An **array** containing the collection unique IDs to publish.
+      
+  - `schemas` — An **array** containing the schema IDs to publish.
+      
+  - `branch` — A **string** value that contains the name of the repository branch. This property is required only for Git-linked APIs.
+      
+
+  You can include the following optional properties:
+
+  - `releaseNotes` — A **string** value that contains the Markdown-supported version summary.
+url: "{{baseUrl}}/apis/:apiId/versions"
+method: POST
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+body:
+  type: json
+  content: |-
+    {
+        "name": "{{apiReleaseName}}",
+        "releaseNotes": "{{apiReleaseDescription}}",
+        "collections": [
+            {
+                "id": "{{collectionUid}}"
+            }
+        ],
+        "schemas": [
+            {
+                "id": "{{schemaId}}"
+            }
+        ]
+    }
+settings: {}
+examples: ./.resources/Create a version.resources/examples
+order: 1000

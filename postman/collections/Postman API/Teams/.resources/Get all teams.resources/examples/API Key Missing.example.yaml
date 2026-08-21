@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams?cursor=RnJpIEZlYiAyNCAyMDIzIDEzOjI0OjA5IEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk=&limit=2
+  method: GET
+  queryParams:
+    cursor: RnJpIEZlYiAyNCAyMDIzIDEzOjI0OjA5IEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk=
+    limit: "2"
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Unauthorized",
+          "instance": "/teams",
+          "status": 401,
+          "type": "https://api.postman.com/problems/unauthorized",
+          "detail": "Unauthorized"
+      }
+order: 5000

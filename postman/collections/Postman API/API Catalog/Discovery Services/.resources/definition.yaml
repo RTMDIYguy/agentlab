@@ -1,0 +1,3 @@
+$kind: collection
+description: These endpoints enable you to manage your API Catalog's [discovered services](https://learning.postman.com/docs/api-catalog/overview#discover-apis-and-services) and integrate them with Postman.
+order: 1000

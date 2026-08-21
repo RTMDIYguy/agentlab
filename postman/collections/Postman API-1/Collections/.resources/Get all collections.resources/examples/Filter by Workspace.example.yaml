@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections?workspace=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: GET
+  queryParams:
+    workspace: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collections": [
+              {
+                  "id": "dac5eac9-148d-a32e-b76b-3edee9da28f7",
+                  "name": "Cloud API",
+                  "owner": "12345678",
+                  "createdAt": "2022-04-12T10:29:46.000Z",
+                  "updatedAt": "2022-04-12T10:29:56.000Z",
+                  "uid": "12345678-dac5eac9-148d-a32e-b76b-3edee9da28f7",
+                  "isPublic": true
+              }
+          ]
+      }
+order: 3000

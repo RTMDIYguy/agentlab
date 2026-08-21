@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors/:monitorId/run
+  method: POST
+  pathVariables:
+    monitorId: 12345678-1e6b6cb7-f13d-4000-acb7-0695757174a8
+response:
+  statusCode: 202
+  statusText: Accepted
+  body:
+    type: json
+    content: |-
+      {
+          "run": {
+            "info": {
+              "monitorId": "1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+              "status": "running",
+              "message": "The request is taking longer than expected, but is processing. To avoid this in future requests, pass the 'async=true' query parameter to use the async option."
+              }
+          }
+      }
+order: 2000

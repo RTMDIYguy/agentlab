@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/collections/:collectionUid/sync-with-schema-tasks
+  method: PUT
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    collectionUid: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 422
+  statusText: Unprocessable Entity (WebDAV) (RFC 4918)
+  body:
+    type: json
+    content: |-
+      {
+          "detail": "This action is not allowed for git linked APIs",
+          "type": "actionNotAllowedError",
+          "title": "Action not allowed"
+      }
+order: 11000

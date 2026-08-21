@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/versions/:versionId
+  method: DELETE
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    versionId: 3563baaa-07a2-46ed-9fd2-0e8a3c5f7ec2
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "type": "VersionNotFound",
+          "title": "API Version not found.",
+          "details": "We could not find the API Version you are looking for."
+      }
+order: 6000

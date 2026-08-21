@@ -1,0 +1,52 @@
+$kind: http-request
+description: |-
+  Updates the roles of users, [user groups](https://learning.postman.com/docs/collaborating-in-postman/user-groups/), or partners in a workspace. To get a list of roles, use the [GET /workspace-roles](https://www.postman.com/postman/workspace/postman-public-workspace/request/12959542-f4250b7c-87a6-46ba-a58b-02081131a67c) endpoint.
+
+  **Note:**
+
+  - User groups are available on Postman [Enterprise plans](https://www.postman.com/pricing).
+      
+  - To use SCIM IDs for users and user groups, include the `identifierType=scim` header when you call this endpoint. To get SCIM user IDs, use the `include=scim` query parameter when calling the [GET /workspaces/{workspaceId}](https://www.postman.com/postman/workspace/postman-public-workspace/request/12959542-3a56b6f8-8d0c-410f-a933-03e26589c742?ctx=documentation) or [GET /workspaces](https://www.postman.com/postman/workspace/postman-public-workspace/request/12959542-f027a0fa-9012-4654-a65d-2b751a3154a9) endpoints.
+      
+  - You can't set roles for users in personal workspaces.
+      
+  - This endpoint doesn't support the external [Guest role](https://learning.postman.com/docs/collaborating-in-postman/roles-and-permissions/#team-roles).
+      
+  - The partner **Editor** and **Editor and Partner Lead** roles aren't supported in multi-partner workspaces.
+      
+  - You can't update partner and user roles in the same operation.
+      
+  - This endpoint is restricted to 50 operations per call.
+      
+  - The request body must contain one unique action per user, user group, or partner. For example, you cannot add and remove multiple roles for a user in the same request body.
+url: "{{baseUrl}}/workspaces/:workspaceId/roles"
+method: PATCH
+headers:
+  - key: identifierType
+    value: scim
+    disabled: true
+    description: Use SCIM user IDs instead of Postman user IDs.
+pathVariables:
+  - key: workspaceId
+    value: ""
+    description: The workspace's ID.
+body:
+  type: json
+  content: |-
+    {
+        "roles": [
+            {
+                "op": "{{operationType}}",
+                "path": "{{pathValue}}",
+                "value": [
+                    {
+                        "id": "{{id}}",
+                        "role": "{{workspaceRoleId}}"
+                    }
+                ]
+            }
+        ]
+    }
+settings: {}
+examples: ./.resources/Update workspace roles.resources/examples
+order: 3000

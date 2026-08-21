@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/bulk-members
+  method: POST
+  pathVariables:
+    teamId: "123"
+  body:
+    type: json
+    content: |-
+      {  
+          "add": {
+              "orgs": { 
+                  "432": [
+                      "TEAM_GUEST_DEVELOPER"
+                  ]
+              }
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "result": [
+              {
+                  "entityType": "organization",
+                  "entityId": 345,
+                  "role": "TEAM_GUEST_DEVELOPER",
+                  "previousRole": "TEAM_GUEST_VIEWER",
+                  "status": "Accepted"
+              }
+          ]
+      }
+order: 3000

@@ -1,0 +1,65 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/requests/:requestId
+  method: GET
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    requestId: e12d2aa6-85c8-4e6c-aad0-1adcfe05c958
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+          "meta": {
+              "model": "request",
+              "populate": false,
+              "changeset": false,
+              "action": "find"
+          },
+          "data": {
+              "owner": "12345678",
+              "lastUpdatedBy": "12345678",
+              "lastRevision": 24994863800,
+              "folder": null,
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+              "name": "Example POST request",
+              "dataMode": "raw",
+              "data": null,
+              "auth": null,
+              "events": null,
+              "rawModeData": "{\n    \"field\": \"Value\"\n}",
+              "descriptionFormat": null,
+              "description": null,
+              "variables": null,
+              "headers": "",
+              "method": "POST",
+              "pathVariables": {},
+              "url": "https://postman-echo.com/post",
+              "preRequestScript": null,
+              "tests": null,
+              "currentHelper": null,
+              "helperAttributes": null,
+              "queryParams": [],
+              "headerData": [],
+              "pathVariableData": [],
+              "protocolProfileBehavior": {
+                  "disableBodyPruning": true
+              },
+              "dataDisabled": false,
+              "responses_order": [
+                  "cc364734-7dfd-4bfc-897d-be763dcdbb07"
+              ],
+              "createdAt": "2023-09-01T07:29:17.000Z",
+              "updatedAt": "2023-09-01T07:36:30.000Z",
+              "dataOptions": {
+                  "raw": {
+                      "language": "json"
+                  }
+              }
+          }
+      }
+order: 2000

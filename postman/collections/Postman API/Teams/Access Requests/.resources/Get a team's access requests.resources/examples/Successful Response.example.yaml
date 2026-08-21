@@ -1,0 +1,48 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/access-requests
+  method: GET
+  pathVariables:
+    teamId: "123"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": [
+              {
+                  "createdAt": "2025-10-10T18:54:09.000Z",
+                  "updatedAt": "2025-10-10T18:54:09.000Z",
+                  "id": 1,
+                  "role": "TEAM_DEVELOPER",
+                  "requestType": "REQUEST_TO_ADD_MEMBERS",
+                  "reason": "Needs the developer role.",
+                  "status": "Requested",
+                  "entityType": "user",
+                  "entityId": 1317604,
+                  "objectType": "team",
+                  "objectId": 1,
+                  "createdBy": 12345678
+              },
+              {
+                  "createdAt": "2025-10-10T18:57:58.000Z",
+                  "updatedAt": "2025-10-10T18:57:58.000Z",
+                  "id": 2,
+                  "role": "TEAM_MANAGER",
+                  "requestType": "UPGRADE_ROLE",
+                  "reason": "I need the team manager role for my team.",
+                  "status": "Requested",
+                  "entityType": "user",
+                  "entityId": 12345678,
+                  "objectType": "team",
+                  "objectId": 2,
+                  "createdBy": 12345678
+              }
+          ],
+          "metadata": {
+              "nextCursor": null
+          }
+      }
+order: 1000

@@ -1,0 +1,43 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/detected-secrets-queries
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "resolved": true,
+          "resources": [
+              {
+                  "type": "example",
+                  "ids": [
+                      "12345678-400005df-3cad-480c-a027-ea68aed35b60"
+                    ]
+              }
+          ],
+          "workspaceIds": [
+              "0fe6c2f2-022d-48f7-8e7e-3244369445b0",
+              "80ab14ae-c17d-4fd6-88d5-99bf13f0b7f0"
+          ],
+          "workspaceVisibilities": [
+              "team"
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "type": "BAD_REQUEST",
+          "title": "Invalid filters specified",
+          "instance": "",
+          "status": 400,
+          "detail": "`workspaceIds` and `resources` filters are exclusive - only one can be applied at a time."
+      }
+order: 8000

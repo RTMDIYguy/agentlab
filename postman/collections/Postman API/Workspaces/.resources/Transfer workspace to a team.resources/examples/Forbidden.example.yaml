@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/transfers
+  method: PATCH
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a
+  body:
+    type: json
+    content: |-
+      {
+          "destination": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+          "source": "d56bc95f-57c5-47cc-bd99-75c4ad96a6dd"
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "title": "Forbidden",
+          "detail": "You do not have access to this workspace.",
+          "status": 403
+      }
+order: 4000

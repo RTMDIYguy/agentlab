@@ -1,0 +1,66 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors?limit=5
+  method: GET
+  queryParams:
+    limit: "5"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "monitors": [
+              {
+                  "id": "1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+                  "name": "Test Monitor",
+                  "active": true,
+                  "uid": "12345678-1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+                  "owner": 12345678,
+                  "collectionUid": "12345678-d35c5bfa-380e-4e98-9052-4eaf3bd0f14a",
+                  "environmentUid": "12345678-9ce0605e-e7cb-40dc-8074-2f6a69252905"
+              },
+              {
+                  "id": "1e6b6cb7-f13d-4000-acb7-0695757174a8",
+                  "name": "API Test",
+                  "active": true,
+                  "uid": "87654321-1e6b6cb7-f13d-4000-acb7-0695757174a8",
+                  "owner": 87654321,
+                  "collectionUid": "87654321-2f5e0f30-15f9-4c8a-9371-bb4402149abb",
+                  "environmentUid": "87654321-da11b6bf-1856-4625-ade2-46843b8eb31c"
+              },
+              {
+                  "id": "3d08e460-b58f-4f46-9dbb-018c57760864",
+                  "name": "Billing",
+                  "active": false,
+                  "uid": "56781234-3d08e460-b58f-4f46-9dbb-018c57760864",
+                  "owner": 56781234,
+                  "collectionUid": "56781234-b79c429b-b347-4b9c-a969-9cc3e1349f68",
+                  "environmentUid": "56781234-ec29504a-a305-47b2-9c73-8b0dcd6ddd61"
+              },
+              {
+                  "id": "90e01576-3ec4-4245-a327-e56b78becdce",
+                  "name": "Testing Monitor",
+                  "active": true,
+                  "uid": "12345678-90e01576-3ec4-4245-a327-e56b78becdce",
+                  "owner": 12345678,
+                  "collectionUid": "12345678-ecfd0f2c-cf60-4935-b2ed-b65c58d2910c",
+                  "environmentUid": "12345678-106dabbe-324c-488f-b628-c9f45033dcc7"
+              },
+              {
+                  "id": "5c8ff94d-ae04-4f23-812c-d428fa72bc43",
+                  "name": "API Test 2",
+                  "active": false,
+                  "uid": "87654321-5c8ff94d-ae04-4f23-812c-d428fa72bc43",
+                  "owner": 87654321,
+                  "collectionUid": "87654321-01c3b7c7-bf1e-47ab-8d57-0f9f950dca65",
+                  "environmentUid": "87654321-2ff3607d-2bdc-49a4-91af-40b0f48a0c77"
+              }
+          ],
+          "meta": {
+              "nextCursor": "D7TopGzwFnQtrVmj8QRbSBsBKkHAq19dnoRp5XxKVfVJW4pUx74P3L9BW9qTnR8vhAbgmXA3KEBTSG8Y4BXxJDmU8vJMH76RfKF1f51DfYm2qgt14AK1oLX1mj5qcmH2buYxiPL5CmdyktVVmNqs9zsMtLD9",
+              "limit": 5
+          }
+      }
+order: 7000

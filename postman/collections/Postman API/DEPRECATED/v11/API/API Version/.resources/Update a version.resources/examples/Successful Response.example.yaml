@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/versions/:versionId
+  method: PUT
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    versionId: 3563baaa-07a2-46ed-9fd2-0e8a3c5f7ec2
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Release 1.5",
+          "releaseNotes": "This is the first public release update."
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "createdAt": "2022-06-09T14:48:45.000Z",
+          "updatedAt": "2022-06-09T19:50:49.000Z",
+          "id": "8d7ba74e-2c36-4e36-a263-f3c0c9ae21d2",
+          "name": "Release 1.5",
+          "releaseNotes": "This is the first public release update."
+      }
+order: 1000

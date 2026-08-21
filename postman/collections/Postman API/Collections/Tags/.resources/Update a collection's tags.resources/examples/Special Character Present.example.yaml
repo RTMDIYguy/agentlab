@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionUid/tags
+  method: PUT
+  pathVariables:
+    collectionUid: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "tags": [
+              {
+                  "slug": "test-api!"
+              }
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Bad Request",
+          "detail": "body/tags/0/slug must match pattern \"^[a-z][a-z0-9-]*[a-z0-9]+$\"",
+          "status": 400
+      }
+order: 4000

@@ -1,0 +1,105 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/me
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "user": {
+              "id": 12345678,
+              "sub": "4d71435e-0e67-45b9-9d4c-e3262166d157",
+              "username": "taylor-lee",
+              "email": "taylor.lee@example.com",
+              "fullName": "Taylor Lee",
+              "avatar": "https://res.cloudinary.com/postman/image/upload/t_user_profile_300/v1/user/default-6",
+              "isPublic": true,
+              "emailVerified": true,
+              "teamId": 123,
+              "teamName": "Test Team",
+              "teamDomain": "test-team",
+              "roles": [
+                  "user",
+                  "flow-editor",
+                  "community-manager"
+              ]
+          },
+          "operations": [
+              {
+                  "name": "api_object_usage",
+                  "limit": 99999999,
+                  "usage": 8872,
+                  "overage": 0
+              },
+              {
+                  "name": "collection_run_limit",
+                  "limit": 99999999,
+                  "usage": 226,
+                  "overage": 0
+              },
+              {
+                  "name": "file_storage_limit",
+                  "limit": 1,
+                  "usage": 0.28,
+                  "overage": 0
+              },
+              {
+                  "name": "flow_requests",
+                  "limit": 1000000,
+                  "usage": 1852,
+                  "overage": 0
+              },
+              {
+                  "name": "performance_test_limit",
+                  "limit": 99999999,
+                  "usage": 10,
+                  "overage": 0
+              },
+              {
+                  "name": "reusable_packages",
+                  "limit": 100,
+                  "usage": 48,
+                  "overage": 0
+              },
+              {
+                  "name": "test_data_retrieval",
+                  "limit": 1000,
+                  "usage": 180,
+                  "overage": 0
+              },
+              {
+                  "name": "test_data_storage",
+                  "limit": 10,
+                  "usage": 0.55,
+                  "overage": 0
+              },
+              {
+                  "name": "postbot_calls",
+                  "limit": 2500,
+                  "usage": 0,
+                  "overage": 0
+              },
+              {
+                  "name": "mock_usage",
+                  "limit": 1000000,
+                  "usage": 79948,
+                  "overage": 0
+              },
+              {
+                  "name": "monitor_request_runs",
+                  "limit": 15000000,
+                  "usage": 4493710,
+                  "overage": 0
+              },
+              {
+                  "name": "api_usage",
+                  "limit": 1000000,
+                  "usage": 10788,
+                  "overage": 0
+              }
+          ]
+      }
+order: 1000

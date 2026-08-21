@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "name": "Public Workspace",
+              "type": "public",
+              "description": "This is a public workspace.",
+              "about": "Public workspace."
+          }
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "status": 403,
+              "name": "forbiddenError",
+              "message": "You are not authorized to perform this action",
+              "detail": "You do not have permission to create team workspaces.",
+              "instance": ""
+          }
+      }
+order: 11000

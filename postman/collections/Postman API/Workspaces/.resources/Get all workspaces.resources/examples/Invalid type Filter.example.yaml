@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces?type=partners
+  method: GET
+  queryParams:
+    type: partners
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "invalidParamError",
+              "message": "visibilityStatus must be one of personal/private/team/public/partner"
+          },
+          "statusCode": 400
+      }
+order: 6000

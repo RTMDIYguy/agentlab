@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/element-transfers
+  method: POST
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "id": "e3d951bf-873f-49ac-a658-b2dcb91d3289",
+          "type": "mock",
+          "to": "d56bc95f-57c5-47cc-bd99-75c4ad96a6dd"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "element-transfers": {
+                  "to": "d56bc95f-57c5-47cc-bd99-75c4ad96a6dd",
+                  "from": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+                  "id": "e3d951bf-873f-49ac-a658-b2dcb91d3289",
+                  "type": "mock"
+              }
+          }
+      }
+order: 3000

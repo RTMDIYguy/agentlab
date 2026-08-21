@@ -1,0 +1,7 @@
+$kind: http-request
+description: Gets information about all roles in a workspace, based on the team's [plan](https://www.postman.com/pricing/).
+url: "{{baseUrl}}/workspaces-roles"
+method: GET
+settings: {}
+examples: ./.resources/Get all roles.resources/examples
+order: 1000

@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "name": "Partner Workspace",
+              "type": "partner",
+              "description": "This is a partner workspace.",
+              "about": "Partner workspace."
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "id": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+              "name": "Partner Workspace"
+          }
+      }
+order: 5000

@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private/:elementType/:elementId
+  method: DELETE
+  pathVariables:
+    elementType: api
+    elementId: 5360b75f-447e-467c-9299-12fd6c92450d
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "AuthenticationError",
+              "message": "Invalid API Key. Every request requires a valid API Key to be sent."
+          }
+      }
+order: 9000

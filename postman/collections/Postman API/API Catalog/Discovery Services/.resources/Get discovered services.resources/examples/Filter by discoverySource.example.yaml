@@ -1,0 +1,45 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services?discoverySource=insights_project
+  method: GET
+  queryParams:
+    discoverySource: insights_project
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "total": 2,
+              "nextCursor": null
+          },
+          "data": [
+              {
+                  "id": "e191861a-9946-4ec2-bcb4-ef3f1dc62f6d",
+                  "name": "ohh/httpbin-deployment-1",
+                  "version": null,
+                  "sourceEnvironment": null,
+                  "systemEnvironmentId": "99fb6fc1-c9b8-43b4-9857-820bc98eb023",
+                  "status": "integrated",
+                  "endpointsCount": 0,
+                  "discoverySource": "insights_project",
+                  "tags": [],
+                  "discoveredAt": "2026-03-13T17:41:35.000Z"
+              },
+              {
+                  "id": "1ebbb102-12e9-4c74-8292-1d04fa0fd4cc",
+                  "name": "app-namespace-3/httpbin-deployment-3",
+                  "version": null,
+                  "sourceEnvironment": null,
+                  "systemEnvironmentId": "69fa9fad-692d-49d4-bd3d-6cab5a887ab7",
+                  "status": "integrated",
+                  "endpointsCount": 8,
+                  "discoverySource": "insights_project",
+                  "tags": [],
+                  "discoveredAt": "2026-02-18T13:15:51.000Z"
+              }
+          ]
+      }
+order: 4000

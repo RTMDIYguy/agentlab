@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/requests
+  method: POST
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Test Request"
+      }
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "Unauthorized",
+              "message": "Unauthorized",
+              "details": {
+                  "model": "request",
+                  "model_id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+                  "owner": "12345678"
+              }
+          }
+      }
+order: 7000

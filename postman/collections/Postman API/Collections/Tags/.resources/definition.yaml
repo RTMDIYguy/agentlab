@@ -1,0 +1,3 @@
+$kind: collection
+description: These endpoints enable you to manage collection tags with Postman's [tagging](https://learning.postman.com/docs/collections/using-collections/#tagging-a-collection) feature. Tagging is available on Postman [<b>Enterprise</b> plans](https://www.postman.com/pricing/).
+order: 8000

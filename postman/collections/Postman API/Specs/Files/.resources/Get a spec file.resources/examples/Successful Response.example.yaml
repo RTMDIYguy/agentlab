@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId/files/:filePath
+  method: GET
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+    filePath: index.json
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "createdAt": "2025-07-22T18:42:18.000Z",
+          "content": "{\n  \"openapi\": \"3.0.0\",\n  \"info\": {\n    \"version\": \"1.0.0\",\n    \"title\": \"Sample API\",\n    \"description\": \"Buy or rent spacecrafts\",\n    \"contact\": {\n      \"name\": \"Taylor Lee\"\n    }\n  },\n  \"servers\": [\n    {\n      \"url\": \"https://example.com\"\n    }\n  ],\n  \"security\": [\n    {\n      \"ApiKey\": []\n    }\n  ],\n  \"paths\": {\n    \"/spacecrafts/{spacecraftId}\": {\n      \"parameters\": [\n        {\n          \"$ref\": \"./components/parameters/spacecrafts.json#/SpacecraftId\"\n        }\n      ],\n      \"get\": {\n        \"summary\": \"Read a spacecraft\",\n        \"description\": \"Gets information about a spacecraft.\",\n        \"operationId\": \"getSpacecraft\",\n        \"tags\": [\n          \"Spacecrafts\"\n        ],\n        \"responses\": {\n          \"200\": {\n            \"$ref\": \"./components/responses/spacecrafts.json#/SuccessfulResponse\"\n          },\n          \"404\": {\n            \"$ref\": \"./components/responses/spacecrafts.json#/NotFound\"\n          },\n          \"500\": {\n            \"description\": \"Unexpected error\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"./components/schemas/spacecrafts.json#/Error\"\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  },\n  \"tags\": [\n    {\n      \"name\": \"Spacecrafts\"\n    }\n  ],\n  \"components\": {\n    \"securitySchemes\": {\n      \"ApiKey\": {\n        \"type\": \"apiKey\",\n        \"in\": \"header\",\n        \"name\": \"X-Api-Key\"\n      }\n    }\n  }\n}",
+          "updatedAt": "2025-07-22T18:47:32.000Z",
+          "createdBy": 12345678,
+          "updatedBy": 12345678,
+          "id": "3860602b-7a92-45a6-8b60-725ff7b453d5",
+          "type": "ROOT",
+          "path": "index.json",
+          "name": "index.json"
+      }
+order: 1000

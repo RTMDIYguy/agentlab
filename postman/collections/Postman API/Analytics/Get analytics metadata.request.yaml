@@ -1,0 +1,26 @@
+$kind: http-request
+description: Returns a catalog of analytics resources and their corresponding metrics for use with the GET `/analytics` endpoint. These metrics provide insights on API usage, success, workspace, and team trends in Postman.
+url: "{{baseUrl}}/analytics-metadata"
+method: GET
+queryParams:
+  - key: include
+    value: parameters,response
+    disabled: true
+    description: |-
+      A comma-separated list of the additional information to include in the response. Accepts the `parameters` and `response` values.
+
+      When you pass this query parameter and its values, the response provides detailed information, including parameters and response schemas for the given metrics.
+  - key: resources
+    value: user,workspace,team
+    disabled: true
+    description: A comma-separated list of resource types to filter the metrics by. Accepts the `user`, `workspace`, and `team` values.
+  - key: metrics
+    value: ""
+    disabled: true
+    description: |-
+      A comma-separated list of metrics values to use to filter the response.
+
+      If you don't pass this query parameter, then the response returns all metadata for all available metrics.
+settings: {}
+examples: ./.resources/Get analytics metadata.resources/examples
+order: 2000

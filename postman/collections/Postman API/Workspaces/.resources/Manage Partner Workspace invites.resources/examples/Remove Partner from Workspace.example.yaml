@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/invitations
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "action": "remove_partner",
+          "targetEntity": "workspace",
+          "targetEntityId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+          "target": {
+              "userIds": [
+                  "56781234"
+              ]
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "targetEntity": "workspace",
+          "targetEntityId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+          "action": "remove_partner",
+          "results": [
+              {
+                  "userId": "56781234",
+                  "status": "REMOVED"
+              }
+          ]
+      }
+order: 3000

@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Testing Team",
+          "description": "API testing team."
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "status": 403,
+          "title": "Forbidden",
+          "detail": {
+              "error": {
+                  "name": "NoPermission",
+                  "message": "You are not allowed to create Team."
+              }
+          },
+          "instance": "/teams"
+      }
+order: 7000

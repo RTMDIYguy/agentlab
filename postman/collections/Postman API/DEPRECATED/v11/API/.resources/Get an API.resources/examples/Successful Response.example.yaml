@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 5360b75f-447e-467c-9299-12fd6c92450d
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "description": "This is a test API.",
+          "id": "5360b75f-447e-467c-9299-12fd6c92450d",
+          "updatedBy": "12345678",
+          "createdBy": "12345678",
+          "createdAt": "2022-06-09T14:48:45.000Z",
+          "name": "Test API",
+          "summary": "Test API.",
+          "updatedAt": "2022-06-09T19:50:49.000Z"
+      }
+order: 1000

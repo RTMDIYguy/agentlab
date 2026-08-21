@@ -1,0 +1,11 @@
+$kind: collection
+description: |-
+  The Relations endpoints let you manage your API's relations. Relations are an API's connections to items such as documentation, tests, and API definitions.
+
+  ### Important
+
+  In Postman v10 and higher, we **only** support the following relation types:
+
+  - `unclassified` — The relation for documentation and testing.
+  - `apiDefinition` — The relation for API definitions.
+order: 2000

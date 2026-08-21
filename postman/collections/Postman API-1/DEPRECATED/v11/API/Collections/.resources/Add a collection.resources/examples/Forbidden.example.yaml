@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/collections
+  method: POST
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+  body:
+    type: json
+    content: |-
+      {
+        "operationType": "COPY_COLLECTION",
+        "data": {
+          "collectionId": "12ece9e1-2abf-4edc-8e34-de66e74114d2"
+        }
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "detail": "You do not have access to perform this operation.",
+          "title": "You are not permitted to perform the action.",
+          "type": "forbiddenError"
+      }
+order: 5000

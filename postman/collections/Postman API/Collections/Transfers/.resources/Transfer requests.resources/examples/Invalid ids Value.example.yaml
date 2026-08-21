@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-requests-transfers
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "ids": [
+              "12345678"
+          ],
+          "target": {
+              "model": "folder",
+              "id": "12345678-bcb5648b-eecb-4468-ade7-4efb38431bb9"
+          },
+          "location": {
+              "position": "start",
+              "model": null,
+              "id": null
+          },
+          "mode": "move"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |
+      {
+          "type": "Error",
+          "title": "One or more request ids provided were not found",
+          "detail": {
+              "missing": [
+                  "12345678"
+              ]
+          }
+      }
+order: 4000

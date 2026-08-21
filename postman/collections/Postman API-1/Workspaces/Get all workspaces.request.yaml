@@ -1,0 +1,53 @@
+$kind: http-request
+description: |-
+  Gets all [workspaces](https://learning.postman.com/docs/collaborating-in-postman/using-workspaces/creating-workspaces/). The response includes your workspaces and any workspaces that you have access to.
+
+  **Note:**
+
+  This endpoint's response contains the `visibility` field. [Visibility](https://learning.postman.com/docs/collaborating-in-postman/using-workspaces/managing-workspaces/#changing-workspace-visibility) determines who can access the workspace:
+
+  - `personal` — Only you can access the workspace.
+      
+  - `team` — All team members can access the workspace.
+      
+  - `private` — Only invited team members can access the workspace ([<b>Team</b> and <b>Enterprise</b> plans only](https://www.postman.com/pricing)).
+      
+  - `public` — Everyone can access the workspace.
+      
+  - `partner` — Only invited team members and [partners](https://learning.postman.com/docs/collaborating-in-postman/using-workspaces/partner-workspaces/) can access the workspace ([<b>Team</b> and <b>Enterprise</b> plans only](https://www.postman.com/pricing)).
+url: "{{baseUrl}}/workspaces"
+method: GET
+queryParams:
+  - key: type
+    value: ""
+    disabled: true
+    description: |-
+      The type of workspace to filter the response by:
+
+      * `personal`
+      * `team`
+      * `private`
+      * `public`
+      * `partner`
+  - key: include
+    value: ""
+    disabled: true
+    description: |-
+      Include the following information in the endpoint's response:
+      - `mocks:deactivated` — Include all deactivated mock servers in the response.
+      - `scim` — Return the SCIM user IDs of the workspace creator and who last modified it.
+  - key: createdBy
+    value: ""
+    disabled: true
+    description: Return only workspaces created by a specific user ID. For multiple users, pass this value as a comma-separated list of user IDs. The response only returns workspaces that you have access to.
+  - key: elementType
+    value: ""
+    disabled: true
+    description: Filter results to return the workspace where the given element type is located. If you pass this query parameter, you must also pass the `elementId` query parameter.
+  - key: elementId
+    value: ""
+    disabled: true
+    description: Filter results to return the workspace where the given element's ID is located. When filtering by collection, you must use the collection's unique ID (`userId`-`collection`). If you pass this query parameter, you must also pass the `elementType` query parameter.
+settings: {}
+examples: ./.resources/Get all workspaces.resources/examples
+order: 9000

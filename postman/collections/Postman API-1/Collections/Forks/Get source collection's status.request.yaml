@@ -1,0 +1,18 @@
+$kind: http-request
+description: |-
+  Checks whether there is a change between the forked collection and its parent (source) collection.
+
+  If the value of the `isSourceAhead` property is `true` in the response, then there is a difference between the forked collection and its source collection.
+
+  **Note:**
+
+  This endpoint may take a few minutes to return an updated `isSourceAhead` status.
+url: "{{baseUrl}}/collections/:collectionId/source-status"
+method: GET
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+settings: {}
+examples: ./.resources/Get source collection's status.resources/examples
+order: 2000

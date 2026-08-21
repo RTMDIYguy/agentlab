@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/runners/:runnerId/instances
+  method: GET
+  pathVariables:
+    runnerId: 1f08d6ba-c377-4ca0-be80-af81daf8fef9
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "status": 401,
+          "type": "https://api.postman.com/problems/unauthorized",
+          "title": "Unauthorized",
+          "detail": "Unauthorized"
+      }
+order: 5000

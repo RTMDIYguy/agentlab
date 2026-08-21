@@ -1,0 +1,34 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "monitor": {
+              "name": "Test Monitor",
+              "schedule": {
+                  "cron": "0 0 * * *",
+                  "timezone": "USA"
+              },
+              "collection": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "environment": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e"
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "invalidParamsError",
+              "message": "The request had invalid parameters",
+              "details": {
+                  "param": "schedule.timezone"
+              }
+          }
+      }
+order: 5000

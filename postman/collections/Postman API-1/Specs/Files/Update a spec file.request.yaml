@@ -1,0 +1,35 @@
+$kind: http-request
+description: |-
+  Updates an API specification's file.
+
+  **Note:**
+
+  - This endpoint does not accept an empty request body. You must pass one of the accepted values.
+      
+  - This endpoint does not accept multiple request body properties in a single call. For example, you cannot pass both the `content` and `type` property at the same time.
+      
+  - Multi-file specifications can only have one root file.
+      
+  - When updating a file type to `ROOT`, the previous root file is updated to the `DEFAULT` file type.
+      
+  - Files cannot exceed a maximum of 10 MB in size.
+url: "{{baseUrl}}/specs/:specId/files/:filePath"
+method: PATCH
+pathVariables:
+  - key: specId
+    value: ""
+    description: The spec's ID.
+  - key: filePath
+    value: ""
+    description: The path to the file.
+body:
+  type: json
+  content: |-
+    {
+        "content": "{{fileContent}}",
+        "name": "{{fileName}}",
+        "type": "{{fileType}}"
+    }
+settings: {}
+examples: ./.resources/Update a spec file.resources/examples
+order: 4000

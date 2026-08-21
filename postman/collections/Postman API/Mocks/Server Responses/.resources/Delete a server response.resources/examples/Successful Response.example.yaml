@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks/12345678-e3d951bf-873f-49ac-a658-b2dcb91d3289/server-responses/965cdd16-fe22-4d96-a161-3d05490ac421
+  method: DELETE
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "id": "bf6bbf95-bebb-44ba-8edb-1f096f905774",
+          "name": "Service Unavailable",
+          "statusCode": 503,
+          "headers": [
+              {
+                  "key": "Content-Type",
+                  "value": "application/json"
+              }
+          ],
+          "language": "json",
+          "body": "{\n    \"message\": \"Service is temporarily unavailable due to maintenance. If the problem persists, reach out to support.\"\n}",
+          "createdBy": "12345678",
+          "updatedBy": "12345678",
+          "createdAt": "2022-05-02T09:38:04.000Z"
+      }
+order: 1000

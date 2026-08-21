@@ -1,0 +1,30 @@
+$kind: http-request
+description: |-
+  Updates a workspace's associated tags. This endpoint replaces all existing tags with those you pass in the request body.
+
+  **Note:**
+
+  - You can only add a maximum of five tags to an API.
+      
+  - Tags must be between 2 and 64 characters long.
+      
+  - Tags must follow the `^[a-z][a-z0-9-]\\\\\\*[a-z0-9]+$` pattern.
+url: "{{baseUrl}}/workspaces/:workspaceId/tags"
+method: PUT
+pathVariables:
+  - key: workspaceId
+    value: ""
+    description: The workspace's ID.
+body:
+  type: json
+  content: |-
+    {
+        "tags": [
+            {
+                "slug": "{{tagName}}"
+            }
+        ]
+    }
+settings: {}
+examples: ./.resources/Update a workspace's tags.resources/examples
+order: 2000

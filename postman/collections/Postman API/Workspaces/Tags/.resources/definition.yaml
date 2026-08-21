@@ -1,0 +1,3 @@
+$kind: collection
+description: These endpoints enable you to manage workspace tags with Postman's [tagging](https://learning.postman.com/docs/collaborating-in-postman/using-workspaces/managing-workspaces/#tagging-a-workspace) feature. Tagging is available on [Postman <b>Enterprise</b> plans](https://www.postman.com/pricing/).
+order: 4000

@@ -1,0 +1,15 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId
+  method: DELETE
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 5360b75f-447e-467c-9299-12fd6c92450d
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 1000

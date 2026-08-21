@@ -1,0 +1,10 @@
+$kind: http-request
+description: Deletes a mock server.
+url: "{{baseUrl}}/mocks/:mockId"
+method: DELETE
+pathVariables:
+  - key: mockId
+    value: ""
+    description: The mock's ID.
+examples: ./.resources/Delete a mock server.resources/examples
+order: 6000

@@ -1,0 +1,8 @@
+$kind: collection
+description: |-
+  These endpoints manage [Runners](http://learning.postman.com/docs/monitoring-your-api/runners/overview/). Runners enable you to monitor and test your organization’s APIs from your internal network, without publicly exposing your endpoints.
+
+  **Note:**
+
+  These endpoints are only available for users who have the **Runner Management** feature enabled. To get access, contact your Postman Customer Success Manager.
+order: 1000

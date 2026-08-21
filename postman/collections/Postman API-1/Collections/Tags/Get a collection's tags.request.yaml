@@ -1,0 +1,11 @@
+$kind: http-request
+description: Gets all the tags associated with a collection.
+url: "{{baseUrl}}/collections/:collectionUid/tags"
+method: GET
+pathVariables:
+  - key: collectionUid
+    value: ""
+    description: The collection's unique ID.
+settings: {}
+examples: ./.resources/Get a collection's tags.resources/examples
+order: 1000

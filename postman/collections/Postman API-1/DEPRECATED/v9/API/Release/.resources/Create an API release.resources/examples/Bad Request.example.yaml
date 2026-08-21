@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/releases
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "release": {
+              "id": "3563baaa-07a2-46ed-9fd2-0e8a3c5f7ec2",
+              "name": "Release 1.0",
+              "summary": "This is the first release.",
+              "description": "This is the first release of the Test API. For more information, read the documentation.",
+              "visibility": "public",
+              "gitTag": "release"
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "apiRepositoryNotFoundError",
+              "message": "This API version is not linked to a repository"
+          }
+      }
+order: 2000

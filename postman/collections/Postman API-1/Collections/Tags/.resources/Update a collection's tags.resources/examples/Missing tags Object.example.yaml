@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionUid/tags
+  method: PUT
+  pathVariables:
+    collectionUid: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: "{}"
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "statusCode": 400,
+          "error": "Bad Request",
+          "message": "body must have required property 'tags'"
+      }
+order: 5000

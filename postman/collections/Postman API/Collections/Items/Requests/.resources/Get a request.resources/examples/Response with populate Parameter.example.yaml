@@ -1,0 +1,163 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/requests/:requestId?populate=true
+  method: GET
+  queryParams:
+    populate: "true"
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    requestId: e12d2aa6-85c8-4e6c-aad0-1adcfe05c958
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "fb620884-9745-4244-b875-6c33a8acc771",
+          "meta": {
+              "model": "request",
+              "populate": true,
+              "changeset": false,
+              "action": "find"
+          },
+          "data": {
+              "owner": "20891195",
+              "lastUpdatedBy": "20891195",
+              "lastRevision": 32545561759,
+              "folder": "adb40f20-deec-4cc6-b1a2-a5591f469c60",
+              "collection": "b75dfb85-9209-4212-8f3d-a9d5e28167e5",
+              "id": "fb620884-9745-4244-b875-6c33a8acc771",
+              "name": "Test A",
+              "dataMode": "raw",
+              "data": null,
+              "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                      {
+                          "key": "token",
+                          "value": "TEST",
+                          "type": "string"
+                      }
+                  ]
+              },
+              "events": [
+                  {
+                      "listen": "test",
+                      "script": {
+                          "id": "b12101c5-fe85-4722-adf0-a1e900eab708",
+                          "exec": [
+                              "pm.test(\"Status code is 200\", function () {",
+                              "    pm.response.to.have.status(200);",
+                              "});"
+                          ],
+                          "type": "text/javascript"
+                      }
+                  },
+                  {
+                      "listen": "prerequest",
+                      "script": {
+                          "id": "7b34bf6b-f440-4768-a486-4ce96e997cb7",
+                          "exec": [
+                              "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                              "    console.log(response.json());",
+                              "});"
+                          ],
+                          "type": "text/javascript"
+                      }
+                  }
+              ],
+              "rawModeData": "",
+              "descriptionFormat": "markdown",
+              "description": "This is a test API.",
+              "variables": null,
+              "headers": "Accept: application/vnd.example.v1+json\n",
+              "method": "GET",
+              "pathVariables": {},
+              "url": "https://postman-echo.com/v1/request?id={{id}}",
+              "preRequestScript": "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {\n    console.log(response.json());\n});",
+              "tests": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});",
+              "currentHelper": "bearerAuth",
+              "helperAttributes": "{\"id\":\"bearer\",\"token\":\"TEST\"}",
+              "queryParams": [
+                  {
+                      "key": "id",
+                      "value": "{{id}}",
+                      "equals": true,
+                      "description": "The API's ID.",
+                      "enabled": true
+                  }
+              ],
+              "headerData": [
+                  {
+                      "key": "Accept",
+                      "value": "application/vnd.example.v1+json",
+                      "description": null,
+                      "type": "text",
+                      "enabled": true
+                  }
+              ],
+              "pathVariableData": [],
+              "protocolProfileBehavior": {
+                  "disableBodyPruning": true
+              },
+              "dataDisabled": false,
+              "responses_order": [
+                  "ee4ab273-1f36-f8de-adfc-02ad1cd126dc"
+              ],
+              "createdAt": "2022-10-05T13:09:24.000Z",
+              "updatedAt": "2023-09-13T14:04:37.000Z",
+              "dataOptions": {
+                  "raw": {
+                      "language": "json"
+                  }
+              },
+              "responses": [
+                  {
+                      "owner": "12345678",
+                      "lastUpdatedBy": "12345678",
+                      "lastRevision": 32545561807,
+                      "request": "fb620884-9745-4244-b875-6c33a8acc771",
+                      "id": "ee4ab273-1f36-f8de-adfc-02ad1cd126dc",
+                      "name": "Successful Response",
+                      "status": null,
+                      "responseCode": {
+                          "code": 200,
+                          "name": "OK"
+                      },
+                      "time": null,
+                      "headers": [
+                          {
+                              "key": "date",
+                              "value": "Thu, 07 Sep 2023 12:41:59 GMT"
+                          },
+                          {
+                              "key": "content-type",
+                              "value": "application/json; charset=utf-8"
+                          },
+                          {
+                              "key": "content-length",
+                              "value": "468"
+                          },
+                          {
+                              "key": "etag",
+                              "value": "W/\"1d4-JuAIw8ssoFCtGzk/UwITxaiSbrc\""
+                          },
+                          {
+                              "key": "set-cookie",
+                              "value": "sails.sid=s%3A6p_NXpI3OZeGE35bI6i5Uq3XgHHxcsdJ.dQVpBE%2BJ9wHWainkqe6F6dkdv7UKoshSZY7sdZ5sbzo; Path=/ HttpOnly"
+                          }
+                      ],
+                      "cookies": null,
+                      "mime": null,
+                      "text": "{\n  \"args\": {},\n  \"data\": {\n    \"field\": \"Value\"\n  },\n  \"files\": {},\n  \"form\": {},\n  \"headers\": {\n    \"x-forwarded-proto\": \"https\",\n    \"x-forwarded-port\": \"443\",\n    \"host\": \"postman-echo.com\",\n    \"x-amzn-trace-id\": \"Root=1-64f9c517-36db304817c774d740619baa\",\n    \"content-length\": \"22\",\n    \"user-agent\": \"curl/7.88.1\",\n    \"accept\": \"*/*\",\n    \"content-type\": \"application/json\"\n  },\n  \"json\": {\n    \"field\": \"Value\"\n  },\n  \"url\": \"https://postman-echo.com/post\"\n}\n",
+                      "language": "json",
+                      "rawDataType": null,
+                      "requestObject": "{\n  \"name\": \"Request\",\n  \"description\": \"\",\n  \"url\": \"https://postman-echo.com/post\",\n  \"method\": \"POST\",\n  \"headers\": [\n    {\n      \"key\": \"Host\",\n      \"value\": \"postman-echo.com\"\n    },\n    {\n      \"key\": \"user-agent\",\n      \"value\": \"curl/7.88.1\"\n    },\n    {\n      \"key\": \"accept\",\n      \"value\": \"*/*\"\n    },\n    {\n      \"key\": \"content-type\",\n      \"value\": \"application/json\"\n    },\n    {\n      \"key\": \"content-length\",\n      \"value\": \"22\"\n    }\n  ],\n  \"dataMode\": \"raw\",\n  \"rawModeData\": \"{\\n  \\\"field\\\": \\\"Value\\\"\\n}\",\n  \"dataOptions\": {\n    \"raw\": {\n      \"language\": \"json\"\n    }\n  }\n}",
+                      "createdAt": "2023-09-12T18:34:27.000Z",
+                      "updatedAt": "2023-09-13T14:04:37.000Z"
+                  }
+              ]
+          }
+      }
+order: 4000

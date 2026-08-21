@@ -1,0 +1,15 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/releases/3563baaa-07a2-46ed-9fd2-0e8a3c5f7ec2
+  method: DELETE
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  body:
+    type: json
+    content: |-
+      {
+          "error": "rateLimited",
+          "message": "Rate limit exceeded. Please retry after 1669048687"
+      }
+order: 3000

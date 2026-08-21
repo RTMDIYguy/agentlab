@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/tags
+  method: PUT
+  pathVariables:
+    workspaceId: e361eeb4-00dd-4225-9774-6146a2555999
+  body:
+    type: json
+    content: |-
+      {
+          "tags": [
+              {
+                  "slug": "oS1Z9gHS9lDaAhX3xu0ekJRZwt0CPIikGYApohSPJVu3n3iiHxdISMqMFVo6wPf8N"
+              }
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Bad Request",
+          "detail": "body/tags/0/slug must NOT have more than 64 characters",
+          "status": 400
+      }
+order: 2000

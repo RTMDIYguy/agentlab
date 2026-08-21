@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Public Workspace",
+          "type": "public",
+          "description": "This is a public workspace.",
+          "about": "Public workspace."
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "malformedRequestError",
+              "message": "'workspace' object missing in the request"
+          }
+      }
+order: 7000

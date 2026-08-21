@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=team&view=summary&duration=last_6_months
+  method: GET
+  queryParams:
+    resource: team
+    view: summary
+    duration: last_6_months
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/unauthorized",
+          "title": "Unauthorized",
+          "detail": "Unauthorized",
+          "status": 401,
+          "instance": "/analytics"
+      }
+order: 38000

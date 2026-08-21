@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis?workspaceId=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  headers:
+    Accept: application/vnd.api.v10+json
+  queryParams:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Test API",
+          "summary": "Test API Schema",
+          "description": "This is a test API."
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "forbiddenError",
+          "title": "You are not permitted to perform the action.",
+          "detail": "You do not have access to perform this operation."
+      }
+order: 4000

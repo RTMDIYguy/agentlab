@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/relations
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "unclassified": [
+              "12345678-b4abc083-3ee2-4fc2-8959-29a7653a1c91"
+          ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "unclassified": [
+              "2e006451-e819-443f-97bc-d1635e51007f"
+          ]
+      }
+order: 1000

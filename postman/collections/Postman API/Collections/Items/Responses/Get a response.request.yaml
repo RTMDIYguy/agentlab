@@ -1,0 +1,27 @@
+$kind: http-request
+description: Gets information about a response in a collection.
+url: "{{baseUrl}}/collections/:collectionId/responses/:responseId"
+method: GET
+queryParams:
+  - key: ids
+    value: "true"
+    disabled: true
+    description: If true, returns only the response properties that contain ID values.
+  - key: uid
+    value: "true"
+    disabled: true
+    description: If true, returns all IDs in UID format (`userId`-`id`).
+  - key: populate
+    value: "true"
+    disabled: true
+    description: If true, returns all of a response's contents.
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+  - key: responseId
+    value: ""
+    description: The response's ID.
+settings: {}
+examples: ./.resources/Get a response.resources/examples
+order: 2000

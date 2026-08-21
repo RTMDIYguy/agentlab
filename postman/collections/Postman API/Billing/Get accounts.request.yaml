@@ -1,0 +1,7 @@
+$kind: http-request
+description: Gets Postman billing account details for the given team.
+url: "{{baseUrl}}/accounts"
+method: GET
+settings: {}
+examples: ./.resources/Get accounts.resources/examples
+order: 1000

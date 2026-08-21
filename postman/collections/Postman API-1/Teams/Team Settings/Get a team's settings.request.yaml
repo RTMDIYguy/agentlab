@@ -1,0 +1,14 @@
+$kind: http-request
+description: Gets a team's settings.
+url: "{{baseUrl}}/teams/:teamId/settings"
+method: GET
+pathVariables:
+  - key: teamId
+    value: ""
+    description: The team's ID.
+body:
+  type: json
+  content: ""
+settings: {}
+examples: ./.resources/Get a team's settings.resources/examples
+order: 2000

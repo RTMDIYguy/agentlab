@@ -1,0 +1,57 @@
+$kind: http-request
+description: Gets information about all APIs.
+url: https://api.getpostman.com/apis
+method: GET
+queryParams:
+  - key: workspaceId
+    value: "{{workspaceId}}"
+    disabled: true
+    description: Optional. Return only APIs that are inside the given workspace.
+  - key: since
+    value: "{{since}}"
+    disabled: true
+    description: Optional. Return only APIs updated at and after this time, in ISO 8601 UTC format.
+  - key: until
+    value: "{{until}}"
+    disabled: true
+    description: Optional. Return only APIs updated at and before this time, in ISO 8601 UTC format.
+  - key: createdBy
+    value: "{{createdBy}}"
+    disabled: true
+    description: Optional. Return only APIs created by the given user ID.
+  - key: updatedBy
+    value: "{{updatedBy}}"
+    disabled: true
+    description: Optional. Return only APIs updated by the given user ID.
+  - key: isPublic
+    value: "{{isPublic}}"
+    disabled: true
+    description: Optional. If true, return only public APIs; if false, return only private APIs.
+  - key: name
+    value: "{{name}}"
+    disabled: true
+    description: Optional. Return only APIs whose name includes the given value. Matching is not case-sensitive.
+  - key: summary
+    value: "{{summary}}"
+    disabled: true
+    description: Optional. Return only APIs whose summary includes the given value. Matching is not case-sensitive.
+  - key: description
+    value: "{{description}}"
+    disabled: true
+    description: Optional. Return only APIs whose description includes the given value. Matching is not case-sensitive.
+  - key: sort
+    value: "{{sort}}"
+    disabled: true
+    description: |-
+      Optional. Sort the results by the given value.
+
+      If you use this query parameter, you must also use the `direction` parameter.
+  - key: direction
+    value: "{{direction}}"
+    disabled: true
+    description: |-
+      Optional. Sort in ascending (`asc`) or descending (`desc`) order. Matching is not case-sensitive.
+
+      If you use this query parameter, you must also use the "sort" parameter.
+examples: ./.resources/Get all APIs.resources/examples
+order: 5000

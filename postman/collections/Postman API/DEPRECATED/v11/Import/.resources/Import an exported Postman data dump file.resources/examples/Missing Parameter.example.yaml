@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/import/exported?type=file&input
+  method: POST
+  queryParams:
+    type: file
+    input: null
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "paramMissingError",
+              "message": "The request body is missing a value for the type parameter. Check your request and try again.",
+              "details": {
+                  "param": "type"
+              }
+          }
+      }
+order: 3000

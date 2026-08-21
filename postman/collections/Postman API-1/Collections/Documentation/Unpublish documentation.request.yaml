@@ -1,0 +1,14 @@
+$kind: http-request
+description: Unpublishes a collection's documentation.
+url: "{{baseUrl}}/collections/:collectionId/public-documentations"
+method: DELETE
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's unique ID.
+body:
+  type: formdata
+  content: []
+settings: {}
+examples: ./.resources/Unpublish documentation.resources/examples
+order: 2000

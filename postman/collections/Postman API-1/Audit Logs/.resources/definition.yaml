@@ -1,0 +1,8 @@
+$kind: collection
+description: |-
+  The [<b>Audit Logs</b>](https://learning.postman.com/docs/administration/audit-logs/) endpoints enable you to monitor and analyze your Enterprise Postman teams.
+
+  **Note:**
+
+  These endpoints are **only** available to Postman [<b>Enterprise</b> plans](https://www.postman.com/pricing).
+order: 4000

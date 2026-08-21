@@ -1,0 +1,41 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "values": [
+                  {
+                      "key": "collectionId",
+                      "value": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "enabled": true,
+                      "type": "default"
+                  },
+                  {
+                      "key": "variable_1",
+                      "value": "The variable_1 value.",
+                      "enabled": false,
+                      "type": "default"
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "malformedRequestError",
+              "message": "Found 1 errors with the supplied environment.",
+              "details": [
+                  "environment: must have required property 'name'"
+              ]
+          }
+      }
+order: 2000

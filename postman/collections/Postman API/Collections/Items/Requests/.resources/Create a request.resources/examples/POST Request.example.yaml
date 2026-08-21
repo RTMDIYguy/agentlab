@@ -1,0 +1,102 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/requests
+  method: POST
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Example POST Request",
+          "url": "https://postman-echo.com/post",
+          "method": "POST",
+          "headers": [
+              {
+                  "key": "Host",
+                  "value": "postman-echo.com"
+              },
+              {
+                  "key": "user-agent",
+                  "value": "curl/7.88.1"
+              },
+              {
+                  "key": "accept",
+                  "value": "*/*"
+              },
+              {
+                  "key": "content-type",
+                  "value": "application/json"
+              },
+              {
+                  "key": "content-length",
+                  "value": "22"
+              }
+          ],
+          "dataMode": "raw",
+          "rawModeData": "{\n  \"field\": \"Value\"\n}",
+          "dataOptions": {
+              "raw": {
+                  "language": "json"
+              }
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+          "meta": {
+              "model": "request",
+              "action": "import"
+          },
+          "data": {
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "method": "POST",
+              "headers": [
+                  {
+                      "key": "Host",
+                      "value": "postman-echo.com"
+                  },
+                  {
+                      "key": "user-agent",
+                      "value": "curl/7.88.1"
+                  },
+                  {
+                      "key": "accept",
+                      "value": "*/*"
+                  },
+                  {
+                      "key": "content-type",
+                      "value": "application/json"
+                  },
+                  {
+                      "key": "content-length",
+                      "value": "22"
+                  }
+              ],
+              "dataMode": "raw",
+              "url": "https://postman-echo.com/post",
+              "name": "Example POST Request",
+              "owner": "12345678",
+              "folder": null,
+              "responses_order": [],
+              "id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+              "lastUpdatedBy": "12345678",
+              "headerData": [],
+              "createdAt": "2023-09-07T13:35:33.691Z",
+              "updatedAt": "2023-09-07T13:35:33.691Z",
+              "rawModeData": null,
+              "dataOptions": {
+                  "raw": {
+                      "language": "json"
+                  }
+              },
+              "responses": []
+          },
+          "revision": 32456382272
+      }
+order: 2000

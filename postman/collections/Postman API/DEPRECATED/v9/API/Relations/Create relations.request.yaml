@@ -1,0 +1,40 @@
+$kind: http-request
+description: |-
+  Creates a new relation for an API version. Include the following in the request body:
+
+  - `relationType` — An **array** that contains entity relations. The key value for this array must be the `unclassified` value.
+      
+
+  You must include the following properties in the `relationType` array:
+
+  - `entityId` — The collection's UID value.
+      
+
+  **Note:**
+
+  The following is **deprecated** in Postman API v10 and higher:
+
+  | **`relationType`** | **`entityId`** |
+  | --- | --- |
+  | `documentation` and `test` | A collection UID value. |
+  | `environment` | An environment UID value. |
+  | `mock` | A mock ID value. |
+  | `monitor` | A monitor ID value. |
+
+  The endpoint accepts multiple `relationType` arrays in a single call. For an example, see the example response documentation.
+
+  The `documentation` and `test` values returned in the response are the relation ID values, **not** the collection ID values.
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}/relations
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+        "{{relationType}}": [
+            "{{entityId}}"
+        ]
+    }
+examples: ./.resources/Create relations.resources/examples
+order: 11000

@@ -1,0 +1,41 @@
+$kind: http-request
+description: |-
+  Creates or updates an API schema file. Include the following in the request body:
+
+  - `content` — A **string** value that contains the schema file's stringified contents.
+      
+
+  **Note:**
+
+  - If the provided file path exists, the file is updated with the new contents.
+      
+  - If the provided file path does <u>not</u> exist, then a new schema file is created.
+      
+  - If the file path contains a `/` (forward slash) character, then a folder is created. For example, if the file path is the `dir/schema.json` value, then a `dir` folder is created with the `schema.json` file inside.
+      
+  - You can only update the `root` tag for protobuf specifications.
+url: "{{baseUrl}}/apis/:apiId/schemas/:schemaId/files/:filePath"
+method: PUT
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+  - key: schemaId
+    value: "{{schemaId}}"
+    description: The API schema's ID.
+  - key: filePath
+    value: "{{filePath}}"
+    description: The path to the schema file.
+body:
+  type: json
+  content: |-
+    {
+        "content": "{{fileContent}}"
+    }
+settings: {}
+examples: ./.resources/Create or update a schema file.resources/examples
+order: 2000

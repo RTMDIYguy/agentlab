@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics-metadata?include=parameters,response&resources=team
+  method: GET
+  queryParams:
+    include: parameters,response
+    resources: team
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/unauthorized",
+          "title": "Unauthorized",
+          "detail": "Unauthorized",
+          "status": 401,
+          "instance": "/analytics-metadata"
+      }
+order: 5000

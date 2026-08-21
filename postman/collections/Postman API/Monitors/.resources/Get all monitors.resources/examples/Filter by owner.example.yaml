@@ -1,0 +1,39 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors?owner=12345678
+  method: GET
+  queryParams:
+    owner: "12345678"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "monitors": [
+              {
+                  "id": "1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+                  "name": "Test Monitor",
+                  "active": true,
+                  "uid": "12345678-1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+                  "owner": 12345678,
+                  "collectionUid": "12345678-d35c5bfa-380e-4e98-9052-4eaf3bd0f14a",
+                  "environmentUid": "12345678-9ce0605e-e7cb-40dc-8074-2f6a69252905"
+              },
+              {
+                  "id": "90e01576-3ec4-4245-a327-e56b78becdce",
+                  "name": "Testing Monitor",
+                  "active": true,
+                  "uid": "12345678-90e01576-3ec4-4245-a327-e56b78becdce",
+                  "owner": 12345678,
+                  "collectionUid": "12345678-ecfd0f2c-cf60-4935-b2ed-b65c58d2910c",
+                  "environmentUid": "12345678-106dabbe-324c-488f-b628-c9f45033dcc7"
+              }
+          ],
+          "meta": {
+              "nextCursor": "",
+              "limit": 25
+          }
+      }
+order: 6000

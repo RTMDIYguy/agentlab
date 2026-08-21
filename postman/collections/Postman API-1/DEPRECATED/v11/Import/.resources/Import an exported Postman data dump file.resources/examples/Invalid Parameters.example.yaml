@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/import/exported?type=file&input
+  method: POST
+  queryParams:
+    type: file
+    input: null
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "invalidParamsError",
+              "message": "The request body has invalid values for the type parameter. Value must be one of file, string, json",
+              "details": {
+                  "param": "type"
+              }
+          }
+      }
+order: 2000

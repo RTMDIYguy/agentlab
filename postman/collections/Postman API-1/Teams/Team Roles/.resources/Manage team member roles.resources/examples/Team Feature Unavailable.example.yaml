@@ -1,0 +1,51 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/bulk-members
+  method: POST
+  pathVariables:
+    - key: teamId
+      value: "123"
+      description: The team's ID.
+  body:
+    type: json
+    content: |-
+      {
+          "add": {
+              "users": {
+                  "123": [
+                      "TEAM_DEVELOPER"
+                  ]
+              }
+          },
+          "remove": {
+              "users": {
+                  "456": [
+                      "TEAM_DEVELOPER"
+                  ]
+              },
+              "groups": {
+                  "998": [
+                      "TEAM_DEVELOPER"
+                  ]
+              }
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "status": 400,
+          "title": "Bad Request",
+          "detail": {
+              "error": {
+                  "name": "BadRequest",
+                  "message": "Team feature is not available for your organization."
+              }
+          },
+          "instance": "/teams"
+      }
+order: 12000

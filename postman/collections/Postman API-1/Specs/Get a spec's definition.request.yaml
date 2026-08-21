@@ -1,0 +1,11 @@
+$kind: http-request
+description: Gets the complete contents of an API specification's definition.
+url: "{{baseUrl}}/specs/:specId/definitions"
+method: GET
+pathVariables:
+  - key: specId
+    value: ""
+    description: The spec's ID.
+settings: {}
+examples: ./.resources/Get a spec's definition.resources/examples
+order: 7000

@@ -1,0 +1,57 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services?search=Order
+  method: GET
+  queryParams:
+    search: Order
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |
+      {
+          "meta": {
+            "total": 3,
+            "nextCursor": null
+          },
+          "data": [
+              {
+                  "id": "0eab2aa4-d39b-49eb-a17b-d6c7b7eb9c9d",
+                  "name": "Order - stage (3.0.0)",
+                  "version": "3.0.0",
+                  "sourceEnvironment": "stage",
+                  "systemEnvironmentId": null,
+                  "status": "discovered",
+                  "endpointsCount": 2,
+                  "discoverySource": "api_gateway_app",
+                  "tags": [],
+                  "discoveredAt": "2026-02-12T04:01:26.000Z"
+              },
+              {
+                  "id": "9014bda4-da6d-45b0-8934-dab552c4b685",
+                  "name": "Order - stage (2.0.0)",
+                  "version": "2.0.0",
+                  "sourceEnvironment": null,
+                  "systemEnvironmentId": null,
+                  "status": "discovered",
+                  "endpointsCount": 2,
+                  "discoverySource": "api_gateway_app",
+                  "tags": [],
+                  "discoveredAt": "2026-02-12T04:01:26.000Z"
+              },
+              {
+                  "id": "2c254eed-a5d1-4f46-83ca-436d198de8b6",
+                  "name": "Order - sandbox (3.0.0)",
+                  "version": "3.0.0",
+                  "sourceEnvironment": "sandbox",
+                  "systemEnvironmentId": null,
+                  "status": "discovered",
+                  "endpointsCount": 2,
+                  "discoverySource": "api_gateway_app",
+                  "tags": [],
+                  "discoveredAt": "2026-02-12T04:01:26.000Z"
+              }
+          ]
+      }
+order: 3000

@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/tags/:slugId/entities
+  method: GET
+  pathVariables:
+    slugId: needs-review
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/internal-server-error",
+          "title": "Something went wrong",
+          "detail": "Something went wrong while fetching entities having the provided slug",
+          "status": 500,
+          "instance": "/tags/hello-world/entities"
+      }
+order: 7000

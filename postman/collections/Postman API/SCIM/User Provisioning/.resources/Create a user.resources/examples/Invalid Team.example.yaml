@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Users
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "taylor-lee@example.com",
+          "name": {
+              "givenName": "Taylor",
+              "familyName": "Lee"
+          },
+          "externalId": "12345678",
+          "displayName": "Taylor Lee",
+          "locale": "en-US",
+          "active": true
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:Error"
+          ],
+          "detail": "This Postman team doesn’t exist anymore.",
+          "status": "400"
+      }
+order: 4000

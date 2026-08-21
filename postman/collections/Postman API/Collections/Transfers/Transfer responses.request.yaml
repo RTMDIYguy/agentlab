@@ -1,0 +1,25 @@
+$kind: http-request
+description: Copies or moves responses into a request.
+url: "{{baseUrl}}/collection-responses-transfers"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "ids": [
+            "{{responseUid}}"
+        ],
+        "target": {
+            "model": "request",
+            "id": "{{modelUid}}"
+        },
+        "location": {
+            "position": "{{position}}",
+            "model": "response",
+            "id": "{{modelUid}}"
+        },
+        "mode": "{{modeType}}"
+    }
+settings: {}
+examples: ./.resources/Transfer responses.resources/examples
+order: 3000

@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Groups/:groupId
+  method: GET
+  pathVariables:
+    groupId: 405775fe15ed41872a8eea4c8aa2b38cda9749812cc55c99
+response:
+  statusCode: 429
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:Error"
+          ],
+          "detail": "That’s 300 attempts in less than a minute. Wait for a minute and then try again.",
+          "status": 429
+      }
+order: 6000

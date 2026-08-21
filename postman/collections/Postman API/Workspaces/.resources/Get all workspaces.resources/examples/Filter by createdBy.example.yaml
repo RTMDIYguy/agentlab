@@ -1,0 +1,67 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces?createdBy=12345678,87654321,56784321
+  method: GET
+  queryParams:
+    createdBy: 12345678,87654321,56784321
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "workspaces": [
+              {
+                  "id": "a0f46158-1529-11ee-be56-0242ac120002",
+                  "name": "Test Workspace",
+                  "type": "team",
+                  "visibility": "private",
+                  "createdBy": "12345678",
+                  "about": "",
+                  "createdAt": "2022-07-18T06:57:37.000Z",
+                  "updatedAt": "2025-05-30T08:49:54.000Z"
+              },
+              {
+                  "id": "f8801e9e-03a4-4c7b-b31e-5db5cd771696",
+                  "name": "Teamwork",
+                  "type": "team",
+                  "visibility": "team",
+                  "createdBy": "12345678",
+                  "about": "",
+                  "createdAt": "2022-07-18T06:57:37.000Z",
+                  "updatedAt": "2025-05-30T08:49:54.000Z"
+              },
+              {
+                  "id": "74dbfab8-1529-11ee-be56-0242ac120002",
+                  "name": "Public Examples",
+                  "type": "team",
+                  "visibility": "public",
+                  "createdBy": "87654321",
+                  "about": "This workspace contains public examples of collections and APIs.",
+                  "createdAt": "2022-07-18T06:57:37.000Z",
+                  "updatedAt": "2025-05-30T08:49:54.000Z"
+              },
+              {
+                  "id": "74dbfab8-1529-11ee-be56-0242ac120002",
+                  "name": "Partner Workspace",
+                  "type": "team",
+                  "visibility": "partner",
+                  "createdBy": "87654321",
+                  "about": "This is a Partner Workspace,",
+                  "createdAt": "2022-07-18T06:57:37.000Z",
+                  "updatedAt": "2025-05-30T08:49:54.000Z"
+              },
+              {
+                  "id": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+                  "name": "My Workspace",
+                  "type": "personal",
+                  "visibility": "personal",
+                  "createdBy": "56784321",
+                  "about": "",
+                  "createdAt": "2022-07-18T06:57:37.000Z",
+                  "updatedAt": "2025-05-30T08:49:54.000Z"
+              }
+          ]
+      }
+order: 4000

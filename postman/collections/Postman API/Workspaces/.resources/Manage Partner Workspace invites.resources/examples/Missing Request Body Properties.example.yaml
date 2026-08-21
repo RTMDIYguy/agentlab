@@ -1,0 +1,32 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/invitations
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "action": "invite_partner",
+          "targetEntity": "workspace",
+          "targetEntityId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+          "target": {
+              "emails": [
+                  "alex.cruz@example.com",
+                  "mike.brown@example.com",
+                  "sara.smith@example.com"
+              ]
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "title": "badRequest",
+          "detail": "Missing properties in request body - should have \"action\", \"targetEntity\", \"targetEntityId\", \"roleId\", \"target\"",
+          "status": 400
+      }
+order: 9000

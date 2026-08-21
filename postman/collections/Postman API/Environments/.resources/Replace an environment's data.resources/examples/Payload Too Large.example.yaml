@@ -1,0 +1,37 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentId
+  method: PUT
+  pathVariables:
+    environmentId: 12345678-5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "name": "Test A Environment",
+              "values": [
+                  {
+                      "key": "collectionId",
+                      "value": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "type": "default",
+                      "enabled": true,
+                      "description": "The collection's ID."
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 413
+  statusText: Payload Too Large
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/payload-too-large",
+          "title": "Payload Too Large",
+          "detail": "Request size limit exceeded",
+          "status": 413,
+          "instance": "/"
+      }
+order: 5000

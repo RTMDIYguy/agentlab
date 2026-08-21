@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-duplicate-tasks/:taskId
+  method: GET
+  pathVariables:
+    taskId: 12345678-66ae9950-0869-4e65-96b0-1e0e47e771af
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/not-found",
+          "title": "Not Found",
+          "detail": "The requested resource was not found.",
+          "status": 404
+      }
+order: 7000

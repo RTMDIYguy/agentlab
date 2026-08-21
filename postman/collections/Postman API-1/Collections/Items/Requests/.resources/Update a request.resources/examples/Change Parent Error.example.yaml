@@ -1,0 +1,37 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/requests/:requestId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    requestId: e12d2aa6-85c8-4e6c-aad0-1adcfe05c958
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Example GET request",
+          "method": "GET"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "changeParentError",
+              "message": "You can't update the parent. Use transfer instead.",
+              "details": {
+                  "server": {
+                      "model": "collection",
+                      "model_id": "12ece9e1-2abf-4edc-8e34-de66e74114d2"
+                  },
+                  "request": {
+                      "model": "collection",
+                      "model_id": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+                  }
+              }
+          }
+      }
+order: 5000

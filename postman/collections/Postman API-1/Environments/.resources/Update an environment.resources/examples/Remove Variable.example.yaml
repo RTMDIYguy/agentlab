@@ -1,0 +1,33 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentId
+  method: PATCH
+  pathVariables:
+    environmentId: 5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      [
+          {
+              "op": "remove",
+              "path": "/values/0"
+          }
+      ]
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "id": "5daabc50-8451-43f6-922d-96b403b4f28e",
+              "name": "Test API Environment",
+              "owner": "12345678",
+              "createdAt": "2025-03-10T15:16:18.000Z",
+              "updatedAt": "2025-03-10T15:17:04.000Z",
+              "values": [],
+              "uid": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e"
+          }
+      }
+order: 6000

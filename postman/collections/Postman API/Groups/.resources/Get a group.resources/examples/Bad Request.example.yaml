@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/groups/:groupId
+  method: GET
+  pathVariables:
+    - key: groupId
+      value: ""
+      description: The group's ID.
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "title": "Bad Request",
+          "detail": "Bad Request",
+          "status": 400
+      }
+order: 2000

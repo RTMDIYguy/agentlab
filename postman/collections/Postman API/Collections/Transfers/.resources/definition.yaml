@@ -1,0 +1,3 @@
+$kind: collection
+description: These endpoints enable you to move collection items between different collections or folders.
+order: 5000

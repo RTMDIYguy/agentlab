@@ -1,0 +1,90 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "discoveredServices": [
+              {
+                  "name": "order-service",
+                  "version": "1.0.0"
+              },
+              {
+                  "name": "inventory-service",
+                  "version": "2.3.1"
+              },
+              {
+                  "name": "notification-service",
+                  "version": "0.9.0"
+              }
+          ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |
+      {
+          "data": [
+              {
+                  "id": "ad800c7e-f304-4731-ba94-ec8e6d61efc6",
+                  "organizationId": 123,
+                  "name": "order-service",
+                  "description": null,
+                  "version": "1.0.0",
+                  "sourceEnvironment": null,
+                  "systemEnvironmentId": null,
+                  "tags": [],
+                  "status": "discovered",
+                  "endpointsCount": 0,
+                  "providerServiceId": "order-service:1.0.0",
+                  "discoveredAt": "2026-02-12T04:01:26.000Z",
+                  "discoveredBy": 12345678,
+                  "lastSyncedAt": "2026-02-12T04:01:26.000Z"
+              },
+              {
+                  "id": "fb15530b-7166-4777-b167-a3f1a2ce3b68",
+                  "organizationId": 123,
+                  "connectionId": 1,
+                  "name": "inventory-service",
+                  "description": null,
+                  "version": "2.3.1",
+                  "sourceEnvironment": null,
+                  "systemEnvironmentId": null,
+                  "tags": [],
+                  "status": "discovered",
+                  "endpointsCount": 0,
+                  "providerServiceId": "inventory-service:2.3.1",
+                  "discoveredAt": "2026-02-12T04:01:26.000Z",
+                  "discoveredBy": 12345678,
+                  "lastSyncedAt": "2026-02-12T04:01:26.000Z"
+              },
+              {
+                  "id": "a4fa1e36-161f-4635-a3f3-db62237b76c2",
+                  "organizationId": 123,
+                  "name": "notification-service",
+                  "description": null,
+                  "version": "0.9.0",
+                  "sourceEnvironment": null,
+                  "systemEnvironmentId": null,
+                  "tags": [],
+                  "status": "discovered",
+                  "endpointsCount": 0,
+                  "providerServiceId": "notification-service:0.9.0",
+                  "discoveredAt": "2026-02-12T04:01:26.000Z",
+                  "discoveredBy": 12345678,
+                  "lastSyncedAt": "2026-02-12T04:01:26.000Z"
+              }
+          ],
+          "meta": {
+              "total": 3,
+              "created": 3,
+              "updated": 0
+          }
+      }
+order: 4000

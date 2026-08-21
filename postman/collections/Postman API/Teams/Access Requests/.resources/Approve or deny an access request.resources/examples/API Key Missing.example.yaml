@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/access-requests/:requestId
+  method: POST
+  pathVariables:
+    teamId: "123"
+    requestId: "1096"
+  body:
+    type: json
+    content: |-
+      {
+          "action": "deny"
+      }
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Unauthorized",
+          "instance": "/teams",
+          "status": 401,
+          "type": "https://api.postman.com/problems/unauthorized",
+          "detail": "Unauthorized"
+      }
+order: 6000

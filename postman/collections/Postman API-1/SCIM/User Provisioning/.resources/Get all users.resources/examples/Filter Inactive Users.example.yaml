@@ -1,0 +1,43 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Users?filter=active eq "false"
+  method: GET
+  queryParams:
+    filter: active eq "false"
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+          ],
+          "totalResults": 1,
+          "startIndex": 1,
+          "itemsPerPage": 1,
+          "Resources": [
+              {
+                  "schemas": [
+                      "urn:ietf:params:scim:schemas:core:2.0:User"
+                  ],
+                  "id": "123775fe15ed41872a8eea4c8aa2b38cda9749812cc55c99",
+                  "userName": "alex.cruz@example.com",
+                  "name": {
+                      "givenName": "Alex",
+                      "familyName": "Cruz"
+                  },
+                  "externalId": "87654321",
+                  "active": false,
+                  "meta": {
+                      "resourceType": "User",
+                      "created": "2021-02-22T04:24:13.000Z",
+                      "lastModified": "2021-02-22T04:24:13.000Z"
+                  }
+              }
+          ]
+      }
+order: 4000

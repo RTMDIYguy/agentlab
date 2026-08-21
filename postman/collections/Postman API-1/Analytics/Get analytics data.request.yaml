@@ -1,0 +1,79 @@
+$kind: http-request
+description: |-
+  Gets analytics data based on the specified resource, metrics, and given filters for team, internal, and public workspaces, as well as Partner Workspaces.
+
+  **Note:**
+
+  This endpoint only accepts the following resource:metric query parameter combinations:
+
+  - `user` — `workspace_active_users`, `active_users`
+      
+  - `workspace` — `elements_in_workspace`, `active_workspaces`, `api_calls`, `active_collections`, `response_status`, `pending_invites`, `needs_attention`, `success_rate`, `user_requests`, `collection_error_aggregate`
+      
+  - `team` — `user_api_journey`, `workspace_distribution`, `internal_workspace_distribution`, `license_consumption`, `partner_engagement_funnel`
+      
+
+  The `view` query parameter only accepts the following values when called with the following resource:metric pairs:
+
+  - `detailed` or `summary` — `user:active_users`, `workspace:active_workspaces`, `workspace:pending_invites`, `workspace:needs_attention`, `workspace:success_rate`, `team:partner_engagement_funnel`
+      
+  - `summary` only — `workspace:elements_in_workspace`, `workspace:workspace_active_users`, `workspace:api_calls`, `workspace:response_status`, `team:user_api_journey`, `team:workspace_distribution`, `team:internal_workspace_distribution`, `team:license_consumption`
+      
+  - `detailed` only — `workspace:active_collections`, `workspace:user_requests`
+url: "{{baseUrl}}/analytics?resource=&metrics=&view="
+method: GET
+queryParams:
+  - key: resource
+    value: ""
+    description: |-
+      Returns metrics and insights for API usage, success, and workspace/team trends in Postman:
+      - `user` — Data related to individual user activities and engagement within Postman workspaces.
+      - `team` — Team-level analytics, license consumption, and organizational trends.
+      - `workspace` — Workspace-level activities, elements, and collaboration patterns.
+  - key: metrics
+    value: ""
+    description: |-
+      Filters the response by only the given metrics. The metric must match the given `resource` value.
+
+      For a list of metrics and their related `resource` value, call the GET `/analytics-metadata` endpoint.
+  - key: view
+    value: ""
+    description: |-
+      The view type for the analytics data:
+      - `detailed` — Return extensive information.
+      - `summary` — Return aggregated information.
+  - key: workspaceType
+    value: ""
+    disabled: true
+    description: A comma-separated list of workspace types to filter the results by. Accepts `internal`, `public`, and `partner`.
+  - key: userId
+    value: ""
+    disabled: true
+    description: A comma-separated list of user IDs to filter the results by. Only pass this parameter when calling the `user_requests` metric for the `workspace` resource.
+  - key: duration
+    value: ""
+    disabled: true
+    description: Filters the response by the given duration.
+  - key: responseStatus
+    value: ""
+    disabled: true
+    description: A comma-separated list of HTTP response status codes to filter the results by. Accepts values `100` through `600`. Only pass this parameter when using the `user_requests` metric.
+  - key: requestId
+    value: ""
+    disabled: true
+    description: A comma-separated list of unique request IDs (`userId`-`requestId`) to filter the response by. Only pass this parameter when using the `user_requests` metric.
+  - key: attentionType
+    value: ""
+    disabled: true
+    description: A comma-separated list of issues types to filter the results by. Attention types provide details about issues users or partners are facing. Accepts the `high_non_200OK_rate_for_partner` and `no_success_on_tried_request` values. Only pass this parameter when using the `needs_attention` metric.
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of records in the paginated response.
+  - key: offset
+    value: ""
+    disabled: true
+    description: The zero-based offset of the first item returned.
+settings: {}
+examples: ./.resources/Get analytics data.resources/examples
+order: 1000

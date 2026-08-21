@@ -1,0 +1,75 @@
+$kind: http-request
+description: |-
+  Gets information about the folders and elements added to your team's [Private API Network](https://learning.postman.com/docs/collaborating-in-postman/adding-private-network/). Elements are APIs, collections, and workspaces.
+
+  **Note:**
+
+  The `limit` and `offset` parameters are separately applied to elements and folders. For example, if you query a `limit` value of `10` and an `offset` value `0`, the endpoint returns 10 elements and 10 folders for a total of 20 items. The `totalCount` property in the `meta` response is the total count of **both** elements and folders.
+url: "{{baseUrl}}/network/private"
+method: GET
+queryParams:
+  - key: since
+    value: ""
+    disabled: true
+    description: Return only results created since the given time, in [ISO 8601](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) format. This value cannot be later than the `until` value.
+  - key: until
+    value: ""
+    disabled: true
+    description: Return only results created until this given time, in [ISO 8601](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) format. This value cannot be earlier than the `since` value.
+  - key: addedBy
+    value: ""
+    disabled: true
+    description: Return only elements published by the given user ID.
+  - key: name
+    value: ""
+    disabled: true
+    description: Return only elements whose name includes the given value. Matching is not case-sensitive.
+  - key: summary
+    value: ""
+    disabled: true
+    description: Return only elements whose summary includes the given value. Matching is not case-sensitive.
+  - key: description
+    value: ""
+    disabled: true
+    description: Return only elements whose description includes the given value. Matching is not case-sensitive.
+  - key: sort
+    value: ""
+    disabled: true
+    description: |-
+      Sort the results by the given value. One of:
+      - `createdAt`
+      - `updatedAt`
+
+      If you use this query parameter, you must also use the `direction` parameter.
+  - key: direction
+    value: ""
+    disabled: true
+    description: Sort in ascending (`asc`) or descending (`desc`) order. Matching is not case-sensitive. If you use this query parameter, you must also use the `sort` parameter.
+  - key: createdBy
+    value: ""
+    disabled: true
+    description: Return only the elements created by the given user ID.
+  - key: offset
+    value: ""
+    disabled: true
+    description: The zero-based offset of the first item to return. This value defaults to `0`.
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of elements to return. If the value exceeds the maximum value of `1000`, then the system uses the `1000` value.
+  - key: parentFolderId
+    value: ""
+    disabled: true
+    description: Return the folders and elements in a specific folder in the Private API Network. If this value is `0`, then the endpoint only returns the root folder's elements.
+  - key: type
+    value: ""
+    disabled: true
+    description: |-
+      Filter by the element type. One of:
+      - `folder`
+      - `workspace`
+      - `collection`
+      - `api`
+settings: {}
+examples: ./.resources/Get all elements and folders.resources/examples
+order: 2000

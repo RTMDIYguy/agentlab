@@ -1,0 +1,13 @@
+$kind: http-request
+description: |-
+  **This endpoint is deprecated in Postman v10 and higher.**
+
+  Gets information about all of an API version's releases.
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}/releases
+method: GET
+pathVariables:
+  apiId: "{{apiId}}"
+  apiVersionId: "{{apiVersionId}}"
+settings: {}
+examples: ./.resources/Get all API releases.resources/examples
+order: 2000

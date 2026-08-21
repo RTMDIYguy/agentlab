@@ -1,0 +1,32 @@
+$kind: http-request
+description: |-
+  **This endpoint is deprecated.**
+
+  Merges a forked collection back into its parent collection. You must have the [Editor role](https://learning.postman.com/docs/collaborating-in-postman/roles-and-permissions/#collection-roles) for the collection to merge a fork.
+
+  Include the following required properties in the request body:
+
+  - `source` — A **string** value that contains the source collection's unique ID.
+      
+  - `destination` — A **string** value that contains the destination (parent) collection's unique ID.
+      
+
+  You can also include the following optional properties in the request body:
+
+  - `strategy` — A **string** value that contains the fork's merge strategy. One of:
+      
+      - `deleteSource` — Merge the changes into the parent collection. After the merge process is complete, Postman deletes the fork. You must have Editor access to both the parent and forked collections.
+          
+      - `updateSourceWithDestination` — (Default) Merge the changes into the parent collection. Any differences in the parent collection are also made to the fork.
+url: "{{baseUrl}}/collections/merge"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "strategy": "{{mergeStrategy}}",
+        "source": "{{sourceCollectionId}}",
+        "destination": "{{destinationCollectionUid}}"
+    }
+examples: ./.resources/Merge a collection fork.resources/examples
+order: 1000

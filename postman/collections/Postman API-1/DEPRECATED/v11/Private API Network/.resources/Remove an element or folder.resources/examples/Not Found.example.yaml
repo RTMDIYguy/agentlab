@@ -1,0 +1,18 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private/:elementType/:elementId
+  method: DELETE
+  pathVariables:
+    elementType: api
+    elementId: 5360b75f-447e-467c-9299-12fd6c92450d
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "name": "instanceNotFoundError",
+          "message": "Instance not found for the model NetworkEntity, id 5360b75f-447e-467c-9299-12fd6c92450d"
+      }
+order: 5000

@@ -1,0 +1,33 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/versions?cursor=RnJpIEZlYiAxNyAyMDIzIDEwOjM5OjUxIEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk=&limit=10
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  queryParams:
+    cursor: RnJpIEZlYiAxNyAyMDIzIDEwOjM5OjUxIEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk=
+    limit: "10"
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "total": 4,
+              "limit": 10
+          },
+          "versions": [
+              {
+                  "createdAt": "2023-02-17T10:39:51.000Z",
+                  "name": "v4",
+                  "id": "bc792958-ffd5-4a4c-bcf5-1c07cb8f277b",
+                  "releaseNotes": "",
+                  "updatedAt": "2023-02-17T10:39:57.000Z"
+              }
+          ]
+      }
+order: 3000

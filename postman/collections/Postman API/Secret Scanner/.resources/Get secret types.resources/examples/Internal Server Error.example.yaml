@@ -1,0 +1,17 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/secret-types
+  method: GET
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: json
+    content: |-
+      {
+          "instance": "",
+          "status": 500,
+          "title": "An error occurred",
+          "type": "SERVER_ERROR"
+      }
+order: 7000

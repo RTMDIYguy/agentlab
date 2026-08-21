@@ -1,0 +1,56 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/responses/:responseId?uid=true
+  method: GET
+  queryParams:
+    uid: "true"
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    responseId: cc364734-7dfd-4bfc-897d-be763dcdbb07
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "cc364734-7dfd-4bfc-897d-be763dcdbb07",
+          "meta": {
+              "model": "response",
+              "populate": false,
+              "changeset": false,
+              "action": "find"
+          },
+          "data": {
+              "owner": "12345678",
+              "lastUpdatedBy": "12345678",
+              "lastRevision": 32528384460,
+              "request": "12345678-c82dd02c-4870-4907-8fcb-593a876cf05b",
+              "id": "12345678-cc364734-7dfd-4bfc-897d-be763dcdbb07",
+              "name": "Not Found",
+              "status": null,
+              "responseCode": {
+                  "code": 404,
+                  "name": "Not Found"
+              },
+              "time": null,
+              "headers": [
+                  {
+                      "key": "Content-Type",
+                      "name": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                  }
+              ],
+              "cookies": null,
+              "mime": null,
+              "text": "{\n    \"title\": \"Not Found\",\n    \"detail\": \"Requested API does not exist\",\n    \"type\": \"about:blank\"\n}",
+              "language": "json",
+              "rawDataType": null,
+              "requestObject": "{\"data\":null,\"dataMode\":\"raw\",\"dataOptions\":{\"raw\":{\"language\":\"json\"}},\"headerData\":[{\"key\":\"Accept\",\"value\":\"application/vnd.example.v1+json\",\"description\":\"\",\"type\":\"text\",\"enabled\":true}],\"method\":\"GET\",\"pathVariableData\":[],\"queryParams\":[{\"key\":\"id\",\"value\":\"test-api\",\"equals\":true,\"description\":null,\"enabled\":true}],\"url\":\"https://postman-echo.com/v1/request?id=test-api\",\"headers\":\"Accept: application/vnd.example.v1+json\\n\",\"pathVariables\":{},\"protocolProfileBehavior\":{\"disableBodyPruning\":true},\"rawModeData\":\"\",\"graphqlModeData\":{}}",
+              "createdAt": "2023-08-22T12:53:12.000Z",
+              "updatedAt": "2023-09-12T18:23:42.000Z"
+          }
+      }
+order: 5000
