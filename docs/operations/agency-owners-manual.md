@@ -134,9 +134,10 @@ Updated when priorities shift, not on a fixed schedule.
 
 **Track 2 — Sales Automation & Partnerships (business & automation)**
 
-- n8n SDR CRM-Lite to HubSpot pipeline: active 2-way deal/contact sync resolving duplicate loops.
+- n8n SDR CRM-Lite to HubSpot pipeline: active 2-way deal/contact sync.
+- CRM Ecosystem Architecture: Implemented a master `Lead / Campaign Source` custom property on Deals. Enables single-pipeline tagging for AgentLab roundtables, app betas, signal systems, URC, and Hamarashops partnership leads, bypassing the HubSpot free tier 1-pipeline limit.
 - MKT-02 Automated Nurture Engine: daily CRON query to HubSpot, Resend SMTP 3-touch sending loop with strict stop-conditions.
-- Virtusa / Dheerendar Partnership: 15-minute technical demonstration of Founder Signal System & Pulse Social; Mutual Non-Disclosure Agreement sent via LinkedIn message.
+- Virtusa / Dheerendar Partnership: Walkthrough successful. Executing revenue-share cross-promotion (MedLM for doctors, Founder Signal System for India B2B). Outreach strategy mapped.
 
 **Maintenance trigger:** Update this section whenever a track completes, a new sprint starts, or priorities shift materially.
 
@@ -442,6 +443,7 @@ where the source files live.
 | Bootstrapper's Guide to the World | Book (digital)                | Live      | $59.99  | Agent Lab / Stripe / Gumroad      |
 | Startup Operational Excellence    | Book / Custom Landing Page    | Live      | TBD     | Gumroad (`landing_soe.html`)      |
 | Pulse Social                      | Social media scheduler webapp | Live      | SaaS    | Vercel / Cloud Run / MongoDB      |
+| Hamarashops.ai Partnership        | Healthcare MedLM Outreach     | Active    | RevShare| Targeted Medical Lead Generation  |
 | Virtusa / Dheerendar Walkthrough  | Demo & Evaluation Package     | Active    | B2B     | Mutual NDA / Live Tech Walkthrough|
 | Ownable OS                        | Workflow package / continuity | Candidate | $500/mo | TBD                               |
 | $1 Bootcamp                       | Entry-level program           | Candidate | $1      | TBD                               |
