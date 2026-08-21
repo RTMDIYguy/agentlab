@@ -4,12 +4,14 @@ Status: generated
 
 ## Top 3 Actions
 
-- [ ] Check money/client-trust items before tool experiments.
-- [ ] MKT-05 Outreach & Engagement: Outreach batch setup, tracking, and reply handling
-- [ ] MKT-02 Email/SMS Nurture: Nurture sequence rules, stop conditions, handoff rules
+- [ ] **Virtusa / Dheerendar Walkthrough**: Execute 15-minute technical demonstration and partnership walkthrough of Founder Signal System & Pulse Social (NDA sent via LinkedIn message; review `output/Dheerendar_Walkthrough_Plan.md`).
+- [ ] **MKT-02 Automated Nurture Engine**: Leverage synced HubSpot contacts to trigger automated email sequences or activate the n8n Resend email-sending loop for 3-touch nurture flow.
+- [ ] **Money & Client-Trust Check**: Verify proposals, active pipeline receivables, and client follow-ups before sandbox tool experiments.
 
 ## Marketing And Sales Moves
 
+- [ ] **Virtusa / Dheerendar Walkthrough**: Host scheduled demo using `run_pulse_social.bat` and `Dheerendar_Walkthrough_Plan.md`; confirm NDA signature received from LinkedIn message.
+- [ ] **MKT-02 Email Nurture Automation**: Connect synced HubSpot SDR leads to automated email-sending loop (n8n Resend / HubSpot Sequences) with 3-touch guardrail.
 - [ ] MKT-05 Outreach & Engagement (Manual / Reach-assisted): Live Reach testing is producing real data and must stay controlled
 - [ ] MKT-02 Email/SMS Nurture (Manual / scheduled campaigns): Follow-up must be consistent once replies and interest arrive
 - [ ] MKT-01 Lead Generation & Conversion (Manual CSV review): Fresh lead sourcing must avoid duplicates and bad-fit drift
