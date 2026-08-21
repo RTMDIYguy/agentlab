@@ -1,0 +1,11 @@
+$kind: http-request
+description: Gets detailed information about a discovered service, including a base64-encoded OpenAPI specification and an array of endpoints.
+url: "{{baseUrl}}/api-catalog/discovery-services/:serviceId"
+method: GET
+pathVariables:
+  - key: serviceId
+    value: ""
+    description: The discovered service's ID.
+settings: {}
+examples: ./.resources/Get a discovered service's information.resources/examples
+order: 2000

@@ -1,0 +1,36 @@
+$kind: http-request
+description: |-
+  Adds a collection to an API. To do this, use the following `operationType` values:
+
+  - `COPY_COLLECTION` — Copies a collection from the workspace and adds it to an API.
+      
+  - `CREATE_NEW` — Creates a new collection by providing the new collection's content. For a complete list of values, refer to the [Postman Collection Format documentation](https://schema.postman.com/collection/json/v2.1.0/draft-07/docs/index.html).
+      
+  - `GENERATE_FROM_SCHEMA` — Generates the collection from an API schema.
+      
+      - `options` — An **object** that contains advanced creation options and their values. You can find a complete list of properties and their values in Postman's [OpenAPI to Postman Collection Converter OPTIONS documentation](https://github.com/postmanlabs/openapi-to-postman/blob/develop/OPTIONS.md). These properties are case-sensitive.
+          
+
+  For examples of each method, see the collection's response examples.
+url: "{{baseUrl}}/apis/:apiId/collections"
+method: POST
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+body:
+  type: json
+  content: |-
+    {
+          "operationType": "COPY_COLLECTION",
+          "data": {
+            "collectionId": "{{collectionId}}"
+          }
+        }
+settings: {}
+examples: ./.resources/Add a collection.resources/examples
+order: 3000

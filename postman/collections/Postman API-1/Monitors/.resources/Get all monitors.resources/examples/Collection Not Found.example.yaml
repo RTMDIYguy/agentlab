@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors?collectionUid=12345678-d35c5bfa-380e-4e98-9052-4eaf3bd0f14a
+  method: POST
+  queryParams:
+    collectionUid: 12345678-d35c5bfa-380e-4e98-9052-4eaf3bd0f14a
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "monitors": [],
+          "meta": {
+              "nextCursor": "",
+              "limit": 25
+          }
+      }
+order: 9000

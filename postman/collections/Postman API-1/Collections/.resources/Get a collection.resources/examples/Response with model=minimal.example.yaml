@@ -1,0 +1,81 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId?model=minimal
+  method: GET
+  queryParams:
+    model: minimal
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "info": {
+                  "_postman_id": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "name": "Test Collection",
+                  "description": "This is a test.",
+                  "updatedAt": "2023-10-13T08:14:22.000Z",
+                  "uid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "createdAt": "2023-10-09T18:34:58.000Z",
+                  "lastUpdatedBy": "12345678"
+              },
+              "variable": [
+                  {
+                      "key": "userId",
+                      "value": "12345678",
+                      "disabled": true,
+                      "description": "The user's ID."
+                  }
+              ],
+              "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                      {
+                          "key": "value",
+                          "value": "XXX",
+                          "type": "string"
+                      },
+                      {
+                          "key": "key",
+                          "value": "x-api-key",
+                          "type": "string"
+                      }
+                  ]
+              },
+              "events": [
+                  {
+                      "listen": "prerequest",
+                      "script": {
+                          "id": "95d3e370-b6eb-42f5-9a98-8f276742037d",
+                          "type": "text/javascript",
+                          "exec": [
+                              ""
+                          ]
+                      }
+                  },
+                  {
+                      "listen": "test",
+                      "script": {
+                          "id": "d09029f2-ab45-4a80-b167-90a4c49bf64e",
+                          "type": "text/javascript",
+                          "exec": [
+                              ""
+                          ]
+                      }
+                  }
+              ],
+              "rootLevelRequests": [
+                  "12345678-8178d96f-7504-4273-9ca2-26c2ac725a5b",
+                  "12345678-fd7565b1-ec19-4d16-b5d4-a3116d1972fb",
+                  "12345678-3860896c-11fe-4c32-9f0a-88625977c8dc"
+              ],
+              "rootLevelFolders": [
+                  "12345678-803151f5-57f1-4ae5-8f75-4919dbd20372"
+              ]
+          }
+      }
+order: 3000

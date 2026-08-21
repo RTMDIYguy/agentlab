@@ -1,0 +1,52 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/schemas
+  method: POST
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+  body:
+    type: json
+    content: |-
+      {
+          "type": "proto:2",
+          "files": [
+              {
+                  "path": "index.proto",
+                  "content": "<file contents>",
+                  "root": {
+                      "enabled": true
+                  }
+              }
+          ]
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  body:
+    type: json
+    content: |-
+      {
+          "type": "proto:2",
+          "files": [
+              {
+                  "path": "index.proto",
+                  "createdBy": "557089",
+                  "id": "41a3d7fd-bf9a-4053-b20e-37453962b4d6",
+                  "createdAt": "2023-03-21T10:10:54.000Z",
+                  "name": "index.proto",
+                  "updatedBy": "557089",
+                  "updatedAt": "2023-03-21T10:10:54.000Z",
+                  "root": {
+                      "enabled": true
+                  }
+              }
+          ],
+          "createdBy": "557089",
+          "createdAt": "2023-03-21T10:10:54.000Z",
+          "id": "b4fc1bdc-6587-4f9b-95c9-f768146089b4",
+          "updatedBy": "557089",
+          "updatedAt": "2023-03-21T10:10:54.000Z"
+      }
+order: 4000

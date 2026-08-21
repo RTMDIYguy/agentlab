@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-access-keys/:keyId
+  method: DELETE
+  pathVariables:
+    keyId: "9"
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/not-found",
+          "title": "Not found",
+          "detail": "The key was not found",
+          "status": 404
+      }
+order: 4000

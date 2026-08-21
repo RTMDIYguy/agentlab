@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors/:monitorId/run?async=true
+  method: POST
+  queryParams:
+    async: "true"
+  pathVariables:
+    monitorId: 12345678-1e6b6cb7-f13d-4000-acb7-0695757174a8
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "run": {
+              "info": {
+                  "jobId": "1ecee76a-e14e-47c0-bddc-256bf690c407",
+                  "monitorId": "1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+                  "name": "Test Monitor",
+                  "collectionUid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "environmentUid": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e",
+                  "status": "success",
+                  "startedAt": "2022-06-17T19:50:04.019Z",
+                  "finishedAt": "2022-06-17T19:50:06.439Z"
+              }
+          }
+      }
+order: 3000

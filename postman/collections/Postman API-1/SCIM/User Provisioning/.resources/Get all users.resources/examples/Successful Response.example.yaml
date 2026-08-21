@@ -1,0 +1,62 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Users?startIndex=1&count=50
+  method: GET
+  queryParams:
+    startIndex: "1"
+    count: "50"
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+          ],
+          "totalResults": 2,
+          "startIndex": 1,
+          "itemsPerPage": 2,
+          "Resources": [
+              {
+                  "schemas": [
+                      "urn:ietf:params:scim:schemas:core:2.0:User"
+                  ],
+                  "id": "405775fe15ed41872a8eea4c8aa2b38cda9749812cc55c99",
+                  "userName": "taylor-lee@example.com",
+                  "name": {
+                      "givenName": "Taylor",
+                      "familyName": "Lee"
+                  },
+                  "externalId": "12345678",
+                  "active": true,
+                  "meta": {
+                      "resourceType": "User",
+                      "created": "2021-02-22T04:24:13.000Z",
+                      "lastModified": "2021-02-22T04:24:13.000Z"
+                  }
+              },
+              {
+                  "schemas": [
+                      "urn:ietf:params:scim:schemas:core:2.0:User"
+                  ],
+                  "id": "123775fe15ed41872a8eea4c8aa2b38cda9749812cc55c99",
+                  "userName": "alex.cruz@example.com",
+                  "name": {
+                      "givenName": "Alex",
+                      "familyName": "Cruz"
+                  },
+                  "externalId": "87654321",
+                  "active": false,
+                  "meta": {
+                      "resourceType": "User",
+                      "created": "2021-02-22T04:24:13.000Z",
+                      "lastModified": "2021-02-22T04:24:13.000Z"
+                  }
+              }
+          ]
+      }
+order: 1000

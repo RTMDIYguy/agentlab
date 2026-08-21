@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/bulk-members
+  method: DELETE
+  headers:
+    identifierType: scim
+  pathVariables:
+    teamId: "123"
+  body:
+    type: json
+    content: |-
+      {
+          "entities": [
+              {
+                  "entityType": "user",
+                  "entityId": "f10ba7a8dac248e8fd9769163dc63aef920f3897c7ea2c86"
+              },
+              {
+                  "entityType": "user",
+                  "entityId": "696e7061fe5aa0e7abb54851cdb0e3b21eed4f8daef24d13"
+              }
+          ]
+      }
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 4000

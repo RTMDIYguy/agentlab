@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/schemas/16bb367e-fafb-4ef3-933b-ee3d971866fb
+  method: GET
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "schemaApiVersionMismatchError",
+              "message": "The Schema ID provided does not belong to the API Version ID provided."
+          }
+      }
+order: 3000

@@ -1,0 +1,3 @@
+$kind: collection
+description: The [<b>API Catalog</b>](https://learning.postman.com/docs/api-catalog/overview) endpoints enable you to manage your centralized APIs and services. It enables you to connect your source code to the API Catalog, and it automatically shows you all your APIs in one place.
+order: 2000

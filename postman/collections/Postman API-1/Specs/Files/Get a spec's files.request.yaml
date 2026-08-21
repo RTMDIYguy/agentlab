@@ -1,0 +1,20 @@
+$kind: http-request
+description: Gets all the files in an API specification.
+url: "{{baseUrl}}/specs/:specId/files"
+method: GET
+queryParams:
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of rows to return in the response. This value defaults to `10`.
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The pointer to the first record of the set of paginated results. To view the next response, use the `nextCursor` value for this parameter.
+pathVariables:
+  - key: specId
+    value: ""
+    description: The spec's ID.
+settings: {}
+examples: ./.resources/Get a spec's files.resources/examples
+order: 2000

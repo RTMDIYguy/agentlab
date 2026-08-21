@@ -1,0 +1,24 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Users?filter=userName eq "taylor%2Dlee@example.com"
+  method: GET
+  queryParams:
+    filter: userName eq "taylor%2Dlee@example.com"
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+          ],
+          "totalResults": 0,
+          "startIndex": 1,
+          "itemsPerPage": 0,
+          "Resources": []
+      }
+order: 5000

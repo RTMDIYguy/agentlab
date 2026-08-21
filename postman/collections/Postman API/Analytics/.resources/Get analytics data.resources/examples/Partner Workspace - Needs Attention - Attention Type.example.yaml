@@ -1,0 +1,89 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=needs_attention&view=detailed&duration=last_30_days&attentionType=high_non_200OK_rate_for_partner
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: needs_attention
+    view: detailed
+    duration: last_30_days
+    attentionType: high_non_200OK_rate_for_partner
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "user_id",
+                              "type": "STRING",
+                              "description": "Unique identifier of the user."
+                          },
+                          {
+                              "name": "request_type",
+                              "type": "STRING",
+                              "description": "Type of issue or request pattern detected for the user."
+                          },
+                          {
+                              "name": "timestamp",
+                              "type": "TIMESTAMP",
+                              "format": "YYYY-MM-DDTHH:MM:SSZ",
+                              "description": "Time when the request event was recorded."
+                          },
+                          {
+                              "name": "request_name",
+                              "type": "STRING",
+                              "description": "Display name of the request. Present when request_type = no_success_on_tried_request."
+                          },
+                          {
+                              "name": "request_identifier_id",
+                              "type": "STRING",
+                              "description": "Unique identifier for the request. Present when request_type = no_success_on_tried_request."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "12345678",
+                          "high_non_200OK_rate_for_partner",
+                          "2026-01-21T00:00:00.000Z",
+                          "partner_id",
+                          "{\"partner_id\":\"12345678\"}"
+                      ],
+                      [
+                          "12345678",
+                          "high_non_200OK_rate_for_partner",
+                          "2026-01-23T00:00:00.000Z",
+                          "partner_id",
+                          "{\"partner_id\":\"12345678\"}"
+                      ],
+                      [
+                          "87654321",
+                          "high_non_200OK_rate_for_partner",
+                          "2026-01-21T00:00:00.000Z",
+                          "partner_id",
+                          "{\"partner_id\":\"87654321\"}"
+                      ],
+                      [
+                          "87654321",
+                          "high_non_200OK_rate_for_partner",
+                          "2026-01-23T00:00:00.000Z",
+                          "partner_id",
+                          "{\"partner_id\":\"87654321\"}"
+                      ]
+                  ],
+                  "pagination": {
+                      "total": 4,
+                      "limit": 100,
+                      "offset": 0,
+                      "has_more": false
+                  }
+              }
+          }
+      }
+order: 33000

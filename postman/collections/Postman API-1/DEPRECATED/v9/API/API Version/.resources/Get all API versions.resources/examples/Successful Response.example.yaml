@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "versions": [
+              {
+                  "id": "a9879d02-74bf-425a-bbec-6d27aa135507",
+                  "name": "Draft",
+                  "summary": null,
+                  "createdBy": "20891195",
+                  "updatedBy": "20891195",
+                  "stage": "Planning",
+                  "visibility": "public",
+                  "api": "387c2863-6ee3-4a56-8210-225f774edade",
+                  "createdAt": "2023-02-14T14:26:05.000Z",
+                  "updatedAt": "2023-02-14T14:26:05.000Z",
+                  "repositoryIntegration": null
+              }
+          ]
+      }
+order: 1000

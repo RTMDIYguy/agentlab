@@ -1,0 +1,21 @@
+$kind: http-request
+description: |-
+  Gets all active mock servers. By default, this endpoint returns only mock servers you created across all workspaces.
+
+  **Note:**
+
+  If you pass both the `teamId` and `workspace` query parameters, this endpoint only accepts the `workspace` query.
+url: "{{baseUrl}}/mocks"
+method: GET
+queryParams:
+  - key: teamId
+    value: ""
+    disabled: true
+    description: Return only mock servers that belong the given team ID.
+  - key: workspace
+    value: ""
+    disabled: true
+    description: Return only mock servers in the given workspace.
+settings: {}
+examples: ./.resources/Get all mock servers.resources/examples
+order: 5000

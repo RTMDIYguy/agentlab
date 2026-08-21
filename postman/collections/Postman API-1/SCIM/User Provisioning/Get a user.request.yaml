@@ -1,0 +1,10 @@
+$kind: http-request
+description: Gets information about a Postman team member.
+url: "{{baseUrl}}/scim/v2/Users/:userId"
+method: GET
+pathVariables:
+  - key: userId
+    value: ""
+    description: The user's SCIM ID.
+examples: ./.resources/Get a user.resources/examples
+order: 1000

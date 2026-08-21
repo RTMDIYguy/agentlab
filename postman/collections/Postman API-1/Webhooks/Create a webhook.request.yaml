@@ -1,0 +1,28 @@
+$kind: http-request
+description: |-
+  Creates a webhook that triggers a collection with a custom payload. You can get the webhook's URL from the `webhookUrl` property in the endpoint's response.
+
+  **Note:**
+
+  If you do not include the `workspace` query parameter, the system creates the webhook in the oldest personal Internal workspace you own.
+url: "{{baseUrl}}/webhooks?workspace="
+method: POST
+queryParams:
+  - key: workspace
+    value: ""
+    description: |-
+      A workspace ID in which to create the webhook.
+
+      If you do not include this parameter, the system creates the webhook in the oldest personal Internal workspace you own.
+body:
+  type: json
+  content: |-
+    {
+        "webhook":{
+            "name": "{{webhookName}}",
+            "collection": "{{collectionUid}}",
+            "environment": "{{environmentUid}}"
+        }
+    }
+examples: ./.resources/Create a webhook.resources/examples
+order: 1000

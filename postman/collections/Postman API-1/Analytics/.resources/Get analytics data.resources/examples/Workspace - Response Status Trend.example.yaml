@@ -1,0 +1,111 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=response_status&view=summary&workspaceType=public,partner,internal&duration=last_6_months
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: response_status
+    view: summary
+    workspaceType: public,partner,internal
+    duration: last_6_months
+  body:
+    type: json
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "timestamp",
+                              "type": "DATE",
+                              "format": "YYYY-MM-DD",
+                              "description": "Reporting date for the aggregated API metrics."
+                          },
+                          {
+                              "name": "total_count",
+                              "type": "INTEGER",
+                              "description": "Total number of API requests for the given date."
+                          },
+                          {
+                              "name": "count_2xx",
+                              "type": "INTEGER",
+                              "description": "Number of successful API responses (2xx)."
+                          },
+                          {
+                              "name": "count_3xx",
+                              "type": "INTEGER",
+                              "description": "Number of redirection responses (3xx)."
+                          },
+                          {
+                              "name": "count_4xx",
+                              "type": "INTEGER",
+                              "description": "Number of client error responses (4xx)."
+                          },
+                          {
+                              "name": "count_5xx",
+                              "type": "INTEGER",
+                              "description": "Number of server error responses (5xx)."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "2025-03-01",
+                          102340,
+                          74480,
+                          3120,
+                          23100,
+                          4760
+                      ],
+                      [
+                          "2025-04-01",
+                          110540,
+                          80210,
+                          2990,
+                          25340,
+                          4990
+                      ],
+                      [
+                          "2025-05-01",
+                          125780,
+                          92410,
+                          3200,
+                          28200,
+                          5170
+                      ],
+                      [
+                          "2025-06-01",
+                          118420,
+                          86540,
+                          3030,
+                          27050,
+                          4830
+                      ],
+                      [
+                          "2025-07-01",
+                          121360,
+                          88250,
+                          3300,
+                          28210,
+                          4900
+                      ],
+                      [
+                          "2025-08-01",
+                          130550,
+                          95400,
+                          3530,
+                          29620,
+                          5530
+                      ]
+                  ]
+              }
+          }
+      }
+order: 15000

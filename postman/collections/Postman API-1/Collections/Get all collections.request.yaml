@@ -1,0 +1,31 @@
+$kind: http-request
+description: |-
+  Gets all of your [collections](https://www.getpostman.com/docs/collections). The response includes all of your subscribed collections.
+
+  **Note:**
+
+  - It's recommended that you use pagination with this endpoint. Pagination improves endpoint performance. Unpaginated calls are considered deprecated and are subject to change.
+      
+  - Filtering with the `name` parameter when you also pass the `limit` and `offset` parameters is not supported.
+      
+  - If you do not include the `workspace` query parameter, this endpoint searches all collections in your team’s workspace. If there are a lot of results, this will return a timeout error.
+url: "{{baseUrl}}/collections?workspace="
+method: GET
+queryParams:
+  - key: name
+    value: ""
+    disabled: true
+    description: Filter results by collections that match the given name.
+  - key: workspace
+    value: ""
+    description: Return only results found in the given workspace ID.
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of rows to return in the response.
+  - key: offset
+    value: ""
+    disabled: true
+    description: The zero-based offset of the first item to return.
+examples: ./.resources/Get all collections.resources/examples
+order: 13000

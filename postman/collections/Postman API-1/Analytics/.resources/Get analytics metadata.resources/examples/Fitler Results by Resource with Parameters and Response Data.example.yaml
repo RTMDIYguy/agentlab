@@ -1,0 +1,1514 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics-metadata?include=parameters,response
+  method: GET
+  queryParams:
+    include: parameters,response
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "resources": [
+                  {
+                      "type": "string",
+                      "metrics": [
+                          {
+                              "metric": "active_users",
+                              "type": "string",
+                              "response": {
+                                  "detailed": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "user_id",
+                                                  "description": "Unique identifier assigned to the user.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "team_joining_date",
+                                                  "description": "Date when the user joined the team.",
+                                                  "type": "DATE"
+                                              },
+                                              {
+                                                  "name": "last_active_ts",
+                                                  "description": "Timestamp of the user's most recent activity.",
+                                                  "type": "TIMESTAMP",
+                                                  "format": "YYYY-MM-DDTHH:MM:SSZ"
+                                              },
+                                              {
+                                                  "name": "api_requests_count",
+                                                  "description": "Total number of API requests made by the user.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  },
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "count",
+                                                  "description": "Total number of active users in the selected period.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "change",
+                                                  "description": "Percentage change from the previous period.",
+                                                  "type": "FLOAT"
+                                              },
+                                              {
+                                                  "name": "change_type",
+                                                  "description": "Indicates whether the metric increased or decreased.",
+                                                  "type": "STRING"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Users who used postman at least once.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether the metric returns detailed or summarized data.",
+                                      "allowed_values": [
+                                          "detailed",
+                                          "summary"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "workspace_type": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "internal",
+                                              "public",
+                                              "partner"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_month"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "workspace_active_users",
+                              "type": "string",
+                              "response": {
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "count",
+                                                  "description": "Summarized total count.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Users who created, edited or sent requests within an individual workspace.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether the metric returns detailed or summarized data.",
+                                      "allowed_values": [
+                                          "summary"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "workspace_type": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "internal",
+                                              "public",
+                                              "partner"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_month"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          }
+                      ],
+                      "description": "User-level metrics and insights describing activities and engagement within Postman workspaces.",
+                      "resource": "user",
+                      "isRequired": true
+                  },
+                  {
+                      "type": "string",
+                      "metrics": [
+                          {
+                              "metric": "elements_in_workspace",
+                              "type": "string",
+                              "response": {
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "timestamp",
+                                                  "description": "Reporting date for the metric.",
+                                                  "type": "DATE",
+                                                  "format": "YYYY-MM-DD"
+                                              },
+                                              {
+                                                  "name": "collections_count",
+                                                  "description": "Number of collections in the selected period.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "environments_count",
+                                                  "description": "Number of environments in the selected period.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "mocks_count",
+                                                  "description": "Number of mocks in the selected period.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "monitors_count",
+                                                  "description": "Number of monitors in the selected period.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Total count of workspace elements (collections, environments, mocks and monitors) over time.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed data is returned for this metric.",
+                                      "allowed_values": [
+                                          "summary"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "workspace_type": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "internal",
+                                              "public",
+                                              "partner"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_month",
+                                              "last_6_months"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "active_workspaces",
+                              "type": "string",
+                              "response": {
+                                  "detailed": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "is_hidden",
+                                                  "description": "Indicates whether the workspace is hidden from the user.",
+                                                  "type": "BOOLEAN"
+                                              },
+                                              {
+                                                  "name": "workspace_name",
+                                                  "description": "Display name of the workspace.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "workspace_id",
+                                                  "description": "Unique identifier for the workspace.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "created_by",
+                                                  "description": "Name of the user who created the workspace",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "type",
+                                                  "description": "Visibility type of the workspace such as Internal, Partner or Public",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "contributors",
+                                                  "description": "Number of contributors to the workspace.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "api_calls",
+                                                  "description": "Number of API requests sent in the workspace.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  },
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "count",
+                                                  "description": "Summarized total count.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "change",
+                                                  "description": "Percentage or numeric change from the previous period.",
+                                                  "type": "FLOAT"
+                                              },
+                                              {
+                                                  "name": "change_type",
+                                                  "description": "Indicates whether the change is an increase or decrease.",
+                                                  "type": "STRING"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "List of active workspaces in the selected period based on edits and API requests sent.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "detailed",
+                                          "summary"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "workspace_type": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "internal",
+                                              "public",
+                                              "partner"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_month"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "api_calls",
+                              "type": "string",
+                              "response": {
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "count",
+                                                  "description": "Summarized total count.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "change",
+                                                  "description": "Percentage or numeric change from the previous period.",
+                                                  "type": "FLOAT"
+                                              },
+                                              {
+                                                  "name": "change_type",
+                                                  "description": "Indicates whether the change is an increase or decrease.",
+                                                  "type": "STRING"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Aggregated API call counts across workspaces.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "summary"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "workspace_type": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "internal",
+                                              "public",
+                                              "partner"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_month"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "active_collections",
+                              "type": "string",
+                              "response": {
+                                  "detailed": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "is_hidden",
+                                                  "description": "Indicates whether the collection is hidden from the user.",
+                                                  "type": "BOOLEAN"
+                                              },
+                                              {
+                                                  "name": "collection_id",
+                                                  "description": "Unique identifier for the collection.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "collection_name",
+                                                  "description": "Display name of the collection.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "workspace_name",
+                                                  "description": "Name of the workspace containing the collection.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "created_by",
+                                                  "description": "Name of the user who created the collection.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "api_calls_count",
+                                                  "description": "Total number of API calls made using requests in this collection.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "List of collections that have been edited or used to send API requests.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "detailed"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "workspace_type": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "internal",
+                                              "public",
+                                              "partner"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_month"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "response_status",
+                              "type": "string",
+                              "response": {
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "timestamp",
+                                                  "description": "Reporting date for the metric.",
+                                                  "type": "DATE",
+                                                  "format": "YYYY-MM-DD"
+                                              },
+                                              {
+                                                  "name": "total_count",
+                                                  "description": "Total number of API requests for the selected period.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "count_2xx",
+                                                  "description": "Number of successful API responses (2xx).",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "count_3xx",
+                                                  "description": "Number of redirection responses (3xx).",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "count_4xx",
+                                                  "description": "Number of client error responses (4xx).",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "count_5xx",
+                                                  "description": "Number of server error responses (5xx).",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Breakdown of API response codes (2xx, 4xx, 5xx) over time.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "summary"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "workspace_type": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "internal",
+                                              "public",
+                                              "partner"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_month",
+                                              "last_6_months"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "pending_invites",
+                              "type": "string",
+                              "response": {
+                                  "detailed": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "email_id",
+                                                  "description": "Invitee's target email.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "invite_id",
+                                                  "description": "Unique identifier for the invite.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "timestamp",
+                                                  "description": "Timestamp when the invite was created.",
+                                                  "type": "TIMESTAMP",
+                                                  "format": "YYYY-MM-DDTHH:MM:SSZ"
+                                              }
+                                          ]
+                                      }
+                                  },
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "count",
+                                                  "description": "Number of pending invites.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "List of pending workspace invitations including target email addresses and invite timestamps.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "summary",
+                                          "detailed"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": []
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "needs_attention",
+                              "type": "string",
+                              "response": {
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "count",
+                                                  "description": "Number of partners who need attention.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  },
+                                  "detailed": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "user_id",
+                                                  "description": "Unique identifier of the user.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "request_type",
+                                                  "description": "Type of issue or request pattern detected for the user.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "timestamp",
+                                                  "description": "Timestamp when the request event was recorded.",
+                                                  "type": "TIMESTAMP",
+                                                  "format": "YYYY-MM-DDTHH:MM:SSZ"
+                                              },
+                                              {
+                                                  "name": "request_name",
+                                                  "description": "Display name of the request. Present when request_type = no_success_on_tried_request.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "request_identifier_id",
+                                                  "description": "Unique identifier for the request. Present when request_type = no_success_on_tried_request.",
+                                                  "type": "STRING"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Identifies partners or users needing attention (e.g., no successful requests or high error rates) for proactive support.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "summary",
+                                          "detailed"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_30_days"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "attention_type": {
+                                          "type": "ENUM",
+                                          "description": "Filter by the attention category.",
+                                          "allowed_values": [
+                                              "no_success_on_tried_request",
+                                              "high_non_200OK_rate_for_partner"
+                                          ],
+                                          "isRequired": false
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "success_rate",
+                              "type": "string",
+                              "response": {
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "success_rate",
+                                                  "description": "Overall percentage of successful requests.",
+                                                  "type": "FLOAT"
+                                              },
+                                              {
+                                                  "name": "change",
+                                                  "description": "Change in success rate compared to the previous period.",
+                                                  "type": "FLOAT"
+                                              },
+                                              {
+                                                  "name": "change_type",
+                                                  "description": "Indicates whether the success rate increased or decreased.",
+                                                  "type": "STRING"
+                                              }
+                                          ]
+                                      }
+                                  },
+                                  "detailed": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "request_name",
+                                                  "description": "Human-readable name of the request.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "request_id",
+                                                  "description": "Unique identifier for the specific request definition.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "collection_name",
+                                                  "description": "Name of the collection containing the request.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "success_count",
+                                                  "description": "Number of successful responses received.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "total_requests",
+                                                  "description": "Number of API requests sent.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Percentage of successful responses (2xx) over time",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned.",
+                                      "allowed_values": [
+                                          "summary",
+                                          "detailed"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_30_days"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "user_requests",
+                              "type": "string",
+                              "response": {
+                                  "detailed": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "user_id",
+                                                  "description": "Unique identifier of the user who sent the request.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "request_name",
+                                                  "description": "Human-readable name of the request made by the user.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "request_id",
+                                                  "description": "Unique identifier of the specific request sent.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "collection_name",
+                                                  "description": "Name of the collection containing the request.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "collection_id",
+                                                  "description": "Unique Identifier of the collection containing the request.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "workspace_id",
+                                                  "description": "Unique Identifier of the workspace containing the collection.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "response_status",
+                                                  "description": "HTTP response code returned for the request.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "request_ts",
+                                                  "description": "Timestamp when the request was made.",
+                                                  "type": "TIMESTAMP",
+                                                  "format": "YYYY-MM-DDTHH:MM:SSZ"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Request-level data for individual users including request names, collections, response statuses and timestamps.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "detailed"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_180_days"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "response_status": {
+                                          "type": "STRING",
+                                          "description": "Filter by the response status code.",
+                                          "isRequired": false
+                                      },
+                                      "user_id": {
+                                          "type": "STRING",
+                                          "description": "Filter by the user's unique identifier",
+                                          "isRequired": false
+                                      },
+                                      "request_id": {
+                                          "type": "STRING",
+                                          "description": "Filter by the request's unique identifier.",
+                                          "isRequired": false
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "collection_error_aggregate",
+                              "type": "string",
+                              "response": {
+                                  "detailed": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "is_hidden",
+                                                  "description": "Indicates whether the collection is hidden from the user.",
+                                                  "type": "BOOLEAN"
+                                              },
+                                              {
+                                                  "name": "collection_id",
+                                                  "description": "Unique identifier for the collection.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "collection_name",
+                                                  "description": "Name of the collection.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "workspace_id",
+                                                  "description": "Unique identifier of the workspace containing the collection.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "count_4xx",
+                                                  "description": "Number of 4xx responses for the collection in the selected period.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "count_5xx",
+                                                  "description": "Number of 5xx responses for the collection in the selected period.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "total_api_calls",
+                                                  "description": "Number of API calls for the collection in the selected period.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Aggregated error metrics (4xx, 5xx responses) per collection, helping identify collections with the highest error rates.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "detailed"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_month",
+                                              "last_6_months"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          }
+                      ],
+                      "description": "Workspace-level metrics and insights about activities and collaboration patterns",
+                      "resource": "workspace",
+                      "isRequired": true
+                  },
+                  {
+                      "type": "string",
+                      "metrics": [
+                          {
+                              "metric": "user_api_journey",
+                              "type": "string",
+                              "response": {
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "timestamp",
+                                                  "description": "Reporting date for aggregated user activity metrics.",
+                                                  "type": "DATE",
+                                                  "format": "YYYY-MM-DD"
+                                              },
+                                              {
+                                                  "name": "active_user",
+                                                  "description": "Number of users active in the selected date.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "api_user",
+                                                  "description": "Number of users who made at least one API call.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "new_api_user",
+                                                  "description": "Number of users making API calls for the first time.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "successful",
+                                                  "description": "Number of users whose API calls were mostly successful.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "error_only",
+                                                  "description": "Number of users who encountered only error responses.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Tracks user progression through the API adoption funnel, showing active users, API users, new API users, successful users, and error-only users. Helps teams understand user onboarding effectiveness and identify users needing support.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "summary"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "workspace_type": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "internal",
+                                              "public",
+                                              "partner"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_month",
+                                              "last_6_months"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "workspace_distribution",
+                              "type": "string",
+                              "response": {
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "date",
+                                                  "description": "Reporting date for the aggregated workspace counts.",
+                                                  "type": "DATE",
+                                                  "format": "YYYY-MM-DD"
+                                              },
+                                              {
+                                                  "name": "total",
+                                                  "description": "Number of workspaces for the given date.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "internal",
+                                                  "description": "Number of internal workspaces.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "partner",
+                                                  "description": "Number of partner workspaces.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "public",
+                                                  "description": "Number of public workspaces.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Distribution of workspace types (team, private, partner, public) over time.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "summary"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "workspace_type": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "internal",
+                                              "public",
+                                              "partner"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_month",
+                                              "last_6_months"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "internal_workspace_distribution",
+                              "type": "string",
+                              "response": {
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "date",
+                                                  "description": "Reporting date for internal workspace distribution.",
+                                                  "type": "DATE",
+                                                  "format": "YYYY-MM-DD"
+                                              },
+                                              {
+                                                  "name": "internal_team_shared",
+                                                  "description": "Count of internal team-shared workspaces.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "internal_private",
+                                                  "description": "Count of internal private workspaces.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Distribution of internal workspaces created into team-shared and private categories.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "summary"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "workspace_type": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "internal",
+                                              "public",
+                                              "partner"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_6_months"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "license_consumption",
+                              "type": "string",
+                              "response": {
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "date",
+                                                  "description": "Reporting date for team and license metrics.",
+                                                  "type": "DATE",
+                                                  "format": "YYYY-MM-DD"
+                                              },
+                                              {
+                                                  "name": "team_members",
+                                                  "description": "Total number of team members.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "active_postman_users",
+                                                  "description": "Number of team members actively using Postman.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "partners",
+                                                  "description": "Number of partner users invited to the team.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "guests",
+                                                  "description": "Number of guest users in the team.",
+                                                  "type": "INTEGER"
+                                              },
+                                              {
+                                                  "name": "unused_licenses",
+                                                  "description": "Number of unused team member licenses.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Tracks how licenses are used across roles (members, partners, guests) and identifies unused seats.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "summary"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "workspace_type": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "internal",
+                                              "public",
+                                              "partner"
+                                          ],
+                                          "isRequired": true
+                                      },
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_6_months"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "members",
+                              "type": "string",
+                              "response": {
+                                  "detailed": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "user_name",
+                                                  "description": "User's name.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "email",
+                                                  "description": "Email ID of user.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "added_in_team",
+                                                  "description": "Timestamp when user was added to team.",
+                                                  "type": "DATE"
+                                              },
+                                              {
+                                                  "name": "last_active",
+                                                  "description": "Timestamp when user was last active.",
+                                                  "type": "DATE"
+                                              },
+                                              {
+                                                  "name": "user_role",
+                                                  "description": "Concatenated list of roles that user has.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "invited_by",
+                                                  "description": "Email ID that invited this user.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "invite_type",
+                                                  "description": "Type of invitation.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "public_profile_enabled",
+                                                  "description": "Describes whether the user's public profile is enabled or not.",
+                                                  "type": "STRING"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Detailed team member list including profile, role and invitation metadata.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "detailed"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": []
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "last_autoflex_cycle",
+                              "type": "string",
+                              "response": {
+                                  "detailed": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "name",
+                                                  "description": "User's name.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "email",
+                                                  "description": "Email ID of user.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "last_active",
+                                                  "description": "Timestamp when user was last active.",
+                                                  "type": "DATE"
+                                              },
+                                              {
+                                                  "name": "invited_by",
+                                                  "description": "Email ID that invited this user.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "joined_date",
+                                                  "description": "Timestamp when user joined team.",
+                                                  "type": "DATE"
+                                              },
+                                              {
+                                                  "name": "user_role",
+                                                  "description": "Concatenated list of roles that user has.",
+                                                  "type": "STRING"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Detailed team members captured in the most recent AutoFlex billing cycle.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "detailed"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": []
+                              },
+                              "isRequired": true
+                          },
+                          {
+                              "metric": "partner_engagement_funnel",
+                              "type": "string",
+                              "response": {
+                                  "summary": {
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "metric",
+                                                  "description": "Name of the partner engagement metric.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "count",
+                                                  "description": "Value associated with the specific engagement metric.",
+                                                  "type": "INTEGER"
+                                              }
+                                          ]
+                                      }
+                                  },
+                                  "detailed": {
+                                      "description": "Returns data grouped by funnel stages: all_partners, workspace_visited, viewed_collection, request_sent, successful_requests_200OK. Each stage contains a list of partners who reached that stage.",
+                                      "funnel_stages": [
+                                          "all_partners",
+                                          "workspace_visited",
+                                          "viewed_collection",
+                                          "request_sent",
+                                          "successful_requests_200OK"
+                                      ],
+                                      "schema": {
+                                          "columns": [
+                                              {
+                                                  "name": "user_id",
+                                                  "description": "Unique identifier of the partner user.",
+                                                  "type": "STRING"
+                                              },
+                                              {
+                                                  "name": "timestamp",
+                                                  "description": "Timestamp when the partner activity was recorded.",
+                                                  "type": "TIMESTAMP",
+                                                  "format": "YYYY-MM-DDTHH:MM:SSZ"
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "description": "Partner engagement funnel, providing insights into partner activation and onboarding. Helps organizations measure the effectiveness of their partner programs and identify engagement opportunities.",
+                              "parameters": {
+                                  "pagination": {
+                                      "supported": true,
+                                      "allowed_values": [
+                                          "offset",
+                                          "limit"
+                                      ]
+                                  },
+                                  "view": {
+                                      "type": "ENUM",
+                                      "description": "Determines whether detailed or summarized data is returned for this metric.",
+                                      "allowed_values": [
+                                          "summary",
+                                          "detailed"
+                                      ],
+                                      "isRequired": false
+                                  },
+                                  "filters": {
+                                      "duration": {
+                                          "type": "ENUM",
+                                          "allowed_values": [
+                                              "last_180_days"
+                                          ],
+                                          "isRequired": true
+                                      }
+                                  }
+                              },
+                              "isRequired": true
+                          }
+                      ],
+                      "description": "Team-level metrics and insights on team activity, license consumption, and organizational workspace trends",
+                      "resource": "team",
+                      "isRequired": true
+                  }
+              ],
+              "description": "Metadata for analytics APIs delivering usage, success, workspace and team trend insights in Postman"
+          }
+      }
+order: 4000

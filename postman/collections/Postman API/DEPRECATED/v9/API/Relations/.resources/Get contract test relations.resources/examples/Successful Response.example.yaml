@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/relations/contracttest
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "contracttest": [
+              {
+                  "id": "2a9b8fa8-88b7-4b86-8372-8e3f6f6e07f2",
+                  "name": "C test",
+                  "updatedAt": "2019-08-29T10:18:11.000Z",
+                  "collectionId": "7732157-a8bcd149-2b01-4b4c-8c14-c7d05be77745"
+              },
+              {
+                  "id": "521b0486-ab91-4d3a-9189-43c9380a0533",
+                  "name": "C1",
+                  "updatedAt": "2019-08-29T11:40:39.000Z",
+                  "collectionId": "7332157-a8bcd143-2b01-4b12-8c14-c7d05be77725"
+              }
+          ]
+      }
+order: 1000

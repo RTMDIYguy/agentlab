@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/folders/:folderId
+  method: DELETE
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    folderId: 65a99e60-8e0a-4b6e-b79c-7d8264cc5caa
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "instanceNotFoundError",
+              "message": "We could not find the folder you are looking for",
+              "details": {
+                  "model": "folder",
+                  "model_id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+                  "owner": "12345678"
+              }
+          }
+      }
+order: 2000

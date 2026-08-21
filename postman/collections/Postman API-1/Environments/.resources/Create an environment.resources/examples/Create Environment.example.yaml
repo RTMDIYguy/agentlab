@@ -1,0 +1,44 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments?workspace=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  queryParams:
+    workspace: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "name": "Test Environment",
+              "values": [
+                  {
+                      "key": "collectionId",
+                      "value": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "enabled": true,
+                      "type": "default",
+                      "description": "The collection's ID."
+                  },
+                  {
+                      "key": "variable_1",
+                      "value": "The variable_1 value.",
+                      "enabled": false,
+                      "type": "default",
+                      "description": "Placeholder variable value."
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "id": "5daabc50-8451-43f6-922d-96b403b4f28e",
+              "name": "Test Environment",
+              "uid": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e"
+          }
+      }
+order: 1000

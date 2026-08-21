@@ -1,0 +1,37 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private/:elementType/:elementId
+  method: PUT
+  pathVariables:
+    elementType: api
+    elementId: 5360b75f-447e-467c-9299-12fd6c92450d
+  body:
+    type: json
+    content: |-
+      {
+          "api": {
+              "parentFolderId": 1
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "addedAt": "2022-06-09T14:48:45.000Z",
+          "addedBy": 12345678,
+          "createdBy": 12345678,
+          "createdAt": "2021-10-11T09:39:33.000Z",
+          "updatedBy": 12345678,
+          "updatedAt": "2022-12-07T17:54:33.000Z",
+          "type": "api",
+          "id": "5360b75f-447e-467c-9299-12fd6c92450d",
+          "name": "Billing API",
+          "summary": "The payments and account services API.",
+          "description": null,
+          "href": "https://api.getpostman.com/apis/fcf87a6d-6d10-4cfa-bed2-0c234ff99f7b",
+          "parentFolderId": 1
+      }
+order: 1000

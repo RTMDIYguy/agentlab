@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors?workspace=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  queryParams:
+    workspace: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "monitor": {
+              "name": "Test Monitor",
+              "schedule": {
+                  "cron": "0 0 * * *",
+                  "timezone": "America/Chicago"
+              },
+              "collection": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "environment": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e"
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "monitor": {
+              "id": "1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+              "name": "Test Monitor",
+              "active": true,
+              "uid": "12345678-1e6b6cc1-c760-48e0-968f-4bfaeeae9af1"
+          }
+      }
+order: 1000

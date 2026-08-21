@@ -1,0 +1,62 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/roles
+  method: PATCH
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "roles": [
+              {
+                  "op": "update",
+                  "path": "/group",
+                  "value": [
+                      {
+                          "id": 12345,
+                          "role": "EDITOR"
+                      },
+                      {
+                          "id": 123,
+                          "role": "VIEWER"
+                      }
+                  ]
+              },
+              {
+                  "op": "update",
+                  "path": "/user",
+                  "value": [
+                      {
+                          "id": 12345678,
+                          "role": "EDITOR"
+                      },
+                      {
+                          "id": 87654321,
+                          "role": "VIEWER"
+                      }
+                  ]
+              },
+              {
+                  "op": "update",
+                  "path": "/team",
+                  "value": [
+                      {
+                          "id": 123,
+                          "role": "VIEWER"
+                      },
+                      {
+                          "id": 543,
+                          "role": "EDITOR"
+                      }
+                  ]
+              }
+          ]
+      }
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 1000

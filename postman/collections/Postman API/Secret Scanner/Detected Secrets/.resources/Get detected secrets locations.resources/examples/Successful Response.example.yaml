@@ -1,0 +1,45 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/detected-secrets/OTI3OTYx/locations?workspaceId=e361eeb4-00dd-4225-9774-6146a2555999&limit=2
+  method: GET
+  queryParams:
+    workspaceId: e361eeb4-00dd-4225-9774-6146a2555999
+    limit: "2"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+        "data": [
+          {
+            "isResourceDeleted": false,
+            "leakedBy": 12345678,
+            "location": "Headers",
+            "occurrences": 1,
+            "parentResourceId": "12345678-14728df4-c7af-424f-b665-5047b7d25866",
+            "resourceId": "12345678-e0df25e0-d245-40dd-89b5-68720d186d3f",
+            "resourceType": "example",
+            "detectedAt": "2023-04-25T08:13:48.000Z",
+            "url": "https://go.postman.co/build/workspace/80ab14ae-c17d-4fd6-88d5-99bf13f0b7f0/example/12345678-e0df25e0-d245-40dd-89b5-68720d186d3f"
+          }
+        ],
+        "meta": {
+          "activityFeed": [
+            {
+              "resolvedBy": null,
+              "status": "ACTIVE",
+              "resolvedAt": null
+            }
+          ],
+          "cursor": "MTIyNjY5Nw==",
+          "limit": 2,
+          "nextCursor": null,
+          "obfuscatedSecret": "PMAK-644781584627df042afa6655-******ba",
+          "secretHash": "0096b35ef6621d7571f106fefee5b10e8ed360cc9bf04f343f267ca4ff65bb5d",
+          "secretType": "Postman API Key",
+          "total": 3
+        }
+      }
+order: 1000

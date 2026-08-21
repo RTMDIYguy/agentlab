@@ -1,0 +1,38 @@
+$kind: http-request
+description: |-
+  Generates code for an AI agent tool using a collection and request from the Public API Network. For more information, see [<b>Tool Generation Demo</b>](http://postman.com/explore/toolgen) in Postman's Public API Network.
+
+  Include the following in your request:
+
+  - `collectionId` — A **string** value that contains the Public API Network collection's ID.
+      
+  - `requestId` — A **string** value that contains the public request ID.
+      
+  - `config` — An **object** that contains the following properties:
+      
+      - `language` — A **string** value that contains the programming language to use to generate the request. Accepts `javascript`, `typescript`, or `python`.
+          
+      - `agentFramework` — A **string** value that contains the AI agent framework to use. Accepts `openai`, `mistral`, `gemini`, `anthropic`, `langchain`, or `autogen` (Python only).
+          
+
+  ### Important
+
+  - This endpoint has a rate limit of **300 calls every 3 hours**. This does not accrue Postbot usage.
+      
+  - This endpoint only supports public Postman Collections and requests.
+url: "{{baseUrl}}/postbot/generations/tool"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "collectionId": "{{collectionId}}",
+        "requestId": "{{requestId}}",
+        "config": {
+            "language": "{{language}}", // javascript, typescript, or python
+            "agentFramework": "{{agentFramework}}" // openai, mistral, gemini, anthropic, langchain, or autogen (Python only)
+        }
+    }
+settings: {}
+examples: ./.resources/Generate a tool.resources/examples
+order: 1000

@@ -1,0 +1,10 @@
+$kind: collection
+description: |-
+  These endpoints enable you to manage your API specification's files.
+
+  **Note:**
+
+  - Multi-file specifications are supported for OpenAPI 3.0 specifications.
+      
+  - Files cannot exceed a maximum of 10 MB in size.
+order: 1000

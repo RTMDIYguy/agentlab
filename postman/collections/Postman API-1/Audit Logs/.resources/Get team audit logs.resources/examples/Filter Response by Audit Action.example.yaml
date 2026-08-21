@@ -1,0 +1,79 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/audit/logs?action=team.scim_add_member
+  method: GET
+  queryParams:
+    action: team.scim_add_member
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "trails": [
+              {
+                  "id": 13,
+                  "ip": "192.0.2.0",
+                  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+                  "action": "user.apikey_create",
+                  "timestamp": "2025-12-22T05:14:47.000Z",
+                  "message": "Taylor Lee created an API key with identifier: 6948d*****.",
+                  "data": {
+                      "actor": {
+                          "name": "Taylor Lee",
+                          "username": "taylor.lee",
+                          "email": "taylor.lee@example.com",
+                          "id": 12345678,
+                          "active": true
+                      },
+                      "user": {
+                          "name": "Taylor Lee",
+                          "username": "taylor.lee",
+                          "email": "taylor.lee@example.com",
+                          "id": 12345678
+                      },
+                      "team": {
+                          "name": "Billing API Team",
+                          "id": 123
+                      },
+                      "variables": {
+                          "apiKey": "6948d*****"
+                      }
+                  }
+              },
+              {
+                  "id": 14,
+                  "ip": "192.0.2.0",
+                  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+                  "action": "user.apikey_create",
+                  "timestamp": "2025-11-17T11:03:45.000Z",
+                  "message": "Alex Cruz created an API key with identifier: 691b0*****.",
+                  "data": {
+                      "actor": {
+                          "name": "Alex Cruz",
+                          "username": "supply-technologist-87654321",
+                          "email": "alex.cruz@example.com",
+                          "id": 1068007,
+                          "active": true
+                      },
+                      "user": {
+                          "name": "Alex Cruz",
+                          "username": "supply-technologist-87654321",
+                          "email": "alex.cruz@example.com",
+                          "id": 1068007
+                      },
+                      "team": {
+                          "name": "Billing API Team",
+                          "id": 123
+                      },
+                      "variables": {
+                          "apiKey": "691b0*****"
+                      }
+                  }
+              }
+          ]
+      }
+order: 3000

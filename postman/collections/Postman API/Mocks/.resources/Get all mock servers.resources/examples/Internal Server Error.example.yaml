@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks
+  method: GET
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  headers:
+    X-RateLimit-Limit: "60"
+    X-RateLimit-Remaining: "59"
+    X-RateLimit-Reset: "1631439621"
+    X-RateLimit-RetryAfter: "4"
+    RetryAfter: "4"
+  body:
+    type: json
+    content: |-
+      {
+        "error": {
+          "type": "serverError",
+          "message": "Something went wrong with the server"
+        }
+      }
+order: 6000

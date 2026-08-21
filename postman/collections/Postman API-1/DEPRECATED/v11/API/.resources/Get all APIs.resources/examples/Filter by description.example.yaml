@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis?workspaceId=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9)&description=This is an API for testing purposes
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  queryParams:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9)
+    description: This is an API for testing purposes
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "nextCursor": "V2VkIEZlYiAxNSAyMDIzIDEzOjA3OjA4IEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk=",
+              "total": 1,
+              "limit": 10
+          },
+          "apis": [
+              {
+                  "updatedBy": "893478",
+                  "createdBy": "893478",
+                  "name": "New API",
+                  "summary": null,
+                  "description": "This is an API for testing purposes.",
+                  "createdAt": "2023-02-15T06:27:16.000Z",
+                  "id": "73e15000-bc7a-4802-b80e-05fff18fd7f8",
+                  "updatedAt": "2023-02-15T06:27:24.000Z"
+              }
+          ]
+      }
+order: 4000

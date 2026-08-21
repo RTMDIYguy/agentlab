@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/folders/:folderId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    folderId: 65a99e60-8e0a-4b6e-b79c-7d8264cc5caa
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Test Folder",
+          "description": "This is a test folder.",
+          "folder": "6e27010c-9db3-4037-8bb7-5f3c2e62c808"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "changeParentError",
+              "message": "You can't update the parent. Use transfer instead.",
+              "details": {
+                  "server": {
+                      "model": "collection",
+                      "model_id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa"
+                  },
+                  "request": {
+                      "model": "collection",
+                      "model_id": "12345678-65a99e60-8e0a-4b6e-b79c-7d8264cc5caa"
+                  }
+              }
+          }
+      }
+order: 5000

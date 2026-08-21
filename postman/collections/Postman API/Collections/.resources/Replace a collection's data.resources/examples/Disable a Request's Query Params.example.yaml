@@ -1,0 +1,122 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "info": {
+                  "name": "Test Collection",
+                  "description": "This is a test.",
+                  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+              },
+              "item": [
+                  {
+                      "name": "GET Request with headers and query params",
+                      "id": "7d3bf97a-9a5e-4676-bad4-991d0442c962",
+                      "protocolProfileBehavior": {
+                          "disableBodyPruning": true
+                      },
+                      "request": {
+                          "method": "GET",
+                          "header": [
+                              {
+                                  "key": "x-api-key",
+                                  "value": "apikey",
+                                  "type": "text",
+                                  "disabled": true
+                              }
+                          ],
+                          "url": {
+                              "raw": "https://postman-echo.com/get",
+                              "protocol": "https",
+                              "host": [
+                                  "postman-echo",
+                                  "com"
+                              ],
+                              "path": [
+                                  "get"
+                              ],
+                              "query": [
+                                  {
+                                      "key": "param1",
+                                      "value": "value1"
+                                  },
+                                  {
+                                      "key": "param2",
+                                      "value": "value2",
+                                      "disabled": true
+                                  }
+                              ]
+                          }
+                      },
+                      "response": [],
+                      "uid": "12345678-42d13443-2f50-47f0-b417-03081a97bf45"
+                  }
+              ],
+              "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                      {
+                          "key": "value",
+                          "value": "{{api-key}}"
+                      },
+                      {
+                          "key": "key",
+                          "value": "x-api-key"
+                      }
+                  ]
+              },
+              "event": [
+                  {
+                      "listen": "prerequest",
+                      "script": {
+                          "id": "86cc41c1-a9ad-411f-923d-5f1d15344c94",
+                          "type": "text/javascript",
+                          "packages": {},
+                          "exec": [
+                              ""
+                          ]
+                      }
+                  },
+                  {
+                      "listen": "test",
+                      "script": {
+                          "id": "9f48d011-89cb-4a85-9179-b3554aa44aff",
+                          "type": "text/javascript",
+                          "packages": {},
+                          "exec": [
+                              "pm.test(\"Content-Type is present\", function () {",
+                              "    pm.response.to.have.header(\"Content-Type\");",
+                              "});"
+                          ]
+                      }
+                  }
+              ],
+              "variable": [
+                  {
+                      "key": "userId",
+                      "value": "12345678",
+                      "description": "The user's ID."
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "id": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "name": "Test Collection",
+              "uid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+          }
+      }
+order: 4000

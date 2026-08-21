@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/tags
+  method: PUT
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 6fd634a3-79ba-451d-8f07-56a953f96667
+  body:
+    type: json
+    content: |-
+      {
+          "tags": [
+              {
+                  "slug": "test-api!"
+              }
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Bad Request",
+          "detail": "body/tags/0/slug must match pattern \"^[a-z][a-z0-9-]*[a-z0-9]+$\"",
+          "status": 400
+      }
+order: 4000

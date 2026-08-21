@@ -1,0 +1,18 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/collections/:collectionId/comments/:commentId
+  method: DELETE
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    collectionId: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+    commentId: "46814"
+  body:
+    type: json
+    content: ""
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 1000

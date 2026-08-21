@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/access-requests
+  method: GET
+  headers:
+    - key: identifierType
+      value: scim
+      description: Use SCIM user and group IDs instead of Postman user IDs.
+  pathVariables:
+    - key: teamId
+      value: "123"
+      description: The team's ID.
+  body:
+    type: json
+    content: ""
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Unauthorized",
+          "instance": "/teams",
+          "status": 401,
+          "type": "https://api.postman.com/problems/unauthorized",
+          "detail": "Unauthorized"
+      }
+order: 4000

@@ -1,0 +1,24 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/detected-secrets/MTc0ODA0Mw==
+  method: PUT
+  body:
+    type: json
+    content: |-
+      {
+          "resolution": "TEST",
+          "workspaceId": "e361eeb4-00dd-4225-9774-6146a2555999"
+      }
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "type": "BAD_REQUEST",
+          "title": "`resolution` must be one of FALSE_POSITIVE, ACCEPTED_RISK, REVOKED, ACTIVE",
+          "instance": "TEST",
+          "status": 400
+      }
+order: 4000

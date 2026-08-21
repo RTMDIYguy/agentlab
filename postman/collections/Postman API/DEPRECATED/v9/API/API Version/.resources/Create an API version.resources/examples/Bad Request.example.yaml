@@ -1,0 +1,39 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "version": {
+              "name": "v1",
+              "source": {
+                  "id": "a9879d02-74bf-425a-bbec-6d27aa135507",
+                  "schema": true,
+                  "relations": {
+                      "documentation": true,
+                      "environment": true,
+                      "mock": true,
+                      "monitor": true
+                  }
+              }
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "instanceNotFoundError",
+              "message": "We could not find the API you are looking for"
+          }
+      }
+order: 2000

@@ -1,0 +1,34 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId
+  method: PATCH
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "info": {
+                  "name": "Test Collection v2",
+                  "description": "This is a sample collection that makes a request to the Postman Echo service. It returns a list of request headers sent by an HTTP client."
+              }
+          }
+      }
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    X-RateLimit-Limit: "60"
+    X-RateLimit-Remaining: "59"
+    X-RateLimit-Reset: "1631439621"
+    X-RateLimit-RetryAfter: "4"
+    RetryAfter: "4"
+  body:
+    type: json
+    content: |-
+      {
+          "error": "rateLimited",
+          "message": "Rate limit exceeded. Please retry after 1669048687"
+      }
+order: 14000

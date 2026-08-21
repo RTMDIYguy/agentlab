@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.eu.postman.com/pull-requests/:pullRequestId/tasks
+  method: POST
+  pathVariables:
+    pullRequestId: 4e1a6609-1a29-4037-a411-89ecc14c6cd8
+  body:
+    type: json
+    content: |-
+      {
+          "action": "unapproved"
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "title": "Forbidden",
+          "detail": "This feature isn't available in your region.",
+          "status": 403
+      }
+order: 8000

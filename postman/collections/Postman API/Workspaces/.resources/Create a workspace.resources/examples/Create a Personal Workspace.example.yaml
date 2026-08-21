@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "name": "Personal Workspace",
+              "type": "personal",
+              "description": "This is a personal workspace.",
+              "about": "Personal workspace."
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "id": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+              "name": "Personal Workspace"
+          }
+      }
+order: 1000

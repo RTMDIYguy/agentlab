@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Groups
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:schemas:core:2.0:Group"
+          ],
+          "displayName": "TestAPI",
+          "members": []
+      }
+response:
+  statusCode: 409
+  statusText: Conflict
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:Error"
+          ],
+          "scimType": "uniqueness",
+          "detail": "This person is already a member of the team.",
+          "status": "409"
+      }
+order: 9000

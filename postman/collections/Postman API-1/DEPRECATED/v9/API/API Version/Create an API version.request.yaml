@@ -1,0 +1,41 @@
+$kind: http-request
+description: |-
+  **This endpoint is deprecated in Postman v10 and higher.**
+
+  Creates a new API version. Include the following request body properties in the `version` object:
+
+  - `name` — Required. A **string** that contains the API version's name.
+  - `source` — An **object** that contains the following properties:
+      - `id` — A **string** that contains an API version's ID to copy to the created API version.
+      - `schema` — A **boolean** value. If true, copy the API definition to the new API version.
+      - `relations` — An **object** that contains the relation types to copy to the new API version. Each property is a **boolean** value that, if true, copies to the new API version. If you do **not** include any the following properties, the system does **not** copy them over (defaults to the `false` value):
+          - `monitor`
+          - `mock`
+          - `documentation`
+          - `test`
+          - `environment`
+url: https://api.getpostman.com/apis/{{apiId}}/versions
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+    	"version": {
+    		"name": "{{apiVersionName}}",
+    		"source": {
+    			"id": "{{apiVersionId}}",
+    			"schema": {{boolean}},
+    			"relations": {
+    				"monitor": {{boolean}},
+    				"mock": {{boolean}},
+    				"documentation": {{boolean}},
+                    "test": {{boolean}},
+                    "environment": {{boolean}}
+    			}
+    		}
+    	}
+    }
+examples: ./.resources/Create an API version.resources/examples
+order: 2000

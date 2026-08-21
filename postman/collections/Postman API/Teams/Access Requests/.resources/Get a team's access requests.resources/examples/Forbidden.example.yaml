@@ -1,0 +1,34 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/access-requests
+  method: GET
+  headers:
+    - key: identifierType
+      value: scim
+      description: Use SCIM user and group IDs instead of Postman user IDs.
+  pathVariables:
+    - key: teamId
+      value: "123"
+      description: The team's ID.
+  body:
+    type: json
+    content: ""
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "status": 403,
+          "title": "Forbidden",
+          "detail": {
+              "error": {
+                  "name": "NoPermission",
+                  "message": "You are not allowed to manage pending requests in team."
+              }
+          },
+          "instance": "/teams/123/access-requests"
+      }
+order: 5000

@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces?elementType=collection&elementId=12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+  method: GET
+  queryParams:
+    elementType: collection
+    elementId: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "workspaces": [
+              {
+                  "id": "f8801e9e-03a4-4c7b-b31e-5db5cd771696",
+                  "name": "Team Workspace",
+                  "type": "team",
+                  "visibility": "team",
+                  "createdBy": "12345678",
+                  "about": "This is a team workspace.",
+                  "createdAt": "2022-07-18T06:57:37.000Z",
+                  "updatedAt": "2025-05-30T08:49:54.000Z"
+              }
+          ]
+      }
+order: 5000

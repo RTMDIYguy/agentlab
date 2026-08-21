@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentId
+  method: PATCH
+  pathVariables:
+    environmentId: 5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      [
+          {
+              "op": "add",
+              "path": "/values/2",
+              "value": {
+                  "key": "x-api-key",
+                  "value": "{{x-api-key}}",
+                  "type": "default",
+                  "enabled": true
+              }
+          }
+      ]
+response:
+  statusCode: 411
+  statusText: Length Required
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/length-required",
+          "title": "Length Required",
+          "detail": "A valid Content-Length header is required",
+          "status": 411,
+          "instance": "/"
+      }
+order: 17000

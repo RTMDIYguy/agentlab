@@ -1,0 +1,35 @@
+$kind: http-request
+description: |-
+  Gets all the tags associated with an API. This endpoint replaces all existing tags with those you pass in the request body.
+
+  **Note:**
+
+  - You can only add a maximum of five tags to an API.
+  - Tags must be between 2 and 64 characters long.
+      
+  - Tags must follow the `^[a-z][a-z0-9-]\\\\\*[a-z0-9]+$` pattern.
+url: "{{baseUrl}}/apis/:apiId/tags"
+method: PUT
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+body:
+  type: json
+  content: |-
+    {
+        "tags": [
+            {
+                "slug": "{{tagName}}"
+            }
+        ]
+    }
+settings:
+  disabledSystemHeaders:
+    - accept
+examples: ./.resources/Update an API's tags.resources/examples
+order: 2000

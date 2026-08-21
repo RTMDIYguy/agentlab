@@ -1,0 +1,55 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "discoveredServices": [
+              {
+                  "name": "user-service",
+                  "version": "3.0.0",
+                  "description": "Handles user registration, authentication, and profile management.",
+                  "apiDefinition": {
+                      "content": "eyJvcGVuYXBpIjoiMy4wLjAiLCJpbmZvIjp7InRpdGxlIjoiQ29uZmlnIiwidmVyc2lvbiI6IjEuMC4wIn0sInBhdGhzIjp7Ii9jb25maWciOnsiZ2V0Ijp7InN1bW1hcnkiOiJHZXQgY29uZmlnIn19LCIvY29uZmlnL3trZXl9Ijp7InB1dCI6eyJzdW1tYXJ5IjoiVXBkYXRlIGNvbmZpZyJ9fX19="
+                  }
+              }
+          ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": [
+              {
+                  "id": "9feb4e3c-0cd8-44db-b137-7bf09aee73cd",
+                  "organizationId": 123,
+                  "name": "user-service",
+                  "description": "Handles user registration, authentication, and profile management.",
+                  "version": "3.0.0",
+                  "sourceEnvironment": "production",
+                  "systemEnvironmentId": null,
+                  "tags": [
+                      "auth",
+                      "core",
+                      "identity"
+                  ],
+                  "status": "discovered",
+                  "endpointsCount": 5,
+                  "providerServiceId": "usr-svc-custom-id-001",
+                  "discoveredAt": "2026-02-12T04:01:26.000Z",
+                  "discoveredBy": 12345678,
+                  "lastSyncedAt": "2026-02-12T04:01:26.000Z"
+              }
+          ],
+          "meta": {
+              "total": 1,
+              "created": 1,
+              "updated": 0
+          }
+      }
+order: 3000

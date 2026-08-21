@@ -1,0 +1,7 @@
+$kind: collection
+description: The **OAuth** endpoints enable you to manage your [OAuth 2.0 tokens](https://learning.postman.com/docs/sending-requests/authorization/oauth-20/) in Postman.
+auth:
+  - id: ""
+    type: noauth
+    name: No Auth
+order: 12000

@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId
+  method: PUT
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "name": "Public Workspace",
+              "type": "private",
+              "description": "This is a public workspace.",
+              "about": "Public workspace."
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "cannotConvertFromPublicWorkspace",
+              "message": "Can not convert workspaces from public workspaces for team user. First convert to team."
+          }
+      }
+order: 6000

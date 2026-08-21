@@ -1,0 +1,11 @@
+$kind: http-request
+description: Gets information about a collection's pull requests, such as the source and destination IDs, status of the pull requests, and a URL link to the pull requests.
+url: "{{baseUrl}}/collections/:collectiondUid/pull-requests"
+method: GET
+pathVariables:
+  - key: collectiondUid
+    value: ""
+    description: The collection's unique ID.
+settings: {}
+examples: ./.resources/Get a collection's pull requests.resources/examples
+order: 1000

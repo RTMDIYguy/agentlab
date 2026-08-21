@@ -1,0 +1,42 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/versions
+  method: POST
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Release 1.5",
+          "releaseNotes": "This is the first public release update.",
+          "collections": [
+              {
+                  "filePath": "path/to/collection1.json"
+              },
+              {
+                  "filePath": "path/to/collection2.json"
+              }
+
+          ],
+          "schemas": [
+              {
+                  "directoryPath": "postman/schemas"
+              }
+          ],
+          "branch": "develop"
+      }
+response:
+  statusCode: 422
+  statusText: Unprocessable Entity (WebDAV) (RFC 4918)
+  body:
+    type: json
+    content: |-
+      {
+          "type": "CollectionPathInvalid",
+          "detail": "Please perform a Git push from the Postman app to sync state between app and repository.",
+          "title": "Collection not found."
+      }
+order: 15000

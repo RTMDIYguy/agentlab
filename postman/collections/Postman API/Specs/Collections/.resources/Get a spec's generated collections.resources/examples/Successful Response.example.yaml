@@ -1,0 +1,39 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId/generations/:elementType
+  method: GET
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+    elementType: collection
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collections": [
+              {
+                  "id": "e8a015e0-f472-4bb3-a523-57ce7c4583ed",
+                  "name": "Sample API",
+                  "state": "in-sync",
+                  "createdAt": "2025-03-17T11:03:15Z",
+                  "updatedAt": "2025-03-17T12:03:15Z",
+                  "createdBy": 12345678,
+                  "updatedBy": 12345678
+              },
+              {
+                  "id": "876211d4-fff8-439c-bb3f-ffb3c565dd21",
+                  "name": "Sample API",
+                  "state": "out-of-sync",
+                  "createdAt": "2025-03-15T12:37:15Z",
+                  "updatedAt": "2025-03-15T11:37:15Z",
+                  "createdBy": 12345678,
+                  "updatedBy": 12345678
+              }
+          ],
+          "meta": {
+              "nextCursor": null
+          }
+      }
+order: 1000

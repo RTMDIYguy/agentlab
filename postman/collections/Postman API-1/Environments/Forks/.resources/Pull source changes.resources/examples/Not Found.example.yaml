@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentUid/pulls
+  method: POST
+  pathVariables:
+    environmentUid: 12345678-5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      {
+          "source": "12345678-d9c7dc8f-904e-4bba-99b5-4d490aae1957"
+      }
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Not Found",
+          "status": 404,
+          "detail": "We could not find the environment you are looking for",
+          "type": "https://api.postman.com/problems/notFound"
+      }
+order: 4000

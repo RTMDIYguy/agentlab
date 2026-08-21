@@ -1,0 +1,34 @@
+$kind: http-request
+description: |-
+  Gets information about a workspace.
+
+  **Note:**
+
+  This endpoint's response also contains the `visibility` field. [Visibility](https://learning.postman.com/docs/collaborating-in-postman/using-workspaces/managing-workspaces/#changing-workspace-visibility) determines who can access the workspace:
+
+  - `personal` — Only you can access the workspace.
+      
+  - `team` — All team members can access the workspace.
+      
+  - `private` — Only invited team members can access the workspace ([<b>Team</b> and <b>Enterprise</b> plans only](https://www.postman.com/pricing)).
+      
+  - `public` — Everyone can access the workspace.
+      
+  - `partner` — Only invited team members and [partners](https://learning.postman.com/docs/collaborating-in-postman/using-workspaces/partner-workspaces/) can access the workspace ([<b>Team</b> and <b>Enterprise</b> plans only](https://www.postman.com/pricing)).
+url: "{{baseUrl}}/workspaces/:workspaceId"
+method: GET
+queryParams:
+  - key: include
+    value: ""
+    disabled: true
+    description: |-
+      Include the following information in the endpoint's response:
+      - `mocks:deactivated` — Include all deactivated mock servers in the response.
+      - `scim` — Return the SCIM user IDs of the workspace creator and who last modified it.
+pathVariables:
+  - key: workspaceId
+    value: ""
+    description: The workspace's ID.
+settings: {}
+examples: ./.resources/Get a workspace.resources/examples
+order: 8000

@@ -1,0 +1,45 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/pull-requests/:pullRequestId
+  method: GET
+  pathVariables:
+    pullRequestId: 4e1a6609-1a29-4037-a411-89ecc14c6cd8
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "createdAt": "2024-02-20T09:55:46.000Z",
+          "updatedAt": "2024-02-20T09:58:38.000Z",
+          "id": "4e1a6609-1a29-4037-a411-89ecc14c6cd8",
+          "title": "Test PR",
+          "description": "This is a test pull request.",
+          "createdBy": "12345678",
+          "updatedBy": "12345678",
+          "comment": "Missing descriptions in requests",
+          "forkType": "collection",
+          "source": {
+              "id": "87654321-3b79068c-dbe5-41d5-a826-51be4bf646ef",
+              "name": "test-collection",
+              "forkName": "Taylor Lee's fork",
+              "exists": true
+          },
+          "destination": {
+              "id": "123456789-24f57217-1169-4b7c-a810-0e957c04eaa5",
+              "name": "test-collection",
+              "exists": true
+          },
+          "status": "declined",
+          "merge": {
+              "status": "inactive"
+          },
+          "reviewers": [
+              {
+                  "id": "12345678",
+                  "status": "declined"
+              }
+          ]
+      }
+order: 1000

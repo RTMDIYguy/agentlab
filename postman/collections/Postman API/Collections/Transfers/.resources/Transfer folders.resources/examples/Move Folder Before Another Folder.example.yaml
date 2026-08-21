@@ -1,0 +1,34 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-folders-transfers
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "ids": [
+              "12345678-bcb5648b-eecb-4468-ade7-4efb38431bd1"
+          ],
+          "target": {
+              "model": "collection",
+              "id": "12345678-2ba6b9c4-5327-4c46-9bf3-4ec84b74b720"
+          },
+          "location": {
+              "position": "before",
+              "model": "folder",
+              "id": "12345678-45499451-e894-41b8-8c66-8191ab64932a"
+          },
+          "mode": "move"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "ids": [
+              "12345678-bcb5648b-eecb-4468-ade7-4efb38431bd1"
+          ]
+      }
+order: 3000

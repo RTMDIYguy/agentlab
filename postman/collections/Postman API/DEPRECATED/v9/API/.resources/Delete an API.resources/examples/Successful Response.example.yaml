@@ -1,0 +1,18 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/5360b75f-447e-467c-9299-12fd6c92450d
+  method: DELETE
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "api": {
+              "id": "5360b75f-447e-467c-9299-12fd6c92450d"
+          }
+      }
+order: 1000

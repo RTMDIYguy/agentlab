@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/5360b75f-447e-467c-9299-12fd6c92450d
+  method: PUT
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "api": {
+              "name": "Test API A",
+              "summary": "Test API A Schema",
+              "description": "This is Test API A."
+          }
+      }
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "error": "rateLimited",
+          "message": "Rate limit exceeded. Please retry after 1669048687"
+      }
+order: 3000

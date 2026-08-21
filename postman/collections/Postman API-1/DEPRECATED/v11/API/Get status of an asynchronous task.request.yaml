@@ -1,0 +1,18 @@
+$kind: http-request
+description: Gets the status of an asynchronous task.
+url: "{{baseUrl}}/apis/:apiId/tasks/:taskId"
+method: GET
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+  - key: taskId
+    value: "{{taskId}}"
+    description: The task's ID.
+settings: {}
+examples: ./.resources/Get status of an asynchronous task.resources/examples
+order: 11000

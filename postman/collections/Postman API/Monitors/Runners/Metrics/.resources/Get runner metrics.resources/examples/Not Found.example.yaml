@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/runners/:runnerId/metrics
+  method: GET
+  pathVariables:
+    runnerId: 1f08d6ba-c377-4ca0-be80-af81daf8fef9
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "type": "urn:error:monitor:instanceNotFoundError",
+          "title": "Instance not found in the database.",
+          "detail": "Runner not found.",
+          "createdAt": "2025-11-06T14:14:45.934Z"
+      }
+order: 4000

@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/spec-migrations
+  method: POST
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+  body:
+    type: json
+    content: |-
+      {
+          "workspaceId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "title": "Definition type not supported",
+              "message": "This API contains an unsupported definition type wsdl:1.0. Spec Hub supports: OAS3, OAS3.1, OAS2.0, AsyncAPI2.0, graphQl, gRPC."
+          }
+      }
+order: 4000

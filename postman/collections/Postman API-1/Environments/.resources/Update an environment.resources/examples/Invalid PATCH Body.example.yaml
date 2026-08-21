@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentId
+  method: PATCH
+  pathVariables:
+    environmentId: 5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      {
+          "op": "replace",
+          "path": "/name",
+          "name": "Test API Environment"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "status": 400,
+          "title": "Bad Request",
+          "detail": "Patch sequence must be an array"
+      }
+order: 9000

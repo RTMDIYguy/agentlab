@@ -1,0 +1,23 @@
+$kind: http-request
+description: Gets all Postman groups within the team.
+url: "{{baseUrl}}/scim/v2/Groups"
+method: GET
+queryParams:
+  - key: startIndex
+    value: "1"
+    disabled: true
+    description: The index entry by which to begin the list of returned results. Must be a value of `1` or greater.
+  - key: count
+    value: "100"
+    disabled: true
+    description: Limit the number of results returned in a single response. By default, the system returns a list of 100 users.
+  - key: filter
+    value: ""
+    disabled: true
+    description: |-
+      Filter results by a specific word or phrase. This query parameter only supports the `displayName` filter and has the following requirements:
+      - Filter values are case-sensitive.
+      - Special characters and spaces must be URL encoded.
+settings: {}
+examples: ./.resources/Get all groups.resources/examples
+order: 1000

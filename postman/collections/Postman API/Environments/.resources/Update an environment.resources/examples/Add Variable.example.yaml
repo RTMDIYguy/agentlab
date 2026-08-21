@@ -1,0 +1,54 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentId
+  method: PATCH
+  pathVariables:
+    environmentId: 5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      [
+          {
+              "op": "add",
+              "path": "/values/1",
+              "value": {
+                  "key": "collectionId",
+                  "value": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "type": "default",
+                  "enabled": true,
+                  "description": "The collection's ID."
+              }
+          }
+      ]
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "id": "5daabc50-8451-43f6-922d-96b403b4f28e",
+              "name": "Test API Environment",
+              "owner": "12345678",
+              "createdAt": "2025-03-10T15:37:00.000Z",
+              "updatedAt": "2025-03-10T15:56:19.000Z",
+              "values": [
+                  {
+                      "key": "x-api-key",
+                      "value": "{{x-api-key}}",
+                      "type": "secret",
+                      "enabled": true
+                  },
+                  {
+                      "key": "collectionId",
+                      "value": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "type": "default",
+                      "enabled": true,
+                      "description": "The collection's ID."
+                  }
+              ],
+              "uid": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e"
+          }
+      }
+order: 2000

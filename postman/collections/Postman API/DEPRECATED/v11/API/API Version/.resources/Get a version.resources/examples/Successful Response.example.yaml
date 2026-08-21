@@ -1,0 +1,37 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/versions/:versionId
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    versionId: 3563baaa-07a2-46ed-9fd2-0e8a3c5f7ec2
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "version": {
+              "createdAt": "2022-06-09T14:48:45.000Z",
+              "updatedAt": "2022-06-09T19:50:49.000Z",
+              "id": "3563baaa-07a2-46ed-9fd2-0e8a3c5f7ec2",
+              "name": "Release 1.0",
+              "releaseNotes": "This is the first release.",
+              "schemas": [
+                  {
+                      "id": "13a441a3-6109-4f78-86eb-e0144d0ff275",
+                      "type": "openapi:3"
+                  }
+              ],
+              "collections": [
+                  {
+                      "id": "12345678-aeedb353-494b-4424-82cf-358aece2bd1c",
+                      "name": "collection1"
+                  }
+              ]
+          }
+      }
+order: 1000

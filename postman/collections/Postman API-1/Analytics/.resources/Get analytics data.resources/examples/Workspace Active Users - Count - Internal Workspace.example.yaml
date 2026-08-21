@@ -1,0 +1,37 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=user&metrics=workspace_active_users&view=summary&workspaceType=internal&duration=last_month
+  method: GET
+  queryParams:
+    resource: user
+    metrics: workspace_active_users
+    view: summary
+    workspaceType: internal
+    duration: last_month
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "count",
+                              "type": "INTEGER",
+                              "description": "Total number for the summarized metric."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          4231
+                      ]
+                  ]
+              }
+          }
+      }
+order: 3000

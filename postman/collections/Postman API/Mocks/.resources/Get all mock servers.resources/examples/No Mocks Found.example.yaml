@@ -1,0 +1,16 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks?workspace=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: GET
+  queryParams:
+    workspace: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "mocks": []
+      }
+order: 4000

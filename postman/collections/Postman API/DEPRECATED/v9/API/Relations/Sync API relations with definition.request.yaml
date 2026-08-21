@@ -1,0 +1,31 @@
+$kind: http-request
+description: Syncs an API version's relation with the API's definition.
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}/:relationType/:entityId/syncWithSchema
+method: PUT
+pathVariables:
+  - key: relationType
+    value: unclassified
+    description: |-
+      The `unclassified` relation type. This relation is used for documentation and testing.
+
+      **Note:**
+
+      In Postman v10 and earlier, this value is one of:
+      * `documentation`
+      * `test`
+      * `mock`
+      * `monitor`
+  - key: entityId
+    value: "{{entityId}}"
+    description: |-
+      The collection's UID value.
+
+      **Note:**
+
+      In Postman v10 and earlier, the entity's ID value is one of the following, based on its relation type:
+      * `documentation` and `test` — The collection UID value.
+      * `environment` — The environment UID value.
+      * `mock` — The mock ID value.
+      * `monitor` — The monitor ID value.
+examples: ./.resources/Sync API relations with definition.resources/examples
+order: 8000

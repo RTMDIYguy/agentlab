@@ -1,0 +1,20 @@
+$kind: http-request
+description: Gets a list of all the authenticated user's forked collections.
+url: "{{baseUrl}}/collections/collection-forks"
+method: GET
+queryParams:
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The pointer to the first record of the set of paginated results.
+  - key: direction
+    value: ""
+    disabled: true
+    description: Sort the results by creation date in ascending (`asc`) or descending (`desc`) order.
+  - key: limit
+    value: "10"
+    disabled: true
+    description: The maximum number of rows to return in the response. Thsi value defaults to `10`.
+settings: {}
+examples: ./.resources/Get all forked collections.resources/examples
+order: 3000

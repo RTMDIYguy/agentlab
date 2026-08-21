@@ -1,0 +1,6 @@
+$kind: collection
+description: |-
+  These endpoints enable you to manage your [collection access keys](https://learning.postman.com/docs/developer/postman-api/authentication/#generate-a-collection-access-key). Collection access keys enable you to securely grant other users read-only access to a collection.
+
+  Collection access keys are valid for 60 days. If unused, the access key expires after 60 days. If someone uses the access key, then its expiration date increases by another 60 days.
+order: 9000

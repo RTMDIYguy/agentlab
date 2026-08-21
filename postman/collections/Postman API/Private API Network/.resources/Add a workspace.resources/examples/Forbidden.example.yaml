@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "id": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9"
+          }
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "forbiddenError",
+              "message": "You do not have enough permissions to perform this action."
+          }
+      }
+order: 3000

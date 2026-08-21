@@ -1,0 +1,44 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private/network-entity/request/:requestId
+  method: PUT
+  pathVariables:
+    requestId: "232"
+  body:
+    type: json
+    content: |-
+      {
+          "status": "denied",
+          "response": {
+              "message": "The requested collection has a lot of governance violations. Please fix them."
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "request": [
+              {
+                  "id": 232,
+                  "createdAt": "2022-06-09T14:48:45.000Z",
+                  "createdBy": 12345678,
+                  "message": "Please add this to the network",
+                  "status": "denied",
+                  "element": {
+                      "type": "api",
+                      "id": "5360b75f-447e-467c-9299-12fd3c92450d",
+                      "name": "Test api",
+                      "summary": "This is a test API"
+                  },
+                  "response": {
+                      "createdAt": "2022-06-09T14:48:45.000Z",
+                      "createdBy": 2272,
+                      "message": "Please fix the API issues first"
+                  }
+              }
+          ]
+      }
+order: 1000

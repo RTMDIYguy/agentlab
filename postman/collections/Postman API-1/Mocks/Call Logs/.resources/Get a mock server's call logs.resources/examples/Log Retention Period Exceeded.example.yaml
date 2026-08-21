@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks/:mockId/call-logs?until=2024-06-21T14:39:21.438Z&since=2024-01-21T14:39:21.438Z
+  method: GET
+  queryParams:
+    until: 2024-06-21T14:39:21.438Z
+    since: 2024-01-21T14:39:21.438Z
+  pathVariables:
+    mockId: 12345678-e3d951bf-873f-49ac-a658-b2dcb91d3289
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "invalidParamsError",
+              "message": "Invalid value for parameter: since. Cannot view logs beyond the call log retention period based on your plan i.e. 30 days."
+          }
+      }
+order: 12000

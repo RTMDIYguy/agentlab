@@ -1,0 +1,73 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId?include=members
+  method: GET
+  headers:
+    identifierType: scim
+  queryParams:
+    include: members
+  pathVariables:
+    teamId: "123"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "team": {
+              "createdAt": "2025-07-30T17:18:00.000Z",
+              "updatedAt": "2025-07-30T17:18:00.000Z",
+              "id": 123,
+              "name": "Testing Team",
+              "handle": "testing-team",
+              "description": "API testing team.",
+              "organizationId": 1,
+              "createdBy": "f10ba7a8dac248e8fd9769163dc63aef920f3897c7ea2c86",
+              "enabled": true,
+              "members": {
+                  "user": {
+                      "87654321": {
+                          "roles": [
+                              "TEAM_GUEST_VIEWER"
+                          ]
+                      },
+                      "g90b4ca5dd393c8cd81a1793d7f48bb96b003bfbb4b2384c": {
+                          "roles": [
+                              "TEAM_MANAGER"
+                          ]
+                      },
+                      "g1eeb33164158e1dedc80cc79b405e3f977b11682d47b200": {
+                          "roles": [
+                              "TEAM_GUEST_VIEWER"
+                          ]
+                      },
+                      "g653804770fd23fdd61ebbaa7906c115f546576215335fdb": {
+                          "roles": [
+                              "TEAM_DEVELOPER"
+                          ]
+                      },
+                      "g0e46a85252b1d70c7ea9875e8a48c278f5160e53f2396b4": {
+                          "roles": [
+                              "TEAM_DEVELOPER"
+                          ]
+                      },
+                      "gad7759db6fa9f709d54c9bf129ba0933400f1846c9d9480": {
+                          "roles": [
+                              "TEAM_DEVELOPER"
+                          ]
+                      }
+                  },
+                  "group": {},
+                  "team": {
+                      "123": {
+                          "roles": [
+                              "TEAM_GUEST_DEVELOPER"
+                          ]
+                      }
+                  }
+              },
+              "memberCount": 4
+          }
+      }
+order: 4000

@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services/:serviceId
+  method: GET
+  pathVariables:
+    serviceId: c6ec74e7-14f8-498c-9470-7a654173bed6
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "status": 403,
+          "title": "Forbidden",
+          "detail": "Feature is disabled."
+      }
+order: 3000

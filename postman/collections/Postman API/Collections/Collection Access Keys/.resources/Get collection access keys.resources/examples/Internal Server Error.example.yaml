@@ -1,0 +1,17 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-access-keys
+  method: GET
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/internal-server-error",
+          "title": "Something went wrong",
+          "detail": "Something went wrong",
+          "status": 500
+      }
+order: 6000

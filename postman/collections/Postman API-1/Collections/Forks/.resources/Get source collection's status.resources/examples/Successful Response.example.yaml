@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/source-status
+  method: GET
+  pathVariables:
+    collectionId: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2": {
+                  "isSourceAhead": false
+              }
+          }
+      }
+order: 1000

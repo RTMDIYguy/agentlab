@@ -1,0 +1,33 @@
+$kind: http-request
+description: Gets a list of all [discovered services](https://learning.postman.com/docs/api-catalog/overview#discover-apis-and-services) in the API Catalog.
+url: "{{baseUrl}}/api-catalog/discovery-services"
+method: GET
+queryParams:
+  - key: discoverySource
+    value: ""
+    disabled: true
+    description: |-
+      Filter results by the given discovery source type:
+      - `api_gateway_app` — API Gateway integrations.
+      - `insights_project` — Postman Insights.
+      - `infra_watcher` — Cluster Watcher.
+      - `public_api` — Services manually added using the POST `/api-catalog/discovery-services` endpoint.
+  - key: search
+    value: ""
+    disabled: true
+    description: Filter results by the given value that match a service's name. Matching is not case-sensitive.
+  - key: status
+    value: ""
+    disabled: true
+    description: A comma-separated list of statuses to filter the results by. Accepts the `discovered`, `integrated`, and `archived` values.
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of rows to return in the response.
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The pointer to the first record of the set of paginated results. To view the next response, use the `nextCursor` value for this parameter.
+settings: {}
+examples: ./.resources/Get discovered services.resources/examples
+order: 1000

@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/access-requests
+  method: POST
+  pathVariables:
+    teamId: "123"
+  body:
+    type: json
+    content: |-
+      {
+          "entityList": [
+              {
+                  "entityType": "organization",
+                  "entityId": "456"
+              }
+          ],
+          "role": "TEAM_GUEST_DEVELOPER",
+          "reason": "",
+          "requestType": "UPGRADE_ROLE"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "result": [
+              {
+                  "entityType": "organization",
+                  "entityId": 456,
+                  "role": "TEAM_GUEST_DEVELOPER",
+                  "previousRole": "TEAM_GUEST_VIEWER",
+                  "status": "Accepted"
+              }
+          ]
+      }
+order: 7000

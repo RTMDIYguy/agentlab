@@ -1,0 +1,6 @@
+$kind: http-request
+description: Gets the Postman SCIM API configuration information. This includes a list of supported operations.
+url: "{{baseUrl}}/scim/v2/ServiceProviderConfig"
+method: GET
+examples: ./.resources/Get service provider configuration.resources/examples
+order: 4000

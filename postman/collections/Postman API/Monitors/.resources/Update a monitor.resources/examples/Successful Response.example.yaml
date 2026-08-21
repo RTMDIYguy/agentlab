@@ -1,0 +1,33 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors/:monitorId
+  method: PUT
+  pathVariables:
+    monitorId: 12345678-1e6b6cb7-f13d-4000-acb7-0695757174a8
+  body:
+    type: json
+    content: |-
+      {
+      	"monitor": {
+      		"name": "Test Monitor",
+      		"schedule": {
+      			"cron": "*/5 * * * *",
+      			"timezone": "America/Chicago"
+      		}
+      	}
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "monitor": {
+              "id": "1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+              "name": "Test Monitor",
+              "active": true,
+              "uid": "12345678-1e6b6cc1-c760-48e0-968f-4bfaeeae9af1"
+          }
+      }
+order: 1000

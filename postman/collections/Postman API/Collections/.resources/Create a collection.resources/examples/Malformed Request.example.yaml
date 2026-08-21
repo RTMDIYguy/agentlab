@@ -1,0 +1,56 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "item": [
+                  {
+                      "name": "Test GET Response",
+                      "event": [
+                          {
+                              "listen": "test",
+                              "script": {
+                                  "id": "7d2334fc-a84a-4c3d-b26c-7529afa4c0ae",
+                                  "exec": [
+                                      "pm.test(\"Status code is 200\", function () {",
+                                      "    pm.response.to.have.status(200);",
+                                      "});"
+                                      ],
+                                  "type": "text/javascript"
+                                  }
+                              }
+                          ],
+                      "request": {
+                          "url": "https://echo.getpostman.com/headers",
+                          "method": "GET",
+                          "header": [
+                              {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                              }
+                          ]
+                      }
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "malformedRequestError",
+              "message": "Found 1 errors with the supplied collection.",
+              "details": [
+                  ": must have required property 'info'"
+              ]
+          }
+      }
+order: 3000

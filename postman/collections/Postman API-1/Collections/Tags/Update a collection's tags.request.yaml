@@ -1,0 +1,30 @@
+$kind: http-request
+description: |-
+  Updates a collection's associated tags. This endpoint replaces all existing tags with those you pass in the request body.
+
+  **Note:**
+
+  - You can only add a maximum of five tags to a collection.
+      
+  - Tags must be between 2 and 64 characters long.
+      
+  - Tags must follow the `^[a-z][a-z0-9-]\\\\\\*[a-z0-9]+$` pattern.
+url: "{{baseUrl}}/collections/:collectionUid/tags"
+method: PUT
+pathVariables:
+  - key: collectionUid
+    value: ""
+    description: The collection's unique ID.
+body:
+  type: json
+  content: |-
+    {
+        "tags": [
+            {
+                "slug": "{{tagName}}"
+            }
+        ]
+    }
+settings: {}
+examples: ./.resources/Update a collection's tags.resources/examples
+order: 2000

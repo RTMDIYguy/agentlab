@@ -1,0 +1,3 @@
+$kind: collection
+description: The **Secret Scanner** endpoints enable you to manage the secrets detected by Postman's [Secret Scanner](https://learning.postman.com/docs/administration/secret-scanner/). These endpoints are only available on Postman [<b>Enterprise</b> plans](https://www.postman.com/pricing/#enterprise-solutions) with the **Advanced Security Administration** add-on feature.
+order: 16000

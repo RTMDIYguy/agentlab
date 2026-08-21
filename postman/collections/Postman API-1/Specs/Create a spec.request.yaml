@@ -1,0 +1,35 @@
+$kind: http-request
+description: |-
+  Creates an API specification in Postman's [Spec Hub](https://learning.postman.com/docs/design-apis/specifications/overview/). Specifications can be single or multi-file.
+
+  **Note:**
+
+  - Postman supports OpenAPI 2.0, OpenAPI 3.0, OpenAPI 3.1, AsyncAPI 2.0, protobuf 2 and 3, and GraphQL specifications.
+      
+  - If the file path contains a `/` (forward slash) character, then a folder is created. For example, if the path is the `components/schemas.json` value, then a `components` folder is created with the `schemas.json` file inside.
+      
+  - Multi-file specifications can only have one root file.
+      
+  - Files cannot exceed a maximum of 10 MB in size.
+url: "{{baseUrl}}/specs?workspaceId="
+method: POST
+queryParams:
+  - key: workspaceId
+    value: ""
+    description: The workspace's ID.
+body:
+  type: json
+  content: |-
+    {
+        "name": "{{specName}}",
+        "type": "{{specType}}",
+        "files": [
+            {
+                "path": "{{filePath}}",
+                "content": "{{content}}"
+            }
+        ]
+    }
+settings: {}
+examples: ./.resources/Create a spec.resources/examples
+order: 4000

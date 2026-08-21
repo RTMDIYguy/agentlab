@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentUid/forks?workspace=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  queryParams:
+    workspace: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  pathVariables:
+    environmentUid: 12345678-5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      {
+          "forkName": "My fork"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "forkName": "Test Fork",
+              "uid": "12345678-0fcea3ba-abcf-49c3-9f48-669c208fef25",
+              "name": "Testing Environment"
+          }
+      }
+order: 1000

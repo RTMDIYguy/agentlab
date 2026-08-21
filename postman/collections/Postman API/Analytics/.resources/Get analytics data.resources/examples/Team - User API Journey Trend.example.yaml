@@ -1,0 +1,107 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=team&metrics=user_api_journey&view=summary&duration=last_6_months
+  method: GET
+  queryParams:
+    resource: team
+    metrics: user_api_journey
+    view: summary
+    duration: last_6_months
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "timestamp",
+                              "type": "DATE",
+                              "format": "YYYY-MM-DD",
+                              "description": "Reporting date for aggregated user activity metrics."
+                          },
+                          {
+                              "name": "active_user",
+                              "type": "INTEGER",
+                              "description": "Total number of users active on the given date."
+                          },
+                          {
+                              "name": "api_user",
+                              "type": "INTEGER",
+                              "description": "Number of users who made at least one API call."
+                          },
+                          {
+                              "name": "new_api_user",
+                              "type": "INTEGER",
+                              "description": "Number of users making API calls for the first time."
+                          },
+                          {
+                              "name": "successful",
+                              "type": "INTEGER",
+                              "description": "Number of users whose API calls were mostly successful."
+                          },
+                          {
+                              "name": "error_only",
+                              "type": "INTEGER",
+                              "description": "Number of users who encountered only error responses."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "2025-03-01",
+                          812,
+                          654,
+                          120,
+                          590,
+                          64
+                      ],
+                      [
+                          "2025-04-01",
+                          920,
+                          710,
+                          145,
+                          620,
+                          90
+                      ],
+                      [
+                          "2025-05-01",
+                          845,
+                          692,
+                          100,
+                          640,
+                          52
+                      ],
+                      [
+                          "2025-06-01",
+                          900,
+                          730,
+                          130,
+                          670,
+                          60
+                      ],
+                      [
+                          "2025-07-01",
+                          870,
+                          710,
+                          110,
+                          660,
+                          50
+                      ],
+                      [
+                          "2025-08-01",
+                          890,
+                          740,
+                          140,
+                          690,
+                          50
+                      ]
+                  ]
+              }
+          }
+      }
+order: 18000

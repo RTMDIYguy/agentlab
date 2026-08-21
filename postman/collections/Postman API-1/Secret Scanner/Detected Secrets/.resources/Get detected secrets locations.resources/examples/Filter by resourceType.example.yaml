@@ -1,0 +1,100 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/detected-secrets/OTI3OTYx/locations?workspaceId=e361eeb4-00dd-4225-9774-6146a2555999&resourceType=example
+  method: GET
+  queryParams:
+    workspaceId: e361eeb4-00dd-4225-9774-6146a2555999
+    resourceType: example
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "total": 6,
+              "obfuscatedSecret": "Basic Q2******",
+              "secretType": "Basic Auth",
+              "secretHash": "0096b35ef6621d7571f106fefee5b10e8ed360cc9bf04f343f267ca4ff65bb5d",
+              "limit": 30,
+              "cursor": null,
+              "nextCursor": null,
+              "activityFeed": [
+                  {
+                      "status": "ACTIVE",
+                      "resolvedAt": null,
+                      "resolvedBy": null
+                  }
+              ]
+          },
+          "data": [
+              {
+                  "resourceId": "12345678-400005df-3cad-480c-a027-ea68aed35b60",
+                  "resourceType": "example",
+                  "location": "Headers",
+                  "occurrences": 1,
+                  "leakedBy": 12345678,
+                  "detectedAt": "2023-03-23T19:30:58.000Z",
+                  "isResourceDeleted": false,
+                  "parentResourceId": "12345678-320cdb51-d3e2-496b-be0d-d0854e07f90b",
+                  "url": "https://go.postman.co/build/workspace/01cb2666-9e05-47d3-9043-3b4743f42f1a/example/12345678-400005df-3cad-480c-a027-ea68aed35b60"
+              },
+              {
+                  "resourceId": "12345678-400005df-3cad-480c-a027-ea68aed35b60",
+                  "resourceType": "example",
+                  "location": "Request Query Params",
+                  "occurrences": 1,
+                  "leakedBy": 12345678,
+                  "detectedAt": "2023-03-23T19:30:58.000Z",
+                  "isResourceDeleted": false,
+                  "parentResourceId": "12345678-320cdb51-d3e2-496b-be0d-d0854e07f90b",
+                  "url": "https://go.postman.co/build/workspace/01cb2666-9e05-47d3-9043-3b4743f42f1a/example/12345678-400005df-3cad-480c-a027-ea68aed35b60"
+              },
+              {
+                  "resourceId": "12345678-400005df-3cad-480c-a027-ea68aed35b60",
+                  "resourceType": "example",
+                  "location": "Response Body",
+                  "occurrences": 1,
+                  "leakedBy": 12345678,
+                  "detectedAt": "2023-03-23T19:30:58.000Z",
+                  "isResourceDeleted": false,
+                  "parentResourceId": "12345678-320cdb51-d3e2-496b-be0d-d0854e07f90b",
+                  "url": "https://go.postman.co/build/workspace/01cb2666-9e05-47d3-9043-3b4743f42f1a/example/12345678-400005df-3cad-480c-a027-ea68aed35b60"
+              },
+              {
+                  "resourceId": "12345678-1e09e897-7ce8-4aea-bbfd-113b8a5ce083",
+                  "resourceType": "example",
+                  "location": "Headers",
+                  "occurrences": 1,
+                  "leakedBy": 12345678,
+                  "detectedAt": "2023-03-23T19:30:58.000Z",
+                  "isResourceDeleted": false,
+                  "parentResourceId": "12345678-e6a5c06e-c523-40de-94af-c6d01af494bb",
+                  "url": "https://go.postman.co/build/workspace/01cb2666-9e05-47d3-9043-3b4743f42f1a/example/12345678-1e09e897-7ce8-4aea-bbfd-113b8a5ce083"
+              },
+              {
+                  "resourceId": "12345678-1e09e897-7ce8-4aea-bbfd-113b8a5ce083",
+                  "resourceType": "example",
+                  "location": "Request Query Params",
+                  "occurrences": 1,
+                  "leakedBy": 12345678,
+                  "detectedAt": "2023-03-23T19:30:58.000Z",
+                  "isResourceDeleted": false,
+                  "parentResourceId": "12345678-e6a5c06e-c523-40de-94af-c6d01af494bb",
+                  "url": "https://go.postman.co/build/workspace/01cb2666-9e05-47d3-9043-3b4743f42f1a/example/12345678-1e09e897-7ce8-4aea-bbfd-113b8a5ce083"
+              },
+              {
+                  "resourceId": "12345678-1e09e897-7ce8-4aea-bbfd-113b8a5ce083",
+                  "resourceType": "example",
+                  "location": "Response Body",
+                  "occurrences": 1,
+                  "leakedBy": 12345678,
+                  "detectedAt": "2023-03-23T19:30:58.000Z",
+                  "isResourceDeleted": false,
+                  "parentResourceId": "12345678-e6a5c06e-c523-40de-94af-c6d01af494bb",
+                  "url": "https://go.postman.co/build/workspace/01cb2666-9e05-47d3-9043-3b4743f42f1a/example/12345678-1e09e897-7ce8-4aea-bbfd-113b8a5ce083"
+              }
+          ]
+      }
+order: 2000

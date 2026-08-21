@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=needs_attention&view=summary&duration=last_30_days
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: needs_attention
+    view: summary
+    duration: last_30_days
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "count",
+                              "type": "INTEGER",
+                              "description": "Number of partners that need attention."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          65
+                      ]
+                  ]
+              }
+          }
+      }
+order: 26000

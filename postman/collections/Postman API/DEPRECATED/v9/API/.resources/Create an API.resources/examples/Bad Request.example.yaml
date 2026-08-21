@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis
+  method: POST
+  headers:
+    Content-Type: application/json
+  queryParams:
+    - key: workspace
+      value: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+      disabled: true
+      description: |-
+        Optional. The workspace ID in which to create the API.
+
+        If you do not use this parameter, the system creates the API in the "My Workspace" workspace.
+  body:
+    type: json
+    content: |-
+      {
+          "api": {
+              "summary": "Test API Schema",
+              "description": "This is a test API."
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "paramMissingError",
+              "message": "Parameter is missing in the request."
+          }
+      }
+order: 3000

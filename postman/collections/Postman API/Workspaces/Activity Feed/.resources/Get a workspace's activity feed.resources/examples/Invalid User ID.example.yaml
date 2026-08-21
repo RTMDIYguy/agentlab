@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/activities?userId="12345678"
+  method: GET
+  queryParams:
+    userId: '"12345678"'
+  pathVariables:
+    workspaceId: 04c93785-a16a-4907-9781-f57cd67e3760
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "title": "Bad Request",
+          "detail": "User ID must be an integer.",
+          "status": 400
+      }
+order: 4000

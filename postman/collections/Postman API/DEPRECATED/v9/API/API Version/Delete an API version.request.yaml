@@ -1,0 +1,9 @@
+$kind: http-request
+description: |-
+  **This endpoint is deprecated in Postman v10 and higher.**
+
+  Deletes an API version.
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}
+method: DELETE
+examples: ./.resources/Delete an API version.resources/examples
+order: 5000

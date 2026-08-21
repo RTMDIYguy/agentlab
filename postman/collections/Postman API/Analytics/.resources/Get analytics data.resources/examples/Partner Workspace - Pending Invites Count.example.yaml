@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=pending_invites&view=summary
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: pending_invites
+    view: summary
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "count",
+                              "type": "INTEGER",
+                              "description": "Total number Pending invites."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          65
+                      ]
+                  ]
+              }
+          }
+      }
+order: 24000

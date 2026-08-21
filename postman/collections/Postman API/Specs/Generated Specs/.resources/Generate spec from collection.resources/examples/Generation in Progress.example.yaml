@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionUid/generations/:elementType
+  method: POST
+  pathVariables:
+    collectionUid: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+    elementType: spec
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Sample API",
+          "type": "OPENAPI:3.0",
+          "format": "JSON"
+      }
+response:
+  statusCode: 423
+  statusText: Locked
+  body:
+    type: json
+    content: |-
+      {
+          "type": "actionLockedError",
+          "title": "Collection generation in progress",
+          "status": 423,
+          "detail": "Collection generation is already in progress for the spec."
+      }
+order: 4000

@@ -1,0 +1,14 @@
+$kind: http-request
+description: Gets all comments left by users in a folder.
+url: "{{baseUrl}}/collections/:collectionUid/folders/:folderUid/comments"
+method: GET
+pathVariables:
+  - key: collectionUid
+    value: ""
+    description: The collection's unique ID.
+  - key: folderUid
+    value: ""
+    description: The folder's unique ID.
+settings: {}
+examples: ./.resources/Get a folder's comments.resources/examples
+order: 1000

@@ -1,0 +1,10 @@
+$kind: http-request
+description: Gets information about an environment.
+url: "{{baseUrl}}/environments/:environmentId"
+method: GET
+pathVariables:
+  - key: environmentId
+    value: ""
+    description: The environment's ID.
+examples: ./.resources/Get an environment.resources/examples
+order: 2000

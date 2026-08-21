@@ -1,0 +1,15 @@
+$kind: http-request
+description: Gets all invoices for a Postman billing account filtered by the status of the invoice.
+url: "{{baseUrl}}/accounts/:accountId/invoices?status=PAID"
+method: GET
+queryParams:
+  - key: status
+    value: PAID
+    description: (Required) The invoice status. Currently accepts only the `PAID` value.
+pathVariables:
+  - key: accountId
+    value: ""
+    description: The account's ID.
+settings: {}
+examples: ./.resources/List account invoices.resources/examples
+order: 2000

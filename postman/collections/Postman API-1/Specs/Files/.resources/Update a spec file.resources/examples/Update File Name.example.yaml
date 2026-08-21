@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId/files/:filePath
+  method: PATCH
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+    filePath: index.yaml
+  body:
+    type: json
+    content: |-
+      {
+          "name": "index.json"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "createdAt": "2025-07-22T19:29:08.000Z",
+          "createdBy": 12345678,
+          "id": "2fdc8ea1-d02e-4e50-989e-6fa28f42b995",
+          "path": "index.json",
+          "updatedAt": "2025-07-22T19:29:57.000Z",
+          "updatedBy": 12345678,
+          "type": "ROOT"
+      }
+order: 5000

@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private/:elementType/:elementId
+  method: DELETE
+  pathVariables:
+    elementType: folder
+    elementId: "1234"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "folder": {
+              "id": "1"
+          }
+      }
+order: 4000

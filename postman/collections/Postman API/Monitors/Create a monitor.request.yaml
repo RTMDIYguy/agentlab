@@ -1,0 +1,62 @@
+$kind: http-request
+description: |-
+  Creates a monitor.
+
+  **Note:**
+
+  - You cannot create monitors for collections added to an API definition.
+      
+  - If you do not include the `workspace` query parameter, the system creates the monitor in the oldest personal Internal workspace you own.
+url: "{{baseUrl}}/monitors?workspace="
+method: POST
+queryParams:
+  - key: workspace
+    value: ""
+    description: |-
+      The workspace ID.
+
+      If you do not pass this parameter, the system creates the monitor in the oldest personal Internal workspace you own.
+body:
+  type: json
+  content: |-
+    {
+        "monitor": {
+            "name": "{{monitorName}}",
+            "collection": "{{collectionUid}}",
+            "environment": "{{environmentUid}}",
+            "active": true,
+            "schedule": {
+                "cron": "{{cronFrequencyPattern}}",
+                "timezone": "{{monitorTimezone}}"
+            },
+            "notificationLimit": 1,
+            "distribution": [
+                {
+                    "region": "{{regionId}}"
+                }
+            ],
+            "options": {
+                "followRedirects": true,
+                "requestDelay": 1,
+                "requestTimeout": 1,
+                "strictSSL": true
+            },
+            "notifications": {
+                "onError": [
+                    {
+                        "email": "{{emailAddress}}"
+                    }
+                ],
+                "onFailure": [
+                    {
+                        "email": "{{emailAddress}}"
+                    }
+                ]
+            },
+            "retry": {
+                "attempts": 1
+            }
+        }
+    }
+examples: ./.resources/Create a monitor.resources/examples
+order: 2000

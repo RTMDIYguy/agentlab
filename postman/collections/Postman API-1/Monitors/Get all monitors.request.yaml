@@ -1,0 +1,36 @@
+$kind: http-request
+description: Gets all monitors.
+url: "{{baseUrl}}/monitors"
+method: GET
+queryParams:
+  - key: workspace
+    value: ""
+    disabled: true
+    description: Return only results found in the given workspace ID.
+  - key: active
+    value: "true"
+    disabled: true
+    description: If true, return only active monitors.
+  - key: owner
+    value: ""
+    disabled: true
+    description: Return the results by the given user ID.
+  - key: collectionUid
+    value: ""
+    disabled: true
+    description: Filter the results by a collection's unique ID.
+  - key: environmentUid
+    value: ""
+    disabled: true
+    description: Filter the results by an environment's unique ID.
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The pointer to the first record of the set of paginated results. To view the next response, use the `nextCursor` value for this parameter.
+  - key: limit
+    value: "25"
+    disabled: true
+    description: The maximum number of rows to return in the response, up to a maximum value of 25. Any value greater than 25 returns a 400 Bad Request response. Defaults to `25`.
+settings: {}
+examples: ./.resources/Get all monitors.resources/examples
+order: 5000

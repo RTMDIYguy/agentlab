@@ -1,0 +1,41 @@
+$kind: http-request
+description: Adds discovered services to the API Catalog. Accepts up to 20 services in a single call.
+url: "{{baseUrl}}/api-catalog/discovery-services"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "discoveredServices": [
+            {
+                "name": "{{serviceName}}",
+                "version": "{{serviceVersionId}}",
+                "providerServiceId": "{{providerServiceId}}",
+                "description": "{{serviceDescription}}",
+                "sourceEnvironment": "{{sourceEnvironment}}",
+                "apiDefinition": {
+                    "content": "{{base64EncodedApiDefinition}}"
+                },
+                "endpoints": [
+                    {
+                        "method": "{{endpointHttpMethod}}",
+                        "path": "{{endpointPath}}",
+                        "description": "{{endpointDescription}}",
+                        "host": "{{endpointHost}}"
+                    }
+                ],
+                "tags": [
+                    "{{serviceTag}}"
+                ],
+                "providerMetadata": {
+                    "commitSha": "{{providerMetadataCommitSha}}",
+                    "branch": "{{providerMetadataBranch}}",
+                    "gitRepoUrl": "{{providerMetadataGitRepoUrl}}",
+                    "deployedAt": "{{providerMetadataDeployedAt}}"
+                }
+            }
+        ]
+    }
+settings: {}
+examples: ./.resources/Add discovered services to the API Catalog.resources/examples
+order: 3000

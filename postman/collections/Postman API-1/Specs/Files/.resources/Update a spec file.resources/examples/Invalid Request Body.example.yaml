@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId/files/:filePath
+  method: PATCH
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+    filePath: index.json
+  body:
+    type: json
+    content: |-
+      {
+          "name": "index.json",
+          "type": "ROOT"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Malformed request",
+          "type": "https://api.postman.com/problems/bad-request",
+          "status": 400,
+          "detail": "Only one of 'content', 'type', or 'name' should be provided."
+      }
+order: 8000

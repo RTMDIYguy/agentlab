@@ -1,0 +1,37 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Groups/:groupId
+  method: PATCH
+  pathVariables:
+    groupId: 405775fe15ed41872a8eea4c8aa2b38cda9749812cc55c99
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+              {
+                  "op": "replace",
+                  "value": {
+                      "id": "561631fq14ed41872a8eea4c8aa2b38cda9749812cc55c00",
+                      "displayName": "Test-API"
+                  }
+              }
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:Error"
+          ],
+          "detail": "Couldn’t update this team member’s username. Try again — it should work next time around.",
+          "status": "400"
+      }
+order: 6000

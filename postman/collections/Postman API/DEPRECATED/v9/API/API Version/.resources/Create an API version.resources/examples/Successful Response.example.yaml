@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "version": {
+              "name": "v1",
+              "source": {
+                  "id": "a9879d02-74bf-425a-bbec-6d27aa135507",
+                  "schema": true,
+                  "relations": {
+                      "documentation": true,
+                      "environment": true,
+                      "mock": true,
+                      "monitor": true
+                  }
+              }
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "version": {
+              "id": "8421a1f3-3262-4d47-a597-7005bf4c1564",
+              "name": "v1",
+              "api": "387c2863-6ee3-4a56-8210-225f774edade"
+          }
+      }
+order: 1000

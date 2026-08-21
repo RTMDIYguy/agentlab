@@ -1,0 +1,64 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/bulk-members
+  method: POST
+  headers:
+    identifierType: scim
+  pathVariables:
+    teamId: "123"
+  body:
+    type: json
+    content: |-
+      {
+          "add": {
+              "users": {
+                  "f10ba7a8dac248e8fd9769163dc63aef920f3897c7ea2c86": [
+                      "TEAM_MANAGER"
+                  ]
+              }
+          },
+          "remove": {
+              "groups": {
+                  "gecb77b6c45c98602d6ae4458b46d4f30e3c423719636d87": [
+                      "TEAM_DEVELOPER"
+                  ]
+              },
+              "users": {
+                  "7db6e2fba7e98f9db428a1735a71bbb4e4fbbaa37db37640": [
+                      "TEAM_DEVELOPER"
+                  ]
+              }
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "result": [
+              {
+                  "entityType": "user",
+                  "entityId": "3c83d7cddf8470c6e5fb1cb52586a98d0d4200781107c535",
+                  "role": "TEAM_MANAGER",
+                  "previousRole": "TEAM_DEVELOPER",
+                  "status": "Accepted"
+              },
+              {
+                  "entityType": "group",
+                  "entityId": "gecb77b6c45c98602d6ae4458b46d4f30e3c423719636d87",
+                  "role": null,
+                  "previousRole": "TEAM_DEVELOPER",
+                  "status": "Accepted"
+              },
+              {
+                  "entityType": "user",
+                  "entityId": "7db6e2fba7e98f9db428a1735a71bbb4e4fbbaa37db37640",
+                  "role": null,
+                  "previousRole": "TEAM_DEVELOPER",
+                  "status": "Accepted"
+              }
+          ]
+      }
+order: 10000

@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/security/api-validation
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "schema": {
+              "type": "openapi1",
+              "language": "json",
+              "schema": "{}"
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": {
+                  "name": "Invalid schema",
+                  "reason": "Provided schema type is not supported."
+              }
+          }
+      }
+order: 4000

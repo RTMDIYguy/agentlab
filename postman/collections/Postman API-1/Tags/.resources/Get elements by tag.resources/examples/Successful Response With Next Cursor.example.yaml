@@ -1,0 +1,33 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/tags/:slugId/entities?cursor=eyJpZCI6ODYsImVudGl0eVR5cGUiOiJhcGkifQ==
+  method: GET
+  queryParams:
+    cursor: eyJpZCI6ODYsImVudGl0eVR5cGUiOiJhcGkifQ==
+  pathVariables:
+    slugId: needs-review
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+        "data": {
+          "entities": [
+            {
+              "entityId": "12345678-6fd634a3-79ba-451d-8f07-56a953f96667",
+              "entityType": "collection"
+            },
+            {
+              "entityId": "7a95cfe8-de72-44e6-81ea-79d19805bd7b",
+              "entityType": "workspace"
+            }
+          ]
+        },
+        "meta": {
+          "count": 2,
+          "nextCursor": "eyJpZCI6ODYsImVudGl0eVR5cGUiOiJhcGkifQ=="
+        }
+      }
+order: 2000

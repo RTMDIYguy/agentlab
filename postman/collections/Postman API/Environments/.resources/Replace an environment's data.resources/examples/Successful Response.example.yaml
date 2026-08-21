@@ -1,0 +1,37 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentId
+  method: PUT
+  pathVariables:
+    environmentId: 12345678-5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "name": "Test A Environment",
+              "values": [
+                  {
+                      "key": "collectionId",
+                      "value": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "type": "default",
+                      "enabled": true,
+                      "description": "The collection's ID."
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "id": "5daabc50-8451-43f6-922d-96b403b4f28e",
+              "name": "Test A Environment",
+              "uid": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e"
+          }
+      }
+order: 1000

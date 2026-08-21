@@ -2,12 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const canonicalJourneyKitPath = path.resolve(
-  root,
-  "..",
-  "AI Native Agency Deepened",
-  "Journey_Kit.md",
-);
+const candidateJourneyKitPaths = [
+  path.resolve(root, "..", "Journey_Kit.md"),
+  path.resolve(root, "..", "AI Native Agency Deepened", "Journey_Kit.md"),
+];
+const canonicalJourneyKitPath =
+  candidateJourneyKitPaths.find((candidate) => fs.existsSync(candidate)) ??
+  candidateJourneyKitPaths[0];
 const requiredFiles = [
   "docs/operations/change-control-register.md",
   "docs/operations/scheduled-change-queue.md",

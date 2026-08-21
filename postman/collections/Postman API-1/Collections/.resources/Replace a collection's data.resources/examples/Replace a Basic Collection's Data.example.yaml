@@ -1,0 +1,265 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "info": {
+                  "name": "Test User Collection",
+                  "description": "This is a basic test user collection.",
+                  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+              },
+              "item": [
+                  {
+                      "name": "Get a user",
+                      "event": [
+                          {
+                              "listen": "prerequest",
+                              "script": {
+                                  "id": "fd554123-3124-444c-a4ab-a2ed3c21b794",
+                                  "exec": [
+                                      "try {",
+                                      "    const response = await pm.sendRequest({",
+                                      "        url: \"https://postman-echo.com/get\",",
+                                      "        method: \"GET\"",
+                                      "    });",
+                                      "",
+                                      "    console.log(response.json());",
+                                      "} catch (err) {",
+                                      "    console.error(err);",
+                                      "}"
+                                  ],
+                                  "type": "text/javascript",
+                                  "packages": {}
+                              }
+                          },
+                          {
+                              "listen": "test",
+                              "script": {
+                                  "id": "85a17bb9-3626-4f86-b206-79798e5f8cd7",
+                                  "exec": [
+                                      "pm.test(\"Status code is 200\", function () {",
+                                      "    pm.response.to.have.status(200);",
+                                      "});"
+                                  ],
+                                  "type": "text/javascript",
+                                  "packages": {}
+                              }
+                          }
+                      ],
+                      "id": "5e1bef64-8201-489b-b07c-a1723e008594",
+                      "protocolProfileBehavior": {
+                          "disableBodyPruning": true,
+                          "strictSSL": true
+                      },
+                      "request": {
+                          "method": "GET",
+                          "header": [],
+                          "url": {
+                              "raw": "http://api.getpostman.com/v1/:userId",
+                              "protocol": "http",
+                              "host": [
+                                  "api",
+                                  "getpostman",
+                                  "com"
+                              ],
+                              "path": [
+                                  "v1",
+                                  ":userId"
+                              ],
+                              "variable": [
+                                  {
+                                      "key": "userId",
+                                      "value": "{{userId}}",
+                                      "description": "The user ID."
+                                  }
+                              ]
+                          },
+                          "description": "Gets information about a user."
+                      },
+                      "response": [
+                          {
+                              "id": "da76da3c-c418-4f72-b47a-24c540badd37",
+                              "name": "200 OK",
+                              "originalRequest": {
+                                  "method": "GET",
+                                  "header": [],
+                                  "url": {
+                                      "raw": "http://api.getpostman.com/v1/:userId",
+                                      "protocol": "http",
+                                      "host": [
+                                          "api",
+                                          "getpostman",
+                                          "com"
+                                      ],
+                                      "path": [
+                                          "v1",
+                                          ":userId"
+                                      ],
+                                      "variable": [
+                                          {
+                                              "key": "userId",
+                                              "value": "{{userId}}",
+                                              "description": "The user ID."
+                                          }
+                                      ]
+                                  }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "json",
+                              "header": [
+                                  {
+                                      "key": "Content-Type",
+                                      "value": "application/json",
+                                      "description": "",
+                                      "type": "text"
+                                  }
+                              ],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": "{\n    \"name\": \"Test User\",\n    \"userId\": 12345678\n}",
+                              "uid": "12345678-da76da3c-c418-4f72-b47a-24c540badd37"
+                          }
+                      ],
+                      "uid": "12345678-5e1bef64-8201-489b-b07c-a1723e008594"
+                  },
+                  {
+                      "name": "Delete a user",
+                      "id": "496c0ff9-e602-4506-b7dc-00ecd709d5eb",
+                      "protocolProfileBehavior": {
+                          "disableBodyPruning": true
+                      },
+                      "request": {
+                          "method": "DELETE",
+                          "header": [],
+                          "url": {
+                              "raw": "http://api.getpostman.com/v1/:userId",
+                              "protocol": "http",
+                              "host": [
+                                  "api",
+                                  "getpostman",
+                                  "com"
+                              ],
+                              "path": [
+                                  "v1",
+                                  ":userId"
+                              ],
+                              "variable": [
+                                  {
+                                      "key": "userId",
+                                      "value": "{{userId}}",
+                                      "description": "The user ID."
+                                  }
+                              ]
+                          },
+                          "description": "Deletes a user."
+                      },
+                      "response": [
+                          {
+                              "id": "06f9ea8b-55a7-4e8e-ae12-891a050367de",
+                              "name": "204 No Content",
+                              "originalRequest": {
+                                  "method": "DELETE",
+                                  "header": [],
+                                  "url": {
+                                      "raw": "http://api.getpostman.com/v1/:userId",
+                                      "protocol": "http",
+                                      "host": [
+                                          "api",
+                                          "getpostman",
+                                          "com"
+                                      ],
+                                      "path": [
+                                          "v1",
+                                          ":userId"
+                                      ],
+                                      "variable": [
+                                          {
+                                              "key": "userId",
+                                              "value": "{{userId}}",
+                                              "description": "The user ID."
+                                          }
+                                      ]
+                                  }
+                              },
+                              "status": "No Content",
+                              "code": 204,
+                              "_postman_previewlanguage": null,
+                              "header": null,
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": null,
+                              "uid": "12345678-06f9ea8b-55a7-4e8e-ae12-891a050367de"
+                          }
+                      ],
+                      "uid": "12345678-496c0ff9-e602-4506-b7dc-00ecd709d5eb"
+                  }
+              ],
+              "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                      {
+                          "key": "value",
+                          "value": "{{api-key}}"
+                      },
+                      {
+                          "key": "key",
+                          "value": "x-api-key"
+                      }
+                  ]
+              },
+              "event": [
+                  {
+                      "listen": "prerequest",
+                      "script": {
+                          "id": "86cc41c1-a9ad-411f-923d-5f1d15344c94",
+                          "type": "text/javascript",
+                          "packages": {},
+                          "exec": [
+                              ""
+                          ]
+                      }
+                  },
+                  {
+                      "listen": "test",
+                      "script": {
+                          "id": "9f48d011-89cb-4a85-9179-b3554aa44aff",
+                          "type": "text/javascript",
+                          "packages": {},
+                          "exec": [
+                              "pm.test(\"Content-Type is present\", function () {",
+                              "    pm.response.to.have.header(\"Content-Type\");",
+                              "});"
+                          ]
+                      }
+                  }
+              ],
+              "variable": [
+                  {
+                      "key": "userId",
+                      "value": "12345678",
+                      "description": "The user's ID."
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "id": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "name": "Test Collection",
+              "uid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+          }
+      }
+order: 1000

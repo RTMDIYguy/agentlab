@@ -1,0 +1,10 @@
+$kind: http-request
+description: Deletes a monitor.
+url: "{{baseUrl}}/monitors/:monitorId"
+method: DELETE
+pathVariables:
+  - key: monitorId
+    value: ""
+    description: The monitor's ID.
+examples: ./.resources/Delete a monitor.resources/examples
+order: 4000

@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-merges
+  method: PUT
+  body:
+    type: json
+    content: |-
+      {
+          "strategy": "default",
+          "source": "12345678-5a027c05-056b-49f5-ac9d-37c29f2d91c3",
+          "destination": "12345678-b04fa319-3e7e-4fa3-b6a2-f5b29ad67583"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "task": {
+              "id": "pm~vc:merge-workflow~12345678-4824989b-cd77-4e2f-856c-1ff2a3e9aaca",
+              "status": "in-progress"
+          }
+      }
+order: 1000

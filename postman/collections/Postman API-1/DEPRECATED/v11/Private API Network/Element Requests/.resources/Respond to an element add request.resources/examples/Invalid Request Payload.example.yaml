@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private/network-entity/request/:requestId
+  method: PUT
+  pathVariables:
+    requestId: "232"
+  body:
+    type: json
+    content: |-
+      {
+          "status": "accepted"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "name": "invalidParamsError",
+          "message": "Status type can only be denied or approved."
+      }
+order: 4000

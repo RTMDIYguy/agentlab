@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.eu.postman.com/apis/:apiId/tags
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 6fd634a3-79ba-451d-8f07-56a953f96667
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "title": "Forbidden",
+          "detail": "This feature isn't available in your region.",
+          "status": 403
+      }
+order: 6000

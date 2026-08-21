@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId
+  method: PATCH
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "variables": [
+                  {
+                      "key": "userId",
+                      "value": 12345678,
+                      "disabled": true,
+                      "description": "The user's ID.",
+                      "property": "test"
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "badRequest",
+              "message": "Invalid parameters: ('property') for key: 'collection.variables'"
+          }
+      }
+order: 6000

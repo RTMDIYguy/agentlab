@@ -1,0 +1,3 @@
+$kind: collection
+description: The **Billing** endpoints enable you to manage your Postman billing account, such as your team's plan and [billing](https://learning.postman.com/docs/billing/billing/) information.
+order: 5000

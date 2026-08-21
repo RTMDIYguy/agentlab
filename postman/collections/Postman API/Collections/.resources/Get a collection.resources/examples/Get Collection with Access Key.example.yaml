@@ -1,0 +1,1037 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId?access_key=PMAK-XXXX
+  method: GET
+  queryParams:
+    access_key: PMAK-XXXX
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "info": {
+                  "_postman_id": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "name": "Test Collection",
+                  "description": "This is a test.",
+                  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+                  "updatedAt": "2023-10-09T18:34:58.000Z",
+                  "createdAt": "2023-10-09T18:34:58.000Z",
+                  "lastUpdatedBy": "12345678",
+                  "uid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+              },
+              "item": [
+                  {
+                      "name": "Folder 1",
+                      "item": [
+                          {
+                              "name": "ID",
+                              "item": [
+                                  {
+                                      "name": "Test D",
+                                      "event": [
+                                          {
+                                              "listen": "prerequest",
+                                              "script": {
+                                                  "exec": [
+                                                      "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                                      "    console.log(response.json());",
+                                                      "});"
+                                                  ],
+                                                  "type": "text/javascript"
+                                              }
+                                          },
+                                          {
+                                              "listen": "test",
+                                              "script": {
+                                                  "exec": [
+                                                      "pm.test(\"Status code is 200\", function () {",
+                                                      "    pm.response.to.have.status(200);",
+                                                      "});"
+                                                  ],
+                                                  "type": "text/javascript"
+                                              }
+                                          }
+                                      ],
+                                      "id": "c616506e-0676-4d79-88a7-c273b70e9cea",
+                                      "protocolProfileBehavior": {
+                                          "disableBodyPruning": true
+                                      },
+                                      "request": {
+                                          "auth": {
+                                              "type": "apikey",
+                                              "apikey": [
+                                                  {
+                                                      "key": "value",
+                                                      "value": "XXX",
+                                                      "type": "string"
+                                                  },
+                                                  {
+                                                      "key": "key",
+                                                      "value": "api-key",
+                                                      "type": "string"
+                                                  }
+                                              ]
+                                          },
+                                          "method": "GET",
+                                          "header": [],
+                                          "url": {
+                                              "raw": "https://postman-echo.com/get?id=12345678",
+                                              "protocol": "https",
+                                              "host": [
+                                                  "postman-echo",
+                                                  "com"
+                                              ],
+                                              "path": [
+                                                  "get"
+                                              ],
+                                              "query": [
+                                                  {
+                                                      "key": "id",
+                                                      "value": "12345678",
+                                                      "description": "Optional. The user's ID."
+                                                  }
+                                              ]
+                                          },
+                                          "description": "This is an example GET request."
+                                      },
+                                      "response": [
+                                          {
+                                              "id": "d20b9562-9c85-4f25-bb2d-cfacf7dd85d1",
+                                              "name": "Successful Response",
+                                              "originalRequest": {
+                                                  "method": "GET",
+                                                  "header": [
+                                                      {
+                                                          "key": "Content-Type",
+                                                          "name": "Content-Type",
+                                                          "value": "application/json",
+                                                          "type": "text"
+                                                      }
+                                                  ],
+                                                  "url": {
+                                                      "raw": "https://postman-echo.com/get?id=1234",
+                                                      "protocol": "https",
+                                                      "host": [
+                                                          "postman-echo",
+                                                          "com"
+                                                      ],
+                                                      "path": [
+                                                          "get"
+                                                      ],
+                                                      "query": [
+                                                          {
+                                                              "key": "id",
+                                                              "value": "1234",
+                                                              "description": "Optional. The user's ID."
+                                                          }
+                                                      ]
+                                                  }
+                                              },
+                                              "status": "OK",
+                                              "code": 200,
+                                              "_postman_previewlanguage": "json",
+                                              "header": [
+                                                  {
+                                                      "key": "Content-Type",
+                                                      "name": "Content-Type",
+                                                      "value": "application/json",
+                                                      "description": "",
+                                                      "type": "text"
+                                                  }
+                                              ],
+                                              "cookie": [],
+                                              "responseTime": null,
+                                              "body": "{\n    \"id\": \"1234\",\n    \"user\": \"test-user\",\n    \"firstName\": \"Test\",\n    \"lastName\": \"User\"\n}",
+                                              "createdAt": "2023-08-22T12:52:01.000Z",
+                                              "updatedAt": "2023-09-13T14:31:25.000Z",
+                                              "uid": "12345678-d20b9562-9c85-4f25-bb2d-cfacf7dd85d1"
+                                          }
+                                      ],
+                                      "createdAt": "2023-08-22T12:52:01.000Z",
+                                      "updatedAt": "2023-09-13T14:31:25.000Z",
+                                      "uid": "12345678-c616506e-0676-4d79-88a7-c273b70e9cea"
+                                  },
+                                  {
+                                      "name": "Test E",
+                                      "id": "bf6fd735-125e-486b-b7fb-9f0ae4a0bbc5",
+                                      "protocolProfileBehavior": {
+                                          "disableBodyPruning": true
+                                      },
+                                      "request": {
+                                          "auth": {
+                                              "type": "bearer",
+                                              "bearer": [
+                                                  {
+                                                      "key": "token",
+                                                      "value": "TEST",
+                                                      "type": "string"
+                                                  }
+                                              ]
+                                          },
+                                          "method": "PATCH",
+                                          "header": [],
+                                          "body": {
+                                              "mode": "raw",
+                                              "raw": "{\n    \"username\": \"test-user\",\n    \"firstName\": \"Test\",\n    \"lastName\": \"User\"\n}",
+                                              "options": {
+                                                  "raw": {
+                                                      "language": "json"
+                                                  }
+                                              }
+                                          },
+                                          "url": {
+                                              "raw": "https://postman-echo.com/get?id=12345678",
+                                              "protocol": "https",
+                                              "host": [
+                                                  "postman-echo",
+                                                  "com"
+                                              ],
+                                              "path": [
+                                                  "get"
+                                              ],
+                                              "query": [
+                                                  {
+                                                      "key": "id",
+                                                      "value": "12345678",
+                                                      "description": "Optional. The user's ID."
+                                                  }
+                                              ]
+                                          },
+                                          "description": "This is an example GET request."
+                                      },
+                                      "response": [
+                                          {
+                                              "id": "86447cb0-aeac-4371-a22f-9f6067fc4dd0",
+                                              "name": "Successful Response",
+                                              "originalRequest": {
+                                                  "method": "GET",
+                                                  "header": [
+                                                      {
+                                                          "key": "Content-Type",
+                                                          "name": "Content-Type",
+                                                          "value": "application/json",
+                                                          "type": "text"
+                                                      }
+                                                  ],
+                                                  "body": {
+                                                      "mode": "raw",
+                                                      "raw": "{\n    \"firstName\": \"Test\",\n    \"lastName\": \"User\"\n}",
+                                                      "options": {
+                                                          "raw": {
+                                                              "language": "json"
+                                                          }
+                                                      }
+                                                  },
+                                                  "url": {
+                                                      "raw": "https://postman-echo.com/get?id=1234",
+                                                      "protocol": "https",
+                                                      "host": [
+                                                          "postman-echo",
+                                                          "com"
+                                                      ],
+                                                      "path": [
+                                                          "get"
+                                                      ],
+                                                      "query": [
+                                                          {
+                                                              "key": "id",
+                                                              "value": "1234",
+                                                              "description": "Optional. The user's ID."
+                                                          }
+                                                      ]
+                                                  }
+                                              },
+                                              "status": "OK",
+                                              "code": 200,
+                                              "_postman_previewlanguage": "json",
+                                              "header": [
+                                                  {
+                                                      "key": "Content-Type",
+                                                      "name": "Content-Type",
+                                                      "value": "application/json",
+                                                      "description": "",
+                                                      "type": "text"
+                                                  }
+                                              ],
+                                              "cookie": [],
+                                              "responseTime": null,
+                                              "body": "{\n    \"id\": \"1234\",\n    \"user\": \"test-user\"\n}",
+                                              "createdAt": "2023-09-13T14:05:22.000Z",
+                                              "updatedAt": "2023-09-13T14:13:21.000Z",
+                                              "uid": "12345678-86447cb0-aeac-4371-a22f-9f6067fc4dd0"
+                                          }
+                                      ],
+                                      "createdAt": "2023-09-13T14:05:22.000Z",
+                                      "updatedAt": "2023-09-13T14:14:41.000Z",
+                                      "uid": "12345678-bf6fd735-125e-486b-b7fb-9f0ae4a0bbc5"
+                                  }
+                              ],
+                              "id": "a7046e3e-fb60-44fc-8e32-a4578b854628",
+                              "auth": {
+                                  "type": "apikey",
+                                  "apikey": [
+                                      {
+                                          "key": "value",
+                                          "value": "XXX",
+                                          "type": "string"
+                                      },
+                                      {
+                                          "key": "key",
+                                          "value": "api-key",
+                                          "type": "string"
+                                      }
+                                  ]
+                              },
+                              "event": [
+                                  {
+                                      "listen": "prerequest",
+                                      "script": {
+                                          "type": "text/javascript",
+                                          "exec": [
+                                              "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                              "    console.log(response.json());",
+                                              "});"
+                                          ]
+                                      }
+                                  },
+                                  {
+                                      "listen": "test",
+                                      "script": {
+                                          "type": "text/javascript",
+                                          "exec": [
+                                              "pm.test(\"Status code is 200\", function () {",
+                                              "    pm.response.to.have.status(200);",
+                                              "});"
+                                          ]
+                                      }
+                                  }
+                              ],
+                              "createdAt": "2023-09-12T15:46:34.000Z",
+                              "updatedAt": "2023-09-13T14:05:22.000Z",
+                              "uid": "12345678-a7046e3e-fb60-44fc-8e32-a4578b854628"
+                          },
+                          {
+                              "name": "Test A",
+                              "event": [
+                                  {
+                                      "listen": "test",
+                                      "script": {
+                                          "exec": [
+                                              "pm.test(\"Status code is 200\", function () {",
+                                              "    pm.response.to.have.status(200);",
+                                              "});"
+                                          ],
+                                          "type": "text/javascript"
+                                      }
+                                  },
+                                  {
+                                      "listen": "prerequest",
+                                      "script": {
+                                          "exec": [
+                                              "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                              "    console.log(response.json());",
+                                              "});"
+                                          ],
+                                          "type": "text/javascript"
+                                      }
+                                  }
+                              ],
+                              "id": "bb4a826b-1654-4f24-9ab1-d00e4fc2d743",
+                              "protocolProfileBehavior": {
+                                  "disableBodyPruning": true
+                              },
+                              "request": {
+                                  "auth": {
+                                      "type": "bearer",
+                                      "bearer": [
+                                          {
+                                              "key": "token",
+                                              "value": "TEST",
+                                              "type": "string"
+                                          }
+                                      ]
+                                  },
+                                  "method": "GET",
+                                  "header": [
+                                      {
+                                          "key": "Accept",
+                                          "value": "application/vnd.example.v1+json",
+                                          "type": "text"
+                                      }
+                                  ],
+                                  "body": {
+                                      "mode": "raw",
+                                      "raw": "",
+                                      "options": {
+                                          "raw": {
+                                              "language": "json"
+                                          }
+                                      }
+                                  },
+                                  "url": {
+                                      "raw": "http://api.getpostman.com/v1/request?id=12345678",
+                                      "protocol": "http",
+                                      "host": [
+                                          "api",
+                                          "getpostman",
+                                          "com"
+                                      ],
+                                      "path": [
+                                          "v1",
+                                          "request"
+                                      ],
+                                      "query": [
+                                          {
+                                              "key": "id",
+                                              "value": "12345678",
+                                              "description": "The API's ID."
+                                          }
+                                      ]
+                                  },
+                                  "description": "This is a test API."
+                              },
+                              "response": [
+                                  {
+                                      "id": "5f297469-80d7-4847-a3e2-f596f2e717d8",
+                                      "name": "Successful Response",
+                                      "originalRequest": {
+                                          "method": "POST",
+                                          "header": [
+                                              {
+                                                  "key": "Host",
+                                                  "value": "postman-echo.com"
+                                              },
+                                              {
+                                                  "key": "user-agent",
+                                                  "value": "curl/7.88.1"
+                                              },
+                                              {
+                                                  "key": "accept",
+                                                  "value": "*/*"
+                                              },
+                                              {
+                                                  "key": "content-type",
+                                                  "value": "application/json"
+                                              },
+                                              {
+                                                  "key": "content-length",
+                                                  "value": "22"
+                                              }
+                                          ],
+                                          "body": {
+                                              "mode": "raw",
+                                              "raw": "{\n  \"field\": \"Value\"\n}",
+                                              "options": {
+                                                  "raw": {
+                                                      "language": "json"
+                                                  }
+                                              }
+                                          },
+                                          "url": {
+                                              "raw": "https://postman-echo.com/post",
+                                              "protocol": "https",
+                                              "host": [
+                                                  "postman-echo",
+                                                  "com"
+                                              ],
+                                              "path": [
+                                                  "post"
+                                              ]
+                                          }
+                                      },
+                                      "status": "OK",
+                                      "code": 200,
+                                      "_postman_previewlanguage": "json",
+                                      "header": [
+                                          {
+                                              "key": "date",
+                                              "value": "Thu, 07 Sep 2023 12:41:59 GMT"
+                                          },
+                                          {
+                                              "key": "content-type",
+                                              "value": "application/json; charset=utf-8"
+                                          },
+                                          {
+                                              "key": "content-length",
+                                              "value": "468"
+                                          },
+                                          {
+                                              "key": "etag",
+                                              "value": "W/\"1d4-JuAIw8ssoFCtGzk/UwITxaiSbrc\""
+                                          },
+                                          {
+                                              "key": "set-cookie",
+                                              "value": "sails.sid=s%3A6p_NXpI3OZeGE35bI6i5Uq3XgHHxcsdJ.dQVpBE%2BJ9wHWainkqe6F6dkdv7UKoshSZY7sdZ5sbzo; Path=/ HttpOnly"
+                                          }
+                                      ],
+                                      "cookie": [],
+                                      "responseTime": null,
+                                      "body": "{\n  \"args\": {},\n  \"data\": {\n    \"field\": \"Value\"\n  },\n  \"files\": {},\n  \"form\": {},\n  \"headers\": {\n    \"x-forwarded-proto\": \"https\",\n    \"x-forwarded-port\": \"443\",\n    \"host\": \"postman-echo.com\",\n    \"x-amzn-trace-id\": \"Root=1-64f9c517-36db304817c774d740619baa\",\n    \"content-length\": \"22\",\n    \"user-agent\": \"curl/7.88.1\",\n    \"accept\": \"*/*\",\n    \"content-type\": \"application/json\"\n  },\n  \"json\": {\n    \"field\": \"Value\"\n  },\n  \"url\": \"https://postman-echo.com/post\"\n}\n",
+                                      "createdAt": "2023-09-12T18:34:27.000Z",
+                                      "updatedAt": "2023-09-13T14:04:37.000Z",
+                                      "uid": "12345678-5f297469-80d7-4847-a3e2-f596f2e717d8"
+                                  },
+                                  {
+                                      "id": "789df3cf-9362-40f7-a69e-4adde47d2bc8",
+                                      "name": "Not Found",
+                                      "originalRequest": {
+                                          "method": "GET",
+                                          "header": [
+                                              {
+                                                  "key": "Accept",
+                                                  "value": "application/vnd.example.v1+json",
+                                                  "type": "text"
+                                              }
+                                          ],
+                                          "body": {
+                                              "mode": "raw",
+                                              "raw": "",
+                                              "options": {
+                                                  "raw": {
+                                                      "language": "json"
+                                                  }
+                                              }
+                                          },
+                                          "url": {
+                                              "raw": "http://api.getpostman.com/v1/request?id=test-api",
+                                              "protocol": "http",
+                                              "host": [
+                                                  "api",
+                                                  "getpostman",
+                                                  "com"
+                                              ],
+                                              "path": [
+                                                  "v1",
+                                                  "request"
+                                              ],
+                                              "query": [
+                                                  {
+                                                      "key": "id",
+                                                      "value": "test-api"
+                                                  }
+                                              ]
+                                          }
+                                      },
+                                      "status": "Not Found",
+                                      "code": 404,
+                                      "_postman_previewlanguage": "json",
+                                      "header": [
+                                          {
+                                              "key": "Content-Type",
+                                              "name": "Content-Type",
+                                              "value": "application/json",
+                                              "description": "",
+                                              "type": "text"
+                                          }
+                                      ],
+                                      "cookie": [],
+                                      "responseTime": null,
+                                      "body": "{\n    \"title\": \"Not Found\",\n    \"detail\": \"Requested API does not exist\",\n    \"type\": \"about:blank\"\n}",
+                                      "createdAt": "2023-08-22T12:53:12.000Z",
+                                      "updatedAt": "2023-09-13T14:04:32.000Z",
+                                      "uid": "12345678-789df3cf-9362-40f7-a69e-4adde47d2bc8"
+                                  }
+                              ],
+                              "createdAt": "2022-10-05T13:09:24.000Z",
+                              "updatedAt": "2025-04-25T17:29:16.000Z",
+                              "uid": "12345678-bb4a826b-1654-4f24-9ab1-d00e4fc2d743"
+                          },
+                          {
+                              "name": "Test B",
+                              "id": "3e2b5890-8fb9-4a73-bf7b-f0a161502513",
+                              "protocolProfileBehavior": {
+                                  "disableBodyPruning": true
+                              },
+                              "request": {
+                                  "method": "PUT",
+                                  "header": [],
+                                  "body": {
+                                      "mode": "raw",
+                                      "raw": "{\n    \"name\": \"Test\",\n    \"description\": \"This is a test.\"\n}",
+                                      "options": {
+                                          "raw": {
+                                              "language": "json"
+                                          }
+                                      }
+                                  },
+                                  "url": {
+                                      "raw": "http://api.getpostman.com/v1/request",
+                                      "protocol": "http",
+                                      "host": [
+                                          "api",
+                                          "getpostman",
+                                          "com"
+                                      ],
+                                      "path": [
+                                          "v1",
+                                          "request"
+                                      ]
+                                  }
+                              },
+                              "response": [
+                                  {
+                                      "id": "c7ffac80-0ab7-45da-a966-10bf469936db",
+                                      "name": "Test B",
+                                      "originalRequest": {
+                                          "method": "PUT",
+                                          "header": [
+                                              {
+                                                  "key": "Content-Type",
+                                                  "name": "Content-Type",
+                                                  "value": "application/json",
+                                                  "type": "text"
+                                              }
+                                          ],
+                                          "body": {
+                                              "mode": "raw",
+                                              "raw": "{\n    \"firstName\": \"Test\",\n    \"lastName\": \"User\"\n}",
+                                              "options": {
+                                                  "raw": {
+                                                      "language": "json"
+                                                  }
+                                              }
+                                          },
+                                          "url": {
+                                              "raw": "http://api.getpostman.com/v1/request",
+                                              "protocol": "http",
+                                              "host": [
+                                                  "api",
+                                                  "getpostman",
+                                                  "com"
+                                              ],
+                                              "path": [
+                                                  "v1",
+                                                  "request"
+                                              ]
+                                          }
+                                      },
+                                      "status": "OK",
+                                      "code": 200,
+                                      "_postman_previewlanguage": "json",
+                                      "header": [
+                                          {
+                                              "key": "Content-Type",
+                                              "name": "Content-Type",
+                                              "value": "application/json",
+                                              "description": "",
+                                              "type": "text"
+                                          }
+                                      ],
+                                      "cookie": [],
+                                      "responseTime": null,
+                                      "body": "{\n    \"id\": \"1234\",\n    \"user\": \"test-user\"\n}",
+                                      "createdAt": "2023-09-12T15:20:20.000Z",
+                                      "updatedAt": "2023-09-13T14:13:44.000Z",
+                                      "uid": "12345678-c7ffac80-0ab7-45da-a966-10bf469936db"
+                                  }
+                              ],
+                              "createdAt": "2022-10-05T13:16:49.000Z",
+                              "updatedAt": "2023-09-13T14:08:04.000Z",
+                              "uid": "12345678-3e2b5890-8fb9-4a73-bf7b-f0a161502513"
+                          },
+                          {
+                              "name": "Test C",
+                              "event": [
+                                  {
+                                      "listen": "test",
+                                      "script": {
+                                          "exec": [
+                                              "pm.test(\"Status code is 200\", function () {",
+                                              "    pm.response.to.have.status(200);",
+                                              "});"
+                                          ],
+                                          "type": "text/javascript"
+                                      }
+                                  },
+                                  {
+                                      "listen": "prerequest",
+                                      "script": {
+                                          "exec": [
+                                              ""
+                                          ],
+                                          "type": "text/javascript"
+                                      }
+                                  }
+                              ],
+                              "id": "98518f83-1da1-4d27-8253-432cc923dbae",
+                              "protocolProfileBehavior": {
+                                  "disableBodyPruning": true
+                              },
+                              "request": {
+                                  "auth": {
+                                      "type": "apikey",
+                                      "apikey": [
+                                          {
+                                              "key": "value",
+                                              "value": "XXX",
+                                              "type": "string"
+                                          },
+                                          {
+                                              "key": "key",
+                                              "value": "api-key",
+                                              "type": "string"
+                                          }
+                                      ]
+                                  },
+                                  "method": "POST",
+                                  "header": [],
+                                  "body": {
+                                      "mode": "raw",
+                                      "raw": "{\n    \"name\": \"Test API\",\n    \"description\": \"This is a test API.\"\n}",
+                                      "options": {
+                                          "raw": {
+                                              "language": "json"
+                                          }
+                                      }
+                                  },
+                                  "url": {
+                                      "raw": "https://postman-echo.com/post",
+                                      "protocol": "https",
+                                      "host": [
+                                          "postman-echo",
+                                          "com"
+                                      ],
+                                      "path": [
+                                          "post"
+                                      ]
+                                  }
+                              },
+                              "response": [
+                                  {
+                                      "id": "bb3cb97c-619e-4c81-9a14-139efe81816c",
+                                      "name": "Successful Response",
+                                      "originalRequest": {
+                                          "method": "POST",
+                                          "header": [],
+                                          "body": {
+                                              "mode": "raw",
+                                              "raw": "{\n    \"name\": \"Test API\",\n    \"description\": \"This is a test API.\"\n}",
+                                              "options": {
+                                                  "raw": {
+                                                      "language": "json"
+                                                  }
+                                              }
+                                          },
+                                          "url": {
+                                              "raw": "https://postman-echo.com/post",
+                                              "protocol": "https",
+                                              "host": [
+                                                  "postman-echo",
+                                                  "com"
+                                              ],
+                                              "path": [
+                                                  "post"
+                                              ]
+                                          }
+                                      },
+                                      "_postman_previewlanguage": "json",
+                                      "header": [
+                                          {
+                                              "key": "Content-Type",
+                                              "name": "Content-Type",
+                                              "value": "application/json",
+                                              "description": "",
+                                              "type": "text"
+                                          }
+                                      ],
+                                      "cookie": [],
+                                      "responseTime": null,
+                                      "body": "{\n    \"id\": \"test-api\",\n    \"name\": \"Test API\",\n    \"description\": \"This is a test API.\",\n    \"is_public\": false,\n    \"created_at\": \"2022-01-28T11:50:56.000Z\",\n    \"updated_at\": \"2022-01-28T11:50:56.000Z\",\n    \"performance\": {\n        \"collection\": \"123e4567-e89b-12d3-a456-556642440000\",\n        \"environment\": \"123e4567-e89b-12d3-a456-556642440000\"\n    }\n}",
+                                      "createdAt": "2023-09-12T15:21:55.000Z",
+                                      "updatedAt": "2023-09-13T14:33:26.000Z",
+                                      "uid": "12345678-bb3cb97c-619e-4c81-9a14-139efe81816c"
+                                  }
+                              ],
+                              "createdAt": "2023-09-07T14:03:52.000Z",
+                              "updatedAt": "2023-09-13T14:26:58.000Z",
+                              "uid": "12345678-98518f83-1da1-4d27-8253-432cc923dbae"
+                          }
+                      ],
+                      "id": "c9a0e43c-6078-4fa0-8cfc-d4dc9e889817",
+                      "description": "This is a test folder.",
+                      "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                              {
+                                  "key": "value",
+                                  "value": "XXX",
+                                  "type": "string"
+                              },
+                              {
+                                  "key": "key",
+                                  "value": "x-api-key",
+                                  "type": "string"
+                              }
+                          ]
+                      },
+                      "event": [
+                          {
+                              "listen": "prerequest",
+                              "script": {
+                                  "type": "text/javascript",
+                                  "exec": [
+                                      "pm.variables.get(\"variable_key\");"
+                                  ]
+                              }
+                          },
+                          {
+                              "listen": "test",
+                              "script": {
+                                  "type": "text/javascript",
+                                  "exec": [
+                                      "pm.test(\"Status code is 200\", function () {",
+                                      "    pm.response.to.have.status(200);",
+                                      "});"
+                                  ]
+                              }
+                          }
+                      ],
+                      "createdAt": "2022-10-05T13:09:28.000Z",
+                      "updatedAt": "2023-09-13T14:32:34.000Z",
+                      "uid": "12345678-c9a0e43c-6078-4fa0-8cfc-d4dc9e889817"
+                  },
+                  {
+                      "name": "Folder 3",
+                      "item": [
+                          {
+                              "name": "ID",
+                              "item": [
+                                  {
+                                      "name": "Request 3-A",
+                                      "id": "a22f41d5-32bf-4830-8731-10ad18e88874",
+                                      "protocolProfileBehavior": {
+                                          "disableBodyPruning": true
+                                      },
+                                      "request": {
+                                          "method": "GET",
+                                          "header": [],
+                                          "body": {
+                                              "mode": "raw",
+                                              "raw": "",
+                                              "options": {
+                                                  "raw": {
+                                                      "language": "json"
+                                                  }
+                                              }
+                                          },
+                                          "url": {
+                                              "raw": ""
+                                          }
+                                      },
+                                      "response": [],
+                                      "createdAt": "2023-09-14T12:44:28.000Z",
+                                      "updatedAt": "2023-09-15T16:25:21.000Z",
+                                      "uid": "12345678-a22f41d5-32bf-4830-8731-10ad18e88874"
+                                  }
+                              ],
+                              "id": "07f106de-776e-4fd8-9fc1-dc72e4a06a00",
+                              "description": "Test folder user ID.",
+                              "createdAt": "2023-09-13T21:54:44.000Z",
+                              "updatedAt": "2023-09-15T16:26:42.000Z",
+                              "uid": "12345678-07f106de-776e-4fd8-9fc1-dc72e4a06a00"
+                          },
+                          {
+                              "name": "User",
+                              "item": [
+                                  {
+                                      "name": "New Request",
+                                      "id": "69e1ed6c-9d7b-41cd-aff7-69a468cf8252",
+                                      "protocolProfileBehavior": {
+                                          "disableBodyPruning": true
+                                      },
+                                      "request": {
+                                          "method": "POST",
+                                          "header": [],
+                                          "url": {
+                                              "raw": ""
+                                          }
+                                      },
+                                      "response": [],
+                                      "createdAt": "2023-09-14T14:02:27.000Z",
+                                      "updatedAt": "2023-09-14T14:02:59.000Z",
+                                      "uid": "12345678-69e1ed6c-9d7b-41cd-aff7-69a468cf8252"
+                                  },
+                                  {
+                                      "name": "New Request",
+                                      "id": "8b50cfc3-6af3-446e-a607-8d05e38e1ce9",
+                                      "protocolProfileBehavior": {
+                                          "disableBodyPruning": true
+                                      },
+                                      "request": {
+                                          "method": "GET",
+                                          "header": [],
+                                          "url": {
+                                              "raw": ""
+                                          }
+                                      },
+                                      "response": [],
+                                      "createdAt": "2023-09-14T14:02:49.000Z",
+                                      "updatedAt": "2023-09-14T14:02:49.000Z",
+                                      "uid": "12345678-8b50cfc3-6af3-446e-a607-8d05e38e1ce9"
+                                  }
+                              ],
+                              "id": "2c9de017-885f-4c1e-99bf-d10cd870fb0b",
+                              "description": "Test folder for user information.",
+                              "createdAt": "2023-09-13T21:56:35.000Z",
+                              "updatedAt": "2023-09-15T16:26:54.000Z",
+                              "uid": "12345678-2c9de017-885f-4c1e-99bf-d10cd870fb0b"
+                          },
+                          {
+                              "name": "Test A",
+                              "id": "8b29623b-9c9c-4fed-ab9e-85f64524977b",
+                              "protocolProfileBehavior": {
+                                  "disableBodyPruning": true
+                              },
+                              "request": {
+                                  "method": "GET",
+                                  "header": [],
+                                  "url": {
+                                      "raw": "http://api.getpostman.com/v1/request",
+                                      "protocol": "http",
+                                      "host": [
+                                          "api",
+                                          "getpostman",
+                                          "com"
+                                      ],
+                                      "path": [
+                                          "v1",
+                                          "request"
+                                      ]
+                                  }
+                              },
+                              "response": [],
+                              "createdAt": "2022-11-18T15:42:45.000Z",
+                              "updatedAt": "2023-09-13T14:07:08.000Z",
+                              "uid": "12345678-8b29623b-9c9c-4fed-ab9e-85f64524977b"
+                          }
+                      ],
+                      "id": "7d1ea228-82fc-4887-833a-caf88d3182d5",
+                      "description": "This is a test folder.",
+                      "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                              {
+                                  "key": "value",
+                                  "value": "XXX",
+                                  "type": "string"
+                              },
+                              {
+                                  "key": "key",
+                                  "value": "x-api-key",
+                                  "type": "string"
+                              }
+                          ]
+                      },
+                      "event": [
+                          {
+                              "listen": "prerequest",
+                              "script": {
+                                  "type": "text/javascript",
+                                  "exec": [
+                                      "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                      "    console.log(response.json());",
+                                      "});"
+                                  ]
+                              }
+                          },
+                          {
+                              "listen": "test",
+                              "script": {
+                                  "type": "text/javascript",
+                                  "exec": [
+                                      "pm.test(\"Status code is 200\", function () {",
+                                      "    pm.response.to.have.status(200);",
+                                      "});"
+                                  ]
+                              }
+                          }
+                      ],
+                      "createdAt": "2022-10-05T13:09:34.000Z",
+                      "updatedAt": "2023-09-15T18:22:13.000Z",
+                      "uid": "12345678-7d1ea228-82fc-4887-833a-caf88d3182d5"
+                  },
+                  {
+                      "name": "Test F",
+                      "id": "ff460862-473c-41b8-8be4-a493041c3351",
+                      "protocolProfileBehavior": {
+                          "disableBodyPruning": true
+                      },
+                      "request": {
+                          "method": "POST",
+                          "header": [],
+                          "url": {
+                              "raw": ""
+                          }
+                      },
+                      "response": [],
+                      "createdAt": "2023-08-22T12:51:45.000Z",
+                      "updatedAt": "2025-05-29T16:04:09.000Z",
+                      "uid": "12345678-ff460862-473c-41b8-8be4-a493041c3351"
+                  }
+              ],
+              "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                      {
+                          "key": "value",
+                          "value": "abc123",
+                          "type": "string"
+                      },
+                      {
+                          "key": "key",
+                          "value": "x-api-key",
+                          "type": "string"
+                      }
+                  ]
+              },
+              "event": [
+                  {
+                      "listen": "prerequest",
+                      "script": {
+                          "id": "cc22c328-3dcc-46c1-a357-7e2f72f54cf6",
+                          "type": "text/javascript",
+                          "packages": {},
+                          "exec": [
+                              "try {",
+                              "    const response = await pm.sendRequest({",
+                              "        url: \"https://postman-echo.com/get\",",
+                              "        method: \"GET\"",
+                              "    });",
+                              "",
+                              "    console.log(response.json());",
+                              "} catch (err) {",
+                              "    console.error(err);",
+                              "}"
+                          ]
+                      }
+                  },
+                  {
+                      "listen": "test",
+                      "script": {
+                          "id": "5db243ea-5022-4d08-a620-b8fb9d561af5",
+                          "type": "text/javascript",
+                          "packages": {},
+                          "exec": [
+                              "pm.test(\"Status code is 200\", function () {",
+                              "    pm.response.to.have.status(200);",
+                              "});"
+                          ]
+                      }
+                  }
+              ],
+              "variable": [
+                  {
+                      "key": "userId",
+                      "value": "12345678",
+                      "disabled": true,
+                      "description": "The user's ID."
+                  }
+              ]
+          }
+      }
+order: 4000

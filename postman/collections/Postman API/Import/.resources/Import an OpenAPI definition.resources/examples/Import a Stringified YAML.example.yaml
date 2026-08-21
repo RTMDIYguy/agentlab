@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/import/openapi
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "type": "string",
+          "input": "openapi: 3.0.0\nservers:\n- url: example.com\ninfo:\n  contact:\n    name: Jon\n  version: 1.0.0\n  title: Sample API\n  description: Buy or rent spacecrafts\npaths:\n  \"/spacecrafts/{spacecraftId}\":\n    parameters:\n    - name: spacecraftId\n      description: The unique identifier of the spacecraft\n      in: path\n      required: true\n      schema:\n        \"$ref\": \"#/components/schemas/SpacecraftId\"\n    get:\n      summary: Read a spacecraft\n      responses:\n        '200':\n          description: The spacecraft corresponding to the provided `spacecraftId`\n          content:\n            application/json:\n              schema:\n                \"$ref\": \"#/components/schemas/Spacecraft\"\n        '404':\n          description: No spacecraft found for the provided `spacecraftId`\n          content:\n            application/json:\n              schema:\n                \"$ref\": \"#/components/schemas/Error\"\n        '500':\n          description: Unexpected error\n          content:\n            application/json:\n              schema:\n                \"$ref\": \"#/components/schemas/Error\"\ncomponents:\n  schemas:\n    SpacecraftId:\n      description: The unique identifier of a spacecraft\n      type: string\n    Spacecraft:\n      type: object\n      required:\n      - id\n      - name\n      - type\n      properties:\n        id:\n          \"$ref\": \"#/components/schemas/SpacecraftId\"\n        name:\n          type: string\n        type:\n          type: string\n          enum:\n          - capsule\n          - probe\n          - satellite\n          - spaceplane\n          - station\n        description:\n          type: string\n    Error:\n      type: object\n      required:\n      - message\n      properties:\n        message:\n          description: A human readable error message\n          type: string\n  securitySchemes:\n    ApiKey:\n      type: apiKey\n      in: header\n      name: X-Api-Key\nsecurity:\n- ApiKey: []"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collections": [
+              {
+                  "id": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                  "name": "Sample API",
+                  "uid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+              }
+          ]
+      }
+order: 5000

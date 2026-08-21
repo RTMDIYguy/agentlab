@@ -1,0 +1,17 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/collection-forks
+  method: GET
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "badRequest",
+              "message": "No Postman User found for given filters"
+          }
+      }
+order: 5000

@@ -1,0 +1,14 @@
+$kind: http-request
+description: |-
+  Deletes a collection access key. To get a collection access key's ID, use the GET `/collection-access-key` endpoint.
+
+  On success, this returns an HTTP `204 No Content` response.
+url: "{{baseUrl}}/collection-access-keys/:keyId"
+method: DELETE
+pathVariables:
+  - key: keyId
+    value: ""
+    description: The collection access key's ID.
+settings: {}
+examples: ./.resources/Delete a collection access key.resources/examples
+order: 2000

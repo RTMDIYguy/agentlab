@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/schemas/:schemaId?versionId=66ae9950-0869-4e65-96b0-1e0e47e771af
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  queryParams:
+    versionId: 66ae9950-0869-4e65-96b0-1e0e47e771af
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    schemaId: 5381f010-c4c1-11ed-afa1-0242ac120002
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "invalidParamError",
+          "title": "Invalid version Id provided",
+          "detail": "Schema not published in this version"
+      }
+order: 5000

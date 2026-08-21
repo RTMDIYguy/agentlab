@@ -1,0 +1,66 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/requests/:requestId
+  method: GET
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    requestId: e12d2aa6-85c8-4e6c-aad0-1adcfe05c958
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+          "meta": {
+              "model": "request",
+              "populate": false,
+              "changeset": false,
+              "action": "find"
+          },
+          "data": {
+              "owner": "12345678",
+              "lastUpdatedBy": "12345678",
+              "lastRevision": 32206434799,
+              "folder": null,
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+              "name": "Example GET Request",
+              "dataMode": null,
+              "data": null,
+              "auth": null,
+              "events": null,
+              "rawModeData": null,
+              "descriptionFormat": null,
+              "description": "This is an example GET request.",
+              "variables": null,
+              "headers": null,
+              "method": "GET",
+              "pathVariables": {},
+              "url": "https://postman-echo.com/get",
+              "preRequestScript": null,
+              "tests": "var data = JSON.parse(responseBody);",
+              "currentHelper": null,
+              "helperAttributes": null,
+              "queryParams": [
+                  {
+                      "key": "id",
+                      "value": "{{id}}",
+                      "equals": true,
+                      "description": "Optional. The user's ID.",
+                      "enabled": true
+                  }
+              ],
+              "headerData": [],
+              "pathVariableData": [],
+              "protocolProfileBehavior": {
+                  "disableBodyPruning": true
+              },
+              "dataDisabled": false,
+              "responses_order": [],
+              "createdAt": "2023-08-22T12:52:01.000Z",
+              "updatedAt": "2023-08-22T12:52:11.000Z"
+          }
+      }
+order: 1000

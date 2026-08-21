@@ -1,0 +1,55 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private/network-entity/request/all?since=2022-09-28T13:48:09.000Z&requestedBy=12345678&offset=5&limit=10
+  method: GET
+  queryParams:
+    since: 2022-09-28T13:48:09.000Z
+    requestedBy: "12345678"
+    offset: "5"
+    limit: "10"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "requests": [
+              {
+                  "id": 1,
+                  "createdBy": 87654321,
+                  "createdAt": "2020-06-01T08:32:31.000Z",
+                  "status": "pending",
+                  "element": {
+                      "type": "api",
+                      "id": "360b75f-447e-467c-9299-12fd3c92450d",
+                      "name": "Test api",
+                      "summary": "Test api summary"
+                  }
+              },
+              {
+                  "id": 2,
+                  "createdBy": 12345678,
+                  "createdAt": "2022-06-09T14:48:45.000Z",
+                  "message": "Please approve this collection",
+                  "status": "denied",
+                  "element": {
+                      "type": "collection",
+                      "id": "5360b75f-447e-467c-9299-12fd3c92450d",
+                      "name": "Test Collection",
+                      "summary": "This is a test collection."
+                  },
+                  "response": {
+                      "createdAt": "2020-06-01T08:32:31.000Z",
+                      "createdBy": 2272,
+                      "message": "Too many errors, please fix and resubmit"
+                  }
+              }
+          ],
+          "meta": {
+              "limit": 10,
+              "offset": 5,
+              "totalCount": 100
+          }
+      }
+order: 1000

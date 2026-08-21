@@ -1,0 +1,6 @@
+$kind: http-request
+description: Gets information about an API.
+url: https://api.getpostman.com/apis/{{apiId}}
+method: GET
+examples: ./.resources/Get an API.resources/examples
+order: 7000

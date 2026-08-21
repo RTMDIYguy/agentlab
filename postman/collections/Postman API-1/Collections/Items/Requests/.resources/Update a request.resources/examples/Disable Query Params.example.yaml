@@ -1,0 +1,142 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/requests/:requestId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    requestId: e12d2aa6-85c8-4e6c-aad0-1adcfe05c958
+  body:
+    type: json
+    content: |-
+      {
+          "owner": "12345678",
+          "lastUpdatedBy": "12345678",
+          "lastRevision": 33437203713,
+          "folder": null,
+          "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+          "id": "42d13443-2f50-47f0-b417-03081a97bf45",
+          "name": "GET Request with headers and query params",
+          "dataMode": null,
+          "data": null,
+          "auth": null,
+          "events": null,
+          "rawModeData": null,
+          "descriptionFormat": null,
+          "description": null,
+          "variables": null,
+          "headers": "// x-api-key: apikey",
+          "method": "GET",
+          "pathVariables": null,
+          "url": "https://postman-echo.com/get?param1=value1",
+          "preRequestScript": null,
+          "tests": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "queryParams": [
+              {
+                  "key": "param1",
+                  "value": "value1",
+                  "description": null,
+                  "enabled": true
+              },
+              {
+                  "key": "param2",
+                  "value": "value2",
+                  "description": null,
+                  "enabled": false
+              }
+          ],
+          "headerData": [
+              {
+                  "key": "x-api-key",
+                  "value": "apikey",
+                  "type": "text",
+                  "description": null,
+                  "enabled": false
+              }
+          ],
+          "pathVariableData": [],
+          "protocolProfileBehavior": {
+              "disableBodyPruning": true
+          },
+          "dataDisabled": false,
+          "responses_order": [],
+          "createdAt": "2023-10-27T08:48:42.000Z",
+          "updatedAt": "2023-11-02T11:05:19.000Z"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+          "meta": {
+              "model": "request",
+              "action": "update"
+          },
+          "data": {
+              "id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+              "name": "Example POST Request",
+              "dataMode": "params",
+              "data": [
+                  {
+                      "enabled": true,
+                      "value": "3f14c9c7-e71c-4094-b90e-ac9edb232c2e",
+                      "type": "text",
+                      "key": "id"
+                  },
+                  {
+                      "enabled": true,
+                      "value": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "type": "text",
+                      "key": "collection"
+                  }
+              ],
+              "auth": null,
+              "events": [
+                  {
+                      "listen": "test",
+                      "script": {
+                          "type": "text/javascript",
+                          "exec": [
+                              "var data = JSON.parse(responseBody);"
+                          ]
+                      }
+                  }
+              ],
+              "rawModeData": "{\n    \"field\": \"Value\"\n}",
+              "descriptionFormat": null,
+              "description": "This is an example POST request.",
+              "variables": null,
+              "headers": "",
+              "method": "POST",
+              "pathVariables": {},
+              "url": "https://postman-echo.com/post",
+              "preRequestScript": null,
+              "tests": "var data = JSON.parse(responseBody);",
+              "currentHelper": null,
+              "helperAttributes": null,
+              "queryParams": [],
+              "headerData": [],
+              "pathVariableData": [],
+              "protocolProfileBehavior": null,
+              "dataDisabled": false,
+              "responses_order": [],
+              "createdAt": "2022-08-29T16:49:19.964Z",
+              "updatedAt": "2022-08-29T16:49:19.964Z",
+              "owner": "12345678",
+              "lastUpdatedBy": "12345678",
+              "lastRevision": 24994863800,
+              "folder": null,
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "dataOptions": {
+                  "raw": {
+                      "language": "json"
+                  }
+              }
+          },
+          "revision": 24994954828
+      }
+order: 3000

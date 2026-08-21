@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Groups
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:schemas:core:2.0:Group"
+          ],
+          "displayName": "TestAPI",
+          "members": []
+      }
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:Error"
+          ],
+          "detail": "Unable to add members to the team. Try again — it should work next time around.",
+          "status": "500"
+      }
+order: 11000

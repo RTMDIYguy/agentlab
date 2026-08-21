@@ -1,0 +1,105 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentUid/forks
+  method: GET
+  pathVariables:
+    environmentUid: 12345678-5daabc50-8451-43f6-922d-96b403b4f28e
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": [
+              {
+                  "forkName": "Test Fork",
+                  "createdBy": "12345678",
+                  "forkId": "12345678-0fcea3ba-abcf-49c3-9f48-669c208fef25",
+                  "createdAt": "2024-01-30T16:42:22.000Z",
+                  "updatedAt": "2024-03-21T15:51:42.000Z"
+              },
+              {
+                  "forkName": "Test Fork #2",
+                  "createdBy": "12345678",
+                  "forkId": "12345678-b7f0ded7-d614-4f74-baef-1006f6ab8a7b",
+                  "createdAt": "2024-01-30T16:39:25.000Z",
+                  "updatedAt": "2024-03-21T15:51:42.000Z"
+              },
+              {
+                  "forkName": "My fork",
+                  "createdBy": "87654321",
+                  "forkId": "87654321-ed71be39-27b8-4886-bb74-77cb047d4fa6",
+                  "createdAt": "2024-01-30T16:39:17.000Z",
+                  "updatedAt": "2024-03-21T15:51:42.000Z"
+              },
+              {
+                  "forkName": "Alex Cruz's fork",
+                  "createdBy": "87654321",
+                  "forkId": "872905-c439ede2-4c40-4f25-82b2-a1a1219ead94",
+                  "createdAt": "2024-01-30T16:39:09.000Z",
+                  "updatedAt": "2024-03-21T15:51:42.000Z"
+              },
+              {
+                  "forkName": "Taylor Lee's Fork",
+                  "createdBy": "12345678",
+                  "forkId": "12345678-65c0a895-1428-45ea-bff0-f0f48e87f044",
+                  "createdAt": "2024-01-30T16:39:02.000Z",
+                  "updatedAt": "2024-03-21T15:51:42.000Z"
+              },
+              {
+                  "forkName": "Test 1",
+                  "createdBy": "87654321",
+                  "forkId": "87654321-3ad67987-91c4-4bd6-b624-348a5ea14e69",
+                  "createdAt": "2024-01-30T16:38:52.000Z",
+                  "updatedAt": "2024-03-21T15:51:42.000Z"
+              },
+              {
+                  "forkName": "Test #2",
+                  "createdBy": "56781234",
+                  "forkId": "56781234-c7e91b68-c39e-4735-a103-da47c98a5f01",
+                  "createdAt": "2024-01-30T16:38:27.000Z",
+                  "updatedAt": "2024-03-21T15:51:42.000Z"
+              },
+              {
+                  "forkName": "Test Fork #3",
+                  "createdBy": "12345678",
+                  "forkId": "12345678-00dcac5b-e81a-4250-bb9a-7878df2a7a03",
+                  "createdAt": "2024-01-30T16:38:18.000Z",
+                  "updatedAt": "2024-03-21T15:51:42.000Z"
+              },
+              {
+                  "forkName": "Alex Cruz's fork 1",
+                  "createdBy": "87654321",
+                  "forkId": "87654321-6dd33d0c-36eb-4542-a5f2-bb2a70303f63",
+                  "createdAt": "2024-01-30T16:38:10.000Z",
+                  "updatedAt": "2024-03-21T15:51:42.000Z"
+              },
+              {
+                  "forkName": "Test 2",
+                  "createdBy": "56781234",
+                  "forkId": "56781234-27eed2fc-8f05-4083-b8d4-55074bc49631",
+                  "createdAt": "2024-01-30T16:38:01.000Z",
+                  "updatedAt": "2024-03-21T15:51:42.000Z"
+              },
+              {
+                  "forkName": "Taylor Lee's Fork 2",
+                  "createdBy": "12345678",
+                  "forkId": "12345678-f96f3b83-3fc4-49a6-bd0b-6bf4162ac9f9",
+                  "createdAt": "2024-01-30T16:37:51.000Z",
+                  "updatedAt": "2024-03-21T15:51:42.000Z"
+              },
+              {
+                  "forkName": "My fork 3",
+                  "createdBy": "56781234",
+                  "forkId": "56781234-69068628-c150-4b0e-a191-1e58a6be46c6",
+                  "createdAt": "2024-01-30T16:24:19.000Z",
+                  "updatedAt": "2024-03-21T15:51:42.000Z"
+              }
+          ],
+          "meta": {
+              "nextCursor": "NTg3NjgtNTg3NTctNTg3NjgtNTAtY3JlYXRlZEF0LWRlc2MtZmFsc2UtLS0xLTEtMTItW1s1ODc2OCw1ODc1N11d",
+              "total": 12
+          }
+      }
+order: 1000

@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/groups/:groupId
+  method: GET
+  pathVariables:
+    - key: groupId
+      value: "123"
+      description: The group's ID.
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/not-found",
+          "title": "Not Found",
+          "detail": "Not Found",
+          "status": 404
+      }
+order: 5000

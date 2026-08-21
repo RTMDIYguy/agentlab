@@ -1,0 +1,11 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2/requests/12345678-e12d2aa6-85c8-4e6c-aad0-1adcfe05c958/comments/46814
+  method: DELETE
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 1000

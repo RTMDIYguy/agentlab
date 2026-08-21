@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionUid/synchronizations?specId=73e15000-bc7a-4802-b80e-05fff18fd7f8
+  method: PUT
+  queryParams:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+  pathVariables:
+    collectionUid: 12345678-61867bcc-c4c1-11ed-afa1-0242ac120002
+response:
+  statusCode: 202
+  statusText: Accepted
+  body:
+    type: json
+    content: |-
+      {
+          "taskId": "66ae9950-0869-4e65-96b0-1e0e47e771af",
+          "url": "/specs/73e15000-bc7a-4802-b80e-05fff18fd7f8/tasks/66ae9950-0869-4e65-96b0-1e0e47e771af"
+      }
+order: 1000

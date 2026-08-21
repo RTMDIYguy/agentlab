@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId
+  method: PATCH
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Sample API"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "id": "ae2b9ab2-28f2-401d-912f-eca09a78e98b",
+          "type": "OPENAPI:3.0",
+          "createdBy": 12345678,
+          "updatedBy": 12345678,
+          "createdAt": "2025-03-15T13:48:28.000Z",
+          "updatedAt": "2025-03-15T13:48:28.000Z",
+          "name": "Sample API"
+      }
+order: 1000

@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-merges-tasks/:taskId
+  method: GET
+  pathVariables:
+    taskId: pm~vc:merge-workflow~12345678-5a027c05-056b-49f5-ac9d-37c29f2d91c3
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/not-found",
+          "title": "Task not found",
+          "status": 404,
+          "detail": "Workflow :: pm~vc:merge-workflow~12345678-5a027c05-056b-49f5-ac9d-37c29f2d91c3 not found"
+      }
+order: 6000

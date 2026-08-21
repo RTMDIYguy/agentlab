@@ -1,0 +1,10 @@
+$kind: collection
+description: |-
+  The Schema endpoints let you manage your API's definitions.
+
+  ### Important
+
+  **The schemas concept is deprecated as of Postman v10 and higher.**
+
+  In Postman v10 and higher, “schemas” are now known as “API definitions”. You may see that API responses may return both the `schemas` and `apiDefinition` properties. Use the `apiDefinition` property.
+order: 3000

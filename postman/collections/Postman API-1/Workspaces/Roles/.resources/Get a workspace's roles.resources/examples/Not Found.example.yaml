@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/roles
+  method: GET
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "title": "https://api.postman.com/problems/not-found",
+          "type": "Resource not found",
+          "detail": "",
+          "status": 404
+      }
+order: 5000

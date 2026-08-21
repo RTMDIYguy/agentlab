@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/me
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "user": {
+              "id": 12345678,
+              "sub": "4d71435e-0e67-45b9-9d4c-e3262166d157",
+              "username": "taylor-lee",
+              "email": "taylor.lee@example.com",
+              "fullName": "Taylor Lee",
+              "avatar": null,
+              "isPublic": true,
+              "emailVerified": true,
+              "teamId": 123,
+              "teamName": "Test Team",
+              "teamDomain": "test-team",
+              "roles": [
+                  "user"
+              ]
+          }
+      }
+order: 2000

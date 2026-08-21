@@ -1,0 +1,29 @@
+$kind: http-request
+description: |-
+  Responds to a user's request to add an element to your team's [Private API Network](https://learning.postman.com/docs/collaborating-in-postman/adding-private-network/). Include the following in the request body:
+
+  - `message` — A **string** value in a `response` object that contains a message that details why the user's request was denied.
+      
+  - `status` — A **string** value that contains the request's status. One of:
+      
+      - `denied`
+          
+      - `approved`
+url: "{{baseUrl}}/network/private/network-entity/request/:requestId"
+method: PUT
+pathVariables:
+  - key: requestId
+    value: "{{elementRequestId}}"
+    description: The element request's ID.
+body:
+  type: json
+  content: |-
+    {
+        "response": {
+            "message": "{{responderMessage}}"
+        },
+        "status": "{{responseStatus}}"
+    }
+settings: {}
+examples: ./.resources/Respond to an element add request.resources/examples
+order: 1000

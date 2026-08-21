@@ -1,0 +1,17 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private
+  method: GET
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "serverError",
+              "message": "An error has occurred on the server."
+          }
+      }
+order: 5000

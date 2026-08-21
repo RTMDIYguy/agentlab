@@ -1,0 +1,183 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "discoveredServices": [
+              {
+                  "name": "payment-service"
+              },
+              {
+                  "name": "sample service"
+              },
+              {
+                  "name": "auth-service"
+              },
+              {
+                  "name": "user-service"
+              },
+              {
+                  "name": "order-service"
+              },
+              {
+                  "name": "inventory-service"
+              },
+              {
+                  "name": "notification-service"
+              },
+              {
+                  "name": "billing-service"
+              },
+              {
+                  "name": "shipping-service"
+              },
+              {
+                  "name": "catalog-service"
+              },
+              {
+                  "name": "search-service"
+              },
+              {
+                  "name": "analytics-service"
+              },
+              {
+                  "name": "logging-service"
+              },
+              {
+                  "name": "monitoring-service"
+              },
+              {
+                  "name": "gateway-service"
+              },
+              {
+                  "name": "config-service"
+              },
+              {
+                  "name": "discovery-service"
+              },
+              {
+                  "name": "messaging-service"
+              },
+              {
+                  "name": "email-service"
+              },
+              {
+                  "name": "sms-service"
+              },
+              {
+                  "name": "file-storage-service"
+              },
+              {
+                  "name": "image-processing-service"
+              },
+              {
+                  "name": "video-service"
+              },
+              {
+                  "name": "chat-service"
+              },
+              {
+                  "name": "recommendation-service"
+              },
+              {
+                  "name": "pricing-service"
+              },
+              {
+                  "name": "tax-service"
+              },
+              {
+                  "name": "discount-service"
+              },
+              {
+                  "name": "coupon-service"
+              },
+              {
+                  "name": "loyalty-service"
+              },
+              {
+                  "name": "review-service"
+              },
+              {
+                  "name": "rating-service"
+              },
+              {
+                  "name": "feedback-service"
+              },
+              {
+                  "name": "support-service"
+              },
+              {
+                  "name": "ticket-service"
+              },
+              {
+                  "name": "workflow-service"
+              },
+              {
+                  "name": "scheduler-service"
+              },
+              {
+                  "name": "cron-service"
+              },
+              {
+                  "name": "queue-service"
+              },
+              {
+                  "name": "cache-service"
+              },
+              {
+                  "name": "session-service"
+              },
+              {
+                  "name": "token-service"
+              },
+              {
+                  "name": "audit-service"
+              },
+              {
+                  "name": "compliance-service"
+              },
+              {
+                  "name": "reporting-service"
+              },
+              {
+                  "name": "dashboard-service"
+              },
+              {
+                  "name": "export-service"
+              },
+              {
+                  "name": "import-service"
+              },
+              {
+                  "name": "webhook-service"
+              },
+              {
+                  "name": "integration-service"
+              },
+              {
+                  "name": "sync-service"
+              }
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "status": 400,
+          "title": "Bad Request",
+          "detail": "Validation Error: discoveredServices: discoveredServices must not have more than 20 items",
+          "errors": [
+              {
+                  "path": "discoveredServices",
+                  "message": "discoveredServices must not have more than 20 items"
+              }
+          ]
+      }
+order: 7000

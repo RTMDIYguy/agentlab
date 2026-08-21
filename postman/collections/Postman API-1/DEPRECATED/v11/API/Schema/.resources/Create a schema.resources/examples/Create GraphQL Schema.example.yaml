@@ -1,0 +1,49 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/schemas
+  method: POST
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+  body:
+    type: json
+    content: |-
+      {
+          "type": "graphql",
+          "files": [
+              {
+                  "path": "posts.graphql",
+                  "content": "type Query {\r\n  allPosts: [Post]\r\n  allUsers: [User]\r\n  postById(id: Int!): Post\r\n  userById(id: Int!): User\r\n}\r\n\r\ntype Mutation {\r\n  createPost(input: CreatePostInput!): CreatePostPayload\r\n  createUser(input: CreateUserInput!): CreateUserPayload\r\n}\r\n\r\ntype Post {\r\n  id: Int!\r\n  title: String\r\n  body: String\r\n  createdDate: Datetime\r\n  authorId: Int!\r\n  userByAuthorId: User\r\n}\r\n\r\ntype User {\r\n  id: Int!\r\n  username: String\r\n  createdDate: Datetime\r\n  postsByAuthorId: [Post]\r\n}\r\n\r\ntype CreatePostPayload {\r\n  clientMutationId: String\r\n  post: Post\r\n  userByAuthorId: User\r\n}\r\n\r\ninput CreatePostInput {\r\n  clientMutationId: String\r\n  post: PostInput!\r\n}\r\n\r\ninput PostInput {\r\n  id: Int\r\n  title: String\r\n  body: String\r\n  createdDate: Datetime\r\n  authorId: Int!\r\n}\r\n\r\ntype CreateUserPayload {\r\n  clientMutationId: String\r\n  user: User\r\n}\r\n\r\ninput CreateUserInput {\r\n  clientMutationId: String\r\n  user: UserInput!\r\n}\r\n\r\ninput UserInput {\r\n  id: Int\r\n  username: String\r\n  createdDate: Datetime\r\n}\r\n\r\nscalar Datetime\r\n"
+              }
+          ]
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  body:
+    type: json
+    content: |-
+      {
+          "id": "0ccd23df-1b9c-4964-8d3c-62fc69f60c37",
+          "createdAt": "2024-01-29T16:53:40.000Z",
+          "type": "graphql",
+          "updatedBy": "12345678",
+          "updatedAt": "2024-01-29T16:53:40.000Z",
+          "files": [
+              {
+                  "id": "0ccd23df-1b9c-4964-8d3c-62fc69f60c37",
+                  "createdAt": "2024-01-29T16:53:40.000Z",
+                  "updatedAt": "2024-01-29T16:53:40.000Z",
+                  "path": "posts.graphql",
+                  "updatedBy": "12345678",
+                  "root": {
+                      "enabled": true
+                  },
+                  "createdBy": "12345678",
+                  "name": "posts.graphql"
+              }
+          ],
+          "createdBy": "12345678"
+      }
+order: 3000

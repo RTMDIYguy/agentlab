@@ -1,0 +1,29 @@
+$kind: http-request
+description: |-
+  Migrates an API Builder definition to a [Spec Hub](https://learning.postman.com/docs/design-apis/specifications/overview) specification. You can migrate the definition to an existing workspace, or create a new workspace to migrate the definition into. On success, this returns an HTTP `202 Created` response. You can use the GET `/apis/{apiId}/spec-migrations` endpoint to check the migration status.
+
+  **Note:**
+
+  This returns an HTTP `200 OK` response if the given API ID isn't an API Builder definition.
+url: "{{baseUrl}}/apis/:apiId/spec-migrations"
+method: POST
+pathVariables:
+  - key: apiId
+    value: ""
+    description: The API's ID.
+body:
+  type: json
+  content: |-
+    {
+        "workspaceId": "{{workspaceId}}"
+    }
+
+    // Use the following request body to migrate an API Builder definition into a new workspace:
+    // {
+    //    "workspaceInfo": {
+    //        "name": "{{workspaceName}}"
+    //   }
+    //}
+settings: {}
+examples: ./.resources/Migrate API Builder API to Spec Hub.resources/examples
+order: 12000

@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/transfers
+  method: PATCH
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "destination": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+          "source": "d56bc95f-57c5-47cc-bd99-75c4ad96a6dd"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "transfer": {
+                  "id": "8b6ea58b-fd33-4678-bdab-67734b3ed6b0",
+                  "source": "d56bc95f-57c5-47cc-bd99-75c4ad96a6dd",
+                  "destination": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9"
+              }
+          }
+      }
+order: 1000

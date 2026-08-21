@@ -1,0 +1,47 @@
+$kind: http-request
+description: |-
+  Creates a request response in a collection. For a complete list of properties and information, see the [Postman Collection Format documentation](https://schema.postman.com/collection/json/v2.1.0/draft-07/docs/index.html).
+
+  **Note:**
+
+  - This request uses example values in the request body for context when creating detailed collection responses. For additional ways to create a response, see the collection's examples.
+      
+  - It is recommended that you pass the `name` property in the request body. If you do not, the system uses a null value. As a result, this creates a response with a blank name.
+url: "{{baseUrl}}/collections/:collectionId/responses?request="
+method: POST
+queryParams:
+  - key: request
+    value: ""
+    description: The parent request's ID.
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+body:
+  type: json
+  content: |-
+    {
+        "name": "Successful Response",
+        "responseCode": {
+            "code": 200,
+            "name": "OK"
+        },
+        "headers": [
+            {
+                "key": "Content-Type",
+                "value": "application/json",
+                "description": "",
+                "type": "text"
+            }
+        ],
+        "cookies": [
+            ""
+        ],
+        "mime": "",
+        "text": "{\n    \"id\": \"405775fe15ed41872a8eea4c8aa2b38cda9749812cc55c99\",\n    \"userName\": \"taylor-lee@example.com\",\n    \"name\": \"Taylor Lee\",\n    \"email\": \"taylor-lee@example.com\",\n    \"active\": true\n}",
+        "language": "json",
+        "requestObject": "{\"data\":null,\"dataMode\":\"raw\",\"dataOptions\":{\"raw\":{\"language\":\"json\"}},\"headerData\":[{\"key\":\"Content-Type\",\"value\":\"application/json\"}],\"method\":\"POST\",\"pathVariableData\":[{\"key\":\"id\",\"value\":\"{{value}}\"}],\"queryParams\":[{\"key\":\"active\",\"value\":\"{{boolean}}\",\"description\":\"\",\"enabled\":true,\"equals\":true}],\"url\":\"https://postman-echo.com/user/:id?active={{boolean}}\",\"headers\":\"Content-Type: application/json\\n\",\"pathVariables\":{\"id\":\"{{value}}\"},\"protocolProfileBehavior\":{\"disableBodyPruning\":true},\"rawModeData\":\"{\\n    \\\"name\\\": \\\"{{value}}\\\",\\n    \\\"email\\\": \\\"{{email}}\\\",\\n    \\\"username\\\": \\\"{{username}}\\\"\\n}\",\"graphqlModeData\":{}}"
+    }
+settings: {}
+examples: ./.resources/Create a response.resources/examples
+order: 3000

@@ -1,0 +1,939 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "info": {
+                  "name": "Test Collection",
+                  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+              },
+              "item": [
+                  {
+                      "name": "Folder 1",
+                      "item": [
+                          {
+                              "name": "ID",
+                              "item": [
+                                  {
+                                      "name": "Test D",
+                                      "event": [
+                                          {
+                                              "listen": "prerequest",
+                                              "script": {
+                                                  "exec": [
+                                                      "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                                      "    console.log(response.json());",
+                                                      "});"
+                                                  ],
+                                                  "type": "text/javascript"
+                                              }
+                                          },
+                                          {
+                                              "listen": "test",
+                                              "script": {
+                                                  "exec": [
+                                                      "pm.test(\"Status code is 200\", function () {",
+                                                      "    pm.response.to.have.status(200);",
+                                                      "});"
+                                                  ],
+                                                  "type": "text/javascript"
+                                              }
+                                          }
+                                      ],
+                                      "protocolProfileBehavior": {
+                                          "disableBodyPruning": true
+                                      },
+                                      "request": {
+                                          "auth": {
+                                              "type": "apikey",
+                                              "apikey": [
+                                                  {
+                                                      "key": "value",
+                                                      "value": "PMAK-XXX"
+                                                  },
+                                                  {
+                                                      "key": "key",
+                                                      "value": "api-key"
+                                                  },
+                                                  {
+                                                      "key": "in",
+                                                      "value": "header"
+                                                  }
+                                              ]
+                                          },
+                                          "method": "GET",
+                                          "header": [],
+                                          "url": {
+                                              "raw": "https://postman-echo.com/get?id={{id}}",
+                                              "protocol": "https",
+                                              "host": [
+                                                  "postman-echo",
+                                                  "com"
+                                              ],
+                                              "path": [
+                                                  "get"
+                                              ],
+                                              "query": [
+                                                  {
+                                                      "key": "id",
+                                                      "value": "{{id}}",
+                                                      "description": "Optional. The user's ID."
+                                                  }
+                                              ]
+                                          },
+                                          "description": "This is an example GET request."
+                                      },
+                                      "response": [
+                                          {
+                                              "name": "Successful Response",
+                                              "originalRequest": {
+                                                  "method": "GET",
+                                                  "header": [
+                                                      {
+                                                          "key": "Content-Type",
+                                                          "name": "Content-Type",
+                                                          "value": "application/json",
+                                                          "type": "text"
+                                                      }
+                                                  ],
+                                                  "url": {
+                                                      "raw": "https://postman-echo.com/get?id=1234",
+                                                      "protocol": "https",
+                                                      "host": [
+                                                          "postman-echo",
+                                                          "com"
+                                                      ],
+                                                      "path": [
+                                                          "get"
+                                                      ],
+                                                      "query": [
+                                                          {
+                                                              "key": "id",
+                                                              "value": "1234",
+                                                              "description": "Optional. The user's ID."
+                                                          }
+                                                      ]
+                                                  }
+                                              },
+                                              "status": "OK",
+                                              "code": 200,
+                                              "_postman_previewlanguage": "json",
+                                              "header": [
+                                                  {
+                                                      "key": "Content-Type",
+                                                      "name": "Content-Type",
+                                                      "value": "application/json",
+                                                      "description": "",
+                                                      "type": "text"
+                                                  }
+                                              ],
+                                              "cookie": [],
+                                              "responseTime": null,
+                                              "body": "{\n    \"id\": \"1234\",\n    \"user\": \"test-user\",\n    \"firstName\": \"Test\",\n    \"lastName\": \"User\"\n}"
+                                          }
+                                      ]
+                                  },
+                                  {
+                                      "name": "Test E",
+                                      "protocolProfileBehavior": {
+                                          "disableBodyPruning": true
+                                      },
+                                      "request": {
+                                          "auth": {
+                                              "type": "bearer",
+                                              "bearer": [
+                                                  {
+                                                      "key": "token",
+                                                      "value": "TEST"
+                                                  }
+                                              ]
+                                          },
+                                          "method": "PATCH",
+                                          "header": [],
+                                          "body": {
+                                              "mode": "raw",
+                                              "raw": "{\n    \"username\": \"test-user\",\n    \"firstName\": \"Test\",\n    \"lastName\": \"User\"\n}",
+                                              "options": {
+                                                  "raw": {
+                                                      "language": "json"
+                                                  }
+                                              }
+                                          },
+                                          "url": {
+                                              "raw": "https://postman-echo.com/get?id={{id}}",
+                                              "protocol": "https",
+                                              "host": [
+                                                  "postman-echo",
+                                                  "com"
+                                              ],
+                                              "path": [
+                                                  "get"
+                                              ],
+                                              "query": [
+                                                  {
+                                                      "key": "id",
+                                                      "value": "{{id}}",
+                                                      "description": "Optional. The user's ID."
+                                                  }
+                                              ]
+                                          },
+                                          "description": "This is an example GET request."
+                                      },
+                                      "response": [
+                                          {
+                                              "name": "Successful Response",
+                                              "originalRequest": {
+                                                  "method": "GET",
+                                                  "header": [
+                                                      {
+                                                          "key": "Content-Type",
+                                                          "name": "Content-Type",
+                                                          "value": "application/json",
+                                                          "type": "text"
+                                                      }
+                                                  ],
+                                                  "body": {
+                                                      "mode": "raw",
+                                                      "raw": "{\n    \"firstName\": \"Test\",\n    \"lastName\": \"User\"\n}",
+                                                      "options": {
+                                                          "raw": {
+                                                              "language": "json"
+                                                          }
+                                                      }
+                                                  },
+                                                  "url": {
+                                                      "raw": "https://postman-echo.com/get?id=1234",
+                                                      "protocol": "https",
+                                                      "host": [
+                                                          "postman-echo",
+                                                          "com"
+                                                      ],
+                                                      "path": [
+                                                          "get"
+                                                      ],
+                                                      "query": [
+                                                          {
+                                                              "key": "id",
+                                                              "value": "1234",
+                                                              "description": "Optional. The user's ID."
+                                                          }
+                                                      ]
+                                                  }
+                                              },
+                                              "status": "OK",
+                                              "code": 200,
+                                              "_postman_previewlanguage": "json",
+                                              "header": [
+                                                  {
+                                                      "key": "Content-Type",
+                                                      "name": "Content-Type",
+                                                      "value": "application/json",
+                                                      "description": "",
+                                                      "type": "text"
+                                                  }
+                                              ],
+                                              "cookie": [],
+                                              "responseTime": null,
+                                              "body": "{\n    \"id\": \"1234\",\n    \"user\": \"test-user\"\n}"
+                                          }
+                                      ]
+                                  }
+                              ],
+                              "auth": {
+                                  "type": "apikey",
+                                  "apikey": [
+                                      {
+                                          "key": "value",
+                                          "value": "PMAK-XXX"
+                                      },
+                                      {
+                                          "key": "key",
+                                          "value": "api-key"
+                                      },
+                                      {
+                                          "key": "in",
+                                          "value": "header"
+                                      }
+                                  ]
+                              },
+                              "event": [
+                                  {
+                                      "listen": "prerequest",
+                                      "script": {
+                                          "type": "text/javascript",
+                                          "exec": [
+                                              "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                              "    console.log(response.json());",
+                                              "});"
+                                          ]
+                                      }
+                                  },
+                                  {
+                                      "listen": "test",
+                                      "script": {
+                                          "type": "text/javascript",
+                                          "exec": [
+                                              "pm.test(\"Status code is 200\", function () {",
+                                              "    pm.response.to.have.status(200);",
+                                              "});"
+                                          ]
+                                      }
+                                  }
+                              ]
+                          },
+                          {
+                              "name": "Test A",
+                              "event": [
+                                  {
+                                      "listen": "test",
+                                      "script": {
+                                          "exec": [
+                                              "pm.test(\"Status code is 200\", function () {",
+                                              "    pm.response.to.have.status(200);",
+                                              "});"
+                                          ],
+                                          "type": "text/javascript"
+                                      }
+                                  },
+                                  {
+                                      "listen": "prerequest",
+                                      "script": {
+                                          "exec": [
+                                              "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                              "    console.log(response.json());",
+                                              "});"
+                                          ],
+                                          "type": "text/javascript"
+                                      }
+                                  }
+                              ],
+                              "protocolProfileBehavior": {
+                                  "disableBodyPruning": true
+                              },
+                              "request": {
+                                  "auth": {
+                                      "type": "bearer",
+                                      "bearer": [
+                                          {
+                                              "key": "token",
+                                              "value": "TEST"
+                                          }
+                                      ]
+                                  },
+                                  "method": "GET",
+                                  "header": [
+                                      {
+                                          "key": "Accept",
+                                          "value": "application/vnd.example.v1+json",
+                                          "type": "text"
+                                      }
+                                  ],
+                                  "body": {
+                                      "mode": "raw",
+                                      "raw": "",
+                                      "options": {
+                                          "raw": {
+                                              "language": "json"
+                                          }
+                                      }
+                                  },
+                                  "url": {
+                                      "raw": "http://api.getpostman.com/v1/request?id={{id}}",
+                                      "protocol": "http",
+                                      "host": [
+                                          "api",
+                                          "getpostman",
+                                          "com"
+                                      ],
+                                      "path": [
+                                          "v1",
+                                          "request"
+                                      ],
+                                      "query": [
+                                          {
+                                              "key": "id",
+                                              "value": "{{id}}",
+                                              "description": "The API's ID."
+                                          }
+                                      ]
+                                  },
+                                  "description": "This is a test API."
+                              },
+                              "response": [
+                                  {
+                                      "name": "Successful Response",
+                                      "originalRequest": {
+                                          "method": "POST",
+                                          "header": [
+                                              {
+                                                  "key": "Host",
+                                                  "value": "postman-echo.com"
+                                              },
+                                              {
+                                                  "key": "user-agent",
+                                                  "value": "curl/7.88.1"
+                                              },
+                                              {
+                                                  "key": "accept",
+                                                  "value": "*/*"
+                                              },
+                                              {
+                                                  "key": "content-type",
+                                                  "value": "application/json"
+                                              },
+                                              {
+                                                  "key": "content-length",
+                                                  "value": "22"
+                                              }
+                                          ],
+                                          "body": {
+                                              "mode": "raw",
+                                              "raw": "{\n  \"field\": \"Value\"\n}",
+                                              "options": {
+                                                  "raw": {
+                                                      "language": "json"
+                                                  }
+                                              }
+                                          },
+                                          "url": {
+                                              "raw": "https://postman-echo.com/post",
+                                              "protocol": "https",
+                                              "host": [
+                                                  "postman-echo",
+                                                  "com"
+                                              ],
+                                              "path": [
+                                                  "post"
+                                              ]
+                                          }
+                                      },
+                                      "status": "OK",
+                                      "code": 200,
+                                      "_postman_previewlanguage": "json",
+                                      "header": [
+                                          {
+                                              "key": "date",
+                                              "value": "Thu, 07 Sep 2023 12:41:59 GMT"
+                                          },
+                                          {
+                                              "key": "content-type",
+                                              "value": "application/json; charset=utf-8"
+                                          },
+                                          {
+                                              "key": "content-length",
+                                              "value": "468"
+                                          },
+                                          {
+                                              "key": "etag",
+                                              "value": "W/\"1d4-JuAIw8ssoFCtGzk/UwITxaiSbrc\""
+                                          },
+                                          {
+                                              "key": "set-cookie",
+                                              "value": "sails.sid=s%3A6p_NXpI3OZeGE35bI6i5Uq3XgHHxcsdJ.dQVpBE%2BJ9wHWainkqe6F6dkdv7UKoshSZY7sdZ5sbzo; Path=/ HttpOnly"
+                                          }
+                                      ],
+                                      "cookie": [],
+                                      "responseTime": null,
+                                      "body": "{\n  \"args\": {},\n  \"data\": {\n    \"field\": \"Value\"\n  },\n  \"files\": {},\n  \"form\": {},\n  \"headers\": {\n    \"x-forwarded-proto\": \"https\",\n    \"x-forwarded-port\": \"443\",\n    \"host\": \"postman-echo.com\",\n    \"x-amzn-trace-id\": \"Root=1-64f9c517-36db304817c774d740619baa\",\n    \"content-length\": \"22\",\n    \"user-agent\": \"curl/7.88.1\",\n    \"accept\": \"*/*\",\n    \"content-type\": \"application/json\"\n  },\n  \"json\": {\n    \"field\": \"Value\"\n  },\n  \"url\": \"https://postman-echo.com/post\"\n}\n"
+                                  },
+                                  {
+                                      "name": "Not Found",
+                                      "originalRequest": {
+                                          "method": "GET",
+                                          "header": [
+                                              {
+                                                  "key": "Accept",
+                                                  "value": "application/vnd.example.v1+json",
+                                                  "type": "text"
+                                              }
+                                          ],
+                                          "body": {
+                                              "mode": "raw",
+                                              "raw": "",
+                                              "options": {
+                                                  "raw": {
+                                                      "language": "json"
+                                                  }
+                                              }
+                                          },
+                                          "url": {
+                                              "raw": "http://api.getpostman.com/v1/request?id=test-api",
+                                              "protocol": "http",
+                                              "host": [
+                                                  "api",
+                                                  "getpostman",
+                                                  "com"
+                                              ],
+                                              "path": [
+                                                  "v1",
+                                                  "request"
+                                              ],
+                                              "query": [
+                                                  {
+                                                      "key": "id",
+                                                      "value": "test-api"
+                                                  }
+                                              ]
+                                          }
+                                      },
+                                      "status": "Not Found",
+                                      "code": 404,
+                                      "_postman_previewlanguage": "json",
+                                      "header": [
+                                          {
+                                              "key": "Content-Type",
+                                              "name": "Content-Type",
+                                              "value": "application/json",
+                                              "description": "",
+                                              "type": "text"
+                                          }
+                                      ],
+                                      "cookie": [],
+                                      "responseTime": null,
+                                      "body": "{\n    \"title\": \"Not Found\",\n    \"detail\": \"Requested API does not exist\",\n    \"type\": \"about:blank\"\n}"
+                                  }
+                              ]
+                          },
+                          {
+                              "name": "Test B",
+                              "protocolProfileBehavior": {
+                                  "disableBodyPruning": true
+                              },
+                              "request": {
+                                  "method": "PUT",
+                                  "header": [],
+                                  "body": {
+                                      "mode": "raw",
+                                      "raw": "{\n    \"name\": \"Test\",\n    \"description\": \"This is a test.\"\n}",
+                                      "options": {
+                                          "raw": {
+                                              "language": "json"
+                                          }
+                                      }
+                                  },
+                                  "url": {
+                                      "raw": "http://api.getpostman.com/v1/request",
+                                      "protocol": "http",
+                                      "host": [
+                                          "api",
+                                          "getpostman",
+                                          "com"
+                                      ],
+                                      "path": [
+                                          "v1",
+                                          "request"
+                                      ]
+                                  }
+                              },
+                              "response": [
+                                  {
+                                      "name": "Test B",
+                                      "originalRequest": {
+                                          "method": "PUT",
+                                          "header": [
+                                              {
+                                                  "key": "Content-Type",
+                                                  "name": "Content-Type",
+                                                  "value": "application/json",
+                                                  "type": "text"
+                                              }
+                                          ],
+                                          "body": {
+                                              "mode": "raw",
+                                              "raw": "{\n    \"firstName\": \"Test\",\n    \"lastName\": \"User\"\n}",
+                                              "options": {
+                                                  "raw": {
+                                                      "language": "json"
+                                                  }
+                                              }
+                                          },
+                                          "url": {
+                                              "raw": "http://api.getpostman.com/v1/request",
+                                              "protocol": "http",
+                                              "host": [
+                                                  "api",
+                                                  "getpostman",
+                                                  "com"
+                                              ],
+                                              "path": [
+                                                  "v1",
+                                                  "request"
+                                              ]
+                                          }
+                                      },
+                                      "status": "OK",
+                                      "code": 200,
+                                      "_postman_previewlanguage": "json",
+                                      "header": [
+                                          {
+                                              "key": "Content-Type",
+                                              "name": "Content-Type",
+                                              "value": "application/json",
+                                              "description": "",
+                                              "type": "text"
+                                          }
+                                      ],
+                                      "cookie": [],
+                                      "responseTime": null,
+                                      "body": "{\n    \"id\": \"1234\",\n    \"user\": \"test-user\"\n}"
+                                  }
+                              ]
+                          },
+                          {
+                              "name": "Test C",
+                              "event": [
+                                  {
+                                      "listen": "test",
+                                      "script": {
+                                          "exec": [
+                                              "pm.test(\"Status code is 200\", function () {",
+                                              "    pm.response.to.have.status(200);",
+                                              "});"
+                                          ],
+                                          "type": "text/javascript"
+                                      }
+                                  },
+                                  {
+                                      "listen": "prerequest",
+                                      "script": {
+                                          "exec": [
+                                              ""
+                                          ],
+                                          "type": "text/javascript"
+                                      }
+                                  }
+                              ],
+                              "protocolProfileBehavior": {
+                                  "disableBodyPruning": true
+                              },
+                              "request": {
+                                  "auth": {
+                                      "type": "apikey",
+                                      "apikey": [
+                                          {
+                                              "key": "value",
+                                              "value": "PMAK-XXX"
+                                          },
+                                          {
+                                              "key": "key",
+                                              "value": "api-key"
+                                          },
+                                          {
+                                              "key": "in",
+                                              "value": "header"
+                                          }
+                                      ]
+                                  },
+                                  "method": "POST",
+                                  "header": [],
+                                  "body": {
+                                      "mode": "raw",
+                                      "raw": "{\n    \"name\": \"Test API\",\n    \"description\": \"This is a test API.\"\n}",
+                                      "options": {
+                                          "raw": {
+                                              "language": "json"
+                                          }
+                                      }
+                                  },
+                                  "url": {
+                                      "raw": "https://postman-echo.com/post",
+                                      "protocol": "https",
+                                      "host": [
+                                          "postman-echo",
+                                          "com"
+                                      ],
+                                      "path": [
+                                          "post"
+                                      ]
+                                  }
+                              },
+                              "response": [
+                                  {
+                                      "name": "Successful Response",
+                                      "originalRequest": {
+                                          "method": "POST",
+                                          "header": [],
+                                          "body": {
+                                              "mode": "raw",
+                                              "raw": "{\n    \"name\": \"Test API\",\n    \"description\": \"This is a test API.\"\n}",
+                                              "options": {
+                                                  "raw": {
+                                                      "language": "json"
+                                                  }
+                                              }
+                                          },
+                                          "url": {
+                                              "raw": "https://postman-echo.com/post",
+                                              "protocol": "https",
+                                              "host": [
+                                                  "postman-echo",
+                                                  "com"
+                                              ],
+                                              "path": [
+                                                  "post"
+                                              ]
+                                          }
+                                      },
+                                      "_postman_previewlanguage": "json",
+                                      "header": [
+                                          {
+                                              "key": "Content-Type",
+                                              "name": "Content-Type",
+                                              "value": "application/json",
+                                              "description": "",
+                                              "type": "text"
+                                          }
+                                      ],
+                                      "cookie": [],
+                                      "responseTime": null,
+                                      "body": "{\n    \"id\": \"test-api\",\n    \"name\": \"Test API\",\n    \"description\": \"This is a test API.\",\n    \"is_public\": false,\n    \"created_at\": \"2022-01-28T11:50:56.000Z\",\n    \"updated_at\": \"2022-01-28T11:50:56.000Z\",\n    \"performance\": {\n        \"collection\": \"123e4567-e89b-12d3-a456-556642440000\",\n        \"environment\": \"123e4567-e89b-12d3-a456-556642440000\"\n    }\n}"
+                                  }
+                              ]
+                          }
+                      ],
+                      "description": "This is a test folder.",
+                      "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                              {
+                                  "key": "value",
+                                  "value": "PMAK-XXX"
+                              },
+                              {
+                                  "key": "key",
+                                  "value": "x-api-key"
+                              },
+                              {
+                                  "key": "in",
+                                  "value": "header"
+                              }
+                          ]
+                      },
+                      "event": [
+                          {
+                              "listen": "prerequest",
+                              "script": {
+                                  "type": "text/javascript",
+                                  "exec": [
+                                      "pm.variables.get(\"variable_key\");"
+                                  ]
+                              }
+                          },
+                          {
+                              "listen": "test",
+                              "script": {
+                                  "type": "text/javascript",
+                                  "exec": [
+                                      "pm.test(\"Status code is 200\", function () {",
+                                      "    pm.response.to.have.status(200);",
+                                      "});"
+                                  ]
+                              }
+                          }
+                      ]
+                  },
+                  {
+                      "name": "Folder 3",
+                      "item": [
+                          {
+                              "name": "ID",
+                              "item": [
+                                  {
+                                      "name": "Request 3-A",
+                                      "protocolProfileBehavior": {
+                                          "disableBodyPruning": true
+                                      },
+                                      "request": {
+                                          "method": "GET",
+                                          "header": [],
+                                          "body": {
+                                              "mode": "raw",
+                                              "raw": "",
+                                              "options": {
+                                                  "raw": {
+                                                      "language": "json"
+                                                  }
+                                              }
+                                          }
+                                      },
+                                      "response": []
+                                  }
+                              ],
+                              "description": "Test folder user ID."
+                          },
+                          {
+                              "name": "User",
+                              "item": [
+                                  {
+                                      "name": "New Request",
+                                      "protocolProfileBehavior": {
+                                          "disableBodyPruning": true
+                                      },
+                                      "request": {
+                                          "method": "POST",
+                                          "header": []
+                                      },
+                                      "response": []
+                                  },
+                                  {
+                                      "name": "New Request",
+                                      "protocolProfileBehavior": {
+                                          "disableBodyPruning": true
+                                      },
+                                      "request": {
+                                          "method": "GET",
+                                          "header": []
+                                      },
+                                      "response": []
+                                  }
+                              ],
+                              "description": "Test folder for user information."
+                          },
+                          {
+                              "name": "Test A",
+                              "protocolProfileBehavior": {
+                                  "disableBodyPruning": true
+                              },
+                              "request": {
+                                  "method": "GET",
+                                  "header": [],
+                                  "url": {
+                                      "raw": "http://api.getpostman.com/v1/request",
+                                      "protocol": "http",
+                                      "host": [
+                                          "api",
+                                          "getpostman",
+                                          "com"
+                                      ],
+                                      "path": [
+                                          "v1",
+                                          "request"
+                                      ]
+                                  }
+                              },
+                              "response": []
+                          }
+                      ],
+                      "description": "This is a test folder.",
+                      "auth": {
+                          "type": "apikey",
+                          "apikey": [
+                              {
+                                  "key": "value",
+                                  "value": "PMAK-XXX"
+                              },
+                              {
+                                  "key": "key",
+                                  "value": "x-api-key"
+                              },
+                              {
+                                  "key": "in",
+                                  "value": "header"
+                              }
+                          ]
+                      },
+                      "event": [
+                          {
+                              "listen": "prerequest",
+                              "script": {
+                                  "type": "text/javascript",
+                                  "exec": [
+                                      "pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+                                      "    console.log(response.json());",
+                                      "});"
+                                  ]
+                              }
+                          },
+                          {
+                              "listen": "test",
+                              "script": {
+                                  "type": "text/javascript",
+                                  "exec": [
+                                      "pm.test(\"Status code is 200\", function () {",
+                                      "    pm.response.to.have.status(200);",
+                                      "});"
+                                  ]
+                              }
+                          }
+                      ]
+                  },
+                  {
+                      "name": "Test F",
+                      "protocolProfileBehavior": {
+                          "disableBodyPruning": true
+                      },
+                      "request": {
+                          "method": "POST",
+                          "header": []
+                      },
+                      "response": []
+                  }
+              ],
+              "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                      {
+                          "key": "value",
+                          "value": "{{api-key}}"
+                      },
+                      {
+                          "key": "key",
+                          "value": "x-api-key"
+                      }
+                  ]
+              },
+              "event": [
+                  {
+                      "listen": "prerequest",
+                      "script": {
+                          "id": "86cc41c1-a9ad-411f-923d-5f1d15344c94",
+                          "type": "text/javascript",
+                          "packages": {},
+                          "exec": [
+                              ""
+                          ]
+                      }
+                  },
+                  {
+                      "listen": "test",
+                      "script": {
+                          "id": "9f48d011-89cb-4a85-9179-b3554aa44aff",
+                          "type": "text/javascript",
+                          "packages": {},
+                          "exec": [
+                              "pm.test(\"Content-Type is present\", function () {",
+                              "    pm.response.to.have.header(\"Content-Type\");",
+                              "});"
+                          ]
+                      }
+                  }
+              ],
+              "variable": [
+                  {
+                      "key": "userId",
+                      "value": "12345678",
+                      "description": "The user's ID."
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "id": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "name": "Test Collection",
+              "uid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+          }
+      }
+order: 3000

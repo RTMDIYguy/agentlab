@@ -1,0 +1,35 @@
+$kind: http-request
+description: |-
+  Creates an access request for a team. Access requests include actions such as request to join a team, upgrading a user's role, adding members, and requesting team role access to another team.
+
+  **Note:**
+
+  If a team discovery is enabled, the team's access request is automatically approved.
+url: "{{baseUrl}}/teams/:teamId/access-requests"
+method: POST
+headers:
+  - key: identifierType
+    value: scim
+    disabled: true
+    description: Use SCIM user and group IDs instead of Postman user IDs.
+pathVariables:
+  - key: teamId
+    value: ""
+    description: The team's ID.
+body:
+  type: json
+  content: |-
+    {
+        "entityList": [
+            {
+                "entityType": "{{entityType}}",
+                "entityId": "{{entityId}}"
+            }
+        ],
+        "role": "{{entityRole}}",
+        "reason": "{{reason}}",
+        "requestType": "{{reasonType}}"
+    }
+settings: {}
+examples: ./.resources/Create an access request.resources/examples
+order: 1000

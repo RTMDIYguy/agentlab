@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-duplicate-tasks/:taskId
+  method: GET
+  pathVariables:
+    taskId: 12345678-66ae9950
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Bad request",
+          "status": 400,
+          "type": "https://api.postman.com/problems/bad-request",
+          "detail": "Invalid task id"
+      }
+order: 4000

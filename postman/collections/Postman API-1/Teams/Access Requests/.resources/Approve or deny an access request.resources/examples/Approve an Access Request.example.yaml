@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/access-requests/:requestId
+  method: POST
+  pathVariables:
+    teamId: "123"
+    requestId: "1095"
+  body:
+    type: json
+    content: |-
+      {
+          "action": "approve"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "result": {
+              "entityType": "user",
+              "entityId": 87654321,
+              "role": "TEAM_DEVELOPER",
+              "previousRole": null,
+              "status": "Accepted",
+              "accessRequest": {
+                  "id": 1095,
+                  "requestType": "REQUEST_TO_ADD_MEMBERS",
+                  "reason": "",
+                  "status": "Accepted",
+                  "objectType": "team",
+                  "objectId": 1095,
+                  "createdBy": 87654321
+              }
+          }
+      }
+order: 1000

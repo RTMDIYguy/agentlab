@@ -1,0 +1,33 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/releases/8d7ba74e-2c36-4e36-a263-f3c0c9ae21d2
+  method: PATCH
+  body:
+    type: json
+    content: |-
+      {
+          "release": {
+              "name": "Release 1.5",
+              "summary": "This is the first public release update.",
+              "description": "This is the first release update of the Test API. For more information, read the documentation.",
+              "visibility": "public",
+              "gitTag": "Test"
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "release": {
+              "id": "8d7ba74e-2c36-4e36-a263-f3c0c9ae21d2",
+              "name": "Release 1.5",
+              "summary": "This is the first public release update.",
+              "description": "This is the first release update of the Test API. For more information, read the documentation.",
+              "visibility": "public",
+              "gitTag": "Test"
+          }
+      }
+order: 1000

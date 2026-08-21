@@ -1,0 +1,34 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/collection-forks?cursor=eyJpZCI6MzMyNzksImZvcmtzQWZ0ZXIiOjIwfQ==
+  method: GET
+  queryParams:
+    cursor: eyJpZCI6MzMyNzksImZvcmtzQWZ0ZXIiOjIwfQ==
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": [
+              {
+                  "forkName": "Collection Fork",
+                  "forkId": "12345678-667df1ad-2ee3-7890-b678-7742d82e2e1f",
+                  "sourceId": "87654321-bd46b634-b347-44d4-aa23-8c71ff4ecc4d",
+                  "createdAt": "2023-11-16T09:18:17.000Z"
+              },
+              {
+                  "forkName": "Test Fork",
+                  "forkId": "12345678-38j9f1ad-2ee3-7890-dv5h-7742d82e2e1f",
+                  "sourceId": "87654321-bd46b634-b347-44d4-aa23-8c71ff4ecc4d",
+                  "createdAt": "2023-11-16T09:16:15.000Z"
+              }
+          ],
+          "meta": {
+              "total": 2,
+              "nextCursor": null,
+              "inaccessibleFork": 0
+          }
+      }
+order: 2000

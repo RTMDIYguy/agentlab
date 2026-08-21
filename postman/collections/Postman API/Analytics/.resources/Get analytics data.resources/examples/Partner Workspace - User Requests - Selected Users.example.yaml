@@ -1,0 +1,115 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=user_requests&view=detailed&duration=last_180_days&userId=12345678&limit=3
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: user_requests
+    view: detailed
+    duration: last_180_days
+    userId: "12345678"
+    limit: "3"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "user_id",
+                              "type": "STRING",
+                              "description": "Unique identifier of the user who sent the request."
+                          },
+                          {
+                              "name": "request_name",
+                              "type": "STRING",
+                              "description": "Human-readable name of the request made by the user."
+                          },
+                          {
+                              "name": "request_identifier_id",
+                              "type": "STRING",
+                              "description": "Unique identifier referencing the specific request definition."
+                          },
+                          {
+                              "name": "collection_name",
+                              "type": "STRING",
+                              "description": "Name of the collection associated with the request."
+                          },
+                          {
+                              "name": "collection_id",
+                              "type": "STRING",
+                              "description": "Identifier of the collection associated with the request."
+                          },
+                          {
+                              "name": "workspace_name",
+                              "type": "STRING",
+                              "description": "Name of the workspace containing the request’s collection."
+                          },
+                          {
+                              "name": "workspace_id",
+                              "type": "STRING",
+                              "description": "Identifier of the workspace containing the collection."
+                          },
+                          {
+                              "name": "response_status",
+                              "type": "INTEGER",
+                              "description": "HTTP status code returned for the request."
+                          },
+                          {
+                              "name": "request_ts",
+                              "type": "TIMESTAMP",
+                              "format": "YYYY-MM-DDTHH:MM:SSZ",
+                              "description": "Timestamp when the request was made."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "12345678",
+                          "Get Workspace Summary",
+                          "12345678-82b01bb6-062c-4bdc-9e09-710bc8f66e75",
+                          "Workspace Insights API",
+                          "12345678-57d32d78-2d30-4fd7-9e33-4ac2213b4499",
+                          "Engineering Hub",
+                          "6755660d-38f1-4366-848b-df9f2008620d",
+                          200,
+                          "2025-10-10T09:55:00Z"
+                      ],
+                      [
+                          "87654321",
+                          "Fetch Collection Details",
+                          "87654321-bcea09cd-cab7-4744-a971-45af229bc1ef",
+                          "Collection Metrics API",
+                          "87654321-43270cfc-92d2-426e-8c1b-4f85bc8dea0a",
+                          "Partner API Hub",
+                          "cc7b80be-89dd-4506-912d-c27945fea4b2",
+                          404,
+                          "2025-10-10T10:00:00Z"
+                      ],
+                      [
+                          "56781234",
+                          "Get User Profile",
+                          "56781234-2b6d42fa-6183-4747-9a5b-d685c18487a0",
+                          "User Management API",
+                          "56781234-6a07486a-2005-4ef1-a32b-15331ae2c9b0",
+                          "Internal Tools",
+                          "19efb285-462f-4e15-94ba-3322657b5c1d",
+                          202,
+                          "2025-10-10T10:10:00Z"
+                      ]
+                  ],
+                  "pagination": {
+                      "total": 25,
+                      "limit": 3,
+                      "offset": 0,
+                      "has_more": true
+                  }
+              }
+          }
+      }
+order: 30000

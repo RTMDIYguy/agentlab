@@ -1,0 +1,60 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/runners/:runnerId/instances
+  method: GET
+  pathVariables:
+    runnerId: 1f08d6ba-c377-4ca0-be80-af81daf8fef9
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "model": "runnerInstance",
+              "action": "find",
+              "url": "https://testing.example.com/runners/1f08d6ba-c377-4ca0-be80-af81daf8fef9/instances"
+          },
+          "data": [
+              {
+                  "id": "Rtesting-78b4f9c59c-5c7mx|b5862804ba|1.23.0|Linux",
+                  "hostname": "testing-78b4f9c59c-5c7mx",
+                  "uniqueId": "b5862804ba",
+                  "cliVersion": "1.23.0",
+                  "osType": "Linux",
+                  "runnerId": "1f08d6ba-c377-4ca0-be80-af81daf8fef9",
+                  "lastPingedAt": "2025-11-06T14:59:53.000Z"
+              },
+              {
+                  "id": "Rtesting-78b4f9c59c-bdjdr|f1b9f8f94a|1.23.0|Linux",
+                  "hostname": "testing-78b4f9c59c-bdjdr",
+                  "uniqueId": "f1b9f8f94a",
+                  "cliVersion": "1.23.0",
+                  "osType": "Linux",
+                  "runnerId": "1f08d6ba-c377-4ca0-be80-af81daf8fef9",
+                  "lastPingedAt": "2025-11-06T15:30:51.000Z"
+              },
+              {
+                  "id": "Rtesting-78b4f9c59c-g85wn|b35d23de98|1.23.0|Linux",
+                  "hostname": "testing-78b4f9c59c-g85wn",
+                  "uniqueId": "b35d23de98",
+                  "cliVersion": "1.23.0",
+                  "osType": "Linux",
+                  "runnerId": "1f08d6ba-c377-4ca0-be80-af81daf8fef9",
+                  "lastPingedAt": "2025-11-06T15:33:35.000Z"
+              },
+              {
+                  "id": "Rtesting-78b4f9c59c-shf48|cd40b93f88|1.23.0|Linux",
+                  "hostname": "testing-78b4f9c59c-shf48",
+                  "uniqueId": "cd40b93f88",
+                  "cliVersion": "1.23.0",
+                  "osType": "Linux",
+                  "runnerId": "1f08d6ba-c377-4ca0-be80-af81daf8fef9",
+                  "lastPingedAt": "2025-11-06T15:33:35.000Z"
+              }
+          ]
+      }
+order: 1000

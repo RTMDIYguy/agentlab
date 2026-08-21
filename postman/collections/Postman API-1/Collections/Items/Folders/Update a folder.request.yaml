@@ -1,0 +1,43 @@
+$kind: http-request
+description: |-
+  Updates a folder in a collection. For a complete list of properties and information, see the [Postman Collection Format documentation](https://schema.postman.com/collection/json/v2.1.0/draft-07/docs/index.html).
+
+  **Note:**
+
+  - This request uses example values in the request body for context when updating collection folders. For additional ways to update a folder, see the collection's examples.
+      
+  - This endpoint acts like a PATCH method. It only updates the values that you pass in the request body (for example, the `name` property). The endpoint does **not** update the entire resource.
+url: "{{baseUrl}}/collections/:collectionId/folders/:folderId"
+method: PUT
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+  - key: folderId
+    value: ""
+    description: The folder's ID.
+body:
+  type: json
+  content: |-
+    {
+        "name": "Test Folder",
+        "description": "This is a test collection folder.",
+        "auth": {
+            "type": "basic",
+            "basic": [
+                {
+                    "key": "password",
+                    "value": "{{basicAuthPassword}}"
+                },
+                {
+                    "key": "username",
+                    "value": "{{basicAuthUsername}}"
+                }
+            ]
+        },
+        "order": [],
+        "folders_order": []
+    }
+settings: {}
+examples: ./.resources/Update a folder.resources/examples
+order: 4000

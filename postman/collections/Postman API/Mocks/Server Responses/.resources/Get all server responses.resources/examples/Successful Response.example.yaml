@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks/12345678-e3d951bf-873f-49ac-a658-b2dcb91d3289/server-responses
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      [
+          {
+              "id": "965cdd16-fe22-4d96-a161-3d05490ac421",
+              "name": "Internal Server Error",
+              "statusCode": 500,
+              "createdAt": "2022-08-02T14:57:44.000Z",
+              "updatedAt": "2022-08-02T14:57:44.000Z",
+              "createdBy": "12345678",
+              "updatedBy": "12345678"
+          }
+      ]
+order: 1000

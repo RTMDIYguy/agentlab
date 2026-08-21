@@ -1,0 +1,14 @@
+$kind: http-request
+description: Deletes a folder in a collection.
+url: "{{baseUrl}}/collections/:collectionId/folders/:folderId"
+method: DELETE
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+  - key: folderId
+    value: ""
+    description: The folder's ID.
+settings: {}
+examples: ./.resources/Delete a folder.resources/examples
+order: 5000

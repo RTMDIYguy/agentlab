@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/pulls
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "destinationId": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "sourceId": "12345678-45499451-e894-41b8-8c66-8191ab64932a"
+          }
+      }
+order: 1000

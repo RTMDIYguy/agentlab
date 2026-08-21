@@ -1,0 +1,71 @@
+$kind: http-request
+description: |-
+  Creates a schema for an API. Include the following in the the request body:
+
+  - `type` — A **string** value that contains the API schema's type. One of:
+      - `openapi:3_1`
+          
+      - `openapi:3`
+          
+      - `openapi:2`
+          
+      - `openapi:1`
+          
+      - `raml:0_8`
+          
+      - `raml:1`
+          
+      - `wsdl:1`
+          
+      - `wsdl:2`
+          
+      - `graphql`
+          
+      - `proto:2`
+          
+      - `proto:3`
+          
+      - `asyncapi:2`
+          
+  - `files` — An **array** of schema files that contains the following:
+      - `path` — A **string** value that contains the schema file's path.
+          
+      - `content` — A **string** value that contains the schema file's stringified contents.
+url: "{{baseUrl}}/apis/:apiId/schemas"
+method: POST
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+body:
+  type: json
+  content: |-
+    {
+        "type": "{{schemaType}}",
+        "files": [
+            {
+                "path": "{{filePath1}}",
+                "content": "{{content1}}"
+            },
+            {
+                "path": "{{filePath2}}",
+                "content": "{{content2}}"
+            },
+            {
+                "path": "{{filePath3}}",
+                "content": "{{content3}}"
+            },
+            {
+                "path": "{{filePath4}}",
+                "content": "{{content4}}"
+            }
+        ]
+    }
+settings:
+  disabledSystemHeaders: []
+examples: ./.resources/Create a schema.resources/examples
+order: 1000

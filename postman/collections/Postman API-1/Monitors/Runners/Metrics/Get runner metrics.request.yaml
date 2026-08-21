@@ -1,0 +1,16 @@
+$kind: http-request
+description: |-
+  Gets the Postman server-side metrics for a runner instance. Metrics include information such as monitor run queues and last polling date.
+
+  **Note:**
+
+  You can get a runner's ID in the Postman UI if you have a Team Admin or Super Admin role. To do this, click **Team > Team Settings** in Postman, then click **Runners**. Click the runner you want to get the ID of, then copy its ID from the URL.
+url: "{{baseUrl}}/runners/:runnerId/metrics"
+method: GET
+pathVariables:
+  - key: runnerId
+    value: ""
+    description: The runner's ID.
+settings: {}
+examples: ./.resources/Get runner metrics.resources/examples
+order: 1000

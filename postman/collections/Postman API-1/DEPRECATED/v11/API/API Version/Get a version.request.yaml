@@ -1,0 +1,24 @@
+$kind: http-request
+description: |-
+  Gets information about an API version.
+
+  **Note:**
+
+  - For API editors, this endpoint returns an HTTP `302 Found` status code when the version status is pending. It also returns the `/apis/{apiId}/tasks/{taskId}` task status response header.
+  - For API viewers, this endpoint returns an HTTP `404 Not Found` when the version status is pending.
+url: "{{baseUrl}}/apis/:apiId/versions/:versionId"
+method: GET
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+  - key: versionId
+    value: "{{versionId}}"
+    description: The API's version ID.
+settings: {}
+examples: ./.resources/Get a version.resources/examples
+order: 3000

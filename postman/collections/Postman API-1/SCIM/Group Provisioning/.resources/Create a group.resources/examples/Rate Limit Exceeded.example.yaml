@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Groups
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:schemas:core:2.0:Group"
+          ],
+          "displayName": "TestAPI",
+          "members": []
+      }
+response:
+  statusCode: 429
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:Error"
+          ],
+          "detail": "That’s 180 attempts in less than a minute. Wait for a minute and then try again.",
+          "status": 429
+      }
+order: 10000

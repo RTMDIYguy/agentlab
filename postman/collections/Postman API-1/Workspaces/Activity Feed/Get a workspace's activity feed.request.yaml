@@ -1,0 +1,34 @@
+$kind: http-request
+description: Gets a workspace's [activity feed](https://learning.postman.com/docs/collaborating-in-postman/using-workspaces/changelog-and-restoring-collections/#view-workspace-activity). Activity feeds return information about who added or removed collections, environments, or elements from a workspace, and users that join or leave a workspace.
+url: "{{baseUrl}}/workspaces/:workspaceId/activities"
+method: GET
+queryParams:
+  - key: elementType
+    value: ""
+    disabled: true
+    description: |-
+      A comma-separated list of elements to filter the results by:
+      - `collection`
+      - `workspace`
+      - `environment`
+      - `mock`
+      - `monitor`
+  - key: userId
+    value: ""
+    disabled: true
+    description: Filter results by the given user ID.
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The pointer to the first record of the set of paginated results. To view the next response, use the `nextCursor` value for this parameter.
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of rows to return in the response.
+pathVariables:
+  - key: workspaceId
+    value: ""
+    description: The workspace's ID.
+settings: {}
+examples: ./.resources/Get a workspace's activity feed.resources/examples
+order: 1000

@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentId
+  method: DELETE
+  pathVariables:
+    environmentId: 12345678-5daabc50-8451-43f6-922d-96b403b4f28e
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    X-RateLimit-Limit: "60"
+    X-RateLimit-Remaining: "59"
+    X-RateLimit-Reset: "1631439621"
+    X-RateLimit-RetryAfter: "4"
+    RetryAfter: "4"
+  body:
+    type: json
+    content: |-
+      {
+          "error": "rateLimited",
+          "message": "Rate limit exceeded. Please retry after 1669048687"
+      }
+order: 3000

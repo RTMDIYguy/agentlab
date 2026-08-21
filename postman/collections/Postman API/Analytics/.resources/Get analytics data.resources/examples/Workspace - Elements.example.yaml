@@ -1,0 +1,108 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=elements_in_workspace&view=summary&workspaceType=public,partner,internal&duration=last_6_months
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: elements_in_workspace
+    view: summary
+    workspaceType: public,partner,internal
+    duration: last_6_months
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "timestamp",
+                              "type": "DATE",
+                              "format": "YYYY-MM-DD",
+                              "description": "Reporting date for the aggregated metrics."
+                          },
+                          {
+                              "name": "collections_count",
+                              "type": "INTEGER",
+                              "description": "Total number of collections at the given time."
+                          },
+                          {
+                              "name": "environments_count",
+                              "type": "INTEGER",
+                              "description": "Total number of environments at the given time."
+                          },
+                          {
+                              "name": "mocks_count",
+                              "type": "INTEGER",
+                              "description": "Total number of mock servers at the given time."
+                          },
+                          {
+                              "name": "monitors_count",
+                              "type": "INTEGER",
+                              "description": "Total number of monitors at the given time."
+                          },
+                          {
+                              "name": "flows_count",
+                              "type": "INTEGER",
+                              "description": "Total number of flows created at the given time."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "2025-03-01",
+                          420,
+                          310,
+                          150,
+                          190,
+                          120
+                      ],
+                      [
+                          "2025-04-01",
+                          450,
+                          320,
+                          160,
+                          200,
+                          125
+                      ],
+                      [
+                          "2025-05-01",
+                          470,
+                          335,
+                          170,
+                          215,
+                          130
+                      ],
+                      [
+                          "2025-06-01",
+                          500,
+                          345,
+                          185,
+                          230,
+                          140
+                      ],
+                      [
+                          "2025-07-01",
+                          520,
+                          355,
+                          195,
+                          240,
+                          145
+                      ],
+                      [
+                          "2025-08-01",
+                          540,
+                          370,
+                          205,
+                          255,
+                          150
+                      ]
+                  ]
+              }
+          }
+      }
+order: 4000

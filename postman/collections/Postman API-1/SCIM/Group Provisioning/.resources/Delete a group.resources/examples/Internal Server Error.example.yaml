@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Groups/:groupId
+  method: DELETE
+  pathVariables:
+    groupId: 405775fe15ed41872a8eea4c8aa2b38cda9749812cc55c99
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:Error"
+          ],
+          "detail": "Unable to fetch information about this team member.",
+          "status": "500"
+      }
+order: 7000

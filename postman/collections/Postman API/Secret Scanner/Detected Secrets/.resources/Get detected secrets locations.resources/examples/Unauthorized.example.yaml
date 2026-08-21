@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/detected-secrets/OTI3OTYx/locations?workspaceId=e361eeb4-00dd-4225-9774-6146a2555999&limit=2
+  method: GET
+  queryParams:
+    workspaceId: e361eeb4-00dd-4225-9774-6146a2555999
+    limit: "2"
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "instance": "",
+          "status": 401,
+          "title": "Unauthorized. Please try again with valid credentials.",
+          "type": "UNAUTHORIZED"
+      }
+order: 6000

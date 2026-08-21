@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Users
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "taylor-lee@example.com",
+          "name": {
+              "givenName": "Taylor",
+              "familyName": "Lee"
+          },
+          "externalId": "12345678",
+          "displayName": "Taylor Lee",
+          "locale": "en-US",
+          "active": true
+      }
+response:
+  statusCode: 409
+  statusText: Conflict
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:Error"
+          ],
+          "detail": "This person is already a member of the team.",
+          "scimType": "uniqueness",
+          "status": "409"
+      }
+order: 9000

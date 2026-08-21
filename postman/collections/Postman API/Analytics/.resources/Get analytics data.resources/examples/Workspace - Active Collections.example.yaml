@@ -1,0 +1,91 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=active_collections&view=detailed&workspaceType=public,partner,internal&duration=last_month&limit=3
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: active_collections
+    view: detailed
+    workspaceType: public,partner,internal
+    duration: last_month
+    limit: "3"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "is_hidden",
+                              "type": "BOOLEAN",
+                              "description": "Indicates whether the collection is hidden."
+                          },
+                          {
+                              "name": "collection_id",
+                              "type": "STRING",
+                              "description": "Unique identifier of the collection."
+                          },
+                          {
+                              "name": "collection_name",
+                              "type": "STRING",
+                              "description": "Display name of the collection."
+                          },
+                          {
+                              "name": "workspace_name",
+                              "type": "STRING",
+                              "description": "Name of the workspace containing the collection."
+                          },
+                          {
+                              "name": "created_by",
+                              "type": "STRING",
+                              "description": "Name of the user who created the collection."
+                          },
+                          {
+                              "name": "last_edited_on",
+                              "type": "TIMESTAMP",
+                              "format": "YYYY-MM-DDTHH:MM:SSZ",
+                              "description": "Timestamp when the collection was last updated."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          false,
+                          "dd14b810-bb36-4549-9410-1c30728fb417",
+                          "Service Monitoring API",
+                          "Engineering Hub",
+                          "Alex Cruz",
+                          "2025-09-15T09:00:00Z"
+                      ],
+                      [
+                          true,
+                          null,
+                          null,
+                          null,
+                          null,
+                          null
+                      ],
+                      [
+                          false,
+                          "36c18c9f-e942-4119-bef8-2cf0ebede4e9",
+                          "User Authentication API",
+                          "Partner API Hub",
+                          "Taylor Lee",
+                          "2025-09-12T14:40:00Z"
+                      ]
+                  ],
+                  "pagination": {
+                      "total": 38,
+                      "limit": 3,
+                      "offset": 0,
+                      "has_more": true
+                  }
+              }
+          }
+      }
+order: 13000

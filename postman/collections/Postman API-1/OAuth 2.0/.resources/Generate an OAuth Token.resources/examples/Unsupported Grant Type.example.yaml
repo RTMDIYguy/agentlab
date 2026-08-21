@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/oauth2/token
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "installationAuthId": "e868878e40f646ce8b5620736995dc89",
+          "grant_type": "client_credential",
+          "jwt": "eyJhXXX"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Date: Thu, 09 Oct 2025 23:06:35 GMT
+    Content-Type: application/json
+    Content-Length: "86"
+    Connection: keep-alive
+    ETag: W/"56-B6d4NPqVllReaDUW2DtY9JhTO+A"
+    Vary: Accept-Encoding
+  body:
+    type: json
+    content: |-
+      {
+          "error": "invalid_request",
+          "error_description": "Unsupported grant type"
+      }
+order: 2000

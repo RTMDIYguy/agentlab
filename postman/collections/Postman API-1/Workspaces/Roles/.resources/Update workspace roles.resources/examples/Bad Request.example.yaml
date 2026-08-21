@@ -1,0 +1,46 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/roles
+  method: PATCH
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "roles": [
+              {
+                  "id": "1",
+                  "user": [
+                      "12345678"
+                  ],
+                  "usergroup": [
+                      "123"
+                  ],
+                  "displayName": "Viewer"
+              },
+              {
+                  "id": "2",
+                  "user": [
+                      "87654321"
+                  ],
+                  "usergroup": [
+                      "321"
+                  ],
+                  "displayName": "Editor"
+              }
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "invalidParamError",
+          "title": "body.roles[0] should have required property 'op'",
+          "status": 400,
+          "detail": ""
+      }
+order: 7000

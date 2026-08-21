@@ -1,0 +1,69 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections?workspace=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  queryParams:
+    workspace: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "info": {
+                  "name": "Test Collection",
+                  "description": "This collection makes a request to the Postman Echo service to get a list of request headers sent by an HTTP client.",
+                  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+              },
+              "variable": [
+                  {
+                      "key": "userId",
+                      "value": 12345678,
+                      "disabled": true,
+                      "description": "The user's ID."
+                  }
+              ],
+              "item": [
+                  {
+                      "name": "Test GET Response",
+                      "event": [
+                          {
+                              "listen": "test",
+                              "script": {
+                                  "id": "7d2334fc-a84a-4c3d-b26c-7529afa4c0ae",
+                                  "exec": [
+                                      "pm.test(\"Status code is 200\", function () {",
+                                      "    pm.response.to.have.status(200);",
+                                      "});"
+                                      ],
+                                  "type": "text/javascript"
+                                  }
+                              }
+                          ],
+                      "request": {
+                          "url": "https://echo.getpostman.com/headers",
+                          "method": "GET",
+                          "header": [
+                              {
+                                  "key": "Content-Type",
+                                  "value": "application/json"
+                              }
+                          ]
+                      }
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "id": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "name": "Test Collection",
+              "uid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+          }
+      }
+order: 1000

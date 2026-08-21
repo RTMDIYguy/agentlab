@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentUid/forks?workspace=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  queryParams:
+    workspace: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  pathVariables:
+    environmentUid: 12345678-5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      {
+          "forkName": "My fork"
+      }
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/internal-server-error",
+          "title": "Internal Server Error",
+          "detail": "Internal Server Error"
+      }
+order: 5000

@@ -1,0 +1,17 @@
+$kind: http-request
+description: Updates an API specification's properties, such as its name.
+url: "{{baseUrl}}/specs/:specId"
+method: PATCH
+pathVariables:
+  - key: specId
+    value: ""
+    description: The spec's ID.
+body:
+  type: json
+  content: |-
+    {
+        "name": "{{specName}}"
+    }
+settings: {}
+examples: ./.resources/Update a spec's properties.resources/examples
+order: 9000

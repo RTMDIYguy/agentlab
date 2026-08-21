@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs?workspaceId=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  queryParams:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Sample API",
+          "type": "OPENAPI:3.0",
+          "files": [
+              {
+                  "path": "index.json",
+                  "content": "{\n  \"openapi\": \"3.0.0\",\n  \"info\": {\n    \"version\": \"1.0.0\",\n    \"title\": \"Sample API\",\n    \"description\": \"Buy or rent spacecrafts\"\n  },\n  \"paths\": {\n    \"/spacecrafts/{spacecraftId}\": {\n      \"parameters\": [\n        {\n          \"name\": \"spacecraftId\",\n          \"description\": \"The unique identifier of the spacecraft\",\n          \"in\": \"path\",\n          \"required\": true,\n          \"schema\": {\n            \"$ref\": \"#/components/schemas/SpacecraftId\"\n          }\n        }\n      ],\n      \"get\": {\n        \"summary\": \"Read a spacecraft\",\n        \"responses\": {\n          \"200\": {\n            \"description\": \"The spacecraft corresponding to the provided `spacecraftId`\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Spacecraft\"\n                }\n              }\n            }\n          },\n          \"404\": {\n            \"description\": \"No spacecraft found for the provided `spacecraftId`\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Error\"\n                }\n              }\n            }\n          },\n          \"500\": {\n            \"description\": \"Unexpected error\",\n            \"content\": {\n              \"application/json\": {\n                \"schema\": {\n                  \"$ref\": \"#/components/schemas/Error\"\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  },\n  \"components\": {\n    \"schemas\": {\n      \"SpacecraftId\": {\n        \"description\": \"The unique identifier of a spacecraft\",\n        \"type\": \"string\"\n      },\n      \"Spacecraft\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"id\",\n          \"name\",\n          \"type\"\n        ],\n        \"properties\": {\n          \"id\": {\n            \"$ref\": \"#/components/schemas/SpacecraftId\"\n          },\n          \"name\": {\n            \"type\": \"string\"\n          },\n          \"type\": {\n            \"type\": \"string\",\n            \"enum\": [\n              \"capsule\",\n              \"probe\",\n              \"satellite\",\n              \"spaceplane\",\n              \"station\"\n            ]\n          },\n          \"description\": {\n            \"type\": \"string\"\n          }\n        }\n      },\n      \"Error\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"message\"\n        ],\n        \"properties\": {\n          \"message\": {\n            \"description\": \"A human readable error message\",\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"securitySchemes\": {\n      \"ApiKey\": {\n        \"type\": \"apiKey\",\n        \"in\": \"header\",\n        \"name\": \"X-Api-Key\"\n      }\n    }\n  },\n  \"security\": [\n    {\n      \"ApiKey\": [\n\n      ]\n    }\n  ]\n}"
+              }
+          ]
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Sample API",
+          "type": "OPENAPI:3.0",
+          "updatedAt": "2025-03-15T13:48:28.000Z",
+          "createdAt": "2025-03-15T13:48:28.000Z",
+          "createdBy": 12345678,
+          "updatedBy": 12345678,
+          "id": "b4fc1bdc-6587-4f9b-95c9-f768146089b4"
+      }
+order: 1000

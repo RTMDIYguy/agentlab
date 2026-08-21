@@ -1,0 +1,25 @@
+$kind: http-request
+description: Copies or moves folders into a collection or folder.
+url: "{{baseUrl}}/collection-folders-transfers"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "ids": [
+            "{{folderUid}}"
+        ],
+        "target": {
+            "model": "{{modelType}}",
+            "id": "{{modelUid}}"
+        },
+        "location": {
+            "position": "{{position}}",
+            "model": "{{modelId}}",
+            "id": "{{modelUid}}"
+        },
+        "mode": "{{modeType}}"
+    }
+settings: {}
+examples: ./.resources/Transfer folders.resources/examples
+order: 1000

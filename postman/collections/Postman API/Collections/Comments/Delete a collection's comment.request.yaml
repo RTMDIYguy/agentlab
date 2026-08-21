@@ -1,0 +1,19 @@
+$kind: http-request
+description: |-
+  Deletes a comment from a collection. On success, this returns an HTTP `204 No Content` response.
+
+  **Note:**
+
+  Deleting the first comment of a thread deletes all the comments in the thread.
+url: "{{baseUrl}}/collections/:collectionUid/comments/:commentId"
+method: DELETE
+pathVariables:
+  - key: collectionUid
+    value: ""
+    description: The collection's unique ID.
+  - key: commentId
+    value: ""
+    description: The comment's ID.
+settings: {}
+examples: ./.resources/Delete a collection's comment.resources/examples
+order: 4000

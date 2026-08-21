@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/environment
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "environment": [
+              {
+                  "id": "12345678-5daabc50-8451-43f6-922d-96b403b4f28e",
+                  "name": "Test Environment",
+                  "createdAt": "2022-07-08T20:32:48.000Z",
+                  "updatedAt": "2022-07-08T20:31:30.000Z"
+              }
+          ]
+      }
+order: 1000

@@ -1,0 +1,50 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/bulk-members
+  method: POST
+  pathVariables:
+    teamId: "123"
+  body:
+    type: json
+    content: |-
+      {
+          "add": {
+              "users": {
+                  "12345678": [
+                      "TEAM_MANAGER"
+                  ]
+              }
+          },
+          "remove": {
+              "users": {
+                  "87654321": [
+                      "TEAM_MANAGER"
+                  ]
+              }
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "status": 400,
+          "title": "Bad Request",
+          "detail": {
+              "error": "Found invalid entities",
+              "result": [
+                  {
+                      "entityType": "user",
+                      "entityId": 87654321,
+                      "role": null,
+                      "status": "Invalid",
+                      "reason": "Existing and new roles are empty"
+                  }
+              ]
+          },
+          "instance": "/teams/123/members"
+      }
+order: 8000

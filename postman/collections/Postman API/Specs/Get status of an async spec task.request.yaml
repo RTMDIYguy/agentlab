@@ -1,0 +1,17 @@
+$kind: http-request
+description: Gets the status of an asynchronous API specification creation task.
+url: "{{baseUrl}}/:elementType/:elementId/tasks/:taskId"
+method: GET
+pathVariables:
+  - key: elementType
+    value: ""
+    description: "The type of element: `specs` or `collections`"
+  - key: elementId
+    value: ""
+    description: The element's ID.
+  - key: taskId
+    value: ""
+    description: The task's ID.
+settings: {}
+examples: ./.resources/Get status of an async spec task.resources/examples
+order: 11000

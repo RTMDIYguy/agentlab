@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId/generations/:elementType
+  method: POST
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+    elementType: collection
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Sample API",
+          "options": {
+              "enableOptionalParameters": true,
+              "folderStrategy": "Tags"
+          }
+      }
+response:
+  statusCode: 202
+  statusText: Accepted
+  body:
+    type: json
+    content: |-
+      {
+          "taskId": "66ae9950-0869-4e65-96b0-1e0e47e771af",
+          "url": "/specs/73e15000-bc7a-4802-b80e-05fff18fd7f8/tasks/66ae9950-0869-4e65-96b0-1e0e47e771af"
+      }
+order: 1000

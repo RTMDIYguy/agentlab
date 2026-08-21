@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/bulk-members
+  method: DELETE
+  pathVariables:
+    teamId: "123"
+  body:
+    type: json
+    content: |-
+      {
+          "entities": [
+              {
+                  "entityType": "user",
+                  "entityId": "87654321"
+              },
+              {
+                  "entityType": "user",
+                  "entityId": "56781234"
+              }
+          ]
+      }
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "title": "Unauthorized",
+          "instance": "/teams",
+          "status": 401,
+          "type": "https://api.postman.com/problems/unauthorized",
+          "detail": "Unauthorized"
+      }
+order: 8000

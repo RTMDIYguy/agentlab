@@ -1,0 +1,22 @@
+$kind: http-request
+description: Creates a pull request for a forked collection into its parent collection.
+url: "{{baseUrl}}/collections/:collectiondUid/pull-requests"
+method: POST
+pathVariables:
+  - key: collectiondUid
+    value: ""
+    description: The collection's unique ID.
+body:
+  type: json
+  content: |-
+    {
+        "title": "{{pullRequestTitle}}",
+        "description": "{{pullRequesetDescription}}",
+        "reviewers": [
+            "{{userId}}"
+        ],
+        "destinationId": "{{destinationCollectionId}}"
+    }
+settings: {}
+examples: ./.resources/Create a pull request.resources/examples
+order: 2000

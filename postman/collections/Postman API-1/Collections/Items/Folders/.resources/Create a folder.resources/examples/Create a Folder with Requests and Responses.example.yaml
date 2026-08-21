@@ -1,0 +1,343 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/folders
+  method: POST
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Test Folder",
+          "order": [
+              "c82dd02c-4870-4907-8fcb-593a876cf05b",
+              "c0160fa6-c38a-4589-ba74-92dcf59fde03"
+          ],
+          "requests": [
+              {
+                  "id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+                  "url": "https://postman-echo.com/v1/request",
+                  "data": [
+                      {
+                          "key": "id",
+                          "type": "text",
+                          "value": "3f14c9c7-e71c-4094-b90e-ac9edb232c2e",
+                          "enabled": true
+                      },
+                      {
+                          "key": "collection",
+                          "type": "text",
+                          "value": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                          "enabled": true
+                      }
+                  ],
+                  "name": "Example POST request",
+                  "tests": "var data = JSON.parse(responseBody);",
+                  "method": "POST",
+                  "headers": "",
+                  "dataMode": "params",
+                  "responses": [
+                      {
+                          "id": "cc364734-7dfd-4bfc-897d-be763dcdbb07",
+                          "mime": "abc",
+                          "name": "Success",
+                          "text": "[21,22,23,24]",
+                          "time": 45,
+                          "state": "{\"size\":\"normal\"}",
+                          "status": "xyz",
+                          "cookies": [
+                              {
+                                  "name": "undefined",
+                                  "path": "/",
+                                  "value": "0",
+                                  "domain": "localhost",
+                                  "secure": false,
+                                  "expires": "11/1/2023 18:57:34",
+                                  "session": false,
+                                  "storeId": "0",
+                                  "hostOnly": true,
+                                  "httpOnly": false,
+                                  "expirationDate": 1452535054
+                              },
+                              {
+                                  "name": "_ga",
+                                  "path": "/",
+                                  "value": "GA1.1.1111420724.142<br/>2561371",
+                                  "domain": "localhost",
+                                  "secure": false,
+                                  "expires": "28/1/2023 20:56:10",
+                                  "session": false,
+                                  "storeId": "0",
+                                  "hostOnly": true,
+                                  "httpOnly": false,
+                                  "expirationDate": 1485633370
+                              }
+                          ],
+                          "headers": [
+                              {
+                                  "key": "Access-Control-Allow-Credentials",
+                                  "name": "Access-Control-Allow-Credentials",
+                                  "value": "",
+                                  "description": ""
+                              },
+                              {
+                                  "key": "Access-Control-Allow-Headers",
+                                  "name": "Access-Control-Allow-Headers",
+                                  "value": "",
+                                  "description": ""
+                              }
+                          ],
+                          "language": "html",
+                          "previewType": "html",
+                          "rawDataType": "text",
+                          "responseCode": {
+                              "code": 200,
+                              "name": "OK"
+                          },
+                          "requestObject": "{\"name\": \"Postman Signup API\", \"description\":\"To sign up for Postman\"}"
+                      }
+                  ],
+                  "description": "This is an example POST request.",
+                  "preRequestScript": "",
+                  "pathVariables": {}
+              },
+              {
+                  "id": "c0160fa6-c38a-4589-ba74-92dcf59fde03",
+                  "name": "Example GET request",
+                  "description": "This is an example GET request.",
+                  "headers": "",
+                  "url": "https://postman-echo.com/v1/request",
+                  "data": [
+                      {
+                          "key": "id",
+                          "type": "text",
+                          "value": "3f14c9c7-e71c-4094-b90e-ac9edb232c2e",
+                          "enabled": true
+                      },
+                      {
+                          "key": "collection",
+                          "type": "text",
+                          "value": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                          "enabled": true
+                      }
+                  ],
+                  "tests": "var data = JSON.parse(responseBody);",
+                  "method": "GET",
+                  "dataMode": "params",
+                  "pathVariables": {},
+                  "preRequestScript": ""
+              }
+          ],
+          "description": "This is a test collection folder."
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "order": [
+                  "c82dd02c-4870-4907-8fcb-593a876cf05b",
+                  "c0160fa6-c38a-4589-ba74-92dcf59fde03"
+              ],
+              "name": "Test Folder",
+              "description": "This is a test collection folder.",
+              "folder": null,
+              "folders_order": [],
+              "id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+              "owner": "12345678",
+              "lastUpdatedBy": "12345678",
+              "createdAt": "2022-08-29T16:49:19.891Z",
+              "updatedAt": "2022-08-29T16:49:20.052Z",
+              "transactionId": "2039363d-2fe4-4c2f-9e06-347242d0e805",
+              "requests": [
+                  {
+                      "id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+                      "method": "POST",
+                      "dataMode": "params",
+                      "tests": "var data = JSON.parse(responseBody);",
+                      "description": "This is an example POST request.",
+                      "headers": "",
+                      "preRequestScript": null,
+                      "name": "Example POST request",
+                      "pathVariables": {},
+                      "url": "https://postman-echo.com/v1/request",
+                      "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "folder": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+                      "responses_order": [
+                          "cc364734-7dfd-4bfc-897d-be763dcdbb07"
+                      ],
+                      "owner": "12345678",
+                      "lastUpdatedBy": "12345678",
+                      "events": [
+                          {
+                              "listen": "test",
+                              "script": {
+                                  "exec": [
+                                      "var data = JSON.parse(responseBody);"
+                                  ],
+                                  "type": "text/javascript"
+                              }
+                          }
+                      ],
+                      "createdAt": "2022-08-29T16:49:19.961Z",
+                      "updatedAt": "2022-08-29T16:49:19.961Z",
+                      "data": [
+                          {
+                              "key": "id",
+                              "type": "text",
+                              "value": "3f14c9c7-e71c-4094-b90e-ac9edb232c2e",
+                              "enabled": true
+                          },
+                          {
+                              "key": "collection",
+                              "type": "text",
+                              "value": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                              "enabled": true
+                          }
+                      ],
+                      "dataOptions": {
+                          "params": null
+                      },
+                      "responses": [
+                          {
+                              "id": "cc364734-7dfd-4bfc-897d-be763dcdbb07",
+                              "data": [
+                                  {
+                                      "key": "id",
+                                      "type": "text",
+                                      "value": "3f14c9c7-e71c-4094-b90e-ac9edb232c2e",
+                                      "enabled": true
+                                  },
+                                  {
+                                      "key": "collection",
+                                      "type": "text",
+                                      "value": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                                      "enabled": true
+                                  }
+                              ],
+                              "mime": "abc",
+                              "name": "Success",
+                              "text": "[21,22,23,24]",
+                              "time": "45",
+                              "owner": "12345678",
+                              "status": "xyz",
+                              "cookies": [
+                                  {
+                                      "hostOnly": true,
+                                      "httpOnly": false,
+                                      "domain": "localhost",
+                                      "storeId": "0",
+                                      "secure": false,
+                                      "name": "undefined",
+                                      "path": "/",
+                                      "session": false,
+                                      "value": "0",
+                                      "expires": "11/1/2023 18:57:34",
+                                      "expirationDate": 1452535054
+                                  },
+                                  {
+                                      "hostOnly": true,
+                                      "httpOnly": false,
+                                      "domain": "localhost",
+                                      "storeId": "0",
+                                      "secure": false,
+                                      "name": "_ga",
+                                      "path": "/",
+                                      "session": false,
+                                      "value": "GA1.1.1111420724.142<br/>2561371",
+                                      "expires": "11/1/2023 18:57:34",
+                                      "expirationDate": 1485633370
+                                  }
+                              ],
+                              "headers": [
+                                  {
+                                      "name": "Access-Control-Allow-Credentials",
+                                      "key": "Access-Control-Allow-Credentials",
+                                      "value": "",
+                                      "description": ""
+                                  },
+                                  {
+                                      "name": "Access-Control-Allow-Headers",
+                                      "key": "Access-Control-Allow-Headers",
+                                      "value": "",
+                                      "description": ""
+                                  }
+                              ],
+                              "request": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+                              "dataMode": "params",
+                              "language": "html",
+                              "createdAt": "2022-08-29T16:49:20.029Z",
+                              "updatedAt": "2022-08-29T16:49:20.029Z",
+                              "rawDataType": "text",
+                              "responseCode": {
+                                  "code": 200,
+                                  "name": "OK"
+                              },
+                              "lastUpdatedBy": "12345678",
+                              "requestObject": "{\"name\": \"Postman Signup API\", \"description\":\"To sign up for Postman\"}"
+                          }
+                      ]
+                  },
+                  {
+                      "id": "c0160fa6-c38a-4589-ba74-92dcf59fde03",
+                      "url": "https://postman-echo.com/v1/request",
+                      "data": [
+                          {
+                              "enabled": true,
+                              "key": "id",
+                              "value": "3f14c9c7-e71c-4094-b90e-ac9edb232c2e",
+                              "type": "text"
+                          },
+                          {
+                              "enabled": true,
+                              "key": "collection",
+                              "value": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                              "type": "text"
+                          }
+                      ],
+                      "name": "Example GET request",
+                      "owner": "12345678",
+                      "tests": "var data = JSON.parse(responseBody);",
+                      "events": [
+                          {
+                              "listen": "test",
+                              "script": {
+                                  "type": "text/javascript",
+                                  "exec": [
+                                      "var data = JSON.parse(responseBody);"
+                                  ]
+                              }
+                          }
+                      ],
+                      "folder": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+                      "method": "GET",
+                      "headers": "",
+                      "dataMode": "params",
+                      "createdAt": "2022-08-29T16:49:19.964Z",
+                      "responses": [],
+                      "updatedAt": "2022-08-29T16:49:19.964Z",
+                      "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+                      "dataOptions": {
+                          "params": null
+                      },
+                      "description": "This is an example GET request.",
+                      "lastUpdatedBy": "12345678",
+                      "pathVariables": {},
+                      "responses_order": [],
+                      "preRequestScript": null
+                  }
+              ],
+              "folders": []
+          },
+          "meta": {
+              "model": "folder",
+              "action": "import"
+          },
+          "model_id": "65a99e60-8e0a-4b6e-b79c-7d8264cc5caa",
+          "revision": 26532147542
+      }
+order: 3000

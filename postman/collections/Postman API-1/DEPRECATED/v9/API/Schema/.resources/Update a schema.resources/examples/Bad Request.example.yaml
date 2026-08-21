@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/schemas/16bb367e-fafb-4ef3-933b-ee3d971866fb
+  method: PUT
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+      	"schema": {
+      		"language": "yaml",
+      		"schema": "openapi: 3.0.0\ninfo:\n  version: 1.0.0\n  title: Test API\nservers:\n  - url: http://localhost:3000\npaths:\n  /user:\n    get:\n      summary: List all users\n      operationId: listUser\n      tags:\n        - user\n      parameters:\n        - name: id\n          in: query\n          required: true\n          description: The user's ID.\n          example: 1234\n          schema:\n            type: integer\n            format: int32\n      responses:\n        '200':\n          description: Information about the user.\n          headers:\n            x-next:\n              description: A link to the next page of responses.\n              schema:\n                type: string\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/User' \ncomponents:\n  schemas:\n   User:\n      type: object\n      required:\n        - id\n        - name\n      properties:\n        id:\n          type: integer\n          format: int32\n   Error:\n      type: object\n      required:\n        - code\n        - message\n      properties:\n        code:\n          type: integer\n          format: int32\n        message:\n          type: string\n",
+      		"type": "openapi3"
+      	}
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "instanceNotFoundError",
+              "message": "We could not find the API you are looking for"
+          }
+      }
+order: 2000

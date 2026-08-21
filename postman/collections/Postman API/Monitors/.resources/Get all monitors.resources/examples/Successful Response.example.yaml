@@ -1,0 +1,37 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "monitors": [
+              {
+                  "id": "1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+                  "name": "Test Monitor",
+                  "active": true,
+                  "uid": "12345678-1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+                  "owner": 12345678,
+                  "collectionUid": "12345678-d35c5bfa-380e-4e98-9052-4eaf3bd0f14a",
+                  "environmentUid": "12345678-9ce0605e-e7cb-40dc-8074-2f6a69252905"
+              },
+              {
+                  "id": "1e6b6cb7-f13d-4000-acb7-0695757174a8",
+                  "name": "Postman Echo Monitor",
+                  "active": true,
+                  "uid": "87654321-1e6b6cb7-f13d-4000-acb7-0695757174a8",
+                  "owner": 87654321,
+                  "collectionUid": "87654321-b2f818c8-0ff3-4b54-8922-4525dd7acaf7",
+                  "environmentUid": "87654321-a674962b-feeb-475d-a796-c59dd4ee28a7"
+              }
+          ],
+          "meta": {
+              "nextCursor": "",
+              "limit": 25
+          }
+      }
+order: 1000

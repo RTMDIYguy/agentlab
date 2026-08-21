@@ -1,0 +1,50 @@
+$kind: http-request
+description: Updates a monitor.
+url: "{{baseUrl}}/monitors/:monitorId"
+method: PUT
+pathVariables:
+  - key: monitorId
+    value: ""
+    description: The monitor's ID.
+body:
+  type: json
+  content: |-
+    {
+    	"monitor": {
+    		"name": "{{monitorName}}",
+    		"schedule": {
+    			"cron": "{{cronFrequencyPattern}}",
+                "timezone": "{{monitorTimezone}}"
+    		},
+            "notificationLimit": 1,
+            "active": true,
+            "distribution": [
+                {
+                    "region": "{{regionId}}"
+                }
+            ],
+            "options": {
+                "followRedirects": true,
+                "requestDelay": 1,
+                "requestTimeout": 1,
+                "strictSSL": true
+            },
+            "notifications": {
+                "onError": [
+                    {
+                        "email": "{{emailAddress}}"
+                    }
+                ],
+                "onFailure": [
+                    {
+                        "email": "{{emailAddress}}"
+                    }
+                ]
+            },
+            "retry": {
+                "attempts": 1
+            }
+    	}
+    }
+examples: ./.resources/Update a monitor.resources/examples
+order: 7000

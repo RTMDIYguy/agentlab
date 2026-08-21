@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId
+  method: DELETE
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "instanceNotFoundError",
+              "message": "The specified item does not exist.",
+              "details": {
+                  "item": "collection",
+                  "id": "12ece9e1-2abf-4edc-8e34-de66e74114d2"
+              }
+          }
+      }
+order: 2000

@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/accounts/:accountId/invoices?status=PAID
+  method: GET
+  queryParams:
+    status: PAID
+  pathVariables:
+    accountId: "123456"
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/unauthorized",
+          "title": "Unauthorized",
+          "detail": "Unauthorized",
+          "status": 401
+      }
+order: 4000

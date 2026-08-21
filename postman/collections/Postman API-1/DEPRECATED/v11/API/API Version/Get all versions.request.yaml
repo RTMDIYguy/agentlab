@@ -1,0 +1,24 @@
+$kind: http-request
+description: Gets all the published versions of an API.
+url: "{{baseUrl}}/apis/:apiId/versions"
+method: GET
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+queryParams:
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The pointer to the first record of the set of paginated results.
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of rows to return in the response. This value defaults to `10`.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+settings: {}
+examples: ./.resources/Get all versions.resources/examples
+order: 2000

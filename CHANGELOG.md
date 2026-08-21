@@ -4,6 +4,19 @@ All notable changes to the AI Native Agency Deepened/agentlab repo are documente
 
 ---
 
+## [Unreleased] - 2026-08-20
+
+### Added
+- **Postman API Collections & Environment Sync**: Exported and tracked Postman workspace collections (`Hostinger API`, `Postman API`, `My Collection`) and the `Uncle Robert Site` environment, registering cloud-to-local resource bindings in `.postman/resources.yaml`.
+- **Standalone AgentLab UI Prototype (`output/agentlab-ui/`)**: Staged a standalone Vite + React UI prototype containing component builds and configuration for the refreshed AgentLab interface.
+- **Mutual NDA (`output/Evaluation_NDA_Dheerendar.md`)**: Staged a tailored Mutual Non-Disclosure and Evaluation Agreement for the upcoming technical demonstration with Virtusa / Dheerendar Srivastav.
+- **Daily Command Brief**: Generated the dated operating brief at `docs/operations/daily-command-center/2026-08-20-command-brief.md`.
+
+### Changed
+- **Change Control Verification Script**: Enhanced `scripts/verify-change-control.mjs` path resolution for `Journey_Kit.md` to cleanly handle both local repository and parent workspace layouts.
+
+---
+
 ## [Unreleased] - 2026-08-19
 
 ### Added

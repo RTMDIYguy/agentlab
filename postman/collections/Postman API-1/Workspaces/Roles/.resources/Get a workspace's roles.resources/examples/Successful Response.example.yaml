@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/roles
+  method: GET
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "roles": [
+              {
+                  "id": "1",
+                  "displayName": "Viewer",
+                  "user": [
+                      "12345678"
+                  ]
+              },
+              {
+                  "id": "3",
+                  "displayName": "Admin",
+                  "group": [
+                      "56781234"
+                  ]
+              },
+              {
+                  "id": "5",
+                  "displayName": "Editor",
+                  "partner": [
+                      "43215678"
+                  ]
+              }
+          ]
+      }
+order: 1000

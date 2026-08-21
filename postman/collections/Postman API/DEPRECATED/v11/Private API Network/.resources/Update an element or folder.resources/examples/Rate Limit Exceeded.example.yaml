@@ -1,0 +1,32 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private/:elementType/:elementId
+  method: PUT
+  pathVariables:
+    elementType: api
+    elementId: 5360b75f-447e-467c-9299-12fd6c92450d
+  body:
+    type: json
+    content: |-
+      {
+          "api": {
+              "parentFolderId": 1
+          }
+      }
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    X-RateLimit-Limit: "60"
+    X-RateLimit-Remaining: "59"
+    X-RateLimit-Reset: "1631439621"
+    X-RateLimit-RetryAfter: "4"
+    RetryAfter: "4"
+  body:
+    type: json
+    content: |-
+      {
+          "error": "rateLimited",
+          "message": "Rate limit exceeded. Please retry after 1669048687"
+      }
+order: 9000

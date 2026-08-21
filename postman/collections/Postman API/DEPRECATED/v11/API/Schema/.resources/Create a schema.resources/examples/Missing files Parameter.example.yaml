@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/schemas
+  method: POST
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+  body:
+    type: json
+    content: |-
+      {
+          "type" : "openapi:3"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "invalidParamError",
+          "title": "Invalid request body",
+          "detail": "Missing parameter: 'files'"
+      }
+order: 10000

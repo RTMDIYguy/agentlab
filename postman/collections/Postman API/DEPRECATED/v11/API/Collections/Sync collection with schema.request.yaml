@@ -1,0 +1,25 @@
+$kind: http-request
+description: |-
+  Syncs a collection attached to an API with the API schema. This is an asynchronous endpoint that returns an HTTP `202 Accepted` response.
+
+  The response contains a polling link to the `/apis/{apiId}/tasks/{taskId}` endpoint in the Location header.
+
+  **Note:**
+
+  This endpoint only supports the OpenAPI 3 schema type.
+url: "{{baseUrl}}/apis/:apiId/collections/:collectionUid/sync-with-schema-tasks"
+method: PUT
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+  - key: collectionUid
+    value: "{{collectionUid}}"
+    description: The collection's unique ID.
+settings: {}
+examples: ./.resources/Sync collection with schema.resources/examples
+order: 4000

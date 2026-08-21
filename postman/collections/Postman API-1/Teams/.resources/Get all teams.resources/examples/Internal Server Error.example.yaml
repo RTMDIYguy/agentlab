@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams?cursor=RnJpIEZlYiAyNCAyMDIzIDEzOjI0OjA5IEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk=&limit=2
+  method: GET
+  queryParams:
+    cursor: RnJpIEZlYiAyNCAyMDIzIDEzOjI0OjA5IEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk=
+    limit: "2"
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/internal-server-error",
+          "status": 500,
+          "title": "Internal Server Error",
+          "detail": {
+              "error": {
+                  "name": "UnexpectedError",
+                  "message": "There was an issue while finding Team."
+              }
+          },
+          "instance": "/teams"
+      }
+order: 6000

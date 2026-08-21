@@ -1,0 +1,47 @@
+$kind: http-request
+description: |-
+  **This endpoint is deprecated in Postman v10 and higher.**
+
+  Creates a collection and links it to an API as one or multiple relations.
+
+  Include the following properties in the request body:
+
+  - `name` — A **string** that contains the name of the collection.
+      
+
+  You can also include the following additional properties in the request body:
+
+  - `relations` — An **array** that contains a list of relations to create:
+      - `contracttest` — **Deprecated.**
+      - `integrationtest` — **Deprecated.**
+      - `testsuite` — **Deprecated.**
+      - `documentation`
+  - `options` — An **object** that contains advanced creation options and their values. You can find a complete list of properties and their values in Postman's [OpenAPI 3.0 to Postman Collection v2.1.0 Converter OPTIONS documentation](https://github.com/postmanlabs/openapi-to-postman/blob/develop/OPTIONS.md). **These properties are case-sensitive.**
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}/schemas/{{schemaId}}/collections
+method: POST
+headers:
+  Content-Type: application/json
+queryParams:
+  - key: workspaceId
+    value: "{{workspaceId}}"
+    disabled: true
+    description: |-
+      Optional. The workspace ID in which to created the collection.
+
+      If you do not include this query parameter, the system defaults to the "My Workspace" workspace.
+body:
+  type: json
+  content: |-
+    {
+    	"name": "{{collectionName}}",
+    	"relations": [
+    		{
+    			"type": "{{relationType}}"
+    		}	
+    	],
+        "options": {
+            "{{optionName}}": "{{optionValue}}"
+        }
+    }
+examples: ./.resources/Create a collection from a schema.resources/examples
+order: 3000

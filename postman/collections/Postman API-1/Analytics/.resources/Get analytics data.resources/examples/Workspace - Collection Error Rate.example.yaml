@@ -1,0 +1,94 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=collection_error_aggregate&view=detailed&duration=last_6_months&limit=3
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: collection_error_aggregate
+    view: detailed
+    duration: last_6_months
+    limit: "3"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "is_hidden",
+                              "type": "BOOLEAN",
+                              "description": "Indicates whether the collection is hidden."
+                          },
+                          {
+                              "name": "collection_id",
+                              "type": "STRING",
+                              "description": "Unique identifier of the collection."
+                          },
+                          {
+                              "name": "collection_name",
+                              "type": "STRING",
+                              "description": "Name of the collection."
+                          },
+                          {
+                              "name": "workspace_id",
+                              "type": "STRING",
+                              "description": "Unique identifier of the workspace owning the collection."
+                          },
+                          {
+                              "name": "count_4xx",
+                              "type": "INTEGER",
+                              "description": "Total number of 4xx responses for the collection in the selected duration."
+                          },
+                          {
+                              "name": "count_5xx",
+                              "type": "INTEGER",
+                              "description": "Total number of 5xx responses for the collection in the selected duration."
+                          },
+                          {
+                              "name": "total_api_calls",
+                              "type": "INTEGER",
+                              "description": "Total API calls for the collection in the selected duration."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "56781234-dd14b810-bb36-4549-9410-1c30728fb417",
+                          "Demo requests",
+                          "ca858e90-131c-44a1-a132-03903fb1ab35",
+                          0,
+                          0,
+                          1
+                      ],
+                      [
+                          "12345678-36c18c9f-e942-4119-bef8-2cf0ebede4e9",
+                          "Testing composasble",
+                          "4540d410-ef72-4977-afb8-d7f53705f379",
+                          0,
+                          0,
+                          1
+                      ],
+                      [
+                          "87654321-13f603d8-4cb2-45d1-92f8-e39891fdf387",
+                          "New Collection",
+                          "b63a8c9d-fac3-47b9-85b1-7ba9237ce62f",
+                          0,
+                          0,
+                          1
+                      ]
+                  ],
+                  "pagination": {
+                      "total": 453,
+                      "limit": 3,
+                      "offset": 0,
+                      "has_more": true
+                  }
+              }
+          }
+      }
+order: 17000

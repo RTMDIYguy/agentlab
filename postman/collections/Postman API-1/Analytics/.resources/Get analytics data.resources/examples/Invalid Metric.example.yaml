@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=wrong_metric_name&view=detailed&workspace_type=all&duration=last_30_days
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: wrong_metric_name
+    view: detailed
+    workspace_type: all
+    duration: last_30_days
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "title": "Malformed request",
+          "status": 400,
+          "detail": "metric='wrong_metric_name' is not supported for resource 'workspaces'."
+      }
+order: 37000

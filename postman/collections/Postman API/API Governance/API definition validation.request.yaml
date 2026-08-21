@@ -1,0 +1,24 @@
+$kind: http-request
+description: |-
+  Performs an analysis on the given definition and returns any issues based on your [predefined rulesets](https://learning.postman.com/docs/api-governance/configurable-rules/configurable-rules-overview/). This endpoint can help you understand the violations' impact and offers solutions to help you resolve any errors. You can include this endpoint to your CI/CD process to automate schema validation.
+
+  **Note:**
+
+  - The maximum allowed size of the definition is 10 MB.
+      
+  - You must [import and enable](https://learning.postman.com/docs/api-governance/configurable-rules/configuring-api-governance-rules/) Postman's [OWASP security rules](https://postman.postman.co/api-governance/libraries/postman_owasp/view) for this endpoint to return any security rule violations.
+url: "{{baseUrl}}/security/api-validation"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "schema": {
+            "type": "{{schemaType}}",
+            "language": "{{schemaLanguage}}",
+            "schema": "{{schemaBody}}"
+        }
+    }
+settings: {}
+examples: ./.resources/API definition validation.resources/examples
+order: 1000

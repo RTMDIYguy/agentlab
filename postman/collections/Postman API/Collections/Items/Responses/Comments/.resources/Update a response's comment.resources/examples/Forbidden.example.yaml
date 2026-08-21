@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionUid/responses/:responseUid/comments/:commentId
+  method: PUT
+  pathVariables:
+    collectionUid: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+    responseUid: 12345678-cc364734-7dfd-4bfc-897d-be763dcdbb07
+    commentId: "46814"
+  body:
+    type: json
+    content: |-
+      {
+          "body": "This is an updated example."
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "title": "Forbidden",
+          "detail": "Forbidden",
+          "status": 403
+      }
+order: 4000

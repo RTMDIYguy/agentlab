@@ -1,0 +1,941 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/audit-actions
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "data": [
+              {
+                  "code": "team.invoice_paid",
+                  "name": "Invoice Paid"
+              },
+              {
+                  "code": "team.scim_add_member",
+                  "name": "Provisioned SCIM User"
+              },
+              {
+                  "code": "team.ai_consent.grant",
+                  "name": "AI Team Consent Granted"
+              },
+              {
+                  "code": "team.add_group_member",
+                  "name": "Added Member to User Group"
+              },
+              {
+                  "code": "user.username_update",
+                  "name": "Updated Username"
+              },
+              {
+                  "code": "team.update_trial_activation_count",
+                  "name": "Updated trial activation count for the team"
+              },
+              {
+                  "code": "team.send_invite",
+                  "name": "Sent Team Invite"
+              },
+              {
+                  "code": "team.pro_domain_updated",
+                  "name": "Updated Team Subdomain"
+              },
+              {
+                  "code": "team.update_user_roles",
+                  "name": "Updated User Roles"
+              },
+              {
+                  "code": "user.group.create",
+                  "name": "User Group Created"
+              },
+              {
+                  "code": "user.provided_consent_for_multi_team_enablement",
+                  "name": "Provided consent for multi team enablement"
+              },
+              {
+                  "code": "team.reject_pending_access_request",
+                  "name": "Rejected Team Join Request"
+              },
+              {
+                  "code": "user.authaccount.delinked",
+                  "name": "User SSO Account Delinked"
+              },
+              {
+                  "code": "team.last_member_reinstated",
+                  "name": "Team Last Member Reinstated"
+              },
+              {
+                  "code": "team.start_limited_duration_trial",
+                  "name": "Start Limited Duration Trial"
+              },
+              {
+                  "code": "team.convert_domain_type",
+                  "name": "Convert Domain Type"
+              },
+              {
+                  "code": "team.encryption_migration_started",
+                  "name": "Encryption Started for existing data"
+              },
+              {
+                  "code": "team.end_limited_duration_trial",
+                  "name": "End Limited Duration Trial"
+              },
+              {
+                  "code": "team.update_billing_email",
+                  "name": "Updated Billing Email"
+              },
+              {
+                  "code": "team.change_default_card",
+                  "name": "Changed Default Payment Method"
+              },
+              {
+                  "code": "team.update_operation_limits",
+                  "name": "Updated operation limits for team"
+              },
+              {
+                  "code": "user.export_data",
+                  "name": "Exported Postman Data"
+              },
+              {
+                  "code": "user.ai_consent.revoke",
+                  "name": "AI User Consent Revoked"
+              },
+              {
+                  "code": "team.url_updated",
+                  "name": "Updated Team Subdomain"
+              },
+              {
+                  "code": "user.mfa_rotate_recovery_codes",
+                  "name": "2FA Recovery Codes Rotated"
+              },
+              {
+                  "code": "user:disable_external_accounts_linkage",
+                  "name": "Disabled External Accounts Linkage"
+              },
+              {
+                  "code": "team.change_default_payment_method",
+                  "name": "Default payment method changed"
+              },
+              {
+                  "code": "user.apikey_revoke",
+                  "name": "Revoked Postman API Key"
+              },
+              {
+                  "code": "team.marked_internal",
+                  "name": "Organization Marked Internal"
+              },
+              {
+                  "code": "team.update_product",
+                  "name": "Updated Product"
+              },
+              {
+                  "code": "team.add_domain",
+                  "name": "Added Domain"
+              },
+              {
+                  "code": "user.login_google_success",
+                  "name": "User Logged-In Using Google OAuth"
+              },
+              {
+                  "code": "user.disabled_guest_sharing_for_object",
+                  "name": "Disabled guest sharing for object"
+              },
+              {
+                  "code": "team.cancellation_request",
+                  "name": "Raised Cancellation Request For Team"
+              },
+              {
+                  "code": "team.suggest_invite",
+                  "name": "Suggested Invite"
+              },
+              {
+                  "code": "team.scim_provisioning_enabled",
+                  "name": "SCIM provisioning enabled"
+              },
+              {
+                  "code": "team.create_partnership",
+                  "name": "Created Partnership"
+              },
+              {
+                  "code": "team.update_user_role",
+                  "name": "Updated User Role"
+              },
+              {
+                  "code": "team.remove_group_manager",
+                  "name": "Removed group manager"
+              },
+              {
+                  "code": "team.update_team_discovery",
+                  "name": "Updated Team Discovery"
+              },
+              {
+                  "code": "user.revoke_one_by_id",
+                  "name": "User Session Revoked"
+              },
+              {
+                  "code": "team.add_group_manager",
+                  "name": "Added group manager"
+              },
+              {
+                  "code": "team.consume_payment_link",
+                  "name": "Used Payment Link"
+              },
+              {
+                  "code": "team.prodomain_disabled",
+                  "name": "Disabled Team Subdomain"
+              },
+              {
+                  "code": "user.apikey_create",
+                  "name": "Created Postman API Key"
+              },
+              {
+                  "code": "team.migrate_product",
+                  "name": "Migrated the product"
+              },
+              {
+                  "code": "team.secret_scanner_finding.unresolve",
+                  "name": "Unresolved a Secret"
+              },
+              {
+                  "code": "team.customauth.rotate_certificate",
+                  "name": "Rotated Custom Auth Scheme Certificates"
+              },
+              {
+                  "code": "user.invalidate_email_manual",
+                  "name": "Invalidated User Email"
+              },
+              {
+                  "code": "team.scimkey_create",
+                  "name": "Created SCIM Key"
+              },
+              {
+                  "code": "team.secret_scanner_finding.revoke",
+                  "name": "Revoked a Secret"
+              },
+              {
+                  "code": "team.update_allowed_payment_method",
+                  "name": "Updated Allowed Payment Method"
+              },
+              {
+                  "code": "team.decrease_size",
+                  "name": "Decreased Team Size"
+              },
+              {
+                  "code": "team.apikey_creation_enabled",
+                  "name": "Enabled Postman API Key Creation For Team"
+              },
+              {
+                  "code": "team.group_summary_updated",
+                  "name": "Updated group summary"
+              },
+              {
+                  "code": "team.scim_deactivate_member",
+                  "name": "Deactivated SCIM User"
+              },
+              {
+                  "code": "team.domain_verification",
+                  "name": "Domain Verification"
+              },
+              {
+                  "code": "team.retry_invoice_success",
+                  "name": "Successfully Retried Invoice"
+              },
+              {
+                  "code": "team.client_secret_scanner_disabled",
+                  "name": "Local Secret Protection Disabled"
+              },
+              {
+                  "code": "team.start_pro",
+                  "name": "Started Paid Team Subscription"
+              },
+              {
+                  "code": "team.update_instruction",
+                  "name": "Updated Instruction"
+              },
+              {
+                  "code": "team.create_group",
+                  "name": "Created User Group"
+              },
+              {
+                  "code": "team.scimkey_delete",
+                  "name": "Deleted SCIM Key"
+              },
+              {
+                  "code": "team.moved_subscription",
+                  "name": "Transferred Team Subscription"
+              },
+              {
+                  "code": "team.domain_capture_enable_team_management",
+                  "name": "Enabled Domain Capture"
+              },
+              {
+                  "code": "team.remove_partnership_member",
+                  "name": "Remove Partnership Member"
+              },
+              {
+                  "code": "user.login_password_success",
+                  "name": "User Logged-In Using Password"
+              },
+              {
+                  "code": "user.user_details_update",
+                  "name": "Updated User Details"
+              },
+              {
+                  "code": "user.download_export_data",
+                  "name": "Downloaded Exported Postman Data"
+              },
+              {
+                  "code": "team.domain_capture_add_user",
+                  "name": "Added User Using Domain Capture"
+              },
+              {
+                  "code": "team.organization_disabled",
+                  "name": "Team Disabled"
+              },
+              {
+                  "code": "team.client_secret_scanner_enabled",
+                  "name": "Local Secret Protection Enabled"
+              },
+              {
+                  "code": "team.client_secret_scanner_justified",
+                  "name": "Local Secret Justification"
+              },
+              {
+                  "code": "team.trial_end",
+                  "name": "Trial Ended For Team"
+              },
+              {
+                  "code": "user.validate_email",
+                  "name": "Validated User Email"
+              },
+              {
+                  "code": "team.apikey_expiry_update",
+                  "name": "Updated Postman API Keys expiry Settings For Team"
+              },
+              {
+                  "code": "team.reject_invite",
+                  "name": "Rejected User Invite"
+              },
+              {
+                  "code": "team.domain_capture_disable_team_management",
+                  "name": "Disabled Domain Capture"
+              },
+              {
+                  "code": "team.remove_member",
+                  "name": "Team Member Removed"
+              },
+              {
+                  "code": "team.trial_start",
+                  "name": "Started Trial For Team"
+              },
+              {
+                  "code": "team.apikey_auto_revoke_disabled",
+                  "name": "Disbled Auto-revoke Exposed Postman API keys For Team"
+              },
+              {
+                  "code": "team.apikey_auto_revoked",
+                  "name": "Auto-revoked Exposed API Key"
+              },
+              {
+                  "code": "team.ai_consent.revoke",
+                  "name": "AI Team Consent Revoked"
+              },
+              {
+                  "code": "team.update_slots",
+                  "name": "Updated Slots"
+              },
+              {
+                  "code": "user.username_password_update",
+                  "name": "Updated Username or Password"
+              },
+              {
+                  "code": "user.create_personal_context_from_team",
+                  "name": "Create Personal Context from Team Data"
+              },
+              {
+                  "code": "user.apikey_regenerate",
+                  "name": "Regenerated Postman API Key"
+              },
+              {
+                  "code": "team.update_invoice_details",
+                  "name": "Updated Invoice Details"
+              },
+              {
+                  "code": "user.vault_export_policy_update",
+                  "name": "Vault Export Policy Updated"
+              },
+              {
+                  "code": "team.trial_expiry",
+                  "name": "Team Trial Expired"
+              },
+              {
+                  "code": "team.secret_scanner_finding.create",
+                  "name": "Detected a Secret"
+              },
+              {
+                  "code": "user.profile_change",
+                  "name": "Updated User Profile"
+              },
+              {
+                  "code": "team.update_limited_duration_trial_period_end",
+                  "name": "Updated Limited Duration Trial Period"
+              },
+              {
+                  "code": "team.add_credits",
+                  "name": "Added Credits For Team"
+              },
+              {
+                  "code": "team.delete_payment_method",
+                  "name": "Deleted a payment method"
+              },
+              {
+                  "code": "team.customauth.update",
+                  "name": "Updated Custom Auth Scheme"
+              },
+              {
+                  "code": "team.customauth.create",
+                  "name": "Created Custom Auth Scheme"
+              },
+              {
+                  "code": "team.custom_token.enable",
+                  "name": "Enabled Custom Token"
+              },
+              {
+                  "code": "user.login_sso_success",
+                  "name": "User Logged-In Using SSO"
+              },
+              {
+                  "code": "team.encryption_enabled",
+                  "name": "Encryption Enabled"
+              },
+              {
+                  "code": "user.login_password_error",
+                  "name": "User Login Failed"
+              },
+              {
+                  "code": "team.generate_payment_link",
+                  "name": "Generated Payment Link"
+              },
+              {
+                  "code": "team.update_public_profile_visibility",
+                  "name": "Updated Public Profile Visibility"
+              },
+              {
+                  "code": "user.create",
+                  "name": "User Signed Up"
+              },
+              {
+                  "code": "team.update_true_up_enabled",
+                  "name": "Updated Auto-flex Enabled"
+              },
+              {
+                  "code": "user.user_deleted",
+                  "name": "Deleted User"
+              },
+              {
+                  "code": "team.update_public_profile_member_list_visibility",
+                  "name": "Updated Team Public Profile"
+              },
+              {
+                  "code": "user.apikey_activate",
+                  "name": "Activated Postman API Key"
+              },
+              {
+                  "code": "team.payment_collection_method_updated",
+                  "name": "Renewal Payment Preference Changed"
+              },
+              {
+                  "code": "team.delete_operation_override",
+                  "name": "Deleted operation override for team"
+              },
+              {
+                  "code": "team.apikey_creation_disabled",
+                  "name": "Disabled Postman API Key Creation For Team"
+              },
+              {
+                  "code": "team.update_true_up_period_end",
+                  "name": "Updated Auto-flex period end date"
+              },
+              {
+                  "code": "user.apikey_delete",
+                  "name": "Deleted Postman API Key"
+              },
+              {
+                  "code": "team.customauth.remove",
+                  "name": "Removed Custom Auth Scheme"
+              },
+              {
+                  "code": "user.ai_consent.grant",
+                  "name": "AI User Consent Granted"
+              },
+              {
+                  "code": "team.change_plan",
+                  "name": "Changed Team Plan"
+              },
+              {
+                  "code": "team.domain_capture_mark_verified",
+                  "name": "Verified Domain For Domain Capture"
+              },
+              {
+                  "code": "team.custom_token.update_pattern",
+                  "name": "Update Custom Token Regex"
+              },
+              {
+                  "code": "team.apikey_auto_revoke_enabled",
+                  "name": "Enabled Auto-revoke Exposed Postman API keys For Team"
+              },
+              {
+                  "code": "user.password_create",
+                  "name": "Create Password"
+              },
+              {
+                  "code": "team.added_giveget_referee_month",
+                  "name": "Applied Referee Code"
+              },
+              {
+                  "code": "team.apikey_revoke_all",
+                  "name": "Admin Revoked All Postman API Keys"
+              },
+              {
+                  "code": "team.annual_plan_renewal",
+                  "name": "Annual Plan Renewed For Team"
+              },
+              {
+                  "code": "team.added_giveget_referer_month",
+                  "name": "Applied Referer Code"
+              },
+              {
+                  "code": "team.expansion",
+                  "name": "Expansion"
+              },
+              {
+                  "code": "team.scimkey_regenerate",
+                  "name": "Regenerated SCIM Key"
+              },
+              {
+                  "code": "team.remove_group_role",
+                  "name": "Removed Role From User Group"
+              },
+              {
+                  "code": "user.apikey_rename",
+                  "name": "Renamed Postman API Key"
+              },
+              {
+                  "code": "user.vault_export",
+                  "name": "Vault Exported"
+              },
+              {
+                  "code": "team.apikey_revoke_all_exposed",
+                  "name": "Admin Revoked All Exposed Postman API Keys"
+              },
+              {
+                  "code": "team.add_group_role",
+                  "name": "Added Role To User Group"
+              },
+              {
+                  "code": "team.consume_purchase_key",
+                  "name": "Used Purchase Key For Team"
+              },
+              {
+                  "code": "user.vault_reset",
+                  "name": "Vault Reset"
+              },
+              {
+                  "code": "team.delete_group",
+                  "name": "Deleted User Group"
+              },
+              {
+                  "code": "team.update_domain_verification",
+                  "name": "Domain Verification Status Updated"
+              },
+              {
+                  "code": "team.custom_token.update_name",
+                  "name": "Update Custom Token Name"
+              },
+              {
+                  "code": "user.exposed_apikey_disable",
+                  "name": "Exposed API Key Revoked"
+              },
+              {
+                  "code": "team.client_secret_scanner_default_policy_updated",
+                  "name": "Local Secret Protection Default Policy Updated"
+              },
+              {
+                  "code": "team.add_partnership_member",
+                  "name": "Add Partnership Member"
+              },
+              {
+                  "code": "team.invoice_generated",
+                  "name": "Invoice Generated"
+              },
+              {
+                  "code": "team.scim_provisioning_disabled",
+                  "name": "SCIM provisioning disabled"
+              },
+              {
+                  "code": "team.update_renewals_to_skip",
+                  "name": "Updated Renewals To Skip"
+              },
+              {
+                  "code": "team.update_team_discovery_auto_join",
+                  "name": "Updated Auto Join via Team Discovery"
+              },
+              {
+                  "code": "team.delete_card",
+                  "name": "Deleted Payment Method"
+              },
+              {
+                  "code": "team.payment_method_added",
+                  "name": "Payment method added"
+              },
+              {
+                  "code": "team.delete_partnership",
+                  "name": "Deleted Partnership"
+              },
+              {
+                  "code": "team.encryption_disabled",
+                  "name": "Encryption Disabled"
+              },
+              {
+                  "code": "team.scimkey_revoke",
+                  "name": "Revoked SCIM Key"
+              },
+              {
+                  "code": "team.organization_enabled",
+                  "name": "Team Enabled"
+              },
+              {
+                  "code": "team.update_trial_period_end",
+                  "name": "Updated trial period end of team"
+              },
+              {
+                  "code": "team.approve_invite",
+                  "name": "Approved User Invite"
+              },
+              {
+                  "code": "team.enterprise_enabled",
+                  "name": "Enabled SSO For Team"
+              },
+              {
+                  "code": "team.update_monitoring_block_count",
+                  "name": "Updated Monitoring Block Count"
+              },
+              {
+                  "code": "team.increase_size",
+                  "name": "Increased Team Size"
+              },
+              {
+                  "code": "user.account_logout",
+                  "name": "User Logged-out"
+              },
+              {
+                  "code": "user.mfa_reset",
+                  "name": "2FA Reset"
+              },
+              {
+                  "code": "team.upgrade_via_transfer",
+                  "name": "Transferred Subscription"
+              },
+              {
+                  "code": "team.customauth.disable",
+                  "name": "Disabled Custom Auth Scheme"
+              },
+              {
+                  "code": "user.sync_disable",
+                  "name": "Disabled Sync For User"
+              },
+              {
+                  "code": "user.apikey_deactivate",
+                  "name": "Deactivated API Key"
+              },
+              {
+                  "code": "team.update_owner",
+                  "name": "Updated Team Owner"
+              },
+              {
+                  "code": "team.account_state_changed",
+                  "name": "Account State Changed"
+              },
+              {
+                  "code": "team.custom_token.disable",
+                  "name": "Disabled Custom Token"
+              },
+              {
+                  "code": "team.modify_future_plan",
+                  "name": "Set Instructions For Next Billing Cycle"
+              },
+              {
+                  "code": "team.start_enterprise",
+                  "name": "Started Enterprise Plan"
+              },
+              {
+                  "code": "team.client_secret_scanner_workspace_policy_updated",
+                  "name": "Local Secret Protection Workspace Policy Updated"
+              },
+              {
+                  "code": "team.last_member_deactivated",
+                  "name": "Team Last Member Deactivated"
+              },
+              {
+                  "code": "team.custom_token.delete",
+                  "name": "Deleted Custom Token"
+              },
+              {
+                  "code": "team.approve_pending_access_request",
+                  "name": "Approved Team Join Request"
+              },
+              {
+                  "code": "team.encryption_rekey_started",
+                  "name": "Encryption Re-keying Started"
+              },
+              {
+                  "code": "team.customauth.enable",
+                  "name": "Enabled Custom Auth Scheme"
+              },
+              {
+                  "code": "team.solution_membership_updated",
+                  "name": "Updated Solution Membership"
+              },
+              {
+                  "code": "user.concurrent_session_limit_hit",
+                  "name": "Concurrent Session Limit Breached"
+              },
+              {
+                  "code": "team.early_renewal",
+                  "name": "Early Renewal"
+              },
+              {
+                  "code": "team.domain_capture_create_domain",
+                  "name": "Added Domain For Domain Capture"
+              },
+              {
+                  "code": "team.update_account_slots",
+                  "name": "Updated Account Slots"
+              },
+              {
+                  "code": "team.set_instruction",
+                  "name": "Set Instruction"
+              },
+              {
+                  "code": "team.group_name_updated",
+                  "name": "Updated group name"
+              },
+              {
+                  "code": "team.resource-rfa-auto-approve-setting-updated",
+                  "name": "Updated team join approval"
+              },
+              {
+                  "code": "team.start_trial",
+                  "name": "Started Team Trial"
+              },
+              {
+                  "code": "team.scim_remove_member",
+                  "name": "De-provisioned SCIM User"
+              },
+              {
+                  "code": "team.invoice_cancelled",
+                  "name": "Cancelled Invoice For Team"
+              },
+              {
+                  "code": "team.update_sales_channel",
+                  "name": "Updated Sales Channel"
+              },
+              {
+                  "code": "team.update_true_up_period",
+                  "name": "Updated Auto-flex Period"
+              },
+              {
+                  "code": "user.authaccount.linked",
+                  "name": "User SSO Account Linked"
+              },
+              {
+                  "code": "user.login_oauth_success",
+                  "name": "User Logged-In Using OAuth"
+              },
+              {
+                  "code": "team.encryption_migration_completed",
+                  "name": "Encryption Completed for existing data"
+              },
+              {
+                  "code": "user.vault_register",
+                  "name": "Vault Enabled"
+              },
+              {
+                  "code": "team.secret_scanner_finding.resolve",
+                  "name": "Resolved a Secret"
+              },
+              {
+                  "code": "user.enabled_guest_sharing_for_object",
+                  "name": "Enabled guest sharing for object"
+              },
+              {
+                  "code": "team.update_true_up_cycle_end_dates",
+                  "name": "Updated custom true-up cycle end dates"
+              },
+              {
+                  "code": "team.start_free",
+                  "name": "Started Free Plan"
+              },
+              {
+                  "code": "user.pro_dashboard_enabled",
+                  "name": "Opted-in to Dashboard Beta"
+              },
+              {
+                  "code": "team.scimkey_activate",
+                  "name": "Activated SCIM Key"
+              },
+              {
+                  "code": "user.consume_purchase_key",
+                  "name": "Used Purchase Key To Activate Team"
+              },
+              {
+                  "code": "user.password_change",
+                  "name": "Updated User Password"
+              },
+              {
+                  "code": "team.add_card",
+                  "name": "Added Payment Method"
+              },
+              {
+                  "code": "team.domain_capture_delete_domain",
+                  "name": "Deleted Domain For Domain Capture"
+              },
+              {
+                  "code": "user.mfa_enabled",
+                  "name": "2FA Enabled"
+              },
+              {
+                  "code": "team.add_member",
+                  "name": "Added Team Member"
+              },
+              {
+                  "code": "team.cancel_plan",
+                  "name": "Cancelled Team Plan"
+              },
+              {
+                  "code": "user.password_reset",
+                  "name": "Reset User Password"
+              },
+              {
+                  "code": "team.prodomain_enabled",
+                  "name": "Enabled Team Subdomain"
+              },
+              {
+                  "code": "team.activation_reset",
+                  "name": "Reset Activation"
+              },
+              {
+                  "code": "team.upgrade_to_paid",
+                  "name": "Upgraded to Paid Team Plan"
+              },
+              {
+                  "code": "team.enterprise_disabled",
+                  "name": "Disabled SSO For Team"
+              },
+              {
+                  "code": "team.execute_instruction",
+                  "name": "Executed Instruction"
+              },
+              {
+                  "code": "user.provided_consent_for_merging_personal_context",
+                  "name": "Provided consent for merging personal context"
+              },
+              {
+                  "code": "team.custom_token.create",
+                  "name": "Added Custom Token Alert"
+              },
+              {
+                  "code": "user.mfa_disabled",
+                  "name": "2FA Disabled"
+              },
+              {
+                  "code": "team.update_billed_operation_overage",
+                  "name": "Updated Billed Operation Allow Overage"
+              },
+              {
+                  "code": "team.auto_renewal_consent_updated",
+                  "name": "Auto Renewal Consent Updated"
+              },
+              {
+                  "code": "team.encryption_key_inaccessible",
+                  "name": "Encryption Key Inaccessible"
+              },
+              {
+                  "code": "team.last_member_cleaned_up",
+                  "name": "Team Last Member Cleaned Up"
+              },
+              {
+                  "code": "team.install_click",
+                  "name": "Install App"
+              },
+              {
+                  "code": "team.remove_group_member",
+                  "name": "Removed User Group Member"
+              },
+              {
+                  "code": "user.pro_dashboard_disabled",
+                  "name": "Opted-out of Dashboard Beta"
+              },
+              {
+                  "code": "team.update_group",
+                  "name": "Updated User Group"
+              },
+              {
+                  "code": "team.delete_payment_link",
+                  "name": "Deleted Payment Link"
+              },
+              {
+                  "code": "team.delete_domain",
+                  "name": "Deleted Domain"
+              },
+              {
+                  "code": "user.group.update",
+                  "name": "User Group Updated"
+              },
+              {
+                  "code": "team.encryption_key_updated",
+                  "name": "Encryption Key Updated"
+              },
+              {
+                  "code": "team.name_updated",
+                  "name": "Updated Team Name"
+              },
+              {
+                  "code": "team.marked_non_internal",
+                  "name": "Organization Marked Non-internal"
+              },
+              {
+                  "code": "team.apikey_revoke",
+                  "name": "Admin Revoked Postman API Key(s)"
+              },
+              {
+                  "code": "team.cancel_invite",
+                  "name": "Cancelled Team Invite"
+              },
+              {
+                  "code": "team.scim_activate_member",
+                  "name": "Activated SCIM User"
+              },
+              {
+                  "code": "team.pricing_update",
+                  "name": "Plan Migrated"
+              },
+              {
+                  "code": "team.encryption_rekey_completed",
+                  "name": "Encryption Re-keying Completed"
+              },
+              {
+                  "code": "team.update_billed_operation",
+                  "name": "Updated Add-on"
+              },
+              {
+                  "code": "user.revoke_multiple_sessions",
+                  "name": "Revoked Multiple User Sessions"
+              }
+          ]
+      }
+order: 1000

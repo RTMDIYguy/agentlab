@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private/network-entity/request/:requestId
+  method: PUT
+  pathVariables:
+    requestId: "232"
+  body:
+    type: json
+    content: |-
+      {
+          "status": "approved"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "name": "requestAlreadyResponded",
+          "message": "This request is already responded."
+      }
+order: 6000

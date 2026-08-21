@@ -1,0 +1,40 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics-metadata?metrics=active_workspaces,license_consumption
+  method: GET
+  queryParams:
+    metrics: active_workspaces,license_consumption
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "resources": [
+                  {
+                      "metrics": [
+                          {
+                              "description": "List of active workspaces in the selected period based on edits and API requests sent.",
+                              "metric": "active_workspaces"
+                          }
+                      ],
+                      "resource": "workspace",
+                      "description": "Workspace-level metrics and insights about activities and collaboration patterns"
+                  },
+                  {
+                      "metrics": [
+                          {
+                              "description": "Tracks how licenses are used across roles (members, partners, guests) and identifies unused seats.",
+                              "metric": "license_consumption"
+                          }
+                      ],
+                      "resource": "team",
+                      "description": "Team-level metrics and insights on team activity, license consumption, and organizational workspace trends"
+                  }
+              ],
+              "description": "Metadata for analytics APIs delivering usage, success, workspace and team trend insights in Postman"
+          }
+      }
+order: 2000

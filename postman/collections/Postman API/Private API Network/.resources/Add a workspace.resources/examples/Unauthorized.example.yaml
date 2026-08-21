@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "id": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9"
+          }
+      }
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "AuthenticationError",
+              "message": "Invalid API Key. Every request requires a valid API Key to be sent."
+          }
+      }
+order: 5000

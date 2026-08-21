@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/monitor
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "monitor": [
+              {
+                  "id": "1e6b6cc1-c760-48e0-968f-4bfaeeae9af1",
+                  "name": "Test Monitor",
+                  "updatedAt": "2022-07-10T05:00:25.066Z",
+                  "monitorId": "1e6b6cc1-c760-48e0-968f-4bfaeeae9af1"
+              }
+          ]
+      }
+order: 1000

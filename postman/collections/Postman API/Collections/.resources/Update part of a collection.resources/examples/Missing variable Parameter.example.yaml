@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId
+  method: PATCH
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "variable": [
+                  {
+                      "key": "userId"
+                  }
+              ]
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "badRequest",
+              "message": "Parameters required: ('value') for key: 'collection.variables'"
+          }
+      }
+order: 8000

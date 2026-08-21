@@ -1,0 +1,3 @@
+$kind: collection
+description: The **Monitors** endpoints enable you to manage your [monitors](https://learning.postman.com/docs/monitoring-your-api/intro-monitors/).
+order: 11000

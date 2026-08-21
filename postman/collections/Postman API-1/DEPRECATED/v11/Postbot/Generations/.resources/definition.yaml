@@ -1,0 +1,6 @@
+$kind: collection
+description: |-
+  **These endpoints are deprecated**
+
+  The **Generations** endpoints enable you to use Postbot to generate tool definition code and more from resources on Postman.
+order: 1000

@@ -1,0 +1,67 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams?cursor=RnJpIEZlYiAyNCAyMDIzIDEzOjI0OjA5IEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk=&limit=2
+  method: GET
+  queryParams:
+    cursor: RnJpIEZlYiAyNCAyMDIzIDEzOjI0OjA5IEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk=
+    limit: "2"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": [
+              {
+                  "createdAt": "2025-02-26T08:17:42.000Z",
+                  "updatedAt": "2025-02-26T08:17:42.000Z",
+                  "id": 123,
+                  "name": "Testing Team",
+                  "handle": "testing-team",
+                  "description": "API testing team.",
+                  "organizationId": 1,
+                  "createdBy": 12345678,
+                  "enabled": true,
+                  "memberCount": 6,
+                  "roles": [
+                      "TEAM_GUEST_VIEWER",
+                      "TEAM_GUEST_DEVELOPER",
+                      "TEAM_DEVELOPER",
+                      "TEAM_PARTNER_MANAGER",
+                      "TEAM_MANAGER"
+                  ],
+                  "settings": {
+                      "rfa_for_add_member": "disabled",
+                      "rfa_for_add_collaborator": "disabled"
+                  }
+              },
+              {
+                  "createdAt": "2025-02-26T08:17:42.000Z",
+                  "updatedAt": "2025-02-26T08:17:42.000Z",
+                  "id": 231,
+                  "name": "Billing Team",
+                  "handle": "billing-team",
+                  "description": "The Billing team.",
+                  "organizationId": 2,
+                  "createdBy": 12345678,
+                  "enabled": true,
+                  "memberCount": 2,
+                  "roles": [
+                      "TEAM_GUEST_VIEWER",
+                      "TEAM_GUEST_DEVELOPER",
+                      "TEAM_DEVELOPER",
+                      "TEAM_PARTNER_MANAGER",
+                      "TEAM_MANAGER"
+                  ],
+                  "settings": {
+                      "rfa_for_add_member": "enabled",
+                      "rfa_for_add_collaborator": "enabled"
+                  }
+              }
+          ],
+          "metadata": {
+              "nextCursor": "NTczNDg="
+          }
+      }
+order: 3000

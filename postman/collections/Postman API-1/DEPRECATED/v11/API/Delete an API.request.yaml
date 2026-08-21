@@ -1,0 +1,15 @@
+$kind: http-request
+description: Deletes an API. On success, this returns an HTTP `204 No Content` response.
+url: "{{baseUrl}}/apis/:apiId"
+method: DELETE
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+settings: {}
+examples: ./.resources/Delete an API.resources/examples
+order: 10000

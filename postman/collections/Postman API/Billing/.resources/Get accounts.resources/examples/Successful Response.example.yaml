@@ -1,0 +1,24 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/accounts
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "id": 12345678,
+          "teamId": 1234,
+          "state": "PAID",
+          "slots": {
+              "total": 10,
+              "unbilled": 0,
+              "consumed": 2,
+              "available": 8
+          },
+          "salesChannel": "SELF_SERVE",
+          "billingEmail": "taylor.lee@example.com"
+      }
+order: 1000

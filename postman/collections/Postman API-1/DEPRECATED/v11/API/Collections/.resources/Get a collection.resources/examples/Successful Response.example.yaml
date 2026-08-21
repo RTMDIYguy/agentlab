@@ -1,0 +1,224 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/collections/:collectionUid
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    collectionUid: 12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "item": [
+              {
+                  "name": "Read a spacecraft",
+                  "id": "7921a9eb-4d49-4b46-9348-6e86174608b1",
+                  "protocolProfileBehavior": {
+                      "disableBodyPruning": true
+                  },
+                  "response": [
+                      {
+                          "header": [
+                              {
+                                  "value": "application/json",
+                                  "key": "Content-Type"
+                              }
+                          ],
+                          "originalRequest": {
+                              "header": [
+                                  {
+                                      "value": "application/json",
+                                      "key": "Accept"
+                                  },
+                                  {
+                                      "description": "Added as a part of security scheme: apikey",
+                                      "value": "<API Key>",
+                                      "key": "X-Api-Key"
+                                  }
+                              ],
+                              "method": "GET",
+                              "url": {
+                                  "raw": "{{baseUrl}}/spacecrafts/:spacecraftId",
+                                  "path": [
+                                      "spacecrafts",
+                                      ":spacecraftId"
+                                  ],
+                                  "host": [
+                                      "{{baseUrl}}"
+                                  ],
+                                  "variable": [
+                                      {
+                                          "key": "spacecraftId"
+                                      }
+                                  ]
+                              }
+                          },
+                          "status": "OK",
+                          "_postman_previewlanguage": "json",
+                          "responseTime": null,
+                          "cookie": [],
+                          "name": "The spacecraft corresponding to the provided `spacecraftId`",
+                          "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"type\": \"probe\",\n  \"description\": \"<string>\"\n}",
+                          "code": 200,
+                          "id": "09e13f27-9b57-4454-8023-f91207024e24"
+                      },
+                      {
+                          "header": [
+                              {
+                                  "value": "application/json",
+                                  "key": "Content-Type"
+                              }
+                          ],
+                          "originalRequest": {
+                              "header": [
+                                  {
+                                      "value": "application/json",
+                                      "key": "Accept"
+                                  },
+                                  {
+                                      "description": "Added as a part of security scheme: apikey",
+                                      "value": "<API Key>",
+                                      "key": "X-Api-Key"
+                                  }
+                              ],
+                              "method": "GET",
+                              "url": {
+                                  "raw": "{{baseUrl}}/spacecrafts/:spacecraftId",
+                                  "path": [
+                                      "spacecrafts",
+                                      ":spacecraftId"
+                                  ],
+                                  "host": [
+                                      "{{baseUrl}}"
+                                  ],
+                                  "variable": [
+                                      {
+                                          "key": "spacecraftId"
+                                      }
+                                  ]
+                              }
+                          },
+                          "status": "Not Found",
+                          "_postman_previewlanguage": "json",
+                          "responseTime": null,
+                          "cookie": [],
+                          "name": "No spacecraft found for the provided `spacecraftId`",
+                          "body": "{\n  \"message\": \"<string>\"\n}",
+                          "code": 404,
+                          "id": "71b0ba6d-9691-43d4-ae8f-c9beb5a71ac3"
+                      },
+                      {
+                          "header": [
+                              {
+                                  "value": "application/json",
+                                  "key": "Content-Type"
+                              }
+                          ],
+                          "originalRequest": {
+                              "header": [
+                                  {
+                                      "value": "application/json",
+                                      "key": "Accept"
+                                  },
+                                  {
+                                      "description": "Added as a part of security scheme: apikey",
+                                      "value": "<API Key>",
+                                      "key": "X-Api-Key"
+                                  }
+                              ],
+                              "method": "GET",
+                              "url": {
+                                  "raw": "{{baseUrl}}/spacecrafts/:spacecraftId",
+                                  "path": [
+                                      "spacecrafts",
+                                      ":spacecraftId"
+                                  ],
+                                  "host": [
+                                      "{{baseUrl}}"
+                                  ],
+                                  "variable": [
+                                      {
+                                          "key": "spacecraftId"
+                                      }
+                                  ]
+                              }
+                          },
+                          "status": "Internal Server Error",
+                          "_postman_previewlanguage": "json",
+                          "responseTime": null,
+                          "cookie": [],
+                          "name": "Unexpected error",
+                          "body": "{\n  \"message\": \"<string>\"\n}",
+                          "code": 500,
+                          "id": "d84c8be2-b633-4e6a-bafb-d84d146b7714"
+                      }
+                  ],
+                  "request": {
+                      "header": [
+                          {
+                              "value": "application/json",
+                              "key": "Accept"
+                          }
+                      ],
+                      "method": "GET",
+                      "url": {
+                          "raw": "{{baseUrl}}/spacecrafts/:spacecraftId",
+                          "path": [
+                              "spacecrafts",
+                              ":spacecraftId"
+                          ],
+                          "host": [
+                              "{{baseUrl}}"
+                          ],
+                          "variable": [
+                              {
+                                  "value": "<string>",
+                                  "description": "(Required) The unique identifier of the spacecraft",
+                                  "id": "a5e9206b-f18d-4098-84e9-d4f384a24572",
+                                  "key": "spacecraftId"
+                              }
+                          ]
+                      }
+                  }
+              }
+          ],
+          "auth": {
+              "apikey": [
+                  {
+                      "value": "X-Api-Key",
+                      "type": "string",
+                      "key": "key"
+                  },
+                  {
+                      "value": "{{apiKey}}",
+                      "type": "string",
+                      "key": "value"
+                  },
+                  {
+                      "value": "header",
+                      "type": "string",
+                      "key": "in"
+                  }
+              ],
+              "type": "apikey"
+          },
+          "info": {
+              "description": "Buy or rent spacecrafts",
+              "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+              "name": "Spacecrafts",
+              "_postman_id": "d0c4f5bb-ce41-46ff-9313-c265446cd290"
+          },
+          "variable": [
+              {
+                  "value": "/",
+                  "id": "56c8597d-7bb1-42df-aa3f-04184ffc3f3e",
+                  "key": "baseUrl"
+              }
+          ]
+      }
+order: 1000

@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/activities
+  method: GET
+  pathVariables:
+    workspaceId: 04c93785-a16a-4907-9781-f57cd67e3760
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/unauthorized",
+          "title": "Unauthorized",
+          "detail": "Unauthorized",
+          "status": 401
+      }
+order: 5000

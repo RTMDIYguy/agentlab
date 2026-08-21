@@ -1,0 +1,99 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=team&metrics=workspace_distribution&view=summary&duration=last_6_months
+  method: GET
+  queryParams:
+    resource: team
+    metrics: workspace_distribution
+    view: summary
+    duration: last_6_months
+  body:
+    type: json
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "date",
+                              "type": "DATE",
+                              "format": "YYYY-MM-DD",
+                              "description": "Reporting date for the aggregated workspace counts."
+                          },
+                          {
+                              "name": "total",
+                              "type": "INTEGER",
+                              "description": "Total number of workspaces for the given date."
+                          },
+                          {
+                              "name": "internal",
+                              "type": "INTEGER",
+                              "description": "Number of internal workspaces."
+                          },
+                          {
+                              "name": "partner",
+                              "type": "INTEGER",
+                              "description": "Number of partner workspaces."
+                          },
+                          {
+                              "name": "public",
+                              "type": "INTEGER",
+                              "description": "Number of public workspaces."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "2025-02-01",
+                          1300,
+                          950,
+                          200,
+                          150
+                      ],
+                      [
+                          "2025-03-01",
+                          1350,
+                          980,
+                          210,
+                          160
+                      ],
+                      [
+                          "2025-04-01",
+                          1370,
+                          995,
+                          215,
+                          160
+                      ],
+                      [
+                          "2025-05-01",
+                          1380,
+                          1000,
+                          220,
+                          160
+                      ],
+                      [
+                          "2025-06-01",
+                          1400,
+                          1020,
+                          225,
+                          155
+                      ],
+                      [
+                          "2025-07-01",
+                          1420,
+                          1035,
+                          230,
+                          155
+                      ]
+                  ]
+              }
+          }
+      }
+order: 19000

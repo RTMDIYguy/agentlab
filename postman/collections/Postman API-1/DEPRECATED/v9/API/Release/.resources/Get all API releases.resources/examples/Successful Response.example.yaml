@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/releases
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "releases": [
+              {
+                  "id": "07d940bf-40fc-4acd-a11e-be6769894af0",
+                  "name": "Release 2.0",
+                  "description": "This is the second release of the Test API.",
+                  "visibility": "private"
+              },
+              {
+                  "id": "3563baaa-07a2-46ed-9fd2-0e8a3c5f7ec2",
+                  "name": "Release 1.0",
+                  "description": "This is the first release of the Test API. For more information, read the documentation.",
+                  "visibility": "public"
+              }
+          ]
+      }
+order: 1000

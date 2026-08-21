@@ -1,0 +1,3 @@
+$kind: collection
+description: These endpoints enable you to manage mock server responses. Server responses let you simulate 5xx server-level responses, such as 500 or 503.
+order: 2000

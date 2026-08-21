@@ -1,0 +1,13 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-access-keys/:keyId
+  method: DELETE
+  pathVariables:
+    keyId: Njg5OjU3MDQ1NjYtYmQxZDU3NzktMWVkNS00ZDhjLWI0ZmQtZWRhOGY2Mzg1NTY0
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 1000

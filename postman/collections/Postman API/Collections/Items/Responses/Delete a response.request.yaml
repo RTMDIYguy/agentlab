@@ -1,0 +1,14 @@
+$kind: http-request
+description: Deletes a response in a collection. On success, this returns an HTTP `204 No Content` response.
+url: "{{baseUrl}}/collections/:collectionId/responses/:responseId"
+method: DELETE
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+  - key: responseId
+    value: ""
+    description: The response's ID.
+settings: {}
+examples: ./.resources/Delete a response.resources/examples
+order: 5000

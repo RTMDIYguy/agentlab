@@ -1,0 +1,3 @@
+$kind: collection
+description: These endpoints enable you to manage environment [forks](https://learning.postman.com/docs/collaborating-in-postman/using-version-control/forking-entities/).
+order: 1000

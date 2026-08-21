@@ -1,0 +1,12 @@
+$kind: http-request
+description: Gets information about all users on the [Postman team](https://learning.postman.com/docs/collaborating-in-postman/working-with-your-team/collaboration-overview/).
+url: "{{baseUrl}}/users"
+method: GET
+queryParams:
+  - key: groupId
+    value: ""
+    disabled: true
+    description: Filter results by the given group ID. To get group IDs, use the GET `/groups` endpoint.
+settings: {}
+examples: ./.resources/Get all team users.resources/examples
+order: 2000

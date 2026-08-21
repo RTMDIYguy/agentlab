@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.eu.postman.com/apis?workspaceId=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  method: POST
+  headers:
+    Accept: application/vnd.api.v10+json
+  queryParams:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Test API",
+          "summary": "Test API Schema",
+          "description": "This is a test API."
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "title": "Forbidden",
+          "detail": "This feature isn't available in your region.",
+          "status": 403
+      }
+order: 6000

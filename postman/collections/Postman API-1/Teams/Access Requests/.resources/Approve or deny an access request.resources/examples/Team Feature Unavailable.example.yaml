@@ -1,0 +1,32 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/access-requests/:requestId
+  method: POST
+  pathVariables:
+    teamId: "123"
+    requestId: "1095"
+  body:
+    type: json
+    content: |-
+      {
+          "action": "approve"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "status": 400,
+          "title": "Bad Request",
+          "detail": {
+              "error": {
+                  "name": "BadRequest",
+                  "message": "Team feature is not available for your organization."
+              }
+          },
+          "instance": "/teams/123/access-requests/1095"
+      }
+order: 4000

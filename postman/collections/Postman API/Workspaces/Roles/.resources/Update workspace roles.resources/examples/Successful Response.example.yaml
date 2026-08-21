@@ -1,0 +1,98 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/roles
+  method: PATCH
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "roles": [
+              {
+                  "op": "add",
+                  "path": "/user",
+                  "value": [
+                      {
+                          "id": "12345678",
+                          "role": "1"
+                      },
+                      {
+                          "id": "87654321",
+                          "role": "2"
+                      }
+                  ]
+              },
+              {
+                  "op": "remove",
+                  "path": "/user",
+                  "value": [
+                      {
+                          "id": "87612345",
+                          "role": "1"
+                      }
+                  ]
+              },
+              {
+                  "op": "add",
+                  "path": "/usergroup",
+                  "value": [
+                      {
+                          "id": "123",
+                          "role": "2"
+                      }
+                  ]
+              },
+              {
+                  "op": "remove",
+                  "path": "/usergroup",
+                  "value": [
+                      {
+                          "id": "312",
+                          "role": "3"
+                      }
+                  ]
+              }
+          ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "roles": [
+              {
+                  "id": "1",
+                  "displayName": "Viewer",
+                  "user": [
+                      "12345678"
+                  ],
+                  "group": [
+                      "123"
+                  ]
+              },
+              {
+                  "id": "2",
+                  "displayName": "Editor",
+                  "user": [
+                      "87654321"
+                  ],
+                  "group": [
+                      "123"
+                  ]
+              },
+              {
+                  "id": "3",
+                  "displayName": "Admin",
+                  "user": [
+                      "13428756"
+                  ],
+                  "group": [
+                      "132"
+                  ]
+              }
+          ]
+      }
+order: 1000

@@ -1,0 +1,7 @@
+$kind: http-request
+description: Gets a complete list of all available audit log event actions.
+url: "{{baseUrl}}/audit-actions"
+method: GET
+settings: {}
+examples: ./.resources/Get all audit log event actions.resources/examples
+order: 2000

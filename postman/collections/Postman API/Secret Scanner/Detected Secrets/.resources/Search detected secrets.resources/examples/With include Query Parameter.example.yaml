@@ -1,0 +1,69 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/detected-secrets-queries?include=meta.total
+  method: POST
+  headers:
+    Content-Type: application/json
+  queryParams:
+    include: meta.total
+  body:
+    type: json
+    content: |-
+      {
+          "secretTypes": [
+              "1a7ec5d1-dcba-4ec7-8220-3c1ee490416b",
+              "3b6ec9d2-dabc-5e67-1220-6coie490416b"
+          ],
+          "resolved": true,
+          "statuses": [
+              "ACCEPTED_RISK",
+              "REVOKED"
+          ],
+          "workspaceIds": [
+              "0fe6c2f2-022d-48f7-8e7e-3244369445b0",
+              "80ab14ae-c17d-4fd6-88d5-99bf13f0b7f0"
+          ],
+          "workspaceVisibilities": [
+              "team"
+          ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "limit": 2,
+              "nextCursor": "MTA4",
+              "total": 10
+          },
+          "data": [
+              {
+                  "detectedAt": "2023-05-19T02:45:31.000Z",
+                  "secretType": "Airtable API Key",
+                  "workspaceVisibility": "team",
+                  "secretHash": "07afd1f787f3555d441b04870dbe1025db8309fbeb31f25b3a20f2f1241478b3",
+                  "workspaceId": "e361eeb4-00dd-4225-9774-6146a2555999",
+                  "secretId": "OTI3OTYx",
+                  "obfuscatedSecret": "keyTF2WAH******",
+                  "resolution": "FALSE_POSITIVE",
+                  "occurrences": 3
+              },
+              {
+                  "detectedAt": "2023-03-23T19:38:49.000Z",
+                  "secretType": "Slack Access Token",
+                  "workspaceVisibility": "team",
+                  "secretHash": "08074c0954fd29d1ee82ab5af9b4ad16f56b0907eca72446e98dc97e10da80a3",
+                  "workspaceId": "e361eeb4-00dd-4225-9774-6146a2555999",
+                  "secretId": "NDcyMjA=",
+                  "obfuscatedSecret": "xoxp-25519******",
+                  "resolution": "ACCEPTED_RISK",
+                  "occurrences": 1
+              }
+          ]
+      }
+order: 2000

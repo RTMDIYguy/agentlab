@@ -1,0 +1,3 @@
+$kind: collection
+description: These endpoints manage runner metrics. Metrics include information such as monitor run queues and last polling date.
+order: 2000

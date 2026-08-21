@@ -1,0 +1,30 @@
+$kind: http-request
+description: |-
+  **This endpoint is deprecated in Postman v10 and higher.**
+
+  Updates an API version's release. Include at least one of the following properties in the `release` object:
+
+  - `name` — A **string** value that contains the release name.
+  - `visibility` — A **string** value that contains the release's visibility. One of:
+      - `private` — The release is private.
+      - `public` — The release is public.
+  - `summary` — A **string** value that contains the release's summary.
+  - `description` — A **string** value that contains the release's description.
+  - `gitTag` — A **string** value that contains a valid [Git tag](https://docs.github.com/en/rest/git/tags) ID. The tag must exist in the API's connected Git repository.
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}/releases/{{apiReleaseId}}
+method: PATCH
+body:
+  type: json
+  content: |-
+    {
+        "release": {
+            "name": "{{apiReleaseName}}",
+            "summary": "{{apiReleaseSummary}}",
+            "description": "{{apiReleaseDescription}}",
+            "visibility": "{{apiReleaseVisibility}}",
+            "gitTag": "{{apiReleaseGitTag}}"
+        }
+    }
+settings: {}
+examples: ./.resources/Update an API release.resources/examples
+order: 4000

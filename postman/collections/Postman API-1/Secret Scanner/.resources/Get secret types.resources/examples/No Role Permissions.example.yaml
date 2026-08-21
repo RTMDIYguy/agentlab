@@ -1,0 +1,17 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/secret-types
+  method: GET
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "instance": "",
+          "status": 403,
+          "title": "Only members with Superadmin, Admin, or Workspace Admin roles can view the detected secrets.",
+          "type": "FORBIDDEN"
+      }
+order: 3000

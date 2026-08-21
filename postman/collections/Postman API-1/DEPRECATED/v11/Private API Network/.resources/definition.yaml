@@ -1,0 +1,6 @@
+$kind: collection
+description: |-
+  **Support for API Builder APIs in the Private API Network are deprecated in Postman v12 and later.**
+
+  The **Private API Network** endpoints enable you to manage and work with your team's [Private API Network](https://learning.postman.com/docs/collaborating-in-postman/adding-private-network/). These endpoints are only available on Postman [<b>Enterprise </b>plans](https://www.postman.com/pricing/#enterprise-solutions).
+order: 5000

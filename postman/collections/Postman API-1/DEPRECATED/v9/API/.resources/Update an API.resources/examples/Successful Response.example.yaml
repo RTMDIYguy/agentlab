@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/5360b75f-447e-467c-9299-12fd6c92450d
+  method: PUT
+  body:
+    type: json
+    content: |-
+      {
+          "api": {
+              "name": "Test API A",
+              "summary": "Test API A Schema",
+              "description": "This is Test API A."
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "api": {
+              "createdAt": "2022-06-29T20:46:58.000Z",
+              "updatedAt": "2022-06-29T20:46:58.000Z",
+              "id": "5360b75f-447e-467c-9299-12fd6c92450d",
+              "name": "Test API A",
+              "summary": "Test API A Schema",
+              "description": "This is Test API A.",
+              "createdBy": "12345678",
+              "updatedBy": "12345678"
+          }
+      }
+order: 1000

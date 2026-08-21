@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=team&view=summary&duration=last_6_months
+  method: GET
+  queryParams:
+    resource: team
+    view: summary
+    duration: last_6_months
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "title": "AuthenticationError",
+          "detail": "Invalid API Key. Every request requires a valid API Key to be sent.",
+          "status": 403,
+          "instance": "/analytics"
+      }
+order: 39000

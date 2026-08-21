@@ -1,0 +1,37 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/detected-secrets/:secretId
+  method: PUT
+  pathVariables:
+    secretId: MTc0ODA0Mw==
+  body:
+    type: json
+    content: |-
+      {
+          "resolution": "ACCEPTED_RISK",
+          "workspaceId": "e361eeb4-00dd-4225-9774-6146a2555999"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "secretHash": "50dbd2...",
+          "workspaceId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+          "resolution": "ACCEPTED_RISK",
+          "history": [
+              {
+                  "actor": 12345678,
+                  "createdAt": "2024-09-18T18:46:26.000Z",
+                  "resolution": "FALSE_POSITIVE"
+              },
+              {
+                  "actor": 12345678,
+                  "createdAt": "2024-09-18T18:43:11.000Z",
+                  "resolution": "ACCEPTED_RISK"
+              }
+          ]
+      }
+order: 1000

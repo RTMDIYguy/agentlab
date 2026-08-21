@@ -1,0 +1,41 @@
+$kind: http-request
+description: |-
+  Manages invitations and access to your team's [Partner Workspaces](https://learning.postman.com/docs/collaborating-in-postman/using-workspaces/partner-workspaces/manage/). You can use this endpoint to:
+
+  - Send Partner Workspace invitations to the given email addresses. Users who already exist in the partnership are added directly, while new users receive an invitation email.
+      
+  - Remove partners from a workspace.
+      
+  - Remove partners from a partnership and all of its workspaces.
+      
+
+  **Note:**
+
+  - Partner Workspaces are available on the Postman **Team** and **Enterprise** [plans](https://www.postman.com/pricing/).
+      
+  - This endpoint requires the following [roles](https://learning.postman.com/docs/administration/roles-and-permissions/), based on your plan:
+      
+      - **Team** — Requires the **Workspace Editor** role to invite or remove partners from workspaces. The **Admin** role is required for removing partners from all workspaces.
+          
+      - **Enterprise** — The **Partner Manager** role can perform all operations. The **Workspace Editor** role and **Admin** roles have the same permissions on this plan as they do on the Team plan. It's recommended to use the **Partner Manager** role if you're on an Enterprise plan.
+url: "{{baseUrl}}/invitations"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "action": "invite_partner",
+        "targetEntity": "workspace",
+        "targetEntityId": "{{targetEntityId}}",
+        "roleId": "{{roleId}}",
+        "target": {
+            "emails": [
+                "{{userEmailAddress}}"
+            ]
+        }
+    }
+
+    // For examples of removing users, reference the request's examples or the request body schema.
+settings: {}
+examples: ./.resources/Manage Partner Workspace invites.resources/examples
+order: 11000

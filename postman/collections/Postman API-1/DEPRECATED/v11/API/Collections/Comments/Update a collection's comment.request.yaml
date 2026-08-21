@@ -1,0 +1,45 @@
+$kind: http-request
+description: |-
+  Updates a comment on an API's collection. Include the following in request body:
+
+  - `body` — (Required) A **string** that contains the updated comment.
+      
+  - `tags` — An **object** that contains information about users tagged in the `body` comment. Include the following in this object:
+      
+      - `userName` — (Required) An **object** that contains information about the tagged user. The object's name is the user's Postman username. For example, `@user-postman`. Include the following in this object:
+          
+          - `type` — (Required) A **string** that contains the user value.
+              
+          - `id` — (Required) An **integer** that contains the user's ID.
+              
+
+  **Note:**
+
+  This endpoint accepts a max of 10,000 characters.
+url: "{{baseUrl}}/apis/:apiId/collections/:collectionId/comments/:commentId"
+method: PUT
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+  - key: collectionId
+    value: "{{collectionUid}}"
+    description: The collection's unique ID.
+  - key: commentId
+    value: "{{commentId}}"
+    description: The comment's ID.
+body:
+  type: json
+  content: |-
+    {
+        "body": "{{comment}}",
+        "tags": {
+            "{{userName}}": {
+                "type": "user",
+                "id": "{{userId}}"
+            }
+        }
+    }
+settings: {}
+examples: ./.resources/Update a collection's comment.resources/examples
+order: 3000

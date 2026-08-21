@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs/:specId/collections/:collectionId/sync-options
+  method: GET
+  pathVariables:
+    specId: 73e15000-bc7a-4802-b80e-05fff18fd7f8
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "syncOptions": {
+              "syncExamples": true
+          }
+      }
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "type": "instanceNotFoundError",
+          "title": "Resource not found",
+          "status": 404,
+          "detail": "Entity that you are trying to access does not exist."
+      }
+order: 5000

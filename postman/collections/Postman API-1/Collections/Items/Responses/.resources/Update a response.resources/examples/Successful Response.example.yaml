@@ -1,0 +1,104 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/responses/:responseId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    responseId: 16473433-f4a74a54-c003-c27a-8d79-e91c6ea2c5d1
+  body:
+    type: json
+    content: |-
+      {
+          "owner": "12345678",
+          "lastUpdatedBy": "12345678",
+          "lastRevision": 32368133468,
+          "request": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+          "name": "Example Response",
+          "status": null,
+          "responseCode": {
+              "code": 200,
+              "name": "OK"
+          },
+          "time": "50",
+          "headers": [
+              {
+                  "key": "Date",
+                  "value": "Fri, 01 Sep 2023 07:36:18 GMT"
+              },
+              {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+              },
+              {
+                  "key": "Content-Length",
+                  "value": "607"
+              },
+              {
+                  "key": "Connection",
+                  "value": "keep-alive"
+              }
+          ],
+          "cookies": null,
+          "mime": null,
+          "text": "{\n    \"args\": {},\n    \"data\": {\n        \"field\": \"Value\"\n    },\n    \"files\": {},\n    \"form\": {},\n    \"headers\": {\n        \"x-forwarded-proto\": \"https\",\n        \"x-forwarded-port\": \"443\",\n        \"host\": \"postman-echo.com\",\n        \"x-amzn-trace-id\": \"Root=1-64f9cd12-62f18f3a048796d345508073\",\n        \"content-length\": \"24\",\n        \"content-type\": \"application/json\",\n        \"x-api-key\": \"xxx\",\n        \"user-agent\": \"PostmanRuntime/7.32.3\",\n        \"accept\": \"*/*\",\n        \"postman-token\": \"XXX\",\n        \"accept-encoding\": \"gzip, deflate, br\"\n    },\n    \"json\": {\n        \"field\": \"Value\"\n    },\n    \"url\": \"https://postman-echo.com/post\"\n}",
+          "language": "json",
+          "rawDataType": null,
+          "requestObject": "{\"data\":null,\"dataMode\":\"raw\",\"dataOptions\":{\"raw\":{\"language\":\"json\"}},\"headerData\":[],\"method\":\"POST\",\"pathVariableData\":[],\"queryParams\":[],\"url\":\"https://postman-echo.com/post\",\"headers\":\"\",\"pathVariables\":{},\"protocolProfileBehavior\":{\"disableBodyPruning\":true},\"rawModeData\":\"{\\n    \\\"field\\\": \\\"Value\\\"\\n}\",\"graphqlModeData\":{}}",
+          "createdAt": "2023-09-01T09:29:54.000Z",
+          "updatedAt": "2023-09-01T09:29:54.000Z"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+          "meta": {
+              "model": "response",
+              "action": "update"
+          },
+          "data": {
+              "id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+              "name": "Example Response",
+              "status": null,
+              "responseCode": {
+                  "name": "OK",
+                  "code": 200
+              },
+              "time": "50",
+              "headers": [
+                  {
+                      "value": "Fri, 01 Sep 2023 07:36:18 GMT",
+                      "key": "Date"
+                  },
+                  {
+                      "value": "application/json; charset=utf-8",
+                      "key": "Content-Type"
+                  },
+                  {
+                      "value": "607",
+                      "key": "Content-Length"
+                  },
+                  {
+                      "value": "keep-alive",
+                      "key": "Connection"
+                  }
+              ],
+              "cookies": null,
+              "mime": null,
+              "text": "{\n    \"args\": {},\n    \"data\": {\n        \"field\": \"Value\"\n    },\n    \"files\": {},\n    \"form\": {},\n    \"headers\": {\n        \"x-forwarded-proto\": \"https\",\n        \"x-forwarded-port\": \"443\",\n        \"host\": \"postman-echo.com\",\n        \"x-amzn-trace-id\": \"Root=1-64f9cd12-62f18f3a048796d345508073\",\n        \"content-length\": \"24\",\n        \"content-type\": \"application/json\",\n        \"x-api-key\": \"xxx\",\n        \"user-agent\": \"PostmanRuntime/7.32.3\",\n        \"accept\": \"*/*\",\n        \"postman-token\": \"XXX\",\n        \"accept-encoding\": \"gzip, deflate, br\"\n    },\n    \"json\": {\n        \"field\": \"Value\"\n    },\n    \"url\": \"https://postman-echo.com/post\"\n}",
+              "language": "json",
+              "rawDataType": null,
+              "requestObject": "{\"data\":null,\"dataMode\":\"raw\",\"dataOptions\":{\"raw\":{\"language\":\"json\"}},\"headerData\":[],\"method\":\"POST\",\"pathVariableData\":[],\"queryParams\":[],\"url\":\"https://postman-echo.com/post\",\"headers\":\"\",\"pathVariables\":{},\"protocolProfileBehavior\":{\"disableBodyPruning\":true},\"rawModeData\":\"{\\n    \\\"field\\\": \\\"Value\\\"\\n}\",\"graphqlModeData\":{}}",
+              "createdAt": "2023-09-01T09:29:54.000Z",
+              "updatedAt": "2023-09-08T12:37:33.000Z",
+              "owner": "12345678",
+              "lastUpdatedBy": "12345678",
+              "lastRevision": 32368133468,
+              "request": "c82dd02c-4870-4907-8fcb-593a876cf05b"
+          },
+          "revision": 32473225008
+      }
+order: 1000

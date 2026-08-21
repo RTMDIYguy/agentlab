@@ -1,0 +1,48 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks/:mockId/call-logs?limit=2
+  method: GET
+  queryParams:
+    limit: "2"
+  pathVariables:
+    mockId: 12345678-e3d951bf-873f-49ac-a658-b2dcb91d3289
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "call-logs": [
+              {
+                  "id": "c4505a1e-7261-497c-91ff-db4bd51351a6-9545",
+                  "responseName": "Double check your method and the request path and try again.",
+                  "servedAt": "2022-01-17T06:19:30.000Z",
+                  "request": {
+                      "method": "POST",
+                      "path": "/animals"
+                  },
+                  "response": {
+                      "type": "error",
+                      "statusCode": 404
+                  }
+              },
+              {
+                  "id": "0f63f54d-665e-436a-95b4-c1302d7685a9-3925",
+                  "responseName": "Bad request",
+                  "servedAt": "2022-01-17T06:19:22.000Z",
+                  "request": {
+                      "method": "POST",
+                      "path": "/animals"
+                  },
+                  "response": {
+                      "type": "success",
+                      "statusCode": 400
+                  }
+              }
+          ],
+          "meta": {
+              "nextCursor": "eyJzY2hlbWUiOiJjdXJzb3JfcGFnaW5hdGlvbklkIiwiZGlyZWN0aW9uVHlwZSI6Im5leHQiLCJwaXZvdCI6InBhZ2luYXRpb25JZCIsInZhbHVlIjoxNjQyNDAwMzU2MDAwNTc5fQ=="
+          }
+      }
+order: 2000

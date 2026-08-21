@@ -1,0 +1,131 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/requests
+  method: POST
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Example GET Request",
+          "description": "This is an example GET request.",
+          "url": "https://postman-echo.com/get?param=value",
+          "method": "GET",
+          "auth": {
+              "type": "apikey",
+              "apikey": [
+                  {
+                      "key": "value",
+                      "value": "XXX",
+                      "type": "string"
+                  },
+                  {
+                      "key": "key",
+                      "value": "api-key",
+                      "type": "string"
+                  }
+              ]
+          },
+          "headers": [
+              {
+                  "key": "Host",
+                  "value": "postman-echo.com"
+              },
+              {
+                  "key": "user-agent",
+                  "value": "curl/7.88.1"
+              },
+              {
+                  "key": "accept",
+                  "value": "*/*"
+              },
+              {
+                  "key": "content-type",
+                  "value": "application/json"
+              }
+          ],
+          "queryParams": [
+              {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "equals": true,
+                  "description": "Optional. The user's ID.",
+                  "enabled": true
+              }
+          ],
+          "currentHelper": "apikeyAuth",
+          "helperAttributes": "{\"id\":\"apikey\",\"key\":\"api-key\",\"value\":\"XXX\"}",
+          "dataMode": "raw",
+          "rawModeData": null,
+          "dataOptions": {
+              "raw": {
+                  "language": "json"
+              }
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "model_id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+          "meta": {
+              "model": "request",
+              "action": "import"
+          },
+          "data": {
+              "folder": "4ec7de35-cc87-4e2f-ab01-6fd351371ad3",
+              "collection": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                      {
+                          "key": "value",
+                          "value": "XXX",
+                          "type": "string"
+                      },
+                      {
+                          "key": "key",
+                          "value": "api-key",
+                          "type": "string"
+                      }
+                  ]
+              },
+              "currentHelper": "apikeyAuth",
+              "helperAttributes": "{\"id\":\"apikey\",\"key\":\"api-key\",\"value\":\"XXX\"}",
+              "description": "This is an example GET request.",
+              "url": "https://postman-echo.com/get?param=value",
+              "dataMode": "raw",
+              "name": "Example GET Request",
+              "method": "GET",
+              "headers": "[object Object],[object Object],[object Object],[object Object]",
+              "responses_order": [],
+              "id": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+              "owner": "12345678",
+              "lastUpdatedBy": "12345678",
+              "queryParams": [
+                  {
+                      "key": "id",
+                      "value": "{{id}}",
+                      "equals": true,
+                      "description": "Optional. The user's ID.",
+                      "enabled": true
+                  }
+              ],
+              "headerData": [],
+              "createdAt": "2022-10-07T13:57:54.145Z",
+              "updatedAt": "2022-10-07T13:57:54.145Z",
+              "rawModeData": null,
+              "dataOptions": {
+                  "raw": {
+                      "language": "json"
+                  }
+              },
+              "responses": []
+          },
+          "revision": 27134451973
+      }
+order: 4000

@@ -1,0 +1,33 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/invitations
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "action": "invite_partner",
+          "targetEntity": "workspace",
+          "targetEntityId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+          "roleId": "4",
+          "target": {
+              "emails": [
+                  "alex.cruz@example.com",
+                  "mike.brown@example.com",
+                  "sara.smith@example.com"
+              ]
+          }
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/forbidden",
+          "title": "forbidden",
+          "detail": "You do not have permission to invite partners to this workspace.",
+          "status": 403
+      }
+order: 11000

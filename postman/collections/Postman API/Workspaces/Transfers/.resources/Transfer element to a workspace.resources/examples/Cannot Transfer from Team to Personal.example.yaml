@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/element-transfers
+  method: POST
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "id": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+          "type": "collection",
+          "to": "d56bc95f-57c5-47cc-bd99-75c4ad96a6dd"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "title": "Bad Request",
+          "status": 400,
+          "detail": "Cannot move elements from team level workspace to personal"
+      }
+order: 6000

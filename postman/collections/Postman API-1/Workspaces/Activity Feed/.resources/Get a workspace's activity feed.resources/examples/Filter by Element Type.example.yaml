@@ -1,0 +1,56 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId/activities?elementType=workspace
+  method: GET
+  queryParams:
+    elementType: workspace
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "nextCursor": ""
+          },
+          "data": [
+              {
+                  "workspaceId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+                  "createdAt": "2025-04-07T13:59:02Z",
+                  "updatedAt": "2025-04-07T13:59:02Z",
+                  "id": 15131,
+                  "user": {
+                      "id": 12345678,
+                      "username": "research-physicist-12345678",
+                      "isPartner": false,
+                      "name": "Taylor Lee"
+                  },
+                  "action": "update",
+                  "elementType": "workspace",
+                  "trigger": "update_visibility",
+                  "elementId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+                  "elementName": "Testing APIs"
+              },
+              {
+                  "workspaceId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+                  "createdAt": "2025-04-07T13:56:09Z",
+                  "updatedAt": "2025-04-07T13:56:09Z",
+                  "id": 15130,
+                  "user": {
+                      "id": 12345678,
+                      "username": "research-physicist-12345678",
+                      "isPartner": false,
+                      "name": "Taylor Lee"
+                  },
+                  "action": "update",
+                  "elementType": "workspace",
+                  "trigger": "add_user_role",
+                  "elementId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9",
+                  "elementName": "Testing APIs"
+              }
+          ]
+      }
+order: 2000

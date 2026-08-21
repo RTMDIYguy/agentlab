@@ -1,0 +1,51 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=active_workspaces&view=summary&workspaceType=internal&duration=last_month&limit=5&offset=0
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: active_workspaces
+    view: summary
+    workspaceType: internal
+    duration: last_month
+    limit: "5"
+    offset: "0"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "count",
+                              "type": "INTEGER",
+                              "description": "Total number for the summarized metric."
+                          },
+                          {
+                              "name": "change",
+                              "type": "FLOAT",
+                              "description": "Percentage or numeric change from the previous value."
+                          },
+                          {
+                              "name": "change_type",
+                              "type": "STRING",
+                              "description": "Indicates whether the change is an increase or decrease."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          312,
+                          4.69,
+                          "increase"
+                      ]
+                  ]
+              }
+          }
+      }
+order: 9000

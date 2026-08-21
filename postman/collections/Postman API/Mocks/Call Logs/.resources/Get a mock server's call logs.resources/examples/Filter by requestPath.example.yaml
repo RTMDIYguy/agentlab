@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/mocks/:mockId/call-logs?requestPath=/animals?type=Dog
+  method: GET
+  queryParams:
+    requestPath: /animals?type=Dog
+  pathVariables:
+    mockId: 12345678-e3d951bf-873f-49ac-a658-b2dcb91d3289
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+      	"call-logs": [
+      		{
+      			"id": "dae50669-f4c1-460a-b3a4-3a2445f4f39d-2468",
+      			"responseName": "Get filtered list of Animals",
+      			"servedAt": "2022-01-17T06:18:26.000Z",
+      			"request": {
+      				"method": "GET",
+      				"path": "/animals?type=dog"
+      			},
+      			"response": {
+      				"type": "success",
+      				"statusCode": 200
+      			}
+      		}
+      	],
+      	"meta": {
+      		"nextCursor": null
+      	}
+      }
+order: 9000

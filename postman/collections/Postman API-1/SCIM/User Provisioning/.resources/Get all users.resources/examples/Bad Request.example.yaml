@@ -1,0 +1,21 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Users?startIndex=1&count=50
+  method: GET
+  queryParams:
+    startIndex: "1"
+    count: "50"
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:Error"
+          ],
+          "detail": "This Postman team doesn’t exist anymore.",
+          "status": "400"
+      }
+order: 8000

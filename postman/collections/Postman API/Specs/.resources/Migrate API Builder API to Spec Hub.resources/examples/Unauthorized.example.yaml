@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/spec-migrations
+  method: POST
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+  body:
+    type: json
+    content: |-
+      {
+          "workspaceId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9"
+      }
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  body:
+    type: json
+    content: |-
+      {
+          "detail": "Unauthorized",
+          "title": "Unauthorized",
+          "type": "https://api.postman.com/problems/unauthorized",
+          "instance": "/apis/90ca9f5a-c4c4-11ed-afa1-0242ac120002/spec-migrations",
+          "status": 401
+      }
+order: 6000

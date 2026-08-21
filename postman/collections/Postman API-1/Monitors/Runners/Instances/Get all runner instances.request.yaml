@@ -1,0 +1,25 @@
+$kind: http-request
+description: |-
+  Gets all instances of the runner polling Postman for upcoming monitor runs. Instances are runner executions that share the same runner ID and key.
+
+  **Note:**
+
+  You can get a runner's ID in the Postman UI if you have an Admin or Super Admin role. To do this, click **Team > Team Settings** in Postman, then click **Runners**. Click the runner you want to get the ID of, then copy its ID from the URL.
+url: "{{baseUrl}}/runners/:runnerId/instances"
+method: GET
+queryParams:
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of rows to return in the response, up to a maximum value of 25. Any value greater than 25 returns a 400 Bad Request response.
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The pointer to the first record of the set of paginated results. To view the next response, use the `nextCursor` value for this parameter.
+pathVariables:
+  - key: runnerId
+    value: ""
+    description: The runner's ID.
+settings: {}
+examples: ./.resources/Get all runner instances.resources/examples
+order: 1000

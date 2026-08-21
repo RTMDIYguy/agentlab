@@ -1,0 +1,10 @@
+$kind: http-request
+description: Deletes an existing workspace.
+url: "{{baseUrl}}/workspaces/:workspaceId"
+method: DELETE
+pathVariables:
+  - key: workspaceId
+    value: ""
+    description: The workspace's ID.
+examples: ./.resources/Delete a workspace.resources/examples
+order: 10000

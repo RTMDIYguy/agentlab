@@ -1,0 +1,27 @@
+$kind: http-request
+description: Gets information about a Postman team.
+url: "{{baseUrl}}/teams/:teamId"
+method: GET
+headers:
+  - key: identifierType
+    value: scim
+    disabled: true
+    description: Use SCIM user and group IDs instead of Postman user IDs.
+queryParams:
+  - key: include
+    value: ""
+    disabled: true
+    description: |-
+      Include additional information in the request's response:
+      - `members` — Include all users and groups, including groups that represent other teams or the entire organization, with access to the team's entities. This includes team managers, members, and persons invited to collaborate as guests.
+      - `userRoles` — Include all the team's user roles in the response.
+pathVariables:
+  - key: teamId
+    value: ""
+    description: The team's ID.
+body:
+  type: json
+  content: ""
+settings: {}
+examples: ./.resources/Get a team.resources/examples
+order: 5000

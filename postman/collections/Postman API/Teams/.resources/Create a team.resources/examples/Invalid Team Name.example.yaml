@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Testing@Team",
+          "description": "API testing team."
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "status": 400,
+          "title": "Bad Request",
+          "detail": {
+              "error": {
+                  "name": "InvalidParams",
+                  "message": "Only alphanumeric characters and spaces are allowed in the name"
+              }
+          },
+          "instance": "/teams"
+      }
+order: 4000

@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/runners/:runnerId/instances
+  method: GET
+  pathVariables:
+    runnerId: 1f08d6ba-c377-4ca0-be80-af81daf8fef9
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "model": "runnerInstance",
+              "action": "find",
+              "url": "https://testing.example.com/runners/1f08d6ba-c377-4ca0-be80-af81daf8fef9/instances"
+          },
+          "data": []
+      }
+order: 3000

@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId
+  method: PATCH
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "info": {
+                  "name": "Test Collection v2",
+                  "description": "This is a sample collection that makes a request to the Postman Echo service. It returns a list of request headers sent by an HTTP client."
+              }
+          }
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "forbiddenError",
+              "message": "You do not have enough permissions to perform this action."
+          }
+      }
+order: 13000

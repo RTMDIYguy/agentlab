@@ -1,0 +1,17 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/accounts
+  method: GET
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "title": "Malformed request",
+          "status": 400,
+          "detail": "You must be part of a team"
+      }
+order: 2000

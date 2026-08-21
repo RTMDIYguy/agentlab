@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collection-access-keys/:keyId
+  method: DELETE
+  pathVariables:
+    keyId: Njg5OjU3MDQ1NjYtYmQxZDU3NzktMWVkNS00ZDhjLWI0ZmQtZWRhOGY2Mzg1NTY0
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/internal-server-error",
+          "title": "Something went wrong",
+          "detail": "Something went wrong",
+          "status": 500
+      }
+order: 5000

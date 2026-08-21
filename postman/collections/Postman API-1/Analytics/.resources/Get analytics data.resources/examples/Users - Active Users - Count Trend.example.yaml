@@ -1,0 +1,49 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=user&metrics=active_users&view=summary&workspaceType=public,partner,internal&duration=last_month
+  method: GET
+  queryParams:
+    resource: user
+    metrics: active_users
+    view: summary
+    workspaceType: public,partner,internal
+    duration: last_month
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "count",
+                              "type": "INTEGER",
+                              "description": "Total number for the summarized metric."
+                          },
+                          {
+                              "name": "change",
+                              "type": "FLOAT",
+                              "description": "Percentage or numeric change from previous value."
+                          },
+                          {
+                              "name": "change_type",
+                              "type": "STRING",
+                              "description": "Indicates whether the change is an increase or decrease."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          4231,
+                          5.51,
+                          "increase"
+                      ]
+                  ]
+              }
+          }
+      }
+order: 2000

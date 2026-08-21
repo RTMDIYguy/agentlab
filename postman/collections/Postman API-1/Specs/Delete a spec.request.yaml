@@ -1,0 +1,11 @@
+$kind: http-request
+description: Deletes an API specification. On success, this returns an HTTP `204 No Content` response.
+url: "{{baseUrl}}/specs/:specId"
+method: DELETE
+pathVariables:
+  - key: specId
+    value: ""
+    description: The spec's ID.
+settings: {}
+examples: ./.resources/Delete a spec.resources/examples
+order: 8000

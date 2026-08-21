@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/spec-migrations
+  method: GET
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "status": "COMPLETED",
+          "details": {
+              "workspaceId": "1f0df51a-8658-4ee8-a2a1-d2567dfa09a9"
+          }
+      }
+order: 1000

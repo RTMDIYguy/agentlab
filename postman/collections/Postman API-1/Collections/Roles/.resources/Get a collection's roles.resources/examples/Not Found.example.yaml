@@ -1,0 +1,17 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/roles
+  method: GET
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "title": "We could not find the collection you are looking for",
+          "type": "instanceNotFoundError"
+      }
+order: 4000

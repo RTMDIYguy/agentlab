@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/network/private
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "folder": {
+              "name": "Billing",
+              "description": "The Billing API."
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "id": 1,
+          "parentFolderId": 0,
+          "updatedAt": "2022-12-07T18:00:39.000Z",
+          "updatedBy": 12345678,
+          "createdBy": 12345678,
+          "createdAt": "2022-12-07T18:00:39.000Z",
+          "name": "Billing",
+          "description": "The Billing API.",
+          "type": "folder"
+      }
+order: 6000

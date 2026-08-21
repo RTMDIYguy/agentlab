@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId/settings
+  method: GET
+  pathVariables:
+    teamId: "123"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "settings": {
+              "rfa_for_add_member": "disabled",
+              "rfa_for_add_collaborator": "disabled"
+          }
+      }
+order: 1000

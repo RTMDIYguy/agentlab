@@ -1,0 +1,29 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/tags
+  method: PUT
+  pathVariables:
+    apiId: 6fd634a3-79ba-451d-8f07-56a953f96667
+  body:
+    type: json
+    content: |-
+      {
+          "tags": [
+              {
+                  "slug": "needs-review"
+              }
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "instanceNotFoundError",
+              "message": "API not found. For v10 and later APIs, ensure that your request sends the \"application/vnd.api.v10+json\" Accept header."
+          }
+      }
+order: 7000

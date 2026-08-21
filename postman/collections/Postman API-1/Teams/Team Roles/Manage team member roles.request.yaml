@@ -1,0 +1,70 @@
+$kind: http-request
+description: |-
+  Adds or removes roles in groups, teams, organizations, as well as individual users' roles.
+
+  **Note:**
+
+  If you remove a role from a group or team, then all members lose the that role's permissions.
+url: "{{baseUrl}}/teams/:teamId/bulk-members"
+method: POST
+headers:
+  - key: identifierType
+    value: scim
+    disabled: true
+    description: Use SCIM user and group IDs instead of Postman user IDs.
+pathVariables:
+  - key: teamId
+    value: ""
+    description: The team's ID.
+body:
+  type: json
+  content: |-
+    {
+        "add": {
+            "users": {
+                "{{userId}}": [
+                    "{{roleName}}"
+                ]
+            },
+            "groups": {
+                "{{userGroupId}}": [
+                    "{{roleName}}"
+                ]
+            },
+            "orgs": {
+                "{{orgId}}": [
+                    "{{roleName}}"
+                ]
+            },
+            "teams": {
+                "{{teamId}}": [
+                    "{{roleName}}"
+                ]
+            }
+        },
+        "remove": {
+            "users": {
+                "{{userId}}": [
+                    "{{roleName}}"
+                ]
+            },
+            "groups": {
+                "{{userGroupId}}": [
+                    "{{roleName}}"
+                ]
+            },
+            "orgs": {
+                "{{orgId}}": [
+                    "{{roleName}}"
+                ]
+            },
+            "teams": {
+                "{{teamId}}": [
+                    "{{roleName}}"
+                ]
+            }
+        }
+    }
+settings: {}
+examples: ./.resources/Manage team member roles.resources/examples
+order: 1000

@@ -1,0 +1,31 @@
+$kind: http-request
+description: |-
+  Gets an API schema file contents at the defined path. You can use the `versionId` query parameter to get schema file contents published in an API version.
+
+  **Note:**
+
+  The `versionId` query parameter is a **required** parameter for API viewers.
+url: "{{baseUrl}}/apis/:apiId/schemas/:schemaId/files/:filePath"
+method: GET
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+queryParams:
+  - key: versionId
+    value: ""
+    disabled: true
+    description: The API's version ID.
+pathVariables:
+  - key: apiId
+    value: "{{apiId}}"
+    description: The API's ID.
+  - key: schemaId
+    value: "{{schemaId}}"
+    description: The API schema's ID.
+  - key: filePath
+    value: "{{filePath}}"
+    description: The path to the schema file.
+settings: {}
+examples: ./.resources/Get schema file contents.resources/examples
+order: 5000

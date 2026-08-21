@@ -1,0 +1,32 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/responses?request=c82dd02c-4870-4907-8fcb-593a876cf05b
+  method: POST
+  queryParams:
+    request: c82dd02c-4870-4907-8fcb-593a876cf05b
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "name": "Success"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "instanceFoundError",
+              "message": "This response already exists in the database.",
+              "details": {
+                  "model": "response",
+                  "model_id": "cc364734-7dfd-4bfc-897d-be763dcdbb07",
+                  "owner": "12345678"
+              }
+          }
+      }
+order: 3000

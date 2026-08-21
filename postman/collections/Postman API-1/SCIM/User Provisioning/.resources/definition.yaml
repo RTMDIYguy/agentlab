@@ -1,0 +1,19 @@
+$kind: collection
+description: |-
+  These endpoints enable you to provision and manage your Postman users.
+
+  > You can only deactivate users with the SCIM API. You cannot permanently delete users with the API. 
+    
+
+  ### Provisioning users with the SCIM API
+
+  - Users created with the SCIM API are automatically created in Postman.
+      
+      - If the account's email ID does not exist, the user is also added to their organization's Postman team.
+          
+      - If the account's email ID already exists, the system sends the user an email invite to join the Postman team. After they accept the invite, the are added to the team.
+          
+      - If the user's email domain matches your team's verified domains, the user is immediately added to the team.
+          
+  - By default, new users are given the developer role in Postman. Postman user roles cannot be updated via the SCIM API. You must manage user and group roles in Postman.
+order: 1000

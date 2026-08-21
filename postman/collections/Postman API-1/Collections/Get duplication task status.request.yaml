@@ -1,0 +1,11 @@
+$kind: http-request
+description: Gets the status of a collection duplication task.
+url: "{{baseUrl}}/collection-duplicate-tasks/:taskId"
+method: GET
+pathVariables:
+  - key: taskId
+    value: ""
+    description: The task's unique ID.
+settings: {}
+examples: ./.resources/Get duplication task status.resources/examples
+order: 15000

@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/oauth2/token
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "installationAuthId": "e868878e40f646ce8b5620736995dc89",
+          "grant_type": "client_credentials",
+          "jwt": "eyJhXXX"
+      }
+response:
+  statusCode: 404
+  statusText: Not Found
+  headers:
+    Date: Thu, 09 Oct 2025 23:06:13 GMT
+    Content-Type: application/json
+    Content-Length: "100"
+    Connection: keep-alive
+    ETag: W/"64-7HX1UJIlK3t9hKD+c4qhLDcbqqU"
+    Vary: Accept-Encoding
+  body:
+    type: json
+    content: |-
+      {
+          "error": "invalid_client",
+          "error_description": "OAuth client installation not found"
+      }
+order: 3000

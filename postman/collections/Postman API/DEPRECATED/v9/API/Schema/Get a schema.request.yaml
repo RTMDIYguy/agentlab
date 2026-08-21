@@ -1,0 +1,9 @@
+$kind: http-request
+description: |-
+  **This endpoint is deprecated in Postman v10 and higher.**
+
+  Gets information about an API's definition.
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}/schemas/{{schemaId}}
+method: GET
+examples: ./.resources/Get a schema.resources/examples
+order: 1000

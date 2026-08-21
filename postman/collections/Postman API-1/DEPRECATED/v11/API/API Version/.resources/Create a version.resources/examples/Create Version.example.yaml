@@ -1,0 +1,41 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/versions
+  method: POST
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+  body:
+    type: json
+    content: |-
+      {
+          "name": "v1",
+          "releaseNotes": "This is the first release.",
+          "collections": [
+              {
+                  "id": "12345678-e8a015e0-f472-4bb3-a523-57ce7c4583ed"
+              }
+          ],
+          "schemas": [
+              {
+                  "id": "18a015e0-f472-4bb3-a523-57ce7c458387"
+              }
+          ]
+      }
+response:
+  statusCode: 202
+  statusText: Accepted
+  headers:
+    Location: /apis/90ca9f5a-c4c4-11ed-afa1-0242ac120002/tasks/3563baaa-07a2-46ed-9fd2-0e8a3c5f7ec2
+  body:
+    type: json
+    content: |-
+      {
+          "createdAt": "2022-06-09T14:48:45.000Z",
+          "updatedAt": "2022-06-09T19:50:49.000Z",
+          "id": "3563baaa-07a2-46ed-9fd2-0e8a3c5f7ec2",
+          "name": "v1",
+          "releaseNotes": "This is the first release."
+      }
+order: 1000

@@ -1,0 +1,37 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/runners/:runnerId/instances?limit=1&cursor=2NMbfiEAxQcpbmTFnmfQw7jV83WCRxjFxCwipofDVfn83ac16idLnRngzvpj4VNR5GsufwXVFrWX59iLNdV7CEriGGCutycbRD1smGoWV9F5GMLGs59mGQX5hnmnhsvxDLYt1kaJgkZYk6fs9oxoaqLvLbRSQb4LyBn4vkTh1T6Xvt1c8Pe9SPR2xJ5y3fPe6judViwg1CPLJbDdRNFZ6GJ8qDp26hJE8ZPTwoYrj
+  method: GET
+  queryParams:
+    limit: "1"
+    cursor: 2NMbfiEAxQcpbmTFnmfQw7jV83WCRxjFxCwipofDVfn83ac16idLnRngzvpj4VNR5GsufwXVFrWX59iLNdV7CEriGGCutycbRD1smGoWV9F5GMLGs59mGQX5hnmnhsvxDLYt1kaJgkZYk6fs9oxoaqLvLbRSQb4LyBn4vkTh1T6Xvt1c8Pe9SPR2xJ5y3fPe6judViwg1CPLJbDdRNFZ6GJ8qDp26hJE8ZPTwoYrj
+  pathVariables:
+    runnerId: 1f08d6ba-c377-4ca0-be80-af81daf8fef9
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "nextCursor": "2NMbfiEAxQcpbmTFnmfQw7jV83WCRxjFxCwipofDVfn83ac16idLnRngzvpj4VNR5GsufwXVFrWX59iLNdV7CEriGGCutycbRD1smGoWV9F5GMLGs59mGQX5hnmnhsvxDLYt1kaJgkZYk6fs9oxoaqLvLbRSQb4LyBn4vkTh1T6Xvt1c8Pe9SPR2xJ5y3fPe6judViwg1CPLJbDdRNFZ6GJ8qDp26hJE8ZPTwoYrj",
+              "model": "runnerInstance",
+              "action": "find",
+              "url": "https://testing.example.com/runners/1f08d6ba-c377-4ca0-be80-af81daf8fef9/instances?limit=1"
+          },
+          "data": [
+              {
+                  "id": "Rtesting-78b4f9c59c-5c7mx|b5862804ba|1.23.0|Linux",
+                  "hostname": "testing-78b4f9c59c-5c7mx",
+                  "uniqueId": "b5862804ba",
+                  "cliVersion": "1.23.0",
+                  "osType": "Linux",
+                  "runnerId": "1f08d6ba-c377-4ca0-be80-af81daf8fef9",
+                  "lastPingedAt": "2025-11-06T14:59:53.000Z"
+              }
+          ]
+      }
+order: 2000

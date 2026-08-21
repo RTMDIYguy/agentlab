@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/versions
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+response:
+  statusCode: 422
+  statusText: Unprocessable Entity (WebDAV) (RFC 4918)
+  body:
+    type: json
+    content: |-
+      {
+          "type": "unsupportedEntityError",
+          "title": "Unsupported API",
+          "detail": "This endpoint does not support v9 APIs."
+      }
+order: 8000

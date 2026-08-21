@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/merge
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "strategy": "deleteSource",
+          "source": "12345678-09547fef-a9a5-4e00-998b-aa563e8db69a",
+          "destination": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+      }
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    X-RateLimit-Limit: "60"
+    X-RateLimit-Remaining: "59"
+    X-RateLimit-Reset: "1631439621"
+    X-RateLimit-RetryAfter: "4"
+    RetryAfter: "4"
+  body:
+    type: json
+    content: |-
+      {
+          "error": "rateLimited",
+          "message": "Rate limit exceeded. Please retry after 1669048687"
+      }
+order: 4000

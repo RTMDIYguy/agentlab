@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId
+  method: DELETE
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "id": "12ece9e1-2abf-4edc-8e34-de66e74114d2",
+              "uid": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2"
+          }
+      }
+order: 1000

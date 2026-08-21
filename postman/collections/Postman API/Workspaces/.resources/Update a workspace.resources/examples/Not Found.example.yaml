@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces/:workspaceId
+  method: PUT
+  pathVariables:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9
+  body:
+    type: json
+    content: |-
+      {
+          "workspace": {
+              "name": "Team Workspace",
+              "type": "team",
+              "description": "This is a team workspace.",
+              "about": "Team workspace."
+          }
+      }
+response:
+  statusCode: 404
+  statusText: Not Found
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "instanceNotFoundError",
+              "message": "The specified workspace with id 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9 does not exist."
+          }
+      }
+order: 10000

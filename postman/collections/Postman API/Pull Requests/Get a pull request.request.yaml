@@ -1,0 +1,11 @@
+$kind: http-request
+description: Gets information about a pull request, such as the source and destination details, who reviewed the pull request, the merge's current status, and whether the element is accessible.
+url: "{{baseUrl}}/pull-requests/:pullRequestId"
+method: GET
+pathVariables:
+  - key: pullRequestId
+    value: "{{pullRequestId}}"
+    description: The pull request's ID.
+settings: {}
+examples: ./.resources/Get a pull request.resources/examples
+order: 1000

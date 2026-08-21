@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/environments/:environmentUid/merges
+  method: POST
+  pathVariables:
+    environmentUid: 12345678-5daabc50-8451-43f6-922d-96b403b4f28e
+  body:
+    type: json
+    content: |-
+      {
+          "source": "12345678-d9c7dc8f-904e-4bba-99b5-4d490aae1957",
+          "deleteSource": false
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "environment": {
+              "uid": "12345678-d9c7dc8f-904e-4bba-99b5-4d490aae1957"
+          }
+      }
+order: 1000

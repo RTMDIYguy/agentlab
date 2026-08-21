@@ -1,0 +1,33 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "info": {
+                  "name": "Test Collection"
+              }
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "malformedRequestError",
+              "message": "Found 2 errors with the supplied collection.",
+              "details": [
+                  ": must have required property 'item'",
+                  "info: must have required property 'schema'"
+              ]
+          }
+      }
+order: 7000

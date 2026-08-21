@@ -1,0 +1,11 @@
+$kind: http-request
+description: |-
+  Gets information about an API version.
+
+  **In Postman v9 and earlier:**
+
+  When you create an API, the system creates a single, default API version. You can use this version’s ID with any endpoints that require an API version ID.
+url: https://api.getpostman.com/apis/{{apiId}}/versions/{{apiVersionId}}
+method: GET
+examples: ./.resources/Get an API version.resources/examples
+order: 3000

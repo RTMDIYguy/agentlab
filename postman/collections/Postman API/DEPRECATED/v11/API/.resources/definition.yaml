@@ -1,0 +1,12 @@
+$kind: collection
+description: |-
+  **These endpoints are deprecated.**
+
+  In Postman v12 and later, these APIs are no longer supported. API Builder will remain available on Postman v11, but it will no longer be actively developed or supported.
+
+  It’s strongly recommended that if you use API Builder and upgrade to Postman v12 to [migrate](https://learning.postman.com/docs/design-apis/migrate-to-spec-hub/) your APIs to [Spec Hub](https://learning.postman.com/docs/design-apis/specifications/overview) and use the [Spec Hub APIs](https://www.postman.com/postman/postman-public-workspace/folder/4qpsuuz/specs).
+
+  ### Note
+
+  When using these endpoints, you must send an `Accept` header with the `application/vnd.api.v10+json` value.
+order: 1000

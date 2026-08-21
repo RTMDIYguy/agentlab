@@ -1,0 +1,71 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/workspaces-roles
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "roles": {
+              "user": [
+                  {
+                      "id": "3",
+                      "displayName": "Admin",
+                      "description": "Can manage people and all resources"
+                  },
+                  {
+                      "id": "2",
+                      "displayName": "Editor",
+                      "description": "Can create and edit all resources"
+                  },
+                  {
+                      "id": "1",
+                      "displayName": "Viewer",
+                      "description": "Can view and collaborate on all resources"
+                  }
+              ],
+              "usergroup": [
+                  {
+                      "id": "3",
+                      "displayName": "Admin",
+                      "description": "Can manage people and all resources"
+                  },
+                  {
+                      "id": "2",
+                      "displayName": "Editor",
+                      "description": "Can create and edit all resources"
+                  },
+                  {
+                      "id": "1",
+                      "displayName": "Viewer",
+                      "description": "Can view and collaborate on all resources"
+                  }
+              ],
+              "partner": [
+                  {
+                      "id": "7",
+                      "displayName": "Editor and Partner Lead",
+                      "description": "Can create and edit workspace resources, and invite partners with Editor or Viewer access to the workspace"
+                  },
+                  {
+                      "id": "6",
+                      "displayName": "Viewer and Partner Lead",
+                      "description": "Can view, fork and export workspace resources, and invite partners with Viewer access to the workspace"
+                  },
+                  {
+                      "id": "5",
+                      "displayName": "Editor",
+                      "description": "Can create, edit and fork workspace resources"
+                  },
+                  {
+                      "id": "4",
+                      "displayName": "Viewer",
+                      "description": "Can send requests and view workspace resources"
+                  }
+              ]
+          }
+      }
+order: 1000

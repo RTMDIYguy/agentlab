@@ -1,0 +1,63 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/scim/v2/Groups
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "schemas": [
+              "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+          ],
+          "totalResults": 2,
+          "startIndex": 1,
+          "itemsPerPage": 2,
+          "Resources": [
+              {
+                  "schemas": [
+                      "urn:ietf:params:scim:schemas:core:2.0:Group"
+                  ],
+                  "id": "561631fq14ed41872a8eea4c8aa2b38cda9749812cc55c00",
+                  "displayName": "TestAPI",
+                  "members": [
+                      {
+                          "value": "23a35c2723d34c03b4c56443c09e7173",
+                          "display": "Taylor Lee"
+                      }
+                  ],
+                  "externalId": "1234",
+                  "meta": {
+                      "resourceType": "Group",
+                      "created": "2022-02-22T04:24:13.000Z",
+                      "lastModified": "2022-02-22T04:24:13.000Z"
+                  }
+              },
+              {
+                  "schemas": [
+                      "urn:ietf:params:scim:schemas:core:2.0:Group"
+                  ],
+                  "id": "123775fe15ed41872a8eea4c8aa2b38cda9749812cc55c99",
+                  "displayName": "Test Group",
+                  "members": [
+                      {
+                          "value": "23a35c2723d34c03b4c56443c09e7173",
+                          "display": "Taylor Lee"
+                      },
+                      {
+                          "value": "ghc794f24f4c49f4b5d503a4cb2686e90",
+                          "display": "Alex Cruz"
+                      }
+                  ],
+                  "externalId": "4321",
+                  "meta": {
+                      "resourceType": "Group",
+                      "created": "2022-02-22T04:24:13.000Z",
+                      "lastModified": "2022-02-22T04:24:13.000Z"
+                  }
+              }
+          ]
+      }
+order: 1000

@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/api-catalog/discovery-services
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "service": [
+              {
+                  "name": "gateway-proxy-renamed",
+                  "version": "2.0.0",
+                  "providerServiceId": "gw-proxy-east-1",
+                  "sourceEnvironment": "us-east-1"
+              }
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "type": "https://api.postman.com/problems/bad-request",
+          "status": 400,
+          "title": "Bad Request",
+          "detail": "Validation Error: discoveredServices: Invalid input: expected array, received undefined",
+          "errors": [
+              {
+                  "path": "discoveredServices",
+                  "message": "Invalid input: expected array, received undefined"
+              }
+          ]
+      }
+order: 6000

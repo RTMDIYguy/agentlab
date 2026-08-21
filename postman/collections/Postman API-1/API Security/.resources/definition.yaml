@@ -1,0 +1,3 @@
+$kind: collection
+description: The **API Security** endpoints enable you to manage the [security of your API](https://learning.postman.com/docs/api-governance/api-definition/api-definition-warnings/). API security includes ensuring you follow security and format warnings and schema validation.
+order: 3000

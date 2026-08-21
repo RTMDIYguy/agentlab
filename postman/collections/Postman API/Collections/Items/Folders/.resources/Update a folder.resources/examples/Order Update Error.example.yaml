@@ -1,0 +1,39 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/folders/:folderId
+  method: PUT
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+    folderId: 65a99e60-8e0a-4b6e-b79c-7d8264cc5caa
+  body:
+    type: json
+    content: |-
+      {
+          "order": [
+              "12345678-66c7fe01-2c7e-4149-9de1-1143592f7bad",
+              "12345678-3def345e-b4b3-4319-8e2c-65d2630c0345",
+              "12345678-c089bf09-c679-4116-9654-9a561276634d",
+              "12345678-eb82f2b7-0478-4068-8e8a-c277e25ba0d3"
+          ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "orderUpdateError",
+              "message": "You can only reorder the requests.",
+              "details": {
+                  "order": [
+                      "66c7fe01-2c7e-4149-9de1-1143592f7bad",
+                      "3def345e-b4b3-4319-8e2c-65d2630c0345",
+                      "c089bf09-c679-4116-9654-9a561276634d",
+                      "eb82f2b7-0478-4068-8e8a-c277e25ba0d3"
+                  ]
+              }
+          }
+      }
+order: 6000

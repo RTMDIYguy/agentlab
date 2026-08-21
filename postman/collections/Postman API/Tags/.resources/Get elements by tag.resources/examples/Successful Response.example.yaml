@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/tags/:slugId/entities
+  method: GET
+  pathVariables:
+    slugId: needs-review
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "entities": [
+                  {
+                      "entityId": "8b86dfe8-de72-44e6-81ea-79d19805bc6a",
+                      "entityType": "collection"
+                  }
+              ]
+          },
+          "meta": {
+              "count": 1
+          }
+      }
+order: 1000

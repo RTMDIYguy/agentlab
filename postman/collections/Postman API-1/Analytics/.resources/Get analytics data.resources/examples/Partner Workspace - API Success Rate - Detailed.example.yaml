@@ -1,0 +1,138 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=workspace&metrics=success_rate&view=detailed&duration=last_30_days&limit=3
+  method: GET
+  queryParams:
+    resource: workspace
+    metrics: success_rate
+    view: detailed
+    duration: last_30_days
+    limit: "3"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "name": "timestamp",
+                              "type": "TIMESTAMP",
+                              "format": "YYYY-MM-DDTHH:MM:SSZ",
+                              "description": "Time when the request metrics snapshot was recorded."
+                          },
+                          {
+                              "name": "request_identifier_id",
+                              "type": "STRING",
+                              "description": "Unique identifier for the specific request definition."
+                          },
+                          {
+                              "name": "request_method",
+                              "type": "STRING",
+                              "description": "HTTP method used for the request."
+                          },
+                          {
+                              "name": "request_name",
+                              "type": "STRING",
+                              "description": "Human-readable name of the request."
+                          },
+                          {
+                              "name": "total_requests",
+                              "type": "INTEGER",
+                              "description": "Total number of request attempts."
+                          },
+                          {
+                              "name": "success_count",
+                              "type": "INTEGER",
+                              "description": "Number of successful responses received."
+                          },
+                          {
+                              "name": "failure_count",
+                              "type": "INTEGER",
+                              "description": "Number of failed responses received."
+                          },
+                          {
+                              "name": "success_percent",
+                              "type": "FLOAT",
+                              "description": "Percentage of successful requests."
+                          },
+                          {
+                              "name": "collection_name",
+                              "type": "STRING",
+                              "description": "Name of the collection the request belongs to."
+                          },
+                          {
+                              "name": "collection_id",
+                              "type": "STRING",
+                              "description": "Identifier of the collection the request belongs to."
+                          },
+                          {
+                              "name": "workspace_name",
+                              "type": "STRING",
+                              "description": "Name of the workspace containing the collection."
+                          },
+                          {
+                              "name": "workspace_id",
+                              "type": "STRING",
+                              "description": "Identifier of the workspace containing the collection."
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "2025-10-10T10:10:00Z",
+                          "87654321-3346d4bb-c3f5-4f37-a80b-4e77eeb6055a",
+                          "GET",
+                          "Get User Profile",
+                          1200,
+                          1080,
+                          120,
+                          90.0,
+                          "User Management API",
+                          "87654321-ff0b2687-2617-48f9-8a50-7bc5bf8ef8b0",
+                          "Partner Portal",
+                          "13f603d8-4cb2-45d1-92f8-e39891fdf387"
+                      ],
+                      [
+                          "2025-10-10T10:10:00Z",
+                          "12345678-6f719613-acee-44d2-a9b5-e9be639add94",
+                          "POST",
+                          "Create Workspace",
+                          980,
+                          850,
+                          130,
+                          86.7,
+                          "Workspace Admin API",
+                          "12345678-c50b4c83-f39c-4812-9a3e-5e9785011e76",
+                          "Partner Portal",
+                          "50903db2-6d98-4564-8da9-631caa258c17"
+                      ],
+                      [
+                          "2025-10-10T10:10:00Z",
+                          "56781234-4cc757c2-ffba-431d-90b2-7242cedb47f3",
+                          "PATCH",
+                          "Update Member Role",
+                          760,
+                          690,
+                          70,
+                          90.8,
+                          "Team Management API",
+                          "56781234-4badbb68-830b-40c8-94b7-4c195c852995",
+                          "Partner Hub",
+                          "d100a067-b604-44c4-a1c1-bf414cc7b2c0"
+                      ]
+                  ],
+                  "pagination": {
+                      "total": 42,
+                      "limit": 3,
+                      "offset": 0,
+                      "has_more": true
+                  }
+              }
+          }
+      }
+order: 29000

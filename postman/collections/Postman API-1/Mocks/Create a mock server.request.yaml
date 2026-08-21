@@ -1,0 +1,32 @@
+$kind: http-request
+description: |-
+  Creates a mock server in a collection.
+
+  **Note:**
+
+  - You cannot create mocks for collections added to an API definition.
+      
+  - If you do not include the `workspaceId` query parameter, the system creates the mock server in the oldest personal Internal workspace you own.
+url: "{{baseUrl}}/mocks?workspace="
+method: POST
+queryParams:
+  - key: workspace
+    value: ""
+    description: |-
+      A workspace ID in which to create the mock server.
+
+      If you do not include this query parameter, the system creates the mock server in the oldest personal Internal workspace you own.
+body:
+  type: json
+  content: |-
+    {
+    	"mock": {
+            "name": "{{mockName}}",
+    		"collection": "{{collectionId}}",
+    		"environment": "{{environmentId}}",
+            "private": true
+    	}
+    }
+settings: {}
+examples: ./.resources/Create a mock server.resources/examples
+order: 4000

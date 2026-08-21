@@ -1,0 +1,36 @@
+$kind: http-request
+description: |-
+  Gets information about all APIs in a workspace.
+
+  **Note:**
+
+  This endpoint only returns APIs created or migrated in Postman v10 and higher.
+url: "{{baseUrl}}/apis?workspaceId={{workspaceId}}"
+method: GET
+headers:
+  - key: Accept
+    value: application/vnd.api.v10+json
+    description: The request header required to use the endpoint.
+queryParams:
+  - key: workspaceId
+    value: "{{workspaceId}}"
+    description: (Required) The workspace ID.
+  - key: createdBy
+    value: ""
+    disabled: true
+    description: The user ID of the user that created the resource.
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The pointer to the first record of the set of paginated results.
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of rows to return in the response.
+  - key: description
+    value: ""
+    disabled: true
+    description: Return only APIs whose description includes the given value. Matching is not case-sensitive.
+settings: {}
+examples: ./.resources/Get all APIs.resources/examples
+order: 6000

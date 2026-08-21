@@ -1,0 +1,33 @@
+$kind: http-request
+description: |-
+  Updates a group's information. Using this endpoint you can:
+
+  - Update a group's name.
+      
+  - Add or remove members from a Postman group.
+url: "{{baseUrl}}/scim/v2/Groups/:groupId"
+method: PATCH
+pathVariables:
+  - key: groupId
+    value: ""
+    description: The group's ID.
+body:
+  type: json
+  content: |-
+    {
+        "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PutOp"
+        ],
+        "Operations": [
+            {
+                "op": "{{operation}}",
+                "value": {
+                    "id": "{{groupId}}",
+                    "displayName": "{{userGroupName}}"
+                }
+            }
+        ]
+    }
+settings: {}
+examples: ./.resources/Update a group.resources/examples
+order: 2000

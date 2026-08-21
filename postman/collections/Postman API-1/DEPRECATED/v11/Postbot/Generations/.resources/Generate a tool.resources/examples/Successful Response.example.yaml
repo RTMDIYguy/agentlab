@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/postbot/generations/tool
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+          "collectionId": "12345678-12ece9e1-2abf-4edc-8e34-de66e74114d2",
+          "requestId": "c82dd02c-4870-4907-8fcb-593a876cf05b",
+          "config": {
+              "language": "javascript",
+              "agentFramework": "openai"
+          }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "text": "/**\n * Function to query a Notion database.\n *\n * @param {Object} args - Arguments for the query.\n * @param {string} args.databaseId - The ID of the Notion database to query.\n * @param {Object} [args.filter] - The filter conditions for the query.\n * @param {Array} [args.sorts] - The sort conditions for the query.\n * @returns {Promise<Object>} - The result of the database query.\n */\nconst executeFunction = async ({ databaseId, filter, sorts }) => {\n    // NOTE before using the tool: verify this section is correct\n    const baseUrl = `https://api.notion.com/v1/databases/${databaseId}/query`;\n    \n    // NOTE! Replace this with your actual API token\n    const token = process.env.NOTION_API_TOKEN;\n    const notionVersion = process.env.NOTION_VERSION || '2022-06-28'; // Default version, update as needed\n\n    // Set up headers for the request\n    const headers = {\n        'Authorization': `Bearer ${token}`,\n        'Content-Type': 'application/json',\n        'Notion-Version': notionVersion,\n    };\n\n    const body = JSON.stringify({\n        filter,\n        sorts,\n    });\n\n    // Perform the fetch request\n    const response = await fetch(baseUrl, {\n        method: 'POST',\n        headers,\n        body\n    });\n\n    // Check if the response was successful\n    if (!response.ok) {\n        const errorData = await response.json();\n        throw new Error(errorData);\n    }\n\n    // Parse and return the response data\n    const data = await response.json();\n    return data;\n};\n\n/**\n * Tool configuration for querying a Notion database.\n * @type {Object}\n */\nconst apiTool = {\n    type: 'function',\n    function: {\n        name: 'query_notion_database',\n        function: executeFunction,\n        description: 'Query a Notion database using specific filter and sort parameters.',\n        parse: JSON.parse,\n        parameters: {\n            type: 'object',\n            properties: {\n                databaseId: {\n                    type: 'string',\n                    description: 'The ID of the Notion database to query.',\n                },\n                filter: {\n                    type: 'object',\n                    description: 'The filter conditions for the query.',\n                },\n                sorts: {\n                    type: 'array',\n                    description: 'The sort conditions for the query.',\n                    items: {\n                        type: 'object',\n                        properties: {\n                            property: {\n                                type: 'string',\n                                description: 'The database property to sort by.',\n                            },\n                            direction: {\n                                type: 'string',\n                                description: 'The direction of sorting, either \"ascending\" or \"descending\".',\n                                enum: ['ascending', 'descending'],\n                            },\n                        },\n                    },\n                },\n            },\n            required: ['databaseId'],\n            additionalProperties: false,\n        },\n    },\n};\n\nexport default apiTool;"
+          }
+      }
+order: 1000

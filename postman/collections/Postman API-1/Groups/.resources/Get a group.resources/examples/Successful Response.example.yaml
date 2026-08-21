@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/groups/:groupId
+  method: GET
+  pathVariables:
+    - key: groupId
+      value: "123"
+      description: The group's ID.
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "id": 123,
+          "teamId": 1,
+          "name": "API Test Group",
+          "summary": "API testing group.",
+          "createdBy": 12345678,
+          "createdAt": "2024-10-03T14:05:05.000Z",
+          "updatedAt": "2024-10-03T14:05:05.000Z",
+          "members": [
+              12345678,
+              87654321,
+              56781234
+          ],
+          "roles": [
+              "user"
+          ],
+          "managers": [
+              12345678
+          ]
+      }
+order: 1000

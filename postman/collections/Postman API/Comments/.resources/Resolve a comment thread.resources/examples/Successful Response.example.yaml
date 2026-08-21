@@ -1,0 +1,13 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/comments-resolutions/:threadId
+  method: POST
+  pathVariables:
+    threadId: "34567"
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 1000

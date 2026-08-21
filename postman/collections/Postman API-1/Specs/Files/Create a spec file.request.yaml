@@ -1,0 +1,29 @@
+$kind: http-request
+description: |-
+  Creates an API specification file.
+
+  **Note:**
+
+  - If the file path contains a `/` (forward slash) character, then a folder is created. For example, if the path is the `components/schemas.json` value, then a `components` folder is created with the `schemas.json` file inside.
+      
+  - Creating a spec file assigns it the `DEFAULT` file type.
+      
+  - Multi-file specifications can only have one root file.
+      
+  - Files cannot exceed a maximum of 10 MB in size.
+url: "{{baseUrl}}/specs/:specId/files"
+method: POST
+pathVariables:
+  - key: specId
+    value: ""
+    description: The spec's ID.
+body:
+  type: json
+  content: |-
+    {
+        "path": "{{filePath}}",
+        "content": "{{fileContent}}"
+    }
+settings: {}
+examples: ./.resources/Create a spec file.resources/examples
+order: 3000

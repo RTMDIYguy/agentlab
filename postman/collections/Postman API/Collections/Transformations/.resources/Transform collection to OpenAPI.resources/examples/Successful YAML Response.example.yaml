@@ -1,0 +1,18 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId/transformations?format=yaml
+  method: GET
+  queryParams:
+    format: yaml
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "output": "openapi: 3.0.3\ninfo:\n  title: Sample API\n  description: |-\n    Buy or rent spacecrafts\n\n    Contact Support:\n     Name: Jon\n  version: 1.0.0\n  contact: {}\nservers:\n  - url: example.com\npaths:\n  /spacecrafts/{spacecraftId}:\n    get:\n      tags:\n        - spacecrafts\n        - \"{spacecraftId}\"\n      summary: Read a spacecraft\n      description: Read a spacecraft\n      operationId: readASpacecraft\n      responses:\n        \"200\":\n          description: The spacecraft corresponding to the provided `spacecraftId`\n          content:\n            application/json:\n              schema:\n                type: object\n                properties:\n                  description:\n                    type: string\n                    example: <string>\n                  id:\n                    type: string\n                    example: <string>\n                  name:\n                    type: string\n                    example: <string>\n                  type:\n                    type: string\n                    example: satellite\n              examples:\n                The spacecraft corresponding to the provided `spacecraftId`:\n                  value:\n                    description: <string>\n                    id: <string>\n                    name: <string>\n                    type: satellite\n        \"404\":\n          description: No spacecraft found for the provided `spacecraftId`\n          content:\n            application/json:\n              schema:\n                type: object\n                properties:\n                  message:\n                    type: string\n                    example: <string>\n              examples:\n                No spacecraft found for the provided `spacecraftId`:\n                  value:\n                    message: <string>\n        \"500\":\n          description: Unexpected error\n          content:\n            application/json:\n              schema:\n                type: object\n                properties:\n                  message:\n                    type: string\n                    example: <string>\n              examples:\n                Unexpected error:\n                  value:\n                    message: <string>\n    parameters:\n      - name: spacecraftId\n        in: path\n        required: true\n        schema:\n          type: string\n          example: <string>\n        description: (Required) The unique identifier of the spacecraft\ncomponents:\n  securitySchemes:\n    apiKey:\n      type: apiKey\n      name: X-Api-Key\n      in: header\nsecurity:\n  - apiKey: []\ntags:\n  - name: spacecrafts\n  - name: \"{spacecraftId}\"\n"
+      }
+order: 2000

@@ -1,0 +1,101 @@
+$kind: http-request
+description: |-
+  Creates a request in a collection. For a complete list of properties and information, see the [Postman Collection Format documentation](https://schema.postman.com/collection/json/v2.1.0/draft-07/docs/index.html).
+
+  **Note:**
+
+  - This request uses example values in the request body for context when creating detailed collection requests. For additional ways to create a request, see the collection's examples.
+      
+  - It is recommended to include at least the `name` property in the request to avoid creating a request with a blank name.
+url: "{{baseUrl}}/collections/:collectionId/requests"
+method: POST
+queryParams:
+  - key: folder
+    value: ""
+    disabled: true
+    description: |-
+      The folder ID in which to create the request.
+
+      By default, the system will create the request at the collection level.
+pathVariables:
+  - key: collectionId
+    value: ""
+    description: The collection's ID.
+body:
+  type: json
+  content: |-
+    {
+        "name": "POST request",
+        "auth": {
+            "type": "apikey",
+            "apikey": [
+                {
+                    "key": "value",
+                    "value": "XXX"
+                },
+                {
+                    "key": "key",
+                    "value": "api-key"
+                }
+            ]
+        },
+        "events": [
+            {
+                "listen": "test",
+                "script": {
+                    "exec": [
+                        "pm.test(\"Status code is 200\", function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});"
+                    ],
+                    "type": "text/javascript"
+                }
+            },
+            {
+                "listen": "prerequest",
+                "script": {
+                    "exec": [
+                        ""
+                    ],
+                    "type": "text/javascript"
+                }
+            }
+        ],
+        "dataMode": "raw",
+        "dataOptions": {
+            "raw": {
+                "language": "json"
+            }
+        },
+        "rawModeData": "{\n    \"name\": \"{{value}}\",\n    \"email\": \"{{email}}\",\n    \"username\": \"{{username}}\"\n}",
+        "description": "This is an example request.",
+        "headers": "Content-Type: application/json\n",
+        "method": "POST",
+        "url": "https://postman-echo.com/user/:id?active={{boolean}}",
+        "preRequestScript": "pm.collectionVariables.get(\"id\");",
+        "tests": "pm.test(\"Body matches string\", function () {\n    pm.expect(pm.response.text()).to.include(\"string_you_want_to_search\");\n});",
+        "queryParams": [
+            {
+                "key": "active",
+                "value": true,
+                "description": "",
+                "enabled": false
+            }
+        ],
+        "pathVariables": {
+            "id": "{{value}}"
+        },
+        "pathVariableData": [
+            {
+                "key": "id",
+                "value": "{{value}}",
+                "description": "The user's ID."
+            }
+        ],
+        "protocolProfileBehavior": {
+            "disableBodyPruning": true
+        }
+    }
+settings: {}
+examples: ./.resources/Create a request.resources/examples
+order: 3000

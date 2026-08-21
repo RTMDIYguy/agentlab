@@ -1,0 +1,71 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/teams/:teamId?include=members
+  method: GET
+  queryParams:
+    include: members
+  pathVariables:
+    teamId: "123"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "team": {
+              "createdAt": "2025-07-30T17:18:00.000Z",
+              "updatedAt": "2025-07-30T17:18:00.000Z",
+              "id": 123,
+              "name": "Testing Team",
+              "handle": "testing-team",
+              "description": "API testing team.",
+              "organizationId": 1,
+              "createdBy": 12345678,
+              "enabled": true,
+              "members": {
+                  "user": {
+                      "12345678": {
+                          "roles": [
+                              "TEAM_MANAGER"
+                          ]
+                      },
+                      "87654321": {
+                          "roles": [
+                              "TEAM_GUEST_VIEWER"
+                          ]
+                      },
+                      "12348765": {
+                          "roles": [
+                              "TEAM_GUEST_VIEWER"
+                          ]
+                      },
+                      "12457834": {
+                          "roles": [
+                              "TEAM_DEVELOPER"
+                          ]
+                      },
+                      "11234567": {
+                          "roles": [
+                              "TEAM_DEVELOPER"
+                          ]
+                      },
+                      "87456321": {
+                          "roles": [
+                              "TEAM_DEVELOPER"
+                          ]
+                      }
+                  },
+                  "group": {},
+                  "team": {
+                      "123": {
+                          "roles": [
+                              "TEAM_GUEST_DEVELOPER"
+                          ]
+                      }
+                  }
+              },
+              "memberCount": 4
+          }
+      }
+order: 3000

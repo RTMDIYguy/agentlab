@@ -1,0 +1,18 @@
+$kind: http-request
+description: Updates the [review](https://learning.postman.com/docs/collaborating-in-postman/using-version-control/reviewing-pull-requests/) status of a pull request.
+url: "{{baseUrl}}/pull-requests/:pullRequestId/tasks"
+method: POST
+pathVariables:
+  - key: pullRequestId
+    value: ""
+    description: The pull request's ID.
+body:
+  type: json
+  content: |-
+    {
+        "action": "{{pullRequestAction}}",
+        "comment": "{{declineComment}}"
+    }
+settings: {}
+examples: ./.resources/Review a pull request.resources/examples
+order: 2000

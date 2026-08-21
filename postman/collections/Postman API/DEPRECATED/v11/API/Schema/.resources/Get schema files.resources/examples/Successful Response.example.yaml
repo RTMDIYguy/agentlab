@@ -1,0 +1,45 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/:apiId/schemas/:schemaId/files?versionId=66ae9950-0869-4e65-96b0-1e0e47e771af&limit=2&cursor=eyJzY2hlbWUiOiJwYXRoX2FzYyIsImRpcmVjdGlvblR5cGUiOiJuZXh0IiwicGl2b3QiOiJwYXRoIiwidmFsdWUiOiJkaXIvczEuanNvbiJ9
+  method: GET
+  headers:
+    Accept: application/vnd.api.v10+json
+  queryParams:
+    versionId: 66ae9950-0869-4e65-96b0-1e0e47e771af
+    limit: "2"
+    cursor: eyJzY2hlbWUiOiJwYXRoX2FzYyIsImRpcmVjdGlvblR5cGUiOiJuZXh0IiwicGl2b3QiOiJwYXRoIiwidmFsdWUiOiJkaXIvczEuanNvbiJ9
+  pathVariables:
+    apiId: 90ca9f5a-c4c4-11ed-afa1-0242ac120002
+    schemaId: 5381f010-c4c1-11ed-afa1-0242ac120002
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "nextCursor": "eyJzY2hlbWUiOiJwYXRoX2FzYyIsImRpcmVjdGlvblR5cGUiOiJuZXh0IiwicGl2b3QiOiJwYXRoIiwidmFsdWUiOiJOZXdQZXQuanNvbiJ9"
+          },
+          "files": [
+              {
+                  "id": "e8a015e0-f472-4bb3-a523-57ce7c4583ed",
+                  "path": "data-model/error.yaml",
+                  "name": "error.yaml",
+                  "createdAt": "2022-03-29T11:37:15Z",
+                  "updatedAt": "2022-03-29T11:37:15Z",
+                  "createdBy": 2345,
+                  "updatedBy": 2345
+              },
+              {
+                  "id": "e8a015e0-f472-4bb3-a523-57ce7c4583ef",
+                  "path": "data-model/error2.yaml",
+                  "name": "error2.yaml",
+                  "createdAt": "2022-03-29T11:37:15Z",
+                  "updatedAt": "2022-03-29T11:37:15Z",
+                  "createdBy": 2345,
+                  "updatedBy": 2345
+              }
+          ]
+      }
+order: 1000

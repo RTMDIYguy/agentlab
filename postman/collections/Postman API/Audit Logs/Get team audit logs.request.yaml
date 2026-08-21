@@ -1,0 +1,40 @@
+$kind: http-request
+description: Gets a list of your team's generated audit events. For a complete list of all audit events, see [Audit logs](https://learning.postman.com/docs/administration/audit-logs/).
+url: "{{baseUrl}}/audit/logs"
+method: GET
+queryParams:
+  - key: userId
+    value: null
+    disabled: true
+    description: Return only results that match the given user ID.
+  - key: action
+    value: ""
+    disabled: true
+    description: Filter results by an audit log action.
+  - key: since
+    value: ""
+    disabled: true
+    description: Return logs created after the given time, in YYYY-MM-DD format.
+  - key: until
+    value: ""
+    disabled: true
+    description: Return logs created before the given time, in YYYY-MM-DD format.
+  - key: limit
+    value: ""
+    disabled: true
+    description: The maximum number of audit events to return at once. The maximum value is 300.
+  - key: cursor
+    value: ""
+    disabled: true
+    description: The cursor to get the next set of results.
+  - key: orderBy
+    value: ""
+    disabled: true
+    description: Return the records in ascending (`asc`) or descending (`desc`) order. This value defaults to `desc` order.
+  - key: order_by
+    value: ""
+    disabled: true
+    description: Return the records in ascending (`asc`) or descending (`desc`) order. This value defaults to `desc` order.
+settings: {}
+examples: ./.resources/Get team audit logs.resources/examples
+order: 1000

@@ -1,0 +1,97 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/analytics?resource=team&metrics=members&view=detailed&limit=2&offset=3
+  method: GET
+  queryParams:
+    resource: team
+    metrics: members
+    view: detailed
+    limit: "2"
+    offset: "3"
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "data": {
+              "summary": {
+                  "schema": {
+                      "columns": [
+                          {
+                              "type": "STRING",
+                              "description": "Username of the user.",
+                              "name": "user_name"
+                          },
+                          {
+                              "type": "STRING",
+                              "description": "Email ID of user.",
+                              "name": "email"
+                          },
+                          {
+                              "type": "DATE",
+                              "description": "Timestamp when user was added to team.",
+                              "name": "added_in_team"
+                          },
+                          {
+                              "type": "DATE",
+                              "description": "Timestamp when user was last active.",
+                              "name": "last_active"
+                          },
+                          {
+                              "type": "STRING",
+                              "description": "Concatenated list of roles that user has.",
+                              "name": "user_role"
+                          },
+                          {
+                              "type": "STRING",
+                              "description": "Email ID that invited this user.",
+                              "name": "invited_by"
+                          },
+                          {
+                              "type": "STRING",
+                              "description": "Type of invitation.",
+                              "name": "invite_type"
+                          },
+                          {
+                              "type": "STRING",
+                              "description": "Describes whether the public profile of the user is enabled or not.",
+                              "name": "public_profile_enabled"
+                          }
+                      ]
+                  },
+                  "rows": [
+                      [
+                          "taylor-lee",
+                          "taylor.lee@example.com",
+                          "2025-09-02",
+                          "2025-09-02",
+                          "Developer",
+                          "",
+                          "",
+                          "Yes"
+                      ],
+                      [
+                          "alex-cruz",
+                          "alex.cruz@example.com",
+                          "2025-09-02",
+                          "2025-09-02",
+                          "Developer",
+                          "",
+                          "",
+                          "Yes"
+                      ]
+                  ],
+                  "pagination": {
+                      "limit": 2,
+                      "has_more": true,
+                      "total": 10,
+                      "offset": 3
+                  }
+              }
+          }
+      }
+order: 23000

@@ -1,0 +1,14 @@
+$kind: http-request
+description: Gets the contents of an API specification's file.
+url: "{{baseUrl}}/specs/:specId/files/:filePath"
+method: GET
+pathVariables:
+  - key: specId
+    value: ""
+    description: The spec's ID.
+  - key: filePath
+    value: ""
+    description: The path to the file.
+settings: {}
+examples: ./.resources/Get a spec file.resources/examples
+order: 1000

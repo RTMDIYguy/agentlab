@@ -1,0 +1,102 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis?name=Public
+  method: GET
+  queryParams:
+    - key: workspace
+      value: "{{workspaceId}}"
+      disabled: true
+      description: Optional. Return only APIs that are inside the given workspace.
+    - key: since
+      value: "{{since}}"
+      disabled: true
+      description: Optional. Return only APIs updated at and after this time, in ISO 8601 UTC format.
+    - key: until
+      value: "{{until}}"
+      disabled: true
+      description: Optional. Return only APIs updated at and before this time, in ISO 8601 UTC format.
+    - key: createdBy
+      value: "{{createdBy}}"
+      disabled: true
+      description: Optional. Return only APIs created by the given user ID.
+    - key: updatedBy
+      value: "{{updatedBy}}"
+      disabled: true
+      description: Optional. Return only APIs updated by the given user ID.
+    - key: isPublic
+      value: "{{isPublic}}"
+      disabled: true
+      description: Optional. If true, return only public APIs; if false, return only private APIs.
+    - key: name
+      value: Public
+      description: Optional. Return only APIs whose name includes the given value. Matching is not case-sensitive.
+    - key: summary
+      value: "{{summary}}"
+      disabled: true
+      description: Optional. Return only APIs whose summary includes the given value. Matching is not case-sensitive.
+    - key: description
+      value: "{{description}}"
+      disabled: true
+      description: Optional. Return only APIs whose description includes the given value. Matching is not case-sensitive.
+    - key: sort
+      value: "{{sort}}"
+      disabled: true
+      description: |-
+        Optional. Sort the results by the given value.
+
+        If you use this query parameter, you must also use the `direction` parameter.
+    - key: direction
+      value: "{{direction}}"
+      disabled: true
+      description: |-
+        Optional. Sort in ascending (`asc`) or descending (`desc`) order. Matching is not case-sensitive.
+
+        If you use this query parameter, you must also use the "sort" parameter.
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Date: Tue, 12 Jul 2022 16:39:09 GMT
+    Content-Type: application/json; charset=utf-8
+    Content-Length: "120"
+    Connection: keep-alive
+    Server: nginx
+    x-frame-options: SAMEORIGIN
+    Access-Control-Allow-Origin: "*"
+    x-srv-trace: v=1;t=915b2bd230311a7e
+    x-srv-span: v=1;s=108d09101d76e02a
+    X-RateLimit-Limit: "400"
+    X-RateLimit-Remaining: "399"
+    X-RateLimit-Reset: "1657644009"
+    ETag: W/"78-WpLmxRlFkKKPPDh/y4B5Gn3NuSs"
+    Vary: Accept-Encoding
+  body:
+    type: json
+    content: |-
+      {
+          "apis": [
+              {
+                  "createdAt": "2022-06-22T16:51:28.000Z",
+                  "updatedAt": "2022-06-22T16:51:28.000Z",
+                  "id": "69ce25ea-2914-426e-ae34-af558b6777e6",
+                  "name": "Public API A",
+                  "summary": "Public Test A.",
+                  "description": "This is a public test API.",
+                  "createdBy": "12345678",
+                  "updatedBy": "12345678",
+                  "isPublic": true
+              },
+              {
+                  "createdAt": "2022-06-30T16:51:28.000Z",
+                  "updatedAt": "2022-06-30T16:51:28.000Z",
+                  "id": "69ce25ea-2914-426e-ae34-af558b6777e6",
+                  "name": "Public Test API B",
+                  "summary": "Public Test B",
+                  "description": "This is another public test API.",
+                  "createdBy": "87654321",
+                  "updatedBy": "87654321",
+                  "isPublic": false
+              }
+          ]
+      }
+order: 4000

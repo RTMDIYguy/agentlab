@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors?environmentUid=12345678-9ce0605e-e7cb-40dc-8074-2f6a69252905
+  method: POST
+  queryParams:
+    environmentUid: 12345678-9ce0605e-e7cb-40dc-8074-2f6a69252905
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "monitors": [],
+          "meta": {
+              "nextCursor": "",
+              "limit": 25
+          }
+      }
+order: 10000

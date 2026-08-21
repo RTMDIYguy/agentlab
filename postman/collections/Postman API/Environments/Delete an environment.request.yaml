@@ -1,0 +1,10 @@
+$kind: http-request
+description: Deletes an environment.
+url: "{{baseUrl}}/environments/:environmentId"
+method: DELETE
+pathVariables:
+  - key: environmentId
+    value: ""
+    description: The environment's ID.
+examples: ./.resources/Delete an environment.resources/examples
+order: 3000

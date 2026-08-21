@@ -1,0 +1,32 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/collections/:collectionId
+  method: PATCH
+  pathVariables:
+    collectionId: 12ece9e1-2abf-4edc-8e34-de66e74114d2
+  body:
+    type: json
+    content: |-
+      {
+          "collection": {
+              "auth": {
+                  "type": "apikey"
+              }
+          }
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "paramMissingError",
+              "message": "The key 'apikey' must be present in 'collection.auth' when 'type' is 'apikey'.",
+              "details": {
+                  "param": "apikey"
+              }
+          }
+      }
+order: 11000

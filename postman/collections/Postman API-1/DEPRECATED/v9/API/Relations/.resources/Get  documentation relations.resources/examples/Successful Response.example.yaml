@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/apis/387c2863-6ee3-4a56-8210-225f774edade/versions/a9879d02-74bf-425a-bbec-6d27aa135507/documentation
+  method: GET
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+          "documentation": [
+              {
+                  "id": "b9bccf0f-e06a-433d-b556-a3cd158f0270",
+                  "name": "Test Collection",
+                  "createdAt": "2022-07-08T20:29:35.000Z",
+                  "updatedAt": "2022-07-08T20:31:06.000Z"
+              }
+          ]
+      }
+order: 1000

@@ -1,0 +1,40 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/specs?workspaceId=1f0df51a-8658-4ee8-a2a1-d2567dfa09a9)&cursor=VGh1IE1hciAxNiAyMDIzIDE3OjIxOjUzIEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk=&limit=2
+  method: GET
+  queryParams:
+    workspaceId: 1f0df51a-8658-4ee8-a2a1-d2567dfa09a9)
+    cursor: VGh1IE1hciAxNiAyMDIzIDE3OjIxOjUzIEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk=
+    limit: "2"
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: json
+    content: |-
+      {
+          "meta": {
+              "nextCursor": "VGh1IE1hciAxNiAyMDIzIDE3OjIxOjUzIEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk="
+          },
+          "specs": [
+              {
+                  "updatedBy": 12345678,
+                  "createdBy": 12345678,
+                  "name": "Sample API",
+                  "type": "OPENAPI:3.0",
+                  "createdAt": "2025-03-15T13:48:28.000Z",
+                  "id": "73e15000-bc7a-4802-b80e-05fff18fd7f8",
+                  "updatedAt": "2025-03-15T13:48:28.000Z"
+              },
+              {
+                  "updatedBy": 87654321,
+                  "createdBy": 87654321,
+                  "name": "Test API",
+                  "type": "OPENAPI:3.0",
+                  "createdAt": "2025-03-15T13:48:28.000Z",
+                  "id": "fec65321-5f55-4feb-8525-be95bccae8dd",
+                  "updatedAt": "2025-03-15T13:48:28.000Z"
+              }
+          ]
+      }
+order: 2000

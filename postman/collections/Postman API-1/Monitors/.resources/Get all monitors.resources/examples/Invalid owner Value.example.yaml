@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: https://api.getpostman.com/monitors?cursor=1&owner=a
+  method: POST
+  queryParams:
+    cursor: "1"
+    owner: a
+response:
+  statusCode: 400
+  statusText: Bad Request
+  body:
+    type: json
+    content: |-
+      {
+          "error": {
+              "name": "badRequest",
+              "message": "Owner user ID must be an integer."
+          }
+      }
+order: 13000
