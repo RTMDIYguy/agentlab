@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 export const AuthLayout: React.FC<{children: ReactNode, title: string, subtitle: string}> = ({ children, title, subtitle }) => (
   <div className="min-h-screen flex flex-col items-center justify-center bg-navy-950 relative overflow-hidden px-4 sm:px-6">
     <div className="absolute inset-0 opacity-40 bg-[radial-gradient(theme(colors.navy.800)_1.5px,transparent_1.5px)] bg-[size:24px_24px]" />

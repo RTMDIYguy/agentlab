@@ -61,7 +61,7 @@ This is the working-memory layer. It is intentionally short. For rules, see
 ## Sources of Truth (Read-First Order)
 
 1. `AGENTS.md`
-2. `docs/operations/agency-command-center.md`
+2. `E:\OneDrive - Uncle Robert Consulting LLC\Desktop\command-center-html.html` (Live Desktop HTML Dashboard)
 3. `docs/operations/agency-operating-manual.md`
 4. `docs/operations/urc-v1-operating-architecture.md`
 5. `docs/operations/workflow-registry.md`
