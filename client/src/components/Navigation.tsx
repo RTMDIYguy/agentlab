@@ -17,7 +17,7 @@ export function Navigation() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-border">
+    <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container flex items-center justify-between py-4">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
@@ -37,7 +37,7 @@ export function Navigation() {
               Home
               <ChevronDown className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
-            <div className="absolute left-0 mt-0 w-48 bg-white border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
+            <div className="absolute left-0 mt-0 w-48 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
               {isAuthenticated && (
                 <>
                   <a
@@ -94,7 +94,7 @@ export function Navigation() {
               Blog
               <ChevronDown className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
-            <div className="absolute left-0 mt-0 w-48 bg-white border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
+            <div className="absolute left-0 mt-0 w-48 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
               <a
                 href="/blog"
                 className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"

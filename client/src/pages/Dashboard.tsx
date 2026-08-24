@@ -16,6 +16,17 @@ import { useLocation } from "wouter";
 import { toast } from "sonner";
 import { PageLayout } from "@/components/PageLayout";
 
+const safeFormatDate = (dateVal: any, formatStr: string) => {
+  if (!dateVal) return "N/A";
+  try {
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return "N/A";
+    return formatDate(d, formatStr);
+  } catch (e) {
+    return "N/A";
+  }
+};
+
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const [, navigate] = useLocation();
@@ -162,7 +173,7 @@ export default function Dashboard() {
                       <p className="text-xl font-bold text-foreground">
                         {subscription.currentPeriodStart &&
                         subscription.currentPeriodEnd
-                          ? `${formatDate(subscription.currentPeriodStart, "MMM d")} - ${formatDate(subscription.currentPeriodEnd, "MMM d, yyyy")}`
+                          ? `${safeFormatDate(subscription.currentPeriodStart, "MMM d")} - ${safeFormatDate(subscription.currentPeriodEnd, "MMM d, yyyy")}`
                           : "N/A"}
                       </p>
                     </div>
@@ -176,7 +187,7 @@ export default function Dashboard() {
                           Next Renewal
                         </p>
                         <p className="text-lg font-semibold text-foreground">
-                          {formatDate(
+                          {safeFormatDate(
                             subscription.currentPeriodEnd,
                             "MMMM d, yyyy"
                           )}
@@ -192,7 +203,7 @@ export default function Dashboard() {
                           Canceled On
                         </p>
                         <p className="text-lg font-semibold text-red-800">
-                          {formatDate(subscription.canceledAt, "MMMM d, yyyy")}
+                          {safeFormatDate(subscription.canceledAt, "MMMM d, yyyy")}
                         </p>
                       </div>
                     )}
@@ -300,7 +311,7 @@ export default function Dashboard() {
                           className="border-b border-border hover:bg-muted/50 transition-colors"
                         >
                           <td className="py-4 px-4 text-foreground">
-                            {formatDate(payment.createdAt, "MMM d, yyyy")}
+                            {safeFormatDate(payment.createdAt, "MMM d, yyyy")}
                           </td>
                           <td className="py-4 px-4 text-foreground font-semibold">
                             ${payment.amount} {payment.currency}
@@ -395,7 +406,7 @@ export default function Dashboard() {
                     Member Since
                   </p>
                   <p className="font-semibold text-foreground">
-                    {formatDate(user.createdAt, "MMMM d, yyyy")}
+                    {safeFormatDate(user.createdAt, "MMMM d, yyyy")}
                   </p>
                 </div>
               </div>

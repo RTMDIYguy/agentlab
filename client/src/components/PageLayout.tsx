@@ -9,7 +9,7 @@ interface PageLayoutProps {
 
 export function PageLayout({ children, className = "" }: PageLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navigation />
       <main className={`flex-1 ${className}`}>{children}</main>
       <Footer />
