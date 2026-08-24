@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { tenantMiddleware } from "./middleware/tenant";
 import { apiRouter } from "./routes/api";
+import { processPendingRuns } from "./execution/queue-processor";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,12 +15,14 @@ async function startServer() {
   const server = createServer(app);
 
   // Security & Body Parsers
-  app.use(cors({
-    origin: true,
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
-  }));
-  app.use(express.json({ limit: '10mb' }));
+  app.use(
+    cors({
+      origin: true,
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    })
+  );
+  app.use(express.json({ limit: "10mb" }));
   app.use(express.urlencoded({ extended: true }));
 
   // Multi-Tenant Isolation Middleware
@@ -30,7 +33,9 @@ async function startServer() {
 
   // Top-level Health Check
   app.get("/health", (_req, res) => {
-    res.status(200).json({ status: "healthy", timestamp: new Date().toISOString() });
+    res
+      .status(200)
+      .json({ status: "healthy", timestamp: new Date().toISOString() });
   });
 
   // Serve static UI in production
@@ -46,7 +51,7 @@ async function startServer() {
     if (req.path.startsWith("/api")) {
       return next();
     }
-    res.sendFile(path.join(staticPath, "index.html"), (err) => {
+    res.sendFile(path.join(staticPath, "index.html"), err => {
       if (err) {
         res.status(200).send("AgentLab Node.js API Service running.");
       }
@@ -56,11 +61,23 @@ async function startServer() {
   const port = process.env.PORT || 3000;
 
   server.listen(port, () => {
-    console.log(`[AgentLab Server] Running on http://localhost:${port}/ (Environment: ${process.env.NODE_ENV || 'development'})`);
+    console.log(
+      `[AgentLab Server] Running on http://localhost:${port}/ (Environment: ${process.env.NODE_ENV || "development"})`
+    );
+
+    // Start the Execution Engine background poller
+    setInterval(async () => {
+      try {
+        await processPendingRuns();
+      } catch (e) {
+        console.error("[Execution Engine Poller] Error:", e);
+      }
+    }, 5000); // Check every 5 seconds
+    console.log(`[Execution Engine] Background poller started.`);
   });
 }
 
-startServer().catch((err) => {
+startServer().catch(err => {
   console.error("[AgentLab Server] Fatal startup error:", err);
   process.exit(1);
 });

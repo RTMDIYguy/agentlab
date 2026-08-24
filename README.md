@@ -26,14 +26,14 @@ CRM/follow-up rhythms, and turn the 90-day plan into weekly actions.
 
 ## Repository Map
 
-| Path | Purpose |
-| --- | --- |
-| `src/` | React client application. |
-| `server/` | Express/tRPC server and backend modules. |
+| Path               | Purpose                                                                                       |
+| ------------------ | --------------------------------------------------------------------------------------------- |
+| `src/`             | React client application.                                                                     |
+| `server/`          | Express/tRPC server and backend modules.                                                      |
 | `docs/operations/` | Operating architecture, execution plans, change control, workflow registry, and handoff docs. |
-| `workflows/` | Imported workflow sources and client-facing workflow packages. |
-| `scripts/` | Repo utilities, including change-control verification. |
-| `content/` | CMS-managed site content. |
+| `workflows/`       | Imported workflow sources and client-facing workflow packages.                                |
+| `scripts/`         | Repo utilities, including change-control verification.                                        |
+| `content/`         | CMS-managed site content.                                                                     |
 
 ## Current Workflow Direction
 

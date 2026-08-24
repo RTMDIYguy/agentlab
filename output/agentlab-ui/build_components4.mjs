@@ -1,9 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-const SRC_DIR = path.join(process.cwd(), 'src');
+import fs from "fs";
+import path from "path";
+const SRC_DIR = path.join(process.cwd(), "src");
 
 const files = {
-  'AuthLayout.tsx': `
+  "AuthLayout.tsx": `
 import React, { ReactNode } from 'react';
 export const AuthLayout: React.FC<{children: ReactNode, title: string, subtitle: string}> = ({ children, title, subtitle }) => (
   <div className="min-h-screen flex flex-col items-center justify-center bg-navy-950 relative overflow-hidden px-4 sm:px-6">
@@ -19,7 +19,7 @@ export const AuthLayout: React.FC<{children: ReactNode, title: string, subtitle:
   </div>
 );
   `,
-  'LoginForm.tsx': `
+  "LoginForm.tsx": `
 import React, { useState } from 'react';
 import { Button } from './Button';
 export const LoginForm: React.FC<{onSuccess: () => void}> = ({ onSuccess }) => (
@@ -36,7 +36,7 @@ export const LoginForm: React.FC<{onSuccess: () => void}> = ({ onSuccess }) => (
   </form>
 );
   `,
-  'App.tsx': `
+  "App.tsx": `
 import React, { useState, useEffect } from 'react';
 import { AuthLayout } from './AuthLayout';
 import { LoginForm } from './LoginForm';
@@ -69,6 +69,8 @@ export const App: React.FC = () => {
     </AppContext.Provider>
   );
 };
-  `
+  `,
 };
-Object.entries(files).forEach(([file, content]) => fs.writeFileSync(path.join(SRC_DIR, file), content.trim()));
+Object.entries(files).forEach(([file, content]) =>
+  fs.writeFileSync(path.join(SRC_DIR, file), content.trim())
+);

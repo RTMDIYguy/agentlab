@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | OPS-04 |
-| Department | Operations |
-| Automation level | N/A - Framework |
-| Owner | Founder/CEO |
-| Trigger | New hire, role change, or tool adoption |
-| Cycle time | Org chart: quarterly; access: semi-annual |
-| Source status | Imported source |
+| Field            | Value                                     |
+| ---------------- | ----------------------------------------- |
+| Workflow ID      | OPS-04                                    |
+| Department       | Operations                                |
+| Automation level | N/A - Framework                           |
+| Owner            | Founder/CEO                               |
+| Trigger          | New hire, role change, or tool adoption   |
+| Cycle time       | Org chart: quarterly; access: semi-annual |
+| Source status    | Imported source                           |
 
 ## Inputs
 
@@ -85,31 +85,34 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `assets/OPS04-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/OPS04-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                             | Purpose                                                                     |
+| ---------------------------------------------------- | --------------------------------------------------------------------------- |
+| `assets/OPS04-Assets.md`                             | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/OPS04-Blueprint.json`                    | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `trackers/OPS04_Tech_Stack_Automation_Registry.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### assets/OPS04-Assets.md
 
-````markdown
+```markdown
 # OPS04: Organization & Security Assets
 
 ## 1. Offboarding Security Checklist
-*To be executed by Operations/IT immediately upon an employee or contractor's departure.*
+
+_To be executed by Operations/IT immediately upon an employee or contractor's departure._
 
 **Employee/Contractor Name:** [Name]
 **Last Day:** [Date]
 
 **Immediate Action (Within 1 hour of departure):**
+
 - [ ] Block access to primary email/Google Workspace account (Do not delete yet, just block/change password).
 - [ ] Revoke access to password manager (e.g., 1Password, LastPass).
 - [ ] Remove from internal communication tools (Slack, Discord, Teams).
 
 **Secondary Action (Within 24 hours):**
+
 - [ ] Remove access to CRM (HubSpot, Salesforce).
 - [ ] Remove access to Project Management tools (ClickUp, Asana, Notion).
 - [ ] Remove access to Financial systems/Expense platforms.
@@ -118,6 +121,7 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 - [ ] If applicable, remotely wipe and lock company-issued devices.
 
 **Wrap-Up (Within 1 week):**
+
 - [ ] Transfer ownership of critical Google Drive files to a manager.
 - [ ] Set up email forwarding from their account to a manager.
 - [ ] Reassign their tool licenses to save costs.
@@ -125,7 +129,8 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 ---
 
 ## 2. Basic Vendor Security Questionnaire
-*Sent to new third-party software vendors or contractors who will handle confidential agency or client data.*
+
+_Sent to new third-party software vendors or contractors who will handle confidential agency or client data._
 
 **Vendor Name:** [Vendor]
 **Service Provided:** [Service]
@@ -140,17 +145,18 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 ---
 
 ## 3. Incident Response Log (Template)
-*Maintained by the Operations Lead to track security incidents.*
 
-| Incident ID | Date/Time | Incident Type | Description & Scope | Remediation Actions Taken | Status | Lessons Learned / SOP Updates |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| INC-001 | 2024-05-12 | Phishing | Employee clicked phishing link. No data exfiltrated. | Reset employee password, ran malware scan, enforced MFA. | Closed | Added mandatory quarterly phishing awareness training. |
-| INC-002 | | | | | | |
-````
+_Maintained by the Operations Lead to track security incidents._
+
+| Incident ID | Date/Time  | Incident Type | Description & Scope                                  | Remediation Actions Taken                                | Status | Lessons Learned / SOP Updates                          |
+| :---------- | :--------- | :------------ | :--------------------------------------------------- | :------------------------------------------------------- | :----- | :----------------------------------------------------- |
+| INC-001     | 2024-05-12 | Phishing      | Employee clicked phishing link. No data exfiltrated. | Reset employee password, ran malware scan, enforced MFA. | Closed | Added mandatory quarterly phishing awareness training. |
+| INC-002     |            |               |                                                      |                                                          |        |                                                        |
+```
 
 ### automation/OPS04-Blueprint.json
 
-````json
+```json
 {
   "name": "OPS04: Security & Access Control (Make.com Blueprint)",
   "flow": [
@@ -188,7 +194,7 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
     }
   ]
 }
-````
+```
 
 ## Binary Attachments
 
@@ -280,6 +286,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

@@ -13,6 +13,7 @@ verification: "The posts list correctly filters content based on the selected st
 **Intent**: Users need to be able to organize their content library by status. This test verifies that clicking the status filter buttons correctly updates the list to show only relevant posts.
 
 **Steps**:
+
 1. click: click: the "Drafts" filter button in the filter bar
 2. assert: assert: text "DRAFT" is visible on all displayed post cards in the posts list
 3. click: click: the "Scheduled" filter button in the filter bar
@@ -21,6 +22,7 @@ verification: "The posts list correctly filters content based on the selected st
 6. assert: assert: text "PUBLISHED" is visible on all displayed post cards in the posts list
 
 **Verification**:
+
 1. click: click: the "Drafts" filter button in the filter bar
 2. assert: assert: text "DRAFT" is visible on the post cards in the posts list
 

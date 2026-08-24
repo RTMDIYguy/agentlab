@@ -12,7 +12,8 @@ export default function Services() {
     {
       id: 1,
       name: "Lead Generation & Conversion",
-      description: "AI-powered lead capture, enrichment, scoring, and qualification with 90-95% automation",
+      description:
+        "AI-powered lead capture, enrichment, scoring, and qualification with 90-95% automation",
       features: [
         "Multi-channel campaign launch and optimization",
         "Automated lead enrichment with firmographic data",
@@ -30,7 +31,8 @@ export default function Services() {
     {
       id: 2,
       name: "Email & SMS Nurture",
-      description: "Intelligent multi-channel nurture campaigns with AI-driven personalization",
+      description:
+        "Intelligent multi-channel nurture campaigns with AI-driven personalization",
       features: [
         "Behavioral trigger-based campaigns",
         "Dynamic content personalization",
@@ -66,7 +68,8 @@ export default function Services() {
     {
       id: 4,
       name: "Content Marketing & SEO",
-      description: "AI-powered content creation, optimization, and distribution",
+      description:
+        "AI-powered content creation, optimization, and distribution",
       features: [
         "AI content generation",
         "SEO optimization recommendations",
@@ -184,13 +187,20 @@ export default function Services() {
         <div className="container">
           <div className="max-w-3xl mx-auto text-center space-y-6">
             <h1 className="text-5xl md:text-6xl font-bold text-foreground">
-              Marketing Department <span className="text-primary">AI Agents</span>
+              Marketing Department{" "}
+              <span className="text-primary">AI Agents</span>
             </h1>
             <p className="text-xl text-muted-foreground">
-              Transform your marketing with AI-powered agents that handle lead generation, nurturing, content creation, and optimization—all with 85-95% automation.
+              Transform your marketing with AI-powered agents that handle lead
+              generation, nurturing, content creation, and optimization—all with
+              85-95% automation.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button size="lg" className="bg-primary hover:bg-primary/90" onClick={() => window.location.href = getLoginUrl()}>
+              <Button
+                size="lg"
+                className="bg-primary hover:bg-primary/90"
+                onClick={() => (window.location.href = getLoginUrl())}
+              >
                 <Zap className="w-5 h-5 mr-2" />
                 Start Free Trial
               </Button>
@@ -206,9 +216,10 @@ export default function Services() {
       <section className="py-8 bg-card border-y border-border">
         <div className="container">
           <p className="max-w-4xl mx-auto text-center text-muted-foreground leading-relaxed">
-            We automate repeatable work while keeping human judgment at the checkpoints where
-            quality, security, and privacy matter. Every workflow should make the client more
-            capable, not more dependent on a heavier tool stack.
+            We automate repeatable work while keeping human judgment at the
+            checkpoints where quality, security, and privacy matter. Every
+            workflow should make the client more capable, not more dependent on
+            a heavier tool stack.
           </p>
         </div>
       </section>
@@ -217,19 +228,35 @@ export default function Services() {
       <section className="py-20">
         <div className="container">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Marketing Workflows Included</h2>
-            <p className="text-lg text-muted-foreground">Each tier includes different combinations of our powerful marketing workflows</p>
+            <h2 className="text-4xl font-bold text-foreground mb-4">
+              Marketing Workflows Included
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Each tier includes different combinations of our powerful
+              marketing workflows
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {marketingWorkflows.map((workflow) => (
-              <Card key={workflow.id} className="p-6 hover:shadow-lg transition-shadow">
-                <h3 className="text-xl font-semibold text-foreground mb-2">{workflow.name}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{workflow.description}</p>
+            {marketingWorkflows.map(workflow => (
+              <Card
+                key={workflow.id}
+                className="p-6 hover:shadow-lg transition-shadow"
+              >
+                <h3 className="text-xl font-semibold text-foreground mb-2">
+                  {workflow.name}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {workflow.description}
+                </p>
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Automation Level:</span>
-                    <span className="font-semibold text-primary">{workflow.automation}</span>
+                    <span className="text-muted-foreground">
+                      Automation Level:
+                    </span>
+                    <span className="font-semibold text-primary">
+                      {workflow.automation}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Cycle Time:</span>
@@ -254,8 +281,12 @@ export default function Services() {
       <section className="py-20 bg-slate-50">
         <div className="container">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Simple, Transparent Pricing</h2>
-            <p className="text-lg text-muted-foreground">Choose the plan that fits your marketing needs</p>
+            <h2 className="text-4xl font-bold text-foreground mb-4">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Choose the plan that fits your marketing needs
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
@@ -273,11 +304,17 @@ export default function Services() {
                     Most Popular
                   </div>
                 )}
-                <h3 className="text-2xl font-bold text-foreground mb-2">{tier.name}</h3>
-                <p className="text-sm text-muted-foreground mb-6">{tier.description}</p>
+                <h3 className="text-2xl font-bold text-foreground mb-2">
+                  {tier.name}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-6">
+                  {tier.description}
+                </p>
 
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-primary">${tier.monthlyPrice}</span>
+                  <span className="text-4xl font-bold text-primary">
+                    ${tier.monthlyPrice}
+                  </span>
                   <span className="text-muted-foreground ml-2">/month</span>
                 </div>
 
@@ -309,15 +346,26 @@ export default function Services() {
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-primary to-primary/80 text-white">
         <div className="container text-center space-y-6">
-          <h2 className="text-4xl font-bold">Ready to Transform Your Marketing?</h2>
+          <h2 className="text-4xl font-bold">
+            Ready to Transform Your Marketing?
+          </h2>
           <p className="text-lg text-white/90 max-w-2xl mx-auto">
-            Start with a free trial today and see how our AI agents can automate your marketing operations.
+            Start with a free trial today and see how our AI agents can automate
+            your marketing operations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white text-white hover:bg-white/10"
+            >
               Start Free Trial
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white text-white hover:bg-white/10"
+            >
               Schedule a Demo
             </Button>
           </div>

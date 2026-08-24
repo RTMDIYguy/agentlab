@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | OPS-05 |
-| Department | Operations |
-| Automation level | N/A - Framework |
-| Owner | Founder/CEO |
-| Trigger | Annual and quarterly |
-| Cycle time | Annual plan; quarterly sprint |
-| Source status | Imported source |
+| Field            | Value                         |
+| ---------------- | ----------------------------- |
+| Workflow ID      | OPS-05                        |
+| Department       | Operations                    |
+| Automation level | N/A - Framework               |
+| Owner            | Founder/CEO                   |
+| Trigger          | Annual and quarterly          |
+| Cycle time       | Annual plan; quarterly sprint |
+| Source status    | Imported source               |
 
 ## Inputs
 
@@ -85,75 +85,81 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `assets/OPS05-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/OPS05-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                              | Purpose                                                                     |
+| ----------------------------------------------------- | --------------------------------------------------------------------------- |
+| `assets/OPS05-Assets.md`                              | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/OPS05-Blueprint.json`                     | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `trackers/OPS05_Vendor_Contract_Renewal_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### assets/OPS05-Assets.md
 
-````markdown
+```markdown
 # OPS05: Strategy & Planning Assets
 
 ## 1. Annual Strategic Planning Agenda (Founder/Team)
-*To be used during the half-day or full-day annual planning session.*
+
+_To be used during the half-day or full-day annual planning session._
 
 **Pre-work (To be completed 1 week prior):**
+
 - Review previous year's financials.
 - Read through client feedback/NPS scores from the past 12 months.
 - Each team member fills out a personal SWOT analysis for the agency.
 
 **Agenda:**
-* **9:00 AM - Year in Review:** Celebrate wins, discuss misses. (No blame, just facts).
-* **10:00 AM - SWOT Synthesis:** Combine individual SWOTs into one master agency SWOT.
-* **11:00 AM - Vision/Values Check:** Are we still aligned with OPS-01? Do we need to pivot?
-* **12:00 PM - Lunch Break**
-* **1:00 PM - Set Annual Objectives:** Brainstorm and finalize the top 3-5 goals for the year.
-* **2:30 PM - Define Key Results:** Attach measurable numbers (KRs) to each objective.
-* **3:30 PM - Identify Q1 Priorities:** Break down the annual goals into the top 3 things to tackle in Q1.
-* **4:30 PM - Wrap up & Assign Owners:** Ensure every priority has a single owner.
+
+- **9:00 AM - Year in Review:** Celebrate wins, discuss misses. (No blame, just facts).
+- **10:00 AM - SWOT Synthesis:** Combine individual SWOTs into one master agency SWOT.
+- **11:00 AM - Vision/Values Check:** Are we still aligned with OPS-01? Do we need to pivot?
+- **12:00 PM - Lunch Break**
+- **1:00 PM - Set Annual Objectives:** Brainstorm and finalize the top 3-5 goals for the year.
+- **2:30 PM - Define Key Results:** Attach measurable numbers (KRs) to each objective.
+- **3:30 PM - Identify Q1 Priorities:** Break down the annual goals into the top 3 things to tackle in Q1.
+- **4:30 PM - Wrap up & Assign Owners:** Ensure every priority has a single owner.
 
 ---
 
 ## 2. Weekly "One Thing" Planner (Printable/Digital)
-*A simple template for team members to focus their week.*
 
-**Name:** _______________________
-**Week of:** _____________________
+_A simple template for team members to focus their week._
 
-**My "ONE Thing":** *(If I only get this done, the week is a success)*
-[ ] __________________________________________________________________
+**Name:** ****\*\*****\_\_\_****\*\*****
+**Week of:** ****\*\*****\_****\*\*****
+
+**My "ONE Thing":** _(If I only get this done, the week is a success)_
+[ ] **************\*\*\*\***************\_\_**************\*\*\*\***************
 
 **Client Delivery Priorities:**
-[ ] __________________________________________________________________
-[ ] __________________________________________________________________
-[ ] __________________________________________________________________
+[ ] **************\*\*\*\***************\_\_**************\*\*\*\***************
+[ ] **************\*\*\*\***************\_\_**************\*\*\*\***************
+[ ] **************\*\*\*\***************\_\_**************\*\*\*\***************
 
 **Biz Dev / Internal Priorities:**
-[ ] __________________________________________________________________
-[ ] __________________________________________________________________
+[ ] **************\*\*\*\***************\_\_**************\*\*\*\***************
+[ ] **************\*\*\*\***************\_\_**************\*\*\*\***************
 
 **Blockers (I need help with...):**
-______________________________________________________________________
+
+---
 
 ---
 
 ## 3. Simple OKR Tracker (Spreadsheet Template)
-*Columns for a Google Sheet or Airtable base.*
 
-| Annual Objective | Key Result | Owner | Starting Value | Target Value | Current Value | % to Goal | Status (🟢/🟡/🔴) | Notes / Blockers |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Grow MRR to $15k | MRR | Founder | $8,000 | $15,000 | $10,500 | 35% | 🟡 | Need more leads |
-| Launch New Service | Beta Clients Signed | Head of Ops | 0 | 3 | 1 | 33% | 🟢 | Pitching to client X |
-| Document Delivery | Standard SOPs Created | Head of Delivery | 0 | 5 | 0 | 0% | 🔴 | Swamped with client work |
-````
+_Columns for a Google Sheet or Airtable base._
+
+| Annual Objective   | Key Result            | Owner            | Starting Value | Target Value | Current Value | % to Goal | Status (🟢/🟡/🔴) | Notes / Blockers         |
+| :----------------- | :-------------------- | :--------------- | :------------- | :----------- | :------------ | :-------- | :---------------- | :----------------------- |
+| Grow MRR to $15k   | MRR                   | Founder          | $8,000         | $15,000      | $10,500       | 35%       | 🟡                | Need more leads          |
+| Launch New Service | Beta Clients Signed   | Head of Ops      | 0              | 3            | 1             | 33%       | 🟢                | Pitching to client X     |
+| Document Delivery  | Standard SOPs Created | Head of Delivery | 0              | 5            | 0             | 0%        | 🔴                | Swamped with client work |
+```
 
 ### automation/OPS05-Blueprint.json
 
-````json
+```json
 {
   "name": "OPS05: Quality Assurance & R&D (Make.com Blueprint)",
   "flow": [
@@ -191,7 +197,7 @@ ______________________________________________________________________
     }
   ]
 }
-````
+```
 
 ## Binary Attachments
 
@@ -283,6 +289,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

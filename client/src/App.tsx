@@ -31,12 +31,14 @@ import Community from "@/pages/Community";
 import AdminEvents from "@/pages/AdminEvents";
 import Book from "@/pages/Book";
 import Bootcamp from "@/pages/Bootcamp";
+import Marketplace from "@/pages/Marketplace";
+import CommandCenter from "@/pages/CommandCenter";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-            <Route path={"/"}  component={Home} />
+      <Route path={"/"} component={Home} />
       <Route path={"/services"} component={Services} />
       <Route path={"/features"} component={Features} />
       <Route path={"/pricing"} component={Pricing} />
@@ -48,7 +50,12 @@ function Router() {
       <Route path={"/blog-manager"} component={BlogManager} />
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/ops-agent"} component={OpsCleanupAgent} />
-      <Route path={"/assessment-generator"} component={AssessmentQuestionGenerator} />
+      <Route
+        path={"/assessment-generator"}
+        component={AssessmentQuestionGenerator}
+      />
+      <Route path={"/marketplace"} component={Marketplace} />
+      <Route path={"/command-center"} component={CommandCenter} />
       <Route path={"/dashboard/settings"} component={Settings} />
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/privacy"} component={Privacy} />
@@ -73,9 +80,7 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-      >
+      <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
           <LiveChat />

@@ -29,4 +29,3 @@ MKT-06 can be used as a controlled manual workflow.
 
 Do not market it as fully automated yet. Next certification step is to capture
 platform-native Reach proof and one addressable tracker/task link.
-

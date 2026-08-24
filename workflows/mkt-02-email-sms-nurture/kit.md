@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | MKT-02 |
-| Department | Marketing |
-| Automation level | 85-90% |
-| Owner | Marcus + Robert |
-| Trigger | Lead qualified as Warm/Cold |
-| Cycle time | 30-90 day sequences; continuous |
-| Source status | Imported source |
+| Field            | Value                           |
+| ---------------- | ------------------------------- |
+| Workflow ID      | MKT-02                          |
+| Department       | Marketing                       |
+| Automation level | 85-90%                          |
+| Owner            | Marcus + Robert                 |
+| Trigger          | Lead qualified as Warm/Cold     |
+| Cycle time       | 30-90 day sequences; continuous |
+| Source status    | Imported source                 |
 
 ## Inputs
 
@@ -85,19 +85,19 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `source/URC-MKT-02_Email_SMS_Nurture.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `assets/Marketing_Workflow_2_Email_SMS_Nurture.csv` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `assets/MKT02-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                             | Purpose                                                                     |
+| ---------------------------------------------------- | --------------------------------------------------------------------------- |
+| `source/URC-MKT-02_Email_SMS_Nurture.md`             | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `assets/Marketing_Workflow_2_Email_SMS_Nurture.csv`  | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `assets/MKT02-Assets.md`                             | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `automation/MKT02-Nurture-Enrollment-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/MKT02_Email_SMS_Nurture_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/MKT02_Email_SMS_Nurture_Tracker.xlsx`      | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-MKT-02_Email_SMS_Nurture.md
 
-````markdown
+```markdown
 # MKT-02 - Email/SMS Nurture Source
 
 Source: `Marketing Department\urc marketing\URC-MKT-02_Email_SMS_Nurture.docx`
@@ -108,7 +108,7 @@ This Markdown file is a text extraction of the source `.docx` for GitHub-readabl
 
 URC-MKT-02 — Email & SMS Nurture
 
-Owner: Robert T. McCarthy, Founder & CEO   |   Version: v1.0   |   Updated: March 21, 2026
+Owner: Robert T. McCarthy, Founder & CEO | Version: v1.0 | Updated: March 21, 2026
 
 1. Document Purpose
 
@@ -408,7 +408,7 @@ HubSpot: leads enrolled vs. calls booked
 
 List growth / month
 
-+ 50+ subscribers
+- 50+ subscribers
 
 Mailchimp subscriber growth report
 
@@ -459,11 +459,11 @@ March 21, 2026
 R. McCarthy
 
 Initial URC-specific document
-````
+```
 
 ### assets/Marketing_Workflow_2_Email_SMS_Nurture.csv
 
-````csv
+```csv
 Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 1,TRIGGER: Contact enters nurture stage OR Behavior detected OR Time-based schedule OR Manual enrollment,System/Marketing,Marketing automation platform / Behavioral trigger / Scheduled workflow,"trigger_type, contact_id, enrollment_timestamp, nurture_track, entry_source",Per schedule or immediate
 2,"Segment contacts by persona, stage, industry, engagement level, preferences",Automation (Segmentation),"CRM segmentation / CDP (Segment, mParticle) / List management","persona_type, buyer_stage, industry, company_size, engagement_tier, time_zone",< 15 minutes
@@ -479,17 +479,19 @@ Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 12,Trigger re-engagement campaigns with new angles or special offers for cold contacts,Automation (Re-engagement),Win-back campaigns / New content alerts / Limited-time offer sequences,"re_engagement_campaign_triggered, campaign_type, offer_presented","Day 14, 21, 28 of inactivity"
 13,Update contact profile with engagement preferences and content interests for future personalization,Automation (Profile Updater),Contact property updates / Preference center / Interest tagging,"updated_preferences, content_interests, engagement_profile, best_send_time",Real-time on interaction
 14,"Generate nurture performance reports (open rates, CTR, progression rates, conversion attribution)",Marketing Team + System,Campaign analytics / Attribution reporting / Cohort analysis / A/B test results,"report_id, track_performance, conversion_rate, revenue_attributed, avg_time_to_convert",Weekly generation
-````
+```
 
 ### assets/MKT02-Assets.md
 
-````markdown
+```markdown
 # MKT02: Email/SMS Nurture Assets
 
 ## 1. 5-Part Email Nurture Sequence
-*Target Audience: "Warm" Leads who downloaded gated content but are not yet ready to buy.*
+
+_Target Audience: "Warm" Leads who downloaded gated content but are not yet ready to buy._
 
 ### Email 1: The Delivery & Educational Value
+
 **Send Time:** Immediate
 **Subject:** Here's your [Content Name] + a quick tip
 **Body:**
@@ -507,6 +509,7 @@ Best,
 [Your Name]
 
 ### Email 2: The Value-Add Framework
+
 **Send Time:** +3 Days
 **Subject:** The [Framework Name] framework for [Desired Outcome]
 **Body:**
@@ -515,6 +518,7 @@ Hi [First Name],
 A few days ago I promised to share the exact framework we use to help our clients achieve [Desired Outcome].
 
 It comes down to 3 simple steps:
+
 1. **[Step 1]**: [Brief explanation]
 2. **[Step 2]**: [Brief explanation]
 3. **[Step 3]**: [Brief explanation]
@@ -526,12 +530,13 @@ I've put together a short 3-minute video breaking down exactly how you can apply
 Let me know what you think!
 
 ### Email 3: The Soft Pitch & Case Study
+
 **Send Time:** +4 Days
 **Subject:** How [Customer Name] stopped struggling with [Pain Point]
 **Body:**
 Hi [First Name],
 
-By now, you've seen the framework. But I know what you might be thinking: *"This sounds great in theory, but how does it work in practice?"*
+By now, you've seen the framework. But I know what you might be thinking: _"This sounds great in theory, but how does it work in practice?"_
 
 Before they started working with us, [Customer Name] was dealing with the exact same [Pain Point] you might be facing. They were losing [Metric/Money/Time] every single month.
 
@@ -543,6 +548,7 @@ If you're curious about how this would look for your specific situation, I'd be 
 [Link to Calendar]
 
 ### Email 4: The Hard Pitch (Urgency/Logic)
+
 **Send Time:** +4 Days
 **Subject:** The cost of waiting on [Problem Area]
 **Body:**
@@ -557,6 +563,7 @@ I have a few openings on my calendar next week to do a custom audit of your curr
 Grab a time that works for you here: [Link to Calendar]
 
 ### Email 5: The Breakup / Re-engagement
+
 **Send Time:** +7 Days
 **Subject:** Closing the loop / Should I stay or should I go?
 **Body:**
@@ -573,18 +580,19 @@ Best of luck with the rest of Q[Current Quarter]!
 ---
 
 ## 2. SMS Follow-Up Templates
-*To be used sparingly alongside emails for high-priority leads who provided mobile numbers.*
+
+_To be used sparingly alongside emails for high-priority leads who provided mobile numbers._
 
 **SMS 1 (Sent 1 hour after Email 1):**
 "Hi [First Name], just sent over the [Content Name] to your email! Let me know if you have any issues accessing it. - [Your Name] from [Company]"
 
 **SMS 2 (Sent concurrently with Email 3):**
 "Hey [First Name], I just sent you a quick case study on how we helped someone in your exact industry solve [Pain Point]. Thought you might find it relevant! - [Your Name]"
-````
+```
 
 ### automation/MKT02-Nurture-Enrollment-Blueprint.json
 
-````json
+```json
 {
   "name": "MKT02: Nurture Sequence Enrollment (Make.com Blueprint)",
   "flow": [
@@ -679,7 +687,7 @@ Best of luck with the rest of Q[Current Quarter]!
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -828,6 +836,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

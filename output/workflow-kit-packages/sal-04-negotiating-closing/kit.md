@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | SAL-04 |
-| Department | Sales |
-| Automation level | 80-85% |
-| Owner | Account Manager + Robert |
-| Trigger | Proposal delivered, 48 hrs no response |
-| Cycle time | Follow-up: daily until response; close: 3-21 days |
-| Source status | Imported source |
+| Field            | Value                                             |
+| ---------------- | ------------------------------------------------- |
+| Workflow ID      | SAL-04                                            |
+| Department       | Sales                                             |
+| Automation level | 80-85%                                            |
+| Owner            | Account Manager + Robert                          |
+| Trigger          | Proposal delivered, 48 hrs no response            |
+| Cycle time       | Follow-up: daily until response; close: 3-21 days |
+| Source status    | Imported source                                   |
 
 ## Inputs
 
@@ -85,18 +85,18 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `source/URC-SAL-04_Proposal_Close.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `assets/SALES04-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/SALES04-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                          | Purpose                                                                     |
+| ------------------------------------------------- | --------------------------------------------------------------------------- |
+| `source/URC-SAL-04_Proposal_Close.md`             | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `assets/SALES04-Assets.md`                        | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/SALES04-Blueprint.json`               | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `trackers/04_Funding_Opportunity_Pipeline_2.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-SAL-04_Proposal_Close.md
 
-````markdown
+```markdown
 # SAL-04 - Negotiating & Closing Source
 
 Source: `Sales Department\urc sales docs\URC-SAL-04_Proposal_Close.docx`
@@ -107,7 +107,7 @@ UNCLE ROBERT CONSULTING LLC
 
 URC-SAL-04 — Proposal & Close
 
-## Owner: Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 21, 2026
+## Owner: Robert T. McCarthy & Sheena Burns | v1.0 | March 21, 2026
 
 1. Why This Document Exists
 
@@ -286,38 +286,42 @@ March 21, 2026
 R. McCarthy & S. Burns
 
 Initial URC-specific document — built from actual client history
-````
+```
 
 ### assets/SALES04-Assets.md
 
-````markdown
+```markdown
 # SALES04: Negotiating & Closing Assets
 
 ## 1. Objection Handling Playbook (Core Scenarios)
 
 ### Scenario A: "It's too expensive / We don't have the budget."
+
 **The AI-Coached Response Framework:**
-*Acknowledge → Isolate → Explore value vs. cost.*
+_Acknowledge → Isolate → Explore value vs. cost._
 "I completely understand, [Name]. It is a significant investment. Just to clarify, when you say it's too expensive, do you mean it's more than you budgeted for, or you're not sure you'll see a return on that amount?"
-*(If budget issue)*: "If we could adjust the scope to fit within your budget by removing [Service B] for now, would you want to move forward with [Service A]?"
-*(If ROI issue)*: "Let's look at the numbers again. If we hit the conservative target of [Metric], this pays for itself in [X months]. If we don't think we can hit that, we shouldn't do this."
+_(If budget issue)_: "If we could adjust the scope to fit within your budget by removing [Service B] for now, would you want to move forward with [Service A]?"
+_(If ROI issue)_: "Let's look at the numbers again. If we hit the conservative target of [Metric], this pays for itself in [X months]. If we don't think we can hit that, we shouldn't do this."
 
 ### Scenario B: "We want to wait until next quarter."
+
 **The AI-Coached Response Framework:**
-*Acknowledge → Uncover the real reason → Highlight cost of inaction.*
+_Acknowledge → Uncover the real reason → Highlight cost of inaction._
 "Makes total sense. A lot of our clients prefer to align these projects with quarterly goals. Just so I understand, what specifically is changing between now and next quarter that makes the timing better?"
-*(After they answer)*: "Got it. One thing to keep in mind: if we wait until [Month] to start, because of the [X-week] ramp-up period, you actually won't see the results of this until [Much later date]. Is the team comfortable delaying [Core Goal] until then?"
+_(After they answer)_: "Got it. One thing to keep in mind: if we wait until [Month] to start, because of the [X-week] ramp-up period, you actually won't see the results of this until [Much later date]. Is the team comfortable delaying [Core Goal] until then?"
 
 ### Scenario C: "We need to run this by [Other Stakeholder] first."
+
 **The AI-Coached Response Framework:**
-*Support → Equip → Attempt to join.*
+_Support → Equip → Attempt to join._
 "Absolutely, [Stakeholder] definitely needs to sign off on this. How do these conversations usually go when you bring them new initiatives?"
-*(After they answer)*: "Since they haven't been on these calls, they're probably going to have questions about [Specific technical or ROI detail]. Rather than making you play telephone, would it be helpful if I jumped on a quick 10-minute call with both of you just to answer their specific questions?"
+_(After they answer)_: "Since they haven't been on these calls, they're probably going to have questions about [Specific technical or ROI detail]. Rather than making you play telephone, would it be helpful if I jumped on a quick 10-minute call with both of you just to answer their specific questions?"
 
 ---
 
 ## 2. The "Summary & Next Steps" Closing Email
-*Sent immediately after a verbal agreement on the closing call.*
+
+_Sent immediately after a verbal agreement on the closing call._
 
 **Subject:** Great chatting! Here are the next steps for [Company Name]
 
@@ -326,6 +330,7 @@ Hi [First Name],
 Great speaking with you today. I'm really excited that we're moving forward!
 
 Just to summarize what we agreed on:
+
 1. We are proceeding with the **[Tier Name]** package.
 2. We've adjusted the scope to include [Custom Item] and removed [Removed Item].
 3. The total investment is **[Final Price]**, billed [Payment Terms].
@@ -343,7 +348,8 @@ Looking forward to getting started!
 ---
 
 ## 3. The "Urgency/Scarcity" Contract Reminder
-*Sent 48 hours after the contract is sent if it remains unsigned.*
+
+_Sent 48 hours after the contract is sent if it remains unsigned._
 
 **Subject:** Action Required: [Company Name] Agreement
 
@@ -356,11 +362,11 @@ I know we discussed kicking things off by [Target Date]. To make sure we can hit
 If you have any questions about the legal language or the terms, let me know and I can get them answered right away.
 
 Otherwise, you can access and sign the agreement here: [Link]
-````
+```
 
 ### automation/SALES04-Blueprint.json
 
-````json
+```json
 {
   "name": "SALES04: Contract Trigger & Follow-Up (Make.com Blueprint)",
   "flow": [
@@ -485,7 +491,7 @@ Otherwise, you can access and sign the agreement here: [Link]
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -664,6 +670,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

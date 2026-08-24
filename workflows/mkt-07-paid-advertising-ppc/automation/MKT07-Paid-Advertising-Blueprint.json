@@ -97,7 +97,10 @@
         "spreadsheetId": "YOUR_MKT07_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{3.choices[0].message.content}}"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD')}}",
+          "{{3.choices[0].message.content}}"
+        ]
       },
       "metadata": {
         "designer": {

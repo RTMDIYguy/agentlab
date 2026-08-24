@@ -10,7 +10,7 @@ URC-CUL-01 — Vision & Purpose
 
 Two-Horizon Edition — Updated March 26, 2026
 
-Robert T. McCarthy   |   v1.1   |   March 26, 2026
+Robert T. McCarthy | v1.1 | March 26, 2026
 
 1. Why This Document Exists
 

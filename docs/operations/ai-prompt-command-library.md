@@ -19,14 +19,14 @@ Use this as the searchable source-of-truth index before starting a new prompt li
 
 ## Quick Index
 
-| Category | Use For | Status |
-| --- | --- | --- |
-| Model routing | OpenRouter auto model selection and logging | Active |
-| Website builder | B12 / Agent Lab website generation and rewrite prompting | Needs original prompt recovered |
-| Agent handoff | Starting future agents with the right business context | Active |
-| Workflow generation | AI-native agency department workflow templates | Active source exists |
-| Marketing prompts | Sales and marketing prompt libraries from Google Drive imports | Source inventory only |
-| Book content | Presale videos, shorts, and book CTA content | Source inventory only |
+| Category            | Use For                                                        | Status                          |
+| ------------------- | -------------------------------------------------------------- | ------------------------------- |
+| Model routing       | OpenRouter auto model selection and logging                    | Active                          |
+| Website builder     | B12 / Agent Lab website generation and rewrite prompting       | Needs original prompt recovered |
+| Agent handoff       | Starting future agents with the right business context         | Active                          |
+| Workflow generation | AI-native agency department workflow templates                 | Active source exists            |
+| Marketing prompts   | Sales and marketing prompt libraries from Google Drive imports | Source inventory only           |
+| Book content        | Presale videos, shorts, and book CTA content                   | Source inventory only           |
 
 ## Command Snippets
 
@@ -142,34 +142,34 @@ Continue the AI-native agency workflow library. Build template workflows first, 
 
 These are the strongest local prompt-library candidates found on 2026-05-18.
 
-| Source | Path | Notes |
-| --- | --- | --- |
-| Sales and marketing prompt library | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Prompt Template Library Sales n Marketing.docx` | Likely prior prompt-library attempt or imported asset. |
-| User evaluation prompt | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\User Evaluation Prompt.docx` | Candidate for evaluation/checking section. |
-| AI Native Agency prompts | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\AI Native Agency Deepened Prompts.txt` | Active conversational prompt history for workflow buildout. |
-| AI Native Agency prompts docx | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\AI Native Agency Deepened Prompts.docx` | Word version of the same or related source. |
-| Agent start prompt | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\To start the agent working prompt.docx` | Candidate startup prompt. |
-| Agent handoff prompt | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Agent Handoff Prompt.md` | Active handoff source. |
-| Fundable Consulting prompting basics | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\Fundable Consulting\Prompting - Basics.docx` | Candidate training reference. |
-| Book presale video prompt | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Authority Assets\Book - Bootstrapper's Guide to the World\Marketing\Presale\video prompt.docx` | Book funnel content source. |
-| Book shorts prompt | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Authority Assets\Book - Bootstrapper's Guide to the World\Marketing\Presale\Shorts prompt.docx` | Book funnel short-form source. |
-| Book shorts ready prompts | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Authority Assets\Book - Bootstrapper's Guide to the World\Marketing\Presale\shorts ready prompts.docx` | Book funnel short-form source. |
-| Google Drive import prompt folder | `C:\Users\thebo\OneDrive\Imports\thebossrob@gmail.com - Google Drive\` | Local mirror of many Drive prompt assets. |
-| Glide prompts sheet | `C:\Users\thebo\OneDrive\Imports\thebossrob@gmail.com - Google Drive\Glide Projects\Prompts.xlsx` | Spreadsheet prompt collection. |
-| HubSpot / Mindstream prompt assets | `C:\Users\thebo\OneDrive\Imports\thebossrob@gmail.com - Google Drive\Uncle Robert Consulting Blog Articles\CCC Assets\HubSpotnMindStream\` | Large marketing/productivity prompt libraries. |
-| Prompt Library folder | `C:\Users\thebo\OneDrive\Imports\thebossrob@gmail.com - Google Drive\Uncle Robert Consulting Blog Articles\CCC Assets\CCC Assets\Partners_Mentors_Affiliates\About Perplexity. His thoughts and feelings\Prompt Library\` | Contains personal prompt-library candidates. |
+| Source                               | Path                                                                                                                                                                                                                      | Notes                                                       |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| Sales and marketing prompt library   | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Prompt Template Library Sales n Marketing.docx`                                                                                                    | Likely prior prompt-library attempt or imported asset.      |
+| User evaluation prompt               | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\User Evaluation Prompt.docx`                                                                                                                          | Candidate for evaluation/checking section.                  |
+| AI Native Agency prompts             | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\AI Native Agency Deepened Prompts.txt`                                                                                      | Active conversational prompt history for workflow buildout. |
+| AI Native Agency prompts docx        | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\AI Native Agency Deepened Prompts.docx`                                                                                     | Word version of the same or related source.                 |
+| Agent start prompt                   | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\To start the agent working prompt.docx`                                                                                     | Candidate startup prompt.                                   |
+| Agent handoff prompt                 | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Agent Handoff Prompt.md`                                                                                                    | Active handoff source.                                      |
+| Fundable Consulting prompting basics | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\Fundable Consulting\Prompting - Basics.docx`                                                                                                          | Candidate training reference.                               |
+| Book presale video prompt            | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Authority Assets\Book - Bootstrapper's Guide to the World\Marketing\Presale\video prompt.docx`                              | Book funnel content source.                                 |
+| Book shorts prompt                   | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Authority Assets\Book - Bootstrapper's Guide to the World\Marketing\Presale\Shorts prompt.docx`                             | Book funnel short-form source.                              |
+| Book shorts ready prompts            | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Authority Assets\Book - Bootstrapper's Guide to the World\Marketing\Presale\shorts ready prompts.docx`                      | Book funnel short-form source.                              |
+| Google Drive import prompt folder    | `C:\Users\thebo\OneDrive\Imports\thebossrob@gmail.com - Google Drive\`                                                                                                                                                    | Local mirror of many Drive prompt assets.                   |
+| Glide prompts sheet                  | `C:\Users\thebo\OneDrive\Imports\thebossrob@gmail.com - Google Drive\Glide Projects\Prompts.xlsx`                                                                                                                         | Spreadsheet prompt collection.                              |
+| HubSpot / Mindstream prompt assets   | `C:\Users\thebo\OneDrive\Imports\thebossrob@gmail.com - Google Drive\Uncle Robert Consulting Blog Articles\CCC Assets\HubSpotnMindStream\`                                                                                | Large marketing/productivity prompt libraries.              |
+| Prompt Library folder                | `C:\Users\thebo\OneDrive\Imports\thebossrob@gmail.com - Google Drive\Uncle Robert Consulting Blog Articles\CCC Assets\CCC Assets\Partners_Mentors_Affiliates\About Perplexity. His thoughts and feelings\Prompt Library\` | Contains personal prompt-library candidates.                |
 
 ## Intake Queue
 
 Use this queue before adding bulk prompt content.
 
-| Priority | Item | Action |
-| --- | --- | --- |
-| 1 | Recover exact B12 prompt | Search chat history or paste from prior conversation when available. |
-| 2 | Open and extract headings from `AI Prompt Template Library Sales n Marketing.docx` | Decide whether it is useful, duplicate, or archive-only. |
-| 3 | Extract book presale prompts | Add reusable video, shorts, and CTA prompts to this library. |
-| 4 | Review Google Drive import prompt folders | Keep only prompts that support URC execution, lead generation, workflow packaging, or book funnel work. |
-| 5 | Create a client-safe edition | Convert the best prompts into a shareable Word/PDF library only after internal sources are cleaned. |
+| Priority | Item                                                                               | Action                                                                                                  |
+| -------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| 1        | Recover exact B12 prompt                                                           | Search chat history or paste from prior conversation when available.                                    |
+| 2        | Open and extract headings from `AI Prompt Template Library Sales n Marketing.docx` | Decide whether it is useful, duplicate, or archive-only.                                                |
+| 3        | Extract book presale prompts                                                       | Add reusable video, shorts, and CTA prompts to this library.                                            |
+| 4        | Review Google Drive import prompt folders                                          | Keep only prompts that support URC execution, lead generation, workflow packaging, or book funnel work. |
+| 5        | Create a client-safe edition                                                       | Convert the best prompts into a shareable Word/PDF library only after internal sources are cleaned.     |
 
 ## Maintenance Notes
 

@@ -77,14 +77,14 @@ Customer or internal trigger:
 Desired outcome:
 
 | Step | Owner | Tool / Location | Input Needed | Output Created | Wait Point | Common Failure |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 |  |  |  |  |  |  |
-| 2 |  |  |  |  |  |  |
-| 3 |  |  |  |  |  |  |
-| 4 |  |  |  |  |  |  |
-| 5 |  |  |  |  |  |  |
-| 6 |  |  |  |  |  |  |
-| 7 |  |  |  |  |  |  |
+| ---- | ----- | --------------- | ------------ | -------------- | ---------- | -------------- |
+| 1    |       |                 |              |                |            |                |
+| 2    |       |                 |              |                |            |                |
+| 3    |       |                 |              |                |            |                |
+| 4    |       |                 |              |                |            |                |
+| 5    |       |                 |              |                |            |                |
+| 6    |       |                 |              |                |            |                |
+| 7    |       |                 |              |                |            |                |
 
 ## Value Check
 
@@ -118,10 +118,10 @@ Score each active project, offer, or commitment from 1 to 5. A 1 means weak or
 unclear. A 5 means strong and obvious.
 
 | Item | Revenue Potential | Customer Value | Strategic Fit | Delivery Capacity | Cash Impact | Learning Value | Total |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-|  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |  |
+| ---- | ----------------: | -------------: | ------------: | ----------------: | ----------: | -------------: | ----: |
+|      |                   |                |               |                   |             |                |       |
+|      |                   |                |               |                   |             |                |       |
+|      |                   |                |               |                   |             |                |       |
 
 ## Interpretation
 

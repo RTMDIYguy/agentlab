@@ -71,12 +71,12 @@ Purpose: define how the agency thinks, decides, approves, and serves.
 
 Initial SOP candidates:
 
-| SOP ID | Working Title | Source | Status |
-| --- | --- | --- | --- |
-| SOP-CUL-001 | Servant Leadership And Agency Values | `docs/operations/SOP-CUL-001-servant-leadership-and-agency-values.md` | Draft exists |
-| SOP-CUL-002 | Agent Contribution And Approval Standard | Agent Lab LinkedIn guidelines | Draft source exists |
-| SOP-CUL-003 | Change-Control And Evidence Logging | `docs/operations/change-control-register.md` | Draft source exists |
-| SOP-CUL-004 | Quarterly SOP Review | OPS-03 / CUL-03 | Needed |
+| SOP ID      | Working Title                            | Source                                                                | Status              |
+| ----------- | ---------------------------------------- | --------------------------------------------------------------------- | ------------------- |
+| SOP-CUL-001 | Servant Leadership And Agency Values     | `docs/operations/SOP-CUL-001-servant-leadership-and-agency-values.md` | Draft exists        |
+| SOP-CUL-002 | Agent Contribution And Approval Standard | Agent Lab LinkedIn guidelines                                         | Draft source exists |
+| SOP-CUL-003 | Change-Control And Evidence Logging      | `docs/operations/change-control-register.md`                          | Draft source exists |
+| SOP-CUL-004 | Quarterly SOP Review                     | OPS-03 / CUL-03                                                       | Needed              |
 
 ### 2. Weekly Operating Rhythm
 
@@ -84,17 +84,17 @@ Purpose: keep the business moving through a simple weekly cadence.
 
 Initial SOP candidates:
 
-| SOP ID | Working Title | Source | Status |
-| --- | --- | --- | --- |
-| SOP-OPS-001 | Weekly URC Operating Rhythm | `docs/operations/urc-v1-operating-architecture.md` | Draft source exists |
-| SOP-OPS-002 | Monday Pipeline Review | URC weekly cadence | Needed |
-| SOP-OPS-003 | Friday Finance And KPI Review | URC weekly cadence | Needed |
-| SOP-OPS-004 | Mobile / Offline Continuity Handoff | `docs/operations/mobile-chatgpt-continuity-brief.md` | Draft source exists |
-| SOP-OPS-005 | Naming Conventions And Identifier Control | `docs/operations/SOP-OPS-005-naming-conventions-and-identifier-control.md` | Draft exists |
-| SOP-OPS-006 | Secret Handling And Credential Continuity | `docs/operations/secret-handling-standard.md` | Draft exists |
-| SOP-OPS-007 | Owner's Manual Maintenance And Public Tour Boundaries | `docs/operations/agency-owners-manual-blueprint.md` | Needed |
-| SOP-OPS-012 | Bootstrapper.ai / Ownable OS Weekly Cockpit | `docs/operations/bootstrapper-ai-operating-field-guide.md` | Draft source exists |
-| SOP-OPS-013 | Google Drive Sync On Repo Update | `docs/operations/SOP-OPS-006-gdrive-sync-on-update.md` | Active — created 2026-06-04 |
+| SOP ID      | Working Title                                         | Source                                                                     | Status                      |
+| ----------- | ----------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------- |
+| SOP-OPS-001 | Weekly URC Operating Rhythm                           | `docs/operations/urc-v1-operating-architecture.md`                         | Draft source exists         |
+| SOP-OPS-002 | Monday Pipeline Review                                | URC weekly cadence                                                         | Needed                      |
+| SOP-OPS-003 | Friday Finance And KPI Review                         | URC weekly cadence                                                         | Needed                      |
+| SOP-OPS-004 | Mobile / Offline Continuity Handoff                   | `docs/operations/mobile-chatgpt-continuity-brief.md`                       | Draft source exists         |
+| SOP-OPS-005 | Naming Conventions And Identifier Control             | `docs/operations/SOP-OPS-005-naming-conventions-and-identifier-control.md` | Draft exists                |
+| SOP-OPS-006 | Secret Handling And Credential Continuity             | `docs/operations/secret-handling-standard.md`                              | Draft exists                |
+| SOP-OPS-007 | Owner's Manual Maintenance And Public Tour Boundaries | `docs/operations/agency-owners-manual-blueprint.md`                        | Needed                      |
+| SOP-OPS-012 | Bootstrapper.ai / Ownable OS Weekly Cockpit           | `docs/operations/bootstrapper-ai-operating-field-guide.md`                 | Draft source exists         |
+| SOP-OPS-013 | Google Drive Sync On Repo Update                      | `docs/operations/SOP-OPS-006-gdrive-sync-on-update.md`                     | Active — created 2026-06-04 |
 
 ### 3. Marketing And Public Voice
 
@@ -103,14 +103,14 @@ offers.
 
 Initial SOP candidates:
 
-| SOP ID | Working Title | Source | Status |
-| --- | --- | --- | --- |
-| SOP-MKT-001 | Agent Lab LinkedIn Content Queue | Agent Lab `Content-Queue.md` | Draft source exists |
-| SOP-MKT-002 | Agent Lab Content Refill Procedure | Agent Lab `Content-Queue.md` continuity procedure | Draft source exists |
-| SOP-MKT-003 | Founder Signal Content Cycle | `workflows/marketing-founder-signal-system/` | Draft source exists |
-| SOP-MKT-004 | Book-To-Content Repurposing | URC operating architecture | Needed |
-| SOP-MKT-005 | Bootstrapper Capital Event Promotion | Bootstrapper Capital launch checklist | Needed |
-| SOP-MKT-006 | Direct-Response Ad Copy Review | Affiliate CMO drafts + Agent Lab voice guardrails | Needed |
+| SOP ID      | Working Title                        | Source                                            | Status              |
+| ----------- | ------------------------------------ | ------------------------------------------------- | ------------------- |
+| SOP-MKT-001 | Agent Lab LinkedIn Content Queue     | Agent Lab `Content-Queue.md`                      | Draft source exists |
+| SOP-MKT-002 | Agent Lab Content Refill Procedure   | Agent Lab `Content-Queue.md` continuity procedure | Draft source exists |
+| SOP-MKT-003 | Founder Signal Content Cycle         | `workflows/marketing-founder-signal-system/`      | Draft source exists |
+| SOP-MKT-004 | Book-To-Content Repurposing          | URC operating architecture                        | Needed              |
+| SOP-MKT-005 | Bootstrapper Capital Event Promotion | Bootstrapper Capital launch checklist             | Needed              |
+| SOP-MKT-006 | Direct-Response Ad Copy Review       | Affiliate CMO drafts + Agent Lab voice guardrails | Needed              |
 
 ### 4. Lead Capture And CRM-Lite
 
@@ -119,12 +119,12 @@ right offer.
 
 Initial SOP candidates:
 
-| SOP ID | Working Title | Source | Status |
-| --- | --- | --- | --- |
-| SOP-SAL-001 | CRM-Lite Lead Intake | URC architecture / execution checklist | Needed |
-| SOP-SAL-002 | Founder Diagnostic Follow-Up | Founder Signal System assets | Draft source exists |
-| SOP-SAL-003 | RoundTable RSVP And Follow-Up | `docs/operations/mkt-09-roundtable-operating-slice.md` | Draft source exists |
-| SOP-SAL-004 | Unbuilt Workflow Purchase Response | `docs/operations/agent-lab-unbuilt-purchase-response.md` | Draft source exists |
+| SOP ID      | Working Title                                      | Source                                                     | Status              |
+| ----------- | -------------------------------------------------- | ---------------------------------------------------------- | ------------------- |
+| SOP-SAL-001 | CRM-Lite Lead Intake                               | URC architecture / execution checklist                     | Needed              |
+| SOP-SAL-002 | Founder Diagnostic Follow-Up                       | Founder Signal System assets                               | Draft source exists |
+| SOP-SAL-003 | RoundTable RSVP And Follow-Up                      | `docs/operations/mkt-09-roundtable-operating-slice.md`     | Draft source exists |
+| SOP-SAL-004 | Unbuilt Workflow Purchase Response                 | `docs/operations/agent-lab-unbuilt-purchase-response.md`   | Draft source exists |
 | SOP-SAL-005 | Bootstrapper.ai CRM Workspace Inventory And Bridge | `docs/operations/bootstrapper-ai-operating-field-guide.md` | Draft source exists |
 
 ### 5. Workflow Packaging And Certification
@@ -133,13 +133,13 @@ Purpose: turn repeatable workflows into usable, testable, sellable packages.
 
 Initial SOP candidates:
 
-| SOP ID | Working Title | Source | Status |
-| --- | --- | --- | --- |
-| SOP-PKG-001 | Workflow Package Creation | MKT-06 package pattern | Needed |
-| SOP-PKG-002 | Kit Change Log And Versioning | `docs/operations/change-control-register.md` | Draft source exists |
-| SOP-PKG-003 | Auth Contract Review | `docs/operations/kit-auth-standard.md` | Draft source exists |
+| SOP ID      | Working Title                 | Source                                          | Status              |
+| ----------- | ----------------------------- | ----------------------------------------------- | ------------------- |
+| SOP-PKG-001 | Workflow Package Creation     | MKT-06 package pattern                          | Needed              |
+| SOP-PKG-002 | Kit Change Log And Versioning | `docs/operations/change-control-register.md`    | Draft source exists |
+| SOP-PKG-003 | Auth Contract Review          | `docs/operations/kit-auth-standard.md`          | Draft source exists |
 | SOP-PKG-004 | Canary Test And Proof Capture | MKT-06 testing plan / Founder Signal proof loop | Draft source exists |
-| SOP-PKG-005 | n8n V1 Runtime Handoff | Founder Signal System n8n handoff | Draft source exists |
+| SOP-PKG-005 | n8n V1 Runtime Handoff        | Founder Signal System n8n handoff               | Draft source exists |
 
 ### 6. Delivery And Aftercare
 
@@ -147,12 +147,12 @@ Purpose: protect client trust after the sale.
 
 Initial SOP candidates:
 
-| SOP ID | Working Title | Source | Status |
-| --- | --- | --- | --- |
-| SOP-FUL-001 | Client Setup Packet | Founder Signal System implementation checklist | Draft source exists |
-| SOP-FUL-002 | Deliverable Review Before Sending | CUL-06 QA rhythm | Needed |
-| SOP-FUL-003 | Proof, Testimonial, And Referral Capture | MKT-04 / Founder Signal proof template | Draft source exists |
-| SOP-FUL-004 | Client Issue Triage | FUL-03 source workflow | Needed |
+| SOP ID      | Working Title                            | Source                                         | Status              |
+| ----------- | ---------------------------------------- | ---------------------------------------------- | ------------------- |
+| SOP-FUL-001 | Client Setup Packet                      | Founder Signal System implementation checklist | Draft source exists |
+| SOP-FUL-002 | Deliverable Review Before Sending        | CUL-06 QA rhythm                               | Needed              |
+| SOP-FUL-003 | Proof, Testimonial, And Referral Capture | MKT-04 / Founder Signal proof template         | Draft source exists |
+| SOP-FUL-004 | Client Issue Triage                      | FUL-03 source workflow                         | Needed              |
 
 ### 7. Finance And Administration
 
@@ -160,12 +160,12 @@ Purpose: keep the agency financially visible while revenue is still small.
 
 Initial SOP candidates:
 
-| SOP ID | Working Title | Source | Status |
-| --- | --- | --- | --- |
+| SOP ID      | Working Title                       | Source                         | Status |
+| ----------- | ----------------------------------- | ------------------------------ | ------ |
 | SOP-FIN-001 | Invoice Creation And Payment Status | Owned finance tracker / FIN-03 | Needed |
-| SOP-FIN-002 | Weekly Receivables Review | URC weekly cadence / FIN-03 | Needed |
-| SOP-FIN-003 | Tool Spend Review | URC low-cost tooling rule | Needed |
-| SOP-FIN-004 | Paid Tool Justification | URC operating rules | Needed |
+| SOP-FIN-002 | Weekly Receivables Review           | URC weekly cadence / FIN-03    | Needed |
+| SOP-FIN-003 | Tool Spend Review                   | URC low-cost tooling rule      | Needed |
+| SOP-FIN-004 | Paid Tool Justification             | URC operating rules            | Needed |
 
 ### 8. Infrastructure, Analytics, And Platform Evaluation
 
@@ -174,12 +174,12 @@ turning experiments into unmanaged production systems.
 
 Initial SOP candidates:
 
-| SOP ID | Working Title | Source | Status |
-| --- | --- | --- | --- |
-| SOP-OPS-008 | VPS Sandbox Use And Promotion Criteria | `docs/operations/urc-v1-operating-architecture.md` | Needed |
-| SOP-OPS-009 | KNIME Analytics And Evidence Workflow | `docs/operations/urc-v1-operating-architecture.md` | Needed |
-| SOP-OPS-010 | SaaS Platform Evaluation Decision Record | `docs/operations/urc-v1-operating-architecture.md` | Needed |
-| SOP-OPS-011 | Weekly Workflow Audit Bank | `docs/operations/weekly-workflow-audit-bank.md`; `docs/operations/workflow-relationship-map.md`; `docs/operations/workflow-registry.md` | Needed |
+| SOP ID      | Working Title                            | Source                                                                                                                                  | Status |
+| ----------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| SOP-OPS-008 | VPS Sandbox Use And Promotion Criteria   | `docs/operations/urc-v1-operating-architecture.md`                                                                                      | Needed |
+| SOP-OPS-009 | KNIME Analytics And Evidence Workflow    | `docs/operations/urc-v1-operating-architecture.md`                                                                                      | Needed |
+| SOP-OPS-010 | SaaS Platform Evaluation Decision Record | `docs/operations/urc-v1-operating-architecture.md`                                                                                      | Needed |
+| SOP-OPS-011 | Weekly Workflow Audit Bank               | `docs/operations/weekly-workflow-audit-bank.md`; `docs/operations/workflow-relationship-map.md`; `docs/operations/workflow-registry.md` | Needed |
 
 ## First Build Order
 

@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | MKT-03 |
-| Department | Marketing |
-| Automation level | 90-95% |
-| Owner | Marcus + Robert |
-| Trigger | Campaign planning cycle |
-| Cycle time | Real-time + immediate follow-up |
-| Source status | Imported source |
+| Field            | Value                           |
+| ---------------- | ------------------------------- |
+| Workflow ID      | MKT-03                          |
+| Department       | Marketing                       |
+| Automation level | 90-95%                          |
+| Owner            | Marcus + Robert                 |
+| Trigger          | Campaign planning cycle         |
+| Cycle time       | Real-time + immediate follow-up |
+| Source status    | Imported source                 |
 
 ## Inputs
 
@@ -85,19 +85,19 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `source/URC-MKT-03_Polls_Assessments.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `assets/Marketing_Workflow_3_Polls_Assessments.csv` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `assets/MKT03-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                             | Purpose                                                                     |
+| ---------------------------------------------------- | --------------------------------------------------------------------------- |
+| `source/URC-MKT-03_Polls_Assessments.md`             | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `assets/Marketing_Workflow_3_Polls_Assessments.csv`  | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `assets/MKT03-Assets.md`                             | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `automation/MKT03-Assessment-Scoring-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/MKT03_Polls_Assessments_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/MKT03_Polls_Assessments_Tracker.xlsx`      | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-MKT-03_Polls_Assessments.md
 
-````markdown
+```markdown
 # MKT-03 - Polls & Assessments Source
 
 Source: `Marketing Department\urc marketing\URC-MKT-03_Polls_Assessments.docx`
@@ -108,7 +108,7 @@ This Markdown file is a text extraction of the source `.docx` for GitHub-readabl
 
 URC-MKT-03 — Polls & Assessments
 
-Owner: Robert T. McCarthy, Founder & CEO   |   Version: v1.0   |   Updated: March 21, 2026
+Owner: Robert T. McCarthy, Founder & CEO | Version: v1.0 | Updated: March 21, 2026
 
 1. Document Purpose
 
@@ -363,11 +363,11 @@ March 21, 2026
 R. McCarthy
 
 Initial URC-specific document
-````
+```
 
 ### assets/Marketing_Workflow_3_Polls_Assessments.csv
 
-````csv
+```csv
 Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 1,TRIGGER: Campaign launch OR Post-purchase timing OR Engagement milestone OR Scheduled feedback request,System/Marketing,Survey/poll software / Campaign scheduler / Milestone trigger,"trigger_type, poll_id, launch_timestamp, campaign_association, target_audience",Per schedule or immediate
 2,"Design poll/assessment with branching logic based on business goals (lead gen, feedback, segmentation)",Marketing Team,Typeform / SurveyMonkey / Zigpoll / Google Forms / Jotform / Outgrow,"poll_title, question_count, branching_rules, scoring_methodology, goal_type",< 4 hours for design
@@ -383,15 +383,16 @@ Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 12,Sync response data to CRM with tags and segmentation for future personalization,Automation (CRM Sync),"CRM integration (HubSpot, Salesforce) / Custom field mapping / Tag application","crm_updated_timestamp, tags_applied, segment_updated, custom_fields_populated",< 15 minutes
 13,"Analyze aggregate results for trends, common pain points, product-market fit insights",Marketing/Product Team,Survey analytics dashboard / Sentiment analysis / Trend detection,"response_count, avg_score, trend_analysis, pain_points_identified, nps_score",Weekly aggregation
 14,Generate feedback reports and trigger internal workflows for product/marketing adjustments,Leadership + Product Team,Internal reporting / Stakeholder alerts / Product backlog integration / Strategy updates,"report_id, stakeholders_notified, action_items_created, follow_up_scheduled",Within 48 hours of threshold
-````
+```
 
 ### assets/MKT03-Assets.md
 
-````markdown
+```markdown
 # MKT03: Polls & Assessments Assets
 
 ## 1. Needs Analysis Assessment Framework
-*Type: Lead Qualification Quiz. Best placed on website popups or high-intent landing pages.*
+
+_Type: Lead Qualification Quiz. Best placed on website popups or high-intent landing pages._
 
 **Intro Screen**
 **Headline:** Find out if your current [Problem Area] is costing you revenue.
@@ -453,7 +454,7 @@ You're currently in the **[Outcome Category: e.g., "Manual Growth" or "Scaling P
 
 Because you mentioned that your biggest frustration is **[Answer from Q3: e.g., "It takes too long"]**, I wanted to highlight one specific area of your report:
 
-*To fix the time bottleneck, you need to implement a rule-based triage system before [Step 2 in process]. Teams your size (from your answer: 6-20 people) usually save 15 hours a week just by doing this.*
+_To fix the time bottleneck, you need to implement a rule-based triage system before [Step 2 in process]. Teams your size (from your answer: 6-20 people) usually save 15 hours a week just by doing this._
 
 I attached your full customized PDF report with the other 3 action items.
 
@@ -463,11 +464,11 @@ Since you're looking to fix this **[Answer from Q5: e.g., "ASAP"]**, would it be
 
 Best,
 [Your Name]
-````
+```
 
 ### automation/MKT03-Assessment-Scoring-Blueprint.json
 
-````json
+```json
 {
   "name": "MKT03: Assessment Scoring & PDF (Make.com Blueprint)",
   "flow": [
@@ -556,7 +557,7 @@ Best,
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -699,6 +700,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

@@ -10,14 +10,14 @@ Manual canary score: 86/100
 
 ## Checks
 
-| Check | Result |
-| --- | --- |
-| Primary keyword appears naturally | Pass |
-| Secondary keywords appear naturally | Pass |
-| Search intent matches founder/operator audience | Pass |
-| No keyword stuffing | Pass |
-| Internal link targets identified | Manual follow-up |
-| Meta description draft ready | Pass |
+| Check                                           | Result           |
+| ----------------------------------------------- | ---------------- |
+| Primary keyword appears naturally               | Pass             |
+| Secondary keywords appear naturally             | Pass             |
+| Search intent matches founder/operator audience | Pass             |
+| No keyword stuffing                             | Pass             |
+| Internal link targets identified                | Manual follow-up |
+| Meta description draft ready                    | Pass             |
 
 ## Meta Description Draft
 
@@ -30,4 +30,3 @@ must be made honest.
 - Startup Operational Excellence book CTA
 - Founder Signal System offer page
 - Bootstrap Limit Threshold operating note
-

@@ -33,7 +33,10 @@ export function LiveChat() {
     const content = draft.trim();
     if (!content || respondMutation.isPending) return;
 
-    const nextMessages: ChatMessage[] = [...messages, { role: "user", content }];
+    const nextMessages: ChatMessage[] = [
+      ...messages,
+      { role: "user", content },
+    ];
     setMessages(nextMessages);
     setDraft("");
 
@@ -77,7 +80,11 @@ export function LiveChat() {
   };
 
   const submitLead = async () => {
-    if (!lead.name.trim() || !lead.email.trim() || captureLeadMutation.isPending) {
+    if (
+      !lead.name.trim() ||
+      !lead.email.trim() ||
+      captureLeadMutation.isPending
+    ) {
       return;
     }
 
@@ -149,29 +156,48 @@ export function LiveChat() {
 
             {showLeadForm ? (
               <div className="space-y-2 rounded-2xl border border-stone-200 bg-white p-3 shadow-sm">
-                <div className="text-sm font-semibold text-stone-900">Get the next step</div>
+                <div className="text-sm font-semibold text-stone-900">
+                  Get the next step
+                </div>
                 <input
                   value={lead.name}
-                  onChange={event => setLead(current => ({ ...current, name: event.target.value }))}
+                  onChange={event =>
+                    setLead(current => ({
+                      ...current,
+                      name: event.target.value,
+                    }))
+                  }
                   placeholder="Your name"
                   className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-950"
                 />
                 <input
                   value={lead.email}
-                  onChange={event => setLead(current => ({ ...current, email: event.target.value }))}
+                  onChange={event =>
+                    setLead(current => ({
+                      ...current,
+                      email: event.target.value,
+                    }))
+                  }
                   placeholder="Email address"
                   className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-950"
                 />
                 <input
                   value={lead.company}
-                  onChange={event => setLead(current => ({ ...current, company: event.target.value }))}
+                  onChange={event =>
+                    setLead(current => ({
+                      ...current,
+                      company: event.target.value,
+                    }))
+                  }
                   placeholder="Company (optional)"
                   className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-950"
                 />
                 <button
                   type="button"
                   onClick={submitLead}
-                  disabled={captureLeadMutation.isPending || captureStatus === "saved"}
+                  disabled={
+                    captureLeadMutation.isPending || captureStatus === "saved"
+                  }
                   className="w-full rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
                 >
                   {captureStatus === "saved"
@@ -186,7 +212,11 @@ export function LiveChat() {
 
           <div className="border-t border-stone-200 bg-white p-3">
             <div className="mb-2 flex flex-wrap gap-2">
-              {["Founder Roundtable", "Business Systems Diagnostic", "Ownable OS"].map(option => (
+              {[
+                "Founder Roundtable",
+                "Business Systems Diagnostic",
+                "Ownable OS",
+              ].map(option => (
                 <button
                   key={option}
                   type="button"

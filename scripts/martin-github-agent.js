@@ -1,12 +1,14 @@
-import fs from 'fs';
-import path from 'path';
-import https from 'https';
+import fs from "fs";
+import path from "path";
+import https from "https";
 
 // Load event payload and API Keys
-const EVENT_PAYLOAD = process.env.GITHUB_EVENT_PATH ? JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8')) : null;
-const OPENAI_KEY = process.env.OPENAI_API_KEY || '';
-const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || '';
-const GEMINI_KEY = process.env.GEMINI_API_KEY || '';
+const EVENT_PAYLOAD = process.env.GITHUB_EVENT_PATH
+  ? JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"))
+  : null;
+const OPENAI_KEY = process.env.OPENAI_API_KEY || "";
+const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || "";
+const GEMINI_KEY = process.env.GEMINI_API_KEY || "";
 
 const WORKSPACE = process.cwd();
 
@@ -16,7 +18,13 @@ console.log(`Working directory: ${WORKSPACE}`);
 function listFiles(dir = WORKSPACE, fileList = []) {
   const files = fs.readdirSync(dir);
   for (const file of files) {
-    if (file === 'node_modules' || file === '.git' || file === '.pnpm-store' || file === 'dist') continue;
+    if (
+      file === "node_modules" ||
+      file === ".git" ||
+      file === ".pnpm-store" ||
+      file === "dist"
+    )
+      continue;
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
     if (stat.isDirectory()) {
@@ -30,15 +38,16 @@ function listFiles(dir = WORKSPACE, fileList = []) {
 
 function safeReadFile(relativeFilePath) {
   const absolutePath = path.join(WORKSPACE, relativeFilePath);
-  if (!fs.existsSync(absolutePath)) return `Error: File not found - ${relativeFilePath}`;
-  return fs.readFileSync(absolutePath, 'utf8');
+  if (!fs.existsSync(absolutePath))
+    return `Error: File not found - ${relativeFilePath}`;
+  return fs.readFileSync(absolutePath, "utf8");
 }
 
 function safeWriteFile(relativeFilePath, content) {
   const absolutePath = path.join(WORKSPACE, relativeFilePath);
   const dir = path.dirname(absolutePath);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(absolutePath, content, 'utf8');
+  fs.writeFileSync(absolutePath, content, "utf8");
   return `Successfully wrote to ${relativeFilePath}`;
 }
 
@@ -68,7 +77,9 @@ async function callLLM(prompt, systemPrompt) {
   } else if (GEMINI_KEY) {
     return await callGemini(prompt, systemPrompt);
   } else {
-    throw new Error("No API secrets (OPENAI_API_KEY, ANTHROPIC_API_KEY, or GEMINI_API_KEY) found.");
+    throw new Error(
+      "No API secrets (OPENAI_API_KEY, ANTHROPIC_API_KEY, or GEMINI_API_KEY) found."
+    );
   }
 }
 
@@ -81,15 +92,19 @@ async function runAgent() {
 
   // Double check payload structure to be extremely robust
   console.log("Payload top keys:", Object.keys(EVENT_PAYLOAD));
-  
+
   const issue = EVENT_PAYLOAD.issue || EVENT_PAYLOAD;
   if (!issue || (!issue.title && !EVENT_PAYLOAD.title)) {
-    console.error("Payload content does not contain an issue definition:", EVENT_PAYLOAD);
+    console.error(
+      "Payload content does not contain an issue definition:",
+      EVENT_PAYLOAD
+    );
     process.exit(1);
   }
 
-  const issueTitle = issue.title || EVENT_PAYLOAD.title || 'Initial cloud connection test';
-  const issueBody = issue.body || EVENT_PAYLOAD.body || '';
+  const issueTitle =
+    issue.title || EVENT_PAYLOAD.title || "Initial cloud connection test";
+  const issueBody = issue.body || EVENT_PAYLOAD.body || "";
   const request = `Issue: ${issueTitle}\n\nDetails:\n${issueBody}`;
 
   const systemPrompt = `You are Martin, the autonomous repository maintenance agent. 
@@ -116,14 +131,17 @@ Set "finished" to true when you have completed all requested cleanup and organiz
   while (currentTurn <= maxTurns) {
     console.log(`\n--- TURN ${currentTurn}/${maxTurns} ---`);
     const files = listFiles();
-    const stateContext = `Active files in repo:\n${files.join('\n')}\n\nHistory of completed actions:\n${logOfActions.join('\n')}`;
+    const stateContext = `Active files in repo:\n${files.join("\n")}\n\nHistory of completed actions:\n${logOfActions.join("\n")}`;
     const userPrompt = `${request}\n\n${stateContext}\n\nWhat is your next action? Output ONLY the JSON block matching the requested schema.`;
 
     const rawResponse = await callLLM(userPrompt, systemPrompt);
     let parsed;
     try {
       // Find JSON block if model wrote wrapping text
-      const cleanJson = rawResponse.substring(rawResponse.indexOf('{'), rawResponse.lastIndexOf('}') + 1);
+      const cleanJson = rawResponse.substring(
+        rawResponse.indexOf("{"),
+        rawResponse.lastIndexOf("}") + 1
+      );
       parsed = JSON.parse(cleanJson);
     } catch (e) {
       console.error("Failed to parse agent JSON. Raw content:", rawResponse);
@@ -131,17 +149,17 @@ Set "finished" to true when you have completed all requested cleanup and organiz
     }
 
     console.log(`Agent reasoning: ${parsed.reasoning}`);
-    
+
     if (parsed.actions && parsed.actions.length > 0) {
       for (const action of parsed.actions) {
         let resultMsg = "";
-        if (action.type === 'read') {
+        if (action.type === "read") {
           resultMsg = `Read file ${action.path} (Length: ${safeReadFile(action.path).length})`;
-        } else if (action.type === 'write') {
+        } else if (action.type === "write") {
           resultMsg = safeWriteFile(action.path, action.content);
-        } else if (action.type === 'move') {
+        } else if (action.type === "move") {
           resultMsg = safeMoveFile(action.from, action.to);
-        } else if (action.type === 'delete') {
+        } else if (action.type === "delete") {
           resultMsg = safeDeleteFile(action.path);
         }
         console.log(`Action executed: ${resultMsg}`);
@@ -151,7 +169,11 @@ Set "finished" to true when you have completed all requested cleanup and organiz
 
     if (parsed.finished) {
       console.log("Martin declared the cleanup finished!");
-      fs.writeFileSync(path.join(WORKSPACE, 'martin-agent-run.md'), `### Martin-Cloud Run Summary\n\n**Issue Handled:** ${issueTitle}\n\n**Actions Completed:**\n\n${logOfActions.map(a => `- ${a}`).join('\n')}\n\n**Reasoning:** ${parsed.reasoning}\n`, 'utf8');
+      fs.writeFileSync(
+        path.join(WORKSPACE, "martin-agent-run.md"),
+        `### Martin-Cloud Run Summary\n\n**Issue Handled:** ${issueTitle}\n\n**Actions Completed:**\n\n${logOfActions.map(a => `- ${a}`).join("\n")}\n\n**Reasoning:** ${parsed.reasoning}\n`,
+        "utf8"
+      );
       break;
     }
 
@@ -165,25 +187,25 @@ function callOpenAI(prompt, systemPrompt) {
       model: "gpt-4o-mini",
       messages: [
         { role: "system", content: systemPrompt },
-        { role: "user", content: prompt }
-      ]
+        { role: "user", content: prompt },
+      ],
     });
 
     const options = {
-      hostname: 'api.openai.com',
+      hostname: "api.openai.com",
       port: 443,
-      path: '/v1/chat/completions',
-      method: 'POST',
+      path: "/v1/chat/completions",
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_KEY}`
-      }
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${OPENAI_KEY}`,
+      },
     };
 
-    const req = https.request(options, (res) => {
-      let body = '';
-      res.on('data', chunk => body += chunk);
-      res.on('end', () => {
+    const req = https.request(options, res => {
+      let body = "";
+      res.on("data", chunk => (body += chunk));
+      res.on("end", () => {
         const parsed = JSON.parse(body);
         if (parsed.choices && parsed.choices[0]) {
           resolve(parsed.choices[0].message.content);
@@ -192,7 +214,7 @@ function callOpenAI(prompt, systemPrompt) {
         }
       });
     });
-    req.on('error', reject);
+    req.on("error", reject);
     req.write(data);
     req.end();
   });
@@ -204,25 +226,25 @@ function callAnthropic(prompt, systemPrompt) {
       model: "claude-3-5-sonnet-latest",
       max_tokens: 4096,
       system: systemPrompt,
-      messages: [{ role: "user", content: prompt }]
+      messages: [{ role: "user", content: prompt }],
     });
 
     const options = {
-      hostname: 'api.anthropic.com',
+      hostname: "api.anthropic.com",
       port: 443,
-      path: '/v1/messages',
-      method: 'POST',
+      path: "/v1/messages",
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_KEY,
-        'anthropic-version': '2023-06-01'
-      }
+        "Content-Type": "application/json",
+        "x-api-key": ANTHROPIC_KEY,
+        "anthropic-version": "2023-06-01",
+      },
     };
 
-    const req = https.request(options, (res) => {
-      let body = '';
-      res.on('data', chunk => body += chunk);
-      res.on('end', () => {
+    const req = https.request(options, res => {
+      let body = "";
+      res.on("data", chunk => (body += chunk));
+      res.on("end", () => {
         const parsed = JSON.parse(body);
         if (parsed.content && parsed.content[0]) {
           resolve(parsed.content[0].text);
@@ -231,7 +253,7 @@ function callAnthropic(prompt, systemPrompt) {
         }
       });
     });
-    req.on('error', reject);
+    req.on("error", reject);
     req.write(data);
     req.end();
   });
@@ -240,21 +262,21 @@ function callAnthropic(prompt, systemPrompt) {
 function callGemini(prompt, systemPrompt) {
   return new Promise((resolve, reject) => {
     const data = JSON.stringify({
-      contents: [{ parts: [{ text: `${systemPrompt}\n\n${prompt}` }] }]
+      contents: [{ parts: [{ text: `${systemPrompt}\n\n${prompt}` }] }],
     });
 
     const options = {
-      hostname: 'generativelanguage.googleapis.com',
+      hostname: "generativelanguage.googleapis.com",
       port: 443,
       path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
     };
 
-    const req = https.request(options, (res) => {
-      let body = '';
-      res.on('data', chunk => body += chunk);
-      res.on('end', () => {
+    const req = https.request(options, res => {
+      let body = "";
+      res.on("data", chunk => (body += chunk));
+      res.on("end", () => {
         const parsed = JSON.parse(body);
         if (parsed.candidates && parsed.candidates[0].content.parts[0]) {
           resolve(parsed.candidates[0].content.parts[0].text);
@@ -263,7 +285,7 @@ function callGemini(prompt, systemPrompt) {
         }
       });
     });
-    req.on('error', reject);
+    req.on("error", reject);
     req.write(data);
     req.end();
   });

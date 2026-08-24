@@ -38,4 +38,3 @@ It is information.
 Save this for your next planning session.
 
 #StartupOperationalExcellence #SOE #FounderOps #Bootstrapping #Ownable
-

@@ -34,13 +34,13 @@ This is the working-memory layer. It is intentionally short. For rules, see
 
 ## Active TODOs
 
-| Item | Owner | Status |
-| --- | --- | --- |
-| Configure n8n to tag incoming leads with the new `Lead / Campaign Source` property | Robert | Needed |
-| Draft SOP for Reach outreach batch setup and monitoring | Agent | Needed |
-| Draft SOP for Google Drive client-folder packet population | Agent | Needed |
-| Reconcile Independence Chapter messaging against MVP beta messaging | Robert + agent | Needed |
-| Run weekly workflow audit bank for the active queue | Robert + agent | Needed |
+| Item                                                                               | Owner          | Status |
+| ---------------------------------------------------------------------------------- | -------------- | ------ |
+| Configure n8n to tag incoming leads with the new `Lead / Campaign Source` property | Robert         | Needed |
+| Draft SOP for Reach outreach batch setup and monitoring                            | Agent          | Needed |
+| Draft SOP for Google Drive client-folder packet population                         | Agent          | Needed |
+| Reconcile Independence Chapter messaging against MVP beta messaging                | Robert + agent | Needed |
+| Run weekly workflow audit bank for the active queue                                | Robert + agent | Needed |
 
 ## Recent Decisions
 

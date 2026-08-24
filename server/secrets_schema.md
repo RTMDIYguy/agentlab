@@ -17,14 +17,15 @@ projects/{GCP_PROJECT_ID}/secrets/workspace_{WORKSPACE_ID}_{PROVIDER_NAME}
 ```
 
 ### Standard Provider Keys:
-| Provider / Tool | GSM Secret ID Pattern | Example Resource Path |
-| :--- | :--- | :--- |
-| **OpenAI** | `workspace_{id}_openai_api_key` | `projects/agentlab-prod/secrets/workspace_9b1e2_openai_api_key` |
-| **Anthropic** | `workspace_{id}_anthropic_api_key` | `projects/agentlab-prod/secrets/workspace_9b1e2_anthropic_api_key` |
-| **Google Vertex / AI** | `workspace_{id}_google_api_key` | `projects/agentlab-prod/secrets/workspace_9b1e2_google_api_key` |
-| **HubSpot** | `workspace_{id}_hubspot_token` | `projects/agentlab-prod/secrets/workspace_9b1e2_hubspot_token` |
-| **Apollo.io** | `workspace_{id}_apollo_api_key` | `projects/agentlab-prod/secrets/workspace_9b1e2_apollo_api_key` |
-| **Microsoft 365** | `workspace_{id}_m365_client_secret` | `projects/agentlab-prod/secrets/workspace_9b1e2_m365_client_secret` |
+
+| Provider / Tool        | GSM Secret ID Pattern               | Example Resource Path                                               |
+| :--------------------- | :---------------------------------- | :------------------------------------------------------------------ |
+| **OpenAI**             | `workspace_{id}_openai_api_key`     | `projects/agentlab-prod/secrets/workspace_9b1e2_openai_api_key`     |
+| **Anthropic**          | `workspace_{id}_anthropic_api_key`  | `projects/agentlab-prod/secrets/workspace_9b1e2_anthropic_api_key`  |
+| **Google Vertex / AI** | `workspace_{id}_google_api_key`     | `projects/agentlab-prod/secrets/workspace_9b1e2_google_api_key`     |
+| **HubSpot**            | `workspace_{id}_hubspot_token`      | `projects/agentlab-prod/secrets/workspace_9b1e2_hubspot_token`      |
+| **Apollo.io**          | `workspace_{id}_apollo_api_key`     | `projects/agentlab-prod/secrets/workspace_9b1e2_apollo_api_key`     |
+| **Microsoft 365**      | `workspace_{id}_m365_client_secret` | `projects/agentlab-prod/secrets/workspace_9b1e2_m365_client_secret` |
 
 ---
 
@@ -60,7 +61,7 @@ sequenceDiagram
     Note over Admin,UI: 1. Operator enters API Key in Settings UI
     Admin->>UI: Input sk-ant-api03... and click Save
     UI->>API: POST /api/workspaces/{workspace_id}/secrets (TLS 1.3)
-    
+
     Note over API,GSM: 2. Write Secret Payload directly to GSM
     API->>GSM: projects.secrets.addVersion(secretId, payload)
     GSM-->>API: version: "2", status: "ENABLED"

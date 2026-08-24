@@ -13,6 +13,7 @@ verification: "Refresh the dashboard and verify the scheduled count remains 3."
 **Intent**: A creator notices their queue is empty on the dashboard, uses the quick-action CTA to create and schedule content, and verifies the dashboard metrics update to reflect the new work.
 
 **Steps**:
+
 1. assert: assert: text "2" is visible in the Scheduled stat card (pst-905, pst-906) in the dashboard stat tiles
 2. click: click the "New post" button (CTA) in the dashboard header
 3. type: type "Dashboard CTA journey post content." in the content textarea in the composer card
@@ -24,6 +25,7 @@ verification: "Refresh the dashboard and verify the scheduled count remains 3."
 9. assert: assert: text "3" is visible in the Scheduled stat card in the dashboard stat tiles
 
 **Verification**:
+
 1. refresh: refresh the page
 2. assert: assert: text "3" is visible in the Scheduled stat card in the dashboard stat tiles
 

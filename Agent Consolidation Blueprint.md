@@ -11,6 +11,7 @@ The agent must reduce confusion, avoid duplicating files, preserve recovered mat
 Create and maintain a working executive layer on top of the existing departmental system.
 
 The agent should:
+
 - identify source-of-truth files
 - avoid creating duplicate strategy documents
 - sort recovered business files into the proper business structure
@@ -201,6 +202,7 @@ This layer should answer:
 ### Agent Communication & Tooling Layer (AgentMail)
 
 All agents must coordinate task handoffs and outbound campaigns using your authenticated **AgentMail.to** relay:
+
 - **API Client:** Use the verified module `E:\OneDrive - Uncle Robert Consulting LLC\Working Docs\AgentMail\agentmail-controller.js`
 - **Mailbox Accounts:**
   - `urcagentcomms@agentmail.to` - Internal collaboration & handoffs

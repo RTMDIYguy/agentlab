@@ -25,17 +25,17 @@ Capture at least one of the following:
 
 Record:
 
-| Field | Value |
-| --- | --- |
-| Run ID |  |
-| Send date |  |
-| Channel/tool |  |
-| Audience/segment |  |
-| Recipients attempted |  |
-| Recipients sent |  |
-| Suppressed/skipped |  |
-| Proof location |  |
-| Operator |  |
+| Field                | Value |
+| -------------------- | ----- |
+| Run ID               |       |
+| Send date            |       |
+| Channel/tool         |       |
+| Audience/segment     |       |
+| Recipients attempted |       |
+| Recipients sent      |       |
+| Suppressed/skipped   |       |
+| Proof location       |       |
+| Operator             |       |
 
 ## Performance Proof
 

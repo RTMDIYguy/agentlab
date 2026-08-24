@@ -33,14 +33,16 @@ function extractSection(markdown, heading) {
 
   const after = markdown.slice(start);
   const nextHeading = after.slice(heading.length).search(/\n##?\s/);
-  return nextHeading === -1 ? after : after.slice(0, heading.length + nextHeading);
+  return nextHeading === -1
+    ? after
+    : after.slice(0, heading.length + nextHeading);
 }
 
 function extractTableRows(markdown, heading) {
   return extractSection(markdown, heading)
     .split(/\r?\n/)
-    .filter((line) => line.trim().startsWith("|"))
-    .filter((line) => !/^\|\s*-+/.test(line));
+    .filter(line => line.trim().startsWith("|"))
+    .filter(line => !/^\|\s*-+/.test(line));
 }
 
 function stripCode(value) {
@@ -51,21 +53,24 @@ function tableRowCells(row) {
   return row
     .split("|")
     .slice(1, -1)
-    .map((cell) => stripCode(cell));
+    .map(cell => stripCode(cell));
 }
 
 function bulletLines(markdown, heading) {
   return extractSection(markdown, heading)
     .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.startsWith("- "))
-    .map((line) => line.slice(2).trim());
+    .map(line => line.trim())
+    .filter(line => line.startsWith("- "))
+    .map(line => line.slice(2).trim());
 }
 
 function getActiveQueue(agencyManual) {
-  const rows = extractTableRows(agencyManual, "## Workflow Test And Implementation Queue")
+  const rows = extractTableRows(
+    agencyManual,
+    "## Workflow Test And Implementation Queue"
+  )
     .map(tableRowCells)
-    .filter((cells) => cells.length >= 5 && cells[0] !== "Priority");
+    .filter(cells => cells.length >= 5 && cells[0] !== "Priority");
 
   return rows.map(([priority, workflow, why, mode, target]) => ({
     priority,
@@ -79,7 +84,7 @@ function getActiveQueue(agencyManual) {
 function getOpenBuildItems(agencyManual) {
   const rows = extractTableRows(agencyManual, "## Open Build Items")
     .map(tableRowCells)
-    .filter((cells) => cells.length >= 3 && cells[0] !== "Item");
+    .filter(cells => cells.length >= 3 && cells[0] !== "Item");
 
   return rows.map(([item, owner, status]) => ({ item, owner, status }));
 }
@@ -87,11 +92,11 @@ function getOpenBuildItems(agencyManual) {
 function getRecentChangeRows(changeControl) {
   return changeControl
     .split(/\r?\n/)
-    .filter((line) => /^\| \d{4}-\d{2}-\d{2} \|/.test(line))
+    .filter(line => /^\| \d{4}-\d{2}-\d{2} \|/.test(line))
     .slice(-5)
-    .map((line) => tableRowCells(line))
-    .filter((cells) => cells.length >= 8)
-    .map((cells) => ({
+    .map(line => tableRowCells(line))
+    .filter(cells => cells.length >= 8)
+    .map(cells => ({
       id: cells[1],
       area: cells[2],
       summary: cells[4],
@@ -102,7 +107,7 @@ function getRecentChangeRows(changeControl) {
 function getAuditLanes(workflowAuditBank) {
   const rows = extractTableRows(workflowAuditBank, "## Audit Questions")
     .map(tableRowCells)
-    .filter((cells) => cells.length >= 4 && cells[0] !== "Audit Lane");
+    .filter(cells => cells.length >= 4 && cells[0] !== "Audit Lane");
 
   return rows.map(([lane, question, passSignal, reviewSignal]) => ({
     lane,
@@ -117,16 +122,16 @@ function getMkt09Checklist(workflowAuditBank) {
 }
 
 function topActions(activeQueue, openBuildItems) {
-  const queueActions = activeQueue.slice(0, 3).map((item) => {
+  const queueActions = activeQueue.slice(0, 3).map(item => {
     return `${item.workflow}: ${item.target}`;
   });
 
-  const ownerManualItem = openBuildItems.find((item) =>
-    item.item.toLowerCase().includes("owner's manual"),
+  const ownerManualItem = openBuildItems.find(item =>
+    item.item.toLowerCase().includes("owner's manual")
   );
 
-  const auditItem = openBuildItems.find((item) =>
-    item.item.toLowerCase().includes("workflow audit"),
+  const auditItem = openBuildItems.find(item =>
+    item.item.toLowerCase().includes("workflow audit")
   );
 
   return [
@@ -134,38 +139,52 @@ function topActions(activeQueue, openBuildItems) {
     ...queueActions,
     ownerManualItem ? ownerManualItem.item : null,
     auditItem ? auditItem.item : null,
-  ].filter(Boolean).slice(0, 3);
+  ]
+    .filter(Boolean)
+    .slice(0, 3);
 }
 
 function marketingAndSalesMoves(activeQueue) {
   return activeQueue
-    .filter((item) => /MKT-|SAL-/.test(item.workflow))
+    .filter(item => /MKT-|SAL-/.test(item.workflow))
     .slice(0, 5)
-    .map((item) => `${item.workflow} (${item.mode}): ${item.why}`);
+    .map(item => `${item.workflow} (${item.mode}): ${item.why}`);
 }
 
 function followUpsAndHandoffs(activeQueue) {
   return activeQueue
-    .filter((item) => /SAL-|FUL-|FIN-|AFC-/.test(item.workflow))
+    .filter(item => /SAL-|FUL-|FIN-|AFC-/.test(item.workflow))
     .slice(0, 5)
-    .map((item) => `${item.workflow}: ${item.target}`);
+    .map(item => `${item.workflow}: ${item.target}`);
 }
 
-function renderList(items, emptyText = "No items found in current source scan.", isCheckbox = false) {
+function renderList(
+  items,
+  emptyText = "No items found in current source scan.",
+  isCheckbox = false
+) {
   if (!items.length) return `- ${emptyText}`;
   const prefix = isCheckbox ? "- [ ] " : "- ";
-  return items.map((item) => `${prefix}${item}`).join("\n");
+  return items.map(item => `${prefix}${item}`).join("\n");
 }
 
-function renderBrief({ activeQueue, openBuildItems, recentChanges, auditLanes, mkt09Checklist }) {
+function renderBrief({
+  activeQueue,
+  openBuildItems,
+  recentChanges,
+  auditLanes,
+  mkt09Checklist,
+}) {
   const actions = topActions(activeQueue, openBuildItems);
   const marketingSales = marketingAndSalesMoves(activeQueue);
   const handoffs = followUpsAndHandoffs(activeQueue);
   const openNeeded = openBuildItems
-    .filter((item) => /Needed|Pending|Deferred/i.test(item.status))
+    .filter(item => /Needed|Pending|Deferred/i.test(item.status))
     .slice(0, 8)
-    .map((item) => `${item.item} (${item.status}; owner: ${item.owner})`);
-  const changes = recentChanges.map((change) => `${change.id} ${change.area}: ${change.summary}`);
+    .map(item => `${item.item} (${item.status}; owner: ${item.owner})`);
+  const changes = recentChanges.map(
+    change => `${change.id} ${change.area}: ${change.summary}`
+  );
 
   return `# Daily Command Brief - ${today}
 
@@ -186,9 +205,12 @@ ${renderList(handoffs, "No items found in current source scan.", true)}
 ## Workflow Audit Prompt
 
 - Start with MKT-09 until the event lane is runnable.
-- Audit lanes today: ${auditLanes.map((lane) => lane.lane).join("; ")}.
+- Audit lanes today: ${auditLanes.map(lane => lane.lane).join("; ")}.
 - MKT-09 minimum slice:
-${mkt09Checklist.slice(0, 12).map((item) => `  - ${item}`).join("\n")}
+${mkt09Checklist
+  .slice(0, 12)
+  .map(item => `  - ${item}`)
+  .join("\n")}
 
 ## Money And Client-Trust Checks
 
@@ -256,7 +278,8 @@ async function main() {
   console.log(`Daily command brief written: ${path.relative(root, outPath)}`);
 
   // --- UPDATE HTML COMMAND CENTER ---
-  const htmlPath = "E:/OneDrive - Uncle Robert Consulting LLC/Desktop/command-center-html.html";
+  const htmlPath =
+    "E:/OneDrive - Uncle Robert Consulting LLC/Desktop/command-center-html.html";
   try {
     const htmlContent = await readFile(htmlPath, "utf8");
 
@@ -265,9 +288,12 @@ async function main() {
     const marketingSales = marketingAndSalesMoves(activeQueue);
     const handoffs = followUpsAndHandoffs(activeQueue);
     const openNeeded = openBuildItems
-      .filter((item) => /Needed|Pending|Deferred/i.test(item.status))
+      .filter(item => /Needed|Pending|Deferred/i.test(item.status))
       .slice(0, 8)
-      .map((item) => `<strong>${item.item}</strong> (${item.status}; owner: ${item.owner})`);
+      .map(
+        item =>
+          `<strong>${item.item}</strong> (${item.status}; owner: ${item.owner})`
+      );
 
     let tasksHtml = `<!-- DYNAMIC TASKS START -->\n`;
     tasksHtml += `  <div class="ctx"><strong>Today's context:</strong> Generated from active agency operating manual on ${new Date().toLocaleString()}.</div>\n\n`;
@@ -336,33 +362,53 @@ async function main() {
     const endDyn = "<!-- DYNAMIC TASKS END -->";
 
     if (newHtml.includes(startDyn) && newHtml.includes(endDyn)) {
-      newHtml = newHtml.slice(0, newHtml.indexOf(startDyn)) + tasksHtml + newHtml.slice(newHtml.indexOf(endDyn) + endDyn.length);
+      newHtml =
+        newHtml.slice(0, newHtml.indexOf(startDyn)) +
+        tasksHtml +
+        newHtml.slice(newHtml.indexOf(endDyn) + endDyn.length);
     } else {
       const h1End = newHtml.indexOf("</h1>") + 5;
       const excelStart = newHtml.indexOf("<!-- EXCEL RECORDS START -->");
       if (h1End > 4 && excelStart !== -1) {
-        newHtml = newHtml.slice(0, h1End) + "\\n" + tasksHtml + "\\n" + newHtml.slice(excelStart);
+        newHtml =
+          newHtml.slice(0, h1End) +
+          "\\n" +
+          tasksHtml +
+          "\\n" +
+          newHtml.slice(excelStart);
       }
     }
 
     // Also update WEBHOOK_URL
-    const oldWebhookStr = 'const WEBHOOK_URL = "https://hyperagent.com/api/webhooks/cms0rjo980xh507adw79b0xrk/receive";';
+    const oldWebhookStr =
+      'const WEBHOOK_URL = "https://hyperagent.com/api/webhooks/cms0rjo980xh507adw79b0xrk/receive";';
     const newWebhookStr = 'const WEBHOOK_URL = "http://localhost:1337/update";';
     newHtml = newHtml.replace(oldWebhookStr, newWebhookStr);
-    
+
     // Update date in header
     const dateRegex = /<div class="date">[^<]+<\/div>/;
-    const formattedDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(new Date());
-    newHtml = newHtml.replace(dateRegex, `<div class="date">${formattedDate} · auto-refreshes 6:30 AM CT</div>`);
+    const formattedDate = new Intl.DateTimeFormat("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }).format(new Date());
+    newHtml = newHtml.replace(
+      dateRegex,
+      `<div class="date">${formattedDate} · auto-refreshes 6:30 AM CT</div>`
+    );
 
     await writeFile(htmlPath, newHtml, "utf8");
     console.log("Successfully updated HTML dashboard tasks at " + htmlPath);
   } catch (error) {
-    console.error("Warning: Could not update HTML Command Center:", error.message);
+    console.error(
+      "Warning: Could not update HTML Command Center:",
+      error.message
+    );
   }
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error(error);
   process.exitCode = 1;
 });

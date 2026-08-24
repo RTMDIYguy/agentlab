@@ -33,4 +33,3 @@ Worth a short 15-minute look / intro conversation to see whether the diagnostic
 or chapter would be relevant?
 
 Brief status: Live/manual canary ready.
-

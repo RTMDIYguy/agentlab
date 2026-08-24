@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { MessageCircle, Send, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  MessageCircle,
+  Send,
+  Trash2,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { toast } from "sonner";
 
 type BlogComment = {
@@ -37,10 +43,11 @@ export default function NestedComment({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch replies for this comment
-  const { data: replies = [], refetch: refetchReplies } = trpc.blog.getCommentReplies.useQuery(
-    { commentId: comment.id },
-    { enabled: !!comment.id }
-  );
+  const { data: replies = [], refetch: refetchReplies } =
+    trpc.blog.getCommentReplies.useQuery(
+      { commentId: comment.id },
+      { enabled: !!comment.id }
+    );
 
   // Create reply mutation
   const createReplyMutation = trpc.blog.createReply.useMutation({
@@ -50,7 +57,7 @@ export default function NestedComment({
       refetchReplies();
       toast.success("Reply posted successfully!");
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to post reply");
     },
   });
@@ -62,7 +69,7 @@ export default function NestedComment({
       onCommentDeleted?.();
       toast.success("Comment deleted successfully");
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to delete comment");
     },
   });
@@ -110,7 +117,9 @@ export default function NestedComment({
               {comment.id % 10}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-foreground text-sm">User #{comment.userId}</p>
+              <p className="font-semibold text-foreground text-sm">
+                User #{comment.userId}
+              </p>
               <p className="text-xs text-muted-foreground">
                 {new Date(comment.createdAt).toLocaleDateString("en-US", {
                   year: "numeric",
@@ -155,7 +164,7 @@ export default function NestedComment({
           <form onSubmit={handleSubmitReply} className="space-y-3">
             <textarea
               value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
+              onChange={e => setReplyText(e.target.value)}
               placeholder="Write a reply..."
               rows={3}
               className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
@@ -205,7 +214,7 @@ export default function NestedComment({
 
           {showReplies && (
             <div className="space-y-3">
-              {replies.map((reply) => (
+              {replies.map(reply => (
                 <NestedComment
                   key={reply.id}
                   comment={reply}

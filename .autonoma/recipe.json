@@ -1,6 +1,9 @@
 {
   "version": 1,
-  "source": { "discoverPath": "discover.json", "scenariosPath": "scenarios.md" },
+  "source": {
+    "discoverPath": "discover.json",
+    "scenariosPath": "scenarios.md"
+  },
   "validationMode": "endpoint-lifecycle",
   "recipes": [
     {

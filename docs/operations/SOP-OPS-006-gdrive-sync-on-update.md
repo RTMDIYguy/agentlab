@@ -41,23 +41,23 @@ Do not wait for a scheduled Friday sync if a customer-facing file changed today.
 These files must stay current in Google Drive at all times.
 The Google Drive target folder for each is listed alongside it.
 
-| Repo File | GDrive Folder | Format | Priority |
-| --- | --- | --- | --- |
-| `docs/operations/agency-operating-manual.md` | Operations / Agency Manual | Google Doc | High |
-| `docs/operations/agency-command-center.md` | Operations / Command Center | Google Doc | High |
-| `docs/operations/workflow-registry.md` | Operations / Workflow Registry | Google Doc | High |
-| `docs/operations/mkt-09-roundtable-operating-slice.md` | Operations / Workflow Slices | Google Doc | High |
-| `docs/operations/sop-manual-index.md` | Operations / SOPs | Google Doc | High |
-| `docs/operations/SOP-CUL-001-servant-leadership-and-agency-values.md` | Operations / SOPs | Google Doc | High |
-| `docs/operations/SOP-OPS-005-naming-conventions-and-identifier-control.md` | Operations / SOPs | Google Doc | High |
-| `docs/operations/SOP-OPS-006-gdrive-sync-on-update.md` | Operations / SOPs | Google Doc | High |
-| `docs/operations/urc-v1-operating-architecture.md` | Operations / Architecture | Google Doc | High |
-| `docs/operations/workflow-relationship-map.md` | Operations / Workflow Registry | Google Doc | Medium |
-| `docs/operations/weekly-workflow-audit-bank.md` | Operations / Audit | Google Doc | Medium |
-| `docs/operations/startup-operational-excellence-book-control.md` | Book / Control | Google Doc | Medium |
-| `workflows/marketing-founder-signal-system/offer-one-pager.md` | Products / Founder Signal System | PDF + Google Doc | High |
-| `workflows/marketing-founder-signal-system/README.md` | Products / Founder Signal System | Google Doc | High |
-| `workflows/marketing-founder-signal-system/implementation-checklist.md` | Products / Founder Signal System | Google Doc + PDF | High |
+| Repo File                                                                  | GDrive Folder                    | Format           | Priority |
+| -------------------------------------------------------------------------- | -------------------------------- | ---------------- | -------- |
+| `docs/operations/agency-operating-manual.md`                               | Operations / Agency Manual       | Google Doc       | High     |
+| `docs/operations/agency-command-center.md`                                 | Operations / Command Center      | Google Doc       | High     |
+| `docs/operations/workflow-registry.md`                                     | Operations / Workflow Registry   | Google Doc       | High     |
+| `docs/operations/mkt-09-roundtable-operating-slice.md`                     | Operations / Workflow Slices     | Google Doc       | High     |
+| `docs/operations/sop-manual-index.md`                                      | Operations / SOPs                | Google Doc       | High     |
+| `docs/operations/SOP-CUL-001-servant-leadership-and-agency-values.md`      | Operations / SOPs                | Google Doc       | High     |
+| `docs/operations/SOP-OPS-005-naming-conventions-and-identifier-control.md` | Operations / SOPs                | Google Doc       | High     |
+| `docs/operations/SOP-OPS-006-gdrive-sync-on-update.md`                     | Operations / SOPs                | Google Doc       | High     |
+| `docs/operations/urc-v1-operating-architecture.md`                         | Operations / Architecture        | Google Doc       | High     |
+| `docs/operations/workflow-relationship-map.md`                             | Operations / Workflow Registry   | Google Doc       | Medium   |
+| `docs/operations/weekly-workflow-audit-bank.md`                            | Operations / Audit               | Google Doc       | Medium   |
+| `docs/operations/startup-operational-excellence-book-control.md`           | Book / Control                   | Google Doc       | Medium   |
+| `workflows/marketing-founder-signal-system/offer-one-pager.md`             | Products / Founder Signal System | PDF + Google Doc | High     |
+| `workflows/marketing-founder-signal-system/README.md`                      | Products / Founder Signal System | Google Doc       | High     |
+| `workflows/marketing-founder-signal-system/implementation-checklist.md`    | Products / Founder Signal System | Google Doc + PDF | High     |
 
 Add new rows to this table any time a new customer-facing or operation-critical
 document is created in the repo.
@@ -109,9 +109,9 @@ Agent cannot upload directly. This step requires Robert.
 
 Add a row to the GDrive Sync Log at the bottom of this SOP after each sync:
 
-| Date | Repo File | GDrive Folder | Synced By | Notes |
-| --- | --- | --- | --- | --- |
-| 2026-06-04 | (initial promotion batch — see staging folder) | Multiple | Robert | First sync. All high-priority tracked files staged for upload. |
+| Date       | Repo File                                      | GDrive Folder | Synced By | Notes                                                          |
+| ---------- | ---------------------------------------------- | ------------- | --------- | -------------------------------------------------------------- |
+| 2026-06-04 | (initial promotion batch — see staging folder) | Multiple      | Robert    | First sync. All high-priority tracked files staged for upload. |
 
 Record meaningful syncs in `docs/operations/change-control-register.md` using
 area: `Operations / GDrive Sync`.
@@ -155,6 +155,6 @@ If a GDrive sync falls behind:
 
 ## GDrive Sync Log
 
-| Date | Repo File | GDrive Folder | Synced By | Notes |
-| --- | --- | --- | --- | --- |
+| Date       | Repo File               | GDrive Folder                 | Synced By        | Notes                                                                                |
+| ---------- | ----------------------- | ----------------------------- | ---------------- | ------------------------------------------------------------------------------------ |
 | 2026-06-04 | Initial promotion batch | Multiple — see staging folder | Robert (pending) | First sync. Staging folder created with high-priority files. Awaiting Robert upload. |

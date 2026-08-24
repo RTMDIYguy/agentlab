@@ -115,10 +115,10 @@ everywhere.
 
 Use the values in three levels:
 
-| Level | Use |
-| --- | --- |
-| Full | About page, culture page, onboarding packet, proposal appendix, internal SOPs. |
-| Short | Footer line, proposal intro, diagnostic handoff, service pages, LinkedIn about copy. |
+| Level    | Use                                                                                                                      |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Full     | About page, culture page, onboarding packet, proposal appendix, internal SOPs.                                           |
+| Short    | Footer line, proposal intro, diagnostic handoff, service pages, LinkedIn about copy.                                     |
 | Embedded | Blog posts, case notes, build logs, product pages, and workflow package copy where a specific value explains a decision. |
 
 Short public line:
@@ -150,6 +150,6 @@ Short public line:
 
 ## Version History
 
-| Date | Version | Change |
-| --- | --- | --- |
-| 2026-05-30 | v0.1 | Initial SOP created from `Agency Values.jpg`. |
+| Date       | Version | Change                                        |
+| ---------- | ------- | --------------------------------------------- |
+| 2026-05-30 | v0.1    | Initial SOP created from `Agency Values.jpg`. |

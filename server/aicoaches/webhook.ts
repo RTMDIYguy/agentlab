@@ -49,8 +49,10 @@ function normalizePayload(payload: unknown, req: Request): NormalizedLead {
     getString(body.visitorPhone) ??
     null;
 
-  const coachName = getString(body.coach_name) ?? getString(body.coachName) ?? null;
-  const widgetId = getString(body.widget_id) ?? getString(body.widgetId) ?? null;
+  const coachName =
+    getString(body.coach_name) ?? getString(body.coachName) ?? null;
+  const widgetId =
+    getString(body.widget_id) ?? getString(body.widgetId) ?? null;
   const conversationId =
     getString(body.conversation_id) ?? getString(body.conversationId) ?? null;
 
@@ -148,4 +150,3 @@ export function registerAICoachesWebhookRoutes(app: Express): void {
     return res.json({ ok: true });
   });
 }
-

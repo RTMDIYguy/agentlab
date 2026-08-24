@@ -108,13 +108,13 @@ anchor outline. Adjust only if the founder cannot sustain that.
 
 ### LinkedIn Posts
 
-| # | Hook / Angle | Pillar | CTA | Status |
-| --- | --- | --- | --- | --- |
-| 1 |  |  |  | Draft / Scheduled / Live |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
-| 5 |  |  |  |  |
+| #   | Hook / Angle | Pillar | CTA | Status                   |
+| --- | ------------ | ------ | --- | ------------------------ |
+| 1   |              |        |     | Draft / Scheduled / Live |
+| 2   |              |        |     |                          |
+| 3   |              |        |     |                          |
+| 4   |              |        |     |                          |
+| 5   |              |        |     |                          |
 
 Style notes for this cycle:
 

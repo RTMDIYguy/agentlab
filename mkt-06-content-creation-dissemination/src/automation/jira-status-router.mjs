@@ -23,4 +23,6 @@
  * TODO: Implement.
  */
 
-throw new Error("jira-status-router.mjs is a spec stub — implementation pending.");
+throw new Error(
+  "jira-status-router.mjs is a spec stub — implementation pending."
+);

@@ -16,17 +16,17 @@ a downstream offer later, but it is not required for this event lane.
 
 ## Operating Position
 
-| Item | Current Decision |
-| --- | --- |
-| Event type | RoundTable Chapter meeting |
-| Event owner | Robert |
-| Logistics support | Marcus / agent support as available |
-| Event schedule | Existing schedule in Ownable OS |
-| Entry cost | Free |
-| Downstream offer | Membership may incur a fee later; diagnostic, workshop, or consulting follow-up may be offered only after fit is clear |
-| Primary source paths | Book, LinkedIn content, Reach outreach, Apollo drip when credits are available, referrals, community, partner mentions |
-| Current RSVP / response path | Existing Google Drive / Business-Systems Audit / assessment response path, pending confirmation |
-| Current tracker posture | One CRM-lite bridge or event tracker row per serious attendee or respondent |
+| Item                         | Current Decision                                                                                                       |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Event type                   | RoundTable Chapter meeting                                                                                             |
+| Event owner                  | Robert                                                                                                                 |
+| Logistics support            | Marcus / agent support as available                                                                                    |
+| Event schedule               | Existing schedule in Ownable OS                                                                                        |
+| Entry cost                   | Free                                                                                                                   |
+| Downstream offer             | Membership may incur a fee later; diagnostic, workshop, or consulting follow-up may be offered only after fit is clear |
+| Primary source paths         | Book, LinkedIn content, Reach outreach, Apollo drip when credits are available, referrals, community, partner mentions |
+| Current RSVP / response path | Existing Google Drive / Business-Systems Audit / assessment response path, pending confirmation                        |
+| Current tracker posture      | One CRM-lite bridge or event tracker row per serious attendee or respondent                                            |
 
 ## Minimum Workflow
 
@@ -47,25 +47,25 @@ a downstream offer later, but it is not required for this event lane.
 Use these fields in the event tracker or CRM-lite bridge. If the active tool
 cannot support all fields, keep the field list as the import/export standard.
 
-| Field | Purpose |
-| --- | --- |
-| Contact name | Human-readable contact identity |
-| Email | Follow-up and dedupe |
-| Organization | Fit and context |
-| Source | Book, LinkedIn, Reach, Apollo, referral, community, partner, manual |
-| Event name | Specific RoundTable / chapter meeting |
-| Event date | Event occurrence |
-| Event status | Invited, registered, attended, no-show, canceled |
-| Assessment status | Downloaded, started, submitted, not applicable, unknown |
-| Assessment response link | Link to Google response or related record |
-| Interest signal | Workflow pain, founder signal, bootstrapper identity, Ownable OS interest, other |
-| Follow-up lane | Nurture, diagnostic, workshop, consulting, membership, no follow-up |
-| Owner | Robert, Marcus, account manager, agent |
-| Next step | Plain-language next action |
-| Follow-up date | Date next action is due |
-| Consent / permission note | Any stated permission boundary for follow-up or public proof |
-| Paid handoff needed | Yes / no |
-| SKU / offer code | Required only if a paid follow-up is created |
+| Field                     | Purpose                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------- |
+| Contact name              | Human-readable contact identity                                                  |
+| Email                     | Follow-up and dedupe                                                             |
+| Organization              | Fit and context                                                                  |
+| Source                    | Book, LinkedIn, Reach, Apollo, referral, community, partner, manual              |
+| Event name                | Specific RoundTable / chapter meeting                                            |
+| Event date                | Event occurrence                                                                 |
+| Event status              | Invited, registered, attended, no-show, canceled                                 |
+| Assessment status         | Downloaded, started, submitted, not applicable, unknown                          |
+| Assessment response link  | Link to Google response or related record                                        |
+| Interest signal           | Workflow pain, founder signal, bootstrapper identity, Ownable OS interest, other |
+| Follow-up lane            | Nurture, diagnostic, workshop, consulting, membership, no follow-up              |
+| Owner                     | Robert, Marcus, account manager, agent                                           |
+| Next step                 | Plain-language next action                                                       |
+| Follow-up date            | Date next action is due                                                          |
+| Consent / permission note | Any stated permission boundary for follow-up or public proof                     |
+| Paid handoff needed       | Yes / no                                                                         |
+| SKU / offer code          | Required only if a paid follow-up is created                                     |
 
 ## Source And Channel Notes
 
@@ -101,26 +101,26 @@ Agent Lab / URC voice, proof, claims, and values review before use.
 
 ## Handoffs
 
-| From | To | Trigger / Signal | Handoff Instruction |
-| --- | --- | --- | --- |
-| `MKT-09` | `MKT-01` | New respondent, attendee, or strong event interest | Create or update the lead row with source, event, status, interest signal, owner, next step, and follow-up date. |
-| `MKT-09` | `MKT-02` | Registered, attended, no-show, or post-event nurture needed | Enroll in the correct follow-up lane; stop if the person opts out, becomes sales-ready, or is not a fit. |
-| `MKT-09` | `SAL-01` | Attendee asks about paid help, diagnostic, workshop, or consulting | Prepare proposal/diagnostic context from the event row and assessment response. |
-| `MKT-09` | `FIN-03` | A paid follow-up, membership, workshop, or invoiceable engagement is created | Add SKU/offer code, amount, payment status, and invoice/receipt need to the owned finance tracker. |
-| `MKT-09` | `MKT-04` | Attendee offers testimonial, referral, or story | Confirm permission and claim safety before using the proof. |
-| `MKT-09` | `AFC-04` | Attendee becomes a community member or needs ongoing community engagement | Update member/community status and next community action. |
+| From     | To       | Trigger / Signal                                                             | Handoff Instruction                                                                                              |
+| -------- | -------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `MKT-09` | `MKT-01` | New respondent, attendee, or strong event interest                           | Create or update the lead row with source, event, status, interest signal, owner, next step, and follow-up date. |
+| `MKT-09` | `MKT-02` | Registered, attended, no-show, or post-event nurture needed                  | Enroll in the correct follow-up lane; stop if the person opts out, becomes sales-ready, or is not a fit.         |
+| `MKT-09` | `SAL-01` | Attendee asks about paid help, diagnostic, workshop, or consulting           | Prepare proposal/diagnostic context from the event row and assessment response.                                  |
+| `MKT-09` | `FIN-03` | A paid follow-up, membership, workshop, or invoiceable engagement is created | Add SKU/offer code, amount, payment status, and invoice/receipt need to the owned finance tracker.               |
+| `MKT-09` | `MKT-04` | Attendee offers testimonial, referral, or story                              | Confirm permission and claim safety before using the proof.                                                      |
+| `MKT-09` | `AFC-04` | Attendee becomes a community member or needs ongoing community engagement    | Update member/community status and next community action.                                                        |
 
 ## Responsibilities
 
-| Stage | Primary Owner | Support Owner | Review Point |
-| --- | --- | --- | --- |
-| Event schedule confirmation | Robert | Agent | Meeting exists in Ownable OS and is safe to promote |
-| Invite setup | Robert / Marcus | Agent | Message, audience, and CTA are aligned |
-| RSVP / response tracking | Marcus / agent | Robert | Response path and tracker fields are usable |
-| Event delivery | Robert | Marcus | Event remains free and aligned to chapter purpose |
-| Follow-up | Marcus / agent | Robert | Right lane selected: nurture, diagnostic, workshop, consulting, membership, or no follow-up |
-| Finance handoff | Robert | Finance / agent | Paid follow-up has SKU, status, and tracker entry |
-| Proof/community handoff | Robert | Marcus / agent | Permission, claim safety, and community status confirmed |
+| Stage                       | Primary Owner   | Support Owner   | Review Point                                                                                |
+| --------------------------- | --------------- | --------------- | ------------------------------------------------------------------------------------------- |
+| Event schedule confirmation | Robert          | Agent           | Meeting exists in Ownable OS and is safe to promote                                         |
+| Invite setup                | Robert / Marcus | Agent           | Message, audience, and CTA are aligned                                                      |
+| RSVP / response tracking    | Marcus / agent  | Robert          | Response path and tracker fields are usable                                                 |
+| Event delivery              | Robert          | Marcus          | Event remains free and aligned to chapter purpose                                           |
+| Follow-up                   | Marcus / agent  | Robert          | Right lane selected: nurture, diagnostic, workshop, consulting, membership, or no follow-up |
+| Finance handoff             | Robert          | Finance / agent | Paid follow-up has SKU, status, and tracker entry                                           |
+| Proof/community handoff     | Robert          | Marcus / agent  | Permission, claim safety, and community status confirmed                                    |
 
 ## Zapier / Google Drive Note
 

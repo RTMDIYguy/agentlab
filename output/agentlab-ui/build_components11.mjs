@@ -1,13 +1,13 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const SRC_DIR = path.join(__dirname, 'src');
+const SRC_DIR = path.join(__dirname, "src");
 
 const files = {
-  'CreateWorkflowModal.tsx': `
+  "CreateWorkflowModal.tsx": `
 import React, { useState } from 'react';
 import { Button } from './Button';
 
@@ -137,7 +137,7 @@ export const CreateWorkflowModal: React.FC<CreateWorkflowModalProps> = ({ isOpen
   );
 };
   `,
-  'Workflows.tsx': `
+  "Workflows.tsx": `
 import React, { useState } from 'react';
 import { WorkflowCard, type WorkflowCardProps } from './WorkflowCard';
 import { WorkflowSlideOver } from './WorkflowSlideOver';
@@ -190,8 +190,10 @@ export const Workflows: React.FC = () => {
     </div>
   );
 };
-  `
+  `,
 };
 
-Object.entries(files).forEach(([file, content]) => fs.writeFileSync(path.join(SRC_DIR, file), content.trim()));
-console.log('Phase 3 Workflow Builder Modal created successfully!');
+Object.entries(files).forEach(([file, content]) =>
+  fs.writeFileSync(path.join(SRC_DIR, file), content.trim())
+);
+console.log("Phase 3 Workflow Builder Modal created successfully!");

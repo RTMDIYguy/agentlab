@@ -29,4 +29,3 @@ Decision: Pass with Manual Workarounds
 MKT-06 should remain `Testing`, but it now has a runnable local canary baseline.
 The next promotion step is a controlled live-service canary using Microsoft 365
 and whichever distribution tool Robert chooses for the first real preview.
-

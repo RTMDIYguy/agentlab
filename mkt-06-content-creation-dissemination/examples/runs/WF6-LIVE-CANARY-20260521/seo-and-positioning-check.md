@@ -21,4 +21,3 @@ Notes:
 - Public SEO scoring is not applicable to this private/manual outreach send.
 - The content still supports MKT-06 because it adapts published Agent Lab
   content into targeted email, follow-up copy, and next-cycle content signals.
-

@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | CUL-06 |
-| Department | Culture |
-| Automation level | 65-75% |
-| Owner | Robert T. McCarthy |
-| Trigger | Monthly QA cycle; quarterly R&D sprint |
-| Cycle time | Tool eval: 2-week trial; QA: every deliverable |
-| Source status | Imported source |
+| Field            | Value                                          |
+| ---------------- | ---------------------------------------------- |
+| Workflow ID      | CUL-06                                         |
+| Department       | Culture                                        |
+| Automation level | 65-75%                                         |
+| Owner            | Robert T. McCarthy                             |
+| Trigger          | Monthly QA cycle; quarterly R&D sprint         |
+| Cycle time       | Tool eval: 2-week trial; QA: every deliverable |
+| Source status    | Imported source                                |
 
 ## Inputs
 
@@ -85,17 +85,17 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
+| Artifact                                       | Purpose                                                                     |
+| ---------------------------------------------- | --------------------------------------------------------------------------- |
 | `source/URC-CUL-06_Weekly_Operating_Rhythm.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/CUL06-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/CUL-06_RD_QA_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/CUL06-Blueprint.json`              | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/CUL-06_RD_QA_Tracker.xlsx`           | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-CUL-06_Weekly_Operating_Rhythm.md
 
-````markdown
+```markdown
 # CUL-06 - R&D & Quality Assurance Source
 
 Source: `Culture\URC Culture files\updated files 03262026\URC-CUL-06_Weekly_Operating_Rhythm.docx`
@@ -108,7 +108,7 @@ URC-CUL-06 — Weekly Operating Rhythm
 
 Updated March 26, 2026 — Solo Operator Edition
 
-Robert T. McCarthy   |   v1.1   |   March 26, 2026
+Robert T. McCarthy | v1.1 | March 26, 2026
 
 NOTE — March 26, 2026
 
@@ -271,11 +271,11 @@ March 26, 2026
 R. McCarthy
 
 Updated: Sheena Burns stepped back from co-founder role March 2026
-````
+```
 
 ### automation/CUL06-Blueprint.json
 
-````json
+```json
 {
   "name": "CUL06: Weekly Operating Rhythm (Make.com Blueprint)",
   "flow": [
@@ -313,7 +313,7 @@ Updated: Sheena Burns stepped back from co-founder role March 2026
     }
   ]
 }
-````
+```
 
 ## Binary Attachments
 
@@ -405,6 +405,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

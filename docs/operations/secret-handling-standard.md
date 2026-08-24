@@ -52,16 +52,16 @@ Agents must not claim technical memory erasure. The practical rule is:
 
 ## Secret Artifact Classes
 
-| Class | Examples | Approved Destination | Repo Record |
-| --- | --- | --- | --- |
-| API key or token | OpenAI key, HubSpot token, Stripe key | Postman Vault, n8n credential, password manager, env var | Metadata only |
-| Service account JSON | Google service account, cloud marketplace key | Password manager or n8n credential; optionally Postman if supported | Metadata only; never raw JSON |
-| OAuth app config | Client ID, client secret, redirect settings | Password manager plus platform app settings | Client ID may be metadata if non-secret; secret value stays vaulted |
-| Webhook secret | n8n webhook secret, platform callback secret | n8n credential or env var | Metadata only |
-| Backup code set | Recovery codes, MFA backup codes | Password manager secure note or approved backup-code folder | Existence and location pointer only |
-| Postman environment | Environment export with values | Postman local vault; repo may keep `.example.json` only | Non-secret example only |
-| Workflow blueprint JSON | n8n workflow, Make blueprint, Postman collection | Workflow automation folder after secret scan | Sanitized artifact only |
-| Unknown JSON | Any unclassified JSON from Keys | Quarantine folder | Metadata with `review-needed` |
+| Class                   | Examples                                         | Approved Destination                                                | Repo Record                                                         |
+| ----------------------- | ------------------------------------------------ | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| API key or token        | OpenAI key, HubSpot token, Stripe key            | Postman Vault, n8n credential, password manager, env var            | Metadata only                                                       |
+| Service account JSON    | Google service account, cloud marketplace key    | Password manager or n8n credential; optionally Postman if supported | Metadata only; never raw JSON                                       |
+| OAuth app config        | Client ID, client secret, redirect settings      | Password manager plus platform app settings                         | Client ID may be metadata if non-secret; secret value stays vaulted |
+| Webhook secret          | n8n webhook secret, platform callback secret     | n8n credential or env var                                           | Metadata only                                                       |
+| Backup code set         | Recovery codes, MFA backup codes                 | Password manager secure note or approved backup-code folder         | Existence and location pointer only                                 |
+| Postman environment     | Environment export with values                   | Postman local vault; repo may keep `.example.json` only             | Non-secret example only                                             |
+| Workflow blueprint JSON | n8n workflow, Make blueprint, Postman collection | Workflow automation folder after secret scan                        | Sanitized artifact only                                             |
+| Unknown JSON            | Any unclassified JSON from Keys                  | Quarantine folder                                                   | Metadata with `review-needed`                                       |
 
 ## Quarantine And Classification Procedure
 
@@ -89,10 +89,10 @@ Agents must not claim technical memory erasure. The practical rule is:
 When Postman requests a variable import with `Key`, `Value`, and
 `Allowed domains`:
 
-| Field | Rule |
-| --- | --- |
-| Key | Use the variable name Postman will expose, such as `PROD_OPENAI_API_KEY` or `LOCAL_N8N_WEBHOOK_SECRET`. |
-| Value | Paste the actual secret only inside Postman or approved vault UI. Do not place it in CSV, Markdown, or Git. |
+| Field           | Rule                                                                                                                                                                                   |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Key             | Use the variable name Postman will expose, such as `PROD_OPENAI_API_KEY` or `LOCAL_N8N_WEBHOOK_SECRET`.                                                                                |
+| Value           | Paste the actual secret only inside Postman or approved vault UI. Do not place it in CSV, Markdown, or Git.                                                                            |
 | Allowed domains | Use the narrowest hostnames the key needs, such as `api.openai.com`, `sheets.googleapis.com`, or `api.hubapi.com`. If unknown, mark `review-needed` rather than guessing broad access. |
 
 If a key does not specify domains, infer only from confirmed service
@@ -107,20 +107,20 @@ The active metadata-only handling log lives in the compliance evidence area:
 
 Required columns:
 
-| Field | Meaning |
-| --- | --- |
-| Date | Date of handling action. |
-| Handler | Human or authorized agent who handled the secret. |
-| Artifact ID / Filename | Filename, variable name, or redacted identifier. |
-| Secret Class | Class from this standard. |
-| Service / Tool | Tool, platform, or account the secret belongs to. |
-| Related Workflow(s) | Workflow IDs or business processes that depend on it. |
-| Action Taken | Classified, vaulted, imported, tested, rotated, retired, or left quarantined. |
-| Secure Location | Vault/tool/location pointer without the value. |
-| Reason | Why the secret was handled. |
-| Result | Outcome of the action. |
-| Value Retained In Docs/Chat? | Must be `No`. |
-| Next Review | Rotation, domain review, or owner review date. |
+| Field                        | Meaning                                                                       |
+| ---------------------------- | ----------------------------------------------------------------------------- |
+| Date                         | Date of handling action.                                                      |
+| Handler                      | Human or authorized agent who handled the secret.                             |
+| Artifact ID / Filename       | Filename, variable name, or redacted identifier.                              |
+| Secret Class                 | Class from this standard.                                                     |
+| Service / Tool               | Tool, platform, or account the secret belongs to.                             |
+| Related Workflow(s)          | Workflow IDs or business processes that depend on it.                         |
+| Action Taken                 | Classified, vaulted, imported, tested, rotated, retired, or left quarantined. |
+| Secure Location              | Vault/tool/location pointer without the value.                                |
+| Reason                       | Why the secret was handled.                                                   |
+| Result                       | Outcome of the action.                                                        |
+| Value Retained In Docs/Chat? | Must be `No`.                                                                 |
+| Next Review                  | Rotation, domain review, or owner review date.                                |
 
 ## Operating Registry Relationship
 

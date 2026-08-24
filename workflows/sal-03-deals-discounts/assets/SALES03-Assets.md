@@ -1,9 +1,11 @@
 # SALES03: Deals & Discounts Assets
 
 ## 1. Pipeline Stall Re-Engagement Sequence
-*Triggered when a deal sits in the "Proposal Sent" stage for >7 days with no movement.*
+
+_Triggered when a deal sits in the "Proposal Sent" stage for >7 days with no movement._
 
 ### Touch 1 (Day 8): The "Did I miss the mark?" Email
+
 **Subject:** Timing off for [Company Name]?
 **Body:**
 Hi [First Name],
@@ -11,6 +13,7 @@ Hi [First Name],
 I noticed things went quiet after I sent over the proposal last week.
 
 Usually, when this happens, it means either:
+
 1. You've been slammed with other priorities (totally understandable).
 2. Something in the proposal (like the scope or the investment) missed the mark.
 
@@ -19,6 +22,7 @@ If it's the second one, let me know! We can always pull a few levers to adjust t
 Let me know what you think.
 
 ### Touch 2 (Day 12): The Value-Add Resource
+
 **Subject:** A different way to look at [Pain Point]
 **Body:**
 Hi [First Name],
@@ -32,6 +36,7 @@ It covers exactly how to solve [Pain Point] without having to overhaul your enti
 I thought you might find it useful while you're evaluating your options.
 
 ### Touch 3 (Day 15): The Time-Limited Offer
+
 **Subject:** Quick idea for [Company Name]
 **Body:**
 Hi [First Name],
@@ -45,18 +50,21 @@ Does it make sense to jump on a quick 5-minute call tomorrow to see if this work
 ---
 
 ## 2. Discount Exception Request Form (Internal)
-*To be filled out by sales rep when requesting a discount above their approved authority tier.*
+
+_To be filled out by sales rep when requesting a discount above their approved authority tier._
 
 **Client/Prospect Name:**
 **Deal Value (Before Discount):**
 **Current Deal Stage:**
 
 **Requested Discount:**
-- [ ] Percentage: ____%
-- [ ] Fixed Amount: $____
-- [ ] Waived Fee (Specify): ____________
+
+- [ ] Percentage: \_\_\_\_%
+- [ ] Fixed Amount: $\_\_\_\_
+- [ ] Waived Fee (Specify): \***\*\_\_\_\_\*\***
 
 **Justification (Select all that apply):**
+
 - [ ] Competitive pressure (Must specify competitor below)
 - [ ] Strategic logo/High-profile client
 - [ ] Multi-year contract commitment
@@ -65,15 +73,16 @@ Does it make sense to jump on a quick 5-minute call tomorrow to see if this work
 - [ ] Other
 
 **Context / Business Case:**
-*(Provide a 2-3 sentence explanation of why we will lose this deal without the discount, and why this client is worth the margin hit.)*
+_(Provide a 2-3 sentence explanation of why we will lose this deal without the discount, and why this client is worth the margin hit.)_
 
 **Alternative Options Explored:**
-*(Did you try removing scope? Offering a payment plan? Phased start? Explain why those didn't work.)*
+_(Did you try removing scope? Offering a payment plan? Phased start? Explain why those didn't work.)_
 
 ---
 
 ## 3. Loyalty/Renewal Offer Template
-*Sent 60 days before contract renewal.*
+
+_Sent 60 days before contract renewal._
 
 **Subject:** Your upcoming renewal + a quick thank you
 

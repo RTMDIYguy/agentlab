@@ -14,7 +14,8 @@ export default function Blog() {
       id: "future-of-ai-agents",
       category: "Technology",
       title: "The Future of Autonomous AI Systems",
-      excerpt: "Explore how AI agents are revolutionizing business automation and decision-making processes. Discover the emerging trends and technologies shaping the next generation of intelligent systems.",
+      excerpt:
+        "Explore how AI agents are revolutionizing business automation and decision-making processes. Discover the emerging trends and technologies shaping the next generation of intelligent systems.",
       author: "Alex Johnson",
       role: "AI Research Lead",
       date: "Mar 15, 2025",
@@ -25,7 +26,8 @@ export default function Blog() {
       id: "reducing-costs-ai",
       category: "Business",
       title: "Reducing Operational Costs with AI Automation",
-      excerpt: "Learn how enterprises are cutting costs by 40% through intelligent automation with AgentLab. Real-world case studies and implementation strategies for maximum ROI.",
+      excerpt:
+        "Learn how enterprises are cutting costs by 40% through intelligent automation with AgentLab. Real-world case studies and implementation strategies for maximum ROI.",
       author: "Lisa Wang",
       role: "Business Strategist",
       date: "Mar 10, 2025",
@@ -36,7 +38,8 @@ export default function Blog() {
       id: "fortune-500-ai-deployment",
       category: "Case Study",
       title: "How Fortune 500 Companies Deploy AI Agents",
-      excerpt: "Real-world examples of successful AI agent implementations in enterprise environments. Learn best practices, common challenges, and solutions from industry leaders.",
+      excerpt:
+        "Real-world examples of successful AI agent implementations in enterprise environments. Learn best practices, common challenges, and solutions from industry leaders.",
       author: "David Park",
       role: "Solutions Architect",
       date: "Mar 5, 2025",
@@ -47,7 +50,8 @@ export default function Blog() {
       id: "ai-ethics-responsibility",
       category: "Insights",
       title: "AI Ethics and Responsible Automation",
-      excerpt: "Understanding the ethical implications of AI agents and how to build systems that are transparent, fair, and aligned with human values.",
+      excerpt:
+        "Understanding the ethical implications of AI agents and how to build systems that are transparent, fair, and aligned with human values.",
       author: "Sarah Chen",
       role: "Founder & CEO",
       date: "Feb 28, 2025",
@@ -58,7 +62,8 @@ export default function Blog() {
       id: "machine-learning-advances",
       category: "Technology",
       title: "Latest Advances in Machine Learning",
-      excerpt: "Dive deep into the latest breakthroughs in machine learning that are powering the next generation of AI agents and autonomous systems.",
+      excerpt:
+        "Dive deep into the latest breakthroughs in machine learning that are powering the next generation of AI agents and autonomous systems.",
       author: "Michael Rodriguez",
       role: "CTO & Co-founder",
       date: "Feb 20, 2025",
@@ -69,7 +74,8 @@ export default function Blog() {
       id: "getting-started-ai-agents",
       category: "Guide",
       title: "Getting Started with AI Agents: A Beginner's Guide",
-      excerpt: "A comprehensive introduction to AI agents for business leaders and technical teams. Learn the fundamentals and how to implement your first automation.",
+      excerpt:
+        "A comprehensive introduction to AI agents for business leaders and technical teams. Learn the fundamentals and how to implement your first automation.",
       author: "Emma Thompson",
       role: "VP of Product",
       date: "Feb 15, 2025",
@@ -79,17 +85,21 @@ export default function Blog() {
   ];
 
   const filteredArticles = articles.filter(
-    (article) =>
+    article =>
       article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       article.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
       article.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const categories = ["All", ...Array.from(new Set(articles.map((a) => a.category)))];
+  const categories = [
+    "All",
+    ...Array.from(new Set(articles.map(a => a.category))),
+  ];
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const displayedArticles = filteredArticles.filter(
-    (article) => selectedCategory === "All" || article.category === selectedCategory
+    article =>
+      selectedCategory === "All" || article.category === selectedCategory
   );
 
   return (
@@ -101,8 +111,9 @@ export default function Blog() {
             AgentLab Blog
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed">
-            Insights, trends, and best practices in AI automation. Stay updated with the latest
-            developments in intelligent systems and business transformation.
+            Insights, trends, and best practices in AI automation. Stay updated
+            with the latest developments in intelligent systems and business
+            transformation.
           </p>
         </div>
       </section>
@@ -118,7 +129,7 @@ export default function Blog() {
                 type="text"
                 placeholder="Search articles..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
@@ -126,7 +137,7 @@ export default function Blog() {
 
           {/* Category Filter */}
           <div className="flex flex-wrap gap-3">
-            {categories.map((category) => (
+            {categories.map(category => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
@@ -148,7 +159,7 @@ export default function Blog() {
         <div className="container max-w-4xl">
           {displayedArticles.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {displayedArticles.map((article) => (
+              {displayedArticles.map(article => (
                 <Card
                   key={article.id}
                   className="border border-border hover:border-primary/50 hover:shadow-lg transition-all cursor-pointer overflow-hidden"
@@ -182,7 +193,7 @@ export default function Blog() {
                           {article.readTime}
                         </span>
                       </div>
-                          <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white text-xs font-bold">
                             {article.author.charAt(0)}
@@ -191,7 +202,9 @@ export default function Blog() {
                             <p className="text-sm font-semibold text-foreground">
                               {article.author}
                             </p>
-                            <p className="text-xs text-muted-foreground">{article.role}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {article.role}
+                            </p>
                           </div>
                         </div>
                         <ArrowRight className="w-5 h-5 text-primary" />
@@ -214,9 +227,12 @@ export default function Blog() {
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-primary/10 to-accent/10 border-b border-border">
         <div className="container max-w-2xl text-center">
-          <h2 className="text-4xl font-bold text-foreground mb-6">Subscribe to Our Newsletter</h2>
+          <h2 className="text-4xl font-bold text-foreground mb-6">
+            Subscribe to Our Newsletter
+          </h2>
           <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-            Get the latest insights on AI automation and business transformation delivered to your inbox.
+            Get the latest insights on AI automation and business transformation
+            delivered to your inbox.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <input
@@ -224,7 +240,9 @@ export default function Blog() {
               placeholder="Enter your email"
               className="flex-1 px-4 py-3 border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
             />
-            <Button className="bg-primary hover:bg-primary/90">Subscribe</Button>
+            <Button className="bg-primary hover:bg-primary/90">
+              Subscribe
+            </Button>
           </div>
         </div>
       </section>

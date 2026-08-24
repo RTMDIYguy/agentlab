@@ -1,13 +1,13 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const SRC_DIR = path.join(__dirname, 'src');
+const SRC_DIR = path.join(__dirname, "src");
 
 const files = {
-  'AgentCard.tsx': `
+  "AgentCard.tsx": `
 import React from 'react';
 import { Button } from './Button';
 
@@ -78,7 +78,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({ id, name, role, status, ta
   );
 };
   `,
-  'Agents.tsx': `
+  "Agents.tsx": `
 import React, { useState } from 'react';
 import { AgentCard, AgentCardProps } from './AgentCard';
 import { AgentSlideOver } from './AgentSlideOver';
@@ -186,8 +186,10 @@ export const Agents: React.FC = () => {
     </div>
   );
 };
-  `
+  `,
 };
 
-Object.entries(files).forEach(([file, content]) => fs.writeFileSync(path.join(SRC_DIR, file), content.trim()));
-console.log('Phase 4 Filtering and Interactivity built successfully!');
+Object.entries(files).forEach(([file, content]) =>
+  fs.writeFileSync(path.join(SRC_DIR, file), content.trim())
+);
+console.log("Phase 4 Filtering and Interactivity built successfully!");

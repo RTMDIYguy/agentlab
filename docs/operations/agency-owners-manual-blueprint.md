@@ -16,14 +16,14 @@ trackers. It points to them in a clear order.
 
 ## Audiences
 
-| Audience | Need |
-| --- | --- |
-| Robert | Fast navigation when files, tools, projects, or account relationships have moved |
-| Returning collaborator | Orientation without needing the whole history repeated verbally |
-| Auditor or certifier | Evidence, controls, ownership boundaries, SOPs, and change records |
+| Audience                 | Need                                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------------------- |
+| Robert                   | Fast navigation when files, tools, projects, or account relationships have moved            |
+| Returning collaborator   | Orientation without needing the whole history repeated verbally                             |
+| Auditor or certifier     | Evidence, controls, ownership boundaries, SOPs, and change records                          |
 | Future operator or buyer | Instructions for using a workflow, playbook, department system, or company operating system |
-| Agent | Source-of-truth links, current priorities, stop conditions, and handoff points |
-| Public observer | A sanitized tour-guide layer showing how the agency is being built in real time |
+| Agent                    | Source-of-truth links, current priorities, stop conditions, and handoff points              |
+| Public observer          | A sanitized tour-guide layer showing how the agency is being built in real time             |
 
 ## Manual Shape
 
@@ -42,20 +42,20 @@ Recommended human-facing copy:
 
 ## Core Sections
 
-| Section | Purpose | Primary Sources |
-| --- | --- | --- |
-| Start Here | Orient the reader and explain what the manual is for | `docs/operations/agency-operating-manual.md`; `WORKSPACE-STANDARD.md` |
-| Business Map | Explain URC, Agent Lab, Tactix, Bootstrapper Capital, Ownable OS, and the book line | `docs/operations/urc-v1-operating-architecture.md` |
-| Current Priorities | Show what is live this week or quarter | `docs/operations/agency-operating-manual.md`; `docs/operations/urc-90-day-implementation-plan.md` |
-| Workflow Map | Show the 45-workflow registry and cross-department handoffs | `docs/operations/workflow-registry.md`; `docs/operations/workflow-relationship-map.md` |
-| SOP Library | Point to active SOPs and SOP candidates | `docs/operations/sop-manual-index.md` |
-| Tools, Accounts, And Relationships | Point to the registry app/data and explain what belongs there | Tool/Account/Relationship registry app and data files |
-| Finance Control Layer | Explain trackers, dashboard links, SKU/account mapping, and export rules | Owned finance trackers; `docs/operations/SOP-OPS-005-naming-conventions-and-identifier-control.md` |
-| Secret And Credential Handling | Explain where metadata is recorded and where values must not go | `docs/operations/secret-handling-standard.md`; Compliance Audits secret log |
-| Publishing And Products | Explain BGW, blueprint books, courses, workflow products, and compendiums | Book tracker; SOE book control; workflow package docs |
-| Infrastructure And Sandboxes | Explain VPS, KNIME, cloud accounts, GitHub, Stripe, and marketplace candidates | `docs/operations/urc-v1-operating-architecture.md`; reference shelves |
-| Evidence, Audits, And Change Control | Show how decisions, tests, and compliance evidence are captured | `docs/operations/change-control-register.md`; Compliance Audits folder |
-| Public Tour Guide Layer | Define what can be shown publicly and what must stay private | Public values guide; secret standard; future public-tour policy |
+| Section                              | Purpose                                                                             | Primary Sources                                                                                    |
+| ------------------------------------ | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Start Here                           | Orient the reader and explain what the manual is for                                | `docs/operations/agency-operating-manual.md`; `WORKSPACE-STANDARD.md`                              |
+| Business Map                         | Explain URC, Agent Lab, Tactix, Bootstrapper Capital, Ownable OS, and the book line | `docs/operations/urc-v1-operating-architecture.md`                                                 |
+| Current Priorities                   | Show what is live this week or quarter                                              | `docs/operations/agency-operating-manual.md`; `docs/operations/urc-90-day-implementation-plan.md`  |
+| Workflow Map                         | Show the 45-workflow registry and cross-department handoffs                         | `docs/operations/workflow-registry.md`; `docs/operations/workflow-relationship-map.md`             |
+| SOP Library                          | Point to active SOPs and SOP candidates                                             | `docs/operations/sop-manual-index.md`                                                              |
+| Tools, Accounts, And Relationships   | Point to the registry app/data and explain what belongs there                       | Tool/Account/Relationship registry app and data files                                              |
+| Finance Control Layer                | Explain trackers, dashboard links, SKU/account mapping, and export rules            | Owned finance trackers; `docs/operations/SOP-OPS-005-naming-conventions-and-identifier-control.md` |
+| Secret And Credential Handling       | Explain where metadata is recorded and where values must not go                     | `docs/operations/secret-handling-standard.md`; Compliance Audits secret log                        |
+| Publishing And Products              | Explain BGW, blueprint books, courses, workflow products, and compendiums           | Book tracker; SOE book control; workflow package docs                                              |
+| Infrastructure And Sandboxes         | Explain VPS, KNIME, cloud accounts, GitHub, Stripe, and marketplace candidates      | `docs/operations/urc-v1-operating-architecture.md`; reference shelves                              |
+| Evidence, Audits, And Change Control | Show how decisions, tests, and compliance evidence are captured                     | `docs/operations/change-control-register.md`; Compliance Audits folder                             |
+| Public Tour Guide Layer              | Define what can be shown publicly and what must stay private                        | Public values guide; secret standard; future public-tour policy                                    |
 
 ## Link And Search Standard
 
@@ -120,9 +120,9 @@ Update the Owner's Manual when:
 
 ## Open Decisions
 
-| Decision | Current Default | Review Point |
-| --- | --- | --- |
-| Human-facing host | Microsoft 365 when available; Google Drive as bridge | When paid Microsoft 365 access is stable |
-| Public tour guide | Candidate only | After private manual has stable private/public classification |
-| Search layer | Links and headings first | Add richer search only after the manual structure stabilizes |
-| Registry app link | Pending | After Tool/Account/Relationship registry V1 exists |
+| Decision          | Current Default                                      | Review Point                                                  |
+| ----------------- | ---------------------------------------------------- | ------------------------------------------------------------- |
+| Human-facing host | Microsoft 365 when available; Google Drive as bridge | When paid Microsoft 365 access is stable                      |
+| Public tour guide | Candidate only                                       | After private manual has stable private/public classification |
+| Search layer      | Links and headings first                             | Add richer search only after the manual structure stabilizes  |
+| Registry app link | Pending                                              | After Tool/Account/Relationship registry V1 exists            |

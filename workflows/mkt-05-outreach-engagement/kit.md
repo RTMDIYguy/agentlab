@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | MKT-05 |
-| Department | Marketing |
-| Automation level | 80-85% |
-| Owner | Marcus + Account Managers |
-| Trigger | Sales territory defined or campaign planned |
-| Cycle time | 7-14 day sequences; continuous |
-| Source status | Imported source |
+| Field            | Value                                       |
+| ---------------- | ------------------------------------------- |
+| Workflow ID      | MKT-05                                      |
+| Department       | Marketing                                   |
+| Automation level | 80-85%                                      |
+| Owner            | Marcus + Account Managers                   |
+| Trigger          | Sales territory defined or campaign planned |
+| Cycle time       | 7-14 day sequences; continuous              |
+| Source status    | Imported source                             |
 
 ## Inputs
 
@@ -85,19 +85,19 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `source/URC-MKT-05_Outreach_Engagement.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                              | Purpose                                                                     |
+| ----------------------------------------------------- | --------------------------------------------------------------------------- |
+| `source/URC-MKT-05_Outreach_Engagement.md`            | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `assets/Marketing_Workflow_5_Outreach_Engagement.csv` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `assets/MKT05-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/MKT05-Outreach-Response-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/MKT05_Outreach_Engagement_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `assets/MKT05-Assets.md`                              | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/MKT05-Outreach-Response-Blueprint.json`   | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/MKT05_Outreach_Engagement_Tracker.xlsx`     | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-MKT-05_Outreach_Engagement.md
 
-````markdown
+```markdown
 # MKT-05 - Outreach & Engagement Source
 
 Source: `Marketing Department\urc marketing\URC-MKT-05_Outreach_Engagement.docx`
@@ -108,7 +108,7 @@ This Markdown file is a text extraction of the source `.docx` for GitHub-readabl
 
 URC-MKT-05 — Outreach & Engagement
 
-Owner: Robert T. McCarthy, Founder & CEO   |   Version: v1.0   |   Updated: March 21, 2026
+Owner: Robert T. McCarthy, Founder & CEO | Version: v1.0 | Updated: March 21, 2026
 
 1. Document Purpose
 
@@ -379,11 +379,11 @@ March 21, 2026
 R. McCarthy
 
 Initial URC-specific document
-````
+```
 
 ### assets/Marketing_Workflow_5_Outreach_Engagement.csv
 
-````csv
+```csv
 Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 1,TRIGGER: New prospect identified OR Engagement drop detected OR Event attendance OR Content consumption,System/Sales Dev,CRM / Lead database / Intent data provider / Event platform,"trigger_type, prospect_id, trigger_source, timestamp, priority_score",Immediate
 2,"Build target prospect list from ICP criteria, intent signals, technographics, firmographics",SDR Team + Automation,ICP filters / ZoomInfo / Clearbit / 6sense / Bombora / LinkedIn Sales Navigator,"company_name, industry, company_size, revenue, technologies, employee_count",< 4 hours for list build
@@ -399,17 +399,19 @@ Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 12,"Auto-pause outreach if prospect shows negative engagement (unsubscribe, ""not interested"" reply)",Automation (Suppression),Unsubscribe processing / Negative reply detection / Do-not-contact list,"suppression_reason, suppression_date, do_not_contact_flag",Immediate
 13,Re-engage cold prospects with new campaigns when timing/circumstances change,SDR Team + Automation,Re-engagement campaigns / Timing triggers / New angle testing,"re_engagement_triggered, new_campaign_name, wait_period_days",Based on timing rules
 14,"Measure outreach effectiveness (response rate, meeting rate, pipeline generated, ROI by channel)",Sales Leadership + Analytics,Sales analytics platform / Pipeline attribution / Channel performance dashboard,"report_id, response_rate, meeting_rate, pipeline_value, cost_per_meeting",Weekly reporting
-````
+```
 
 ### assets/MKT05-Assets.md
 
-````markdown
+```markdown
 # MKT05: Outreach & Engagement Assets
 
 ## 1. 7-Touch Outbound Sequence (The "Value-First" Approach)
-*Sequence duration: 14 Days. Designed for Apollo, Outreach, or SalesLoft.*
+
+_Sequence duration: 14 Days. Designed for Apollo, Outreach, or SalesLoft._
 
 ### Day 1: Email 1 (The Observation)
+
 **Subject:** Saw your post on [Topic] / Question about [Company]
 **Body:**
 Hi [First Name],
@@ -424,9 +426,11 @@ Worth a chat?
 [Your Name]
 
 ### Day 2: LinkedIn Touch (Connection Request)
+
 **Note:** "Hey [First Name], noticed you were leading the [Department] team at [Company]. I work with a lot of [Job Title]s in [Industry] and love following your updates. Thought I'd connect!"
 
 ### Day 4: Email 2 (The Value Drop)
+
 **Subject:** Re: Saw your post on [Topic] / Question about [Company]
 **Body:**
 Hi [First Name] - Not sure if you saw my last note, but I put together a quick 2-minute Loom video specifically showing how [Company Name] could automate [Specific Process] using your current tech stack.
@@ -436,17 +440,21 @@ Hi [First Name] - Not sure if you saw my last note, but I put together a quick 2
 Let me know if this looks like something that would save your team time this quarter.
 
 ### Day 5: Call Script 1 (The Permission Based Opener)
+
 **SDR:** "Hi [First Name], this is [Name] from [Company]. I know I caught you in the middle of something—do you have 30 seconds for me to tell you why I'm calling, and then you can tell me to hang up if it's not relevant?"
 **Prospect:** "Sure, go ahead."
 **SDR:** "I noticed [Company] is scaling up right now. We typically see [Role]s struggling to keep [Pain Point] under control during growth. I sent you an email with a short video on this yesterday. Is [Pain Point] an active priority for you right now, or do you already have it handled?"
 
 ### Day 7: LinkedIn Voice Note / Message
+
 "Hey [First Name], just left a quick voicemail. Sent over a video on Tuesday showing how we could help [Company] streamline [Process]. No pressure to reply right away, but let me know if you want me to send over more details."
 
 ### Day 10: Call Script 2 (The Follow-up)
+
 **SDR:** "Hi [First Name], [Name] from [Company] calling back. I know timing is everything with [Problem Area]. Just wanted to see if the video I sent over resonated, or if I'm completely off base?"
 
 ### Day 14: Email 3 (The Breakup)
+
 **Subject:** Closing the file
 **Body:**
 Hi [First Name],
@@ -462,18 +470,21 @@ Best of luck with the rest of the year!
 ## 2. Objection Handling Scripts
 
 ### Objection: "We already have a solution for this."
+
 **Response:** "That's great. Most of the teams we speak with do. Who are you currently using? [...] Oh, [Competitor]? They're solid for [Feature A]. We actually have a lot of clients who switched from them because they were struggling with [Feature B]. How are you handling [Feature B] right now?"
 
 ### Objection: "We don't have budget right now."
+
 **Response:** "I completely understand. In fact, most of our best clients didn't have budget when we first spoke. The reason they ended up finding budget is because we showed them how they were currently losing $X a month due to [Pain Point]. Since we're not asking for money today, would you be open to a 10-minute discovery call just to see if the ROI makes sense for next quarter?"
 
 ### Objection: "Call me back in 6 months."
+
 **Response:** "Happy to do that. Just so I make sure I don't waste your time when I call back in 6 months—what usually changes between now and then? Is there a specific initiative you're waiting to wrap up?"
-````
+```
 
 ### automation/MKT05-Outreach-Response-Blueprint.json
 
-````json
+```json
 {
   "name": "MKT05: Outreach Response Routing (Make.com Blueprint)",
   "flow": [
@@ -575,7 +586,7 @@ Best of luck with the rest of the year!
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -731,6 +742,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

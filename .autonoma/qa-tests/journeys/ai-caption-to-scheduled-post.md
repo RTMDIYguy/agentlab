@@ -13,6 +13,7 @@ verification: "Refresh the dashboard and verify the scheduled post remains in th
 **Intent**: A creator uses AI to overcome writer's block, schedules the resulting content for next year, and verifies it is tracked in the dashboard's upcoming queue.
 
 **Steps**:
+
 1. type: type "Future of brutalist design" in the topic input field in the AI caption panel
 2. click: click the "Generate caption" button in the AI caption panel
 3. assert: assert: text "Caption ready" is visible in the toast notification in the toast notification
@@ -24,6 +25,7 @@ verification: "Refresh the dashboard and verify the scheduled post remains in th
 9. assert: assert: text "Future of brutalist design" is visible in the upcoming list in the dashboard upcoming section
 
 **Verification**:
+
 1. refresh: refresh the page
 2. assert: assert: text "Future of brutalist design" is visible in the upcoming list in the dashboard upcoming section
 

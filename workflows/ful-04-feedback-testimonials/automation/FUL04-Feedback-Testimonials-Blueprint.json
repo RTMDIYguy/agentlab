@@ -104,7 +104,13 @@
         "spreadsheetId": "YOUR_FUL04_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{4.respondentName}}", "{{4.npsScore}}", "{{4.testimonialText}}", "Pending Approval"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD')}}",
+          "{{4.respondentName}}",
+          "{{4.npsScore}}",
+          "{{4.testimonialText}}",
+          "Pending Approval"
+        ]
       },
       "metadata": {
         "designer": {

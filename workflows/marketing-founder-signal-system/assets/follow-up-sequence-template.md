@@ -98,13 +98,13 @@ or close cleanly if a direct ask would feel forced.
 
 When a reply comes in, classify it. This is what feeds the proof log.
 
-| Bucket | Definition | Next Action |
-| --- | --- | --- |
-| Interested | Real reply, real signal, willing to talk or learn more | Move to a 1:1 conversation. Stop the sequence. Log in proof log under "interested." |
-| Not now | Reply confirms relevance but timing is wrong | Stop the sequence. Note the timing reason. Add to a "revisit in 60 / 90 / 180 days" list. Log under "not now." |
-| Referral | Reply names someone else who is a better fit | Thank them. Ask permission to mention them when reaching out to the referral. Log under "referral." |
-| No response | No reply after all touches | Close the loop with Touch 3. Log under "no response." |
-| Objection | Reply pushes back, raises a real concern | Stop the sequence. Treat the objection as content. Log under "objection" with the exact wording. |
+| Bucket      | Definition                                             | Next Action                                                                                                    |
+| ----------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Interested  | Real reply, real signal, willing to talk or learn more | Move to a 1:1 conversation. Stop the sequence. Log in proof log under "interested."                            |
+| Not now     | Reply confirms relevance but timing is wrong           | Stop the sequence. Note the timing reason. Add to a "revisit in 60 / 90 / 180 days" list. Log under "not now." |
+| Referral    | Reply names someone else who is a better fit           | Thank them. Ask permission to mention them when reaching out to the referral. Log under "referral."            |
+| No response | No reply after all touches                             | Close the loop with Touch 3. Log under "no response."                                                          |
+| Objection   | Reply pushes back, raises a real concern               | Stop the sequence. Treat the objection as content. Log under "objection" with the exact wording.               |
 
 ## Things That Disqualify A Touch
 

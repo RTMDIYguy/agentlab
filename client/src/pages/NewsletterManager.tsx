@@ -30,7 +30,9 @@ interface Campaign {
 
 export default function NewsletterManager() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"campaigns" | "subscribers" | "templates" | "stats">("campaigns");
+  const [activeTab, setActiveTab] = useState<
+    "campaigns" | "subscribers" | "templates" | "stats"
+  >("campaigns");
   const [showNewCampaign, setShowNewCampaign] = useState(false);
   const [campaignTitle, setCampaignTitle] = useState("");
   const [campaignSubject, setCampaignSubject] = useState("");
@@ -119,7 +121,7 @@ export default function NewsletterManager() {
 
       {/* Tabs */}
       <div className="flex gap-2 mb-8 border-b border-border">
-        {["campaigns", "subscribers", "templates", "stats"].map((tab) => (
+        {["campaigns", "subscribers", "templates", "stats"].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab as any)}
@@ -155,20 +157,20 @@ export default function NewsletterManager() {
                 type="text"
                 placeholder="Campaign Title"
                 value={campaignTitle}
-                onChange={(e) => setCampaignTitle(e.target.value)}
+                onChange={e => setCampaignTitle(e.target.value)}
                 className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               />
               <input
                 type="text"
                 placeholder="Email Subject"
                 value={campaignSubject}
-                onChange={(e) => setCampaignSubject(e.target.value)}
+                onChange={e => setCampaignSubject(e.target.value)}
                 className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               />
               <textarea
                 placeholder="Campaign Content (HTML)"
                 value={campaignContent}
-                onChange={(e) => setCampaignContent(e.target.value)}
+                onChange={e => setCampaignContent(e.target.value)}
                 rows={8}
                 className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
               />

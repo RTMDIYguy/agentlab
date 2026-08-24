@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | CUL-08 |
-| Department | Culture |
-| Automation level | 70-80% |
-| Owner | Robert + Tech Lead |
-| Trigger | Immediate agency setup; monthly thereafter |
-| Cycle time | Registry: monthly; audit: December |
-| Source status | Imported source |
+| Field            | Value                                      |
+| ---------------- | ------------------------------------------ |
+| Workflow ID      | CUL-08                                     |
+| Department       | Culture                                    |
+| Automation level | 70-80%                                     |
+| Owner            | Robert + Tech Lead                         |
+| Trigger          | Immediate agency setup; monthly thereafter |
+| Cycle time       | Registry: monthly; audit: December         |
+| Source status    | Imported source                            |
 
 ## Inputs
 
@@ -85,8 +85,8 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
+| Artifact                                   | Purpose                                                                     |
+| ------------------------------------------ | --------------------------------------------------------------------------- |
 | `trackers/CUL-08_Tech_Stack_Registry.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
@@ -143,6 +143,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

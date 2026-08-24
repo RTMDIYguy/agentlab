@@ -13,12 +13,14 @@ verification: "The user is navigated to the Posts page, and the new draft post i
 **Intent**: Users should be able to compose a post and save it as a draft for later editing.
 
 **Steps**:
+
 1. type: type: "This is a draft post for testing." into the "Content" textarea in the composer card house
 2. click: click: the "Instagram" button to toggle it OFF (it defaults to ON) in the Platforms section house
 3. click: click: the "Facebook" button to toggle it ON in the Platforms section house
 4. click: click: the "Save draft" button in the composer actions house
 
 **Verification**:
+
 1. assert: assert: "This is a draft post for testing." is visible in the post list house
 2. assert: assert: "Draft" is visible as the status badge for the post on the "This is a draft post for testing." post card house
 

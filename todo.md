@@ -1,6 +1,7 @@
 # AgentLab Project TODO
 
 ## Completed Features
+
 - [x] Basic landing page with hero section
 - [x] AI capabilities showcase (6 feature cards)
 - [x] Features section
@@ -17,6 +18,7 @@
 - [x] Pricing buttons integrated with Stripe checkout
 
 ## In Progress / TODO
+
 - [ ] Configure Stripe price IDs in environment variables
 - [ ] Create dashboard page for authenticated users
 - [ ] Display user's current subscription on dashboard
@@ -33,6 +35,7 @@
 - [ ] FAQ page
 
 ## Testing Checklist
+
 - [ ] Test checkout flow with Stripe test card (4242 4242 4242 4242)
 - [ ] Verify webhook events are being received
 - [ ] Test subscription creation in database
@@ -43,6 +46,7 @@
 - [ ] Test form validations
 
 ## Dashboard Feature (Completed)
+
 - [x] Create dashboard page component with subscription status display
 - [x] Add payment history table to dashboard
 - [x] Implement subscription status badge with renewal date
@@ -50,6 +54,7 @@
 - [x] Test dashboard page functionality
 
 ## Subscription Management Feature (Completed)
+
 - [x] Add upgrade/downgrade procedure to Stripe router
 - [x] Add cancel subscription procedure to Stripe router
 - [x] Create subscription management modal in dashboard
@@ -57,12 +62,14 @@
 - [x] Implement cancel subscription with confirmation
 
 ## Invoice Download Feature (Completed)
+
 - [x] Add invoice retrieval from Stripe API
 - [x] Create invoice download endpoint
 - [x] Add download buttons to payment history table
 - [x] Handle PDF generation and delivery
 
 ## User Settings Feature (Completed)
+
 - [x] Create user settings page component
 - [x] Add profile information editing
 - [x] Add email notification preferences
@@ -71,6 +78,7 @@
 - [x] Add settings route to navigation
 
 ## Admin Dashboard Feature (Completed)
+
 - [x] Create admin analytics queries (MRR, churn, customer count)
 - [x] Add admin procedures to Stripe router
 - [x] Build admin dashboard layout with header
@@ -82,6 +90,7 @@
 - [x] Test admin dashboard functionality
 
 ## About Page Feature (Completed)
+
 - [x] Create About page component with company story
 - [x] Add team members section with profiles
 - [x] Add company values section
@@ -90,6 +99,7 @@
 - [x] Test About page functionality
 
 ## Blog Section Feature (Completed)
+
 - [x] Create blog listing page with article cards
 - [x] Create individual article page component
 - [x] Add placeholder article about future of AI agents
@@ -97,6 +107,7 @@
 - [x] Test blog functionality
 
 ## Blog Comments Feature (Completed)
+
 - [x] Create database schema for blog comments
 - [x] Create tRPC procedures for comments (create, read, delete)
 - [x] Build comment section UI component
@@ -105,6 +116,7 @@
 - [x] Integrate comments into blog article page
 
 ## Threaded Comments Feature (Completed)
+
 - [x] Update database schema to support parent comment references
 - [x] Add reply creation tRPC procedure
 - [x] Add nested comment fetching procedure
@@ -113,6 +125,7 @@
 - [x] Integrate threaded comments into blog article page
 
 ## Blog Management System (Completed)
+
 - [x] Create database schema for blog articles with scheduling
 - [x] Add article creation/editing/deletion procedures
 - [x] Build article editor UI with rich text support
@@ -122,6 +135,7 @@
 - [x] Add article draft/published status management
 
 ## Legal Pages Feature (Completed)
+
 - [x] Create Privacy Policy page
 - [x] Create Terms and Conditions page
 - [x] Create Cookies Policy page
@@ -129,6 +143,7 @@
 - [x] Add legal page routes to navigation
 
 ## Blog Management System - FIXES COMPLETED
+
 - [x] Debug and fix blog article database schema
 - [x] Verify tRPC procedures for article CRUD operations
 - [x] Fix article editor component and form submission
@@ -137,6 +152,7 @@
 - [x] Test complete article creation and scheduling workflow
 
 ## Help Center Feature (Completed)
+
 - [x] Create Help Center page with FAQ section
 - [x] Add knowledge base articles to Help Center
 - [x] Add contact form to Help Center
@@ -145,6 +161,7 @@
 - [x] Test Help Center functionality
 
 ## Contact Form Backend (Completed)
+
 - [x] Create contact submissions database table
 - [x] Add tRPC procedure for contact form submission
 - [x] Implement email notification to support team
@@ -152,12 +169,14 @@
 - [x] Connect Help Center contact form to backend
 
 ## Live Chat Widget (Complete)
+
 - [x] Integrate live chat widget library (Crisp Chat API)
 - [x] Configure chat widget settings
 - [x] Add chat widget to site header/footer
 - [x] Test chat widget functionality
 
 ## System Status Page (Completed)
+
 - [x] Create status page component
 - [x] Add uptime monitoring data
 - [x] Create incident history section
@@ -165,6 +184,7 @@
 - [x] Link status page to footer
 
 ## Live Chat Widget Integration (Complete)
+
 - [x] Create live chat widget component with Crisp Chat API
 - [x] Configure chat widget settings and styling
 - [x] Add chat widget to Help Center page
@@ -172,6 +192,7 @@
 - [x] Test live chat functionality
 
 ## Contact Form Backend Enhancement (Complete)
+
 - [x] Verify database schema for contact submissions
 - [x] Create tRPC procedures for contact form submission
 - [x] Integrate Manus notification API for email sending
@@ -181,6 +202,7 @@
 - [x] Add unit tests for contact form backend (22 tests passing)
 
 ## Newsletter Backend Implementation (Complete)
+
 - [x] Create newsletter database schema (subscribers, campaigns, templates)
 - [x] Build tRPC procedures for newsletter subscription
 - [x] Implement email validation and double opt-in
@@ -194,6 +216,7 @@
 - [x] Add unit tests for newsletter backend (27 tests passing)
 
 ## Newsletter Integration (Complete)
+
 - [x] Integrate NewsletterSignup component to homepage and footer
 - [x] Create newsletter verification page at /newsletter/verify
 - [x] Create newsletter unsubscribe page at /newsletter/unsubscribe
@@ -202,11 +225,13 @@
 - [x] Test newsletter unsubscribe flow end-to-end (38 integration tests passing)
 
 ## UI/UX Improvements (Complete)
+
 - [x] Darken newsletter form input borders for visibility against light blue background
 - [x] Replace hero background circles/circuits graphic with AI Native Agency visual
 - [x] Test newsletter form visibility on light backgrounds
 
 ## Services Page - Marketing Department (Complete)
+
 - [x] Review marketing workflow document and plan page structure
 - [x] Create services page layout with department showcase
 - [x] Build marketing department workflows display
@@ -217,8 +242,8 @@
 - [x] Test services page responsiveness
 - [x] Create unit tests for services page (46 tests passing)
 
-
 ## Navigation Restructuring (Complete)
+
 - [x] Replace About link with Features link in main navigation
 - [x] Add About as nested child under Home
 - [x] Add Dashboard as nested child under Home (visible only when signed in)
@@ -227,6 +252,7 @@
 - [x] Test navigation on desktop and mobile
 
 ## Features Page Build (Complete)
+
 - [x] Create Features page with department selector tabs
 - [x] Build Marketing department workflows and pricing display
 - [x] Build Sales department workflows and pricing display
@@ -237,6 +263,7 @@
 - [x] Create pricing comparison table for selected department
 
 ## Pricing Page & Quote Builder (Complete)
+
 - [x] Create Pricing page with aggregated department pricing
 - [x] Build interactive quote builder interface
 - [x] Implement department and tier selection
@@ -246,6 +273,7 @@
 - [x] Display quote summary before checkout
 
 ## Shopping Cart System (In Progress)
+
 - [ ] Create cart data model in database
 - [ ] Build cart management tRPC procedures
 - [ ] Create cart UI component with item management
@@ -254,6 +282,7 @@
 - [ ] Create cart summary and totals display
 
 ## Checkout & Payment Integration (In Progress)
+
 - [ ] Create checkout page layout
 - [ ] Integrate Stripe payment processing
 - [ ] Add PayPal as backup payment option
@@ -263,6 +292,7 @@
 - [ ] Implement webhook handling for payment confirmation
 
 ## Order Management & Receipts (In Progress)
+
 - [ ] Create order model in database
 - [ ] Build order tracking system
 - [ ] Create order confirmation page
@@ -272,6 +302,7 @@
 - [ ] Build order history page for users
 
 ## Authentication on Quote Submission (In Progress)
+
 - [ ] Create authentication dialog component
 - [ ] Implement sign up form in dialog
 - [ ] Implement login form in dialog
@@ -280,6 +311,7 @@
 - [ ] Redirect to checkout after authentication
 
 ## Testing & Validation (In Progress)
+
 - [ ] Test navigation menu interactions
 - [ ] Test department switching on Features page
 - [ ] Test quote builder calculations
@@ -290,8 +322,8 @@
 - [ ] Test authentication dialog trigger
 - [ ] Create comprehensive unit tests for all flows
 
-
 ## Layout Consistency Audit & Fixes (Complete)
+
 - [x] Audit all pages for Navigation and Footer components
 - [x] Create PageLayout wrapper component for consistent header/footer
 - [x] Apply PageLayout to Dashboard page

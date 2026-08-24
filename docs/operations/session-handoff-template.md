@@ -11,10 +11,10 @@ reading this file plus any linked documents.
 
 ## Session Metadata
 
-Date: _______________
-Session ID (if known): _______________
-Approximate duration: _______________
-Primary AI assistant this session: _______________
+Date: **\*\***\_\_\_**\*\***
+Session ID (if known): **\*\***\_\_\_**\*\***
+Approximate duration: **\*\***\_\_\_**\*\***
+Primary AI assistant this session: **\*\***\_\_\_**\*\***
 
 ---
 
@@ -44,9 +44,11 @@ The exact stopping point. What was the last thing completed? What was the
 next action that had not yet been taken?
 
 Last completed:
+
 > [Write here]
 
 Next action:
+
 > [Write here]
 
 ---
@@ -56,19 +58,22 @@ Next action:
 Things the new session needs to know that are NOT written down anywhere else.
 
 ### Current Operating Rules
+
 Any working decisions or constraints that were established this session and
 have not yet been documented in a permanent file.
 
 > [Write here or "None — all decisions are documented"]
 
 ### Open Questions
+
 Questions that came up but were not yet answered.
 
 | Question | Why It Matters | Who/What Answers It |
-| --- | --- | --- |
-| | | |
+| -------- | -------------- | ------------------- |
+|          |                |                     |
 
 ### Blockers
+
 Anything that is currently stopping forward progress.
 
 > [Write here or "None"]
@@ -88,12 +93,12 @@ read top to bottom.
 
 ## Active Projects and Their Status
 
-| Project / Brand | Current Status | Next Move |
-| --- | --- | --- |
-| Uncle Robert Consulting LLC | | |
-| Bootstrapper Capital | | |
-| Tactix | | |
-| Agent Lab | | |
+| Project / Brand             | Current Status | Next Move |
+| --------------------------- | -------------- | --------- |
+| Uncle Robert Consulting LLC |                |           |
+| Bootstrapper Capital        |                |           |
+| Tactix                      |                |           |
+| Agent Lab                   |                |           |
 
 ---
 
@@ -101,13 +106,13 @@ read top to bottom.
 
 Note anything that was connected, broken, configured, or pending this session.
 
-| Tool / Integration | Status | Notes |
-| --- | --- | --- |
-| Bootstrapper.ai | | |
-| GitHub / agent-lab-site repo | | |
-| CRM-lite | | |
-| Finance tracker | | |
-| Other | | |
+| Tool / Integration           | Status | Notes |
+| ---------------------------- | ------ | ----- |
+| Bootstrapper.ai              |        |       |
+| GitHub / agent-lab-site repo |        |       |
+| CRM-lite                     |        |       |
+| Finance tracker              |        |       |
+| Other                        |        |       |
 
 ---
 
@@ -137,6 +142,6 @@ wrong, things that worked especially well.
 
 ---
 
-*Template location: `AI Native Agency Deepened/agentlab/docs/operations/session-handoff-template.md`*
-*Copy this file, rename it with today's date, fill it out, and save it to the repo.*
-*Example: `session-handoff-2026-06-05.md`*
+_Template location: `AI Native Agency Deepened/agentlab/docs/operations/session-handoff-template.md`_
+_Copy this file, rename it with today's date, fill it out, and save it to the repo._
+_Example: `session-handoff-2026-06-05.md`_

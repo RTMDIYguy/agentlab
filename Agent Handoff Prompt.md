@@ -1,88 +1,43 @@
-# Agent Handoff Prompt
+You are Antigravity, the Executor.
 
-Use this prompt to start any future agent on this system.
+Your current objective is to implement **Phase 12: Database Unification & Stripe Webhooks** for AgentLab. We need to resolve a database dialect mismatch (MySQL vs Postgres) by fully committing to PostgreSQL, and we need to wire up the Stripe webhook to actually provision the marketplace packages upon payment.
 
-## Copy-Paste Prompt
+### 1. Database Unification (Switching fully to PostgreSQL)
+Our `server/schema.ts` is written for Postgres (`pgTable`), but the rest of the app was originally scaffolded for MySQL. Let's fix this:
+1. **Dependencies:** Remove `mysql2` from `package.json` and add `postgres` (the Node.js postgres client). (You can manually edit `package.json` or run `npm uninstall mysql2 && npm install postgres`).
+2. **Update `server/db.ts`:**
+   Change the connection logic to use `postgres` and `drizzle-orm/postgres-js`. 
+   *Example:*
+   ```typescript
+   import { drizzle } from 'drizzle-orm/postgres-js';
+   import postgres from 'postgres';
+   import * as schema from './schema';
 
-You are working inside:
+   const connectionString = process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/agentlab';
+   const client = postgres(connectionString);
+   export const db = drizzle(client, { schema });
+   
+   export async function getDb() {
+     return db;
+   }
+   ```
+3. **Update `drizzle.config.ts`:** Change `dialect: "mysql"` to `dialect: "postgresql"`. Ensure `schema` points to `./server/schema.ts`.
+4. **Cleanup:** Delete `drizzle/schema.ts` and `server/schema.sql` if they exist, as `server/schema.ts` is our single source of truth. Remove any type-casting hacks you added in Phase 11 to bypass the MySQL/Postgres type mismatches.
 
-`C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs`
+### 2. Stripe Webhook Integration (`server/stripe/webhook.ts`)
+We need to listen for successful payments and provision the Knowledge Packages.
+1. In `server/stripe/webhook.ts`, handle the `checkout.session.completed` event.
+2. Extract `workspaceId` and `packageId` from the session's `metadata` (we assume the checkout session was created with these).
+3. Extract the `subscription` ID from the session.
+4. Upsert a record into the `workspacePackages` table:
+   - `workspaceId`: from metadata
+   - `packageId`: from metadata
+   - `status`: 'active'
+   - `stripeSubscriptionId`: from the session
+   - `unlockedAt`: new Date()
 
-This is the business-wide workspace root. Do not treat any one subfolder as the
-entire business.
+### 3. Stripe Checkout Creation (`server/stripe/checkout.ts` or `server/controllers/marketplace.ts`)
+In your `marketplace.ts` (or `checkout.ts`), update the `/subscribe` endpoint. Instead of just blindly inserting into the DB, it should ideally create a Stripe Checkout Session (if `STRIPE_SECRET_KEY` is present) passing the `workspaceId` and `packageId` in the `metadata`, and return the `checkoutUrl`. 
+*Note: If `STRIPE_SECRET_KEY` is missing (local dev), you can gracefully fallback to the direct DB insert you built in Phase 11.*
 
-Your job is to consolidate and activate the existing operating system for:
-
-- Uncle Robert Consulting (`URC`)
-- Tactix
-- Bootstrapper Capital
-- Bootstrapper's Guide to the World
-
-Do not redesign the business from scratch.
-
-Read these files first, in order:
-
-1. `WORKSPACE-STANDARD.md`
-2. `AI Native Agency Deepened\Agent Consolidation Blueprint.md`
-3. `AI Native Agency Deepened\Agent Task Queue.md`
-4. `AI Native Agency Deepened\Agentic Systems Playbook.docx`
-5. `AI Native Agency Deepened\System Audit and plan suggestions.docx`
-6. `AI Native Agency Deepened\Where we are.docx`
-7. `AI Native Agency Deepened\Bootstrapper.docx`
-
-Important rules:
-
-- preserve existing business data
-- avoid duplicating plans that already exist
-- prefer consolidation over invention
-- do not overwrite active files silently
-- do not delete recovered files during intake
-- treat `D:\Recover` as archive source material
-- prioritize `D:\Business Docs Recovered` before `D:\Misc Recovered`
-
-The likely active departmental files are already identified in:
-
-- `Agent Consolidation Blueprint.md`
-
-The first-pass execution order is already identified in:
-
-- `Agent Task Queue.md`
-
-Your first objective is to confirm the source-of-truth files and build a clean live layer, not to create a brand new architecture.
-
-Expected outputs from you:
-
-- strategy summary
-- source-of-truth file list
-- duplicate/archive candidate list
-- recovered-files intake inventory
-- categorized recovered-files list
-- merge/conflict list
-- executive command layer proposal or draft
-- book-to-client funnel map
-- weekly operating checklist
-- top 3 next actions
-
-Stop and ask for direction if:
-
-- a recovered file may overwrite a live file
-- a file appears personal or legally sensitive
-- multiple versions conflict and you cannot choose safely
-
-Default success condition:
-
-- the system is cleaner
-- the active layer is clearer
-- recovered business files are triaged
-- the book, Bootstrapper Capital, URC, and Tactix are better connected
-
-## Notes For The Human
-
-If you start a future agent, tell it:
-
-- to read this file first
-- then read `WORKSPACE-STANDARD.md`
-- then read `AI Native Agency Deepened\Agent Consolidation Blueprint.md`
-- then read `AI Native Agency Deepened\Agent Task Queue.md`
-
-That should keep future sessions from wasting time rediscovering the structure.
+Please execute these changes, run `npm run check`, and summarize your work when complete!

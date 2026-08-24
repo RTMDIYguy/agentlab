@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | OPS-08 |
-| Department | Operations |
-| Automation level | N/A - Framework |
-| Owner | Head of Operations |
-| Trigger | Monthly QA cycle or R&D sprint |
-| Cycle time | QA: before every deliverable; R&D: quarterly |
-| Source status | Imported source |
+| Field            | Value                                        |
+| ---------------- | -------------------------------------------- |
+| Workflow ID      | OPS-08                                       |
+| Department       | Operations                                   |
+| Automation level | N/A - Framework                              |
+| Owner            | Head of Operations                           |
+| Trigger          | Monthly QA cycle or R&D sprint               |
+| Cycle time       | QA: before every deliverable; R&D: quarterly |
+| Source status    | Imported source                              |
 
 ## Inputs
 
@@ -85,21 +85,22 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `assets/OPS08-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/OPS08-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                     | Purpose                                                                     |
+| -------------------------------------------- | --------------------------------------------------------------------------- |
+| `assets/OPS08-Assets.md`                     | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/OPS08-Blueprint.json`            | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `trackers/OPS08_RD_Experiment_Pipeline.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### assets/OPS08-Assets.md
 
-````markdown
+```markdown
 # OPS08: R&D & Quality Assurance Assets
 
 ## 1. R&D "Learning Doc" Template
-*To be filled out after any R&D experiment is completed.*
+
+_To be filled out after any R&D experiment is completed._
 
 **Experiment Name:** [e.g., Using AI to generate initial client reports]
 **Owner:** [Name]
@@ -114,7 +115,8 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 ---
 
 ## 2. Post-Project Client Feedback Survey (NPS/CSAT)
-*Sent automatically when a project is marked "Complete" in the CRM.*
+
+_Sent automatically when a project is marked "Complete" in the CRM._
 
 **Subject:** How did we do, [Client Name]?
 
@@ -126,6 +128,7 @@ Could you take 60 seconds to answer 3 quick questions?
 [Link to Survey]
 
 **Survey Questions:**
+
 1. **CSAT:** On a scale of 1-5, how satisfied are you with the final deliverable?
 2. **NPS:** On a scale of 0-10, how likely are you to recommend us to a colleague or friend?
 3. What is one thing we could have done better?
@@ -133,17 +136,18 @@ Could you take 60 seconds to answer 3 quick questions?
 ---
 
 ## 3. Agency Issue Log (Tracker Template)
-*A spreadsheet or database to track quality failures so they can be fixed at the root.*
 
-| Date Logged | Issue Description | Category (Critical/High/Med/Low) | Client Impacted? | Root Cause (The "Why") | Action Taken (SOP Update) | Owner | Status |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| 2024-06-01 | Wrong logo used on final client presentation | Med | Yes (Client A) | Designer pulled from old folder | Added "Verify brand assets" step to Pre-Delivery QA Checklist | Designer | Closed |
-| 2024-06-15 | Monthly reports sent 2 days late | High | Yes (All) | Data source API broke | Switched data sources | Ops Lead | Open |
-````
+_A spreadsheet or database to track quality failures so they can be fixed at the root._
+
+| Date Logged | Issue Description                            | Category (Critical/High/Med/Low) | Client Impacted? | Root Cause (The "Why")          | Action Taken (SOP Update)                                     | Owner    | Status |
+| :---------- | :------------------------------------------- | :------------------------------- | :--------------- | :------------------------------ | :------------------------------------------------------------ | :------- | :----- |
+| 2024-06-01  | Wrong logo used on final client presentation | Med                              | Yes (Client A)   | Designer pulled from old folder | Added "Verify brand assets" step to Pre-Delivery QA Checklist | Designer | Closed |
+| 2024-06-15  | Monthly reports sent 2 days late             | High                             | Yes (All)        | Data source API broke           | Switched data sources                                         | Ops Lead | Open   |
+```
 
 ### automation/OPS08-Blueprint.json
 
-````json
+```json
 {
   "name": "OPS08: Automated NPS Collection (Make.com Blueprint)",
   "flow": [
@@ -231,7 +235,7 @@ Could you take 60 seconds to answer 3 quick questions?
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -373,6 +377,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

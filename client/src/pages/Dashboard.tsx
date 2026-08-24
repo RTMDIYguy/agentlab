@@ -3,7 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { formatDate } from "date-fns";
-import { CheckCircle2, AlertCircle, Clock, CreditCard, LogOut, Download, Settings } from "lucide-react";
+import {
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  CreditCard,
+  LogOut,
+  Download,
+  Settings,
+} from "lucide-react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
 import { PageLayout } from "@/components/PageLayout";
@@ -38,7 +46,9 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Card className="p-8 max-w-md">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Access Denied</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-4">
+            Access Denied
+          </h1>
           <p className="text-muted-foreground mb-6">
             You need to be logged in to access the dashboard.
           </p>
@@ -83,7 +93,9 @@ export default function Dashboard() {
         <div className="container flex items-center justify-between py-4">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-            <p className="text-sm text-muted-foreground">Welcome back, {user.name}</p>
+            <p className="text-sm text-muted-foreground">
+              Welcome back, {user.name}
+            </p>
           </div>
           <Button
             variant="outline"
@@ -123,24 +135,33 @@ export default function Dashboard() {
                 <div className="space-y-6">
                   {/* Status Badge */}
                   <div className="flex items-center gap-3">
-                    <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${getStatusColor(subscription.status)}`}>
+                    <div
+                      className={`flex items-center gap-2 px-4 py-2 rounded-full ${getStatusColor(subscription.status)}`}
+                    >
                       {getStatusIcon(subscription.status)}
-                      <span className="font-semibold capitalize">{subscription.status}</span>
+                      <span className="font-semibold capitalize">
+                        {subscription.status}
+                      </span>
                     </div>
                   </div>
 
                   {/* Plan Details */}
                   <div className="grid grid-cols-2 gap-6">
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">Current Plan</p>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Current Plan
+                      </p>
                       <p className="text-xl font-bold text-foreground capitalize">
                         {subscription.plan}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">Billing Cycle</p>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Billing Cycle
+                      </p>
                       <p className="text-xl font-bold text-foreground">
-                        {subscription.currentPeriodStart && subscription.currentPeriodEnd
+                        {subscription.currentPeriodStart &&
+                        subscription.currentPeriodEnd
                           ? `${formatDate(subscription.currentPeriodStart, "MMM d")} - ${formatDate(subscription.currentPeriodEnd, "MMM d, yyyy")}`
                           : "N/A"}
                       </p>
@@ -148,24 +169,33 @@ export default function Dashboard() {
                   </div>
 
                   {/* Renewal Info */}
-                  {subscription.status === "active" && subscription.currentPeriodEnd && (
-                    <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
-                      <p className="text-sm text-muted-foreground mb-1">Next Renewal</p>
-                      <p className="text-lg font-semibold text-foreground">
-                        {formatDate(subscription.currentPeriodEnd, "MMMM d, yyyy")}
-                      </p>
-                    </div>
-                  )}
+                  {subscription.status === "active" &&
+                    subscription.currentPeriodEnd && (
+                      <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-1">
+                          Next Renewal
+                        </p>
+                        <p className="text-lg font-semibold text-foreground">
+                          {formatDate(
+                            subscription.currentPeriodEnd,
+                            "MMMM d, yyyy"
+                          )}
+                        </p>
+                      </div>
+                    )}
 
                   {/* Canceled Info */}
-                  {subscription.status === "canceled" && subscription.canceledAt && (
-                    <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                      <p className="text-sm text-muted-foreground mb-1">Canceled On</p>
-                      <p className="text-lg font-semibold text-red-800">
-                        {formatDate(subscription.canceledAt, "MMMM d, yyyy")}
-                      </p>
-                    </div>
-                  )}
+                  {subscription.status === "canceled" &&
+                    subscription.canceledAt && (
+                      <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-1">
+                          Canceled On
+                        </p>
+                        <p className="text-lg font-semibold text-red-800">
+                          {formatDate(subscription.canceledAt, "MMMM d, yyyy")}
+                        </p>
+                      </div>
+                    )}
 
                   {/* Action Buttons */}
                   <div className="flex gap-3 pt-4 border-t border-border">
@@ -189,7 +219,11 @@ export default function Dashboard() {
                           className="ml-auto text-red-600 hover:text-red-700"
                           disabled={cancelMutation.isPending}
                           onClick={async () => {
-                            if (confirm("Are you sure you want to cancel your subscription?")) {
+                            if (
+                              confirm(
+                                "Are you sure you want to cancel your subscription?"
+                              )
+                            ) {
                               try {
                                 await cancelMutation.mutateAsync();
                                 toast.success("Subscription canceled");
@@ -220,7 +254,9 @@ export default function Dashboard() {
             {/* Payment History */}
             <Card className="p-8 border border-border">
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-foreground mb-2">Payment History</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-2">
+                  Payment History
+                </h2>
                 <p className="text-muted-foreground">
                   View all your past transactions and invoices
                 </p>
@@ -228,8 +264,11 @@ export default function Dashboard() {
 
               {paymentsLoading ? (
                 <div className="space-y-4">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="h-16 bg-muted rounded animate-pulse"></div>
+                  {[1, 2, 3].map(i => (
+                    <div
+                      key={i}
+                      className="h-16 bg-muted rounded animate-pulse"
+                    ></div>
                   ))}
                 </div>
               ) : payments && payments.length > 0 ? (
@@ -237,16 +276,29 @@ export default function Dashboard() {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-border">
-                        <th className="text-left py-3 px-4 font-semibold text-foreground">Date</th>
-                        <th className="text-left py-3 px-4 font-semibold text-foreground">Amount</th>
-                        <th className="text-left py-3 px-4 font-semibold text-foreground">Status</th>
-                        <th className="text-left py-3 px-4 font-semibold text-foreground">Description</th>
-                        <th className="text-right py-3 px-4 font-semibold text-foreground">Invoice</th>
+                        <th className="text-left py-3 px-4 font-semibold text-foreground">
+                          Date
+                        </th>
+                        <th className="text-left py-3 px-4 font-semibold text-foreground">
+                          Amount
+                        </th>
+                        <th className="text-left py-3 px-4 font-semibold text-foreground">
+                          Status
+                        </th>
+                        <th className="text-left py-3 px-4 font-semibold text-foreground">
+                          Description
+                        </th>
+                        <th className="text-right py-3 px-4 font-semibold text-foreground">
+                          Invoice
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {payments.map((payment) => (
-                        <tr key={payment.id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                      {payments.map(payment => (
+                        <tr
+                          key={payment.id}
+                          className="border-b border-border hover:bg-muted/50 transition-colors"
+                        >
                           <td className="py-4 px-4 text-foreground">
                             {formatDate(payment.createdAt, "MMM d, yyyy")}
                           </td>
@@ -272,7 +324,9 @@ export default function Dashboard() {
                               {payment.status === "processing" && (
                                 <Clock className="w-4 h-4 mr-1" />
                               )}
-                              <span className="capitalize">{payment.status}</span>
+                              <span className="capitalize">
+                                {payment.status}
+                              </span>
                             </span>
                           </td>
                           <td className="py-4 px-4 text-muted-foreground text-sm">
@@ -284,8 +338,12 @@ export default function Dashboard() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={async () => {
-                                  const invoice = invoices.find((inv) =>
-                                    Math.abs(inv.date.getTime() - new Date(payment.createdAt).getTime()) < 86400000
+                                  const invoice = invoices.find(
+                                    inv =>
+                                      Math.abs(
+                                        inv.date.getTime() -
+                                          new Date(payment.createdAt).getTime()
+                                      ) < 86400000
                                   );
                                   if (invoice && invoice.pdfUrl) {
                                     window.open(invoice.pdfUrl, "_blank");
@@ -304,7 +362,9 @@ export default function Dashboard() {
               ) : (
                 <div className="p-6 bg-muted/50 rounded-lg border border-border text-center">
                   <CreditCard className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-                  <p className="text-muted-foreground">No payment history yet</p>
+                  <p className="text-muted-foreground">
+                    No payment history yet
+                  </p>
                 </div>
               )}
             </Card>
@@ -314,18 +374,26 @@ export default function Dashboard() {
           <div className="space-y-6">
             {/* User Info Card */}
             <Card className="p-6 border border-border">
-              <h3 className="text-lg font-bold text-foreground mb-4">Account Information</h3>
+              <h3 className="text-lg font-bold text-foreground mb-4">
+                Account Information
+              </h3>
               <div className="space-y-4">
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Name</p>
-                  <p className="font-semibold text-foreground">{user.name || "Not set"}</p>
+                  <p className="font-semibold text-foreground">
+                    {user.name || "Not set"}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Email</p>
-                  <p className="font-semibold text-foreground break-all">{user.email || "Not set"}</p>
+                  <p className="font-semibold text-foreground break-all">
+                    {user.email || "Not set"}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Member Since</p>
+                  <p className="text-sm text-muted-foreground mb-1">
+                    Member Since
+                  </p>
                   <p className="font-semibold text-foreground">
                     {formatDate(user.createdAt, "MMMM d, yyyy")}
                   </p>
@@ -335,18 +403,36 @@ export default function Dashboard() {
 
             {/* Quick Links */}
             <Card className="p-6 border border-border">
-              <h3 className="text-lg font-bold text-foreground mb-4">Quick Links</h3>
+              <h3 className="text-lg font-bold text-foreground mb-4">
+                Quick Links
+              </h3>
               <div className="space-y-2">
-                <Button variant="ghost" className="w-full justify-start" disabled>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  disabled
+                >
                   Edit Profile
                 </Button>
-                <Button variant="ghost" className="w-full justify-start" disabled>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  disabled
+                >
                   Billing Settings
                 </Button>
-                <Button variant="ghost" className="w-full justify-start" disabled>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  disabled
+                >
                   Download Invoices
                 </Button>
-                <Button variant="ghost" className="w-full justify-start" disabled>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  disabled
+                >
                   Support
                 </Button>
               </div>
@@ -354,9 +440,12 @@ export default function Dashboard() {
 
             {/* Help Card */}
             <Card className="p-6 border border-border bg-primary/5">
-              <h3 className="text-lg font-bold text-foreground mb-2">Need Help?</h3>
+              <h3 className="text-lg font-bold text-foreground mb-2">
+                Need Help?
+              </h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Check our documentation or contact our support team for assistance.
+                Check our documentation or contact our support team for
+                assistance.
               </p>
               <Button variant="outline" className="w-full" disabled>
                 Contact Support

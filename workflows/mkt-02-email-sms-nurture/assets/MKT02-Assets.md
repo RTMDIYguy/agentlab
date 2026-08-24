@@ -1,9 +1,11 @@
 # MKT02: Email/SMS Nurture Assets
 
 ## 1. 5-Part Email Nurture Sequence
-*Target Audience: "Warm" Leads who downloaded gated content but are not yet ready to buy.*
+
+_Target Audience: "Warm" Leads who downloaded gated content but are not yet ready to buy._
 
 ### Email 1: The Delivery & Educational Value
+
 **Send Time:** Immediate
 **Subject:** Here's your [Content Name] + a quick tip
 **Body:**
@@ -21,6 +23,7 @@ Best,
 [Your Name]
 
 ### Email 2: The Value-Add Framework
+
 **Send Time:** +3 Days
 **Subject:** The [Framework Name] framework for [Desired Outcome]
 **Body:**
@@ -29,6 +32,7 @@ Hi [First Name],
 A few days ago I promised to share the exact framework we use to help our clients achieve [Desired Outcome].
 
 It comes down to 3 simple steps:
+
 1. **[Step 1]**: [Brief explanation]
 2. **[Step 2]**: [Brief explanation]
 3. **[Step 3]**: [Brief explanation]
@@ -40,12 +44,13 @@ I've put together a short 3-minute video breaking down exactly how you can apply
 Let me know what you think!
 
 ### Email 3: The Soft Pitch & Case Study
+
 **Send Time:** +4 Days
 **Subject:** How [Customer Name] stopped struggling with [Pain Point]
 **Body:**
 Hi [First Name],
 
-By now, you've seen the framework. But I know what you might be thinking: *"This sounds great in theory, but how does it work in practice?"*
+By now, you've seen the framework. But I know what you might be thinking: _"This sounds great in theory, but how does it work in practice?"_
 
 Before they started working with us, [Customer Name] was dealing with the exact same [Pain Point] you might be facing. They were losing [Metric/Money/Time] every single month.
 
@@ -57,6 +62,7 @@ If you're curious about how this would look for your specific situation, I'd be 
 [Link to Calendar]
 
 ### Email 4: The Hard Pitch (Urgency/Logic)
+
 **Send Time:** +4 Days
 **Subject:** The cost of waiting on [Problem Area]
 **Body:**
@@ -71,6 +77,7 @@ I have a few openings on my calendar next week to do a custom audit of your curr
 Grab a time that works for you here: [Link to Calendar]
 
 ### Email 5: The Breakup / Re-engagement
+
 **Send Time:** +7 Days
 **Subject:** Closing the loop / Should I stay or should I go?
 **Body:**
@@ -87,7 +94,8 @@ Best of luck with the rest of Q[Current Quarter]!
 ---
 
 ## 2. SMS Follow-Up Templates
-*To be used sparingly alongside emails for high-priority leads who provided mobile numbers.*
+
+_To be used sparingly alongside emails for high-priority leads who provided mobile numbers._
 
 **SMS 1 (Sent 1 hour after Email 1):**
 "Hi [First Name], just sent over the [Content Name] to your email! Let me know if you have any issues accessing it. - [Your Name] from [Company]"

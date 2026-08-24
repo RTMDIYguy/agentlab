@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | CUL-05 |
-| Department | Culture |
-| Automation level | 70-80% |
-| Owner | Robert T. McCarthy |
-| Trigger | New hire confirmed |
-| Cycle time | Onboarding: 5-day sprint; training: 2 hrs/week |
-| Source status | Imported source |
+| Field            | Value                                          |
+| ---------------- | ---------------------------------------------- |
+| Workflow ID      | CUL-05                                         |
+| Department       | Culture                                        |
+| Automation level | 70-80%                                         |
+| Owner            | Robert T. McCarthy                             |
+| Trigger          | New hire confirmed                             |
+| Cycle time       | Onboarding: 5-day sprint; training: 2 hrs/week |
+| Source status    | Imported source                                |
 
 ## Inputs
 
@@ -85,17 +85,17 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
+| Artifact                                 | Purpose                                                                     |
+| ---------------------------------------- | --------------------------------------------------------------------------- |
 | `source/URC-CUL-05_YC_Investor_Story.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/CUL05-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/CUL-05_Training_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/CUL05-Blueprint.json`        | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/CUL-05_Training_Tracker.xlsx`  | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-CUL-05_YC_Investor_Story.md
 
-````markdown
+```markdown
 # CUL-05 - Growth & Training Source
 
 Source: `Culture\URC Culture files\updated files 03262026\URC-CUL-05_YC_Investor_Story.docx`
@@ -108,7 +108,7 @@ URC-CUL-05 — The YC & Investor Story
 
 Updated March 26, 2026 — Solo Founder Edition
 
-Robert T. McCarthy   |   v1.1   |   March 26, 2026
+Robert T. McCarthy | v1.1 | March 26, 2026
 
 1. Why This Document Exists
 
@@ -237,11 +237,11 @@ March 26, 2026
 R. McCarthy
 
 Updated: Sheena Burns stepped back from co-founder role March 2026
-````
+```
 
 ### automation/CUL05-Blueprint.json
 
-````json
+```json
 {
   "name": "CUL05: Investor Story (Make.com Blueprint)",
   "flow": [
@@ -279,7 +279,7 @@ Updated: Sheena Burns stepped back from co-founder role March 2026
     }
   ]
 }
-````
+```
 
 ## Binary Attachments
 
@@ -371,6 +371,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

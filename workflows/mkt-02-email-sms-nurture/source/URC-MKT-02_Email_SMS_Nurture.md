@@ -8,7 +8,7 @@ This Markdown file is a text extraction of the source `.docx` for GitHub-readabl
 
 URC-MKT-02 — Email & SMS Nurture
 
-Owner: Robert T. McCarthy, Founder & CEO   |   Version: v1.0   |   Updated: March 21, 2026
+Owner: Robert T. McCarthy, Founder & CEO | Version: v1.0 | Updated: March 21, 2026
 
 1. Document Purpose
 
@@ -308,7 +308,7 @@ HubSpot: leads enrolled vs. calls booked
 
 List growth / month
 
-+ 50+ subscribers
+- 50+ subscribers
 
 Mailchimp subscriber growth report
 

@@ -1,6 +1,6 @@
-import { buildSchemaFromFactories } from '@autonoma-ai/sdk';
-import { z } from 'zod';
-import { defineFactory } from '@autonoma-ai/sdk';
+import { buildSchemaFromFactories } from "@autonoma-ai/sdk";
+import { z } from "zod";
+import { defineFactory } from "@autonoma-ai/sdk";
 
 // Recreate exactly what factories.ts exports to test buildSchemaFromFactories
 
@@ -21,7 +21,9 @@ const Quote = defineFactory({
     email: z.string(),
     name: z.string(),
     company: z.string().optional(),
-    status: z.enum(["draft", "sent", "viewed", "accepted", "rejected"]).optional(),
+    status: z
+      .enum(["draft", "sent", "viewed", "accepted", "rejected"])
+      .optional(),
     subtotal: z.number(),
     tax: z.number().optional(),
     total: z.number(),
@@ -54,8 +56,8 @@ const factories = {
 };
 
 try {
-  const schema = buildSchemaFromFactories(factories as any, 'testRunId');
-  console.log('Success! Models count:', schema.models.length);
+  const schema = buildSchemaFromFactories(factories as any, "testRunId");
+  console.log("Success! Models count:", schema.models.length);
 } catch (e) {
-  console.error('ERROR:', e.message);
+  console.error("ERROR:", e.message);
 }

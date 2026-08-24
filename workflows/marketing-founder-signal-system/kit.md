@@ -261,13 +261,13 @@ Do not use this kit when:
 
 ### Parameters
 
-| Parameter | Default | Notes |
-| --- | --- | --- |
-| Cycle length | 1 week | Move to biweekly only if the founder cannot sustain weekly |
-| Content batch size | 3 to 5 LinkedIn posts, 1 short email, 1 anchor outline | Smaller than this is fine; bigger usually fails |
-| Outreach batch size | 10 to 25 named prospects per cycle | Hard ceiling 25 so messages stay personal |
-| Sequence touches | 3 total | First outreach, helpful follow-up, specific problem / close-the-loop |
-| Proof log cadence | Every cycle | Skipping the log breaks the system |
+| Parameter           | Default                                                | Notes                                                                |
+| ------------------- | ------------------------------------------------------ | -------------------------------------------------------------------- |
+| Cycle length        | 1 week                                                 | Move to biweekly only if the founder cannot sustain weekly           |
+| Content batch size  | 3 to 5 LinkedIn posts, 1 short email, 1 anchor outline | Smaller than this is fine; bigger usually fails                      |
+| Outreach batch size | 10 to 25 named prospects per cycle                     | Hard ceiling 25 so messages stay personal                            |
+| Sequence touches    | 3 total                                                | First outreach, helpful follow-up, specific problem / close-the-loop |
+| Proof log cadence   | Every cycle                                            | Skipping the log breaks the system                                   |
 
 ### Models
 
@@ -323,15 +323,15 @@ batch.
 
 ## Source Map
 
-| Source | Role |
-| --- | --- |
-| `workflows/mkt-01-lead-generation-conversion/` | ICP definition and qualified-conversation criteria |
-| `workflows/mkt-03-polls-assessments/` | Founder intake and lightweight diagnostic |
-| `workflows/mkt-06-content-creation-dissemination/` | Content engine and content brief |
-| `workflows/mkt-05-outreach-engagement/` | Small human outreach list and message style |
-| `workflows/mkt-02-email-sms-nurture/` | Three-touch follow-up sequence and response segmentation |
-| `workflows/mkt-04-reviews-referrals/` | Proof capture, testimonial triggers, and referral signals |
-| `source-map.md` | Detailed rationale tying the thin slice back to source workflows |
+| Source                                             | Role                                                             |
+| -------------------------------------------------- | ---------------------------------------------------------------- |
+| `workflows/mkt-01-lead-generation-conversion/`     | ICP definition and qualified-conversation criteria               |
+| `workflows/mkt-03-polls-assessments/`              | Founder intake and lightweight diagnostic                        |
+| `workflows/mkt-06-content-creation-dissemination/` | Content engine and content brief                                 |
+| `workflows/mkt-05-outreach-engagement/`            | Small human outreach list and message style                      |
+| `workflows/mkt-02-email-sms-nurture/`              | Three-touch follow-up sequence and response segmentation         |
+| `workflows/mkt-04-reviews-referrals/`              | Proof capture, testimonial triggers, and referral signals        |
+| `source-map.md`                                    | Detailed rationale tying the thin slice back to source workflows |
 
 ## Automation Blueprint
 
@@ -392,7 +392,6 @@ The Make.com link lane also requires a public sharing link and a successful inst
   `automation/make-public-template-publisher-checklist.md`. The link remains
   pending until Make.com public sharing is generated and tested.
 
-
 ## Consolidated Install Surface
 
 This section folds the former split `template.md` and Make blueprint surface into the operative kit file. The old files are retained as legacy/provenance artifacts, but this section is the package authority.
@@ -427,7 +426,7 @@ Logged: 2026-05-17
 - Gmail output node test fired successfully.
 - OpenAI node is reachable and mapped, but full sequence test is blocked by
   OpenAI error `[429] You have consumed all credits in your OpenAI account,
-  or exceeded your monthly OpenAI budget.`
+or exceeded your monthly OpenAI budget.`
 - Scenario should remain off until OpenAI credits or monthly budget are
   restored and one full Tally to OpenAI to Gmail test succeeds.
 - Public Magic Template Link has not been generated yet.
@@ -455,13 +454,13 @@ public sharing link, the buyer can:
 
 The Standard-tier template expects these services:
 
-| Service | Required? | Used For |
-| --- | --- | --- |
-| Make.com | Yes | Scenario hosting and execution |
-| OpenAI | Yes | Drafting the signal brief, content prompts, and follow-up language |
-| HubSpot | Optional | Creating or updating the CRM-lite contact record |
-| Microsoft 365 Outlook | Optional | Sending the internal setup summary |
-| Microsoft 365 Excel or Lists | Optional | Logging proof-loop and follow-up records |
+| Service                      | Required? | Used For                                                           |
+| ---------------------------- | --------- | ------------------------------------------------------------------ |
+| Make.com                     | Yes       | Scenario hosting and execution                                     |
+| OpenAI                       | Yes       | Drafting the signal brief, content prompts, and follow-up language |
+| HubSpot                      | Optional  | Creating or updating the CRM-lite contact record                   |
+| Microsoft 365 Outlook        | Optional  | Sending the internal setup summary                                 |
+| Microsoft 365 Excel or Lists | Optional  | Logging proof-loop and follow-up records                           |
 
 If a buyer does not use HubSpot or Microsoft 365, run the Manual tier instead
 and use the Markdown templates in `assets/`.
@@ -661,7 +660,6 @@ Do not delay buyer delivery just because the public sharing link is not ready.
 }
 ```
 
-
 ## Embedded Package Documents
 
 This appendix makes the Founder Signal System kit self-contained for review. The original files remain in place as editable working copies, but the kit now carries their readable contents.
@@ -767,17 +765,17 @@ starting point and the next layer should be planned as a separate engagement.
 
 The full URC Marketing department has nine workflows:
 
-| ID | Workflow | Included In This Package? |
-| --- | --- | --- |
-| MKT-01 | Lead Generation & Conversion | Yes — ICP and qualified-conversation layer only |
-| MKT-02 | Email/SMS Nurture | Yes — three-touch outreach and follow-up only |
-| MKT-03 | Polls & Assessments | Yes — light intake/diagnostic only |
-| MKT-04 | Reviews & Referrals | Yes — proof capture only |
-| MKT-05 | Outreach & Engagement | Yes — small human outreach list only |
-| MKT-06 | Content Creation & Dissemination | Yes — content engine, the visible wedge |
-| MKT-07 | Paid Advertising / PPC | No |
-| MKT-08 | Social Media Management | No |
-| MKT-09 | Event & Webinar Marketing | No |
+| ID     | Workflow                         | Included In This Package?                       |
+| ------ | -------------------------------- | ----------------------------------------------- |
+| MKT-01 | Lead Generation & Conversion     | Yes — ICP and qualified-conversation layer only |
+| MKT-02 | Email/SMS Nurture                | Yes — three-touch outreach and follow-up only   |
+| MKT-03 | Polls & Assessments              | Yes — light intake/diagnostic only              |
+| MKT-04 | Reviews & Referrals              | Yes — proof capture only                        |
+| MKT-05 | Outreach & Engagement            | Yes — small human outreach list only            |
+| MKT-06 | Content Creation & Dissemination | Yes — content engine, the visible wedge         |
+| MKT-07 | Paid Advertising / PPC           | No                                              |
+| MKT-08 | Social Media Management          | No                                              |
+| MKT-09 | Event & Webinar Marketing        | No                                              |
 
 The visible wedge is MKT-06 because that is where founders feel the pain
 first. The package only includes the minimum viable dependencies from the
@@ -855,7 +853,7 @@ Initial build logged as `CC-2026-05-15-003`. See
 
 ### source-map.md
 
-````markdown
+```markdown
 # Source Map — Founder Signal System
 
 Every step in the Founder Signal System maps back to a specific URC source
@@ -868,13 +866,13 @@ inherit the full URC workflow.
 
 ## Source Locations
 
-| ID | Repo Folder | Source File |
-| --- | --- | --- |
-| MKT-01 | `workflows/mkt-01-lead-generation-conversion/` | `source/URC-MKT-01_Lead_Generation_Conversion.md` |
-| MKT-02 | `workflows/mkt-02-email-sms-nurture/` | `source/URC-MKT-02_Email_SMS_Nurture.md` |
-| MKT-03 | `workflows/mkt-03-polls-assessments/` | `source/URC-MKT-03_Polls_Assessments.md` |
-| MKT-04 | `workflows/mkt-04-reviews-referrals/` | `source/URC-MKT-04_Reviews_Referrals.md` |
-| MKT-05 | `workflows/mkt-05-outreach-engagement/` | `source/URC-MKT-05_Outreach_Engagement.md` |
+| ID     | Repo Folder                                        | Source File                                           |
+| ------ | -------------------------------------------------- | ----------------------------------------------------- |
+| MKT-01 | `workflows/mkt-01-lead-generation-conversion/`     | `source/URC-MKT-01_Lead_Generation_Conversion.md`     |
+| MKT-02 | `workflows/mkt-02-email-sms-nurture/`              | `source/URC-MKT-02_Email_SMS_Nurture.md`              |
+| MKT-03 | `workflows/mkt-03-polls-assessments/`              | `source/URC-MKT-03_Polls_Assessments.md`              |
+| MKT-04 | `workflows/mkt-04-reviews-referrals/`              | `source/URC-MKT-04_Reviews_Referrals.md`              |
+| MKT-05 | `workflows/mkt-05-outreach-engagement/`            | `source/URC-MKT-05_Outreach_Engagement.md`            |
 | MKT-06 | `workflows/mkt-06-content-creation-dissemination/` | `source/URC-MKT-06_Content_Creation_Dissemination.md` |
 
 The reference kit-format implementation pattern lives at
@@ -886,25 +884,25 @@ draft-stage starter package and reuses the manifest shape.
 
 ### Step 1 — ICP and Fit Focus
 
-| Package Element | Source Workflow | Source Section |
-| --- | --- | --- |
-| Definition of ICP | MKT-01 | Section 3 — Ideal Customer Profile |
-| Painful problem language | MKT-01 | Section 3 — pain points dimension |
-| What counts as a qualified conversation | MKT-01 | Section 6 — Lead Qualification & Handoff |
-| Exclusion criteria pattern | MKT-01 | Section 3 — ICP dimensions, especially budget and stage |
-| Channels to find the ICP | MKT-01 | Section 4 — Lead Generation Channels |
+| Package Element                         | Source Workflow | Source Section                                          |
+| --------------------------------------- | --------------- | ------------------------------------------------------- |
+| Definition of ICP                       | MKT-01          | Section 3 — Ideal Customer Profile                      |
+| Painful problem language                | MKT-01          | Section 3 — pain points dimension                       |
+| What counts as a qualified conversation | MKT-01          | Section 6 — Lead Qualification & Handoff                |
+| Exclusion criteria pattern              | MKT-01          | Section 3 — ICP dimensions, especially budget and stage |
+| Channels to find the ICP                | MKT-01          | Section 4 — Lead Generation Channels                    |
 
 Asset using this: `assets/intake-questions.md` (ICP and audience sections),
 README "Who This Is For".
 
 ### Step 2 — Diagnostic and Segmentation
 
-| Package Element | Source Workflow | Source Section |
-| --- | --- | --- |
-| Short intake / founder interview format | MKT-03 | Section 3 — URC Assessment Strategy |
-| Segmentation logic (interested / not now / referral / no response) | MKT-03 | Section 4 — Active Assessments, outcome segments |
-| Lightweight vs heavy survey decision | MKT-03 | Section 4.1 — AI Readiness Quiz, scoring approach |
-| Real-time scoring discipline | MKT-03 | Workflow Overview — typical cycle time |
+| Package Element                                                    | Source Workflow | Source Section                                    |
+| ------------------------------------------------------------------ | --------------- | ------------------------------------------------- |
+| Short intake / founder interview format                            | MKT-03          | Section 3 — URC Assessment Strategy               |
+| Segmentation logic (interested / not now / referral / no response) | MKT-03          | Section 4 — Active Assessments, outcome segments  |
+| Lightweight vs heavy survey decision                               | MKT-03          | Section 4.1 — AI Readiness Quiz, scoring approach |
+| Real-time scoring discipline                                       | MKT-03          | Workflow Overview — typical cycle time            |
 
 Asset using this: `assets/intake-questions.md` (full file), plus the
 "interested / not now / referral / no response" buckets in
@@ -912,26 +910,26 @@ Asset using this: `assets/intake-questions.md` (full file), plus the
 
 ### Step 3 — Content Engine
 
-| Package Element | Source Workflow | Source Section |
-| --- | --- | --- |
-| Content brief composition | MKT-06 | Section 5 — Content Creation Process |
-| Content pillars pattern | MKT-06 | Section 4 — Content Pillars |
-| Idea-to-publish cycle time | MKT-06 | Section 2 — Workflow Overview |
-| Founder POV vs brand voice | MKT-06 | Section 4 — Robert's Perspective pillar |
-| Distribution / repurposing approach | MKT-06 | Section 5 onward — Creation Process and downstream channels |
+| Package Element                     | Source Workflow | Source Section                                              |
+| ----------------------------------- | --------------- | ----------------------------------------------------------- |
+| Content brief composition           | MKT-06          | Section 5 — Content Creation Process                        |
+| Content pillars pattern             | MKT-06          | Section 4 — Content Pillars                                 |
+| Idea-to-publish cycle time          | MKT-06          | Section 2 — Workflow Overview                               |
+| Founder POV vs brand voice          | MKT-06          | Section 4 — Robert's Perspective pillar                     |
+| Distribution / repurposing approach | MKT-06          | Section 5 onward — Creation Process and downstream channels |
 
 Asset using this: `assets/content-brief-template.md`. The kit/1.0 reference
 manifest shape is borrowed from `mkt-06-content-creation-dissemination/kit.md`.
 
 ### Step 4 — Outreach Lane
 
-| Package Element | Source Workflow | Source Section |
-| --- | --- | --- |
-| Outreach philosophy (only reach out with something relevant) | MKT-05 | Section 3 — Outreach Philosophy |
-| LinkedIn outreach style | MKT-05 | Section 4.1 — LinkedIn (Primary Outreach Channel) |
-| Email outreach for warm leads | MKT-05 | Section 4.2 — Email Outreach |
-| 3-touch maximum cadence | MKT-05 | Section 4.2 — Maximum 3-touch sequence |
-| No bulk automation | MKT-05 | Section 4.1 — No automated bulk messaging |
+| Package Element                                              | Source Workflow | Source Section                                    |
+| ------------------------------------------------------------ | --------------- | ------------------------------------------------- |
+| Outreach philosophy (only reach out with something relevant) | MKT-05          | Section 3 — Outreach Philosophy                   |
+| LinkedIn outreach style                                      | MKT-05          | Section 4.1 — LinkedIn (Primary Outreach Channel) |
+| Email outreach for warm leads                                | MKT-05          | Section 4.2 — Email Outreach                      |
+| 3-touch maximum cadence                                      | MKT-05          | Section 4.2 — Maximum 3-touch sequence            |
+| No bulk automation                                           | MKT-05          | Section 4.1 — No automated bulk messaging         |
 
 Asset using this: outreach lane in `implementation-checklist.md` (Day 4),
 plus the message style and consent rules referenced in
@@ -939,35 +937,35 @@ plus the message style and consent rules referenced in
 
 ### Step 5 — Follow-Up Lane
 
-| Package Element | Source Workflow | Source Section |
-| --- | --- | --- |
-| Three-touch follow-up sequence | MKT-02 | Section 4 — Nurture Tracks |
-| Value-first nurture philosophy | MKT-02 | Section 3 — Nurture Philosophy |
-| Response segmentation buckets | MKT-02 | Section 4 — Nurture Tracks by audience |
-| Cadence (helpful → specific → close-the-loop) | MKT-02 | Section 4 / 5 — sequence design |
+| Package Element                               | Source Workflow | Source Section                         |
+| --------------------------------------------- | --------------- | -------------------------------------- |
+| Three-touch follow-up sequence                | MKT-02          | Section 4 — Nurture Tracks             |
+| Value-first nurture philosophy                | MKT-02          | Section 3 — Nurture Philosophy         |
+| Response segmentation buckets                 | MKT-02          | Section 4 — Nurture Tracks by audience |
+| Cadence (helpful → specific → close-the-loop) | MKT-02          | Section 4 / 5 — sequence design        |
 
 Asset using this: `assets/follow-up-sequence-template.md`.
 
 ### Step 6 — Proof Loop
 
-| Package Element | Source Workflow | Source Section |
-| --- | --- | --- |
-| When to ask for testimonial or review | MKT-04 | Section 3.1 — When to Ask |
-| Review platforms and prioritization | MKT-04 | Section 3.2 — Review Platforms |
-| Case study capture pattern | MKT-04 | Section 3 onward — Reviews and Testimonials |
-| Feedback loop into next content cycle | MKT-04 | Section 3 — overall workflow goal |
+| Package Element                       | Source Workflow | Source Section                              |
+| ------------------------------------- | --------------- | ------------------------------------------- |
+| When to ask for testimonial or review | MKT-04          | Section 3.1 — When to Ask                   |
+| Review platforms and prioritization   | MKT-04          | Section 3.2 — Review Platforms              |
+| Case study capture pattern            | MKT-04          | Section 3 onward — Reviews and Testimonials |
+| Feedback loop into next content cycle | MKT-04          | Section 3 — overall workflow goal           |
 
 Asset using this: `assets/proof-capture-template.md` and the cycle-review
 step in `implementation-checklist.md` (Day 5).
 
 ## Reference Implementation (Not A Source, But A Pattern)
 
-| Reference | Repo Location | Purpose |
-| --- | --- | --- |
-| Active kit/1.0 reference | `mkt-06-content-creation-dissemination/kit.md` | Manifest shape, frontmatter, change log discipline |
-| Active kit README pattern | `mkt-06-content-creation-dissemination/README.md` | Structure for the package README |
-| Kit standard | `docs/operations/kit-auth-standard.md` | Auth contract (not required for this draft because the thin slice has no connectors) |
-| Canonical kit standard | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Journey_Kit.md` | Source-of-truth for kit/1.0 fields |
+| Reference                 | Repo Location                                                                                                 | Purpose                                                                              |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Active kit/1.0 reference  | `mkt-06-content-creation-dissemination/kit.md`                                                                | Manifest shape, frontmatter, change log discipline                                   |
+| Active kit README pattern | `mkt-06-content-creation-dissemination/README.md`                                                             | Structure for the package README                                                     |
+| Kit standard              | `docs/operations/kit-auth-standard.md`                                                                        | Auth contract (not required for this draft because the thin slice has no connectors) |
+| Canonical kit standard    | `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Journey_Kit.md` | Source-of-truth for kit/1.0 fields                                                   |
 
 ## What Is Deliberately Not Inherited
 
@@ -994,11 +992,11 @@ When a source workflow updates, this file is the diff point. Update the
 matching row, log the change in
 `docs/operations/change-control-register.md`, and reflect it in
 `kit.md` change log.
-````
+```
 
 ### implementation-checklist.md
 
-````markdown
+```markdown
 # Implementation Checklist — Founder Signal System
 
 A 3-to-5 day setup sprint that takes one founder from unclear audience and
@@ -1150,13 +1148,13 @@ output of the week.
 
 ## Cycle Cadence After Setup
 
-| Day | Activity | Time |
-| --- | --- | --- |
-| Cycle Day 1 | Content brief + draft batch | 60 to 90 min |
-| Cycle Day 2 | Publish first piece + send first 5 outreach messages | 45 to 60 min |
+| Day         | Activity                                                                  | Time         |
+| ----------- | ------------------------------------------------------------------------- | ------------ |
+| Cycle Day 1 | Content brief + draft batch                                               | 60 to 90 min |
+| Cycle Day 2 | Publish first piece + send first 5 outreach messages                      | 45 to 60 min |
 | Cycle Day 3 | Publish second piece + send remaining outreach + Touch 2 from prior cycle | 45 to 60 min |
-| Cycle Day 4 | Light day — reply to inbound + queue Touch 3 where needed | 30 min |
-| Cycle Day 5 | Update proof log + send/confirm Touch 3 + plan next cycle | 45 to 60 min |
+| Cycle Day 4 | Light day — reply to inbound + queue Touch 3 where needed                 | 30 min       |
+| Cycle Day 5 | Update proof log + send/confirm Touch 3 + plan next cycle                 | 45 to 60 min |
 
 After 3 cycles, run a longer review. After 6 cycles, decide whether to add
 an adjacent workflow (MKT-08 social, MKT-07 paid, MKT-09 events, or a full
@@ -1164,13 +1162,13 @@ nurture library from MKT-02).
 
 ## Common Failure Modes And Fixes
 
-| Failure | Symptom | Fix |
-| --- | --- | --- |
-| Skipped intake | Content "kind of" lands but no replies | Stop. Go back to Day 1. |
-| Content but no outreach | Posts publish, inbox is empty | Set a hard rule: no second cycle until outreach list is contacted |
-| Outreach but no follow-up | First touches sent, never followed up | Schedule Touch 1/2/3 on the calendar the same day the outreach goes out |
-| No proof log | Founder cannot describe what worked last cycle | Make the proof log the literal last step of every cycle, not an "if I have time" task |
-| Scope creep | Founder asks for paid ads or a website rebuild after week 2 | Refer back to README "What Is Intentionally Excluded". Quote the next layer as a separate engagement. |
+| Failure                   | Symptom                                                     | Fix                                                                                                   |
+| ------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Skipped intake            | Content "kind of" lands but no replies                      | Stop. Go back to Day 1.                                                                               |
+| Content but no outreach   | Posts publish, inbox is empty                               | Set a hard rule: no second cycle until outreach list is contacted                                     |
+| Outreach but no follow-up | First touches sent, never followed up                       | Schedule Touch 1/2/3 on the calendar the same day the outreach goes out                               |
+| No proof log              | Founder cannot describe what worked last cycle              | Make the proof log the literal last step of every cycle, not an "if I have time" task                 |
+| Scope creep               | Founder asks for paid ads or a website rebuild after week 2 | Refer back to README "What Is Intentionally Excluded". Quote the next layer as a separate engagement. |
 
 ## Verification
 
@@ -1188,11 +1186,11 @@ complete when:
       objection, testimonial, referral, or traction note
 
 If all five are true, this checklist has done its job.
-````
+```
 
 ### offer-one-pager.md
 
-````markdown
+```markdown
 # Founder Signal System — Offer One-Pager
 
 A starter marketing system for founders who already have customers but
@@ -1353,11 +1351,11 @@ Most founders do not need a marketing department. They need to know who
 they are for, what to say, where to say it, and whether anyone is
 listening. The Founder Signal System is the smallest sellable version of
 that answer.
-````
+```
 
 ### template.md
 
-````markdown
+```markdown
 # Magic Template Link — Founder Signal System
 
 Status: Make scenario deferred; n8n selected as preferred v1 runtime
@@ -1374,7 +1372,7 @@ Logged: 2026-05-17
 - Gmail output node test fired successfully.
 - OpenAI node is reachable and mapped, but full sequence test is blocked by
   OpenAI error `[429] You have consumed all credits in your OpenAI account,
-  or exceeded your monthly OpenAI budget.`
+or exceeded your monthly OpenAI budget.`
 - Scenario should remain off until OpenAI credits or monthly budget are
   restored and one full Tally to OpenAI to Gmail test succeeds.
 - Public Magic Template Link has not been generated yet.
@@ -1402,13 +1400,13 @@ public sharing link, the buyer can:
 
 The Standard-tier template expects these services:
 
-| Service | Required? | Used For |
-| --- | --- | --- |
-| Make.com | Yes | Scenario hosting and execution |
-| OpenAI | Yes | Drafting the signal brief, content prompts, and follow-up language |
-| HubSpot | Optional | Creating or updating the CRM-lite contact record |
-| Microsoft 365 Outlook | Optional | Sending the internal setup summary |
-| Microsoft 365 Excel or Lists | Optional | Logging proof-loop and follow-up records |
+| Service                      | Required? | Used For                                                           |
+| ---------------------------- | --------- | ------------------------------------------------------------------ |
+| Make.com                     | Yes       | Scenario hosting and execution                                     |
+| OpenAI                       | Yes       | Drafting the signal brief, content prompts, and follow-up language |
+| HubSpot                      | Optional  | Creating or updating the CRM-lite contact record                   |
+| Microsoft 365 Outlook        | Optional  | Sending the internal setup summary                                 |
+| Microsoft 365 Excel or Lists | Optional  | Logging proof-loop and follow-up records                           |
 
 If a buyer does not use HubSpot or Microsoft 365, run the Manual tier instead
 and use the Markdown templates in `assets/`.
@@ -1454,11 +1452,11 @@ If the Make.com link is unavailable, the package still works manually:
 - Log results in `assets/proof-capture-template.md`.
 
 Do not delay buyer delivery just because the public sharing link is not ready.
-````
+```
 
 ### assets/content-brief-template.md
 
-````markdown
+```markdown
 # Content Brief Template
 
 One filled-in instance per cycle. The brief is the single source of
@@ -1569,13 +1567,13 @@ anchor outline. Adjust only if the founder cannot sustain that.
 
 ### LinkedIn Posts
 
-| # | Hook / Angle | Pillar | CTA | Status |
-| --- | --- | --- | --- | --- |
-| 1 |  |  |  | Draft / Scheduled / Live |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
-| 5 |  |  |  |  |
+| #   | Hook / Angle | Pillar | CTA | Status                   |
+| --- | ------------ | ------ | --- | ------------------------ |
+| 1   |              |        |     | Draft / Scheduled / Live |
+| 2   |              |        |     |                          |
+| 3   |              |        |     |                          |
+| 4   |              |        |     |                          |
+| 5   |              |        |     |                          |
 
 Style notes for this cycle:
 
@@ -1647,11 +1645,11 @@ later.
 
 This section becomes input to `proof-capture-template.md` for the same
 cycle.
-````
+```
 
 ### assets/follow-up-sequence-template.md
 
-````markdown
+```markdown
 # Follow-Up Sequence Template
 
 A simple three-touch outreach and follow-up sequence for the outreach
@@ -1752,13 +1750,13 @@ or close cleanly if a direct ask would feel forced.
 
 When a reply comes in, classify it. This is what feeds the proof log.
 
-| Bucket | Definition | Next Action |
-| --- | --- | --- |
-| Interested | Real reply, real signal, willing to talk or learn more | Move to a 1:1 conversation. Stop the sequence. Log in proof log under "interested." |
-| Not now | Reply confirms relevance but timing is wrong | Stop the sequence. Note the timing reason. Add to a "revisit in 60 / 90 / 180 days" list. Log under "not now." |
-| Referral | Reply names someone else who is a better fit | Thank them. Ask permission to mention them when reaching out to the referral. Log under "referral." |
-| No response | No reply after all touches | Close the loop with Touch 3. Log under "no response." |
-| Objection | Reply pushes back, raises a real concern | Stop the sequence. Treat the objection as content. Log under "objection" with the exact wording. |
+| Bucket      | Definition                                             | Next Action                                                                                                    |
+| ----------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Interested  | Real reply, real signal, willing to talk or learn more | Move to a 1:1 conversation. Stop the sequence. Log in proof log under "interested."                            |
+| Not now     | Reply confirms relevance but timing is wrong           | Stop the sequence. Note the timing reason. Add to a "revisit in 60 / 90 / 180 days" list. Log under "not now." |
+| Referral    | Reply names someone else who is a better fit           | Thank them. Ask permission to mention them when reaching out to the referral. Log under "referral."            |
+| No response | No reply after all touches                             | Close the loop with Touch 3. Log under "no response."                                                          |
+| Objection   | Reply pushes back, raises a real concern               | Stop the sequence. Treat the objection as content. Log under "objection" with the exact wording.               |
 
 ## Things That Disqualify A Touch
 
@@ -1790,11 +1788,11 @@ If all five pass, send it.
 After every touch is sent, log the date and any reply against the
 proof log at `assets/proof-capture-template.md`. The follow-up
 sequence does not work without that loop.
-````
+```
 
 ### assets/intake-questions.md
 
-````markdown
+```markdown
 # Founder Intake Questions
 
 The point of this intake is to reveal who the founder is for, the painful
@@ -1994,11 +1992,11 @@ brief covering:
 10. Constraints to respect
 
 The signal brief is the input to every cycle that follows.
-````
+```
 
 ### assets/proof-capture-template.md
 
-````markdown
+```markdown
 # Proof Capture Template
 
 The single most important artifact in the Founder Signal System. The
@@ -2032,13 +2030,13 @@ happened." Capturing the fact that nothing happened is also signal.
 Capture every reply that came in during the cycle, regardless of
 channel. One row per reply.
 
-| Date | Contact | Channel | Touch # | Bucket | Reply Summary (1-2 lines) | Next Action |
-| --- | --- | --- | --- | --- | --- | --- |
-|  |  |  |  | Interested / Not now / Referral / Objection / Other |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
+| Date | Contact | Channel | Touch # | Bucket                                              | Reply Summary (1-2 lines) | Next Action |
+| ---- | ------- | ------- | ------- | --------------------------------------------------- | ------------------------- | ----------- |
+|      |         |         |         | Interested / Not now / Referral / Objection / Other |                           |             |
+|      |         |         |         |                                                     |                           |             |
+|      |         |         |         |                                                     |                           |             |
+|      |         |         |         |                                                     |                           |             |
+|      |         |         |         |                                                     |                           |             |
 
 Buckets:
 
@@ -2054,10 +2052,10 @@ Objections are content, not failures. Each unique objection gets
 written down in the contact's own words.
 
 | Date | Contact / Anonymized | Objection (exact wording) | Underlying belief or fear |
-| --- | --- | --- | --- |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
+| ---- | -------------------- | ------------------------- | ------------------------- |
+|      |                      |                           |                           |
+|      |                      |                           |                           |
+|      |                      |                           |                           |
 
 For each objection: is this a content piece for the next cycle? If
 yes, mark it and pull it into the next content brief's "founder POV"
@@ -2066,9 +2064,9 @@ or "painful problem" sections.
 ## 3. Referrals Received
 
 | Date | Sent By | Referral Name | Referral Context | Permission to Mention Sender? | Reach-Out Status |
-| --- | --- | --- | --- | --- | --- |
-|  |  |  |  | Yes / No |  |
-|  |  |  |  |  |  |
+| ---- | ------- | ------------- | ---------------- | ----------------------------- | ---------------- |
+|      |         |               |                  | Yes / No                      |                  |
+|      |         |               |                  |                               |                  |
 
 Thank-you sent to referrer within 24 hours? Track here:
 
@@ -2081,9 +2079,9 @@ From MKT-04 triggers: client NPS ≥ 9, first major deliverable approved,
 30-day or 90-day milestone, engagement concluded.
 
 | Date | Source / Customer | Trigger | Format Captured (quote, email screenshot, recorded call, review link) | Permission To Use Publicly? | Where Filed |
-| --- | --- | --- | --- | --- | --- |
-|  |  |  |  | Yes / No / Pending |  |
-|  |  |  |  |  |  |
+| ---- | ----------------- | ------- | --------------------------------------------------------------------- | --------------------------- | ----------- |
+|      |                   |         |                                                                       | Yes / No / Pending          |             |
+|      |                   |         |                                                                       |                             |             |
 
 Action items:
 
@@ -2097,11 +2095,11 @@ Action items:
 For each piece published this cycle, capture what happened. Numbers
 help, but plain observation matters more.
 
-| Piece | Channel | Pillar | Engagement (likes / comments / replies / DMs) | Notable comment, DM, or quote | Worth a sequel? |
-| --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  | Yes / No / Maybe |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
+| Piece | Channel | Pillar | Engagement (likes / comments / replies / DMs) | Notable comment, DM, or quote | Worth a sequel?  |
+| ----- | ------- | ------ | --------------------------------------------- | ----------------------------- | ---------------- |
+|       |         |        |                                               |                               | Yes / No / Maybe |
+|       |         |        |                                               |                               |                  |
+|       |         |        |                                               |                               |                  |
 
 Pick **the one piece that pulled the most**:
 
@@ -2168,9 +2166,9 @@ cycle at all), revisit the signal brief. Something upstream is wrong.
 Anything that did not get done this cycle but should not get lost.
 
 | Item | Owner | Target Cycle | Notes |
-| --- | --- | --- | --- |
-|  |  |  |  |
-|  |  |  |  |
+| ---- | ----- | ------------ | ----- |
+|      |       |              |       |
+|      |       |              |       |
 
 ---
 
@@ -2188,11 +2186,11 @@ Anything that did not get done this cycle but should not get lost.
 
 The point of the proof log is not the log. The point is that the
 founder stops guessing.
-````
+```
 
 ### automation/Founder-Signal-System-Make-Blueprint.json
 
-````json
+```json
 {
   "name": "Founder Signal System: Intake to Signal Brief (Make.com Blueprint)",
   "description": "Standard-tier scenario build spec for the Founder Signal System. This file documents the intended modules and mappings, but it is not a Make.com-importable blueprint because Make requires platform-generated module identifiers.",
@@ -2341,11 +2339,11 @@ founder stops guessing.
     "notes": "Draft blueprint for building the Make.com public sharing scenario. Before market use, import or recreate in Make.com, validate module IDs and mappings, replace placeholder workbook/sheet values, publish a public sharing link, and update template.md."
   }
 }
-````
+```
 
 ### automation/make-public-template-publisher-checklist.md
 
-````markdown
+```markdown
 # Make.com Public Template Publisher Checklist
 
 Use this checklist to convert the Founder Signal System Standard-tier draft
@@ -2374,7 +2372,7 @@ Logged: 2026-05-17
 - Gmail output node test: passed.
 - OpenAI node: reachable and mapped, but blocked by OpenAI account error
   `[429] You have consumed all credits in your OpenAI account, or exceeded
-  your monthly OpenAI budget.`
+your monthly OpenAI budget.`
 - Scenario status: built, not enabled.
 - Next action: restore OpenAI credits or raise monthly budget, rerun one full
   sequence test, then turn on the scenario and generate the public sharing
@@ -2416,19 +2414,19 @@ Logged: 2026-05-17
 
 Use this non-sensitive test data:
 
-| Field | Value |
-| --- | --- |
-| founder_name | Jordan Lee |
-| email | jordan@example.com |
-| company | Bright Harbor Ops |
-| offer | Operations cleanup sprint for small service businesses |
-| ideal_customer | Founder-led service business with 3-15 employees |
-| painful_problem | Work is spread across inboxes, spreadsheets, and memory |
-| desired_outcome | One weekly operating rhythm and one clean lead follow-up tracker |
-| proof_points | Reduced missed follow-ups; created one shared owner dashboard |
-| exclusions | Not for venture-backed teams replacing their full CRM |
-| primary_channel | LinkedIn |
-| notification_email | jordan@example.com |
+| Field              | Value                                                            |
+| ------------------ | ---------------------------------------------------------------- |
+| founder_name       | Jordan Lee                                                       |
+| email              | jordan@example.com                                               |
+| company            | Bright Harbor Ops                                                |
+| offer              | Operations cleanup sprint for small service businesses           |
+| ideal_customer     | Founder-led service business with 3-15 employees                 |
+| painful_problem    | Work is spread across inboxes, spreadsheets, and memory          |
+| desired_outcome    | One weekly operating rhythm and one clean lead follow-up tracker |
+| proof_points       | Reduced missed follow-ups; created one shared owner dashboard    |
+| exclusions         | Not for venture-backed teams replacing their full CRM            |
+| primary_channel    | LinkedIn                                                         |
+| notification_email | jordan@example.com                                               |
 
 ## Acceptance Criteria
 
@@ -2444,7 +2442,7 @@ Use this non-sensitive test data:
 
 Do not claim the Magic Template Link is live, certified, or fully wired until
 the link has been generated in Make.com and tested from a second account.
-````
+```
 
 ### automation/make-scenario-manual-build.md
 
@@ -2663,12 +2661,12 @@ Use the existing n8n workflow as the starting pattern:
 
 Observed in local n8n on 2026-05-17:
 
-| Workflow | Observed Role | Status / Notes |
-| --- | --- | --- |
-| `MKT-06 - Content Creation & Dissemination` | Main MKT-06 package template | Imported and nominally tested; still needs node-by-node certification before being treated as fully certified. Do not disturb while building Founder Signal. |
-| `Automated AI Lead Enrichment: Hubspot to Explorium for Enhanced Prospect Data` | Lead enrichment reference workflow | Useful as a HubSpot/enrichment pattern, but not the v1 Founder Signal runtime. Keep separate. |
-| `MKT-06 TEST - HubSpot Attribution Read Check` | Isolated HubSpot read test | Keep as a service credential/read-node validation harness. This supports certification evidence. |
-| `My workflow` | n8n starter AI-agent example | Appears to be the only active/live workflow. Treat as a sandbox/tutorial workflow unless Robert confirms it is serving a real process. |
+| Workflow                                                                        | Observed Role                      | Status / Notes                                                                                                                                               |
+| ------------------------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `MKT-06 - Content Creation & Dissemination`                                     | Main MKT-06 package template       | Imported and nominally tested; still needs node-by-node certification before being treated as fully certified. Do not disturb while building Founder Signal. |
+| `Automated AI Lead Enrichment: Hubspot to Explorium for Enhanced Prospect Data` | Lead enrichment reference workflow | Useful as a HubSpot/enrichment pattern, but not the v1 Founder Signal runtime. Keep separate.                                                                |
+| `MKT-06 TEST - HubSpot Attribution Read Check`                                  | Isolated HubSpot read test         | Keep as a service credential/read-node validation harness. This supports certification evidence.                                                             |
+| `My workflow`                                                                   | n8n starter AI-agent example       | Appears to be the only active/live workflow. Treat as a sandbox/tutorial workflow unless Robert confirms it is serving a real process.                       |
 
 Working rule: create a new separate workflow named
 `Founder Signal System - Intake to Setup Packet`. Do not modify the imported

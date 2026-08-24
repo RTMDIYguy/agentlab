@@ -73,7 +73,12 @@
         "spreadsheetId": "YOUR_FUL05_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{3.choices[0].message.content.totalExecutions}}", "{{3.choices[0].message.content.timeSavedHours}}", "{{3.choices[0].message.content.costSaved}}"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD')}}",
+          "{{3.choices[0].message.content.totalExecutions}}",
+          "{{3.choices[0].message.content.timeSavedHours}}",
+          "{{3.choices[0].message.content.costSaved}}"
+        ]
       },
       "metadata": {
         "designer": {

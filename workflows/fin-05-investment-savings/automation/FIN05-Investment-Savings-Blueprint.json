@@ -98,7 +98,10 @@
         "spreadsheetId": "YOUR_FIN05_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{3.choices[0].message.content}}"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD')}}",
+          "{{3.choices[0].message.content}}"
+        ]
       },
       "metadata": {
         "designer": {

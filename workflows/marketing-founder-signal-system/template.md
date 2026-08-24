@@ -14,7 +14,7 @@ Logged: 2026-05-17
 - Gmail output node test fired successfully.
 - OpenAI node is reachable and mapped, but full sequence test is blocked by
   OpenAI error `[429] You have consumed all credits in your OpenAI account,
-  or exceeded your monthly OpenAI budget.`
+or exceeded your monthly OpenAI budget.`
 - Scenario should remain off until OpenAI credits or monthly budget are
   restored and one full Tally to OpenAI to Gmail test succeeds.
 - Public Magic Template Link has not been generated yet.
@@ -42,13 +42,13 @@ public sharing link, the buyer can:
 
 The Standard-tier template expects these services:
 
-| Service | Required? | Used For |
-| --- | --- | --- |
-| Make.com | Yes | Scenario hosting and execution |
-| OpenAI | Yes | Drafting the signal brief, content prompts, and follow-up language |
-| HubSpot | Optional | Creating or updating the CRM-lite contact record |
-| Microsoft 365 Outlook | Optional | Sending the internal setup summary |
-| Microsoft 365 Excel or Lists | Optional | Logging proof-loop and follow-up records |
+| Service                      | Required? | Used For                                                           |
+| ---------------------------- | --------- | ------------------------------------------------------------------ |
+| Make.com                     | Yes       | Scenario hosting and execution                                     |
+| OpenAI                       | Yes       | Drafting the signal brief, content prompts, and follow-up language |
+| HubSpot                      | Optional  | Creating or updating the CRM-lite contact record                   |
+| Microsoft 365 Outlook        | Optional  | Sending the internal setup summary                                 |
+| Microsoft 365 Excel or Lists | Optional  | Logging proof-loop and follow-up records                           |
 
 If a buyer does not use HubSpot or Microsoft 365, run the Manual tier instead
 and use the Markdown templates in `assets/`.

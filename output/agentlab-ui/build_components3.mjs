@@ -1,9 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-const SRC_DIR = path.join(process.cwd(), 'src');
+import fs from "fs";
+import path from "path";
+const SRC_DIR = path.join(process.cwd(), "src");
 
 const files = {
-  'Dashboard.tsx': `
+  "Dashboard.tsx": `
 import React from 'react';
 const METRICS_DATA = [{ id: 'm1', label: 'Active Agents', value: '24', delta: '+3', trend: 'positive' }, { id: 'm2', label: 'Tasks Completed', value: '1,492', delta: '+12%', trend: 'positive' }];
 const AGENTS_DATA = [{ id: 'a1', name: 'Alpha-Node-01', task: 'Processing NLP...', status: 'active' }, { id: 'a2', name: 'Beta-Node-02', task: 'Awaiting workload...', status: 'idle' }];
@@ -35,6 +35,8 @@ export const Dashboard: React.FC = () => (
     </section>
   </div>
 );
-  `
+  `,
 };
-Object.entries(files).forEach(([file, content]) => fs.writeFileSync(path.join(SRC_DIR, file), content.trim()));
+Object.entries(files).forEach(([file, content]) =>
+  fs.writeFileSync(path.join(SRC_DIR, file), content.trim())
+);

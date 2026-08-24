@@ -1,1 +1,0 @@
-ALTER TABLE `blogComments` ADD `parentCommentId` int;

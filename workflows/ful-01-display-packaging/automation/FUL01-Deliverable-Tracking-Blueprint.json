@@ -82,7 +82,12 @@
         "spreadsheetId": "YOUR_FUL01_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD HH:mm')}}", "{{1.taskName}}", "{{1.status}}", "{{2.choices[0].message.content.daysRemaining}}"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD HH:mm')}}",
+          "{{1.taskName}}",
+          "{{1.status}}",
+          "{{2.choices[0].message.content.daysRemaining}}"
+        ]
       },
       "metadata": {
         "designer": {

@@ -139,9 +139,9 @@ And add a body section:
 ```markdown
 ## Change Log
 
-| Date | Version | Type | Summary |
-| --- | --- | --- | --- |
-| 2026-05-05 | 1.0.0 | audit | Reviewed kit/1.0 conformance and identified missing department bundles, companion templates, quick start guide, and change-log structure. |
+| Date       | Version | Type  | Summary                                                                                                                                   |
+| ---------- | ------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-05-05 | 1.0.0   | audit | Reviewed kit/1.0 conformance and identified missing department bundles, companion templates, quick start guide, and change-log structure. |
 ```
 
 ## Seven Department Coverage
@@ -152,15 +152,15 @@ Found: one department/workflow kit bundle.
 
 Current visible coverage:
 
-| Department / Workflow | Kit Found | Template Found | Quick Start Found | Change Log Found |
-| --- | --- | --- | --- | --- |
-| Marketing / MKT-06 Content Creation & Dissemination | Yes | No | No | No |
-| Operations | No | No | No | No |
-| Sales | No | No | No | No |
-| Finance | No | No | No | No |
-| Client Delivery / Fulfillment | No | No | No | No |
-| Culture / People | No | No | No | No |
-| Seventh department | No visible source file | No | No | No |
+| Department / Workflow                               | Kit Found              | Template Found | Quick Start Found | Change Log Found |
+| --------------------------------------------------- | ---------------------- | -------------- | ----------------- | ---------------- |
+| Marketing / MKT-06 Content Creation & Dissemination | Yes                    | No             | No                | No               |
+| Operations                                          | No                     | No             | No                | No               |
+| Sales                                               | No                     | No             | No                | No               |
+| Finance                                             | No                     | No             | No                | No               |
+| Client Delivery / Fulfillment                       | No                     | No             | No                | No               |
+| Culture / People                                    | No                     | No             | No                | No               |
+| Seventh department                                  | No visible source file | No             | No                | No               |
 
 Note: Operations should not mirror Culture workflows. No Operations kit bundle was found, so I could not verify the new Operations-specific workflow set.
 

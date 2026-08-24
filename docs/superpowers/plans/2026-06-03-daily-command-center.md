@@ -30,6 +30,7 @@
 ## Task 1: Add The Daily Command Center Script
 
 **Files:**
+
 - Create: `scripts/daily-command-center.mjs`
 
 - [ ] **Step 1: Create script with source config and helpers**
@@ -65,11 +66,12 @@ function extractTableRows(markdown, heading) {
   if (start === -1) return [];
   const after = markdown.slice(start);
   const nextHeading = after.slice(heading.length).search(/\n##?\s/);
-  const section = nextHeading === -1 ? after : after.slice(0, heading.length + nextHeading);
+  const section =
+    nextHeading === -1 ? after : after.slice(0, heading.length + nextHeading);
   return section
     .split(/\r?\n/)
-    .filter((line) => line.trim().startsWith("|"))
-    .filter((line) => !/^\|\s*-+/.test(line));
+    .filter(line => line.trim().startsWith("|"))
+    .filter(line => !/^\|\s*-+/.test(line));
 }
 
 function stripCode(value) {
@@ -80,7 +82,7 @@ function tableRowCells(row) {
   return row
     .split("|")
     .slice(1, -1)
-    .map((cell) => stripCode(cell));
+    .map(cell => stripCode(cell));
 }
 
 function bulletLines(markdown, heading) {
@@ -88,12 +90,13 @@ function bulletLines(markdown, heading) {
   if (start === -1) return [];
   const after = markdown.slice(start);
   const nextHeading = after.slice(heading.length).search(/\n##?\s/);
-  const section = nextHeading === -1 ? after : after.slice(0, heading.length + nextHeading);
+  const section =
+    nextHeading === -1 ? after : after.slice(0, heading.length + nextHeading);
   return section
     .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.startsWith("- "))
-    .map((line) => line.slice(2).trim());
+    .map(line => line.trim())
+    .filter(line => line.startsWith("- "))
+    .map(line => line.slice(2).trim());
 }
 ```
 
@@ -103,9 +106,12 @@ Append:
 
 ```js
 function getActiveQueue(agencyManual) {
-  const rows = extractTableRows(agencyManual, "## Workflow Test And Implementation Queue")
+  const rows = extractTableRows(
+    agencyManual,
+    "## Workflow Test And Implementation Queue"
+  )
     .map(tableRowCells)
-    .filter((cells) => cells.length >= 5 && cells[0] !== "Priority");
+    .filter(cells => cells.length >= 5 && cells[0] !== "Priority");
 
   return rows.map(([priority, workflow, why, mode, target]) => ({
     priority,
@@ -119,7 +125,7 @@ function getActiveQueue(agencyManual) {
 function getOpenBuildItems(agencyManual) {
   const rows = extractTableRows(agencyManual, "## Open Build Items")
     .map(tableRowCells)
-    .filter((cells) => cells.length >= 3 && cells[0] !== "Item");
+    .filter(cells => cells.length >= 3 && cells[0] !== "Item");
 
   return rows.map(([item, owner, status]) => ({ item, owner, status }));
 }
@@ -127,11 +133,11 @@ function getOpenBuildItems(agencyManual) {
 function getRecentChangeRows(changeControl) {
   return changeControl
     .split(/\r?\n/)
-    .filter((line) => line.startsWith("| 2026-06-03 |"))
+    .filter(line => line.startsWith("| 2026-06-03 |"))
     .slice(-5)
-    .map((line) => tableRowCells(line))
-    .filter((cells) => cells.length >= 8)
-    .map((cells) => ({
+    .map(line => tableRowCells(line))
+    .filter(cells => cells.length >= 8)
+    .map(cells => ({
       id: cells[1],
       area: cells[2],
       summary: cells[4],
@@ -142,7 +148,7 @@ function getRecentChangeRows(changeControl) {
 function getAuditLanes(workflowAuditBank) {
   const rows = extractTableRows(workflowAuditBank, "## Audit Questions")
     .map(tableRowCells)
-    .filter((cells) => cells.length >= 4 && cells[0] !== "Audit Lane");
+    .filter(cells => cells.length >= 4 && cells[0] !== "Audit Lane");
 
   return rows.map(([lane, question, passSignal, reviewSignal]) => ({
     lane,
@@ -163,16 +169,16 @@ Append:
 
 ```js
 function topActions(activeQueue, openBuildItems) {
-  const queueActions = activeQueue.slice(0, 3).map((item) => {
+  const queueActions = activeQueue.slice(0, 3).map(item => {
     return `${item.workflow}: ${item.target}`;
   });
 
-  const ownerManualItem = openBuildItems.find((item) =>
-    item.item.toLowerCase().includes("owner's manual"),
+  const ownerManualItem = openBuildItems.find(item =>
+    item.item.toLowerCase().includes("owner's manual")
   );
 
-  const auditItem = openBuildItems.find((item) =>
-    item.item.toLowerCase().includes("workflow audit"),
+  const auditItem = openBuildItems.find(item =>
+    item.item.toLowerCase().includes("workflow audit")
   );
 
   return [
@@ -180,37 +186,50 @@ function topActions(activeQueue, openBuildItems) {
     ...queueActions,
     ownerManualItem ? ownerManualItem.item : null,
     auditItem ? auditItem.item : null,
-  ].filter(Boolean).slice(0, 3);
+  ]
+    .filter(Boolean)
+    .slice(0, 3);
 }
 
 function marketingAndSalesMoves(activeQueue) {
   return activeQueue
-    .filter((item) => /MKT-|SAL-/.test(item.workflow))
+    .filter(item => /MKT-|SAL-/.test(item.workflow))
     .slice(0, 5)
-    .map((item) => `${item.workflow} (${item.mode}): ${item.why}`);
+    .map(item => `${item.workflow} (${item.mode}): ${item.why}`);
 }
 
 function followUpsAndHandoffs(activeQueue) {
   return activeQueue
-    .filter((item) => /SAL-|FUL-|FIN-|AFC-/.test(item.workflow))
+    .filter(item => /SAL-|FUL-|FIN-|AFC-/.test(item.workflow))
     .slice(0, 5)
-    .map((item) => `${item.workflow}: ${item.target}`);
+    .map(item => `${item.workflow}: ${item.target}`);
 }
 
-function renderList(items, emptyText = "No items found in current source scan.") {
+function renderList(
+  items,
+  emptyText = "No items found in current source scan."
+) {
   if (!items.length) return `- ${emptyText}`;
-  return items.map((item) => `- ${item}`).join("\n");
+  return items.map(item => `- ${item}`).join("\n");
 }
 
-function renderBrief({ activeQueue, openBuildItems, recentChanges, auditLanes, mkt09Checklist }) {
+function renderBrief({
+  activeQueue,
+  openBuildItems,
+  recentChanges,
+  auditLanes,
+  mkt09Checklist,
+}) {
   const actions = topActions(activeQueue, openBuildItems);
   const marketingSales = marketingAndSalesMoves(activeQueue);
   const handoffs = followUpsAndHandoffs(activeQueue);
   const openNeeded = openBuildItems
-    .filter((item) => /Needed|Pending|Deferred/i.test(item.status))
+    .filter(item => /Needed|Pending|Deferred/i.test(item.status))
     .slice(0, 8)
-    .map((item) => `${item.item} (${item.status}; owner: ${item.owner})`);
-  const changes = recentChanges.map((change) => `${change.id} ${change.area}: ${change.summary}`);
+    .map(item => `${item.item} (${item.status}; owner: ${item.owner})`);
+  const changes = recentChanges.map(
+    change => `${change.id} ${change.area}: ${change.summary}`
+  );
 
   return `# Daily Command Brief - ${today}
 
@@ -231,9 +250,12 @@ ${renderList(handoffs)}
 ## Workflow Audit Prompt
 
 - Start with MKT-09 until the event lane is runnable.
-- Audit lanes today: ${auditLanes.map((lane) => lane.lane).join("; ")}.
+- Audit lanes today: ${auditLanes.map(lane => lane.lane).join("; ")}.
 - MKT-09 minimum slice:
-${mkt09Checklist.slice(0, 12).map((item) => `  - ${item}`).join("\n")}
+${mkt09Checklist
+  .slice(0, 12)
+  .map(item => `  - ${item}`)
+  .join("\n")}
 
 ## Money And Client-Trust Checks
 
@@ -300,7 +322,7 @@ async function main() {
   console.log(`Daily command brief written: ${path.relative(root, outPath)}`);
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error(error);
   process.exitCode = 1;
 });
@@ -323,6 +345,7 @@ Daily command brief written: docs\operations\daily-command-center\2026-06-03-com
 ## Task 2: Add Package Script And Command Center README
 
 **Files:**
+
 - Modify: `package.json`
 - Create: `docs/operations/daily-command-center/README.md`
 
@@ -348,7 +371,7 @@ Modify `package.json` and add this script under `scripts`:
 
 Create `docs/operations/daily-command-center/README.md`:
 
-```markdown
+````markdown
 # Daily Command Center
 
 Status: v0 local pilot
@@ -367,6 +390,7 @@ maintenance.
 ```bash
 pnpm daily-command:center
 ```
+````
 
 The script writes a dated brief:
 
@@ -390,7 +414,8 @@ keys, or raw client-sensitive data to generated briefs.
 
 ClickUp remains a retool candidate until its current state is exported,
 inspected, and reconciled against the repo and `AI Native Agency Deepened`.
-```
+
+````
 
 - [ ] **Step 4: Run package script**
 
@@ -398,7 +423,7 @@ Run:
 
 ```bash
 pnpm daily-command:center
-```
+````
 
 Expected:
 
@@ -409,6 +434,7 @@ Daily command brief written: docs\operations\daily-command-center\2026-06-03-com
 ## Task 3: Wire Command Center Into Operating Docs
 
 **Files:**
+
 - Modify: `docs/operations/agency-operating-manual.md`
 - Modify: `docs/operations/change-control-register.md`
 
@@ -441,6 +467,7 @@ If `CC-2026-06-03-005` is already taken when implementing, use the next availabl
 ## Task 4: Verify
 
 **Files:**
+
 - Generated: `docs/operations/daily-command-center/2026-06-03-command-brief.md`
 
 - [ ] **Step 1: Run command center**
@@ -491,6 +518,7 @@ Expected: no whitespace errors. CRLF warnings are acceptable on Windows.
 ## Task 5: Optional Scheduling Proposal
 
 **Files:**
+
 - No repo file changes required.
 
 - [ ] **Step 1: Confirm manual brief usefulness**

@@ -13,7 +13,8 @@ const articleContent: Record<string, any> = {
     date: "Mar 15, 2025",
     readTime: "8 min read",
     image: "🤖",
-    excerpt: "Explore how AI agents are revolutionizing business automation and decision-making processes. Discover the emerging trends and technologies shaping the next generation of intelligent systems.",
+    excerpt:
+      "Explore how AI agents are revolutionizing business automation and decision-making processes. Discover the emerging trends and technologies shaping the next generation of intelligent systems.",
     content: `
 # The Future of Autonomous AI Systems
 
@@ -120,7 +121,9 @@ export default function BlogArticle() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-4">Article Not Found</h1>
+          <h1 className="text-4xl font-bold text-foreground mb-4">
+            Article Not Found
+          </h1>
           <p className="text-muted-foreground mb-8">
             The article you're looking for doesn't exist or has been removed.
           </p>
@@ -171,7 +174,9 @@ export default function BlogArticle() {
           <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
             {article.title}
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">{article.excerpt}</p>
+          <p className="text-xl text-muted-foreground mb-8">
+            {article.excerpt}
+          </p>
 
           {/* Article Metadata */}
           <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
@@ -180,7 +185,9 @@ export default function BlogArticle() {
                 {article.author.charAt(0)}
               </div>
               <div>
-                <p className="font-semibold text-foreground">{article.author}</p>
+                <p className="font-semibold text-foreground">
+                  {article.author}
+                </p>
                 <p className="text-xs">{article.role}</p>
               </div>
             </div>
@@ -205,39 +212,53 @@ export default function BlogArticle() {
         <div className="container max-w-3xl">
           <div className="prose prose-lg max-w-none">
             <article className="text-foreground space-y-6">
-              {article.content.split("\n\n").map((paragraph: string, index: number) => {
-                if (paragraph.startsWith("#")) {
-                  const level = paragraph.match(/^#+/)?.[0].length || 1;
-                  const text = paragraph.replace(/^#+\s/, "");
-                  const headingClass = {
-                    1: "text-4xl font-bold mt-12 mb-6",
-                    2: "text-2xl font-bold mt-8 mb-4",
-                    3: "text-xl font-bold mt-6 mb-3",
-                  }[level] || "text-lg font-bold mt-4 mb-2";
+              {article.content
+                .split("\n\n")
+                .map((paragraph: string, index: number) => {
+                  if (paragraph.startsWith("#")) {
+                    const level = paragraph.match(/^#+/)?.[0].length || 1;
+                    const text = paragraph.replace(/^#+\s/, "");
+                    const headingClass =
+                      {
+                        1: "text-4xl font-bold mt-12 mb-6",
+                        2: "text-2xl font-bold mt-8 mb-4",
+                        3: "text-xl font-bold mt-6 mb-3",
+                      }[level] || "text-lg font-bold mt-4 mb-2";
+                    return (
+                      <h2
+                        key={index}
+                        className={`text-foreground ${headingClass}`}
+                      >
+                        {text}
+                      </h2>
+                    );
+                  }
+                  if (paragraph.startsWith("- ")) {
+                    const items = paragraph
+                      .split("\n")
+                      .filter(item => item.startsWith("- "));
+                    return (
+                      <ul
+                        key={index}
+                        className="list-disc list-inside space-y-2 text-muted-foreground"
+                      >
+                        {items.map((item, i) => (
+                          <li key={i} className="ml-4">
+                            {item.replace(/^- /, "")}
+                          </li>
+                        ))}
+                      </ul>
+                    );
+                  }
                   return (
-                    <h2 key={index} className={`text-foreground ${headingClass}`}>
-                      {text}
-                    </h2>
+                    <p
+                      key={index}
+                      className="text-muted-foreground leading-relaxed"
+                    >
+                      {paragraph}
+                    </p>
                   );
-                }
-                if (paragraph.startsWith("- ")) {
-                  const items = paragraph.split("\n").filter((item) => item.startsWith("- "));
-                  return (
-                    <ul key={index} className="list-disc list-inside space-y-2 text-muted-foreground">
-                      {items.map((item, i) => (
-                        <li key={i} className="ml-4">
-                          {item.replace(/^- /, "")}
-                        </li>
-                      ))}
-                    </ul>
-                  );
-                }
-                return (
-                  <p key={index} className="text-muted-foreground leading-relaxed">
-                    {paragraph}
-                  </p>
-                );
-              })}
+                })}
             </article>
           </div>
 
@@ -248,12 +269,17 @@ export default function BlogArticle() {
                 {article.author.charAt(0)}
               </div>
               <div>
-                <h3 className="text-xl font-bold text-foreground mb-2">{article.author}</h3>
-                <p className="text-sm text-primary font-semibold mb-3">{article.role}</p>
+                <h3 className="text-xl font-bold text-foreground mb-2">
+                  {article.author}
+                </h3>
+                <p className="text-sm text-primary font-semibold mb-3">
+                  {article.role}
+                </p>
                 <p className="text-muted-foreground">
-                  {article.author} is a thought leader in AI and automation with extensive experience
-                  in building intelligent systems. They regularly contribute insights on emerging
-                  technologies and their business applications.
+                  {article.author} is a thought leader in AI and automation with
+                  extensive experience in building intelligent systems. They
+                  regularly contribute insights on emerging technologies and
+                  their business applications.
                 </p>
               </div>
             </div>
@@ -265,7 +291,9 @@ export default function BlogArticle() {
           {/* Related Articles */}
           {article.relatedArticles && article.relatedArticles.length > 0 && (
             <div className="mt-16 pt-16 border-t border-border">
-              <h2 className="text-2xl font-bold text-foreground mb-8">Related Articles</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-8">
+                Related Articles
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {article.relatedArticles.map((relatedId: string) => (
                   <div
@@ -273,7 +301,9 @@ export default function BlogArticle() {
                     onClick={() => navigate(`/blog/${relatedId}`)}
                     className="p-6 bg-card rounded-lg border border-border hover:border-primary/50 cursor-pointer transition-all"
                   >
-                    <p className="text-sm text-primary font-semibold mb-2">Related</p>
+                    <p className="text-sm text-primary font-semibold mb-2">
+                      Related
+                    </p>
                     <h3 className="font-bold text-foreground mb-3 line-clamp-2">
                       {articleContent[relatedId]?.title || "Article"}
                     </h3>

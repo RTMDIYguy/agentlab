@@ -21,4 +21,3 @@ Remaining stronger proof to capture:
 - campaign/send ID if Reach provides one
 - per-contact open/reply/bounce statuses
 - sent timestamp per lead
-

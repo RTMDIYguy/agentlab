@@ -4,7 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { BookOpen, Star, ShoppingCart, Mail, Loader2, ArrowRight, CheckCircle2 } from "lucide-react";
+import {
+  BookOpen,
+  Star,
+  ShoppingCart,
+  Mail,
+  Loader2,
+  ArrowRight,
+  CheckCircle2,
+} from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,17 +40,20 @@ const testimonials = [
   {
     name: "Marcus T.",
     role: "First-time founder",
-    quote: "I picked 3 models from the book and had revenue in 6 weeks. No investors, no loans.",
+    quote:
+      "I picked 3 models from the book and had revenue in 6 weeks. No investors, no loans.",
   },
   {
     name: "Lena M.",
     role: "Corporate refugee",
-    quote: "This is the most practical guide I've read. Every model has a real path to cash.",
+    quote:
+      "This is the most practical guide I've read. Every model has a real path to cash.",
   },
   {
     name: "Deon W.",
     role: "Side hustler → full-time",
-    quote: "Stopped overthinking and started. That's what this book does for you.",
+    quote:
+      "Stopped overthinking and started. That's what this book does for you.",
   },
 ];
 
@@ -54,7 +65,7 @@ export default function Book() {
       setChapterSent(true);
       toast.success("Check your inbox — free chapter is on the way!");
     },
-    onError: (err) => {
+    onError: err => {
       toast.error(err.message ?? "Something went wrong. Try again.");
     },
   });
@@ -101,7 +112,9 @@ export default function Book() {
               Bootstrapper's Guide to the World
             </h1>
             <p className="text-lg text-neutral-300 mb-6">
-              Start 28 profitable businesses with zero upfront investment. Each model is proven, practical, and designed for people with more hustle than capital.
+              Start 28 profitable businesses with zero upfront investment. Each
+              model is proven, practical, and designed for people with more
+              hustle than capital.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button
@@ -120,9 +133,14 @@ export default function Book() {
             </div>
             <div className="flex items-center gap-1 mt-4">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                <Star
+                  key={i}
+                  className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                />
               ))}
-              <span className="text-sm text-neutral-400 ml-2">4.9 · 200+ readers</span>
+              <span className="text-sm text-neutral-400 ml-2">
+                4.9 · 200+ readers
+              </span>
             </div>
           </motion.div>
 
@@ -148,7 +166,9 @@ export default function Book() {
       {/* What's inside */}
       <section className="py-16 px-4">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-8">28 Models. Real Results.</h2>
+          <h2 className="text-2xl font-bold text-center mb-8">
+            28 Models. Real Results.
+          </h2>
           <div className="grid sm:grid-cols-2 gap-3">
             {chapters.map((ch, i) => (
               <motion.div
@@ -175,7 +195,8 @@ export default function Book() {
           <Mail className="h-10 w-10 mx-auto mb-4 text-muted-foreground" />
           <h2 className="text-2xl font-bold mb-2">Get a Free Chapter</h2>
           <p className="text-muted-foreground mb-6">
-            Not sure yet? Read the first chapter on us. No credit card, no strings.
+            Not sure yet? Read the first chapter on us. No credit card, no
+            strings.
           </p>
 
           {chapterSent ? (
@@ -190,7 +211,9 @@ export default function Book() {
           ) : (
             <form onSubmit={handleSubmit(onFreeChapter)} className="space-y-3">
               <div>
-                <Label htmlFor="email" className="sr-only">Email</Label>
+                <Label htmlFor="email" className="sr-only">
+                  Email
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -198,7 +221,9 @@ export default function Book() {
                   {...register("email")}
                 />
                 {errors.email && (
-                  <p className="text-xs text-destructive mt-1">{errors.email.message}</p>
+                  <p className="text-xs text-destructive mt-1">
+                    {errors.email.message}
+                  </p>
                 )}
               </div>
               <Button
@@ -221,7 +246,9 @@ export default function Book() {
       {/* Testimonials */}
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-10">What Readers Say</h2>
+          <h2 className="text-2xl font-bold text-center mb-10">
+            What Readers Say
+          </h2>
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
               <motion.div
@@ -235,10 +262,15 @@ export default function Book() {
                   <CardContent className="pt-6">
                     <div className="flex mb-3">
                       {Array.from({ length: 5 }).map((_, j) => (
-                        <Star key={j} className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
+                        <Star
+                          key={j}
+                          className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400"
+                        />
                       ))}
                     </div>
-                    <p className="text-sm text-muted-foreground mb-4 italic">"{t.quote}"</p>
+                    <p className="text-sm text-muted-foreground mb-4 italic">
+                      "{t.quote}"
+                    </p>
                     <div>
                       <p className="font-semibold text-sm">{t.name}</p>
                       <p className="text-xs text-muted-foreground">{t.role}</p>
@@ -259,9 +291,12 @@ export default function Book() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl font-bold mb-3">Stop waiting for the "right" idea.</h2>
+          <h2 className="text-3xl font-bold mb-3">
+            Stop waiting for the "right" idea.
+          </h2>
           <p className="text-neutral-300 mb-8">
-            28 proven business models. Zero investment required. Your next chapter starts today.
+            28 proven business models. Zero investment required. Your next
+            chapter starts today.
           </p>
           <Button
             size="lg"
@@ -276,7 +311,9 @@ export default function Book() {
             )}
             Get the Book — $59.99
           </Button>
-          <p className="text-xs text-neutral-500 mt-3">One-time purchase · Instant download</p>
+          <p className="text-xs text-neutral-500 mt-3">
+            One-time purchase · Instant download
+          </p>
         </motion.div>
       </section>
     </div>

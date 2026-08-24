@@ -1,7 +1,8 @@
 # SALES05: Passive and Active Income Streams Assets
 
 ## 1. Digital Product / Template Pack Sales Page Copy
-*To be used on Gumroad, ThriveCart, or landing pages.*
+
+_To be used on Gumroad, ThriveCart, or landing pages._
 
 **Headline:** The Exact [System/Framework Name] We Use to Help Our Clients Achieve [Specific Result]
 
@@ -9,6 +10,7 @@
 
 **The Problem:**
 You know you need to [Action, e.g., run better discovery calls], but right now, your process looks like this:
+
 - [Symptom 1: e.g., You're spending 3 hours prepping for every call]
 - [Symptom 2: e.g., Prospects are leaving the call without clear next steps]
 - [Symptom 3: e.g., You're losing deals to competitors who seem more organized]
@@ -19,6 +21,7 @@ Introducing **The [System/Framework Name] Toolkit**.
 This isn't theory. This is the exact battle-tested system we use internally. For the first time, we're opening up our agency vault so you can copy and paste our success into your own business.
 
 **What You Get Inside:**
+
 - **[Asset 1 Name]**: (Value $X) - A 5-page PDF detailing exactly how to...
 - **[Asset 2 Name]**: (Value $X) - Our proprietary Google Sheet tracker for...
 - **[Asset 3 Name]**: (Value $X) - Word-for-word email templates for...
@@ -26,7 +29,7 @@ This isn't theory. This is the exact battle-tested system we use internally. For
 **Total Value:** $X
 **Your Price Today:** $Y
 
-*[Buy Now Button]*
+_[Buy Now Button]_
 
 **Who this is for:**
 [Target Audience 1], [Target Audience 2], and [Target Audience 3] who are tired of guessing and want a proven system that works.
@@ -34,7 +37,8 @@ This isn't theory. This is the exact battle-tested system we use internally. For
 ---
 
 ## 2. Affiliate Recommendation Email (For Clients)
-*Sent to clients when they hit a specific milestone or ask for a software recommendation.*
+
+_Sent to clients when they hit a specific milestone or ask for a software recommendation._
 
 **Subject:** The tool we use for [Specific Function]
 
@@ -46,7 +50,7 @@ While there are a lot of tools out there, we internally use and strongly recomme
 
 If you decide to sign up, you can use our partner link here: **[Your Affiliate Link]**
 
-*(Full transparency: That is an affiliate link, but we only recommend tools we actively use ourselves and trust.)*
+_(Full transparency: That is an affiliate link, but we only recommend tools we actively use ourselves and trust.)_
 
 Let me know if you need any help getting it set up—I can send over a quick Loom video showing how we configured ours!
 
@@ -55,6 +59,7 @@ Let me know if you need any help getting it set up—I can send over a quick Loo
 ## 3. Passive Income Evergreen Email Sequence
 
 ### Email 1: The "Aha Moment" Value Add (Send immediately after lead magnet download)
+
 **Subject:** Here's your [Lead Magnet Name] + a quick question
 
 Hi [First Name],
@@ -68,6 +73,7 @@ Quick question for you: Now that you have this resource, what is the #1 biggest 
 Hit reply and let me know.
 
 ### Email 2: The Transition & Offer (Send Day 2)
+
 **Subject:** How to take [Topic] to the next level
 
 Hi [First Name],
@@ -81,6 +87,7 @@ That's exactly why we packaged up our internal agency tools into **The [Product 
 You can grab it here for just $[Price]: [Link to Sales Page]
 
 ### Email 3: Scarcity / Objection Handling (Send Day 4)
+
 **Subject:** You're overthinking [Topic]
 
 Hi [First Name],
@@ -90,6 +97,7 @@ I've seen so many people waste weeks trying to build their own [System] from scr
 You don't need to reinvent the wheel. **The [Product Name]** is ready to use today.
 
 Inside you'll find:
+
 - [Benefit 1]
 - [Benefit 2]
 

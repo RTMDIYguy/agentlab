@@ -44,4 +44,3 @@ Create a local URL file (do not put secrets in it). Example:
 - `https://bootstrapper.ai/`
 - `https://bootstrapper.ai/pricing`
 - `https://bootstrappercapital.com/`
-

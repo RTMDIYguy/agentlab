@@ -4,7 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Plus, Edit2, Trash2, Clock, CheckCircle, FileText, Loader2, ArrowLeft } from "lucide-react";
+import {
+  Plus,
+  Edit2,
+  Trash2,
+  Clock,
+  CheckCircle,
+  FileText,
+  Loader2,
+  ArrowLeft,
+} from "lucide-react";
 import { toast } from "sonner";
 
 export default function BlogManager() {
@@ -13,7 +22,11 @@ export default function BlogManager() {
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
 
   // Fetch user's articles
-  const { data: articles = [], refetch, isLoading } = trpc.articles.getMyArticles.useQuery(
+  const {
+    data: articles = [],
+    refetch,
+    isLoading,
+  } = trpc.articles.getMyArticles.useQuery(
     { limit: 50 },
     { enabled: isAuthenticated }
   );
@@ -25,7 +38,7 @@ export default function BlogManager() {
       setDeleteConfirm(null);
       refetch();
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to delete article");
     },
   });
@@ -67,7 +80,9 @@ export default function BlogManager() {
       <div className="min-h-screen bg-background py-8">
         <div className="container max-w-6xl">
           <Card className="p-8 border border-border text-center">
-            <p className="text-foreground mb-4">Please log in to manage articles.</p>
+            <p className="text-foreground mb-4">
+              Please log in to manage articles.
+            </p>
             <Button className="bg-primary hover:bg-primary/90">Sign In</Button>
           </Card>
         </div>
@@ -103,24 +118,32 @@ export default function BlogManager() {
 
         {/* Content Calendar Section */}
         <Card className="p-6 border border-border mb-8">
-          <h2 className="text-xl font-semibold text-foreground mb-4">Content Calendar</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-4">
+            Content Calendar
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <div className="text-sm text-blue-600 font-medium mb-1">Drafts</div>
+              <div className="text-sm text-blue-600 font-medium mb-1">
+                Drafts
+              </div>
               <div className="text-3xl font-bold text-blue-900">
-                {articles.filter((a) => a.status === "draft").length}
+                {articles.filter(a => a.status === "draft").length}
               </div>
             </div>
             <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-              <div className="text-sm text-yellow-600 font-medium mb-1">Scheduled</div>
+              <div className="text-sm text-yellow-600 font-medium mb-1">
+                Scheduled
+              </div>
               <div className="text-3xl font-bold text-yellow-900">
-                {articles.filter((a) => a.status === "scheduled").length}
+                {articles.filter(a => a.status === "scheduled").length}
               </div>
             </div>
             <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-              <div className="text-sm text-green-600 font-medium mb-1">Published</div>
+              <div className="text-sm text-green-600 font-medium mb-1">
+                Published
+              </div>
               <div className="text-3xl font-bold text-green-900">
-                {articles.filter((a) => a.status === "published").length}
+                {articles.filter(a => a.status === "published").length}
               </div>
             </div>
           </div>
@@ -129,7 +152,9 @@ export default function BlogManager() {
         {/* Articles List */}
         <Card className="border border-border overflow-hidden">
           <div className="p-6 border-b border-border">
-            <h2 className="text-xl font-semibold text-foreground">Your Articles</h2>
+            <h2 className="text-xl font-semibold text-foreground">
+              Your Articles
+            </h2>
           </div>
 
           {isLoading ? (
@@ -138,7 +163,9 @@ export default function BlogManager() {
             </div>
           ) : articles.length === 0 ? (
             <div className="p-8 text-center">
-              <p className="text-muted-foreground mb-4">No articles yet. Start writing!</p>
+              <p className="text-muted-foreground mb-4">
+                No articles yet. Start writing!
+              </p>
               <Button
                 onClick={() => navigate("/article/new")}
                 className="bg-primary hover:bg-primary/90"
@@ -151,24 +178,49 @@ export default function BlogManager() {
               <table className="w-full">
                 <thead className="bg-muted/50 border-b border-border">
                   <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Title</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Status</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Category</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Views</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Created</th>
-                    <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Actions</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
+                      Title
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
+                      Category
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
+                      Views
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
+                      Created
+                    </th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {articles.map((article) => (
-                    <tr key={article.id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                  {articles.map(article => (
+                    <tr
+                      key={article.id}
+                      className="border-b border-border hover:bg-muted/50 transition-colors"
+                    >
                       <td className="px-6 py-4">
-                        <div className="font-medium text-foreground">{article.title}</div>
-                        <div className="text-sm text-muted-foreground truncate">{article.excerpt}</div>
+                        <div className="font-medium text-foreground">
+                          {article.title}
+                        </div>
+                        <div className="text-sm text-muted-foreground truncate">
+                          {article.excerpt}
+                        </div>
                       </td>
-                      <td className="px-6 py-4">{getStatusBadge(article.status)}</td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground">{article.category}</td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground">{article.views}</td>
+                      <td className="px-6 py-4">
+                        {getStatusBadge(article.status)}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-muted-foreground">
+                        {article.category}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-muted-foreground">
+                        {article.views}
+                      </td>
                       <td className="px-6 py-4 text-sm text-muted-foreground">
                         {new Date(article.createdAt).toLocaleDateString()}
                       </td>
@@ -206,9 +258,12 @@ export default function BlogManager() {
         {deleteConfirm !== null && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <Card className="p-6 border border-border max-w-sm">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Delete Article?</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-4">
+                Delete Article?
+              </h3>
               <p className="text-muted-foreground mb-6">
-                This action cannot be undone. The article will be permanently deleted.
+                This action cannot be undone. The article will be permanently
+                deleted.
               </p>
               <div className="flex gap-3 justify-end">
                 <Button
@@ -223,7 +278,9 @@ export default function BlogManager() {
                   disabled={deleteMutation.isPending}
                   className="bg-red-600 hover:bg-red-700 flex items-center gap-2"
                 >
-                  {deleteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                  {deleteMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : null}
                   Delete
                 </Button>
               </div>

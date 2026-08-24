@@ -460,11 +460,11 @@ prerequisites:
   - name: Node.js 20+
     check: "node --version"
   - name: Atlassian site URL valid
-    check: "curl -sf https://unclerobertconsulting.atlassian.net/rest/api/3/myself -H \"Authorization: Bearer $ATLASSIAN_API_TOKEN\""
+    check: 'curl -sf https://unclerobertconsulting.atlassian.net/rest/api/3/myself -H "Authorization: Bearer $ATLASSIAN_API_TOKEN"'
   - name: Klaviyo API reachable with named lists/templates
-    check: "curl -sf https://a.klaviyo.com/api/lists/SrkWfC/ -H \"Authorization: Klaviyo-API-Key $KLAVIYO_API_KEY\""
+    check: 'curl -sf https://a.klaviyo.com/api/lists/SrkWfC/ -H "Authorization: Klaviyo-API-Key $KLAVIYO_API_KEY"'
   - name: HubSpot Private App token valid
-    check: "curl -sf https://api.hubapi.com/crm/v3/objects/contacts?limit=1 -H \"Authorization: Bearer $HUBSPOT_PRIVATE_APP_TOKEN\""
+    check: 'curl -sf https://api.hubapi.com/crm/v3/objects/contacts?limit=1 -H "Authorization: Bearer $HUBSPOT_PRIVATE_APP_TOKEN"'
   - name: GitHub repo accessible
     check: "gh repo view RTMDIYguy/urc-content-assets"
 
@@ -632,21 +632,20 @@ failures:
   - problem: Editorial review cycles can exceed the 2-revision cap when reviewer is unavailable
     resolution: Add an SLA escalation that auto-routes the ticket to the creative director after 24 hours in Revisions Requested, and a Teams nudge at the 12-hour mark
     scope: general
-
 ---
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-07 | CC-2026-05-07-001 | 1.0.0 | control | Added visible change-control register, kit changelog section, agent version ledger, and validation script. | codex |
-| 2026-05-07 | CC-2026-05-07-003 | 1.0.0 | auth-standard | Added kit-auth/1.0 policy and connector auth matrix for one-click and agentic installation. | codex |
-| 2026-05-12 | CC-2026-05-12-001 | 1.0.0 | n8n-template | Added importable n8n v1 workflow template with safe canary checkpoints and placeholder live-service handoffs. | codex |
-| 2026-05-13 | CC-2026-05-13-001 | 1.0.0 | n8n-live-node | Wired first read-only HubSpot attribution check node into the MKT-06 n8n template and validated it in the local self-hosted n8n instance. | codex |
-| 2026-05-21 | CC-2026-05-21-002 | 1.0.0 | canary-baseline | Added manual evidence mode to `run-canary.mjs`, created `examples/runs/WF6-CANARY-20260521/`, and completed a local canary with `Pass with Manual Workarounds`. | codex |
-| 2026-05-21 | CC-2026-05-21-005 | 1.0.0 | live-manual-canary | Used the Independence Chapter outreach run as the first field canary, created `examples/runs/WF6-LIVE-CANARY-20260521/`, and recorded `Pass with Manual Workarounds` with Reach/manual-email distribution evidence. | codex |
-| 2026-05-21 | CC-2026-05-21-006 | 1.0.0 | field-hardening | Added `examples/runs/WF6-NEXT-BATCH-20260525/`, `examples/manual-send-proof-checklist.md`, and `examples/performance-tracker-row-template.md` so the next manual field send can capture evidence without rebuilding the packet. | codex |
-| 2026-05-31 | CC-2026-05-31-005 | 1.0.0 | proof-mode | Added `--mode proof` to the canary driver and a proof-mode regression test so a run can pass without workarounds only when all checkpoints have completed, resolvable evidence and no fallback/skipped language. | codex |
+| Date       | Change ID         | Version | Type               | Summary                                                                                                                                                                                                                         | Author |
+| ---------- | ----------------- | ------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-07 | CC-2026-05-07-001 | 1.0.0   | control            | Added visible change-control register, kit changelog section, agent version ledger, and validation script.                                                                                                                      | codex  |
+| 2026-05-07 | CC-2026-05-07-003 | 1.0.0   | auth-standard      | Added kit-auth/1.0 policy and connector auth matrix for one-click and agentic installation.                                                                                                                                     | codex  |
+| 2026-05-12 | CC-2026-05-12-001 | 1.0.0   | n8n-template       | Added importable n8n v1 workflow template with safe canary checkpoints and placeholder live-service handoffs.                                                                                                                   | codex  |
+| 2026-05-13 | CC-2026-05-13-001 | 1.0.0   | n8n-live-node      | Wired first read-only HubSpot attribution check node into the MKT-06 n8n template and validated it in the local self-hosted n8n instance.                                                                                       | codex  |
+| 2026-05-21 | CC-2026-05-21-002 | 1.0.0   | canary-baseline    | Added manual evidence mode to `run-canary.mjs`, created `examples/runs/WF6-CANARY-20260521/`, and completed a local canary with `Pass with Manual Workarounds`.                                                                 | codex  |
+| 2026-05-21 | CC-2026-05-21-005 | 1.0.0   | live-manual-canary | Used the Independence Chapter outreach run as the first field canary, created `examples/runs/WF6-LIVE-CANARY-20260521/`, and recorded `Pass with Manual Workarounds` with Reach/manual-email distribution evidence.             | codex  |
+| 2026-05-21 | CC-2026-05-21-006 | 1.0.0   | field-hardening    | Added `examples/runs/WF6-NEXT-BATCH-20260525/`, `examples/manual-send-proof-checklist.md`, and `examples/performance-tracker-row-template.md` so the next manual field send can capture evidence without rebuilding the packet. | codex  |
+| 2026-05-31 | CC-2026-05-31-005 | 1.0.0   | proof-mode         | Added `--mode proof` to the canary driver and a proof-mode regression test so a run can pass without workarounds only when all checkpoints have completed, resolvable evidence and no fallback/skipped language.                | codex  |
 
 ## Goal
 

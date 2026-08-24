@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { formatContactEmail, formatAutoReplyEmail } from "./contact/email-service";
+import {
+  formatContactEmail,
+  formatAutoReplyEmail,
+} from "./contact/email-service";
 
 // Mock the email formatting functions since they're internal
 function formatContactEmail(payload: {
@@ -88,11 +91,11 @@ describe("Contact Form Backend", () => {
       const validNames = ["John", "Jane", "A B"];
       const invalidNames = ["", "A"];
 
-      validNames.forEach((name) => {
+      validNames.forEach(name => {
         expect(name.length).toBeGreaterThanOrEqual(2);
       });
 
-      invalidNames.forEach((name) => {
+      invalidNames.forEach(name => {
         expect(name.length).toBeLessThan(2);
       });
     });
@@ -107,24 +110,28 @@ describe("Contact Form Backend", () => {
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      validEmails.forEach((email) => {
+      validEmails.forEach(email => {
         expect(emailRegex.test(email)).toBe(true);
       });
 
-      invalidEmails.forEach((email) => {
+      invalidEmails.forEach(email => {
         expect(emailRegex.test(email)).toBe(false);
       });
     });
 
     it("should validate subject field (minimum 5 characters)", () => {
-      const validSubjects = ["Hello", "Question about pricing", "Support needed"];
+      const validSubjects = [
+        "Hello",
+        "Question about pricing",
+        "Support needed",
+      ];
       const invalidSubjects = ["", "Hi", "Test"];
 
-      validSubjects.forEach((subject) => {
+      validSubjects.forEach(subject => {
         expect(subject.length).toBeGreaterThanOrEqual(5);
       });
 
-      invalidSubjects.forEach((subject) => {
+      invalidSubjects.forEach(subject => {
         expect(subject.length).toBeLessThan(5);
       });
     });
@@ -136,11 +143,11 @@ describe("Contact Form Backend", () => {
       ];
       const invalidMessages = ["", "Short", "Hi there"];
 
-      validMessages.forEach((message) => {
+      validMessages.forEach(message => {
         expect(message.length).toBeGreaterThanOrEqual(10);
       });
 
-      invalidMessages.forEach((message) => {
+      invalidMessages.forEach(message => {
         expect(message.length).toBeLessThan(10);
       });
     });
@@ -150,7 +157,7 @@ describe("Contact Form Backend", () => {
     it("should have correct submission status values", () => {
       const validStatuses = ["new", "read", "responded"];
 
-      validStatuses.forEach((status) => {
+      validStatuses.forEach(status => {
         expect(["new", "read", "responded"]).toContain(status);
       });
     });
@@ -207,7 +214,8 @@ describe("Contact Form Backend", () => {
     it("should return success response with submission ID", () => {
       const response = {
         success: true,
-        message: "Your message has been sent successfully. We'll get back to you soon!",
+        message:
+          "Your message has been sent successfully. We'll get back to you soon!",
         submissionId: 123,
       };
 
@@ -219,7 +227,8 @@ describe("Contact Form Backend", () => {
     it("should include helpful message in response", () => {
       const response = {
         success: true,
-        message: "Your message has been sent successfully. We'll get back to you soon!",
+        message:
+          "Your message has been sent successfully. We'll get back to you soon!",
       };
 
       expect(response.message).toContain("sent successfully");
@@ -316,10 +325,10 @@ describe("Contact Form Backend", () => {
         { id: 3, status: "responded" as const },
       ];
 
-      const newCount = submissions.filter((s) => s.status === "new").length;
-      const readCount = submissions.filter((s) => s.status === "read").length;
+      const newCount = submissions.filter(s => s.status === "new").length;
+      const readCount = submissions.filter(s => s.status === "read").length;
       const respondedCount = submissions.filter(
-        (s) => s.status === "responded"
+        s => s.status === "responded"
       ).length;
 
       expect(newCount).toBe(1);

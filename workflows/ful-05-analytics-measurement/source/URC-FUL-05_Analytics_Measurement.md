@@ -10,7 +10,7 @@ URC-FUL-05 — Analytics & Measurement
 
 The Numbers That Tell the Truth About How URC Is Performing
 
-Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
+Robert T. McCarthy & Sheena Burns | v1.0 | March 23, 2026
 
 1. Why This Workflow Exists
 

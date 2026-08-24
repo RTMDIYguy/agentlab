@@ -1,10 +1,10 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
-const SRC_DIR = path.join(process.cwd(), 'src');
+const SRC_DIR = path.join(process.cwd(), "src");
 
 const files = {
-  'Button.tsx': `
+  "Button.tsx": `
 import React, { ButtonHTMLAttributes } from 'react';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> { variant?: 'primary' | 'secondary'; }
 export const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', className = '', ...props }) => {
@@ -16,7 +16,7 @@ export const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', c
   return <button className={\`\${baseStyles} \${variants[variant]} \${className}\`} {...props}>{children}</button>;
 };
   `,
-  'TopNavBadge.tsx': `
+  "TopNavBadge.tsx": `
 import React from 'react';
 interface TopNavBadgeProps { unreadCount: number; hasCritical: boolean; onClick: () => void; }
 export const TopNavBadge: React.FC<TopNavBadgeProps> = ({ unreadCount, hasCritical, onClick }) => (
@@ -26,7 +26,7 @@ export const TopNavBadge: React.FC<TopNavBadgeProps> = ({ unreadCount, hasCritic
   </button>
 );
   `,
-  'Navigation.tsx': `
+  "Navigation.tsx": `
 import React from 'react';
 import { TopNavBadge } from './TopNavBadge';
 interface NavigationProps { currentView?: string; onNavigate?: (view: string) => void; onOpenNotifications?: () => void; }
@@ -50,7 +50,9 @@ export const Navigation: React.FC<NavigationProps> = ({ currentView = 'dashboard
     </div>
   </nav>
 );
-  `
+  `,
 };
 
-Object.entries(files).forEach(([file, content]) => fs.writeFileSync(path.join(SRC_DIR, file), content.trim()));
+Object.entries(files).forEach(([file, content]) =>
+  fs.writeFileSync(path.join(SRC_DIR, file), content.trim())
+);

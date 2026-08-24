@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | FUL-01 |
-| Department | Fulfillment |
-| Automation level | 80-85% |
-| Owner | Account Manager + Marcus |
-| Trigger | Deliverable milestone reached |
-| Cycle time | Simple: 1-2 hrs; complex: 4-8 hrs |
-| Source status | Imported source |
+| Field            | Value                             |
+| ---------------- | --------------------------------- |
+| Workflow ID      | FUL-01                            |
+| Department       | Fulfillment                       |
+| Automation level | 80-85%                            |
+| Owner            | Account Manager + Marcus          |
+| Trigger          | Deliverable milestone reached     |
+| Cycle time       | Simple: 1-2 hrs; complex: 4-8 hrs |
+| Source status    | Imported source                   |
 
 ## Inputs
 
@@ -85,17 +85,17 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `source/URC-FUL-01_Display_Packaging.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                               | Purpose                                                                     |
+| ------------------------------------------------------ | --------------------------------------------------------------------------- |
+| `source/URC-FUL-01_Display_Packaging.md`               | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `automation/FUL01-Deliverable-Tracking-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/FUL-01_Deliverable_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/FUL-01_Deliverable_Tracker.xlsx`             | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-FUL-01_Display_Packaging.md
 
-````markdown
+```markdown
 # FUL-01 - Display & Packaging Source
 
 Source: `Fulfillment Department\URC Fulfillment\URC-FUL-01_Display_Packaging.docx`
@@ -108,7 +108,7 @@ URC-FUL-01 — Display & Packaging
 
 How Every URC Deliverable Is Presented, Named, and Delivered
 
-Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
+Robert T. McCarthy & Sheena Burns | v1.0 | March 23, 2026
 
 1. Why This Workflow Exists
 
@@ -130,7 +130,7 @@ File Naming Convention
 
 All URC deliverables follow this naming format:
 
-[ClientName]_[DeliverableType]_[YYYY-MM]_v[Version]
+[ClientName]_[DeliverableType]_[YYYY-MM]\_v[Version]
 
 Examples:
 
@@ -335,11 +335,11 @@ March 23, 2026
 R. McCarthy & S. Burns
 
 Initial URC Fulfillment document — built from actual operations
-````
+```
 
 ### automation/FUL01-Deliverable-Tracking-Blueprint.json
 
-````json
+```json
 {
   "name": "FUL01: Deliverable Sprint Tracker & Escalation (Make.com Blueprint)",
   "flow": [
@@ -424,7 +424,12 @@ Initial URC Fulfillment document — built from actual operations
         "spreadsheetId": "YOUR_FUL01_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD HH:mm')}}", "{{1.taskName}}", "{{1.status}}", "{{2.choices[0].message.content.daysRemaining}}"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD HH:mm')}}",
+          "{{1.taskName}}",
+          "{{1.status}}",
+          "{{2.choices[0].message.content.daysRemaining}}"
+        ]
       },
       "metadata": {
         "designer": {
@@ -439,7 +444,7 @@ Initial URC Fulfillment document — built from actual operations
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -534,7 +539,12 @@ Initial URC Fulfillment document — built from actual operations
         "spreadsheetId": "YOUR_FUL01_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD HH:mm')}}", "{{1.taskName}}", "{{1.status}}", "{{2.choices[0].message.content.daysRemaining}}"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD HH:mm')}}",
+          "{{1.taskName}}",
+          "{{1.status}}",
+          "{{2.choices[0].message.content.daysRemaining}}"
+        ]
       },
       "metadata": {
         "designer": {
@@ -594,6 +604,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

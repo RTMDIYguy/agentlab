@@ -81,7 +81,9 @@ The application uses a sidebar navigation layout (defined in `AppLayout.jsx`) av
 ## Core Flows
 
 ### Post Composition & Scheduling
+
 The heartbeat of Pulse. Users enter the **Compose** page to:
+
 1.  **Write Content**: Enter text in a large textarea.
 2.  **AI Assistance**: Input a topic and select a tone (energetic, professional, playful, etc.) to generate a caption using Claude.
 3.  **Platform Selection**: Toggle between Instagram, Facebook, and LinkedIn.
@@ -90,38 +92,44 @@ The heartbeat of Pulse. Users enter the **Compose** page to:
 6.  **Persistence**: Save as a "Draft" or commit to "Scheduled".
 
 ### Account Integration
+
 Found in the **Accounts** page, this flow is critical for functionality:
--   **Discovery**: View which platforms (Instagram, Facebook, LinkedIn) are currently connected.
--   **OAuth Flow**: Clicking "Connect" redirects the user to the platform's official authorization page (e.g., Facebook Login).
--   **Confirmation**: After successful OAuth, the user is redirected back to Pulse with a success toast and the account handle visible.
--   **Disconnection**: Users can revoke permissions and remove accounts at any time.
+
+- **Discovery**: View which platforms (Instagram, Facebook, LinkedIn) are currently connected.
+- **OAuth Flow**: Clicking "Connect" redirects the user to the platform's official authorization page (e.g., Facebook Login).
+- **Confirmation**: After successful OAuth, the user is redirected back to Pulse with a success toast and the account handle visible.
+- **Disconnection**: Users can revoke permissions and remove accounts at any time.
 
 ### User Authentication
--   **Signup**: New users register with name, email, and password.
--   **Login**: Returning users authenticate to access their private dashboard.
--   **Persistence**: Handled via `AuthContext`, ensuring the user remains logged in across sessions.
+
+- **Signup**: New users register with name, email, and password.
+- **Login**: Returning users authenticate to access their private dashboard.
+- **Persistence**: Handled via `AuthContext`, ensuring the user remains logged in across sessions.
 
 ## Other Features
 
 ### Dashboard & Analytics
--   **Stat Cards**: Quick counts of total, scheduled, published, and draft posts.
--   **Engagement Totals**: Aggregated sums of impressions, likes, comments, shares, and clicks.
--   **Recent/Upcoming**: Lists the next 5 scheduled posts and last 5 published posts for quick access.
--   **Visual Analytics**: Recharts-powered line and bar graphs showing engagement trends over the last 14 days and platform-specific breakdowns.
+
+- **Stat Cards**: Quick counts of total, scheduled, published, and draft posts.
+- **Engagement Totals**: Aggregated sums of impressions, likes, comments, shares, and clicks.
+- **Recent/Upcoming**: Lists the next 5 scheduled posts and last 5 published posts for quick access.
+- **Visual Analytics**: Recharts-powered line and bar graphs showing engagement trends over the last 14 days and platform-specific breakdowns.
 
 ### Post Management & Calendar
--   **Status Filtering**: The **Posts** page allows filtering by "Drafts", "Scheduled", and "Published".
--   **Direct Actions**: Users can "Publish Now" (skip the queue) or "Delete" posts directly from the list.
--   **Calendar Interaction**: Selecting a day on the calendar shows a filtered list of posts for that specific date.
+
+- **Status Filtering**: The **Posts** page allows filtering by "Drafts", "Scheduled", and "Published".
+- **Direct Actions**: Users can "Publish Now" (skip the queue) or "Delete" posts directly from the list.
+- **Calendar Interaction**: Selecting a day on the calendar shows a filtered list of posts for that specific date.
 
 ## UI Patterns
 
--   **Brutalist Design**: High-contrast colors (Neon yellow, Blue, Red), thick black borders, and heavy typography (font-black, uppercase).
--   **Feedback**: Sonner-based toast messages for all actions (success/error).
--   **Modals/Popovers**: Used for date pickers and dropdown menus (shadcn/ui).
--   **Loading States**: Skeleton-like text or "Loading..." indicators during data fetching.
+- **Brutalist Design**: High-contrast colors (Neon yellow, Blue, Red), thick black borders, and heavy typography (font-black, uppercase).
+- **Feedback**: Sonner-based toast messages for all actions (success/error).
+- **Modals/Popovers**: Used for date pickers and dropdown menus (shadcn/ui).
+- **Loading States**: Skeleton-like text or "Loading..." indicators during data fetching.
 
 ## Preferences
--   **Date/Time**: Handled in ISO format; displayed in the UI using local date/time strings (Medium date, Short time).
--   **Timezone**: Uses the user's browser timezone for display and scheduling.
--   **Platforms**: Fixed set of Instagram, Facebook, and LinkedIn.
+
+- **Date/Time**: Handled in ISO format; displayed in the UI using local date/time strings (Medium date, Short time).
+- **Timezone**: Uses the user's browser timezone for display and scheduling.
+- **Platforms**: Fixed set of Instagram, Facebook, and LinkedIn.

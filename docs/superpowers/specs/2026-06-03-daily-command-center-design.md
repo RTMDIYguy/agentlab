@@ -40,16 +40,16 @@ current ClickUp state is stale. Until it is reconciled against the repo and
 
 The V1 command center reads from these source categories:
 
-| Source | Use |
-| --- | --- |
-| `docs/operations/agency-operating-manual.md` | Active queue, cadence, open build items |
-| `docs/operations/urc-agent-execution-checklist.md` | Required agent opening routine and execution prompts |
-| `docs/operations/weekly-workflow-audit-bank.md` | Workflow audit lanes and `MKT-09` canary checks |
-| `docs/operations/workflow-relationship-map.md` | Cross-department handoffs and active execution overlay |
-| `docs/operations/change-control-register.md` | Recent operating changes and approved decisions |
-| `docs/operations/agency-owners-manual-blueprint.md` | Navigation and source-of-truth build prompts |
-| Marketing and Sales workspace folders | Revenue recovery, follow-up, affiliate, and campaign opportunities |
-| Future ClickUp export or connector | Candidate cockpit data after reconciliation |
+| Source                                              | Use                                                                |
+| --------------------------------------------------- | ------------------------------------------------------------------ |
+| `docs/operations/agency-operating-manual.md`        | Active queue, cadence, open build items                            |
+| `docs/operations/urc-agent-execution-checklist.md`  | Required agent opening routine and execution prompts               |
+| `docs/operations/weekly-workflow-audit-bank.md`     | Workflow audit lanes and `MKT-09` canary checks                    |
+| `docs/operations/workflow-relationship-map.md`      | Cross-department handoffs and active execution overlay             |
+| `docs/operations/change-control-register.md`        | Recent operating changes and approved decisions                    |
+| `docs/operations/agency-owners-manual-blueprint.md` | Navigation and source-of-truth build prompts                       |
+| Marketing and Sales workspace folders               | Revenue recovery, follow-up, affiliate, and campaign opportunities |
+| Future ClickUp export or connector                  | Candidate cockpit data after reconciliation                        |
 
 ## V1 Output
 

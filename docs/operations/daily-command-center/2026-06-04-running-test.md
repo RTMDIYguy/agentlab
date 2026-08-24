@@ -35,31 +35,31 @@ workflow audit canary and is still marked as a folder shell.
 
 ### MKT-09 Audit Snapshot
 
-| Audit Lane | Status | Finding | Next Fix |
-| --- | --- | --- | --- |
-| Process steps completeness | Review needed | The registry identifies the trigger and timing, but not the full event run sequence. | Define event type, invite path, registration path, reminder path, attendance record, follow-up, and stop condition. |
-| Stack stabilization | Review needed | The current event stack is not named in the workflow itself. | Choose the low-cost current lane before naming any future platform: calendar, registration form, tracker, email/reminder channel, and storage folder. |
-| Workflow viability | Review needed | A manual event could run, but the written source does not yet make it repeatable. | Draft a minimum viable roundtable slice that can run with current accounts and manual controls. |
-| Dependencies and handoffs | Review needed | Downstream relationships to `MKT-01`, `MKT-02`, `MKT-04`, and `AFC-04` are known but not operationalized. | Define the handoff fields and review point for each downstream workflow. |
-| Action responsibilities | Review needed | Robert and Marcus are named, but event work also touches Sales, Finance if paid, and AfterCare/community. | Add primary, support, and review responsibilities for each stage of the event lane. |
-| Flow efficiency | Review needed | Without a stable tracker, event data risks being retyped into multiple places. | Use one event tracker/CRM-lite bridge update path and treat all other views as downstream reports. |
+| Audit Lane                 | Status        | Finding                                                                                                   | Next Fix                                                                                                                                              |
+| -------------------------- | ------------- | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Process steps completeness | Review needed | The registry identifies the trigger and timing, but not the full event run sequence.                      | Define event type, invite path, registration path, reminder path, attendance record, follow-up, and stop condition.                                   |
+| Stack stabilization        | Review needed | The current event stack is not named in the workflow itself.                                              | Choose the low-cost current lane before naming any future platform: calendar, registration form, tracker, email/reminder channel, and storage folder. |
+| Workflow viability         | Review needed | A manual event could run, but the written source does not yet make it repeatable.                         | Draft a minimum viable roundtable slice that can run with current accounts and manual controls.                                                       |
+| Dependencies and handoffs  | Review needed | Downstream relationships to `MKT-01`, `MKT-02`, `MKT-04`, and `AFC-04` are known but not operationalized. | Define the handoff fields and review point for each downstream workflow.                                                                              |
+| Action responsibilities    | Review needed | Robert and Marcus are named, but event work also touches Sales, Finance if paid, and AfterCare/community. | Add primary, support, and review responsibilities for each stage of the event lane.                                                                   |
+| Flow efficiency            | Review needed | Without a stable tracker, event data risks being retyped into multiple places.                            | Use one event tracker/CRM-lite bridge update path and treat all other views as downstream reports.                                                    |
 
 ## Minimum Viable MKT-09 Slice To Build Next
 
-| Stage | Minimum Definition |
-| --- | --- |
-| Event type | Founder roundtable or Bootstrapper Capital chapter meeting |
-| Audience | Founders, solopreneurs, and operators with workflow/tool-sprawl pain |
-| Source | Book, LinkedIn content, direct outreach, referral, community, or partner |
-| Invite path | `MKT-06` content or `MKT-05` outreach sends to one RSVP path |
-| RSVP / registration | One form or tracker entry with source, event, attendee, interest, follow-up consent, and next step |
-| Reminder path | Manual or scheduled reminders before event |
-| Attendance record | One attendee status field: invited, registered, attended, no-show, canceled |
-| Follow-up sequence | `MKT-02` sends thank-you, replay/resources if any, diagnostic/offer next step, and stop condition |
-| CRM-lite bridge | Update source, stage, event attended, interest, next step, owner, follow-up date |
-| Finance handoff | If paid, `FIN-03` receives SKU, amount, payment status, invoice/receipt need |
-| Proof/referral handoff | `MKT-04` receives testimonial/referral candidate only after permission and claim-safety review |
-| AfterCare/community handoff | `AFC-04` receives community/member status when an attendee joins or needs ongoing engagement |
+| Stage                       | Minimum Definition                                                                                 |
+| --------------------------- | -------------------------------------------------------------------------------------------------- |
+| Event type                  | Founder roundtable or Bootstrapper Capital chapter meeting                                         |
+| Audience                    | Founders, solopreneurs, and operators with workflow/tool-sprawl pain                               |
+| Source                      | Book, LinkedIn content, direct outreach, referral, community, or partner                           |
+| Invite path                 | `MKT-06` content or `MKT-05` outreach sends to one RSVP path                                       |
+| RSVP / registration         | One form or tracker entry with source, event, attendee, interest, follow-up consent, and next step |
+| Reminder path               | Manual or scheduled reminders before event                                                         |
+| Attendance record           | One attendee status field: invited, registered, attended, no-show, canceled                        |
+| Follow-up sequence          | `MKT-02` sends thank-you, replay/resources if any, diagnostic/offer next step, and stop condition  |
+| CRM-lite bridge             | Update source, stage, event attended, interest, next step, owner, follow-up date                   |
+| Finance handoff             | If paid, `FIN-03` receives SKU, amount, payment status, invoice/receipt need                       |
+| Proof/referral handoff      | `MKT-04` receives testimonial/referral candidate only after permission and claim-safety review     |
+| AfterCare/community handoff | `AFC-04` receives community/member status when an attendee joins or needs ongoing engagement       |
 
 ## Human Judgment Needed
 

@@ -545,7 +545,7 @@ Working production assumption:
 - Primary edition: Kindle eBook
 - Secondary edition: paperback after the manuscript is stable
 - Working print trim size: 8.5" x 11", matched to `The Bootstrappers Guide to
-  the World`
+the World`
 - Working print margins: 0.75" top/bottom and 0.5" left/right, matched to the
   shipped Bootstrapper DOCX
 - Human review copies: maintain matching DOCX and PDF exports from the same

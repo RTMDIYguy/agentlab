@@ -1,12 +1,12 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const filePath = path.join(__dirname, 'src', 'Dashboard.tsx');
+const filePath = path.join(__dirname, "src", "Dashboard.tsx");
 
-let content = fs.readFileSync(filePath, 'utf8');
+let content = fs.readFileSync(filePath, "utf8");
 
 // The issue here is the escaped backticks and dollar sign inside the TSX file.
 // We need to change `cell-\${index}\` to just \`cell-\${index}\`
@@ -19,4 +19,4 @@ content = content.replace(/\\`/g, "\`");
 content = content.replace(/\\\$/g, "$");
 
 fs.writeFileSync(filePath, content);
-console.log('Fixed literal escapes in Dashboard.tsx');
+console.log("Fixed literal escapes in Dashboard.tsx");

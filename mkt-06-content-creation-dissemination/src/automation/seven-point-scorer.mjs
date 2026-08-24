@@ -36,4 +36,6 @@
  * TODO: Implement.
  */
 
-throw new Error("seven-point-scorer.mjs is a spec stub — implementation pending.");
+throw new Error(
+  "seven-point-scorer.mjs is a spec stub — implementation pending."
+);

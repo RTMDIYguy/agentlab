@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | MKT-07 |
-| Department | Marketing |
-| Automation level | 85-90% |
-| Owner | Marcus + Robert |
-| Trigger | Marketing calendar or pipeline gap |
-| Cycle time | Launch: 48-72 hrs; optimization: daily |
-| Source status | Imported source + automation |
+| Field            | Value                                  |
+| ---------------- | -------------------------------------- |
+| Workflow ID      | MKT-07                                 |
+| Department       | Marketing                              |
+| Automation level | 85-90%                                 |
+| Owner            | Marcus + Robert                        |
+| Trigger          | Marketing calendar or pipeline gap     |
+| Cycle time       | Launch: 48-72 hrs; optimization: daily |
+| Source status    | Imported source + automation           |
 
 ## Inputs
 
@@ -85,16 +85,16 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
+| Artifact                                           | Purpose                                                                     |
+| -------------------------------------------------- | --------------------------------------------------------------------------- |
 | `automation/MKT07-Paid-Advertising-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/MKT07_Marketing_KPI_Dashboard.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/MKT07_Marketing_KPI_Dashboard.xlsx`      | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### automation/MKT07-Paid-Advertising-Blueprint.json
 
-````json
+```json
 {
   "name": "MKT07: Paid Advertising Budget & Performance Monitor (Make.com Blueprint)",
   "flow": [
@@ -194,7 +194,10 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
         "spreadsheetId": "YOUR_MKT07_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{3.choices[0].message.content}}"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD')}}",
+          "{{3.choices[0].message.content}}"
+        ]
       },
       "metadata": {
         "designer": {
@@ -209,7 +212,7 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -319,7 +322,10 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
         "spreadsheetId": "YOUR_MKT07_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{3.choices[0].message.content}}"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD')}}",
+          "{{3.choices[0].message.content}}"
+        ]
       },
       "metadata": {
         "designer": {
@@ -378,6 +384,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

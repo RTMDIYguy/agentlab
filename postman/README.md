@@ -11,10 +11,10 @@ files that are safe to share.
 
 ## Folder Map
 
-| Folder | Use | Commit? |
-| --- | --- | --- |
-| `collections/` | Postman collection exports such as `agentic-recipes.postman_collection.json`. | Yes, after review. |
-| `environments/` | Example environment templates with placeholder values only. | Commit `*.example.json` only. |
+| Folder          | Use                                                                           | Commit?                       |
+| --------------- | ----------------------------------------------------------------------------- | ----------------------------- |
+| `collections/`  | Postman collection exports such as `agentic-recipes.postman_collection.json`. | Yes, after review.            |
+| `environments/` | Example environment templates with placeholder values only.                   | Commit `*.example.json` only. |
 
 ## Rules
 

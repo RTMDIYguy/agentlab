@@ -41,28 +41,28 @@ Performance tracker shape:
 Batch 2 contains five internet-verified company records after removing the stale
 Spitball lead:
 
-| Lead | Company | Public source status |
-| --- | --- | --- |
-| Ali | PrimeLogic | Verified live company site |
+| Lead   | Company               | Public source status       |
+| ------ | --------------------- | -------------------------- |
+| Ali    | PrimeLogic            | Verified live company site |
 | Andrew | Digital Middle Ground | Verified live company site |
-| Brett | Command.App | Verified live company site |
-| Joseph | CarePilot | Verified live company site |
-| Hari | Nona Lifestyle | Verified live company site |
+| Brett  | Command.App           | Verified live company site |
+| Joseph | CarePilot             | Verified live company site |
+| Hari   | Nona Lifestyle        | Verified live company site |
 
 ## Evidence Tasks
 
-| # | Checkpoint | Required evidence | Status |
-| --- | --- | --- | --- |
-| 1 | Planning item | This run packet plus outreach prep file | Ready |
-| 2 | Task record | Manual run packet and reminder automation | Ready |
-| 3 | Source draft | Batch 2 prep file | Ready |
-| 4 | Repository artifact | This packet | Ready |
-| 5 | Editorial approval | Operator send approval before send | Pending |
-| 6 | SEO/positioning | CTA and founder-workflow language check | Ready |
-| 7 | Adaptation | First-touch email adaptation | Ready |
-| 8 | Distribution proof | Reach/Gmail/manual send proof | Pending send |
-| 9 | Step 7 tracker row | `performance-tracker-row.md` | Pending metrics |
-| 10 | Final decision | Post-send pass/workaround/fail decision | Pending |
+| #   | Checkpoint          | Required evidence                         | Status          |
+| --- | ------------------- | ----------------------------------------- | --------------- |
+| 1   | Planning item       | This run packet plus outreach prep file   | Ready           |
+| 2   | Task record         | Manual run packet and reminder automation | Ready           |
+| 3   | Source draft        | Batch 2 prep file                         | Ready           |
+| 4   | Repository artifact | This packet                               | Ready           |
+| 5   | Editorial approval  | Operator send approval before send        | Pending         |
+| 6   | SEO/positioning     | CTA and founder-workflow language check   | Ready           |
+| 7   | Adaptation          | First-touch email adaptation              | Ready           |
+| 8   | Distribution proof  | Reach/Gmail/manual send proof             | Pending send    |
+| 9   | Step 7 tracker row  | `performance-tracker-row.md`              | Pending metrics |
+| 10  | Final decision      | Post-send pass/workaround/fail decision   | Pending         |
 
 ## Next Operator Actions
 

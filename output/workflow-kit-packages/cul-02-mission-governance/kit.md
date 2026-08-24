@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | CUL-02 |
-| Department | Culture |
-| Automation level | 50-60% |
-| Owner | Robert T. McCarthy |
-| Trigger | Annual or business model update |
-| Cycle time | Mission: annual; AI policy: semi-annual |
-| Source status | Imported source |
+| Field            | Value                                   |
+| ---------------- | --------------------------------------- |
+| Workflow ID      | CUL-02                                  |
+| Department       | Culture                                 |
+| Automation level | 50-60%                                  |
+| Owner            | Robert T. McCarthy                      |
+| Trigger          | Annual or business model update         |
+| Cycle time       | Mission: annual; AI policy: semi-annual |
+| Source status    | Imported source                         |
 
 ## Inputs
 
@@ -85,15 +85,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
+| Artifact                          | Purpose                                                                     |
+| --------------------------------- | --------------------------------------------------------------------------- |
 | `automation/CUL02-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### automation/CUL02-Blueprint.json
 
-````json
+```json
 {
   "name": "CUL02: Mission & Governance (Make.com Blueprint)",
   "flow": [
@@ -131,7 +131,7 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
     }
   ]
 }
-````
+```
 
 ## Binary Attachments
 
@@ -223,6 +223,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

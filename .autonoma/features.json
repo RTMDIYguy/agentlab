@@ -27,9 +27,7 @@
     "name": "Post Composer Form",
     "type": "form",
     "parentPagePath": "/app/compose",
-    "sourceFiles": [
-      "frontend/src/pages/Compose.jsx"
-    ],
+    "sourceFiles": ["frontend/src/pages/Compose.jsx"],
     "interactiveElements": 10,
     "description": "Comprehensive form for creating social media posts. Supports multi-platform selection, content input, image uploads, and scheduling with date/time pickers.",
     "id": "compose-post-form"
@@ -38,9 +36,7 @@
     "name": "AI Caption Assistant",
     "type": "complex-component",
     "parentPagePath": "/app/compose",
-    "sourceFiles": [
-      "frontend/src/pages/Compose.jsx"
-    ],
+    "sourceFiles": ["frontend/src/pages/Compose.jsx"],
     "interactiveElements": 3,
     "description": "AI-powered utility to generate post captions based on a topic and selected tone. Integrates directly into the composer's content field.",
     "id": "compose-ai-assistant"
@@ -49,9 +45,7 @@
     "name": "Posts Management List",
     "type": "table",
     "parentPagePath": "/app/posts",
-    "sourceFiles": [
-      "frontend/src/pages/Posts.jsx"
-    ],
+    "sourceFiles": ["frontend/src/pages/Posts.jsx"],
     "interactiveElements": 6,
     "description": "A feed of posts with status filtering (Drafts, Scheduled, Published). Each post item allows for immediate publishing or deletion.",
     "id": "posts-management-list"
@@ -72,9 +66,7 @@
     "name": "Social Account Integrations",
     "type": "complex-component",
     "parentPagePath": "/app/accounts",
-    "sourceFiles": [
-      "frontend/src/pages/Accounts.jsx"
-    ],
+    "sourceFiles": ["frontend/src/pages/Accounts.jsx"],
     "interactiveElements": 3,
     "description": "Management interface for linking and unlinking social media accounts (Facebook, Instagram, LinkedIn). Handles OAuth redirection and display of connected account handles.",
     "id": "accounts-integration-cards"

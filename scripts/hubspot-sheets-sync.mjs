@@ -5,7 +5,8 @@ import dotenv from "dotenv";
 // Load environment variables from .env.local
 dotenv.config({ path: path.join(process.cwd(), ".env.local") });
 
-const ADC_PATH = "C:\\Users\\RobertM\\AppData\\Roaming\\gcloud\\application_default_credentials.json";
+const ADC_PATH =
+  "C:\\Users\\RobertM\\AppData\\Roaming\\gcloud\\application_default_credentials.json";
 const SPREADSHEET_ID = "14HMhMB4uJOTAPS1dpiOR7r6XwKr81WjhwSDUczXxwIw";
 const TAB_NAME = "Lead Follow-Up";
 // Get active Google access token using the authorized refresh token
@@ -55,7 +56,9 @@ async function updateSheetCell(accessToken, range, value) {
     body: JSON.stringify({ values: [[value]] }),
   });
   if (!response.ok) {
-    throw new Error(`Failed to update sheet cell ${range}: ${await response.text()}`);
+    throw new Error(
+      `Failed to update sheet cell ${range}: ${await response.text()}`
+    );
   }
 }
 // Search for contact in HubSpot by email
@@ -69,13 +72,17 @@ async function searchHubSpotContact(email) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      filterGroups: [{
-        filters: [{ propertyName: "email", operator: "EQ", value: email }]
-      }]
+      filterGroups: [
+        {
+          filters: [{ propertyName: "email", operator: "EQ", value: email }],
+        },
+      ],
     }),
   });
   if (!response.ok) {
-    throw new Error(`Failed to search HubSpot contact: ${await response.text()}`);
+    throw new Error(
+      `Failed to search HubSpot contact: ${await response.text()}`
+    );
   }
   const data = await response.json();
   return data.results && data.results.length > 0 ? data.results[0] : null;
@@ -91,11 +98,13 @@ async function createHubSpotContact(firstName, lastName, email) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      properties: { email, firstname: firstName, lastname: lastName }
+      properties: { email, firstname: firstName, lastname: lastName },
     }),
   });
   if (!response.ok) {
-    throw new Error(`Failed to create HubSpot contact: ${await response.text()}`);
+    throw new Error(
+      `Failed to create HubSpot contact: ${await response.text()}`
+    );
   }
   return await response.json();
 }
@@ -113,8 +122,8 @@ async function createHubSpotDeal(dealName) {
       properties: {
         dealname: dealName,
         dealstage: "appointmentscheduled",
-        pipeline: "default"
-      }
+        pipeline: "default",
+      },
     }),
   });
   if (!response.ok) {
@@ -135,19 +144,26 @@ async function associateDealToContact(dealId, contactId) {
     body: JSON.stringify([
       {
         associationCategory: "HUBSPOT_DEFINED",
-        associationTypeId: 3 // deal_to_contact is 3
-      }
+        associationTypeId: 3, // deal_to_contact is 3
+      },
     ]),
   });
   if (!response.ok) {
-    throw new Error(`Failed to associate deal to contact: ${await response.text()}`);
+    throw new Error(
+      `Failed to associate deal to contact: ${await response.text()}`
+    );
   }
 }
 // Main Orchestrator Sync Function
 async function syncSDRLeads() {
   console.log("Starting HubSpot Sheets Sync SDR Agent...");
-  if (!process.env.HUBSPOT_ACCESS_TOKEN || process.env.HUBSPOT_ACCESS_TOKEN === "pat-your-token-here") {
-    console.error("CRITICAL ERROR: Please add your actual HubSpot Private App Access Token to .env.local!");
+  if (
+    !process.env.HUBSPOT_ACCESS_TOKEN ||
+    process.env.HUBSPOT_ACCESS_TOKEN === "pat-your-token-here"
+  ) {
+    console.error(
+      "CRITICAL ERROR: Please add your actual HubSpot Private App Access Token to .env.local!"
+    );
     return;
   }
 
@@ -169,7 +185,9 @@ async function syncSDRLeads() {
     const hubspotIdIndex = headers.indexOf("hubspotid");
 
     if (emailIndex === -1 || syncStatusIndex === -1) {
-      console.error("CRITICAL ERROR: Spreadsheet must have 'Email' and 'HubSpotSync' columns!");
+      console.error(
+        "CRITICAL ERROR: Spreadsheet must have 'Email' and 'HubSpotSync' columns!"
+      );
       return;
     }
     let syncCount = 0;
@@ -182,11 +200,18 @@ async function syncSDRLeads() {
         continue;
       }
 
-      const firstName = firstNameIndex !== -1 ? row[firstNameIndex]?.trim() || "" : "";
-      const lastName = lastNameIndex !== -1 ? row[lastNameIndex]?.trim() || "" : "";
-      const offer = offerIndex !== -1 ? row[offerIndex]?.trim() || "General Lead" : "General Lead";
+      const firstName =
+        firstNameIndex !== -1 ? row[firstNameIndex]?.trim() || "" : "";
+      const lastName =
+        lastNameIndex !== -1 ? row[lastNameIndex]?.trim() || "" : "";
+      const offer =
+        offerIndex !== -1
+          ? row[offerIndex]?.trim() || "General Lead"
+          : "General Lead";
 
-      console.log(`Processing Lead: ${firstName} ${lastName} (${email}) for Offer: ${offer}...`);
+      console.log(
+        `Processing Lead: ${firstName} ${lastName} (${email}) for Offer: ${offer}...`
+      );
 
       // 1. Search for existing contact in HubSpot
       let contactId;
@@ -196,7 +221,11 @@ async function syncSDRLeads() {
         console.log(`Found existing HubSpot Contact with ID: ${contactId}`);
       } else {
         // 2. Create brand-new contact if missing
-        const newContact = await createHubSpotContact(firstName, lastName, email);
+        const newContact = await createHubSpotContact(
+          firstName,
+          lastName,
+          email
+        );
         contactId = newContact.id;
         console.log(`Created new HubSpot Contact with ID: ${contactId}`);
       }
@@ -212,18 +241,28 @@ async function syncSDRLeads() {
       // 5. Update Google Sheet
       const rowIndex = i + 1;
       const syncColLetter = String.fromCharCode(65 + syncStatusIndex); // A, B, C, etc.
-      await updateSheetCell(googleToken, `${syncColLetter}${rowIndex}`, "SUCCESS");
+      await updateSheetCell(
+        googleToken,
+        `${syncColLetter}${rowIndex}`,
+        "SUCCESS"
+      );
 
       if (hubspotIdIndex !== -1) {
         const idColLetter = String.fromCharCode(65 + hubspotIdIndex);
-        await updateSheetCell(googleToken, `${idColLetter}${rowIndex}`, contactId);
+        await updateSheetCell(
+          googleToken,
+          `${idColLetter}${rowIndex}`,
+          contactId
+        );
       }
 
       console.log(`Successfully synced row ${rowIndex} to HubSpot!`);
       syncCount++;
     }
 
-    console.log(`HubSpot Sheets Sync SDR Agent completed successfully! Synced ${syncCount} leads.`);
+    console.log(
+      `HubSpot Sheets Sync SDR Agent completed successfully! Synced ${syncCount} leads.`
+    );
   } catch (error) {
     console.error("CRITICAL ERROR during sync execution:", error);
   }

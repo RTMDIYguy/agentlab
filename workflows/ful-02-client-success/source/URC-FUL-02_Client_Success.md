@@ -10,7 +10,7 @@ URC-FUL-02 — Client Success
 
 Proactive Health Monitoring, Check-Ins, and Outcome Delivery
 
-Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
+Robert T. McCarthy & Sheena Burns | v1.0 | March 23, 2026
 
 1. Why This Workflow Exists
 

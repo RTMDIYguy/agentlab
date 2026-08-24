@@ -13,6 +13,7 @@ verification: "Refresh the page and verify the post is no longer in the library.
 **Intent**: A creator starts a new post, saves it as a draft to finish later, then decides to discard it from the library, ensuring the full lifecycle from creation to deletion works.
 
 **Steps**:
+
 1. type: type "This is a draft journey test post." in the content textarea in the composer card
 2. click: click the "Save draft" button in the composer card actions
 3. assert: assert: text "Saved as draft" is visible in the toast notification in the toast notification
@@ -21,6 +22,7 @@ verification: "Refresh the page and verify the post is no longer in the library.
 6. assert: assert: text "Post deleted" is visible in the toast notification in the toast notification
 
 **Verification**:
+
 1. refresh: refresh the page
 2. assert: assert: text "This is a draft journey test post." is NOT visible in the post list in the post library list
 

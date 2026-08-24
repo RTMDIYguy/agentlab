@@ -82,15 +82,15 @@ to each other, and what each one owns. The source of truth for "which entity doe
 
 ### Entities
 
-| Entity                                       | Role                                                                                      | Notes                                                                                                                                                                                                             |
-| -------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Uncle Robert Consulting LLC (URC)**        | Main operating entity. Consulting, advisory, IP ownership, client invoicing.              | All client contracts run through URC.                                                                                                                                                                             |
-| **Tactix**                                   | Execution pod. Upwork-facing delivery arm.                                                | Handles billable project work; keeps client-facing delivery separate from URC brand.                                                                                                                              |
-| **Bootstrapper Capital**                     | Audience, community, and funnel. Roundtables, bootcamps, continuity programs.             | Independence Chapter on Bootstrapper.ai. Feeds URC pipeline.                                                                                                                                                      |
+| Entity                                       | Role                                                                                      | Notes                                                                                                                                                                                                                                 |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Uncle Robert Consulting LLC (URC)**        | Main operating entity. Consulting, advisory, IP ownership, client invoicing.              | All client contracts run through URC.                                                                                                                                                                                                 |
+| **Tactix**                                   | Execution pod. Upwork-facing delivery arm.                                                | Handles billable project work; keeps client-facing delivery separate from URC brand.                                                                                                                                                  |
+| **Bootstrapper Capital**                     | Audience, community, and funnel. Roundtables, bootcamps, continuity programs.             | Independence Chapter on Bootstrapper.ai. Feeds URC pipeline.                                                                                                                                                                          |
 | **Agent Lab**                                | R&D and public demonstration platform. Tests automation, agent workflows, and AI tooling. | Live at https://agent-lab.tech Source repo in this workspace at C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\agentlab or you can use the URL at https://github.com/RTMDIYguy/agentlab |
-| **Bootstrapper's Guide to the World (book)** | Authority and conversion asset. 28 bootstrapped business models, $59.99.                  | Listed in Agent Lab & Gumroad. Feeds Bootstrapper Capital funnel.                                                                                                                                                 |
-| **Startup Operational Excellence**           | Authority and conversion asset. Book rewrite & custom Gumroad sales page live.            | Custom landing page live in `Sales Department/landing_soe.html`.                                                                                                                                                  |
-| **Pulse Social**                             | Multi-platform social media scheduling and real-time engagement analytics web app.        | Live at https://pulse-social-agentlab-projects.vercel.app (React frontend + Cloud Run FastAPI backend + MongoDB Atlas).                                                                                          |
+| **Bootstrapper's Guide to the World (book)** | Authority and conversion asset. 28 bootstrapped business models, $59.99.                  | Listed in Agent Lab & Gumroad. Feeds Bootstrapper Capital funnel.                                                                                                                                                                     |
+| **Startup Operational Excellence**           | Authority and conversion asset. Book rewrite & custom Gumroad sales page live.            | Custom landing page live in `Sales Department/landing_soe.html`.                                                                                                                                                                      |
+| **Pulse Social**                             | Multi-platform social media scheduling and real-time engagement analytics web app.        | Live at https://pulse-social-agentlab-projects.vercel.app (React frontend + Cloud Run FastAPI backend + MongoDB Atlas).                                                                                                               |
 
 ### Offer Ladder (Phase 1 LOCKED v1.0)
 
@@ -438,16 +438,16 @@ where the source files live.
 
 ### Product Registry
 
-| Product                           | Type                          | Status    | Price   | Channel                           |
-| --------------------------------- | ----------------------------- | --------- | ------- | --------------------------------- |
-| Bootstrapper's Guide to the World | Book (digital)                | Live      | $59.99  | Agent Lab / Stripe / Gumroad      |
-| Startup Operational Excellence    | Book / Custom Landing Page    | Live      | TBD     | Gumroad (`landing_soe.html`)      |
-| Pulse Social                      | Social media scheduler webapp | Live      | SaaS    | Vercel / Cloud Run / MongoDB      |
-| Hamarashops.ai Partnership        | Healthcare MedLM Outreach     | Active    | RevShare| Targeted Medical Lead Generation  |
-| Virtusa / Dheerendar Walkthrough  | Demo & Evaluation Package     | Active    | B2B     | Mutual NDA / Live Tech Walkthrough|
-| Ownable OS                        | Workflow package / continuity | Candidate | $500/mo | TBD                               |
-| $1 Bootcamp                       | Entry-level program           | Candidate | $1      | TBD                               |
-| Workflow blueprints / compendiums | Document products             | Candidate | TBD     | TBD                               |
+| Product                           | Type                          | Status    | Price    | Channel                            |
+| --------------------------------- | ----------------------------- | --------- | -------- | ---------------------------------- |
+| Bootstrapper's Guide to the World | Book (digital)                | Live      | $59.99   | Agent Lab / Stripe / Gumroad       |
+| Startup Operational Excellence    | Book / Custom Landing Page    | Live      | TBD      | Gumroad (`landing_soe.html`)       |
+| Pulse Social                      | Social media scheduler webapp | Live      | SaaS     | Vercel / Cloud Run / MongoDB       |
+| Hamarashops.ai Partnership        | Healthcare MedLM Outreach     | Active    | RevShare | Targeted Medical Lead Generation   |
+| Virtusa / Dheerendar Walkthrough  | Demo & Evaluation Package     | Active    | B2B      | Mutual NDA / Live Tech Walkthrough |
+| Ownable OS                        | Workflow package / continuity | Candidate | $500/mo  | TBD                                |
+| $1 Bootcamp                       | Entry-level program           | Candidate | $1       | TBD                                |
+| Workflow blueprints / compendiums | Document products             | Candidate | TBD      | TBD                                |
 
 ### Publishing Standards
 
@@ -479,19 +479,19 @@ each piece does and its current status. Does not contain access credentials.
 
 ### Current Infrastructure Map
 
-| Layer             | Tool / Platform                  | Purpose                                  | Status     |
-| ----------------- | -------------------------------- | ---------------------------------------- | ---------- |
-| Source control    | GitHub                           | Agent Lab codebase; ops docs             | Active     |
-| Deployment        | Vercel                           | Agent Lab & Pulse Social frontends       | Active     |
-| Cloud Compute     | Google Cloud Run                 | Pulse Social FastAPI container backend   | Active     |
-| Database          | SQLite (dev) / MongoDB (cloud)   | Agent Lab local dev; Pulse Social cloud  | Active     |
-| Email Sending     | Resend SMTP                      | Automated MKT-02 nurture sends           | Active     |
-| Payments          | Stripe & Gumroad                 | Checkout sessions; custom landing pages  | Active     |
-| Automation        | n8n                              | SDR sync & nurture workflows; MCP server | Active     |
-| Testing Suite     | Autonoma                         | Automated UI test runner & verification  | Active     |
-| CRM               | HubSpot                          | Contact capture and 2-way deal pipeline  | Active     |
-| Office suite      | Microsoft 365                    | Preferred backbone                       | Active     |
-| Analytics sandbox | KNIME                            | Data analysis — no production dependency | Evaluation |
+| Layer             | Tool / Platform                | Purpose                                  | Status     |
+| ----------------- | ------------------------------ | ---------------------------------------- | ---------- |
+| Source control    | GitHub                         | Agent Lab codebase; ops docs             | Active     |
+| Deployment        | Vercel                         | Agent Lab & Pulse Social frontends       | Active     |
+| Cloud Compute     | Google Cloud Run               | Pulse Social FastAPI container backend   | Active     |
+| Database          | SQLite (dev) / MongoDB (cloud) | Agent Lab local dev; Pulse Social cloud  | Active     |
+| Email Sending     | Resend SMTP                    | Automated MKT-02 nurture sends           | Active     |
+| Payments          | Stripe & Gumroad               | Checkout sessions; custom landing pages  | Active     |
+| Automation        | n8n                            | SDR sync & nurture workflows; MCP server | Active     |
+| Testing Suite     | Autonoma                       | Automated UI test runner & verification  | Active     |
+| CRM               | HubSpot                        | Contact capture and 2-way deal pipeline  | Active     |
+| Office suite      | Microsoft 365                  | Preferred backbone                       | Active     |
+| Analytics sandbox | KNIME                          | Data analysis — no production dependency | Evaluation |
 
 ### Sandbox Rules
 
@@ -629,4 +629,4 @@ Quick reference for what causes this document to need an update.
 
 ---
 
-*End of Agency Owner's Manual v0.2*
+_End of Agency Owner's Manual v0.2_

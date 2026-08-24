@@ -7,10 +7,7 @@
       "name": "Manual Canary Trigger",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
-      "position": [
-        -900,
-        220
-      ]
+      "position": [-900, 220]
     },
     {
       "parameters": {
@@ -57,10 +54,7 @@
       "name": "Form Brief Intake",
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.2,
-      "position": [
-        -900,
-        440
-      ]
+      "position": [-900, 440]
     },
     {
       "parameters": {
@@ -73,10 +67,7 @@
       "name": "Workflow Notes",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [
-        -960,
-        -160
-      ]
+      "position": [-960, -160]
     },
     {
       "parameters": {
@@ -89,10 +80,7 @@
       "name": "Normalize Content Brief",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        -620,
-        320
-      ]
+      "position": [-620, 320]
     },
     {
       "parameters": {
@@ -105,10 +93,7 @@
       "name": "01 Planning Item Placeholder",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        -360,
-        320
-      ]
+      "position": [-360, 320]
     },
     {
       "parameters": {
@@ -121,10 +106,7 @@
       "name": "02 Jira Ticket Placeholder",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        -100,
-        320
-      ]
+      "position": [-100, 320]
     },
     {
       "parameters": {
@@ -137,10 +119,7 @@
       "name": "03 Source Draft Placeholder",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        160,
-        320
-      ]
+      "position": [160, 320]
     },
     {
       "parameters": {
@@ -153,10 +132,7 @@
       "name": "04 GitHub Artifact Placeholder",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        420,
-        320
-      ]
+      "position": [420, 320]
     },
     {
       "parameters": {
@@ -169,10 +145,7 @@
       "name": "05 Editorial Gate Placeholder",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        680,
-        320
-      ]
+      "position": [680, 320]
     },
     {
       "parameters": {
@@ -185,10 +158,7 @@
       "name": "06 SEO Complete Placeholder",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        940,
-        320
-      ]
+      "position": [940, 320]
     },
     {
       "parameters": {
@@ -201,10 +171,7 @@
       "name": "07 Adaptation Placeholder",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        1200,
-        320
-      ]
+      "position": [1200, 320]
     },
     {
       "parameters": {
@@ -217,10 +184,7 @@
       "name": "08 Distribution Preview Placeholder",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        1460,
-        320
-      ]
+      "position": [1460, 320]
     },
     {
       "parameters": {
@@ -233,10 +197,7 @@
       "name": "09 Step 7 Tracker Placeholder",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        1720,
-        320
-      ]
+      "position": [1720, 320]
     },
     {
       "parameters": {
@@ -249,10 +210,7 @@
       "name": "10 Final Decision Placeholder",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        1980,
-        320
-      ]
+      "position": [1980, 320]
     },
     {
       "parameters": {
@@ -267,10 +225,7 @@
       "name": "09A HubSpot Attribution Read Check",
       "type": "n8n-nodes-base.hubspot",
       "typeVersion": 2.2,
-      "position": [
-        1900,
-        540
-      ],
+      "position": [1900, 540],
       "credentials": {
         "hubspotAppToken": {
           "id": "B21tckPSe9yki6YK",

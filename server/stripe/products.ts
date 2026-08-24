@@ -62,11 +62,12 @@ export type BillingCycle = "monthly" | "yearly";
 
 export function getPriceId(plan: PlanId, cycle: BillingCycle): string {
   const product = STRIPE_PRODUCTS[plan];
-  const priceId = cycle === "monthly" ? product.monthlyPriceId : product.yearlyPriceId;
-  
+  const priceId =
+    cycle === "monthly" ? product.monthlyPriceId : product.yearlyPriceId;
+
   if (!priceId) {
     throw new Error(`Price ID not configured for ${plan} ${cycle} plan`);
   }
-  
+
   return priceId;
 }

@@ -79,15 +79,15 @@ included in a culture that was already there.
 Compare the June 2025 "The Plan" page (seven bullets) to the May 2026
 Founder Signal System (six steps):
 
-| The Plan (June 2025) | Founder Signal System (May 2026) |
-| --- | --- |
-| Create Content | Content engine (MKT-06) |
-| Create webpage | ICP / signal brief substrate (MKT-01) |
-| Upload content | Publish (MKT-06) |
-| Promote webpage | Outreach lane (MKT-05) |
-| Engage audience | Follow-up lane (MKT-02) |
+| The Plan (June 2025)          | Founder Signal System (May 2026)              |
+| ----------------------------- | --------------------------------------------- |
+| Create Content                | Content engine (MKT-06)                       |
+| Create webpage                | ICP / signal brief substrate (MKT-01)         |
+| Upload content                | Publish (MKT-06)                              |
+| Promote webpage               | Outreach lane (MKT-05)                        |
+| Engage audience               | Follow-up lane (MKT-02)                       |
 | Build a book of subscriptions | Proof loop / qualified conversations (MKT-04) |
-| Maintain and expand | Next-cycle review |
+| Maintain and expand           | Next-cycle review                             |
 
 Same loop. Eleven months of refining language and standards, not
 inventing structure. Robert wrote the bones eleven months before anyone
@@ -255,6 +255,6 @@ updated.
 
 ## Change Log
 
-| Date | Change ID | Type | Summary | Author |
-| --- | --- | --- | --- | --- |
+| Date       | Change ID         | Type    | Summary                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Author |
+| ---------- | ----------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
 | 2026-05-16 | CC-2026-05-16-007 | initial | Documented the founding through-line from KKBKrazy Entertainment (June 2025) through URC formation, Content Creator Class iterations, Teamspace Overview operating posture, and forward to the Founder Signal System ship (CC-2026-05-15-003) and the Reserve Stack codification (CC-2026-05-16-006). Captures seven through-lines: gratitude toward the person who walked away; the thin slice was always there; the artifact is the business; everyone builds equity in what they build; the reserve was never theoretical; the tool sprawl is real; the first cohort was community. Authored from a live ClickUp archaeology session with operator approval to codify the findings durably. | Claude |

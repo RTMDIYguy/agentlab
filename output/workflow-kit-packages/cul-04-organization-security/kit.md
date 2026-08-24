@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | CUL-04 |
-| Department | Culture |
-| Automation level | 60-70% |
-| Owner | Robert T. McCarthy |
-| Trigger | New hire, role change, breach |
-| Cycle time | Org chart: quarterly; access: semi-annual |
-| Source status | Imported source |
+| Field            | Value                                     |
+| ---------------- | ----------------------------------------- |
+| Workflow ID      | CUL-04                                    |
+| Department       | Culture                                   |
+| Automation level | 60-70%                                    |
+| Owner            | Robert T. McCarthy                        |
+| Trigger          | New hire, role change, breach             |
+| Cycle time       | Org chart: quarterly; access: semi-annual |
+| Source status    | Imported source                           |
 
 ## Inputs
 
@@ -85,16 +85,16 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
+| Artifact                                  | Purpose                                                                     |
+| ----------------------------------------- | --------------------------------------------------------------------------- |
 | `source/URC-CUL-04_Team_Roles_Culture.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/CUL04-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/CUL04-Blueprint.json`         | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-CUL-04_Team_Roles_Culture.md
 
-````markdown
+```markdown
 # CUL-04 - Organization & Security Source
 
 Source: `Culture\URC Culture files\updated files 03262026\URC-CUL-04_Team_Roles_Culture.docx`
@@ -107,7 +107,7 @@ URC-CUL-04 — Team, Roles & Culture
 
 Updated March 26, 2026 — Solo Operator Edition
 
-Robert T. McCarthy   |   v1.1   |   March 26, 2026
+Robert T. McCarthy | v1.1 | March 26, 2026
 
 1. The Team Today
 
@@ -264,11 +264,11 @@ March 26, 2026
 R. McCarthy
 
 Updated: Sheena Burns stepped back from co-founder role March 2026
-````
+```
 
 ### automation/CUL04-Blueprint.json
 
-````json
+```json
 {
   "name": "CUL04: Team Roles & Culture (Make.com Blueprint)",
   "flow": [
@@ -306,7 +306,7 @@ Updated: Sheena Burns stepped back from co-founder role March 2026
     }
   ]
 }
-````
+```
 
 ## Binary Attachments
 
@@ -398,6 +398,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

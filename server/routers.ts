@@ -3,16 +3,11 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { stripeRouter, adminRouter } from "./stripe/router";
-import { blogRouter } from "./blog/router";
-import { articlesRouter } from "./blog/articles-router";
-import { contactRouter } from "./contact/router";
-import { newsletterRouter } from "./newsletter/router";
-import { founderIntakeRouter } from "./founder-intake/router";
 import { opsCleanupRouter } from "./ops-cleanup/router";
 import { hubspotRouter } from "./hubspot/router";
 
 export const appRouter = router({
-    // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
+  // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
@@ -27,11 +22,6 @@ export const appRouter = router({
 
   stripe: stripeRouter,
   admin: adminRouter,
-  blog: blogRouter,
-  articles: articlesRouter,
-  contact: contactRouter,
-  newsletter: newsletterRouter,
-  founderIntake: founderIntakeRouter,
   opsCleanup: opsCleanupRouter,
   hubspot: hubspotRouter,
 });

@@ -1,6 +1,7 @@
 # Session Handoff — June 7, 2026
 
 ## Who You're Working With
+
 Robert McCarthy — Uncle Robert Consulting LLC (URC). Founder building an AI-native agency/consulting practice. Primary tool is **Claude Desktop (Cowork)**. Separate Claude Code CLI installation called **Codex** exists but is secondary and currently has auth issues (parked).
 
 ---
@@ -8,6 +9,7 @@ Robert McCarthy — Uncle Robert Consulting LLC (URC). Founder building an AI-na
 ## Active Operating System: Bootstrapper.ai / Ownable OS
 
 Platform for founder operations. Key modules:
+
 - **Profit Engine** — CRM (pipeline, accounts, contacts, deals)
 - **Financial Engine** — revenue/expense tracking
 - **Value Engine** — offer management
@@ -17,6 +19,7 @@ Platform for founder operations. Key modules:
 - **Independence Chapter** — community membership layer
 
 **Current platform status**: Ownable OS is NOT fully functional. Both email/calendar sync integrations are blocked:
+
 - Google OAuth: blocked — Bootstrapper.ai has not completed Google verification
 - Microsoft/Nylas: error 31004 (integration_not_found) — platform-side bug
 - DO NOT attempt to reconnect these until Bootstrapper.ai team resolves them
@@ -30,6 +33,7 @@ All operations docs live in the GitHub repo that syncs to:
 `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\agentlab\`
 
 Key files:
+
 - `docs/operations/bootstrapper-ai-operating-field-guide.md` — v1 field guide (June 5). Full CRM inspection from June 3, sync blocker details, 7-day sprint plan, safety rules, glossary
 - `docs/operations/session-handoff-2026-06-05.md` — previous handoff
 - `docs/operations/session-handoff-2026-06-07.md` — this file
@@ -39,6 +43,7 @@ Key files:
 ## CRM Status (Day 1 Inspection — COMPLETE)
 
 Inspection confirmed June 3 (screenshots captured, documented in field guide):
+
 - 0 accounts, 0 contacts, 0 deals, $0 pipeline
 - Setup checklist: 1/5 complete (pipeline stages only)
 - Both sync integrations blocked (platform-side, not user error)
@@ -52,6 +57,7 @@ Inspection confirmed June 3 (screenshots captured, documented in field guide):
 Location: `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\Build Queue\`
 
 Contents:
+
 - `01-roundtable-opt-in-form.html` — ready to deploy
 - `02-independence-chapter-event-tracker-template.html` — ready to deploy
 - `03-book-landing-page.html` — ready to deploy
@@ -61,6 +67,7 @@ Contents:
 - `Root Intake 2026-05-21/` — 15 docs including playbooks, prompts, CRM schema, Codex handoff
 
 Robert said "amazing, approved" — these are cleared for use. Integration plan:
+
 1. Read each HTML file and determine deploy destination (Agent Lab site or standalone)
 2. Route HubSpot CSV leads into working CRM (Bootstrapper.ai OR Google Sheet CRM-lite)
 3. Triage Root Intake playbooks against what's already in the repo
@@ -92,17 +99,17 @@ The HubSpot CSV (9 KC companies) is the **only actual lead data** that exists. T
 
 All created 2026-04-29, LinkedIn first-touch, owned by Robert McCarthy:
 
-| Company | City | Website |
-|---------|------|---------|
-| Advanced Solutions Inc. | Chicago | advsolutionspros.com |
-| Novus Power Products LLC | Independence | novuspower.com |
-| Ferguson Computer Services | Independence | fcskc.com |
-| Weber TC | Independence | webertc.com |
-| Matchstick Websites | Lee's Summit | matchstickwebsites.com |
-| CPros | Blue Springs | cprosinc.com |
-| IT Nachos | Independence | itnachos.com |
-| Binary Noggin | North Kansas City | binarynoggin.com |
-| Illumisoft | Kansas City | illumisoft.com |
+| Company                    | City              | Website                |
+| -------------------------- | ----------------- | ---------------------- |
+| Advanced Solutions Inc.    | Chicago           | advsolutionspros.com   |
+| Novus Power Products LLC   | Independence      | novuspower.com         |
+| Ferguson Computer Services | Independence      | fcskc.com              |
+| Weber TC                   | Independence      | webertc.com            |
+| Matchstick Websites        | Lee's Summit      | matchstickwebsites.com |
+| CPros                      | Blue Springs      | cprosinc.com           |
+| IT Nachos                  | Independence      | itnachos.com           |
+| Binary Noggin              | North Kansas City | binarynoggin.com       |
+| Illumisoft                 | Kansas City       | illumisoft.com         |
 
 ---
 

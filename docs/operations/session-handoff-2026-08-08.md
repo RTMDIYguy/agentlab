@@ -26,9 +26,11 @@ We finalized the integration of real API connections for the Pulse Social app. P
 ## Where We Left Off
 
 Last completed:
+
 > Pushed the finalized Analytics Engine code to GitHub and triggered the Render backend deployment. Updated the command center and changelogs.
 
 Next action:
+
 > Monitor how the app performs in the real world over the next couple days. The next session will likely focus on tweaking the Analytics engine based on how the API rates hold up, or adjusting the frontend UI now that the real data is flowing.
 
 ---
@@ -36,12 +38,15 @@ Next action:
 ## Active Context
 
 ### Current Operating Rules
+
 None — all decisions are documented.
 
 ### Open Questions
+
 None.
 
 ### Blockers
+
 None.
 
 ---
@@ -57,24 +62,24 @@ None.
 
 ## Active Projects and Their Status
 
-| Project / Brand | Current Status | Next Move |
-| --- | --- | --- |
-| Uncle Robert Consulting LLC | | |
-| Bootstrapper Capital | | |
-| Tactix | | |
-| Agent Lab | | |
-| Pulse Social | Live | Monitor and tweak |
+| Project / Brand             | Current Status | Next Move         |
+| --------------------------- | -------------- | ----------------- |
+| Uncle Robert Consulting LLC |                |                   |
+| Bootstrapper Capital        |                |                   |
+| Tactix                      |                |                   |
+| Agent Lab                   |                |                   |
+| Pulse Social                | Live           | Monitor and tweak |
 
 ---
 
 ## Tools and Integrations Status
 
-| Tool / Integration | Status | Notes |
-| --- | --- | --- |
-| Pulse Social Backend | Deployed to Render | Background worker now polls for posts |
+| Tool / Integration    | Status             | Notes                                 |
+| --------------------- | ------------------ | ------------------------------------- |
+| Pulse Social Backend  | Deployed to Render | Background worker now polls for posts |
 | Pulse Social Frontend | Deployed to Vercel | ESLint warnings successfully resolved |
-| LinkedIn API | Connected | Used for OAuth and publishing |
-| Facebook Graph API | Connected | Used for OAuth and publishing |
+| LinkedIn API          | Connected          | Used for OAuth and publishing         |
+| Facebook Graph API    | Connected          | Used for OAuth and publishing         |
 
 ---
 

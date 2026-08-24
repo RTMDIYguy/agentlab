@@ -12,18 +12,18 @@ Use a clearly labeled internal-only content item so nobody mistakes the canary f
 
 ## Required evidence chain (10 checkpoints)
 
-| # | Checkpoint | System of Record | Pass Condition |
-|---|------------|------------------|----------------|
-| 1 | Notion planning item | Notion Content Calendar | URL captured; title/channels/owner/publish date filled |
-| 2 | Jira ticket through 7 statuses | Jira (atlassian.net) | Ticket URL + state transitions captured: To Do → In Progress → In Review → Approved → SEO Complete → Adaptation Complete → Published |
-| 3 | Source draft | Google Docs / OneDrive | Doc URL captured; content matches Jira + Notion |
-| 4 | Repository artifact | GitHub `RTMDIYguy/urc-content-assets` | Branch `content/{ticket}/{slug}` and commit SHA captured (or documented manual exception) |
-| 5 | Editorial approval | Microsoft Teams / Notion comments | Reviewer name + timestamp + outcome captured |
-| 6 | SEO completion | Confluence / Notion | On-page SEO score ≥ 85; report URL captured |
-| 7 | At least one adaptation | Drive / OneDrive / GitHub `/adaptations/{ticket-id}/` | Email variant + ≥ 1 social variant linked back to master Notion page |
-| 8 | Klaviyo preview | Klaviyo Preview List `XbByas` | Preview campaign ID or screenshot captured |
-| 9 | Step 7 tracker row | Notion Content Performance Tracker | Row exists with at least one observed metric or review cycle |
-| 10 | Final decision | Notion + Master Workflow Index | One of: Pass / Pass with Manual Workarounds / Fail |
+| #   | Checkpoint                     | System of Record                                      | Pass Condition                                                                                                                       |
+| --- | ------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | Notion planning item           | Notion Content Calendar                               | URL captured; title/channels/owner/publish date filled                                                                               |
+| 2   | Jira ticket through 7 statuses | Jira (atlassian.net)                                  | Ticket URL + state transitions captured: To Do → In Progress → In Review → Approved → SEO Complete → Adaptation Complete → Published |
+| 3   | Source draft                   | Google Docs / OneDrive                                | Doc URL captured; content matches Jira + Notion                                                                                      |
+| 4   | Repository artifact            | GitHub `RTMDIYguy/urc-content-assets`                 | Branch `content/{ticket}/{slug}` and commit SHA captured (or documented manual exception)                                            |
+| 5   | Editorial approval             | Microsoft Teams / Notion comments                     | Reviewer name + timestamp + outcome captured                                                                                         |
+| 6   | SEO completion                 | Confluence / Notion                                   | On-page SEO score ≥ 85; report URL captured                                                                                          |
+| 7   | At least one adaptation        | Drive / OneDrive / GitHub `/adaptations/{ticket-id}/` | Email variant + ≥ 1 social variant linked back to master Notion page                                                                 |
+| 8   | Klaviyo preview                | Klaviyo Preview List `XbByas`                         | Preview campaign ID or screenshot captured                                                                                           |
+| 9   | Step 7 tracker row             | Notion Content Performance Tracker                    | Row exists with at least one observed metric or review cycle                                                                         |
+| 10  | Final decision                 | Notion + Master Workflow Index                        | One of: Pass / Pass with Manual Workarounds / Fail                                                                                   |
 
 ## Worked run (template)
 
@@ -42,13 +42,13 @@ checkpoints:
     name: jira_ticket
     url: https://unclerobertconsulting.atlassian.net/browse/MKT-<placeholder>
     states_captured:
-      - {state: "To Do", at: 2026-05-02T09:01:00-05:00}
-      - {state: "In Progress", at: 2026-05-02T09:15:00-05:00}
-      - {state: "In Review", at: 2026-05-02T11:30:00-05:00}
-      - {state: "Approved", at: 2026-05-02T14:00:00-05:00}
-      - {state: "SEO Complete", at: 2026-05-02T15:30:00-05:00}
-      - {state: "Adaptation Complete", at: 2026-05-02T18:00:00-05:00}
-      - {state: "Published", at: 2026-05-03T09:00:00-05:00}
+      - { state: "To Do", at: 2026-05-02T09:01:00-05:00 }
+      - { state: "In Progress", at: 2026-05-02T09:15:00-05:00 }
+      - { state: "In Review", at: 2026-05-02T11:30:00-05:00 }
+      - { state: "Approved", at: 2026-05-02T14:00:00-05:00 }
+      - { state: "SEO Complete", at: 2026-05-02T15:30:00-05:00 }
+      - { state: "Adaptation Complete", at: 2026-05-02T18:00:00-05:00 }
+      - { state: "Published", at: 2026-05-03T09:00:00-05:00 }
     pass: true
   - id: 3
     name: source_draft
@@ -74,8 +74,8 @@ checkpoints:
   - id: 7
     name: adaptation
     variants:
-      - {channel: email, path: adaptations/MKT-<placeholder>/email.html}
-      - {channel: linkedin, path: adaptations/MKT-<placeholder>/linkedin.md}
+      - { channel: email, path: adaptations/MKT-<placeholder>/email.html }
+      - { channel: linkedin, path: adaptations/MKT-<placeholder>/linkedin.md }
     pass: true
   - id: 8
     name: klaviyo_preview
@@ -86,7 +86,7 @@ checkpoints:
     name: step7_tracker_row
     url: https://www.notion.so/<placeholder>
     observed_metrics:
-      - {metric: page_views, source: GA4, value_at: 24h}
+      - { metric: page_views, source: GA4, value_at: 24h }
     pass: true
   - id: 10
     name: final_decision

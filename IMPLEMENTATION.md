@@ -55,16 +55,16 @@ All factories live in `server/_core/autonoma/factories.ts`, all have teardown (d
 
 Unique columns found (mysql `.unique()` in schema) and how each will be covered:
 
-| table | unique column | recipe coverage |
-|---|---|---|
-| users | openId | `{{testRunShortId}}` embedded |
-| subscriptions | stripeSubscriptionId | `{{testRunShortId}}` embedded |
-| payments | stripePaymentIntentId | `{{testRunShortId}}` embedded |
-| blogArticles | slug | `{{testRunShortId}}` embedded |
-| newsletterSubscribers | email | `{{testRunId}}` embedded |
-| newsletterSubscribers | unsubscribeToken | app-generated random token (`generateToken()`, not recipe-supplied) — collision-safe by construction |
-| orders | orderNumber | `{{testRunShortId}}` embedded |
-| orders | stripePaymentIntentId | nullable, not set by this recipe — MySQL treats each NULL as distinct in a unique index, so concurrent runs never collide on it |
+| table                 | unique column         | recipe coverage                                                                                                                 |
+| --------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| users                 | openId                | `{{testRunShortId}}` embedded                                                                                                   |
+| subscriptions         | stripeSubscriptionId  | `{{testRunShortId}}` embedded                                                                                                   |
+| payments              | stripePaymentIntentId | `{{testRunShortId}}` embedded                                                                                                   |
+| blogArticles          | slug                  | `{{testRunShortId}}` embedded                                                                                                   |
+| newsletterSubscribers | email                 | `{{testRunId}}` embedded                                                                                                        |
+| newsletterSubscribers | unsubscribeToken      | app-generated random token (`generateToken()`, not recipe-supplied) — collision-safe by construction                            |
+| orders                | orderNumber           | `{{testRunShortId}}` embedded                                                                                                   |
+| orders                | stripePaymentIntentId | nullable, not set by this recipe — MySQL treats each NULL as distinct in a unique index, so concurrent runs never collide on it |
 
 No other `.unique()` columns exist in `drizzle/schema.ts`.
 

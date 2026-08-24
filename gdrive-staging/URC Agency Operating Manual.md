@@ -81,13 +81,13 @@ People Engine, or Weekly Close.
 
 ## Business Map
 
-| Lane | Role | Current Use |
-| --- | --- | --- |
-| Uncle Robert Consulting | Main business brand | Client relationships, diagnostics, consulting, operating backbone |
-| Agent Lab | Public proof and workflow-product brand | Tested-in-public workflow packages, site, LinkedIn, beta framing |
-| Bootstrapper Capital | Audience, event, and potential Ownable OS ecosystem layer | Independence Chapter, founder roundtables, bootstrapper community, story collection, compendium/course demand signals |
-| Tactix | Fulfillment and execution arm | Delivery, Upwork-style fulfillment, implementation support |
-| Book / Authority Assets | Trust, funnel, and publishing-line seed | BGW, blueprint books, lower-priced authority products, future courses |
+| Lane                    | Role                                                      | Current Use                                                                                                           |
+| ----------------------- | --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Uncle Robert Consulting | Main business brand                                       | Client relationships, diagnostics, consulting, operating backbone                                                     |
+| Agent Lab               | Public proof and workflow-product brand                   | Tested-in-public workflow packages, site, LinkedIn, beta framing                                                      |
+| Bootstrapper Capital    | Audience, event, and potential Ownable OS ecosystem layer | Independence Chapter, founder roundtables, bootstrapper community, story collection, compendium/course demand signals |
+| Tactix                  | Fulfillment and execution arm                             | Delivery, Upwork-style fulfillment, implementation support                                                            |
+| Book / Authority Assets | Trust, funnel, and publishing-line seed                   | BGW, blueprint books, lower-priced authority products, future courses                                                 |
 
 Do not collapse these lanes without explicit founder approval. They are related,
 but each has a different job in the system.
@@ -188,38 +188,38 @@ candidate path rather than a chosen route.
 
 ## Source Of Truth Map
 
-| Artifact Type | Human-facing Source | Agent / Versioned Source | Notes |
-| --- | --- | --- | --- |
-| Agency Command Center | Repo Markdown front door | `docs/operations/agency-command-center.md` | V1 human navigation layer for what to open, check, or work on next |
-| Agency manual | Google Drive copy when promoted | `docs/operations/agency-operating-manual.md` | This file is the current repo source |
-| Bootstrapper.ai / Ownable OS field guide | Bootstrapper.ai screens plus future human-facing copy | `docs/operations/bootstrapper-ai-operating-field-guide.md` | Practical navigation guide for Independence Chapter, Ownable OS, CRM, engines, Weekly Close, and local control-layer boundaries |
-| Daily Command Center | Repo Markdown briefs; future scheduled digest | `docs/operations/daily-command-center/`; `scripts/daily-command-center.mjs` | Daily personal-assistant layer that surfaces top actions, marketing/sales moves, handoffs, audit prompts, and money/client-trust checks |
-| SOPs | Operations folder / Google Docs where needed | `docs/operations/sop-manual-index.md` and individual SOP files | Use SOP template for formal versions |
-| Workflow registry | Repo Markdown | `docs/operations/workflow-registry.md` | Registry is the workflow map |
-| Workflow audit bank | Repo Markdown | `docs/operations/weekly-workflow-audit-bank.md` | Weekly checks for process completeness, stack stability, viability, dependencies, responsibilities, and efficiency |
-| Change control | Repo Markdown | `docs/operations/change-control-register.md` | Required for meaningful operational changes |
-| Evidence / audits | Compliance Audits folder | Linked from repo when needed | Use approved evidence location unless local placement is required |
-| Secret handling | Approved vaults / credential surfaces | `docs/operations/secret-handling-standard.md`; Compliance Audits `secret-handling-log.md` | Store values only in approved vaults; repo keeps metadata and handling evidence only |
-| Owner's Manual | Future Microsoft 365 / Google Drive human-facing copy | `docs/operations/agency-owners-manual-blueprint.md`; future `docs/operations/agency-owners-manual.md` | Single guide for Robert, collaborators, auditors, future operators, and possible public tour derivative |
-| Leads and outreach | Reach, Gmail, lead CSVs | Lead list source files and recap docs | Do not duplicate lead truth casually |
-| Client folders | Google Drive Clients folder | Operating docs describe the automation | Folder contents are client-facing |
+| Artifact Type                            | Human-facing Source                                   | Agent / Versioned Source                                                                              | Notes                                                                                                                                   |
+| ---------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Agency Command Center                    | Repo Markdown front door                              | `docs/operations/agency-command-center.md`                                                            | V1 human navigation layer for what to open, check, or work on next                                                                      |
+| Agency manual                            | Google Drive copy when promoted                       | `docs/operations/agency-operating-manual.md`                                                          | This file is the current repo source                                                                                                    |
+| Bootstrapper.ai / Ownable OS field guide | Bootstrapper.ai screens plus future human-facing copy | `docs/operations/bootstrapper-ai-operating-field-guide.md`                                            | Practical navigation guide for Independence Chapter, Ownable OS, CRM, engines, Weekly Close, and local control-layer boundaries         |
+| Daily Command Center                     | Repo Markdown briefs; future scheduled digest         | `docs/operations/daily-command-center/`; `scripts/daily-command-center.mjs`                           | Daily personal-assistant layer that surfaces top actions, marketing/sales moves, handoffs, audit prompts, and money/client-trust checks |
+| SOPs                                     | Operations folder / Google Docs where needed          | `docs/operations/sop-manual-index.md` and individual SOP files                                        | Use SOP template for formal versions                                                                                                    |
+| Workflow registry                        | Repo Markdown                                         | `docs/operations/workflow-registry.md`                                                                | Registry is the workflow map                                                                                                            |
+| Workflow audit bank                      | Repo Markdown                                         | `docs/operations/weekly-workflow-audit-bank.md`                                                       | Weekly checks for process completeness, stack stability, viability, dependencies, responsibilities, and efficiency                      |
+| Change control                           | Repo Markdown                                         | `docs/operations/change-control-register.md`                                                          | Required for meaningful operational changes                                                                                             |
+| Evidence / audits                        | Compliance Audits folder                              | Linked from repo when needed                                                                          | Use approved evidence location unless local placement is required                                                                       |
+| Secret handling                          | Approved vaults / credential surfaces                 | `docs/operations/secret-handling-standard.md`; Compliance Audits `secret-handling-log.md`             | Store values only in approved vaults; repo keeps metadata and handling evidence only                                                    |
+| Owner's Manual                           | Future Microsoft 365 / Google Drive human-facing copy | `docs/operations/agency-owners-manual-blueprint.md`; future `docs/operations/agency-owners-manual.md` | Single guide for Robert, collaborators, auditors, future operators, and possible public tour derivative                                 |
+| Leads and outreach                       | Reach, Gmail, lead CSVs                               | Lead list source files and recap docs                                                                 | Do not duplicate lead truth casually                                                                                                    |
+| Client folders                           | Google Drive Clients folder                           | Operating docs describe the automation                                                                | Folder contents are client-facing                                                                                                       |
 
 ## Workflow Test And Implementation Queue
 
 This is the priority order while live outreach is turning into revenue motion.
 
-| Priority | Workflow | Why It Comes Now | Current Mode | Next SOP / Automation Target |
-| --- | --- | --- | --- | --- |
-| 1 | MKT-05 Outreach & Engagement | Live Reach testing is producing real data and must stay controlled | Manual / Reach-assisted | Outreach batch setup, tracking, and reply handling |
-| 2 | MKT-02 Email/SMS Nurture | Follow-up must be consistent once replies and interest arrive | Manual / scheduled campaigns | Nurture sequence rules, stop conditions, handoff rules |
-| 3 | MKT-01 Lead Generation & Conversion | Fresh lead sourcing must avoid duplicates and bad-fit drift | Manual CSV review | Lead qualification, dedupe, and bridge-tracker import |
-| 4 | SAL-02 OnBoarding | Signed proposals already trigger folder creation; the second half needs automation | Zapier + manual gap | Google Drive packet copy, folder population, sharing |
-| 5 | SAL-01 Proposals & Contracts | Revenue conversations need a clean path into signed work | Manual / template-driven | Proposal prep, review, send, and status tracking |
-| 6 | FUL-02 Client Success | New clients need visible health and next actions | Manual | Client success tracker and check-in cadence |
-| 7 | FUL-03 Customer Service | Inbound questions need triage before they become hidden work | Manual | Issue intake, tiering, and escalation |
-| 8 | FIN-03 Accounts Receivable & Payable | Money tasks need clear invoice and payment status | Manual / owned finance tracker | Invoice creation, receivables review, payment status, SKU/account mapping |
-| 9 | MKT-04 Reviews & Referrals | Positive outcomes should become proof loops | Manual | Testimonial request, referral ask, proof capture |
-| 10 | MKT-09 Event & Webinar Marketing | Independence Chapter needs a repeatable event lane | v0 runnable slice | RoundTable invite, RSVP/assessment response tracking, event follow-up |
+| Priority | Workflow                             | Why It Comes Now                                                                   | Current Mode                   | Next SOP / Automation Target                                              |
+| -------- | ------------------------------------ | ---------------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
+| 1        | MKT-05 Outreach & Engagement         | Live Reach testing is producing real data and must stay controlled                 | Manual / Reach-assisted        | Outreach batch setup, tracking, and reply handling                        |
+| 2        | MKT-02 Email/SMS Nurture             | Follow-up must be consistent once replies and interest arrive                      | Manual / scheduled campaigns   | Nurture sequence rules, stop conditions, handoff rules                    |
+| 3        | MKT-01 Lead Generation & Conversion  | Fresh lead sourcing must avoid duplicates and bad-fit drift                        | Manual CSV review              | Lead qualification, dedupe, and bridge-tracker import                     |
+| 4        | SAL-02 OnBoarding                    | Signed proposals already trigger folder creation; the second half needs automation | Zapier + manual gap            | Google Drive packet copy, folder population, sharing                      |
+| 5        | SAL-01 Proposals & Contracts         | Revenue conversations need a clean path into signed work                           | Manual / template-driven       | Proposal prep, review, send, and status tracking                          |
+| 6        | FUL-02 Client Success                | New clients need visible health and next actions                                   | Manual                         | Client success tracker and check-in cadence                               |
+| 7        | FUL-03 Customer Service              | Inbound questions need triage before they become hidden work                       | Manual                         | Issue intake, tiering, and escalation                                     |
+| 8        | FIN-03 Accounts Receivable & Payable | Money tasks need clear invoice and payment status                                  | Manual / owned finance tracker | Invoice creation, receivables review, payment status, SKU/account mapping |
+| 9        | MKT-04 Reviews & Referrals           | Positive outcomes should become proof loops                                        | Manual                         | Testimonial request, referral ask, proof capture                          |
+| 10       | MKT-09 Event & Webinar Marketing     | Independence Chapter needs a repeatable event lane                                 | v0 runnable slice              | RoundTable invite, RSVP/assessment response tracking, event follow-up     |
 
 This queue is not permanent. It should change when live evidence changes.
 
@@ -275,26 +275,26 @@ Before automation, define:
 
 Current automation candidates:
 
-| Candidate | Trigger | Desired Outcome | Current Constraint |
-| --- | --- | --- | --- |
-| New client packet population | Zapier creates client folder after signed proposal | Copy packet into folder and share with client | Free Zapier has only trigger + one action; Google-side script likely needed |
-| Reach reply tracking | Reply or campaign event arrives | Update Independence Chapter bridge stage and next step without replacing the agency CRM stack | Need stable tracker source |
-| Lead dedupe | New lead CSV prepared | Prevent uploading old Reach contacts | Needs simple comparison habit or script |
-| Beta intake routing | Founder requests beta/diagnostic | Route into correct track and follow-up | Needs final intake fields and active form path |
-| RoundTable follow-up | Event attendee or invite reply | Send appropriate follow-up and update stage | v0 slice exists; response path and tracker location still need live confirmation |
-| Finance tracker standardization | New offer, SKU, invoice, payment, or expense appears | Keep owned trackers aligned to SKU, revenue category, and chart-of-accounts fields | No active finance platform; tracker schema must be stable before migration |
-| Owner's Manual maintenance | New source of truth, SOP, tracker, platform candidate, or material project appears | Keep the human navigation layer current enough that Robert, collaborators, auditors, agents, and future operators can find the system | First manual still needs to be built from the blueprint |
-| Daily command brief | Weekday morning or manual run | Produce one practical daily brief from current operating sources | V0 script exists; schedule after Robert confirms the format is useful |
+| Candidate                       | Trigger                                                                            | Desired Outcome                                                                                                                       | Current Constraint                                                               |
+| ------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| New client packet population    | Zapier creates client folder after signed proposal                                 | Copy packet into folder and share with client                                                                                         | Free Zapier has only trigger + one action; Google-side script likely needed      |
+| Reach reply tracking            | Reply or campaign event arrives                                                    | Update Independence Chapter bridge stage and next step without replacing the agency CRM stack                                         | Need stable tracker source                                                       |
+| Lead dedupe                     | New lead CSV prepared                                                              | Prevent uploading old Reach contacts                                                                                                  | Needs simple comparison habit or script                                          |
+| Beta intake routing             | Founder requests beta/diagnostic                                                   | Route into correct track and follow-up                                                                                                | Needs final intake fields and active form path                                   |
+| RoundTable follow-up            | Event attendee or invite reply                                                     | Send appropriate follow-up and update stage                                                                                           | v0 slice exists; response path and tracker location still need live confirmation |
+| Finance tracker standardization | New offer, SKU, invoice, payment, or expense appears                               | Keep owned trackers aligned to SKU, revenue category, and chart-of-accounts fields                                                    | No active finance platform; tracker schema must be stable before migration       |
+| Owner's Manual maintenance      | New source of truth, SOP, tracker, platform candidate, or material project appears | Keep the human navigation layer current enough that Robert, collaborators, auditors, agents, and future operators can find the system | First manual still needs to be built from the blueprint                          |
+| Daily command brief             | Weekday morning or manual run                                                      | Produce one practical daily brief from current operating sources                                                                      | V0 script exists; schedule after Robert confirms the format is useful            |
 
 ## Weekly Operating Rhythm
 
-| Day | Focus | Operating Question |
-| --- | --- | --- |
-| Monday | Sales and pipeline | Who needs follow-up, and what money task moves today? |
-| Tuesday | Marketing and book promotion | What public signal or authority asset feeds the funnel? |
-| Wednesday | Bootstrapper Capital and events | What does the Independence Chapter need next? |
-| Thursday | Fulfillment and aftercare | What client or beta user needs delivery, review, or recovery? |
-| Friday | Finance and KPI review | What did we learn, earn, spend, ship, or defer? |
+| Day       | Focus                           | Operating Question                                            |
+| --------- | ------------------------------- | ------------------------------------------------------------- |
+| Monday    | Sales and pipeline              | Who needs follow-up, and what money task moves today?         |
+| Tuesday   | Marketing and book promotion    | What public signal or authority asset feeds the funnel?       |
+| Wednesday | Bootstrapper Capital and events | What does the Independence Chapter need next?                 |
+| Thursday  | Fulfillment and aftercare       | What client or beta user needs delivery, review, or recovery? |
+| Friday    | Finance and KPI review          | What did we learn, earn, spend, ship, or defer?               |
 
 When the system is under stress, money tasks and client trust outrank tool
 experiments.
@@ -314,18 +314,18 @@ These lessons should drive SOPs and automation design:
 
 ## Open Build Items
 
-| Item | Owner | Status |
-| --- | --- | --- |
-| Promote this manual into the agency Operations folder / Google Drive source when Robert approves | Robert + agent | Pending |
-| Decide final MVP beta intake path | Robert + agent | Pending |
-| Draft SOP for Reach outreach batch setup and monitoring | Agent | Needed |
-| Draft SOP for Google Drive client-folder packet population | Agent | Needed |
-| Decide Independence Chapter CRM-lite bridge location and required CRM-compatible columns | Robert + agent | Needed |
-| Reconcile Independence Chapter messaging against MVP beta messaging | Robert + agent | Needed |
-| Build first repo-native Owner's Manual from the blueprint | Robert + agent | Needed |
-| Run weekly workflow audit bank for process completeness, stack stability, dependencies, responsibilities, and efficiency | Robert + agent | Needed |
-| Define safe sandbox use plan for VPS and KNIME | Robert + agent | Needed |
-| Park Docker / OpenClaw infrastructure repair until money tasks are stable | Robert + agent | Deferred |
+| Item                                                                                                                     | Owner          | Status   |
+| ------------------------------------------------------------------------------------------------------------------------ | -------------- | -------- |
+| Promote this manual into the agency Operations folder / Google Drive source when Robert approves                         | Robert + agent | Pending  |
+| Decide final MVP beta intake path                                                                                        | Robert + agent | Pending  |
+| Draft SOP for Reach outreach batch setup and monitoring                                                                  | Agent          | Needed   |
+| Draft SOP for Google Drive client-folder packet population                                                               | Agent          | Needed   |
+| Decide Independence Chapter CRM-lite bridge location and required CRM-compatible columns                                 | Robert + agent | Needed   |
+| Reconcile Independence Chapter messaging against MVP beta messaging                                                      | Robert + agent | Needed   |
+| Build first repo-native Owner's Manual from the blueprint                                                                | Robert + agent | Needed   |
+| Run weekly workflow audit bank for process completeness, stack stability, dependencies, responsibilities, and efficiency | Robert + agent | Needed   |
+| Define safe sandbox use plan for VPS and KNIME                                                                           | Robert + agent | Needed   |
+| Park Docker / OpenClaw infrastructure repair until money tasks are stable                                                | Robert + agent | Deferred |
 
 ## Handoff Summary
 

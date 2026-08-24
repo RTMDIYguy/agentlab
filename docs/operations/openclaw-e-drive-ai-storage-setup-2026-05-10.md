@@ -20,7 +20,7 @@ toward a usable local assistant setup without consuming the C: drive.
   - `E:\AI\Downloads`
 - Copied the existing Ollama model store from:
   - `C:\Users\thebo\.ollama\models`
-  to:
+    to:
   - `E:\AI\Ollama\Models`
 - Set the user environment variable:
   - `OLLAMA_MODELS=E:\AI\Ollama\Models`

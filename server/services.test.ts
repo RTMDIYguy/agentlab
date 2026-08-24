@@ -309,10 +309,7 @@ describe("Services Page Tests", () => {
 
     it("Enterprise tier should have dedicated account manager", () => {
       const tier = {
-        features: [
-          "Dedicated account manager",
-          "24/7 phone + email support",
-        ],
+        features: ["Dedicated account manager", "24/7 phone + email support"],
       };
 
       expect(tier.features).toContain("Dedicated account manager");
@@ -320,10 +317,7 @@ describe("Services Page Tests", () => {
 
     it("Enterprise tier should have 24/7 support", () => {
       const tier = {
-        features: [
-          "Dedicated account manager",
-          "24/7 phone + email support",
-        ],
+        features: ["Dedicated account manager", "24/7 phone + email support"],
       };
 
       expect(tier.features).toContain("24/7 phone + email support");
@@ -438,14 +432,15 @@ describe("Services Page Tests", () => {
         "Paid Advertising Management",
       ];
 
-      const allMarketing = workflows.every((w) =>
-        w.toLowerCase().includes("lead") ||
-        w.toLowerCase().includes("email") ||
-        w.toLowerCase().includes("content") ||
-        w.toLowerCase().includes("social") ||
-        w.toLowerCase().includes("advertising") ||
-        w.toLowerCase().includes("assessment") ||
-        w.toLowerCase().includes("poll")
+      const allMarketing = workflows.every(
+        w =>
+          w.toLowerCase().includes("lead") ||
+          w.toLowerCase().includes("email") ||
+          w.toLowerCase().includes("content") ||
+          w.toLowerCase().includes("social") ||
+          w.toLowerCase().includes("advertising") ||
+          w.toLowerCase().includes("assessment") ||
+          w.toLowerCase().includes("poll")
       );
 
       expect(allMarketing).toBe(true);

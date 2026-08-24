@@ -5,7 +5,7 @@ intent: "The signup form should enforce required fields and minimum password len
 criticality: high
 scenario: standard
 flow: "User Authentication"
-verification: "The user remains on the signup page and the \"Create account\" button is still visible (not replaced by \"Creating...\")."
+verification: 'The user remains on the signup page and the "Create account" button is still visible (not replaced by "Creating...").'
 ---
 
 **Setup**: The user is on the Signup page (/signup).
@@ -13,6 +13,7 @@ verification: "The user remains on the signup page and the \"Create account\" bu
 **Intent**: The signup form should enforce required fields and minimum password length to prevent invalid registration attempts.
 
 **Steps**:
+
 1. click: click: the "Create account" button in the signup form
 2. type: type: "Alex" into the "Name" field in the signup form house
 3. type: type: "invalid-email" into the "Email" field in the signup form house
@@ -21,6 +22,7 @@ verification: "The user remains on the signup page and the \"Create account\" bu
 6. assert: assert: "Create account" is visible on the button in the signup form house
 
 **Verification**:
+
 1. assert: assert: "Create account" is visible on the button in the signup form house
 2. assert: assert: "It only takes a minute" is visible as a sub-heading in the signup form house
 

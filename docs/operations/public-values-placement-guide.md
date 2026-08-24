@@ -11,19 +11,19 @@ like a culture poster.
 
 ## Placement Map
 
-| Surface | Placement | Treatment |
-| --- | --- | --- |
-| Agent Lab website About page | Full values section | Use all six values with concise explanations. |
-| Shared website footer | One-line culture signal | Use a short values line under copyright or brand copy. |
-| Service pages | Embedded trust note | Mention responsible automation, human judgment, and practical stewardship near workflow/product claims. |
-| Pricing / offer pages | Embedded buying assurance | Mention practical stewardship and no unnecessary tool sprawl. |
-| Founder diagnostic / intake pages | Embedded process assurance | Mention walking beside the client and human review. |
-| Proposals | Short values box | Include 3-6 bullets only when relevant to trust and delivery expectations. |
-| Onboarding packets | Full or near-full values section | Use to set expectations for collaboration and implementation. |
-| LinkedIn About / Featured content | Short values line | Use as positioning, not a repeated post. |
-| Build logs and public proof posts | One value at a time | Tie each value to the actual work shown. |
-| Tactix / Upwork profile | Short delivery promise | Emphasize walking beside the client, intentional excellence, and practical stewardship. |
-| Bootstrapper Capital events | Short host standard | Emphasize servant leadership, honesty, and practical stewardship. |
+| Surface                           | Placement                        | Treatment                                                                                               |
+| --------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Agent Lab website About page      | Full values section              | Use all six values with concise explanations.                                                           |
+| Shared website footer             | One-line culture signal          | Use a short values line under copyright or brand copy.                                                  |
+| Service pages                     | Embedded trust note              | Mention responsible automation, human judgment, and practical stewardship near workflow/product claims. |
+| Pricing / offer pages             | Embedded buying assurance        | Mention practical stewardship and no unnecessary tool sprawl.                                           |
+| Founder diagnostic / intake pages | Embedded process assurance       | Mention walking beside the client and human review.                                                     |
+| Proposals                         | Short values box                 | Include 3-6 bullets only when relevant to trust and delivery expectations.                              |
+| Onboarding packets                | Full or near-full values section | Use to set expectations for collaboration and implementation.                                           |
+| LinkedIn About / Featured content | Short values line                | Use as positioning, not a repeated post.                                                                |
+| Build logs and public proof posts | One value at a time              | Tie each value to the actual work shown.                                                                |
+| Tactix / Upwork profile           | Short delivery promise           | Emphasize walking beside the client, intentional excellence, and practical stewardship.                 |
+| Bootstrapper Capital events       | Short host standard              | Emphasize servant leadership, honesty, and practical stewardship.                                       |
 
 ## Recommended Short Copy
 

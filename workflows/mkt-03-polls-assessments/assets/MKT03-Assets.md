@@ -1,7 +1,8 @@
 # MKT03: Polls & Assessments Assets
 
 ## 1. Needs Analysis Assessment Framework
-*Type: Lead Qualification Quiz. Best placed on website popups or high-intent landing pages.*
+
+_Type: Lead Qualification Quiz. Best placed on website popups or high-intent landing pages._
 
 **Intro Screen**
 **Headline:** Find out if your current [Problem Area] is costing you revenue.
@@ -63,7 +64,7 @@ You're currently in the **[Outcome Category: e.g., "Manual Growth" or "Scaling P
 
 Because you mentioned that your biggest frustration is **[Answer from Q3: e.g., "It takes too long"]**, I wanted to highlight one specific area of your report:
 
-*To fix the time bottleneck, you need to implement a rule-based triage system before [Step 2 in process]. Teams your size (from your answer: 6-20 people) usually save 15 hours a week just by doing this.*
+_To fix the time bottleneck, you need to implement a rule-based triage system before [Step 2 in process]. Teams your size (from your answer: 6-20 people) usually save 15 hours a week just by doing this._
 
 I attached your full customized PDF report with the other 3 action items.
 

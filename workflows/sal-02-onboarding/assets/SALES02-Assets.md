@@ -1,6 +1,7 @@
 # SALES02: OnBoarding Assets
 
 ## 1. Automated Welcome Email
+
 **Subject:** Welcome to [Agency Name]! Let's get started. 🚀
 
 Hi [First Name],
@@ -12,7 +13,8 @@ Before our kickoff call, there are a few quick things we need from you so we can
 **Your First Step: The Intake Questionnaire**
 Please take 5-10 minutes to complete this intake form: [Link to Form]
 
-*In this form, you'll be able to:*
+_In this form, you'll be able to:_
+
 - Upload your brand assets and logo files
 - Share access to your ad accounts/analytics
 - Confirm your target audience profiles
@@ -33,35 +35,42 @@ Account Manager, [Agency Name]
 ---
 
 ## 2. Kickoff Call Agenda Template
-*To be used by the Account Manager during the live kickoff call.*
+
+_To be used by the Account Manager during the live kickoff call._
 
 **1. Welcome & Introductions (5 mins)**
+
 - Introduce agency team members and their roles.
 - Client introduces their team members.
 
 **2. Goal Alignment & Scope Review (10 mins)**
+
 - Review the core objectives outlined in the contract.
 - Confirm the specific KPIs that will determine "success" for this project.
-- *Ask:* "Just to make sure we're completely aligned, if we look back 6 months from now, what specifically needs to happen for you to consider this a massive win?"
+- _Ask:_ "Just to make sure we're completely aligned, if we look back 6 months from now, what specifically needs to happen for you to consider this a massive win?"
 
 **3. The Plan & First Milestone (10 mins)**
+
 - Review the initial 30-day timeline.
 - Detail the exact deliverables for the first milestone.
 - Set the deadline for the first review round.
 
 **4. Communication & Workflow (10 mins)**
+
 - Explain the Client Portal (how to leave feedback, track progress).
 - Establish the communication cadence (e.g., Weekly Slack updates, Monthly reporting calls).
 - Define the approval workflow (Who has final say on deliverables?).
 
 **5. Immediate Next Steps & Q&A (5 mins)**
+
 - Summarize action items for both the agency and the client.
 - Answer any remaining questions.
 
 ---
 
 ## 3. 30-Day Check-in Survey
-*Triggered automatically 30 days after the contract start date.*
+
+_Triggered automatically 30 days after the contract start date._
 
 **Subject:** How are we doing so far? (1-minute survey)
 

@@ -26,7 +26,7 @@ Logged: 2026-05-17
 - Gmail output node test: passed.
 - OpenAI node: reachable and mapped, but blocked by OpenAI account error
   `[429] You have consumed all credits in your OpenAI account, or exceeded
-  your monthly OpenAI budget.`
+your monthly OpenAI budget.`
 - Scenario status: built, not enabled.
 - Next action: restore OpenAI credits or raise monthly budget, rerun one full
   sequence test, then turn on the scenario and generate the public sharing
@@ -68,19 +68,19 @@ Logged: 2026-05-17
 
 Use this non-sensitive test data:
 
-| Field | Value |
-| --- | --- |
-| founder_name | Jordan Lee |
-| email | jordan@example.com |
-| company | Bright Harbor Ops |
-| offer | Operations cleanup sprint for small service businesses |
-| ideal_customer | Founder-led service business with 3-15 employees |
-| painful_problem | Work is spread across inboxes, spreadsheets, and memory |
-| desired_outcome | One weekly operating rhythm and one clean lead follow-up tracker |
-| proof_points | Reduced missed follow-ups; created one shared owner dashboard |
-| exclusions | Not for venture-backed teams replacing their full CRM |
-| primary_channel | LinkedIn |
-| notification_email | jordan@example.com |
+| Field              | Value                                                            |
+| ------------------ | ---------------------------------------------------------------- |
+| founder_name       | Jordan Lee                                                       |
+| email              | jordan@example.com                                               |
+| company            | Bright Harbor Ops                                                |
+| offer              | Operations cleanup sprint for small service businesses           |
+| ideal_customer     | Founder-led service business with 3-15 employees                 |
+| painful_problem    | Work is spread across inboxes, spreadsheets, and memory          |
+| desired_outcome    | One weekly operating rhythm and one clean lead follow-up tracker |
+| proof_points       | Reduced missed follow-ups; created one shared owner dashboard    |
+| exclusions         | Not for venture-backed teams replacing their full CRM            |
+| primary_channel    | LinkedIn                                                         |
+| notification_email | jordan@example.com                                               |
 
 ## Acceptance Criteria
 

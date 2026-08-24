@@ -12,9 +12,9 @@ AFTERCARE DEPARTMENT
 
 Complete Workflow Playbook
 
-Dual-Format: URC Master Edition  +  Client Template Edition
+Dual-Format: URC Master Edition + Client Template Edition
 
-Version 1.0  |  March 2026  |  Confidential
+Version 1.0 | March 2026 | Confidential
 
 4 CORE WORKFLOWS INCLUDED
 
@@ -26,13 +26,13 @@ Version 1.0  |  March 2026  |  Confidential
 
 4 — Communities
 
-PART ONE  —  URC MASTER EDITION
+PART ONE — URC MASTER EDITION
 
 Complete workflows filled with Uncle Robert Consulting's actual tools, team, KPIs, and processes.
 
 ## Workflow 1: Subscriptions
 
-URC-AFC-01  |  Uncle Robert Consulting Master Version
+URC-AFC-01 | Uncle Robert Consulting Master Version
 
 Department Context
 
@@ -62,7 +62,7 @@ Create a subscription data dashboard giving Robert real-time visibility into MRR
 
 ## Automation Level
 
-85-90%  |  AI handles renewals, dunning, churn scoring, save flows, and reporting; humans approve win-back campaigns and handle escalated cancellations
+85-90% | AI handles renewals, dunning, churn scoring, save flows, and reporting; humans approve win-back campaigns and handle escalated cancellations
 
 Human Involvement
 
@@ -456,7 +456,7 @@ Conduct quarterly pricing review using MRR and churn data to optimize plan struc
 
 ## Workflow 2: Memberships
 
-URC-AFC-02  |  Uncle Robert Consulting Master Version
+URC-AFC-02 | Uncle Robert Consulting Master Version
 
 Department Context
 
@@ -486,7 +486,7 @@ Generate 30%+ of new member enrollments through existing member referrals
 
 ## Automation Level
 
-80-85%  |  AI manages engagement tracking, milestone rewards, renewal sequences, and upsell flows; humans deliver advisory sessions, personal recognition, and community leadership
+80-85% | AI manages engagement tracking, milestone rewards, renewal sequences, and upsell flows; humans deliver advisory sessions, personal recognition, and community leadership
 
 Human Involvement
 
@@ -880,7 +880,7 @@ Evaluate program P&L: ensure member LTV exceeds 3x annual fee at each tier
 
 ## Workflow 3: Long-Term Contracts
 
-URC-AFC-03  |  Uncle Robert Consulting Master Version
+URC-AFC-03 | Uncle Robert Consulting Master Version
 
 Department Context
 
@@ -910,7 +910,7 @@ Create standardized contract performance dashboards that give Robert real-time v
 
 ## Automation Level
 
-85-90%  |  AI handles drafting, obligation tracking, milestone reminders, compliance monitoring, and renewal alerts; humans conduct negotiations, approve terms, and handle disputes
+85-90% | AI handles drafting, obligation tracking, milestone reminders, compliance monitoring, and renewal alerts; humans conduct negotiations, approve terms, and handle disputes
 
 Human Involvement
 
@@ -1308,7 +1308,7 @@ Train all account managers on obligation tracking system and weekly digest revie
 
 ## Workflow 4: Communities
 
-URC-AFC-04  |  Uncle Robert Consulting Master Version
+URC-AFC-04 | Uncle Robert Consulting Master Version
 
 Department Context
 
@@ -1338,7 +1338,7 @@ Build community-exclusive events and programming that community members cannot g
 
 ## Automation Level
 
-75-80%  |  AI handles welcome sequences, content curation, moderation alerts, event reminders, and engagement scoring; humans run live events, moderate culture, and build personal relationships
+75-80% | AI handles welcome sequences, content curation, moderation alerts, event reminders, and engagement scoring; humans run live events, moderate culture, and build personal relationships
 
 Human Involvement
 
@@ -1732,13 +1732,13 @@ Host first quarterly town hall with Robert; record and distribute replay to all 
 
 Conduct NPS survey at 90-day mark; use results to prioritize community improvements for Month 4-6
 
-PART TWO  —  CLIENT TEMPLATE EDITION
+PART TWO — CLIENT TEMPLATE EDITION
 
 Blank workflow templates with [BRACKETED] fields — ready for any agency or business to customize and implement.
 
 ## Workflow 1: Subscriptions
 
-TEMPLATE-AFC-01  |  Client Template Edition — Customize All [BRACKETED] Fields
+TEMPLATE-AFC-01 | Client Template Edition — Customize All [BRACKETED] Fields
 
 HOW TO USE THIS TEMPLATE
 
@@ -1784,7 +1784,7 @@ Provide [OWNER/LEADERSHIP NAME] with real-time visibility into MRR and churn
 
 ## Automation Level
 
-[TARGET AUTOMATION LEVEL, e.g., 80-85%]  |  AI handles [LIST KEY AUTOMATED TASKS]; humans manage [LIST HUMAN TASKS]
+[TARGET AUTOMATION LEVEL, e.g., 80-85%] | AI handles [LIST KEY AUTOMATED TASKS]; humans manage [LIST HUMAN TASKS]
 
 Human Involvement
 
@@ -2178,7 +2178,7 @@ Conduct quarterly pricing review using MRR and churn data
 
 ## Workflow 2: Memberships
 
-TEMPLATE-AFC-02  |  Client Template Edition — Customize All [BRACKETED] Fields
+TEMPLATE-AFC-02 | Client Template Edition — Customize All [BRACKETED] Fields
 
 HOW TO USE THIS TEMPLATE
 
@@ -2218,7 +2218,7 @@ Generate [TARGET %] of new enrollments through existing member referrals
 
 ## Automation Level
 
-[TARGET %]  |  AI manages [LIST]; humans deliver [LIST]
+[TARGET %] | AI manages [LIST]; humans deliver [LIST]
 
 Human Involvement
 
@@ -2580,7 +2580,7 @@ Evaluate P&L: ensure member LTV exceeds [MULTIPLIER]x annual fee at each tier
 
 ## Workflow 3: Long-Term Contracts
 
-TEMPLATE-AFC-03  |  Client Template Edition — Customize All [BRACKETED] Fields
+TEMPLATE-AFC-03 | Client Template Edition — Customize All [BRACKETED] Fields
 
 HOW TO USE THIS TEMPLATE
 
@@ -2620,7 +2620,7 @@ Give [OWNER/LEADERSHIP] real-time visibility into all active agreements
 
 ## Automation Level
 
-[TARGET %]  |  AI handles [LIST]; humans conduct [LIST]
+[TARGET %] | AI handles [LIST]; humans conduct [LIST]
 
 Human Involvement
 
@@ -2992,7 +2992,7 @@ Train all [ROLE] on obligation tracking system and weekly digest review
 
 ## Workflow 4: Communities
 
-TEMPLATE-AFC-04  |  Client Template Edition — Customize All [BRACKETED] Fields
+TEMPLATE-AFC-04 | Client Template Edition — Customize All [BRACKETED] Fields
 
 HOW TO USE THIS TEMPLATE
 
@@ -3032,7 +3032,7 @@ Build [NUMBER]+ exclusive community events per month that members cannot get els
 
 ## Automation Level
 
-[TARGET %]  |  AI handles [LIST]; humans run [LIST]
+[TARGET %] | AI handles [LIST]; humans run [LIST]
 
 Human Involvement
 

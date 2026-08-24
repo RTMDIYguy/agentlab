@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | FUL-04 |
-| Department | Fulfillment |
-| Automation level | 85-90% |
-| Owner | Marcus + Account Manager |
-| Trigger | Automated multi-touch lifecycle triggers |
-| Cycle time | Collection: continuous; case study: 1-2 weeks |
-| Source status | Imported source |
+| Field            | Value                                         |
+| ---------------- | --------------------------------------------- |
+| Workflow ID      | FUL-04                                        |
+| Department       | Fulfillment                                   |
+| Automation level | 85-90%                                        |
+| Owner            | Marcus + Account Manager                      |
+| Trigger          | Automated multi-touch lifecycle triggers      |
+| Cycle time       | Collection: continuous; case study: 1-2 weeks |
+| Source status    | Imported source                               |
 
 ## Inputs
 
@@ -85,17 +85,17 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `source/URC-FUL-04_Feedback_Testimonials.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                                | Purpose                                                                     |
+| ------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `source/URC-FUL-04_Feedback_Testimonials.md`            | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `automation/FUL04-Feedback-Testimonials-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/FUL-04_Feedback_Testimonials_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/FUL-04_Feedback_Testimonials_Tracker.xlsx`    | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-FUL-04_Feedback_Testimonials.md
 
-````markdown
+```markdown
 # FUL-04 - Feedback & Testimonials Source
 
 Source: `Fulfillment Department\URC Fulfillment\URC-FUL-04_Feedback_Testimonials.docx`
@@ -108,7 +108,7 @@ URC-FUL-04 — Feedback & Testimonials
 
 Systematic Collection, Honest Processing, and Strategic Deployment of Social Proof
 
-Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
+Robert T. McCarthy & Sheena Burns | v1.0 | March 23, 2026
 
 1. Why This Workflow Exists
 
@@ -373,11 +373,11 @@ March 23, 2026
 R. McCarthy & S. Burns
 
 Initial URC Fulfillment document — built from actual operations
-````
+```
 
 ### automation/FUL04-Feedback-Testimonials-Blueprint.json
 
-````json
+```json
 {
   "name": "FUL04: NPS Survey & Testimonial Capture (Make.com Blueprint)",
   "flow": [
@@ -484,7 +484,13 @@ Initial URC Fulfillment document — built from actual operations
         "spreadsheetId": "YOUR_FUL04_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{4.respondentName}}", "{{4.npsScore}}", "{{4.testimonialText}}", "Pending Approval"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD')}}",
+          "{{4.respondentName}}",
+          "{{4.npsScore}}",
+          "{{4.testimonialText}}",
+          "Pending Approval"
+        ]
       },
       "metadata": {
         "designer": {
@@ -499,7 +505,7 @@ Initial URC Fulfillment document — built from actual operations
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -616,7 +622,13 @@ Initial URC Fulfillment document — built from actual operations
         "spreadsheetId": "YOUR_FUL04_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{4.respondentName}}", "{{4.npsScore}}", "{{4.testimonialText}}", "Pending Approval"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD')}}",
+          "{{4.respondentName}}",
+          "{{4.npsScore}}",
+          "{{4.testimonialText}}",
+          "Pending Approval"
+        ]
       },
       "metadata": {
         "designer": {
@@ -675,6 +687,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

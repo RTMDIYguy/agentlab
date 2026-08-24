@@ -26,18 +26,18 @@ Source signal:
 
 ## Evidence Chain
 
-| # | Checkpoint | Evidence | Status |
-| --- | --- | --- | --- |
-| 1 | Planning item | `content-brief.md` | Pass |
-| 2 | Task record | `task-record.md` | Pass with manual system |
-| 3 | Source draft | `source-draft.md` | Pass |
-| 4 | Repository artifact | This packet plus outreach run files | Pass with local repo proof |
-| 5 | Editorial approval | `editorial-approval.md` | Pass |
-| 6 | SEO completion | `seo-and-positioning-check.md` | Pass with manual positioning check |
-| 7 | Adaptation asset | `adaptation-proof.md` | Pass |
-| 8 | Distribution proof | `distribution-proof.md` | Pass with Reach-reported send/open signal |
-| 9 | Step 7 tracker row | `performance-tracker-row.md` | Pass |
-| 10 | Final decision | `final-decision.md` | Pass with Manual Workarounds |
+| #   | Checkpoint          | Evidence                            | Status                                    |
+| --- | ------------------- | ----------------------------------- | ----------------------------------------- |
+| 1   | Planning item       | `content-brief.md`                  | Pass                                      |
+| 2   | Task record         | `task-record.md`                    | Pass with manual system                   |
+| 3   | Source draft        | `source-draft.md`                   | Pass                                      |
+| 4   | Repository artifact | This packet plus outreach run files | Pass with local repo proof                |
+| 5   | Editorial approval  | `editorial-approval.md`             | Pass                                      |
+| 6   | SEO completion      | `seo-and-positioning-check.md`      | Pass with manual positioning check        |
+| 7   | Adaptation asset    | `adaptation-proof.md`               | Pass                                      |
+| 8   | Distribution proof  | `distribution-proof.md`             | Pass with Reach-reported send/open signal |
+| 9   | Step 7 tracker row  | `performance-tracker-row.md`        | Pass                                      |
+| 10  | Final decision      | `final-decision.md`                 | Pass with Manual Workarounds              |
 
 ## Final Decision
 
@@ -47,4 +47,3 @@ MKT-06 can now be treated as usable for controlled manual execution. It should
 not be called fully automated or fully live-service certified until the next
 canary proves addressable task links, addressable document links, and
 distribution platform screenshots/URLs or campaign IDs.
-

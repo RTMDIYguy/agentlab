@@ -2,18 +2,29 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
-const commandCenterDir = path.join(root, "docs/operations/daily-command-center");
-const agencyManualPath = path.join(root, "docs/operations/agency-operating-manual.md");
+const commandCenterDir = path.join(
+  root,
+  "docs/operations/daily-command-center"
+);
+const agencyManualPath = path.join(
+  root,
+  "docs/operations/agency-operating-manual.md"
+);
 
 async function sync() {
   try {
     const files = await readdir(commandCenterDir);
-    const briefs = files.filter(f => /^\d{4}-\d{2}-\d{2}-command-brief\.md$/.test(f)).sort();
+    const briefs = files
+      .filter(f => /^\d{4}-\d{2}-\d{2}-command-brief\.md$/.test(f))
+      .sort();
     if (briefs.length === 0) {
       console.log("No daily briefs found to sync.");
       return;
     }
-    const latestBriefPath = path.join(commandCenterDir, briefs[briefs.length - 1]);
+    const latestBriefPath = path.join(
+      commandCenterDir,
+      briefs[briefs.length - 1]
+    );
     const briefContent = await readFile(latestBriefPath, "utf8");
 
     // Extract all checked items
@@ -41,7 +52,9 @@ async function sync() {
       // Extract the core item text by removing the parenthetical status/owner if present
       // e.g. "Draft SOP for Reach outreach batch setup and monitoring (Needed; owner: Agent) - done!"
       let coreText = checkedText;
-      const parenMatch = checkedText.match(/^(.*?)\s*\([^)]+owner:[^)]+\)(.*)$/i);
+      const parenMatch = checkedText.match(
+        /^(.*?)\s*\([^)]+owner:[^)]+\)(.*)$/i
+      );
       let notes = "";
       if (parenMatch) {
         coreText = parenMatch[1].trim();
@@ -49,11 +62,16 @@ async function sync() {
       }
 
       // Find this in the manual's "Open Build Items" table
-      const openBuildItemsIndex = manualLines.findIndex(l => l.startsWith("## Open Build Items"));
+      const openBuildItemsIndex = manualLines.findIndex(l =>
+        l.startsWith("## Open Build Items")
+      );
       if (openBuildItemsIndex !== -1) {
         for (let i = openBuildItemsIndex + 1; i < manualLines.length; i++) {
           if (manualLines[i].startsWith("## ")) break; // Next section
-          if (manualLines[i].trim().startsWith("|") && manualLines[i].includes(coreText)) {
+          if (
+            manualLines[i].trim().startsWith("|") &&
+            manualLines[i].includes(coreText)
+          ) {
             // It's a table row containing the text. Update the status column.
             // Format: | Item | Owner | Status |
             const cells = manualLines[i].split("|");
@@ -81,9 +99,13 @@ async function sync() {
 
     if (updated) {
       await writeFile(agencyManualPath, manualLines.join("\n"), "utf8");
-      console.log("Successfully updated agency-operating-manual.md with completed items.");
+      console.log(
+        "Successfully updated agency-operating-manual.md with completed items."
+      );
     } else {
-      console.log("Checked items were found, but could not be mapped to updatable source tables.");
+      console.log(
+        "Checked items were found, but could not be mapped to updatable source tables."
+      );
     }
   } catch (error) {
     console.error("Error syncing command center:", error);

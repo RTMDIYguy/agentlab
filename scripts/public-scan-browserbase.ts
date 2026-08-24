@@ -32,7 +32,11 @@ function usage(): string {
   ].join("\n");
 }
 
-function parseArgs(argv: string[]): { options: CliOptions; urls: string[]; showHelp: boolean } {
+function parseArgs(argv: string[]): {
+  options: CliOptions;
+  urls: string[];
+  showHelp: boolean;
+} {
   const options: CliOptions = {
     outDir: "output/public-signal-snapshots",
     screenshot: true,
@@ -107,9 +111,9 @@ async function readUrlsFile(filePath: string): Promise<string[]> {
   const raw = await readFile(filePath, "utf8");
   return raw
     .split(/\r?\n/g)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
-    .filter((line) => !line.startsWith("#"));
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+    .filter(line => !line.startsWith("#"));
 }
 
 async function main(): Promise<void> {
@@ -133,12 +137,13 @@ async function main(): Promise<void> {
     throw new Error("Missing env var: BROWSERBASE_API_KEY");
   }
 
-  const model = process.env.BROWSERBASE_MODEL ?? "google/gemini-3-flash-preview";
+  const model =
+    process.env.BROWSERBASE_MODEL ?? "google/gemini-3-flash-preview";
 
   const runRoot = path.resolve(
     options.outDir,
     todayIsoDate(),
-    options.tag ? safeSlug(options.tag) : "",
+    options.tag ? safeSlug(options.tag) : ""
   );
   await mkdir(runRoot, { recursive: true });
 
@@ -158,19 +163,26 @@ async function main(): Promise<void> {
     try {
       const response = await page.goto(url, { waitUntil: "domcontentloaded" });
       responseStatus = response ? response.status() : null;
-      await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
+      await page
+        .waitForLoadState("networkidle", { timeout: 15_000 })
+        .catch(() => {});
       await page.waitForTimeout(1_000);
 
       const title = await page.title().catch(() => "");
       const html = await page.content();
-      const htmlSha256 = createHash("sha256").update(html, "utf8").digest("hex");
+      const htmlSha256 = createHash("sha256")
+        .update(html, "utf8")
+        .digest("hex");
 
       const targetDir = path.join(runRoot, safeSlug(url));
       await mkdir(targetDir, { recursive: true });
 
       await writeFile(path.join(targetDir, "page.html"), html, "utf8");
       if (options.screenshot) {
-        await page.screenshot({ path: path.join(targetDir, "screenshot.png"), fullPage: true });
+        await page.screenshot({
+          path: path.join(targetDir, "screenshot.png"),
+          fullPage: true,
+        });
       }
 
       const meta = {
@@ -183,7 +195,11 @@ async function main(): Promise<void> {
         htmlSha256,
         model,
       };
-      await writeFile(path.join(targetDir, "meta.json"), JSON.stringify(meta, null, 2), "utf8");
+      await writeFile(
+        path.join(targetDir, "meta.json"),
+        JSON.stringify(meta, null, 2),
+        "utf8"
+      );
 
       process.stdout.write(`OK ${url} -> ${targetDir}\n`);
     } catch (error) {
@@ -197,7 +213,11 @@ async function main(): Promise<void> {
         responseStatus,
         error: error instanceof Error ? error.message : String(error),
       };
-      await writeFile(path.join(targetDir, "meta.json"), JSON.stringify(meta, null, 2), "utf8");
+      await writeFile(
+        path.join(targetDir, "meta.json"),
+        JSON.stringify(meta, null, 2),
+        "utf8"
+      );
 
       process.stderr.write(`FAIL ${url} (${meta.error})\n`);
     }
@@ -206,7 +226,7 @@ async function main(): Promise<void> {
   await stagehand.close();
 }
 
-main().catch((error) => {
+main().catch(error => {
   const message = error instanceof Error ? error.message : String(error);
   process.stderr.write(`${message}\n`);
   process.exitCode = 1;

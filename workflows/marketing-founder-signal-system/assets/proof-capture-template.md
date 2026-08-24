@@ -31,13 +31,13 @@ happened." Capturing the fact that nothing happened is also signal.
 Capture every reply that came in during the cycle, regardless of
 channel. One row per reply.
 
-| Date | Contact | Channel | Touch # | Bucket | Reply Summary (1-2 lines) | Next Action |
-| --- | --- | --- | --- | --- | --- | --- |
-|  |  |  |  | Interested / Not now / Referral / Objection / Other |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
+| Date | Contact | Channel | Touch # | Bucket                                              | Reply Summary (1-2 lines) | Next Action |
+| ---- | ------- | ------- | ------- | --------------------------------------------------- | ------------------------- | ----------- |
+|      |         |         |         | Interested / Not now / Referral / Objection / Other |                           |             |
+|      |         |         |         |                                                     |                           |             |
+|      |         |         |         |                                                     |                           |             |
+|      |         |         |         |                                                     |                           |             |
+|      |         |         |         |                                                     |                           |             |
 
 Buckets:
 
@@ -53,10 +53,10 @@ Objections are content, not failures. Each unique objection gets
 written down in the contact's own words.
 
 | Date | Contact / Anonymized | Objection (exact wording) | Underlying belief or fear |
-| --- | --- | --- | --- |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
+| ---- | -------------------- | ------------------------- | ------------------------- |
+|      |                      |                           |                           |
+|      |                      |                           |                           |
+|      |                      |                           |                           |
 
 For each objection: is this a content piece for the next cycle? If
 yes, mark it and pull it into the next content brief's "founder POV"
@@ -65,9 +65,9 @@ or "painful problem" sections.
 ## 3. Referrals Received
 
 | Date | Sent By | Referral Name | Referral Context | Permission to Mention Sender? | Reach-Out Status |
-| --- | --- | --- | --- | --- | --- |
-|  |  |  |  | Yes / No |  |
-|  |  |  |  |  |  |
+| ---- | ------- | ------------- | ---------------- | ----------------------------- | ---------------- |
+|      |         |               |                  | Yes / No                      |                  |
+|      |         |               |                  |                               |                  |
 
 Thank-you sent to referrer within 24 hours? Track here:
 
@@ -80,9 +80,9 @@ From MKT-04 triggers: client NPS ≥ 9, first major deliverable approved,
 30-day or 90-day milestone, engagement concluded.
 
 | Date | Source / Customer | Trigger | Format Captured (quote, email screenshot, recorded call, review link) | Permission To Use Publicly? | Where Filed |
-| --- | --- | --- | --- | --- | --- |
-|  |  |  |  | Yes / No / Pending |  |
-|  |  |  |  |  |  |
+| ---- | ----------------- | ------- | --------------------------------------------------------------------- | --------------------------- | ----------- |
+|      |                   |         |                                                                       | Yes / No / Pending          |             |
+|      |                   |         |                                                                       |                             |             |
 
 Action items:
 
@@ -96,11 +96,11 @@ Action items:
 For each piece published this cycle, capture what happened. Numbers
 help, but plain observation matters more.
 
-| Piece | Channel | Pillar | Engagement (likes / comments / replies / DMs) | Notable comment, DM, or quote | Worth a sequel? |
-| --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  | Yes / No / Maybe |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
+| Piece | Channel | Pillar | Engagement (likes / comments / replies / DMs) | Notable comment, DM, or quote | Worth a sequel?  |
+| ----- | ------- | ------ | --------------------------------------------- | ----------------------------- | ---------------- |
+|       |         |        |                                               |                               | Yes / No / Maybe |
+|       |         |        |                                               |                               |                  |
+|       |         |        |                                               |                               |                  |
 
 Pick **the one piece that pulled the most**:
 
@@ -167,9 +167,9 @@ cycle at all), revisit the signal brief. Something upstream is wrong.
 Anything that did not get done this cycle but should not get lost.
 
 | Item | Owner | Target Cycle | Notes |
-| --- | --- | --- | --- |
-|  |  |  |  |
-|  |  |  |  |
+| ---- | ----- | ------------ | ----- |
+|      |       |              |       |
+|      |       |              |       |
 
 ---
 

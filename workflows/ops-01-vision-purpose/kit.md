@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | OPS-01 |
-| Department | Operations |
-| Automation level | N/A - Framework |
-| Owner | Founder/CEO |
-| Trigger | Annual strategy session |
-| Cycle time | Annual review; OKRs quarterly |
-| Source status | Imported source |
+| Field            | Value                         |
+| ---------------- | ----------------------------- |
+| Workflow ID      | OPS-01                        |
+| Department       | Operations                    |
+| Automation level | N/A - Framework               |
+| Owner            | Founder/CEO                   |
+| Trigger          | Annual strategy session       |
+| Cycle time       | Annual review; OKRs quarterly |
+| Source status    | Imported source               |
 
 ## Inputs
 
@@ -85,25 +85,27 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `assets/OPS01-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/OPS01-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                           | Purpose                                                                     |
+| -------------------------------------------------- | --------------------------------------------------------------------------- |
+| `assets/OPS01-Assets.md`                           | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/OPS01-Blueprint.json`                  | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `trackers/OPS01_SOP_Registry_Version_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### assets/OPS01-Assets.md
 
-````markdown
+```markdown
 # OPS01: Vision & Purpose Assets
 
 ## 1. Annual Vision Check-In Survey (Internal)
-*Sent to the team annually to ensure alignment with the agency's Vision and Purpose.*
+
+_Sent to the team annually to ensure alignment with the agency's Vision and Purpose._
 
 **Subject:** [AGENCY NAME] Annual Vision Check-In: Are we on track?
 
 **Survey Questions (Typeform / Google Forms):**
+
 1. On a scale of 1-10, how aligned do you feel the work we did this year was with our core purpose of [Agency Purpose]?
 2. Looking at our 3-5 year Vision statement, do you feel we moved closer to it this year? Why or why not?
 3. Which of our Core Values did you see demonstrated most often by the team this year? Can you give an example?
@@ -113,7 +115,8 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 ---
 
 ## 2. Core Values "Shout-out" Slack Template
-*Used by team members to recognize colleagues living the core values.*
+
+_Used by team members to recognize colleagues living the core values._
 
 **Trigger:** Use the `/shoutout` command or post in the `#wins-and-shoutouts` channel.
 
@@ -124,27 +127,29 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 **What they did:** [Brief description of the action they took that exemplified the value]
 **Impact:** [How it helped the team or the client]
 
-*(Add relevant emojis!)*
+_(Add relevant emojis!)_
 
 ---
 
 ## 3. Vision/Purpose Alignment Decision Filter
-*A quick mental or written checklist to use during leadership meetings when making major strategic decisions.*
+
+_A quick mental or written checklist to use during leadership meetings when making major strategic decisions._
 
 **The Proposal:** [Insert idea, e.g., "Launch a new lower-tier service offering"]
 
 **The Filter:**
+
 - [ ] Does this directly support our Long-Term Outcome of [Insert Outcome]?
 - [ ] Does executing this force us to compromise on our Core Value of [Insert Value]?
 - [ ] If we succeed wildly at this, will it bring us closer to our 10-year Vision?
 - [ ] Are we doing this out of fear/scarcity, or does it genuinely advance our Purpose?
 
 **Decision:** [Proceed / Kill / Rework]
-````
+```
 
 ### automation/OPS01-Blueprint.json
 
-````json
+```json
 {
   "name": "OPS01: Infrastructure Health (Make.com Blueprint)",
   "flow": [
@@ -156,7 +161,7 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
         "url": "https://api.openai.com/v1/dashboard/billing/usage",
         "method": "GET",
         "headers": [
-          {"name": "Authorization", "value": "Bearer {{OPENAI_API_KEY}}"}
+          { "name": "Authorization", "value": "Bearer {{OPENAI_API_KEY}}" }
         ]
       }
     },
@@ -186,7 +191,7 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
     }
   ]
 }
-````
+```
 
 ## Binary Attachments
 
@@ -208,7 +213,7 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
         "url": "https://api.openai.com/v1/dashboard/billing/usage",
         "method": "GET",
         "headers": [
-          {"name": "Authorization", "value": "Bearer {{OPENAI_API_KEY}}"}
+          { "name": "Authorization", "value": "Bearer {{OPENAI_API_KEY}}" }
         ]
       }
     },
@@ -282,6 +287,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

@@ -2,7 +2,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PageLayout } from "@/components/PageLayout";
-import { Check, Plus, Minus, ShoppingCart, ArrowRight, Zap } from "lucide-react";
+import {
+  Check,
+  Plus,
+  Minus,
+  ShoppingCart,
+  ArrowRight,
+  Zap,
+} from "lucide-react";
 
 interface QuoteItem {
   id: string;
@@ -136,10 +143,13 @@ const PRICING_TIERS = {
 export default function Pricing() {
   const [selectedDepartment, setSelectedDepartment] = useState("marketing");
   const [quoteItems, setQuoteItems] = useState<QuoteItem[]>([]);
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
+    "monthly"
+  );
 
-  const currentDept = DEPARTMENTS.find((d) => d.id === selectedDepartment);
-  const tiers = PRICING_TIERS[selectedDepartment as keyof typeof PRICING_TIERS] || [];
+  const currentDept = DEPARTMENTS.find(d => d.id === selectedDepartment);
+  const tiers =
+    PRICING_TIERS[selectedDepartment as keyof typeof PRICING_TIERS] || [];
 
   const addToQuote = (tier: (typeof tiers)[0]) => {
     const newItem: QuoteItem = {
@@ -152,11 +162,14 @@ export default function Pricing() {
   };
 
   const removeFromQuote = (id: string) => {
-    setQuoteItems(quoteItems.filter((item) => item.id !== id));
+    setQuoteItems(quoteItems.filter(item => item.id !== id));
   };
 
   const calculateTotal = () => {
-    const monthlyTotal = quoteItems.reduce((sum, item) => sum + item.monthlyPrice, 0);
+    const monthlyTotal = quoteItems.reduce(
+      (sum, item) => sum + item.monthlyPrice,
+      0
+    );
     if (billingCycle === "yearly") {
       return Math.round(monthlyTotal * 12 * 0.9); // 10% discount for yearly
     }
@@ -164,8 +177,12 @@ export default function Pricing() {
   };
 
   const total = calculateTotal();
-  const monthlyTotal = quoteItems.reduce((sum, item) => sum + item.monthlyPrice, 0);
-  const yearlyDiscount = billingCycle === "yearly" ? Math.round(monthlyTotal * 12 * 0.1) : 0;
+  const monthlyTotal = quoteItems.reduce(
+    (sum, item) => sum + item.monthlyPrice,
+    0
+  );
+  const yearlyDiscount =
+    billingCycle === "yearly" ? Math.round(monthlyTotal * 12 * 0.1) : 0;
 
   return (
     <PageLayout>
@@ -174,10 +191,12 @@ export default function Pricing() {
         <div className="container">
           <div className="max-w-3xl mx-auto text-center space-y-6">
             <h1 className="text-5xl md:text-6xl font-bold text-foreground">
-              Build Your Custom <span className="text-primary">AI Agent Quote</span>
+              Build Your Custom{" "}
+              <span className="text-primary">AI Agent Quote</span>
             </h1>
             <p className="text-xl text-muted-foreground">
-              Select the departments and service tiers you need. Mix and match to create the perfect solution for your business.
+              Select the departments and service tiers you need. Mix and match
+              to create the perfect solution for your business.
             </p>
           </div>
         </div>
@@ -191,7 +210,7 @@ export default function Pricing() {
             <div className="lg:col-span-2 space-y-8">
               {/* Department Tabs */}
               <div className="flex flex-wrap gap-3">
-                {DEPARTMENTS.map((dept) => (
+                {DEPARTMENTS.map(dept => (
                   <button
                     key={dept.id}
                     onClick={() => setSelectedDepartment(dept.id)}
@@ -209,36 +228,54 @@ export default function Pricing() {
               {/* Department Description */}
               {currentDept && (
                 <Card className="p-6 bg-primary/5 border-primary/20">
-                  <p className="text-lg text-foreground font-semibold">{currentDept.name} Department</p>
-                  <p className="text-muted-foreground mt-2">{currentDept.description}</p>
+                  <p className="text-lg text-foreground font-semibold">
+                    {currentDept.name} Department
+                  </p>
+                  <p className="text-muted-foreground mt-2">
+                    {currentDept.description}
+                  </p>
                 </Card>
               )}
 
               {/* Pricing Tiers */}
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-foreground">Select Service Tier</h3>
+                <h3 className="text-2xl font-bold text-foreground">
+                  Select Service Tier
+                </h3>
                 <div className="grid md:grid-cols-3 gap-6">
-                  {tiers.map((tier) => (
+                  {tiers.map(tier => (
                     <Card
                       key={tier.tier}
                       className={`p-6 border-2 transition-all hover:shadow-lg ${
-                        quoteItems.some((item) => item.department === selectedDepartment && item.tier === tier.tier)
+                        quoteItems.some(
+                          item =>
+                            item.department === selectedDepartment &&
+                            item.tier === tier.tier
+                        )
                           ? "border-primary bg-primary/5"
                           : "border-border hover:border-primary/50"
                       }`}
                     >
-                      <h4 className="text-xl font-bold text-foreground mb-2">{tier.name}</h4>
-                      <p className="text-sm text-muted-foreground mb-4">{tier.description}</p>
+                      <h4 className="text-xl font-bold text-foreground mb-2">
+                        {tier.name}
+                      </h4>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        {tier.description}
+                      </p>
 
                       <div className="mb-4">
-                        <div className="text-3xl font-bold text-primary">${tier.monthlyPrice}</div>
+                        <div className="text-3xl font-bold text-primary">
+                          ${tier.monthlyPrice}
+                        </div>
                         <p className="text-sm text-muted-foreground">/month</p>
                       </div>
 
                       <div className="mb-6 space-y-2">
                         <div className="flex items-center gap-2 text-sm">
                           <Check className="w-4 h-4 text-primary" />
-                          <span className="text-foreground">{tier.workflows} workflows included</span>
+                          <span className="text-foreground">
+                            {tier.workflows} workflows included
+                          </span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                           <Check className="w-4 h-4 text-primary" />
@@ -262,7 +299,9 @@ export default function Pricing() {
             {/* Quote Summary */}
             <div className="lg:col-span-1">
               <Card className="p-6 sticky top-24 border-2 border-primary bg-primary/5">
-                <h3 className="text-2xl font-bold text-foreground mb-6">Quote Summary</h3>
+                <h3 className="text-2xl font-bold text-foreground mb-6">
+                  Quote Summary
+                </h3>
 
                 {/* Billing Cycle Toggle */}
                 <div className="mb-6 p-3 bg-white rounded-lg border border-border">
@@ -298,13 +337,18 @@ export default function Pricing() {
                       Add departments to your quote
                     </p>
                   ) : (
-                    quoteItems.map((item) => (
-                      <div key={item.id} className="flex items-center justify-between p-3 bg-white rounded border border-border">
+                    quoteItems.map(item => (
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between p-3 bg-white rounded border border-border"
+                      >
                         <div className="flex-1">
                           <p className="font-semibold text-foreground capitalize">
                             {item.department} - {item.tier}
                           </p>
-                          <p className="text-sm text-muted-foreground">${item.monthlyPrice}/mo</p>
+                          <p className="text-sm text-muted-foreground">
+                            ${item.monthlyPrice}/mo
+                          </p>
                         </div>
                         <button
                           onClick={() => removeFromQuote(item.id)}
@@ -321,26 +365,40 @@ export default function Pricing() {
                 {quoteItems.length > 0 && (
                   <div className="space-y-3 mb-6 p-4 bg-white rounded border border-border">
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Monthly Subtotal:</span>
-                      <span className="font-semibold text-foreground">${monthlyTotal}</span>
+                      <span className="text-muted-foreground">
+                        Monthly Subtotal:
+                      </span>
+                      <span className="font-semibold text-foreground">
+                        ${monthlyTotal}
+                      </span>
                     </div>
                     {billingCycle === "yearly" && (
                       <>
                         <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Annual Subtotal:</span>
-                          <span className="font-semibold text-foreground">${monthlyTotal * 12}</span>
+                          <span className="text-muted-foreground">
+                            Annual Subtotal:
+                          </span>
+                          <span className="font-semibold text-foreground">
+                            ${monthlyTotal * 12}
+                          </span>
                         </div>
                         <div className="flex justify-between text-sm text-green-600">
                           <span>Annual Discount (10%):</span>
-                          <span className="font-semibold">-${yearlyDiscount}</span>
+                          <span className="font-semibold">
+                            -${yearlyDiscount}
+                          </span>
                         </div>
                       </>
                     )}
                     <div className="border-t border-border pt-3 flex justify-between">
                       <span className="font-bold text-foreground">
-                        {billingCycle === "yearly" ? "Annual Total:" : "Monthly Total:"}
+                        {billingCycle === "yearly"
+                          ? "Annual Total:"
+                          : "Monthly Total:"}
                       </span>
-                      <span className="text-2xl font-bold text-primary">${total}</span>
+                      <span className="text-2xl font-bold text-primary">
+                        ${total}
+                      </span>
                     </div>
                   </div>
                 )}
@@ -367,7 +425,9 @@ export default function Pricing() {
       {/* FAQ Section */}
       <section className="py-20 bg-slate-50">
         <div className="container max-w-3xl">
-          <h2 className="text-4xl font-bold text-foreground mb-12 text-center">Frequently Asked Questions</h2>
+          <h2 className="text-4xl font-bold text-foreground mb-12 text-center">
+            Frequently Asked Questions
+          </h2>
 
           <div className="space-y-6">
             {[
@@ -393,7 +453,9 @@ export default function Pricing() {
               },
             ].map((faq, idx) => (
               <Card key={idx} className="p-6">
-                <h4 className="text-lg font-semibold text-foreground mb-3">{faq.q}</h4>
+                <h4 className="text-lg font-semibold text-foreground mb-3">
+                  {faq.q}
+                </h4>
                 <p className="text-muted-foreground">{faq.a}</p>
               </Card>
             ))}
@@ -404,16 +466,27 @@ export default function Pricing() {
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-primary to-primary/80 text-white">
         <div className="container text-center space-y-6">
-          <h2 className="text-4xl font-bold">Ready to Transform Your Business?</h2>
+          <h2 className="text-4xl font-bold">
+            Ready to Transform Your Business?
+          </h2>
           <p className="text-lg text-white/90 max-w-2xl mx-auto">
-            Start with a free trial and see how our AI agents can automate your operations.
+            Start with a free trial and see how our AI agents can automate your
+            operations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white text-white hover:bg-white/10"
+            >
               <Zap className="w-5 h-5 mr-2" />
               Start Free Trial
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white text-white hover:bg-white/10"
+            >
               Schedule Demo
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>

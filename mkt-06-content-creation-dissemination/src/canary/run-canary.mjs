@@ -61,7 +61,7 @@ const REQUIRED_SECRETS = [
 ];
 
 if (mode !== "manual" && mode !== "proof") {
-  const missing = REQUIRED_SECRETS.filter((name) => !process.env[name]);
+  const missing = REQUIRED_SECRETS.filter(name => !process.env[name]);
   if (missing.length > 0) {
     console.error(`[canary] Missing required env vars: ${missing.join(", ")}`);
     exit(2);
@@ -72,8 +72,13 @@ if (mode !== "manual" && mode !== "proof") {
 // The URC site URL was historically misconfigured as 'atlasian.net' (typo).
 // Hard-fail before running any Jira write to surface this clearly.
 
-const ATLASSIAN_SITE = process.env.ATLASSIAN_SITE_URL ?? "unclerobertconsulting.atlassian.net";
-if (mode !== "manual" && mode !== "proof" && ATLASSIAN_SITE.includes("atlasian.net")) {
+const ATLASSIAN_SITE =
+  process.env.ATLASSIAN_SITE_URL ?? "unclerobertconsulting.atlassian.net";
+if (
+  mode !== "manual" &&
+  mode !== "proof" &&
+  ATLASSIAN_SITE.includes("atlasian.net")
+) {
   console.error(
     `[canary] ATLASSIAN_SITE_URL contains 'atlasian.net' (typo). ` +
       `Correct domain is 'atlassian.net' with double 's'. Fix before running canary.`
@@ -286,11 +291,11 @@ async function captureStep7TrackerRow() {
 
 async function captureFinalDecision(rows) {
   const requiredFails = rows
-    .filter((r) => CHECKPOINTS.find((c) => c.id === r.id)?.required)
-    .filter((r) => !r.completed && !r.skipped);
+    .filter(r => CHECKPOINTS.find(c => c.id === r.id)?.required)
+    .filter(r => !r.completed && !r.skipped);
   const proofFails =
     mode === "proof"
-      ? rows.filter((r) => !r.completed || r.skipped || r.fallback)
+      ? rows.filter(r => !r.completed || r.skipped || r.fallback)
       : [];
   const decision =
     mode === "proof"
@@ -338,17 +343,16 @@ async function main() {
   // Write CSV ----------------------------------------------------------------
 
   const csvHeader = "id,name,completed,skipped,evidenceUrl,fallback,notes";
-  const csvRows = rows.map(
-    (r) =>
-      [
-        r.id,
-        r.name,
-        r.completed ?? "",
-        r.skipped ?? "",
-        (r.evidenceUrl ?? "").replace(/,/g, ";"),
-        (r.fallback ?? "").replace(/,/g, ";"),
-        (r.notes ?? r.decision ?? "").replace(/,/g, ";"),
-      ].join(",")
+  const csvRows = rows.map(r =>
+    [
+      r.id,
+      r.name,
+      r.completed ?? "",
+      r.skipped ?? "",
+      (r.evidenceUrl ?? "").replace(/,/g, ";"),
+      (r.fallback ?? "").replace(/,/g, ";"),
+      (r.notes ?? r.decision ?? "").replace(/,/g, ";"),
+    ].join(",")
   );
   const csv = [csvHeader, ...csvRows].join("\n");
   const logPath = outputFile ?? `MKT-06-Canary-Evidence-Log-${date}.csv`;
@@ -361,7 +365,7 @@ async function main() {
   exit(final.decision.startsWith("Pass") ? 0 : 1);
 }
 
-main().catch((err) => {
+main().catch(err => {
   console.error(`[canary] Unhandled error:`, err);
   exit(1);
 });

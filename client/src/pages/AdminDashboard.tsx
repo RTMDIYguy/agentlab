@@ -62,7 +62,9 @@ export default function AdminDashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Card className="p-8 max-w-md">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Access Denied</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-4">
+            Access Denied
+          </h1>
           <p className="text-muted-foreground mb-6">
             You need admin privileges to access this dashboard.
           </p>
@@ -75,7 +77,7 @@ export default function AdminDashboard() {
   }
 
   // Prepare chart data
-  const subscriptionCounts = analytics?.subscriptionCounts as any || {};
+  const subscriptionCounts = (analytics?.subscriptionCounts as any) || {};
   const subscriptionData = analytics
     ? [
         { name: "Active", value: subscriptionCounts.active || 0 },
@@ -87,11 +89,12 @@ export default function AdminDashboard() {
   const COLORS = ["#10b981", "#ef4444", "#f59e0b"];
 
   // Filter customers based on search
-  const filteredCustomers = customers?.filter(
-    (customer) =>
-      customer.plan?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.status?.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
+  const filteredCustomers =
+    customers?.filter(
+      customer =>
+        customer.plan?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customer.status?.toLowerCase().includes(searchTerm.toLowerCase())
+    ) || [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -107,8 +110,12 @@ export default function AdminDashboard() {
       <div className="bg-card border-b border-border sticky top-0 z-40">
         <div className="container flex items-center justify-between py-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
-            <p className="text-sm text-muted-foreground">Subscription Analytics & Customer Management</p>
+            <h1 className="text-2xl font-bold text-foreground">
+              Admin Dashboard
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Subscription Analytics & Customer Management
+            </p>
           </div>
           <div className="flex gap-2">
             <Button
@@ -139,9 +146,14 @@ export default function AdminDashboard() {
           <Card className="p-6 border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Total Revenue</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  Total Revenue
+                </p>
                 <p className="text-3xl font-bold text-foreground">
-                  ${analyticsLoading ? "..." : (analytics?.totalRevenue || 0).toLocaleString()}
+                  $
+                  {analyticsLoading
+                    ? "..."
+                    : (analytics?.totalRevenue || 0).toLocaleString()}
                 </p>
               </div>
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
@@ -154,9 +166,14 @@ export default function AdminDashboard() {
           <Card className="p-6 border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Monthly Recurring Revenue</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  Monthly Recurring Revenue
+                </p>
                 <p className="text-3xl font-bold text-foreground">
-                  ${analyticsLoading ? "..." : (analytics?.mrr || 0).toLocaleString()}
+                  $
+                  {analyticsLoading
+                    ? "..."
+                    : (analytics?.mrr || 0).toLocaleString()}
                 </p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -169,7 +186,9 @@ export default function AdminDashboard() {
           <Card className="p-6 border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Active Subscriptions</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  Active Subscriptions
+                </p>
                 <p className="text-3xl font-bold text-foreground">
                   {analyticsLoading ? "..." : subscriptionCounts.active || 0}
                 </p>
@@ -184,7 +203,9 @@ export default function AdminDashboard() {
           <Card className="p-6 border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Churn (30 days)</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  Churn (30 days)
+                </p>
                 <p className="text-3xl font-bold text-foreground">
                   {analyticsLoading ? "..." : analytics?.churnRate || 0}
                 </p>
@@ -200,7 +221,9 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Subscription Status Pie Chart */}
           <Card className="p-6 border border-border">
-            <h2 className="text-xl font-bold text-foreground mb-6">Subscription Status</h2>
+            <h2 className="text-xl font-bold text-foreground mb-6">
+              Subscription Status
+            </h2>
             {analyticsLoading ? (
               <div className="h-80 bg-muted rounded animate-pulse"></div>
             ) : (
@@ -228,33 +251,41 @@ export default function AdminDashboard() {
 
           {/* Revenue Metrics */}
           <Card className="p-6 border border-border">
-            <h2 className="text-xl font-bold text-foreground mb-6">Revenue Breakdown</h2>
+            <h2 className="text-xl font-bold text-foreground mb-6">
+              Revenue Breakdown
+            </h2>
             {analyticsLoading ? (
               <div className="h-80 bg-muted rounded animate-pulse"></div>
             ) : (
               <div className="space-y-6">
                 <div className="p-4 bg-muted/50 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">Total Revenue</p>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Total Revenue
+                  </p>
                   <p className="text-2xl font-bold text-foreground">
                     ${(analytics?.totalRevenue || 0).toLocaleString()}
                   </p>
                 </div>
                 <div className="p-4 bg-muted/50 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">Monthly Recurring Revenue</p>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Monthly Recurring Revenue
+                  </p>
                   <p className="text-2xl font-bold text-green-600">
                     ${(analytics?.mrr || 0).toLocaleString()}
                   </p>
                 </div>
                 <div className="p-4 bg-muted/50 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">Average Revenue Per User</p>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Average Revenue Per User
+                  </p>
                   <p className="text-2xl font-bold text-foreground">
-                    ${
-                      subscriptionCounts.active && analytics
-                        ? Math.round(
-                            (analytics.mrr / (subscriptionCounts.active || 1)) * 100
-                          ) / 100
-                        : 0
-                    }
+                    $
+                    {subscriptionCounts.active && analytics
+                      ? Math.round(
+                          (analytics.mrr / (subscriptionCounts.active || 1)) *
+                            100
+                        ) / 100
+                      : 0}
                   </p>
                 </div>
               </div>
@@ -272,7 +303,7 @@ export default function AdminDashboard() {
                 type="text"
                 placeholder="Search customers..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
@@ -280,8 +311,11 @@ export default function AdminDashboard() {
 
           {customersLoading ? (
             <div className="space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-16 bg-muted rounded animate-pulse"></div>
+              {[1, 2, 3].map(i => (
+                <div
+                  key={i}
+                  className="h-16 bg-muted rounded animate-pulse"
+                ></div>
               ))}
             </div>
           ) : filteredCustomers.length > 0 ? (
@@ -289,15 +323,25 @@ export default function AdminDashboard() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left py-3 px-4 font-semibold text-foreground">User ID</th>
-                    <th className="text-left py-3 px-4 font-semibold text-foreground">Plan</th>
-                    <th className="text-left py-3 px-4 font-semibold text-foreground">Status</th>
-                    <th className="text-left py-3 px-4 font-semibold text-foreground">Current Period</th>
-                    <th className="text-left py-3 px-4 font-semibold text-foreground">Actions</th>
+                    <th className="text-left py-3 px-4 font-semibold text-foreground">
+                      User ID
+                    </th>
+                    <th className="text-left py-3 px-4 font-semibold text-foreground">
+                      Plan
+                    </th>
+                    <th className="text-left py-3 px-4 font-semibold text-foreground">
+                      Status
+                    </th>
+                    <th className="text-left py-3 px-4 font-semibold text-foreground">
+                      Current Period
+                    </th>
+                    <th className="text-left py-3 px-4 font-semibold text-foreground">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredCustomers.map((customer) => (
+                  {filteredCustomers.map(customer => (
                     <tr
                       key={customer.id}
                       className="border-b border-border hover:bg-muted/50 transition-colors"
@@ -322,7 +366,8 @@ export default function AdminDashboard() {
                         </span>
                       </td>
                       <td className="py-4 px-4 text-sm text-muted-foreground">
-                        {customer.currentPeriodStart && customer.currentPeriodEnd
+                        {customer.currentPeriodStart &&
+                        customer.currentPeriodEnd
                           ? `${new Date(customer.currentPeriodStart).toLocaleDateString()} - ${new Date(customer.currentPeriodEnd).toLocaleDateString()}`
                           : "N/A"}
                       </td>

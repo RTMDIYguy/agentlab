@@ -1,1 +1,678 @@
-[{"updatedAt":"2026-08-02T20:27:21.210Z","createdAt":"2026-08-02T20:27:21.210Z","id":"linkedin-authority-system-v1-local-proof","name":"LinkedIn Authority System - Intake to Follow-Up Tracker","description":null,"active":false,"isArchived":false,"nodes":[{"parameters":{},"id":"1f7d2435-2e4e-49c0-98d8-715c12f4e001","name":"Manual Dogfood Trigger","type":"n8n-nodes-base.manualTrigger","typeVersion":1,"position":[-960,240]},{"parameters":{"content":"# LinkedIn Authority System - Intake to Follow-Up Tracker\n\nManual-trigger v1 proof lane. This workflow does not post to LinkedIn, scrape LinkedIn, auto-send DMs, or send email. It normalizes one test signal, checks claim boundaries, builds tracker row payloads, prepares a follow-up task, and returns a final local review packet.","height":300,"width":520,"color":5},"id":"42f497df-b7f9-4fc3-9af4-715c12f4e002","name":"Workflow Notes","type":"n8n-nodes-base.stickyNote","typeVersion":1,"position":[-1020,-160]},{"parameters":{"mode":"raw","jsonOutput":"{\n  \"test_case\": \"lead_signal\",\n  \"campaign_id\": \"LAS-2026-001\",\n  \"campaign_name\": \"Agent Lab authority loop\",\n  \"campaign_status\": \"Active\",\n  \"owner\": \"Robert\",\n  \"start_date\": \"2026-05-23\",\n  \"target_buyer\": \"Founders and service operators\",\n  \"core_problem\": \"LinkedIn activity is not turning into business conversations\",\n  \"cta_label\": \"Request the LinkedIn Authority Setup\",\n  \"cta_url\": \"https://agent-lab.tech/contact\",\n  \"post_id\": \"POST-001\",\n  \"post_status\": \"Planned\",\n  \"post_date\": \"\",\n  \"post_url\": \"\",\n  \"content_type\": \"Authority Post\",\n  \"working_title\": \"Content should create business conversations, not just activity\",\n  \"comments_worth_replying\": 1,\n  \"connection_requests_sent\": 0,\n  \"replies\": 1,\n  \"calls_booked\": 0,\n  \"post_hours_spent\": 0.5,\n  \"lead_id\": \"LEAD-001\",\n  \"contact_name\": \"Sample Founder\",\n  \"company\": \"Sample Company\",\n  \"lead_source\": \"LinkedIn Comment\",\n  \"signal\": \"Asked how to connect LinkedIn content to follow-up\",\n  \"stage\": \"New\",\n  \"first_contact_date\": \"2026-05-23\",\n  \"estimated_opportunity_value\": 0,\n  \"next_follow_up_date\": \"2026-05-27\",\n  \"next_action\": \"Reply with beta setup question\",\n  \"lead_hours_spent\": 0.25,\n  \"sender_name\": \"Robert\",\n  \"business_name\": \"Uncle Robert Consulting\",\n  \"unsafe_claim_text\": \"\"\n}","options":{}},"id":"ad8f9630-1696-4d5a-8fd6-715c12f4e003","name":"Seed Dogfood Intake","type":"n8n-nodes-base.set","typeVersion":3.4,"position":[-700,240]},{"parameters":{"jsCode":"const campaignStatuses = ['Planned','Active','Paused','Complete','Archived'];\nconst postStatuses = ['Idea','Draft','Review','Scheduled','Published','Archived','Planned'];\nconst leadStages = ['New','Engaged','Replied','Booked','Qualified','Proposal','Won','Lost','Nurture','Opted Out'];\n\nfunction clean(value, fallback = '') {\n  if (value === undefined || value === null || value === '') return fallback;\n  return value;\n}\nfunction num(value) {\n  const n = Number(value);\n  return Number.isFinite(n) ? n : 0;\n}\n\nreturn items.map((item) => {\n  const j = item.json;\n  const warnings = [];\n  const normalized = {\n    test_case: clean(j.test_case, 'lead_signal'),\n    campaign_id: clean(j.campaign_id, 'LAS-2026-001'),\n    campaign_name: clean(j.campaign_name, 'LinkedIn Authority dogfood campaign'),\n    campaign_status: clean(j.campaign_status, 'Active'),\n    owner: clean(j.owner, 'Robert'),\n    start_date: clean(j.start_date, '2026-05-23'),\n    target_buyer: clean(j.target_buyer, 'Founders and service operators'),\n    core_problem: clean(j.core_problem, 'LinkedIn activity is not turning into business conversations'),\n    cta_label: clean(j.cta_label, 'Request the LinkedIn Authority Setup'),\n    cta_url: clean(j.cta_url, 'DECISION_NEEDED'),\n    post_id: clean(j.post_id, 'POST-001'),\n    post_status: clean(j.post_status, 'Planned'),\n    post_date: clean(j.post_date, ''),\n    post_url: clean(j.post_url, ''),\n    content_type: clean(j.content_type, 'Authority Post'),\n    working_title: clean(j.working_title, 'Content should create business conversations, not just activity'),\n    comments_worth_replying: num(j.comments_worth_replying),\n    connection_requests_sent: num(j.connection_requests_sent),\n    replies: num(j.replies),\n    calls_booked: num(j.calls_booked),\n    post_hours_spent: num(j.post_hours_spent ?? j.hours_spent),\n    lead_id: clean(j.lead_id, ''),\n    contact_name: clean(j.contact_name, ''),\n    company: clean(j.company, ''),\n    lead_source: clean(j.lead_source, 'LinkedIn Comment'),\n    signal: clean(j.signal, ''),\n    stage: clean(j.stage, 'New'),\n    first_contact_date: clean(j.first_contact_date, ''),\n    estimated_opportunity_value: num(j.estimated_opportunity_value),\n    next_follow_up_date: clean(j.next_follow_up_date, ''),\n    next_action: clean(j.next_action, ''),\n    lead_hours_spent: num(j.lead_hours_spent),\n    sender_name: clean(j.sender_name, 'Robert'),\n    business_name: clean(j.business_name, 'Uncle Robert Consulting'),\n    unsafe_claim_text: clean(j.unsafe_claim_text, '')\n  };\n\n  if (!campaignStatuses.includes(normalized.campaign_status)) {\n    warnings.push(`Unknown campaign status: ${normalized.campaign_status}`);\n    normalized.campaign_status = 'Planned';\n  }\n  if (!postStatuses.includes(normalized.post_status)) {\n    warnings.push(`Unknown post status: ${normalized.post_status}`);\n    normalized.post_status = 'Review';\n  }\n  if (!leadStages.includes(normalized.stage)) {\n    warnings.push(`Unknown lead stage: ${normalized.stage}`);\n    normalized.stage = 'New';\n  }\n  if (normalized.cta_url === 'DECISION_NEEDED') warnings.push('CTA URL still needs a destination decision.');\n  if (normalized.lead_id && !normalized.next_follow_up_date) warnings.push('Lead exists but next follow-up date is missing.');\n\n  return { json: { ...j, normalized, normalization_warnings: warnings } };\n});"},"id":"dcb4a283-a8dd-4d50-9286-715c12f4e004","name":"Normalize Payload","type":"n8n-nodes-base.code","typeVersion":2,"position":[-440,240]},{"parameters":{"jsCode":"const unsafeTerms = [\n  'guaranteed',\n  'proven',\n  'instant roi',\n  'immediate roi',\n  'algorithm rewards',\n  'predictable clients',\n  'predictable source of clients',\n  'revenue in 48 hours',\n  'leads in 48 hours',\n  'generate measurable leads in under 48 hours'\n];\n\nreturn items.map((item) => {\n  const n = item.json.normalized || item.json;\n  const text = Object.values(n).filter(v => typeof v === 'string').join(' ').toLowerCase();\n  const extra = String(n.unsafe_claim_text || '').toLowerCase();\n  const found = unsafeTerms.filter(term => text.includes(term) || extra.includes(term));\n  const claim_check_status = found.length ? 'Needs Review - claim language found' : 'Pass - no guarantee claims in generated fields';\n  const claim_check_notes = found.length ? `Review these terms before public use: ${found.join(', ')}` : 'No blocked claim terms found in this test payload.';\n  const workflow_run_status = found.length ? 'Ready For Review' : (n.cta_url === 'DECISION_NEEDED' ? 'Ready For Review' : 'Passed');\n  return { json: { ...item.json, claim_check_status, claim_check_notes, blocked_claim_terms: found, workflow_run_status } };\n});"},"id":"2fb84ff3-4255-43fb-b94f-715c12f4e005","name":"Claim And Boundary Check","type":"n8n-nodes-base.code","typeVersion":2,"position":[-180,240]},{"parameters":{"jsCode":"return items.map((item) => {\n  const n = item.json.normalized;\n  const campaign_row = {\n    'Campaign ID': n.campaign_id,\n    'Status': n.campaign_status,\n    'Campaign Name': n.campaign_name,\n    'Owner': n.owner,\n    'Start Date': n.start_date,\n    'End Date': '',\n    'Target Buyer': n.target_buyer,\n    'Core Problem': n.core_problem,\n    'CTA': n.cta_label,\n    'CTA Link': n.cta_url,\n    'Goal': 'Dogfood the tracker and first n8n lane',\n    'Notes': item.json.normalization_warnings.join(' | ')\n  };\n  const post_row = {\n    'Post ID': n.post_id,\n    'Campaign ID': n.campaign_id,\n    'Status': n.post_status,\n    'Post Date': n.post_date,\n    'Post URL': n.post_url,\n    'Content Type': n.content_type,\n    'Working Title': n.working_title,\n    'Target Buyer': n.target_buyer,\n    'CTA': n.cta_label,\n    'CTA Link': n.cta_url,\n    'Comments Worth Replying': n.comments_worth_replying,\n    'Connection Requests Sent': n.connection_requests_sent,\n    'Replies': n.replies,\n    'Calls Booked': n.calls_booked,\n    'Hours Spent': n.post_hours_spent\n  };\n  const lead_row = n.lead_id ? {\n    'Lead ID': n.lead_id,\n    'Contact Name': n.contact_name,\n    'Company': n.company,\n    'Source Post ID': n.post_id,\n    'Source Post URL': n.post_url,\n    'Lead Source': n.lead_source,\n    'Signal': n.signal,\n    'Stage': n.stage,\n    'Owner': n.owner,\n    'First Contact Date': n.first_contact_date,\n    'Estimated Opportunity Value': n.estimated_opportunity_value,\n    'Next Follow-Up Date': n.next_follow_up_date,\n    'Next Action': n.next_action,\n    'Hours Spent': n.lead_hours_spent\n  } : { status: 'No lead signal yet' };\n  const weekly_review_hint = {\n    'Week Start': '2026-05-25',\n    'Campaign ID': n.campaign_id,\n    'What Worked': 'Pending dogfood cycle',\n    'What To Improve': 'Resolve CTA URL and write path after local proof',\n    'Next Week Focus': 'Run first live internal LinkedIn Authority loop'\n  };\n  return { json: { ...item.json, campaign_row, post_row, lead_row, weekly_review_hint } };\n});"},"id":"9ab33aba-d682-42bd-aac8-715c12f4e006","name":"Build Tracker Row Payloads","type":"n8n-nodes-base.code","typeVersion":2,"position":[80,240]},{"parameters":{"jsCode":"return items.map((item) => {\n  const n = item.json.normalized;\n  const suggested_reply = 'Thanks for engaging with that post. I am testing a simple LinkedIn authority loop for founders who want content to create real business conversations, not just activity. Are you trying to use LinkedIn for leads right now, or more for credibility?';\n  const follow_up_task = {\n    task_title: `Follow up on ${n.lead_id || n.post_id} - ${n.campaign_name}`,\n    task_owner: n.owner,\n    task_due_date: n.next_follow_up_date || 'DECISION_NEEDED',\n    task_context: n.signal || `Review LinkedIn signal for ${n.post_id}`,\n    suggested_reply,\n    source_post_id: n.post_id,\n    lead_id: n.lead_id || '',\n    manual_fallback: 'Add the record manually to the ROI tracker workbook and set the next follow-up date.'\n  };\n  return { json: { ...item.json, follow_up_task } };\n});"},"id":"c44f6cf8-71ad-477b-a5cc-715c12f4e007","name":"Build Follow-Up Task","type":"n8n-nodes-base.code","typeVersion":2,"position":[340,240]},{"parameters":{"jsCode":"return items.map((item) => {\n  const n = item.json.normalized;\n  const owner_notification = [\n    'LinkedIn Authority follow-up needed',\n    '',\n    `Campaign: ${n.campaign_name}`,\n    `Lead: ${n.contact_name || 'No contact name yet'} / ${n.company || 'No company yet'}`,\n    `Signal: ${n.signal || 'No signal text captured'}`,\n    `Next action: ${n.next_action || 'DECISION_NEEDED'}`,\n    `Due: ${n.next_follow_up_date || 'DECISION_NEEDED'}`,\n    `Source post: ${n.post_id}`,\n    `CTA URL: ${n.cta_url}`,\n    `Claim check: ${item.json.claim_check_status}`\n  ].join('\\n');\n  return { json: { ...item.json, owner_notification } };\n});"},"id":"24c8cc56-5a01-4779-af1c-715c12f4e008","name":"Owner Notification Draft","type":"n8n-nodes-base.code","typeVersion":2,"position":[600,240]},{"parameters":{"jsCode":"return items.map((item) => {\n  const final_local_review = {\n    workflow_name: 'LinkedIn Authority System - Intake to Follow-Up Tracker',\n    workflow_run_status: item.json.workflow_run_status,\n    normalized_intake: item.json.normalized,\n    normalization_warnings: item.json.normalization_warnings,\n    claim_check: {\n      status: item.json.claim_check_status,\n      notes: item.json.claim_check_notes,\n      blocked_terms: item.json.blocked_claim_terms\n    },\n    tracker_payloads: {\n      campaign_row: item.json.campaign_row,\n      post_row: item.json.post_row,\n      lead_row: item.json.lead_row,\n      weekly_review_hint: item.json.weekly_review_hint\n    },\n    follow_up_task: item.json.follow_up_task,\n    owner_notification: item.json.owner_notification,\n    activation_note: 'Manual-trigger proof only. No send/post/write nodes are active in this v1 lane.'\n  };\n  return { json: { final_local_review } };\n});"},"id":"b19734f8-f195-45e7-a138-715c12f4e009","name":"Final Local Review Output","type":"n8n-nodes-base.code","typeVersion":2,"position":[860,240]},{"id":"f3a1b719-a153-454d-9874-715c12f4e011","name":"Prepare Tracker Write Payload","type":"n8n-nodes-base.code","typeVersion":2,"position":[1120,240],"parameters":{"jsCode":"return items.map((item) => {\n  const payload = item.json.final_local_review?.tracker_payloads || {};\n  const json = JSON.stringify(payload);\n  const tracker_write_payload_b64 = Buffer.from(json, 'utf8').toString('base64');\n  return { json: { ...item.json, tracker_write_payload_b64 } };\n});"}},{"id":"36a8cb24-900e-40a8-b213-715c12f4e012","name":"Excel Tracker Writer Placeholder","type":"n8n-nodes-base.code","typeVersion":2,"position":[1380,240],"parameters":{"jsCode":"return items.map((item) => ({\n  json: {\n    ...item.json,\n    tracker_write_result: {\n      status: 'Skipped in n8n',\n      reason: 'executeCommand node type is unavailable in this n8n instance',\n      fallback: 'Use automation/write-tracker-payload.py directly, or use the Google Sheets connector lane.'\n    },\n    command_exit_code: 0\n  }\n}));"},"notes":"Local executeCommand is unavailable in this n8n instance. The direct Excel writer script remains available outside n8n; Google Sheets is the active connector test lane."},{"id":"4f49e249-a7f3-404d-b5da-715c12f4e013","name":"Tracker Write Result","type":"n8n-nodes-base.code","typeVersion":2,"position":[1640,240],"parameters":{"jsCode":"return items.map((item) => {\n  if (item.json.tracker_write_result) {\n    return { json: { tracker_write_result: item.json.tracker_write_result, command_exit_code: item.json.command_exit_code ?? 0 } };\n  }\n  let parsed = {};\n  try { parsed = JSON.parse(item.json.stdout || '{}'); } catch (error) { parsed = { parse_error: error.message, stdout: item.json.stdout, stderr: item.json.stderr }; }\n  return { json: { tracker_write_result: parsed, command_exit_code: item.json.exitCode ?? 0 } };\n});"}},{"id":"7b96f6ae-fd0a-43d4-a351-715c12f4e015","name":"Prepare Google Sheets Rows","type":"n8n-nodes-base.code","typeVersion":2,"position":[1120,500],"notes":"Connector prep lane. Converts final_local_review.tracker_payloads into one item per target Google Sheet tab. Safe to run without sending messages.","parameters":{"jsCode":"const payloads = items[0]?.json?.final_local_review?.tracker_payloads || {};\nconst rows = [\n  { sheet_tab: 'Campaigns', match_key_column: 'Campaign ID', match_key: payloads.campaign_row?.['Campaign ID'], row: payloads.campaign_row },\n  { sheet_tab: 'Posts', match_key_column: 'Post ID', match_key: payloads.post_row?.['Post ID'], row: payloads.post_row },\n  { sheet_tab: 'Lead Follow-Up', match_key_column: 'Lead ID', match_key: payloads.lead_row?.['Lead ID'], row: payloads.lead_row },\n  { sheet_tab: 'Weekly Review', match_key_column: 'Campaign ID', match_key: payloads.weekly_review_hint?.['Campaign ID'], row: payloads.weekly_review_hint }\n];\nreturn rows\n  .filter((entry) => entry.row && entry.match_key)\n  .map((entry) => ({\n    json: {\n      google_sheets_status: 'Ready For Credential Mapping',\n      spreadsheet_id: 'DECISION_NEEDED',\n      ...entry,\n      ...entry.row\n    }\n  }));"}},{"id":"d2e13a10-1baf-4e87-b310-715c12f4e016","name":"Google Sheets - Upsert Campaign","type":"n8n-nodes-base.googleSheets","typeVersion":4.7,"position":[1380,420],"disabled":true,"notes":"Disabled until Google credentials and spreadsheet ID are selected. Configure this node to append or update Campaigns rows using Campaign ID as the matching column.","parameters":{"operation":"appendOrUpdate","documentId":{"__rl":true,"value":"PASTE_GOOGLE_SHEET_ID_OR_SELECT_DOCUMENT","mode":"id"},"sheetName":{"__rl":true,"value":"Campaigns","mode":"name"},"columns":{"mappingMode":"autoMapInputData","matchingColumns":["Campaign ID"],"value":{}},"options":{},"authentication":"serviceAccount"}},{"id":"e6f23d7b-083d-431f-8bd1-715c12f4e017","name":"Google Sheets - Upsert Post","type":"n8n-nodes-base.googleSheets","typeVersion":4.7,"position":[1380,540],"disabled":true,"notes":"Disabled until Google credentials and spreadsheet ID are selected. Configure this node to append or update Posts rows using Post ID as the matching column.","parameters":{"operation":"appendOrUpdate","documentId":{"__rl":true,"value":"PASTE_GOOGLE_SHEET_ID_OR_SELECT_DOCUMENT","mode":"id"},"sheetName":{"__rl":true,"value":"Posts","mode":"name"},"columns":{"mappingMode":"autoMapInputData","matchingColumns":["Post ID"],"value":{}},"options":{},"authentication":"serviceAccount"}},{"id":"a27a0645-57c5-4c49-a7a2-715c12f4e018","name":"Google Sheets - Upsert Lead","type":"n8n-nodes-base.googleSheets","typeVersion":4.7,"position":[1380,660],"disabled":true,"notes":"Disabled until Google credentials and spreadsheet ID are selected. Configure this node to append or update Lead Follow-Up rows using Lead ID as the matching column.","parameters":{"operation":"appendOrUpdate","documentId":{"__rl":true,"value":"PASTE_GOOGLE_SHEET_ID_OR_SELECT_DOCUMENT","mode":"id"},"sheetName":{"__rl":true,"value":"Lead Follow-Up","mode":"name"},"columns":{"mappingMode":"autoMapInputData","matchingColumns":["Lead ID"],"value":{}},"options":{},"authentication":"serviceAccount"}},{"id":"df049a3c-97d1-4281-9e42-715c12f4e019","name":"Google Sheets - Upsert Weekly Review","type":"n8n-nodes-base.googleSheets","typeVersion":4.7,"position":[1380,780],"disabled":true,"notes":"Disabled until Google credentials and spreadsheet ID are selected. Configure this node to append or update Weekly Review rows using Campaign ID as the matching column.","parameters":{"operation":"appendOrUpdate","documentId":{"__rl":true,"value":"PASTE_GOOGLE_SHEET_ID_OR_SELECT_DOCUMENT","mode":"id"},"sheetName":{"__rl":true,"value":"Weekly Review","mode":"name"},"columns":{"mappingMode":"autoMapInputData","matchingColumns":["Campaign ID"],"value":{}},"options":{},"authentication":"serviceAccount"}},{"id":"efb17ec8-2d29-4d83-a154-715c12f4e020","name":"Google Sheets Connector Notes","type":"n8n-nodes-base.stickyNote","typeVersion":1,"position":[1080,720],"parameters":{"content":"# Google Sheets Connector Lane\n\nStaged connector branch. Keep the four Google Sheets nodes disabled until credentials are connected and a spreadsheet is selected. Use the same sheet tabs as the Excel tracker: Campaigns, Posts, Lead Follow-Up, Weekly Review. After mapping passes, this lane can replace or run beside the local Excel writer.","height":260,"width":520,"color":4}},{"id":"1e7d6b8c-94c4-4a8d-b27f-715c12f4e023","name":"Filter Campaign Sheet Row","type":"n8n-nodes-base.code","typeVersion":2,"position":[1250,420],"parameters":{"jsCode":"return items.filter((item) => item.json.sheet_tab === 'Campaigns');"}},{"id":"67049310-4980-45d2-8afb-715c12f4e024","name":"Filter Post Sheet Row","type":"n8n-nodes-base.code","typeVersion":2,"position":[1250,540],"parameters":{"jsCode":"return items.filter((item) => item.json.sheet_tab === 'Posts');"}},{"id":"a7b8d003-6b90-4f60-b78f-715c12f4e025","name":"Filter Lead Sheet Row","type":"n8n-nodes-base.code","typeVersion":2,"position":[1250,660],"parameters":{"jsCode":"return items.filter((item) => item.json.sheet_tab === 'Lead Follow-Up');"}},{"id":"fa5a12d5-385b-46c4-a45f-715c12f4e026","name":"Filter Weekly Review Sheet Row","type":"n8n-nodes-base.code","typeVersion":2,"position":[1250,780],"parameters":{"jsCode":"return items.filter((item) => item.json.sheet_tab === 'Weekly Review');"}}],"connections":{"Manual Dogfood Trigger":{"main":[[{"node":"Seed Dogfood Intake","type":"main","index":0}]]},"Seed Dogfood Intake":{"main":[[{"node":"Normalize Payload","type":"main","index":0}]]},"Normalize Payload":{"main":[[{"node":"Claim And Boundary Check","type":"main","index":0}]]},"Claim And Boundary Check":{"main":[[{"node":"Build Tracker Row Payloads","type":"main","index":0}]]},"Build Tracker Row Payloads":{"main":[[{"node":"Build Follow-Up Task","type":"main","index":0}]]},"Build Follow-Up Task":{"main":[[{"node":"Owner Notification Draft","type":"main","index":0}]]},"Owner Notification Draft":{"main":[[{"node":"Final Local Review Output","type":"main","index":0}]]},"Final Local Review Output":{"main":[[{"node":"Prepare Google Sheets Rows","type":"main","index":0}]]},"Prepare Google Sheets Rows":{"main":[[{"node":"Filter Campaign Sheet Row","type":"main","index":0},{"node":"Filter Post Sheet Row","type":"main","index":0},{"node":"Filter Lead Sheet Row","type":"main","index":0},{"node":"Filter Weekly Review Sheet Row","type":"main","index":0}]]},"Filter Campaign Sheet Row":{"main":[[{"node":"Google Sheets - Upsert Campaign","type":"main","index":0}]]},"Filter Post Sheet Row":{"main":[[{"node":"Google Sheets - Upsert Post","type":"main","index":0}]]},"Filter Lead Sheet Row":{"main":[[{"node":"Google Sheets - Upsert Lead","type":"main","index":0}]]},"Filter Weekly Review Sheet Row":{"main":[[{"node":"Google Sheets - Upsert Weekly Review","type":"main","index":0}]]}},"settings":{"executionOrder":"v1"},"staticData":null,"meta":{"templateCredsSetupCompleted":true},"nodeGroups":[],"pinData":{},"versionId":"1f50b144-7649-4414-9c95-5ab3c64c8302","activeVersionId":null,"versionCounter":1,"triggerCount":0,"sourceWorkflowId":null,"tags":[],"shared":[{"updatedAt":"2026-08-02T20:27:21.216Z","createdAt":"2026-08-02T20:27:21.216Z","role":"workflow:owner","workflowId":"linkedin-authority-system-v1-local-proof","projectId":"tYNV5PwfsF82f0eK","project":{"updatedAt":"2026-08-02T20:16:18.146Z","createdAt":"2026-08-02T20:13:35.480Z","id":"tYNV5PwfsF82f0eK","name":"Robert thebossrob@gmail.com <thebossrob@gmail.com>","type":"personal","icon":null,"description":null,"customTelemetryTags":[],"creatorId":"8b8afd06-1234-4114-a49f-35df19c409b4"}}],"versionMetadata":{"name":null,"description":null}},{"updatedAt":"2026-08-17T23:14:00.612Z","createdAt":"2026-08-17T21:50:18.274Z","id":"EG0XMr8W70ioenUx","name":"SDR-Agent: Google Sheets to HubSpot Pipeline Sync","description":null,"active":false,"isArchived":false,"nodes":[{"parameters":{"rule":{"interval":[{"field":"hours"}]}},"id":"14dad3ce-c97e-4cd4-a4e3-56b4a6bf5598","name":"Every 1 Hour Trigger","type":"n8n-nodes-base.scheduleTrigger","typeVersion":1.1,"position":[-896,32]},{"parameters":{"documentId":{"__rl":true,"mode":"list","value":""},"sheetName":{"__rl":true,"mode":"list","value":""}},"id":"46d25de2-883f-43b2-a7ba-fd2ac51a0993","name":"Read CRM-Lite Sheet","type":"n8n-nodes-base.googleSheets","typeVersion":4,"position":[-688,32],"credentials":{"googleSheetsOAuth2Api":{"id":"cTmgR7G7jETYu8Sk","name":"Google Sheets account 3"}}},{"parameters":{"conditions":{"options":{"caseSensitive":true,"leftValue":"","typeValidation":"strict","version":1,"leftValueString":""},"conditions":[{"id":"check-sync","leftValue":"={{ $json.HubSpotSync }}","rightValue":"SUCCESS","operator":"notEquals"}],"combinATOR":"and","combinator":"and"},"options":{}},"id":"28f82ae9-269d-45ac-ba94-bc848467b7b4","name":"Filter Unsynced Leads","type":"n8n-nodes-base.if","typeVersion":2,"position":[-496,32]},{"parameters":{"operation":"get","contactId":"={{ $json.Email }}","additionalFields":{}},"id":"3e14dac3-9959-4eed-93fb-b010bf961c92","name":"HubSpot: Check If Contact Exists","type":"n8n-nodes-base.hubspot","typeVersion":2,"position":[-272,32],"continueOnFail":true},{"parameters":{"conditions":{"options":{"caseSensitive":true,"leftValue":"","typeValidation":"strict","version":1,"leftValueString":""},"conditions":[{"id":"check-exist","leftValue":"={{ $json.id }}","operator":"isEmpty"}],"combinATOR":"and","combinator":"and"},"options":{}},"id":"0656c830-52e2-43ed-a496-7c3419eabd84","name":"Does Contact Exist?","type":"n8n-nodes-base.if","typeVersion":2,"position":[-48,32]},{"parameters":{"operation":"create"},"id":"5bbaac27-b728-4a6e-8303-6574fb0bf3c5","name":"HubSpot: Create Contact","type":"n8n-nodes-base.hubspot","typeVersion":2,"position":[192,-80]},{"parameters":{"resource":"deal","additionalFields":{}},"id":"ddda979d-2435-4171-a733-59e41b604865","name":"HubSpot: Create Deal","type":"n8n-nodes-base.hubspot","typeVersion":2,"position":[432,32]},{"parameters":{"resource":"deal","operation":"associate"},"id":"d0ccfd99-b93d-46d8-81bc-51e1acc4e3db","name":"HubSpot: Associate Deal to Contact","type":"n8n-nodes-base.hubspot","typeVersion":2,"position":[672,32]},{"parameters":{"operation":"update","documentId":{"__rl":true,"mode":"list","value":""},"sheetName":{"__rl":true,"mode":"list","value":""}},"id":"40e2889f-a837-4d43-809b-5ac21bbc64ac","name":"Google Sheets: Mark Synced","type":"n8n-nodes-base.googleSheets","typeVersion":4,"position":[912,32],"credentials":{"googleSheetsOAuth2Api":{"id":"O3QOu3iDJozmKLdD","name":"Google Sheets account"}}}],"connections":{"Every 1 Hour Trigger":{"main":[[{"node":"Read CRM-Lite Sheet","type":"main","index":0}]]},"Read CRM-Lite Sheet":{"main":[[{"node":"Filter Unsynced Leads","type":"main","index":0}]]},"Filter Unsynced Leads":{"main":[[{"node":"HubSpot: Check If Contact Exists","type":"main","index":0}]]},"HubSpot: Check If Contact Exists":{"main":[[{"node":"Does Contact Exist?","type":"main","index":0}]]},"Does Contact Exist?":{"main":[[],[{"node":"HubSpot: Create Contact","type":"main","index":0}]]},"HubSpot: Create Contact":{"main":[[{"node":"HubSpot: Create Deal","type":"main","index":0}]]},"HubSpot: Create Deal":{"main":[[{"node":"HubSpot: Associate Deal to Contact","type":"main","index":0}]]},"HubSpot: Associate Deal to Contact":{"main":[[{"node":"Google Sheets: Mark Synced","type":"main","index":0}]]}},"settings":{"executionOrder":"v1","binaryMode":"separate","availableInMCP":false},"staticData":null,"meta":null,"nodeGroups":[],"pinData":{},"versionId":"99907ba6-73ce-4066-a1f3-1a709399feb2","activeVersionId":null,"versionCounter":5,"triggerCount":0,"sourceWorkflowId":null,"tags":[],"shared":[{"updatedAt":"2026-08-17T21:50:18.295Z","createdAt":"2026-08-17T21:50:18.295Z","role":"workflow:owner","workflowId":"EG0XMr8W70ioenUx","projectId":"tYNV5PwfsF82f0eK","project":{"updatedAt":"2026-08-02T20:16:18.146Z","createdAt":"2026-08-02T20:13:35.480Z","id":"tYNV5PwfsF82f0eK","name":"Robert thebossrob@gmail.com <thebossrob@gmail.com>","type":"personal","icon":null,"description":null,"customTelemetryTags":[],"creatorId":"8b8afd06-1234-4114-a49f-35df19c409b4"}}],"versionMetadata":{"name":null,"description":null}}]
+[
+  {
+    "updatedAt": "2026-08-02T20:27:21.210Z",
+    "createdAt": "2026-08-02T20:27:21.210Z",
+    "id": "linkedin-authority-system-v1-local-proof",
+    "name": "LinkedIn Authority System - Intake to Follow-Up Tracker",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {},
+        "id": "1f7d2435-2e4e-49c0-98d8-715c12f4e001",
+        "name": "Manual Dogfood Trigger",
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [-960, 240]
+      },
+      {
+        "parameters": {
+          "content": "# LinkedIn Authority System - Intake to Follow-Up Tracker\n\nManual-trigger v1 proof lane. This workflow does not post to LinkedIn, scrape LinkedIn, auto-send DMs, or send email. It normalizes one test signal, checks claim boundaries, builds tracker row payloads, prepares a follow-up task, and returns a final local review packet.",
+          "height": 300,
+          "width": 520,
+          "color": 5
+        },
+        "id": "42f497df-b7f9-4fc3-9af4-715c12f4e002",
+        "name": "Workflow Notes",
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [-1020, -160]
+      },
+      {
+        "parameters": {
+          "mode": "raw",
+          "jsonOutput": "{\n  \"test_case\": \"lead_signal\",\n  \"campaign_id\": \"LAS-2026-001\",\n  \"campaign_name\": \"Agent Lab authority loop\",\n  \"campaign_status\": \"Active\",\n  \"owner\": \"Robert\",\n  \"start_date\": \"2026-05-23\",\n  \"target_buyer\": \"Founders and service operators\",\n  \"core_problem\": \"LinkedIn activity is not turning into business conversations\",\n  \"cta_label\": \"Request the LinkedIn Authority Setup\",\n  \"cta_url\": \"https://agent-lab.tech/contact\",\n  \"post_id\": \"POST-001\",\n  \"post_status\": \"Planned\",\n  \"post_date\": \"\",\n  \"post_url\": \"\",\n  \"content_type\": \"Authority Post\",\n  \"working_title\": \"Content should create business conversations, not just activity\",\n  \"comments_worth_replying\": 1,\n  \"connection_requests_sent\": 0,\n  \"replies\": 1,\n  \"calls_booked\": 0,\n  \"post_hours_spent\": 0.5,\n  \"lead_id\": \"LEAD-001\",\n  \"contact_name\": \"Sample Founder\",\n  \"company\": \"Sample Company\",\n  \"lead_source\": \"LinkedIn Comment\",\n  \"signal\": \"Asked how to connect LinkedIn content to follow-up\",\n  \"stage\": \"New\",\n  \"first_contact_date\": \"2026-05-23\",\n  \"estimated_opportunity_value\": 0,\n  \"next_follow_up_date\": \"2026-05-27\",\n  \"next_action\": \"Reply with beta setup question\",\n  \"lead_hours_spent\": 0.25,\n  \"sender_name\": \"Robert\",\n  \"business_name\": \"Uncle Robert Consulting\",\n  \"unsafe_claim_text\": \"\"\n}",
+          "options": {}
+        },
+        "id": "ad8f9630-1696-4d5a-8fd6-715c12f4e003",
+        "name": "Seed Dogfood Intake",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [-700, 240]
+      },
+      {
+        "parameters": {
+          "jsCode": "const campaignStatuses = ['Planned','Active','Paused','Complete','Archived'];\nconst postStatuses = ['Idea','Draft','Review','Scheduled','Published','Archived','Planned'];\nconst leadStages = ['New','Engaged','Replied','Booked','Qualified','Proposal','Won','Lost','Nurture','Opted Out'];\n\nfunction clean(value, fallback = '') {\n  if (value === undefined || value === null || value === '') return fallback;\n  return value;\n}\nfunction num(value) {\n  const n = Number(value);\n  return Number.isFinite(n) ? n : 0;\n}\n\nreturn items.map((item) => {\n  const j = item.json;\n  const warnings = [];\n  const normalized = {\n    test_case: clean(j.test_case, 'lead_signal'),\n    campaign_id: clean(j.campaign_id, 'LAS-2026-001'),\n    campaign_name: clean(j.campaign_name, 'LinkedIn Authority dogfood campaign'),\n    campaign_status: clean(j.campaign_status, 'Active'),\n    owner: clean(j.owner, 'Robert'),\n    start_date: clean(j.start_date, '2026-05-23'),\n    target_buyer: clean(j.target_buyer, 'Founders and service operators'),\n    core_problem: clean(j.core_problem, 'LinkedIn activity is not turning into business conversations'),\n    cta_label: clean(j.cta_label, 'Request the LinkedIn Authority Setup'),\n    cta_url: clean(j.cta_url, 'DECISION_NEEDED'),\n    post_id: clean(j.post_id, 'POST-001'),\n    post_status: clean(j.post_status, 'Planned'),\n    post_date: clean(j.post_date, ''),\n    post_url: clean(j.post_url, ''),\n    content_type: clean(j.content_type, 'Authority Post'),\n    working_title: clean(j.working_title, 'Content should create business conversations, not just activity'),\n    comments_worth_replying: num(j.comments_worth_replying),\n    connection_requests_sent: num(j.connection_requests_sent),\n    replies: num(j.replies),\n    calls_booked: num(j.calls_booked),\n    post_hours_spent: num(j.post_hours_spent ?? j.hours_spent),\n    lead_id: clean(j.lead_id, ''),\n    contact_name: clean(j.contact_name, ''),\n    company: clean(j.company, ''),\n    lead_source: clean(j.lead_source, 'LinkedIn Comment'),\n    signal: clean(j.signal, ''),\n    stage: clean(j.stage, 'New'),\n    first_contact_date: clean(j.first_contact_date, ''),\n    estimated_opportunity_value: num(j.estimated_opportunity_value),\n    next_follow_up_date: clean(j.next_follow_up_date, ''),\n    next_action: clean(j.next_action, ''),\n    lead_hours_spent: num(j.lead_hours_spent),\n    sender_name: clean(j.sender_name, 'Robert'),\n    business_name: clean(j.business_name, 'Uncle Robert Consulting'),\n    unsafe_claim_text: clean(j.unsafe_claim_text, '')\n  };\n\n  if (!campaignStatuses.includes(normalized.campaign_status)) {\n    warnings.push(`Unknown campaign status: ${normalized.campaign_status}`);\n    normalized.campaign_status = 'Planned';\n  }\n  if (!postStatuses.includes(normalized.post_status)) {\n    warnings.push(`Unknown post status: ${normalized.post_status}`);\n    normalized.post_status = 'Review';\n  }\n  if (!leadStages.includes(normalized.stage)) {\n    warnings.push(`Unknown lead stage: ${normalized.stage}`);\n    normalized.stage = 'New';\n  }\n  if (normalized.cta_url === 'DECISION_NEEDED') warnings.push('CTA URL still needs a destination decision.');\n  if (normalized.lead_id && !normalized.next_follow_up_date) warnings.push('Lead exists but next follow-up date is missing.');\n\n  return { json: { ...j, normalized, normalization_warnings: warnings } };\n});"
+        },
+        "id": "dcb4a283-a8dd-4d50-9286-715c12f4e004",
+        "name": "Normalize Payload",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [-440, 240]
+      },
+      {
+        "parameters": {
+          "jsCode": "const unsafeTerms = [\n  'guaranteed',\n  'proven',\n  'instant roi',\n  'immediate roi',\n  'algorithm rewards',\n  'predictable clients',\n  'predictable source of clients',\n  'revenue in 48 hours',\n  'leads in 48 hours',\n  'generate measurable leads in under 48 hours'\n];\n\nreturn items.map((item) => {\n  const n = item.json.normalized || item.json;\n  const text = Object.values(n).filter(v => typeof v === 'string').join(' ').toLowerCase();\n  const extra = String(n.unsafe_claim_text || '').toLowerCase();\n  const found = unsafeTerms.filter(term => text.includes(term) || extra.includes(term));\n  const claim_check_status = found.length ? 'Needs Review - claim language found' : 'Pass - no guarantee claims in generated fields';\n  const claim_check_notes = found.length ? `Review these terms before public use: ${found.join(', ')}` : 'No blocked claim terms found in this test payload.';\n  const workflow_run_status = found.length ? 'Ready For Review' : (n.cta_url === 'DECISION_NEEDED' ? 'Ready For Review' : 'Passed');\n  return { json: { ...item.json, claim_check_status, claim_check_notes, blocked_claim_terms: found, workflow_run_status } };\n});"
+        },
+        "id": "2fb84ff3-4255-43fb-b94f-715c12f4e005",
+        "name": "Claim And Boundary Check",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [-180, 240]
+      },
+      {
+        "parameters": {
+          "jsCode": "return items.map((item) => {\n  const n = item.json.normalized;\n  const campaign_row = {\n    'Campaign ID': n.campaign_id,\n    'Status': n.campaign_status,\n    'Campaign Name': n.campaign_name,\n    'Owner': n.owner,\n    'Start Date': n.start_date,\n    'End Date': '',\n    'Target Buyer': n.target_buyer,\n    'Core Problem': n.core_problem,\n    'CTA': n.cta_label,\n    'CTA Link': n.cta_url,\n    'Goal': 'Dogfood the tracker and first n8n lane',\n    'Notes': item.json.normalization_warnings.join(' | ')\n  };\n  const post_row = {\n    'Post ID': n.post_id,\n    'Campaign ID': n.campaign_id,\n    'Status': n.post_status,\n    'Post Date': n.post_date,\n    'Post URL': n.post_url,\n    'Content Type': n.content_type,\n    'Working Title': n.working_title,\n    'Target Buyer': n.target_buyer,\n    'CTA': n.cta_label,\n    'CTA Link': n.cta_url,\n    'Comments Worth Replying': n.comments_worth_replying,\n    'Connection Requests Sent': n.connection_requests_sent,\n    'Replies': n.replies,\n    'Calls Booked': n.calls_booked,\n    'Hours Spent': n.post_hours_spent\n  };\n  const lead_row = n.lead_id ? {\n    'Lead ID': n.lead_id,\n    'Contact Name': n.contact_name,\n    'Company': n.company,\n    'Source Post ID': n.post_id,\n    'Source Post URL': n.post_url,\n    'Lead Source': n.lead_source,\n    'Signal': n.signal,\n    'Stage': n.stage,\n    'Owner': n.owner,\n    'First Contact Date': n.first_contact_date,\n    'Estimated Opportunity Value': n.estimated_opportunity_value,\n    'Next Follow-Up Date': n.next_follow_up_date,\n    'Next Action': n.next_action,\n    'Hours Spent': n.lead_hours_spent\n  } : { status: 'No lead signal yet' };\n  const weekly_review_hint = {\n    'Week Start': '2026-05-25',\n    'Campaign ID': n.campaign_id,\n    'What Worked': 'Pending dogfood cycle',\n    'What To Improve': 'Resolve CTA URL and write path after local proof',\n    'Next Week Focus': 'Run first live internal LinkedIn Authority loop'\n  };\n  return { json: { ...item.json, campaign_row, post_row, lead_row, weekly_review_hint } };\n});"
+        },
+        "id": "9ab33aba-d682-42bd-aac8-715c12f4e006",
+        "name": "Build Tracker Row Payloads",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [80, 240]
+      },
+      {
+        "parameters": {
+          "jsCode": "return items.map((item) => {\n  const n = item.json.normalized;\n  const suggested_reply = 'Thanks for engaging with that post. I am testing a simple LinkedIn authority loop for founders who want content to create real business conversations, not just activity. Are you trying to use LinkedIn for leads right now, or more for credibility?';\n  const follow_up_task = {\n    task_title: `Follow up on ${n.lead_id || n.post_id} - ${n.campaign_name}`,\n    task_owner: n.owner,\n    task_due_date: n.next_follow_up_date || 'DECISION_NEEDED',\n    task_context: n.signal || `Review LinkedIn signal for ${n.post_id}`,\n    suggested_reply,\n    source_post_id: n.post_id,\n    lead_id: n.lead_id || '',\n    manual_fallback: 'Add the record manually to the ROI tracker workbook and set the next follow-up date.'\n  };\n  return { json: { ...item.json, follow_up_task } };\n});"
+        },
+        "id": "c44f6cf8-71ad-477b-a5cc-715c12f4e007",
+        "name": "Build Follow-Up Task",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [340, 240]
+      },
+      {
+        "parameters": {
+          "jsCode": "return items.map((item) => {\n  const n = item.json.normalized;\n  const owner_notification = [\n    'LinkedIn Authority follow-up needed',\n    '',\n    `Campaign: ${n.campaign_name}`,\n    `Lead: ${n.contact_name || 'No contact name yet'} / ${n.company || 'No company yet'}`,\n    `Signal: ${n.signal || 'No signal text captured'}`,\n    `Next action: ${n.next_action || 'DECISION_NEEDED'}`,\n    `Due: ${n.next_follow_up_date || 'DECISION_NEEDED'}`,\n    `Source post: ${n.post_id}`,\n    `CTA URL: ${n.cta_url}`,\n    `Claim check: ${item.json.claim_check_status}`\n  ].join('\\n');\n  return { json: { ...item.json, owner_notification } };\n});"
+        },
+        "id": "24c8cc56-5a01-4779-af1c-715c12f4e008",
+        "name": "Owner Notification Draft",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [600, 240]
+      },
+      {
+        "parameters": {
+          "jsCode": "return items.map((item) => {\n  const final_local_review = {\n    workflow_name: 'LinkedIn Authority System - Intake to Follow-Up Tracker',\n    workflow_run_status: item.json.workflow_run_status,\n    normalized_intake: item.json.normalized,\n    normalization_warnings: item.json.normalization_warnings,\n    claim_check: {\n      status: item.json.claim_check_status,\n      notes: item.json.claim_check_notes,\n      blocked_terms: item.json.blocked_claim_terms\n    },\n    tracker_payloads: {\n      campaign_row: item.json.campaign_row,\n      post_row: item.json.post_row,\n      lead_row: item.json.lead_row,\n      weekly_review_hint: item.json.weekly_review_hint\n    },\n    follow_up_task: item.json.follow_up_task,\n    owner_notification: item.json.owner_notification,\n    activation_note: 'Manual-trigger proof only. No send/post/write nodes are active in this v1 lane.'\n  };\n  return { json: { final_local_review } };\n});"
+        },
+        "id": "b19734f8-f195-45e7-a138-715c12f4e009",
+        "name": "Final Local Review Output",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [860, 240]
+      },
+      {
+        "id": "f3a1b719-a153-454d-9874-715c12f4e011",
+        "name": "Prepare Tracker Write Payload",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [1120, 240],
+        "parameters": {
+          "jsCode": "return items.map((item) => {\n  const payload = item.json.final_local_review?.tracker_payloads || {};\n  const json = JSON.stringify(payload);\n  const tracker_write_payload_b64 = Buffer.from(json, 'utf8').toString('base64');\n  return { json: { ...item.json, tracker_write_payload_b64 } };\n});"
+        }
+      },
+      {
+        "id": "36a8cb24-900e-40a8-b213-715c12f4e012",
+        "name": "Excel Tracker Writer Placeholder",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [1380, 240],
+        "parameters": {
+          "jsCode": "return items.map((item) => ({\n  json: {\n    ...item.json,\n    tracker_write_result: {\n      status: 'Skipped in n8n',\n      reason: 'executeCommand node type is unavailable in this n8n instance',\n      fallback: 'Use automation/write-tracker-payload.py directly, or use the Google Sheets connector lane.'\n    },\n    command_exit_code: 0\n  }\n}));"
+        },
+        "notes": "Local executeCommand is unavailable in this n8n instance. The direct Excel writer script remains available outside n8n; Google Sheets is the active connector test lane."
+      },
+      {
+        "id": "4f49e249-a7f3-404d-b5da-715c12f4e013",
+        "name": "Tracker Write Result",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [1640, 240],
+        "parameters": {
+          "jsCode": "return items.map((item) => {\n  if (item.json.tracker_write_result) {\n    return { json: { tracker_write_result: item.json.tracker_write_result, command_exit_code: item.json.command_exit_code ?? 0 } };\n  }\n  let parsed = {};\n  try { parsed = JSON.parse(item.json.stdout || '{}'); } catch (error) { parsed = { parse_error: error.message, stdout: item.json.stdout, stderr: item.json.stderr }; }\n  return { json: { tracker_write_result: parsed, command_exit_code: item.json.exitCode ?? 0 } };\n});"
+        }
+      },
+      {
+        "id": "7b96f6ae-fd0a-43d4-a351-715c12f4e015",
+        "name": "Prepare Google Sheets Rows",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [1120, 500],
+        "notes": "Connector prep lane. Converts final_local_review.tracker_payloads into one item per target Google Sheet tab. Safe to run without sending messages.",
+        "parameters": {
+          "jsCode": "const payloads = items[0]?.json?.final_local_review?.tracker_payloads || {};\nconst rows = [\n  { sheet_tab: 'Campaigns', match_key_column: 'Campaign ID', match_key: payloads.campaign_row?.['Campaign ID'], row: payloads.campaign_row },\n  { sheet_tab: 'Posts', match_key_column: 'Post ID', match_key: payloads.post_row?.['Post ID'], row: payloads.post_row },\n  { sheet_tab: 'Lead Follow-Up', match_key_column: 'Lead ID', match_key: payloads.lead_row?.['Lead ID'], row: payloads.lead_row },\n  { sheet_tab: 'Weekly Review', match_key_column: 'Campaign ID', match_key: payloads.weekly_review_hint?.['Campaign ID'], row: payloads.weekly_review_hint }\n];\nreturn rows\n  .filter((entry) => entry.row && entry.match_key)\n  .map((entry) => ({\n    json: {\n      google_sheets_status: 'Ready For Credential Mapping',\n      spreadsheet_id: 'DECISION_NEEDED',\n      ...entry,\n      ...entry.row\n    }\n  }));"
+        }
+      },
+      {
+        "id": "d2e13a10-1baf-4e87-b310-715c12f4e016",
+        "name": "Google Sheets - Upsert Campaign",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [1380, 420],
+        "disabled": true,
+        "notes": "Disabled until Google credentials and spreadsheet ID are selected. Configure this node to append or update Campaigns rows using Campaign ID as the matching column.",
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "PASTE_GOOGLE_SHEET_ID_OR_SELECT_DOCUMENT",
+            "mode": "id"
+          },
+          "sheetName": { "__rl": true, "value": "Campaigns", "mode": "name" },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "matchingColumns": ["Campaign ID"],
+            "value": {}
+          },
+          "options": {},
+          "authentication": "serviceAccount"
+        }
+      },
+      {
+        "id": "e6f23d7b-083d-431f-8bd1-715c12f4e017",
+        "name": "Google Sheets - Upsert Post",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [1380, 540],
+        "disabled": true,
+        "notes": "Disabled until Google credentials and spreadsheet ID are selected. Configure this node to append or update Posts rows using Post ID as the matching column.",
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "PASTE_GOOGLE_SHEET_ID_OR_SELECT_DOCUMENT",
+            "mode": "id"
+          },
+          "sheetName": { "__rl": true, "value": "Posts", "mode": "name" },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "matchingColumns": ["Post ID"],
+            "value": {}
+          },
+          "options": {},
+          "authentication": "serviceAccount"
+        }
+      },
+      {
+        "id": "a27a0645-57c5-4c49-a7a2-715c12f4e018",
+        "name": "Google Sheets - Upsert Lead",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [1380, 660],
+        "disabled": true,
+        "notes": "Disabled until Google credentials and spreadsheet ID are selected. Configure this node to append or update Lead Follow-Up rows using Lead ID as the matching column.",
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "PASTE_GOOGLE_SHEET_ID_OR_SELECT_DOCUMENT",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "Lead Follow-Up",
+            "mode": "name"
+          },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "matchingColumns": ["Lead ID"],
+            "value": {}
+          },
+          "options": {},
+          "authentication": "serviceAccount"
+        }
+      },
+      {
+        "id": "df049a3c-97d1-4281-9e42-715c12f4e019",
+        "name": "Google Sheets - Upsert Weekly Review",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [1380, 780],
+        "disabled": true,
+        "notes": "Disabled until Google credentials and spreadsheet ID are selected. Configure this node to append or update Weekly Review rows using Campaign ID as the matching column.",
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "PASTE_GOOGLE_SHEET_ID_OR_SELECT_DOCUMENT",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "Weekly Review",
+            "mode": "name"
+          },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "matchingColumns": ["Campaign ID"],
+            "value": {}
+          },
+          "options": {},
+          "authentication": "serviceAccount"
+        }
+      },
+      {
+        "id": "efb17ec8-2d29-4d83-a154-715c12f4e020",
+        "name": "Google Sheets Connector Notes",
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [1080, 720],
+        "parameters": {
+          "content": "# Google Sheets Connector Lane\n\nStaged connector branch. Keep the four Google Sheets nodes disabled until credentials are connected and a spreadsheet is selected. Use the same sheet tabs as the Excel tracker: Campaigns, Posts, Lead Follow-Up, Weekly Review. After mapping passes, this lane can replace or run beside the local Excel writer.",
+          "height": 260,
+          "width": 520,
+          "color": 4
+        }
+      },
+      {
+        "id": "1e7d6b8c-94c4-4a8d-b27f-715c12f4e023",
+        "name": "Filter Campaign Sheet Row",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [1250, 420],
+        "parameters": {
+          "jsCode": "return items.filter((item) => item.json.sheet_tab === 'Campaigns');"
+        }
+      },
+      {
+        "id": "67049310-4980-45d2-8afb-715c12f4e024",
+        "name": "Filter Post Sheet Row",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [1250, 540],
+        "parameters": {
+          "jsCode": "return items.filter((item) => item.json.sheet_tab === 'Posts');"
+        }
+      },
+      {
+        "id": "a7b8d003-6b90-4f60-b78f-715c12f4e025",
+        "name": "Filter Lead Sheet Row",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [1250, 660],
+        "parameters": {
+          "jsCode": "return items.filter((item) => item.json.sheet_tab === 'Lead Follow-Up');"
+        }
+      },
+      {
+        "id": "fa5a12d5-385b-46c4-a45f-715c12f4e026",
+        "name": "Filter Weekly Review Sheet Row",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [1250, 780],
+        "parameters": {
+          "jsCode": "return items.filter((item) => item.json.sheet_tab === 'Weekly Review');"
+        }
+      }
+    ],
+    "connections": {
+      "Manual Dogfood Trigger": {
+        "main": [
+          [{ "node": "Seed Dogfood Intake", "type": "main", "index": 0 }]
+        ]
+      },
+      "Seed Dogfood Intake": {
+        "main": [[{ "node": "Normalize Payload", "type": "main", "index": 0 }]]
+      },
+      "Normalize Payload": {
+        "main": [
+          [{ "node": "Claim And Boundary Check", "type": "main", "index": 0 }]
+        ]
+      },
+      "Claim And Boundary Check": {
+        "main": [
+          [{ "node": "Build Tracker Row Payloads", "type": "main", "index": 0 }]
+        ]
+      },
+      "Build Tracker Row Payloads": {
+        "main": [
+          [{ "node": "Build Follow-Up Task", "type": "main", "index": 0 }]
+        ]
+      },
+      "Build Follow-Up Task": {
+        "main": [
+          [{ "node": "Owner Notification Draft", "type": "main", "index": 0 }]
+        ]
+      },
+      "Owner Notification Draft": {
+        "main": [
+          [{ "node": "Final Local Review Output", "type": "main", "index": 0 }]
+        ]
+      },
+      "Final Local Review Output": {
+        "main": [
+          [{ "node": "Prepare Google Sheets Rows", "type": "main", "index": 0 }]
+        ]
+      },
+      "Prepare Google Sheets Rows": {
+        "main": [
+          [
+            { "node": "Filter Campaign Sheet Row", "type": "main", "index": 0 },
+            { "node": "Filter Post Sheet Row", "type": "main", "index": 0 },
+            { "node": "Filter Lead Sheet Row", "type": "main", "index": 0 },
+            {
+              "node": "Filter Weekly Review Sheet Row",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Filter Campaign Sheet Row": {
+        "main": [
+          [
+            {
+              "node": "Google Sheets - Upsert Campaign",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Filter Post Sheet Row": {
+        "main": [
+          [
+            {
+              "node": "Google Sheets - Upsert Post",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Filter Lead Sheet Row": {
+        "main": [
+          [
+            {
+              "node": "Google Sheets - Upsert Lead",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Filter Weekly Review Sheet Row": {
+        "main": [
+          [
+            {
+              "node": "Google Sheets - Upsert Weekly Review",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": { "executionOrder": "v1" },
+    "staticData": null,
+    "meta": { "templateCredsSetupCompleted": true },
+    "nodeGroups": [],
+    "pinData": {},
+    "versionId": "1f50b144-7649-4414-9c95-5ab3c64c8302",
+    "activeVersionId": null,
+    "versionCounter": 1,
+    "triggerCount": 0,
+    "sourceWorkflowId": null,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-08-02T20:27:21.216Z",
+        "createdAt": "2026-08-02T20:27:21.216Z",
+        "role": "workflow:owner",
+        "workflowId": "linkedin-authority-system-v1-local-proof",
+        "projectId": "tYNV5PwfsF82f0eK",
+        "project": {
+          "updatedAt": "2026-08-02T20:16:18.146Z",
+          "createdAt": "2026-08-02T20:13:35.480Z",
+          "id": "tYNV5PwfsF82f0eK",
+          "name": "Robert thebossrob@gmail.com <thebossrob@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "customTelemetryTags": [],
+          "creatorId": "8b8afd06-1234-4114-a49f-35df19c409b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  },
+  {
+    "updatedAt": "2026-08-17T23:14:00.612Z",
+    "createdAt": "2026-08-17T21:50:18.274Z",
+    "id": "EG0XMr8W70ioenUx",
+    "name": "SDR-Agent: Google Sheets to HubSpot Pipeline Sync",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": { "rule": { "interval": [{ "field": "hours" }] } },
+        "id": "14dad3ce-c97e-4cd4-a4e3-56b4a6bf5598",
+        "name": "Every 1 Hour Trigger",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.1,
+        "position": [-896, 32]
+      },
+      {
+        "parameters": {
+          "documentId": { "__rl": true, "mode": "list", "value": "" },
+          "sheetName": { "__rl": true, "mode": "list", "value": "" }
+        },
+        "id": "46d25de2-883f-43b2-a7ba-fd2ac51a0993",
+        "name": "Read CRM-Lite Sheet",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4,
+        "position": [-688, 32],
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "cTmgR7G7jETYu8Sk",
+            "name": "Google Sheets account 3"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1,
+              "leftValueString": ""
+            },
+            "conditions": [
+              {
+                "id": "check-sync",
+                "leftValue": "={{ $json.HubSpotSync }}",
+                "rightValue": "SUCCESS",
+                "operator": "notEquals"
+              }
+            ],
+            "combinATOR": "and",
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "id": "28f82ae9-269d-45ac-ba94-bc848467b7b4",
+        "name": "Filter Unsynced Leads",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [-496, 32]
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "contactId": "={{ $json.Email }}",
+          "additionalFields": {}
+        },
+        "id": "3e14dac3-9959-4eed-93fb-b010bf961c92",
+        "name": "HubSpot: Check If Contact Exists",
+        "type": "n8n-nodes-base.hubspot",
+        "typeVersion": 2,
+        "position": [-272, 32],
+        "continueOnFail": true
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1,
+              "leftValueString": ""
+            },
+            "conditions": [
+              {
+                "id": "check-exist",
+                "leftValue": "={{ $json.id }}",
+                "operator": "isEmpty"
+              }
+            ],
+            "combinATOR": "and",
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "id": "0656c830-52e2-43ed-a496-7c3419eabd84",
+        "name": "Does Contact Exist?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [-48, 32]
+      },
+      {
+        "parameters": { "operation": "create" },
+        "id": "5bbaac27-b728-4a6e-8303-6574fb0bf3c5",
+        "name": "HubSpot: Create Contact",
+        "type": "n8n-nodes-base.hubspot",
+        "typeVersion": 2,
+        "position": [192, -80]
+      },
+      {
+        "parameters": { "resource": "deal", "additionalFields": {} },
+        "id": "ddda979d-2435-4171-a733-59e41b604865",
+        "name": "HubSpot: Create Deal",
+        "type": "n8n-nodes-base.hubspot",
+        "typeVersion": 2,
+        "position": [432, 32]
+      },
+      {
+        "parameters": { "resource": "deal", "operation": "associate" },
+        "id": "d0ccfd99-b93d-46d8-81bc-51e1acc4e3db",
+        "name": "HubSpot: Associate Deal to Contact",
+        "type": "n8n-nodes-base.hubspot",
+        "typeVersion": 2,
+        "position": [672, 32]
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "documentId": { "__rl": true, "mode": "list", "value": "" },
+          "sheetName": { "__rl": true, "mode": "list", "value": "" }
+        },
+        "id": "40e2889f-a837-4d43-809b-5ac21bbc64ac",
+        "name": "Google Sheets: Mark Synced",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4,
+        "position": [912, 32],
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "O3QOu3iDJozmKLdD",
+            "name": "Google Sheets account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Every 1 Hour Trigger": {
+        "main": [
+          [{ "node": "Read CRM-Lite Sheet", "type": "main", "index": 0 }]
+        ]
+      },
+      "Read CRM-Lite Sheet": {
+        "main": [
+          [{ "node": "Filter Unsynced Leads", "type": "main", "index": 0 }]
+        ]
+      },
+      "Filter Unsynced Leads": {
+        "main": [
+          [
+            {
+              "node": "HubSpot: Check If Contact Exists",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HubSpot: Check If Contact Exists": {
+        "main": [
+          [{ "node": "Does Contact Exist?", "type": "main", "index": 0 }]
+        ]
+      },
+      "Does Contact Exist?": {
+        "main": [
+          [],
+          [{ "node": "HubSpot: Create Contact", "type": "main", "index": 0 }]
+        ]
+      },
+      "HubSpot: Create Contact": {
+        "main": [
+          [{ "node": "HubSpot: Create Deal", "type": "main", "index": 0 }]
+        ]
+      },
+      "HubSpot: Create Deal": {
+        "main": [
+          [
+            {
+              "node": "HubSpot: Associate Deal to Contact",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HubSpot: Associate Deal to Contact": {
+        "main": [
+          [{ "node": "Google Sheets: Mark Synced", "type": "main", "index": 0 }]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "binaryMode": "separate",
+      "availableInMCP": false
+    },
+    "staticData": null,
+    "meta": null,
+    "nodeGroups": [],
+    "pinData": {},
+    "versionId": "99907ba6-73ce-4066-a1f3-1a709399feb2",
+    "activeVersionId": null,
+    "versionCounter": 5,
+    "triggerCount": 0,
+    "sourceWorkflowId": null,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-08-17T21:50:18.295Z",
+        "createdAt": "2026-08-17T21:50:18.295Z",
+        "role": "workflow:owner",
+        "workflowId": "EG0XMr8W70ioenUx",
+        "projectId": "tYNV5PwfsF82f0eK",
+        "project": {
+          "updatedAt": "2026-08-02T20:16:18.146Z",
+          "createdAt": "2026-08-02T20:13:35.480Z",
+          "id": "tYNV5PwfsF82f0eK",
+          "name": "Robert thebossrob@gmail.com <thebossrob@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "customTelemetryTags": [],
+          "creatorId": "8b8afd06-1234-4114-a49f-35df19c409b4"
+        }
+      }
+    ],
+    "versionMetadata": { "name": null, "description": null }
+  }
+]

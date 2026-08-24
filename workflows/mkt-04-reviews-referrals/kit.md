@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | MKT-04 |
-| Department | Marketing |
-| Automation level | 85-90% |
-| Owner | Marcus + Robert |
-| Trigger | Positive NPS (>=8) or milestone reached |
-| Cycle time | Trigger-based; continuous |
-| Source status | Imported source |
+| Field            | Value                                   |
+| ---------------- | --------------------------------------- |
+| Workflow ID      | MKT-04                                  |
+| Department       | Marketing                               |
+| Automation level | 85-90%                                  |
+| Owner            | Marcus + Robert                         |
+| Trigger          | Positive NPS (>=8) or milestone reached |
+| Cycle time       | Trigger-based; continuous               |
+| Source status    | Imported source                         |
 
 ## Inputs
 
@@ -85,19 +85,19 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `source/URC-MKT-04_Reviews_Referrals.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                            | Purpose                                                                     |
+| --------------------------------------------------- | --------------------------------------------------------------------------- |
+| `source/URC-MKT-04_Reviews_Referrals.md`            | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `assets/Marketing_Workflow_4_Reviews_Referrals.csv` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `assets/MKT04-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/MKT04-Review-Trigger-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/MKT04_Reviews_Referrals_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `assets/MKT04-Assets.md`                            | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/MKT04-Review-Trigger-Blueprint.json`    | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/MKT04_Reviews_Referrals_Tracker.xlsx`     | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-MKT-04_Reviews_Referrals.md
 
-````markdown
+```markdown
 # MKT-04 - Reviews & Referrals Source
 
 Source: `Marketing Department\urc marketing\URC-MKT-04_Reviews_Referrals.docx`
@@ -108,7 +108,7 @@ This Markdown file is a text extraction of the source `.docx` for GitHub-readabl
 
 URC-MKT-04 — Reviews & Referrals
 
-Owner: Robert T. McCarthy, Founder & CEO   |   Version: v1.0   |   Updated: March 21, 2026
+Owner: Robert T. McCarthy, Founder & CEO | Version: v1.0 | Updated: March 21, 2026
 
 1. Document Purpose
 
@@ -401,11 +401,11 @@ March 21, 2026
 R. McCarthy
 
 Initial URC-specific document
-````
+```
 
 ### assets/Marketing_Workflow_4_Reviews_Referrals.csv
 
-````csv
+```csv
 Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 1,TRIGGER: Purchase completed OR Milestone reached OR High NPS score OR Positive support interaction,System,Order management / CRM milestone tracking / NPS survey / Support ticket system,"trigger_type, customer_id, trigger_event, timestamp, customer_segment",Per business rules
 2,Determine optimal timing for request based on customer journey stage and product type,Automation (Timing Engine),Customer journey analytics / Timing optimization algorithm,"optimal_request_time, days_since_purchase, customer_satisfaction_score",Calculated per customer
@@ -421,17 +421,19 @@ Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 12,"Credit referral rewards automatically when conversion criteria met (purchase, subscription)",Automation (Reward Fulfillment),"Reward fulfillment system (gift cards, discounts, credits) / Payment processor","reward_credited_date, reward_amount, reward_status, redemption_method",Within 48 hours of conversion
 13,"Generate social proof content from reviews for ads, landing pages, and social media",Marketing Team + Automation,Social proof aggregator / Content automation / UGC management,"social_proof_content_created, usage_locations, performance_metrics",Weekly content generation
 14,Create leaderboard for top referrers and send engagement campaigns to active advocates,Marketing Team + System,Gamification platform / Leaderboard widget / Advocate engagement campaigns,"leaderboard_position, total_referrals, engagement_campaign_sent",Monthly leaderboard update
-````
+```
 
 ### assets/MKT04-Assets.md
 
-````markdown
+```markdown
 # MKT04: Reviews & Referrals Assets
 
 ## 1. Review Solicitation Templates
-*Triggered automatically via HubSpot when a deal is closed won or an NPS score >8 is submitted.*
+
+_Triggered automatically via HubSpot when a deal is closed won or an NPS score >8 is submitted._
 
 ### Email: The "Soft Ask" (NPS > 8)
+
 **Subject:** Thanks for your feedback, [First Name]! One quick favor?
 **Body:**
 Hi [First Name],
@@ -450,9 +452,11 @@ Thanks again for your partnership!
 ---
 
 ## 2. Referral Program Assets
-*Triggered automatically when a customer leaves a 5-star review.*
+
+_Triggered automatically when a customer leaves a 5-star review._
 
 ### Email: Program Invitation
+
 **Subject:** A little something to say thank you 🎁
 **Body:**
 Hi [First Name],
@@ -467,12 +471,13 @@ For every person who signs up, we'll send you a **[$X Amazon Gift Card / X Month
 
 Here is your unique referral link: [Referral Link]
 
-*(I also attached a quick swipe file below if you want to just copy/paste a message to a colleague).*
+_(I also attached a quick swipe file below if you want to just copy/paste a message to a colleague)._
 
 Best,
 [Your Name]
 
 ### LinkedIn Swipe Copy (For Referrers to copy/paste)
+
 "I've been working with the team at [Company Name] to handle our [Pain Point] and the results have been incredible so far. If anyone is looking for a solution to [Desired Outcome], I highly recommend them. You can check them out here: [Referral Link]"
 
 ---
@@ -480,18 +485,21 @@ Best,
 ## 3. Automated Review Response Templates
 
 ### Positive Review (4-5 Stars)
+
 "Hi [Name], thank you so much for the kind words! We're thrilled to hear that [Product/Service] has helped you [Desired Outcome]. Our team loved working with you on this. Don't hesitate to reach out if you ever need anything else!"
 
 ### Neutral Review (3 Stars)
+
 "Hi [Name], thanks for taking the time to leave feedback. We're glad you liked [Positive aspect mentioned], but I see we fell short regarding [Negative aspect]. We're actively working on improving this. I've sent you a direct message to see how we can make this right."
 
 ### Negative Review (1-2 Stars)
+
 "Hi [Name], I'm genuinely sorry to hear about your experience. This is not the standard we strive for. I've personally looked into your account and escalated this to our Head of Customer Success. We will be reaching out to you directly via email in the next 30 minutes to get this resolved for you."
-````
+```
 
 ### automation/MKT04-Review-Trigger-Blueprint.json
 
-````json
+```json
 {
   "name": "MKT04: Review Request & Referral Trigger",
   "flow": [
@@ -573,7 +581,7 @@ Best,
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -709,6 +717,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

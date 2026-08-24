@@ -11,13 +11,13 @@ Used by the AI Drafting Agent and the AI Pre-Screening Agent. The brand voice co
 
 ## Tone calibration
 
-| Setting | Default | Adjust when |
-|---------|---------|-------------|
-| Formality | Casual-professional | Tighter for case studies and proposals; looser for social |
-| Reading level | Grade 8–10 | Drop to grade 6–8 for top-of-funnel social |
-| Person | Second person ("you") | First person ("we") only in case studies and bylined essays |
-| Sentence length | Mixed, leaning short | Longer when the topic demands precision (legal, finance) |
-| Humor | Dry, occasional | More sparingly in client-branded content |
+| Setting         | Default               | Adjust when                                                 |
+| --------------- | --------------------- | ----------------------------------------------------------- |
+| Formality       | Casual-professional   | Tighter for case studies and proposals; looser for social   |
+| Reading level   | Grade 8–10            | Drop to grade 6–8 for top-of-funnel social                  |
+| Person          | Second person ("you") | First person ("we") only in case studies and bylined essays |
+| Sentence length | Mixed, leaning short  | Longer when the topic demands precision (legal, finance)    |
+| Humor           | Dry, occasional       | More sparingly in client-branded content                    |
 
 ## Required vocabulary (use)
 

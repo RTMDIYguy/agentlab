@@ -11,7 +11,9 @@ import { ArrowLeft, Mail, Lock, MapPin, Bell } from "lucide-react";
 export default function Settings() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
-  const [activeTab, setActiveTab] = useState<"profile" | "billing" | "notifications" | "security">("profile");
+  const [activeTab, setActiveTab] = useState<
+    "profile" | "billing" | "notifications" | "security"
+  >("profile");
 
   const [profileData, setProfileData] = useState({
     name: user?.name || "",
@@ -37,7 +39,9 @@ export default function Settings() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Card className="p-8 max-w-md">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Access Denied</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-4">
+            Access Denied
+          </h1>
           <p className="text-muted-foreground mb-6">
             You need to be logged in to access settings.
           </p>
@@ -149,7 +153,9 @@ export default function Settings() {
             {/* Profile Tab */}
             {activeTab === "profile" && (
               <Card className="p-8 border border-border">
-                <h2 className="text-2xl font-bold text-foreground mb-6">Profile Information</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-6">
+                  Profile Information
+                </h2>
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">
@@ -158,7 +164,7 @@ export default function Settings() {
                     <input
                       type="text"
                       value={profileData.name}
-                      onChange={(e) =>
+                      onChange={e =>
                         setProfileData({ ...profileData, name: e.target.value })
                       }
                       className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
@@ -171,8 +177,11 @@ export default function Settings() {
                     <input
                       type="email"
                       value={profileData.email}
-                      onChange={(e) =>
-                        setProfileData({ ...profileData, email: e.target.value })
+                      onChange={e =>
+                        setProfileData({
+                          ...profileData,
+                          email: e.target.value,
+                        })
                       }
                       className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                     />
@@ -190,7 +199,9 @@ export default function Settings() {
             {/* Billing Address Tab */}
             {activeTab === "billing" && (
               <Card className="p-8 border border-border">
-                <h2 className="text-2xl font-bold text-foreground mb-6">Billing Address</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-6">
+                  Billing Address
+                </h2>
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">
@@ -199,8 +210,11 @@ export default function Settings() {
                     <input
                       type="text"
                       value={billingData.address}
-                      onChange={(e) =>
-                        setBillingData({ ...billingData, address: e.target.value })
+                      onChange={e =>
+                        setBillingData({
+                          ...billingData,
+                          address: e.target.value,
+                        })
                       }
                       placeholder="123 Main St"
                       className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
@@ -214,8 +228,11 @@ export default function Settings() {
                       <input
                         type="text"
                         value={billingData.city}
-                        onChange={(e) =>
-                          setBillingData({ ...billingData, city: e.target.value })
+                        onChange={e =>
+                          setBillingData({
+                            ...billingData,
+                            city: e.target.value,
+                          })
                         }
                         placeholder="San Francisco"
                         className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
@@ -228,8 +245,11 @@ export default function Settings() {
                       <input
                         type="text"
                         value={billingData.state}
-                        onChange={(e) =>
-                          setBillingData({ ...billingData, state: e.target.value })
+                        onChange={e =>
+                          setBillingData({
+                            ...billingData,
+                            state: e.target.value,
+                          })
                         }
                         placeholder="CA"
                         className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
@@ -244,8 +264,11 @@ export default function Settings() {
                       <input
                         type="text"
                         value={billingData.zipCode}
-                        onChange={(e) =>
-                          setBillingData({ ...billingData, zipCode: e.target.value })
+                        onChange={e =>
+                          setBillingData({
+                            ...billingData,
+                            zipCode: e.target.value,
+                          })
                         }
                         placeholder="94102"
                         className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
@@ -258,8 +281,11 @@ export default function Settings() {
                       <input
                         type="text"
                         value={billingData.country}
-                        onChange={(e) =>
-                          setBillingData({ ...billingData, country: e.target.value })
+                        onChange={e =>
+                          setBillingData({
+                            ...billingData,
+                            country: e.target.value,
+                          })
                         }
                         placeholder="United States"
                         className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
@@ -279,11 +305,15 @@ export default function Settings() {
             {/* Notifications Tab */}
             {activeTab === "notifications" && (
               <Card className="p-8 border border-border">
-                <h2 className="text-2xl font-bold text-foreground mb-6">Notification Preferences</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-6">
+                  Notification Preferences
+                </h2>
                 <div className="space-y-6">
                   <div className="flex items-center justify-between p-4 border border-border rounded-lg">
                     <div>
-                      <p className="font-semibold text-foreground">Email Notifications</p>
+                      <p className="font-semibold text-foreground">
+                        Email Notifications
+                      </p>
                       <p className="text-sm text-muted-foreground">
                         Receive general email notifications
                       </p>
@@ -291,7 +321,7 @@ export default function Settings() {
                     <input
                       type="checkbox"
                       checked={notificationSettings.emailNotifications}
-                      onChange={(e) =>
+                      onChange={e =>
                         setNotificationSettings({
                           ...notificationSettings,
                           emailNotifications: e.target.checked,
@@ -302,7 +332,9 @@ export default function Settings() {
                   </div>
                   <div className="flex items-center justify-between p-4 border border-border rounded-lg">
                     <div>
-                      <p className="font-semibold text-foreground">Invoice Notifications</p>
+                      <p className="font-semibold text-foreground">
+                        Invoice Notifications
+                      </p>
                       <p className="text-sm text-muted-foreground">
                         Receive notifications when invoices are available
                       </p>
@@ -310,7 +342,7 @@ export default function Settings() {
                     <input
                       type="checkbox"
                       checked={notificationSettings.invoiceNotifications}
-                      onChange={(e) =>
+                      onChange={e =>
                         setNotificationSettings({
                           ...notificationSettings,
                           invoiceNotifications: e.target.checked,
@@ -321,7 +353,9 @@ export default function Settings() {
                   </div>
                   <div className="flex items-center justify-between p-4 border border-border rounded-lg">
                     <div>
-                      <p className="font-semibold text-foreground">Renewal Reminders</p>
+                      <p className="font-semibold text-foreground">
+                        Renewal Reminders
+                      </p>
                       <p className="text-sm text-muted-foreground">
                         Get reminded before your subscription renews
                       </p>
@@ -329,7 +363,7 @@ export default function Settings() {
                     <input
                       type="checkbox"
                       checked={notificationSettings.renewalReminders}
-                      onChange={(e) =>
+                      onChange={e =>
                         setNotificationSettings({
                           ...notificationSettings,
                           renewalReminders: e.target.checked,
@@ -340,7 +374,9 @@ export default function Settings() {
                   </div>
                   <div className="flex items-center justify-between p-4 border border-border rounded-lg">
                     <div>
-                      <p className="font-semibold text-foreground">Promotional Emails</p>
+                      <p className="font-semibold text-foreground">
+                        Promotional Emails
+                      </p>
                       <p className="text-sm text-muted-foreground">
                         Receive offers and promotional content
                       </p>
@@ -348,7 +384,7 @@ export default function Settings() {
                     <input
                       type="checkbox"
                       checked={notificationSettings.promotionalEmails}
-                      onChange={(e) =>
+                      onChange={e =>
                         setNotificationSettings({
                           ...notificationSettings,
                           promotionalEmails: e.target.checked,
@@ -370,34 +406,39 @@ export default function Settings() {
             {/* Security Tab */}
             {activeTab === "security" && (
               <Card className="p-8 border border-border">
-                <h2 className="text-2xl font-bold text-foreground mb-6">Security Settings</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-6">
+                  Security Settings
+                </h2>
                 <div className="space-y-6">
                   <div className="p-6 bg-muted/50 border border-border rounded-lg">
-                    <h3 className="font-semibold text-foreground mb-2">Password</h3>
+                    <h3 className="font-semibold text-foreground mb-2">
+                      Password
+                    </h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Your password is managed through your Manus account. To change your password, visit your account settings.
+                      Your password is managed through your Manus account. To
+                      change your password, visit your account settings.
                     </p>
-                    <Button variant="outline">
-                      Manage Account Settings
-                    </Button>
+                    <Button variant="outline">Manage Account Settings</Button>
                   </div>
                   <div className="p-6 bg-muted/50 border border-border rounded-lg">
-                    <h3 className="font-semibold text-foreground mb-2">Two-Factor Authentication</h3>
+                    <h3 className="font-semibold text-foreground mb-2">
+                      Two-Factor Authentication
+                    </h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Add an extra layer of security to your account with two-factor authentication.
+                      Add an extra layer of security to your account with
+                      two-factor authentication.
                     </p>
-                    <Button variant="outline">
-                      Enable 2FA
-                    </Button>
+                    <Button variant="outline">Enable 2FA</Button>
                   </div>
                   <div className="p-6 bg-muted/50 border border-border rounded-lg">
-                    <h3 className="font-semibold text-foreground mb-2">Active Sessions</h3>
+                    <h3 className="font-semibold text-foreground mb-2">
+                      Active Sessions
+                    </h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Manage your active sessions and sign out from other devices.
+                      Manage your active sessions and sign out from other
+                      devices.
                     </p>
-                    <Button variant="outline">
-                      View Sessions
-                    </Button>
+                    <Button variant="outline">View Sessions</Button>
                   </div>
                 </div>
               </Card>

@@ -1,13 +1,13 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const SRC_DIR = path.join(__dirname, 'src');
+const SRC_DIR = path.join(__dirname, "src");
 
 const files = {
-  'DeployNodeModal.tsx': `
+  "DeployNodeModal.tsx": `
 import React from 'react';
 import { Button } from './Button';
 
@@ -82,7 +82,7 @@ export const DeployNodeModal: React.FC<DeployNodeModalProps> = ({ isOpen, onClos
   );
 };
   `,
-  'Navigation.tsx': `
+  "Navigation.tsx": `
 import React from 'react';
 import { TopNavBadge } from './TopNavBadge';
 
@@ -136,7 +136,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   </nav>
 );
   `,
-  'PageLayout.tsx': `
+  "PageLayout.tsx": `
 import React, { ReactNode } from 'react';
 import { Navigation } from './Navigation';
 import { Footer } from './Footer';
@@ -175,7 +175,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   </div>
 );
   `,
-  'App.tsx': `
+  "App.tsx": `
 import React, { useState } from 'react';
 import { AuthLayout } from './AuthLayout';
 import { LoginForm } from './LoginForm';
@@ -218,8 +218,10 @@ export const App: React.FC = () => {
     </AppContext.Provider>
   );
 };
-  `
+  `,
 };
 
-Object.entries(files).forEach(([file, content]) => fs.writeFileSync(path.join(SRC_DIR, file), content.trim()));
-console.log('Phase 3 Deploy Node Modal built successfully!');
+Object.entries(files).forEach(([file, content]) =>
+  fs.writeFileSync(path.join(SRC_DIR, file), content.trim())
+);
+console.log("Phase 3 Deploy Node Modal built successfully!");

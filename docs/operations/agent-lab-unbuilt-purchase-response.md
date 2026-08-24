@@ -93,11 +93,10 @@ After the intake is returned:
    - missing access or information
    - next human review point
 6. If the workflow is not yet certified, mark it as `custom build / not yet
-   certified` until tested.
+certified` until tested.
 
 ## Notes
 
 This response pattern buys time without hiding the truth. The intake itself
 explains why the buyer needs to wait: Agent Lab is gathering the material needed
 to build the right workflow.
-

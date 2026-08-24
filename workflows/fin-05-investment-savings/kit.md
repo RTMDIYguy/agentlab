@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | FIN-05 |
-| Department | Finance |
-| Automation level | 65% |
-| Owner | Robert T. McCarthy |
-| Trigger | 1st business day of month; drift detected |
-| Cycle time | Transfers: monthly; monitoring: daily |
-| Source status | Imported source |
+| Field            | Value                                     |
+| ---------------- | ----------------------------------------- |
+| Workflow ID      | FIN-05                                    |
+| Department       | Finance                                   |
+| Automation level | 65%                                       |
+| Owner            | Robert T. McCarthy                        |
+| Trigger          | 1st business day of month; drift detected |
+| Cycle time       | Transfers: monthly; monitoring: daily     |
+| Source status    | Imported source                           |
 
 ## Inputs
 
@@ -82,22 +82,22 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 ## Source Digest
 
 - `FINANCE-DEPARTMENT-CLIENT-TEMPLATE-EDITION.md`: Source file imported and retained for detailed workflow extraction.
-- `URC-FIN-Master_Edition 2.0.md`: 3.2  Human Involvement 3.3  Core Principles 4.  URC-FIN-01 — Pricing & Expenses 4.1  Workflow Purpose & Key Objectives 4.2  Detailed Steps (12 Steps) 4.3  Integration Points 4.4  Technology Stack 4.5  Key Performance Indicators 4.6  Implementation Checklist (3 Phases) 5.  URC-FIN-02 — Taxes & Fees
+- `URC-FIN-Master_Edition 2.0.md`: 3.2 Human Involvement 3.3 Core Principles 4. URC-FIN-01 — Pricing & Expenses 4.1 Workflow Purpose & Key Objectives 4.2 Detailed Steps (12 Steps) 4.3 Integration Points 4.4 Technology Stack 4.5 Key Performance Indicators 4.6 Implementation Checklist (3 Phases) 5. URC-FIN-02 — Taxes & Fees
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
+| Artifact                                               | Purpose                                                                     |
+| ------------------------------------------------------ | --------------------------------------------------------------------------- |
 | `source/FINANCE-DEPARTMENT-CLIENT-TEMPLATE-EDITION.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `source/URC-FIN-Master_Edition 2.0.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/FIN05-Investment-Savings-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/FIN05_Investment_Savings_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `source/URC-FIN-Master_Edition 2.0.md`                 | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/FIN05-Investment-Savings-Blueprint.json`   | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/FIN05_Investment_Savings_Tracker.xlsx`       | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/FINANCE-DEPARTMENT-CLIENT-TEMPLATE-EDITION.md
 
-````markdown
+```markdown
 # FIN-05 - Investment & Savings Department Source
 
 Source: `Finance Department\FINANCE DEPARTMENT — CLIENT TEMPLATE EDITION.docx`
@@ -1419,11 +1419,11 @@ Evaluate tax-advantaged accounts ([YOUR OPTIONS: SEP-IRA, Solo 401k, HSA]) when 
 Build [X]-month financial forecast: revenue projections × savings rate = wealth accumulation curve
 
 Conduct annual investment allocation review with [YOUR ADVISOR / SELF-DIRECTED APPROACH]
-````
+```
 
 ### source/URC-FIN-Master_Edition 2.0.md
 
-````markdown
+```markdown
 # FIN-05 - Investment & Savings Department Source
 
 Source: `Finance Department\URC-FIN-Master_Edition 2.0.docx`
@@ -1434,7 +1434,7 @@ UNCLE ROBERT CONSULTING LLC
 
 Finance Department — Master Edition
 
-URC-FIN-MASTER  |  FINANCE DEPARTMENT WORKFLOW LIBRARY
+URC-FIN-MASTER | FINANCE DEPARTMENT WORKFLOW LIBRARY
 
 Document ID
 
@@ -1474,85 +1474,85 @@ Table of Contents
 
 3.  Finance Department Context
 
-3.1  Workflow Overview
+3.1 Workflow Overview
 
-3.2  Human Involvement
+3.2 Human Involvement
 
-3.3  Core Principles
+3.3 Core Principles
 
 4.  URC-FIN-01 — Pricing & Expenses
 
-4.1  Workflow Purpose & Key Objectives
+4.1 Workflow Purpose & Key Objectives
 
-4.2  Detailed Steps (12 Steps)
+4.2 Detailed Steps (12 Steps)
 
-4.3  Integration Points
+4.3 Integration Points
 
-4.4  Technology Stack
+4.4 Technology Stack
 
-4.5  Key Performance Indicators
+4.5 Key Performance Indicators
 
-4.6  Implementation Checklist (3 Phases)
+4.6 Implementation Checklist (3 Phases)
 
 5.  URC-FIN-02 — Taxes & Fees
 
-5.1  Workflow Purpose & Key Objectives
+5.1 Workflow Purpose & Key Objectives
 
-5.2  Detailed Steps (12 Steps)
+5.2 Detailed Steps (12 Steps)
 
-5.3  Integration Points
+5.3 Integration Points
 
-5.4  Technology Stack
+5.4 Technology Stack
 
-5.5  Key Performance Indicators
+5.5 Key Performance Indicators
 
-5.6  Implementation Checklist (3 Phases)
+5.6 Implementation Checklist (3 Phases)
 
 6.  URC-FIN-03 — Accounts Receivable & Payable
 
-6.1  Workflow Purpose & Key Objectives
+6.1 Workflow Purpose & Key Objectives
 
-6.2  Detailed Steps (14 Steps — AR & AP Parallel)
+6.2 Detailed Steps (14 Steps — AR & AP Parallel)
 
-6.3  Integration Points
+6.3 Integration Points
 
-6.4  Technology Stack
+6.4 Technology Stack
 
-6.5  Key Performance Indicators
+6.5 Key Performance Indicators
 
-6.6  Implementation Checklist (3 Phases)
+6.6 Implementation Checklist (3 Phases)
 
 7.  URC-FIN-04 — Accounting & Auditing
 
-7.1  Workflow Purpose & Key Objectives
+7.1 Workflow Purpose & Key Objectives
 
-7.2  Detailed Steps (12 Steps)
+7.2 Detailed Steps (12 Steps)
 
-7.3  Integration Points
+7.3 Integration Points
 
-7.4  Technology Stack
+7.4 Technology Stack
 
-7.5  Key Performance Indicators
+7.5 Key Performance Indicators
 
-7.6  Implementation Checklist (3 Phases)
+7.6 Implementation Checklist (3 Phases)
 
 8.  URC-FIN-05 — Investment & Savings
 
-8.1  Workflow Purpose & Key Objectives
+8.1 Workflow Purpose & Key Objectives
 
-8.2  Detailed Steps (12 Steps)
+8.2 Detailed Steps (12 Steps)
 
-8.3  Integration Points
+8.3 Integration Points
 
-8.4  Technology Stack
+8.4 Technology Stack
 
-8.5  Key Performance Indicators
+8.5 Key Performance Indicators
 
-8.6  Implementation Checklist (3 Phases)
+8.6 Implementation Checklist (3 Phases)
 
 9.  Finance Department Integration Map
 
-9.1  Cross-Department Dependencies
+9.1 Cross-Department Dependencies
 
 Finance Department Context
 
@@ -1728,7 +1728,7 @@ Plaid API via Make.com
 
 N/A — direct bank feed
 
-URC-FIN-01  |  PRICING & EXPENSES
+URC-FIN-01 | PRICING & EXPENSES
 
 Document ID
 
@@ -1766,7 +1766,7 @@ Maintain audit-ready documentation for every expense with receipt, category, and
 
 Detailed Steps
 
-## Step #
+## Step
 
 Action / Trigger Description
 
@@ -2004,7 +2004,7 @@ Build cost driver change detector — alert when any category increases 10%+ mon
 
 Conduct first pricing model review using 3 months of expense data as baseline
 
-URC-FIN-02  |  TAXES & FEES
+URC-FIN-02 | TAXES & FEES
 
 Document ID
 
@@ -2042,7 +2042,7 @@ Identify deductible expenses automatically and flag missed deductions for CPA re
 
 Detailed Steps
 
-## Step #
+## Step
 
 Action / Trigger Description
 
@@ -2278,7 +2278,7 @@ Set annual review with CPA to assess entity structure optimization (LLC vs S-Cor
 
 Document all tax positions taken for consistent treatment year over year
 
-URC-FIN-03  |  ACCOUNTS RECEIVABLE & PAYABLE
+URC-FIN-03 | ACCOUNTS RECEIVABLE & PAYABLE
 
 Document ID
 
@@ -2316,7 +2316,7 @@ Flag accounts 30+ days overdue for collections escalation automatically
 
 Detailed Steps
 
-## Step #
+## Step
 
 Action / Trigger Description
 
@@ -2564,7 +2564,7 @@ Review DSO monthly and adjust reminder timing if collection rate drops below tar
 
 Quarterly review of vendor payment terms — negotiate extended terms with high-spend vendors
 
-URC-FIN-04  |  ACCOUNTING & AUDITING
+URC-FIN-04 | ACCOUNTING & AUDITING
 
 Document ID
 
@@ -2602,7 +2602,7 @@ Produce executive dashboard showing Robert's key financial metrics in real-time
 
 Detailed Steps
 
-## Step #
+## Step
 
 Action / Trigger Description
 
@@ -2840,7 +2840,7 @@ Conduct first quarterly internal audit using the compliance documentation packag
 
 Set up annual review process for chart of accounts — add/remove categories as business evolves
 
-URC-FIN-05  |  INVESTMENT & SAVINGS
+URC-FIN-05 | INVESTMENT & SAVINGS
 
 Document ID
 
@@ -2878,7 +2878,7 @@ Generate monthly investment performance and goal progress report for Robert
 
 Detailed Steps
 
-## Step #
+## Step
 
 Action / Trigger Description
 
@@ -3354,14 +3354,14 @@ Robert
 
 — END OF DOCUMENT —
 
-Uncle Robert Consulting LLC  |  Finance Department — Master Edition  |  URC-FIN-MASTER  |  v1.0  |  March 2026
+Uncle Robert Consulting LLC | Finance Department — Master Edition | URC-FIN-MASTER | v1.0 | March 2026
 
 Confidential — Internal Use Only. This document and all contents are proprietary to Uncle Robert Consulting LLC.
-````
+```
 
 ### automation/FIN05-Investment-Savings-Blueprint.json
 
-````json
+```json
 {
   "name": "FIN05: Profit Transfer & Reserve Monitor (Make.com Blueprint)",
   "flow": [
@@ -3462,7 +3462,10 @@ Confidential — Internal Use Only. This document and all contents are proprieta
         "spreadsheetId": "YOUR_FIN05_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{3.choices[0].message.content}}"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD')}}",
+          "{{3.choices[0].message.content}}"
+        ]
       },
       "metadata": {
         "designer": {
@@ -3477,7 +3480,7 @@ Confidential — Internal Use Only. This document and all contents are proprieta
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -3588,7 +3591,10 @@ Confidential — Internal Use Only. This document and all contents are proprieta
         "spreadsheetId": "YOUR_FIN05_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{3.choices[0].message.content}}"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD')}}",
+          "{{3.choices[0].message.content}}"
+        ]
       },
       "metadata": {
         "designer": {
@@ -3648,6 +3654,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

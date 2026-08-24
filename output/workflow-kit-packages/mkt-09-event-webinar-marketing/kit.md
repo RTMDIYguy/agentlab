@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | MKT-09 |
-| Department | Marketing |
-| Automation level | 80-85% |
-| Owner | Robert (live) + Marcus (logistics) |
-| Trigger | Monthly planning session |
-| Cycle time | Planned 30 days out; follow-up 14 days after |
-| Source status | Folder shell |
+| Field            | Value                                        |
+| ---------------- | -------------------------------------------- |
+| Workflow ID      | MKT-09                                       |
+| Department       | Marketing                                    |
+| Automation level | 80-85%                                       |
+| Owner            | Robert (live) + Marcus (logistics)           |
+| Trigger          | Monthly planning session                     |
+| Cycle time       | Planned 30 days out; follow-up 14 days after |
+| Source status    | Folder shell                                 |
 
 ## Inputs
 
@@ -85,8 +85,8 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
+| Artifact          | Purpose                                                                                |
+| ----------------- | -------------------------------------------------------------------------------------- |
 | None imported yet | Create or attach source, asset, automation, or tracker artifacts during certification. |
 
 ## Embedded Source and Asset Documents
@@ -143,6 +143,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

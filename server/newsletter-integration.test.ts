@@ -76,7 +76,7 @@ describe("Newsletter Integration Tests", () => {
       };
 
       const newsletterButton = adminNavigation.buttons.find(
-        (b) => b.label === "Newsletter"
+        b => b.label === "Newsletter"
       );
       expect(newsletterButton).toBeTruthy();
       expect(newsletterButton?.action).toBe("/newsletter-manager");
@@ -282,7 +282,7 @@ describe("Newsletter Integration Tests", () => {
       ];
 
       const activeSubscribers = subscribers.filter(
-        (s) => s.status === "subscribed"
+        s => s.status === "subscribed"
       );
       expect(activeSubscribers.length).toBe(1);
     });

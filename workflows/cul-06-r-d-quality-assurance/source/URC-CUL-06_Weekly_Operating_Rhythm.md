@@ -10,7 +10,7 @@ URC-CUL-06 — Weekly Operating Rhythm
 
 Updated March 26, 2026 — Solo Operator Edition
 
-Robert T. McCarthy   |   v1.1   |   March 26, 2026
+Robert T. McCarthy | v1.1 | March 26, 2026
 
 NOTE — March 26, 2026
 

@@ -51,12 +51,12 @@ docs/operations/scheduled-change-queue.md      # flipped CC-2026-05-15-003 Propo
 
 ## Verification Status
 
-| Check | Result | Notes |
-| --- | --- | --- |
-| `git diff --check` on touched paths | Clean (exit 0) | |
-| `node scripts/verify-change-control.mjs` (Cowork sandbox) | 1 failure | Failure is the canonical `../AI Native Agency Deepened/Journey_Kit.md` not being mounted in the sandbox. All other assertions against touched files passed. |
-| Grep `PRICE_TBD` across package + `docs/operations/` | 0 hits | Placeholder fully swept. |
-| `pnpm change-control:check` (local) | NOT RUN | Pnpm not on path in sandbox. Please run locally before committing. |
+| Check                                                     | Result         | Notes                                                                                                                                                       |
+| --------------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `git diff --check` on touched paths                       | Clean (exit 0) |                                                                                                                                                             |
+| `node scripts/verify-change-control.mjs` (Cowork sandbox) | 1 failure      | Failure is the canonical `../AI Native Agency Deepened/Journey_Kit.md` not being mounted in the sandbox. All other assertions against touched files passed. |
+| Grep `PRICE_TBD` across package + `docs/operations/`      | 0 hits         | Placeholder fully swept.                                                                                                                                    |
+| `pnpm change-control:check` (local)                       | NOT RUN        | Pnpm not on path in sandbox. Please run locally before committing.                                                                                          |
 
 ## Open Items For Codex
 

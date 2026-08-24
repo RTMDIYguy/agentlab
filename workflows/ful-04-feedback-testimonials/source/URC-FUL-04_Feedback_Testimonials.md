@@ -10,7 +10,7 @@ URC-FUL-04 — Feedback & Testimonials
 
 Systematic Collection, Honest Processing, and Strategic Deployment of Social Proof
 
-Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
+Robert T. McCarthy & Sheena Burns | v1.0 | March 23, 2026
 
 1. Why This Workflow Exists
 

@@ -8,9 +8,7 @@ import {
   getNewsletterStats,
   generateToken,
 } from "./newsletter/db";
-import {
-  formatUnsubscribeConfirmationEmail,
-} from "./newsletter/email-service";
+import { formatUnsubscribeConfirmationEmail } from "./newsletter/email-service";
 
 describe("Newsletter Backend", () => {
   describe("Token Generation", () => {
@@ -33,7 +31,7 @@ describe("Newsletter Backend", () => {
         "user+tag@example.com",
       ];
 
-      validEmails.forEach((email) => {
+      validEmails.forEach(email => {
         expect(email).toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
       });
     });
@@ -62,7 +60,7 @@ describe("Newsletter Backend", () => {
     it("should track subscription source", () => {
       const sources = ["website", "homepage", "popup", "import"];
 
-      sources.forEach((source) => {
+      sources.forEach(source => {
         expect(["website", "homepage", "popup", "import"]).toContain(source);
       });
     });
@@ -79,7 +77,7 @@ describe("Newsletter Backend", () => {
         "failed",
       ];
 
-      validStatuses.forEach((status) => {
+      validStatuses.forEach(status => {
         expect(validStatuses).toContain(status);
       });
     });
@@ -134,10 +132,13 @@ describe("Newsletter Backend", () => {
     it("should support all subscriber statuses", () => {
       const statuses = ["subscribed", "unsubscribed", "bounced", "complained"];
 
-      statuses.forEach((status) => {
-        expect(["subscribed", "unsubscribed", "bounced", "complained"]).toContain(
-          status
-        );
+      statuses.forEach(status => {
+        expect([
+          "subscribed",
+          "unsubscribed",
+          "bounced",
+          "complained",
+        ]).toContain(status);
       });
     });
 
@@ -207,9 +208,16 @@ describe("Newsletter Backend", () => {
 
   describe("Newsletter Events Tracking", () => {
     it("should track all event types", () => {
-      const eventTypes = ["sent", "open", "click", "bounce", "complaint", "unsubscribe"];
+      const eventTypes = [
+        "sent",
+        "open",
+        "click",
+        "bounce",
+        "complaint",
+        "unsubscribe",
+      ];
 
-      eventTypes.forEach((type) => {
+      eventTypes.forEach(type => {
         expect([
           "sent",
           "open",
@@ -277,7 +285,8 @@ describe("Newsletter Backend", () => {
       };
 
       const activePercentage = (stats.subscribed / stats.total) * 100;
-      const churnRate = ((stats.unsubscribed + stats.bounced) / stats.total) * 100;
+      const churnRate =
+        ((stats.unsubscribed + stats.bounced) / stats.total) * 100;
 
       expect(activePercentage).toBe(90);
       expect(churnRate).toBeCloseTo(9.6, 1);
@@ -368,7 +377,7 @@ describe("Newsletter Backend", () => {
         "announcement",
       ];
 
-      categories.forEach((cat) => {
+      categories.forEach(cat => {
         expect(typeof cat).toBe("string");
         expect(cat.length > 0).toBe(true);
       });
@@ -380,7 +389,7 @@ describe("Newsletter Backend", () => {
         { id: 2, name: "Custom", isDefault: false },
       ];
 
-      const defaultTemplate = templates.find((t) => t.isDefault);
+      const defaultTemplate = templates.find(t => t.isDefault);
       expect(defaultTemplate?.name).toBe("Default");
     });
   });

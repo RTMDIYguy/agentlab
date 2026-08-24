@@ -30,13 +30,13 @@ Do not rename inherited root folders just because they are awkward.
 
 Instead, document them with a friendly alias:
 
-| Legacy path or name | Standard alias | Rule |
-| --- | --- | --- |
-| `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC` | OneDrive account root | Use when referring to the synced account container, not the business workspace. |
-| `Robert - Uncle Robert Consulting` | OneDrive account / external display name | Treat as a provider-created display label, not a workspace standard. |
-| `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs` | Working Docs root | Default business-wide workspace root. |
-| `Attachments\Licensing\Licensing\Secrets` | Legacy secrets source | Inventory only; do not publish secret values into docs. |
-| `AI Native Agency Deepened\Keys` | Legacy keys source | Inventory only; use the API key inventory and Postman vault as the consolidation lane. |
+| Legacy path or name                                                  | Standard alias                           | Rule                                                                                   |
+| -------------------------------------------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------- |
+| `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC`              | OneDrive account root                    | Use when referring to the synced account container, not the business workspace.        |
+| `Robert - Uncle Robert Consulting`                                   | OneDrive account / external display name | Treat as a provider-created display label, not a workspace standard.                   |
+| `C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs` | Working Docs root                        | Default business-wide workspace root.                                                  |
+| `Attachments\Licensing\Licensing\Secrets`                            | Legacy secrets source                    | Inventory only; do not publish secret values into docs.                                |
+| `AI Native Agency Deepened\Keys`                                     | Legacy keys source                       | Inventory only; use the API key inventory and Postman vault as the consolidation lane. |
 
 ## Folder Names
 
@@ -85,26 +85,26 @@ Avoid `final`, `final-final`, or names that require memory to interpret.
 
 Use short codes when an item must connect across systems.
 
-| Code | Meaning |
-| --- | --- |
-| `URC` | Uncle Robert Consulting |
-| `AGL` | Agent Lab |
-| `TAC` | Tactix |
-| `BCAP` | Bootstrapper Capital |
-| `BGW` | Bootstrapper's Guide to the World |
-| `SOE` | Startup Operational Excellence |
+| Code   | Meaning                           |
+| ------ | --------------------------------- |
+| `URC`  | Uncle Robert Consulting           |
+| `AGL`  | Agent Lab                         |
+| `TAC`  | Tactix                            |
+| `BCAP` | Bootstrapper Capital              |
+| `BGW`  | Bootstrapper's Guide to the World |
+| `SOE`  | Startup Operational Excellence    |
 
 Department or workflow codes:
 
-| Code | Meaning |
-| --- | --- |
-| `OPS` | Operations |
-| `MKT` | Marketing |
-| `SAL` | Sales |
-| `FUL` | Fulfillment / delivery |
-| `FIN` | Finance |
-| `PKG` | Workflow packaging |
-| `CUL` | Culture / governance |
+| Code  | Meaning                           |
+| ----- | --------------------------------- |
+| `OPS` | Operations                        |
+| `MKT` | Marketing                         |
+| `SAL` | Sales                             |
+| `FUL` | Fulfillment / delivery            |
+| `FIN` | Finance                           |
+| `PKG` | Workflow packaging                |
+| `CUL` | Culture / governance              |
 | `SEC` | Security, credentials, and access |
 
 ## SKU Standard
@@ -117,24 +117,24 @@ Pattern:
 
 Examples:
 
-| SKU | Meaning |
-| --- | --- |
-| `AGL-FSS-BETA-STD-MONTHLY` | Agent Lab Founder Signal System standard beta monthly plan |
-| `URC-ASMT-QUAL-LITE-FREE` | URC lightweight assessment used as a free lead qualifier |
-| `URC-ASMT-AUDIT-DEEP-ONEOFF` | URC in-depth assessment expanded into a paid audit |
-| `BCAP-ROUND-SPONSOR-STD-ONEOFF` | Bootstrapper Capital standard roundtable sponsorship |
-| `TAC-UPWORK-IMPL-SPRINT-ONEOFF` | Tactix Upwork implementation sprint |
+| SKU                             | Meaning                                                    |
+| ------------------------------- | ---------------------------------------------------------- |
+| `AGL-FSS-BETA-STD-MONTHLY`      | Agent Lab Founder Signal System standard beta monthly plan |
+| `URC-ASMT-QUAL-LITE-FREE`       | URC lightweight assessment used as a free lead qualifier   |
+| `URC-ASMT-AUDIT-DEEP-ONEOFF`    | URC in-depth assessment expanded into a paid audit         |
+| `BCAP-ROUND-SPONSOR-STD-ONEOFF` | Bootstrapper Capital standard roundtable sponsorship       |
+| `TAC-UPWORK-IMPL-SPRINT-ONEOFF` | Tactix Upwork implementation sprint                        |
 
 Segment rules:
 
-| Segment | Meaning | Rule |
-| --- | --- | --- |
-| `BUSINESS` | Owning business or authority lane | Use a business code such as `URC`, `AGL`, `TAC`, `BCAP`, `BGW`, or `SOE`. |
-| `ASSET` | Stable product, asset, channel, or system family | Use a short code such as `ASMT`, `FSS`, `ROUND`, `BOOK`, `UPWORK`, or `DIAG`. |
-| `OFFER` | Commercial or operating use | Use a short code such as `QUAL`, `LMAG`, `PROD`, `AUDIT`, `SPRINT`, `SPONSOR`, `WKSP`, or `CONT`. |
-| `VARIANT` | Optional tier or package variant | Use `NONE` when no tier exists; otherwise use `LITE`, `STD`, `PRO`, `BETA`, `CUSTOM`, or another approved code. |
-| `DEPTH` | Work depth or scope | Use `NONE`, `LITE`, `STD`, `DEEP`, `FULL`, or `CUSTOM`. |
-| `BILLING` | Billing model | Use `FREE`, `ONEOFF`, `MONTHLY`, `QUARTERLY`, `ANNUAL`, `REVSHARE`, or `SPONSOR`. |
+| Segment    | Meaning                                          | Rule                                                                                                            |
+| ---------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| `BUSINESS` | Owning business or authority lane                | Use a business code such as `URC`, `AGL`, `TAC`, `BCAP`, `BGW`, or `SOE`.                                       |
+| `ASSET`    | Stable product, asset, channel, or system family | Use a short code such as `ASMT`, `FSS`, `ROUND`, `BOOK`, `UPWORK`, or `DIAG`.                                   |
+| `OFFER`    | Commercial or operating use                      | Use a short code such as `QUAL`, `LMAG`, `PROD`, `AUDIT`, `SPRINT`, `SPONSOR`, `WKSP`, or `CONT`.               |
+| `VARIANT`  | Optional tier or package variant                 | Use `NONE` when no tier exists; otherwise use `LITE`, `STD`, `PRO`, `BETA`, `CUSTOM`, or another approved code. |
+| `DEPTH`    | Work depth or scope                              | Use `NONE`, `LITE`, `STD`, `DEEP`, `FULL`, or `CUSTOM`.                                                         |
+| `BILLING`  | Billing model                                    | Use `FREE`, `ONEOFF`, `MONTHLY`, `QUARTERLY`, `ANNUAL`, `REVSHARE`, or `SPONSOR`.                               |
 
 SKU rules:
 
@@ -154,16 +154,16 @@ SKU rules:
 
 Every reusable invoice line item should have:
 
-| Field | Rule |
-| --- | --- |
-| SKU | Use the SKU standard above. |
-| Public description | Plain customer-facing description. |
-| Internal offer | Link to offer, workflow, or SOP. |
-| Revenue category | Consulting, subscription, workshop, sponsorship, setup, fulfillment, or resale. |
-| Default price | Optional; price may vary by proposal. |
-| Tax treatment | Pending review until finance/tax rules are confirmed. |
-| Fulfillment owner | URC, Agent Lab, Tactix, or Bootstrapper Capital. |
-| Accounting account | Chart-of-accounts reference when available. |
+| Field              | Rule                                                                            |
+| ------------------ | ------------------------------------------------------------------------------- |
+| SKU                | Use the SKU standard above.                                                     |
+| Public description | Plain customer-facing description.                                              |
+| Internal offer     | Link to offer, workflow, or SOP.                                                |
+| Revenue category   | Consulting, subscription, workshop, sponsorship, setup, fulfillment, or resale. |
+| Default price      | Optional; price may vary by proposal.                                           |
+| Tax treatment      | Pending review until finance/tax rules are confirmed.                           |
+| Fulfillment owner  | URC, Agent Lab, Tactix, or Bootstrapper Capital.                                |
+| Accounting account | Chart-of-accounts reference when available.                                     |
 
 ## Chart Of Accounts Naming
 
@@ -172,15 +172,15 @@ be stable enough to connect to SKUs later.
 
 Recommended planning ranges:
 
-| Range | Category |
-| --- | --- |
-| `4000-4999` | Revenue |
+| Range       | Category                               |
+| ----------- | -------------------------------------- |
+| `4000-4999` | Revenue                                |
 | `5000-5999` | Cost of goods sold / fulfillment costs |
-| `6000-6999` | Operating expenses |
-| `7000-7999` | Other income and expense |
-| `1000-1999` | Assets |
-| `2000-2999` | Liabilities |
-| `3000-3999` | Equity |
+| `6000-6999` | Operating expenses                     |
+| `7000-7999` | Other income and expense               |
+| `1000-1999` | Assets                                 |
+| `2000-2999` | Liabilities                            |
+| `3000-3999` | Equity                                 |
 
 Account names should be business-readable:
 
@@ -264,8 +264,8 @@ Rules:
 
 ## Version History
 
-| Date | Version | Change |
-| --- | --- | --- |
-| 2026-05-30 | v0.1 | Initial SOP created from API key inventory and folder navigation discussion. |
-| 2026-06-03 | v0.2 | Added pointer to the secret-handling standard, metadata-only handling log, and JSON quarantine classification rule. |
-| 2026-06-03 | v0.3 | Added `SOE`, expanded SKU segments for assessment/offer depth and billing variation, and required SKU/accounting synchronization while owned finance trackers are the active control layer. |
+| Date       | Version | Change                                                                                                                                                                                      |
+| ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-05-30 | v0.1    | Initial SOP created from API key inventory and folder navigation discussion.                                                                                                                |
+| 2026-06-03 | v0.2    | Added pointer to the secret-handling standard, metadata-only handling log, and JSON quarantine classification rule.                                                                         |
+| 2026-06-03 | v0.3    | Added `SOE`, expanded SKU segments for assessment/offer depth and billing variation, and required SKU/accounting synchronization while owned finance trackers are the active control layer. |

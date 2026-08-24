@@ -1,17 +1,20 @@
 # OPS04: Organization & Security Assets
 
 ## 1. Offboarding Security Checklist
-*To be executed by Operations/IT immediately upon an employee or contractor's departure.*
+
+_To be executed by Operations/IT immediately upon an employee or contractor's departure._
 
 **Employee/Contractor Name:** [Name]
 **Last Day:** [Date]
 
 **Immediate Action (Within 1 hour of departure):**
+
 - [ ] Block access to primary email/Google Workspace account (Do not delete yet, just block/change password).
 - [ ] Revoke access to password manager (e.g., 1Password, LastPass).
 - [ ] Remove from internal communication tools (Slack, Discord, Teams).
 
 **Secondary Action (Within 24 hours):**
+
 - [ ] Remove access to CRM (HubSpot, Salesforce).
 - [ ] Remove access to Project Management tools (ClickUp, Asana, Notion).
 - [ ] Remove access to Financial systems/Expense platforms.
@@ -20,6 +23,7 @@
 - [ ] If applicable, remotely wipe and lock company-issued devices.
 
 **Wrap-Up (Within 1 week):**
+
 - [ ] Transfer ownership of critical Google Drive files to a manager.
 - [ ] Set up email forwarding from their account to a manager.
 - [ ] Reassign their tool licenses to save costs.
@@ -27,7 +31,8 @@
 ---
 
 ## 2. Basic Vendor Security Questionnaire
-*Sent to new third-party software vendors or contractors who will handle confidential agency or client data.*
+
+_Sent to new third-party software vendors or contractors who will handle confidential agency or client data._
 
 **Vendor Name:** [Vendor]
 **Service Provided:** [Service]
@@ -42,9 +47,10 @@
 ---
 
 ## 3. Incident Response Log (Template)
-*Maintained by the Operations Lead to track security incidents.*
 
-| Incident ID | Date/Time | Incident Type | Description & Scope | Remediation Actions Taken | Status | Lessons Learned / SOP Updates |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| INC-001 | 2024-05-12 | Phishing | Employee clicked phishing link. No data exfiltrated. | Reset employee password, ran malware scan, enforced MFA. | Closed | Added mandatory quarterly phishing awareness training. |
-| INC-002 | | | | | | |
+_Maintained by the Operations Lead to track security incidents._
+
+| Incident ID | Date/Time  | Incident Type | Description & Scope                                  | Remediation Actions Taken                                | Status | Lessons Learned / SOP Updates                          |
+| :---------- | :--------- | :------------ | :--------------------------------------------------- | :------------------------------------------------------- | :----- | :----------------------------------------------------- |
+| INC-001     | 2024-05-12 | Phishing      | Employee clicked phishing link. No data exfiltrated. | Reset employee password, ran malware scan, enforced MFA. | Closed | Added mandatory quarterly phishing awareness training. |
+| INC-002     |            |               |                                                      |                                                          |        |                                                        |

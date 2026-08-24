@@ -48,16 +48,20 @@ const handler = createExpressHandler(config);
 export function registerAutonomaSdkRoutes(app: Express) {
   // Use express.text to parse the raw body as a string for HMAC verification.
   // This prevents the SDK's req.on('data') from hanging in serverless/proxied environments.
-  app.post("/api/autonoma", express.text({ type: "application/json" }), (req, res, next) => {
-    const originalJson = res.json;
-    res.json = function (body) {
-      if (res.statusCode >= 400) {
-        console.error("Autonoma SDK Error Response:", res.statusCode, body);
-      }
-      return originalJson.apply(this, arguments as any);
-    };
-    
-    // Express 4 doesn't catch async handler errors automatically
-    Promise.resolve(handler(req, res)).catch(next);
-  });
+  app.post(
+    "/api/autonoma",
+    express.text({ type: "application/json" }),
+    (req, res, next) => {
+      const originalJson = res.json;
+      res.json = function (body) {
+        if (res.statusCode >= 400) {
+          console.error("Autonoma SDK Error Response:", res.statusCode, body);
+        }
+        return originalJson.apply(this, arguments as any);
+      };
+
+      // Express 4 doesn't catch async handler errors automatically
+      Promise.resolve(handler(req, res)).catch(next);
+    }
+  );
 }

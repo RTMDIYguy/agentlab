@@ -3,9 +3,7 @@
     {
       "path": "frontend",
       "framework": "react",
-      "dependsOn": [
-        "backend"
-      ],
+      "dependsOn": ["backend"],
       "why": "React application (CRA) serving as the user dashboard for scheduling and monitoring social media posts."
     }
   ],

@@ -5,33 +5,33 @@ Status: Ready for Calibre test import
 
 ## Primary Files
 
-| File | Purpose |
-| --- | --- |
-| `Startup Operational Excellence-Calibre handoff manuscript.docx` | Clean DOCX source for Calibre import. |
-| `Startup Operational Excellence-Calibre handoff manuscript.pdf` | Matching human review/reference PDF exported from the clean DOCX. |
-| `Startup Operational Excellence - signed review copy.docx` | Word review copy with orange-text cover page, prepared for Robert to sign before sharing. |
-| `Startup Operational Excellence - signed review copy.pdf` | Matching PDF proof exported from the signed review DOCX. |
-| `graphics/startup-operational-excellence/` | Interior graphics, contact sheet, and graphics inventory. |
+| File                                                              | Purpose                                                                                                                        |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `Startup Operational Excellence-Calibre handoff manuscript.docx`  | Clean DOCX source for Calibre import.                                                                                          |
+| `Startup Operational Excellence-Calibre handoff manuscript.pdf`   | Matching human review/reference PDF exported from the clean DOCX.                                                              |
+| `Startup Operational Excellence - signed review copy.docx`        | Word review copy with orange-text cover page, prepared for Robert to sign before sharing.                                      |
+| `Startup Operational Excellence - signed review copy.pdf`         | Matching PDF proof exported from the signed review DOCX.                                                                       |
+| `graphics/startup-operational-excellence/`                        | Interior graphics, contact sheet, and graphics inventory.                                                                      |
 | `cover-assets/SOE Cover Graphic - cropped no strip 1600x2000.jpg` | Preferred current cover background candidate for Calibre/Canva. Cropped to remove generated bottom text without blur patching. |
-| `cover-assets/SOE Cover Graphic - cropped no strip.jpg` | Faithful no-strip crop before 1600 x 2000 resizing. |
-| `cover-assets/SOE Cover Graphic - clean background.jpg` | Earlier cleaned candidate; not preferred because the removed strip area can show blur artifacts. |
-| `cover-assets/SOE Cover Graphic - clean background.png` | Lossless version of the earlier cleaned candidate. |
-| `cover-assets/SOE Cover Graphic.png` | Original AI-generated cover graphic source. |
-| `reader-feedback/David Wagstaff Book review.txt` | First outside-reader feedback file received 2026-05-21. |
-| `reader-feedback-log.md` | Structured feedback log and pre-KDP revision signals. |
+| `cover-assets/SOE Cover Graphic - cropped no strip.jpg`           | Faithful no-strip crop before 1600 x 2000 resizing.                                                                            |
+| `cover-assets/SOE Cover Graphic - clean background.jpg`           | Earlier cleaned candidate; not preferred because the removed strip area can show blur artifacts.                               |
+| `cover-assets/SOE Cover Graphic - clean background.png`           | Lossless version of the earlier cleaned candidate.                                                                             |
+| `cover-assets/SOE Cover Graphic.png`                              | Original AI-generated cover graphic source.                                                                                    |
+| `reader-feedback/David Wagstaff Book review.txt`                  | First outside-reader feedback file received 2026-05-21.                                                                        |
+| `reader-feedback-log.md`                                          | Structured feedback log and pre-KDP revision signals.                                                                          |
 
 ## Metadata
 
-| Field | Value |
-| --- | --- |
-| Title | Startup Operational Excellence |
-| Subtitle | A Practical Mentor Guide for Building a Business with its Own Soul |
-| Author | Robert T. McCarthy |
-| Publisher / Imprint | Uncle Robert Consulting LLC |
-| Language | English |
-| Series | None |
-| Categories | Business Startup; Bootstrapping |
-| Keywords | business startup; bootstrapping; startup operational excellence; SOE; StartupOperationalExcellence; small business systems; founder operations; operational excellence; Ownable |
+| Field               | Value                                                                                                                                                                           |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Title               | Startup Operational Excellence                                                                                                                                                  |
+| Subtitle            | A Practical Mentor Guide for Building a Business with its Own Soul                                                                                                              |
+| Author              | Robert T. McCarthy                                                                                                                                                              |
+| Publisher / Imprint | Uncle Robert Consulting LLC                                                                                                                                                     |
+| Language            | English                                                                                                                                                                         |
+| Series              | None                                                                                                                                                                            |
+| Categories          | Business Startup; Bootstrapping                                                                                                                                                 |
+| Keywords            | business startup; bootstrapping; startup operational excellence; SOE; StartupOperationalExcellence; small business systems; founder operations; operational excellence; Ownable |
 
 ## Description Draft
 

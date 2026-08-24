@@ -13,6 +13,7 @@ verification: "The new draft appears in the posts list with the correct content 
 **Intent**: Users should be able to write content, select platforms, and save their work as a draft for later editing. This test verifies the basic creation and persistence flow for drafts.
 
 **Steps**:
+
 1. type: type: "This is a draft post content." into the Content textarea in the composer card
 2. click: click: the "Instagram" platform button to deselect it (it's selected by default) in the platform selector
 3. click: click: the "Facebook" platform button to select it in the platform selector
@@ -20,6 +21,7 @@ verification: "The new draft appears in the posts list with the correct content 
 5. assert: assert: text "Saved as draft" is visible in the toast notification in the toast notification house
 
 **Verification**:
+
 1. assert: assert: text "This is a draft post content." is visible in the posts list in the posts list table
 2. assert: assert: text "DRAFT" is visible as the status for the new post in the posts list table row for the new post
 

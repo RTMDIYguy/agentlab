@@ -96,17 +96,17 @@ starting point and the next layer should be planned as a separate engagement.
 
 The full URC Marketing department has nine workflows:
 
-| ID | Workflow | Included In This Package? |
-| --- | --- | --- |
-| MKT-01 | Lead Generation & Conversion | Yes — ICP and qualified-conversation layer only |
-| MKT-02 | Email/SMS Nurture | Yes — three-touch outreach and follow-up only |
-| MKT-03 | Polls & Assessments | Yes — light intake/diagnostic only |
-| MKT-04 | Reviews & Referrals | Yes — proof capture only |
-| MKT-05 | Outreach & Engagement | Yes — small human outreach list only |
-| MKT-06 | Content Creation & Dissemination | Yes — content engine, the visible wedge |
-| MKT-07 | Paid Advertising / PPC | No |
-| MKT-08 | Social Media Management | No |
-| MKT-09 | Event & Webinar Marketing | No |
+| ID     | Workflow                         | Included In This Package?                       |
+| ------ | -------------------------------- | ----------------------------------------------- |
+| MKT-01 | Lead Generation & Conversion     | Yes — ICP and qualified-conversation layer only |
+| MKT-02 | Email/SMS Nurture                | Yes — three-touch outreach and follow-up only   |
+| MKT-03 | Polls & Assessments              | Yes — light intake/diagnostic only              |
+| MKT-04 | Reviews & Referrals              | Yes — proof capture only                        |
+| MKT-05 | Outreach & Engagement            | Yes — small human outreach list only            |
+| MKT-06 | Content Creation & Dissemination | Yes — content engine, the visible wedge         |
+| MKT-07 | Paid Advertising / PPC           | No                                              |
+| MKT-08 | Social Media Management          | No                                              |
+| MKT-09 | Event & Webinar Marketing        | No                                              |
 
 The visible wedge is MKT-06 because that is where founders feel the pain
 first. The package only includes the minimum viable dependencies from the

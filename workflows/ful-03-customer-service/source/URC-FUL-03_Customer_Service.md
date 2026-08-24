@@ -10,7 +10,7 @@ URC-FUL-03 — Customer Service
 
 Tiered Issue Resolution — Fast, Consistent, and Human Where It Counts
 
-Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
+Robert T. McCarthy & Sheena Burns | v1.0 | March 23, 2026
 
 1. Why This Workflow Exists
 

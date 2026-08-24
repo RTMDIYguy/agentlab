@@ -27,11 +27,13 @@ writeFileSync(
       8: {
         completed: false,
         skipped: true,
-        fallback: "Distribution preview represented by local email/social adaptation files",
+        fallback:
+          "Distribution preview represented by local email/social adaptation files",
       },
       9: {
         completed: true,
-        evidenceUrl: "canary-runs/WF6-CANARY-20260521/performance-tracker-row.md",
+        evidenceUrl:
+          "canary-runs/WF6-CANARY-20260521/performance-tracker-row.md",
       },
     },
     null,

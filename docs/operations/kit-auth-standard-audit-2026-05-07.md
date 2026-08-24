@@ -56,7 +56,7 @@ Change-control verification passed.
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-07 | CC-2026-05-07-003 | 1.0.0 | audit | Added and verified kit auth standard plus tracker-ready Notion update. | codex |
-| 2026-05-07 | CC-2026-05-07-004 | 1.0.1 | audit | Reflected `kit-auth/1.0` in canonical `Journey_Kit.md` after source-of-truth correction. | codex |
+| Date       | Change ID         | Version | Type  | Summary                                                                                  | Author |
+| ---------- | ----------------- | ------- | ----- | ---------------------------------------------------------------------------------------- | ------ |
+| 2026-05-07 | CC-2026-05-07-003 | 1.0.0   | audit | Added and verified kit auth standard plus tracker-ready Notion update.                   | codex  |
+| 2026-05-07 | CC-2026-05-07-004 | 1.0.1   | audit | Reflected `kit-auth/1.0` in canonical `Journey_Kit.md` after source-of-truth correction. | codex  |

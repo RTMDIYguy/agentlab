@@ -11,13 +11,19 @@ interface BlogCommentSectionProps {
   articleId: string;
 }
 
-export default function BlogCommentSection({ articleId }: BlogCommentSectionProps) {
+export default function BlogCommentSection({
+  articleId,
+}: BlogCommentSectionProps) {
   const { user, isAuthenticated } = useAuth();
   const [commentText, setCommentText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch threaded comments (top-level only)
-  const { data: comments = [], refetch: refetchComments, isLoading } = trpc.blog.getThreadedComments.useQuery(
+  const {
+    data: comments = [],
+    refetch: refetchComments,
+    isLoading,
+  } = trpc.blog.getThreadedComments.useQuery(
     { articleId },
     { enabled: !!articleId }
   );
@@ -35,7 +41,7 @@ export default function BlogCommentSection({ articleId }: BlogCommentSectionProp
       refetchComments();
       toast.success("Comment posted successfully!");
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to post comment");
     },
   });
@@ -46,7 +52,7 @@ export default function BlogCommentSection({ articleId }: BlogCommentSectionProp
       refetchComments();
       toast.success("Comment deleted successfully");
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to delete comment");
     },
   });
@@ -100,7 +106,7 @@ export default function BlogCommentSection({ articleId }: BlogCommentSectionProp
               </label>
               <textarea
                 value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
+                onChange={e => setCommentText(e.target.value)}
                 placeholder="Write a thoughtful comment..."
                 rows={4}
                 className="w-full px-4 py-3 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
@@ -135,10 +141,13 @@ export default function BlogCommentSection({ articleId }: BlogCommentSectionProp
           <div className="flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-primary" />
             <p className="text-foreground">
-              <a href="/login" className="font-semibold text-primary hover:underline">
+              <a
+                href="/login"
+                className="font-semibold text-primary hover:underline"
+              >
                 Sign in
-              </a>
-              {" "}to post a comment
+              </a>{" "}
+              to post a comment
             </p>
           </div>
         </Card>
@@ -151,7 +160,7 @@ export default function BlogCommentSection({ articleId }: BlogCommentSectionProp
             <p className="text-muted-foreground">Loading comments...</p>
           </div>
         ) : comments && comments.length > 0 ? (
-          comments.map((comment) => (
+          comments.map(comment => (
             <NestedComment
               key={comment.id}
               comment={comment}

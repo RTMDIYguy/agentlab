@@ -68,7 +68,7 @@ export function useAuth(options?: UseAuthOptions) {
     const destination = redirectPath ?? getLoginUrl();
     if (window.location.pathname === destination) return;
 
-    window.location.href = destination
+    window.location.href = destination;
   }, [
     redirectOnUnauthenticated,
     redirectPath,

@@ -234,8 +234,10 @@ describe("Features Page", () => {
       ];
 
       // Professional should include all basic workflows plus new ones
-      expect(professionalWorkflows.length).toBeGreaterThan(basicWorkflows.length);
-      basicWorkflows.forEach((workflow) => {
+      expect(professionalWorkflows.length).toBeGreaterThan(
+        basicWorkflows.length
+      );
+      basicWorkflows.forEach(workflow => {
         expect(professionalWorkflows).toContain(workflow);
       });
     });
@@ -256,7 +258,7 @@ describe("Features Page", () => {
         "Paid Advertising",
       ];
 
-      professionalWorkflows.forEach((workflow) => {
+      professionalWorkflows.forEach(workflow => {
         expect(enterpriseWorkflows).toContain(workflow);
       });
     });

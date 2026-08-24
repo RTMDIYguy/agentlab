@@ -10,7 +10,7 @@ URC-FUL-01 — Display & Packaging
 
 How Every URC Deliverable Is Presented, Named, and Delivered
 
-Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
+Robert T. McCarthy & Sheena Burns | v1.0 | March 23, 2026
 
 1. Why This Workflow Exists
 
@@ -32,7 +32,7 @@ File Naming Convention
 
 All URC deliverables follow this naming format:
 
-[ClientName]_[DeliverableType]_[YYYY-MM]_v[Version]
+[ClientName]_[DeliverableType]_[YYYY-MM]\_v[Version]
 
 Examples:
 

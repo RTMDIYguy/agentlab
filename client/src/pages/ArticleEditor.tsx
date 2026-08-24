@@ -16,7 +16,9 @@ export default function ArticleEditor() {
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("General");
-  const [status, setStatus] = useState<"draft" | "scheduled" | "published">("draft");
+  const [status, setStatus] = useState<"draft" | "scheduled" | "published">(
+    "draft"
+  );
   const [scheduledFor, setScheduledFor] = useState<string>("");
   const [featuredImage, setFeaturedImage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,7 +35,7 @@ export default function ArticleEditor() {
       toast.success("Article created successfully!");
       navigate("/blog-manager");
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to create article");
       setIsSubmitting(false);
     },
@@ -44,7 +46,7 @@ export default function ArticleEditor() {
       toast.success("Article updated successfully!");
       navigate("/blog-manager");
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to update article");
       setIsSubmitting(false);
     },
@@ -60,7 +62,9 @@ export default function ArticleEditor() {
       setStatus(article.status as "draft" | "scheduled" | "published");
       setFeaturedImage(article.featuredImage || "");
       if (article.scheduledFor) {
-        setScheduledFor(new Date(article.scheduledFor).toISOString().slice(0, 16));
+        setScheduledFor(
+          new Date(article.scheduledFor).toISOString().slice(0, 16)
+        );
       }
     }
   }, [article]);
@@ -76,7 +80,13 @@ export default function ArticleEditor() {
     setIsSubmitting(true);
 
     try {
-      const articleSlug = slug === "new" ? title.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "") : (slug || "");
+      const articleSlug =
+        slug === "new"
+          ? title
+              .toLowerCase()
+              .replace(/\s+/g, "-")
+              .replace(/[^\w-]/g, "")
+          : slug || "";
 
       if (slug === "new") {
         // Create new article
@@ -87,7 +97,10 @@ export default function ArticleEditor() {
           slug: articleSlug,
           category,
           status,
-          scheduledFor: status === "scheduled" && scheduledFor ? new Date(scheduledFor) : undefined,
+          scheduledFor:
+            status === "scheduled" && scheduledFor
+              ? new Date(scheduledFor)
+              : undefined,
           featuredImage: featuredImage || undefined,
         });
       } else {
@@ -99,7 +112,10 @@ export default function ArticleEditor() {
           content,
           category,
           status,
-          scheduledFor: status === "scheduled" && scheduledFor ? new Date(scheduledFor) : undefined,
+          scheduledFor:
+            status === "scheduled" && scheduledFor
+              ? new Date(scheduledFor)
+              : undefined,
           featuredImage: featuredImage || undefined,
         });
       }
@@ -132,7 +148,9 @@ export default function ArticleEditor() {
       <div className="min-h-screen bg-background py-8">
         <div className="container max-w-4xl">
           <Card className="p-8 border border-border text-center">
-            <p className="text-foreground mb-4">Please log in to write articles.</p>
+            <p className="text-foreground mb-4">
+              Please log in to write articles.
+            </p>
             <Button className="bg-primary hover:bg-primary/90">Sign In</Button>
           </Card>
         </div>
@@ -171,11 +189,13 @@ export default function ArticleEditor() {
             <div className="space-y-4">
               {/* Title */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Title</label>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Title
+                </label>
                 <input
                   type="text"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={e => setTitle(e.target.value)}
                   placeholder="Enter article title"
                   className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                   required
@@ -184,10 +204,12 @@ export default function ArticleEditor() {
 
               {/* Excerpt */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Excerpt</label>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Excerpt
+                </label>
                 <textarea
                   value={excerpt}
-                  onChange={(e) => setExcerpt(e.target.value)}
+                  onChange={e => setExcerpt(e.target.value)}
                   placeholder="Brief summary of your article (optional)"
                   rows={2}
                   className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
@@ -196,10 +218,12 @@ export default function ArticleEditor() {
 
               {/* Content */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Content (Markdown)</label>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Content (Markdown)
+                </label>
                 <textarea
                   value={content}
-                  onChange={(e) => setContent(e.target.value)}
+                  onChange={e => setContent(e.target.value)}
                   placeholder="Write your article content here (supports Markdown)"
                   rows={12}
                   className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary font-mono text-sm"
@@ -209,10 +233,12 @@ export default function ArticleEditor() {
 
               {/* Category */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Category</label>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Category
+                </label>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={e => setCategory(e.target.value)}
                   className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option>General</option>
@@ -225,11 +251,13 @@ export default function ArticleEditor() {
 
               {/* Featured Image */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Featured Image URL</label>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Featured Image URL
+                </label>
                 <input
                   type="url"
                   value={featuredImage}
-                  onChange={(e) => setFeaturedImage(e.target.value)}
+                  onChange={e => setFeaturedImage(e.target.value)}
                   placeholder="https://example.com/image.jpg"
                   className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                 />
@@ -238,11 +266,13 @@ export default function ArticleEditor() {
               {/* Scheduled Date */}
               {status === "scheduled" && (
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Schedule For</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Schedule For
+                  </label>
                   <input
                     type="datetime-local"
                     value={scheduledFor}
-                    onChange={(e) => setScheduledFor(e.target.value)}
+                    onChange={e => setScheduledFor(e.target.value)}
                     className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   />
@@ -260,7 +290,11 @@ export default function ArticleEditor() {
               disabled={isSubmitting}
               className="flex items-center gap-2"
             >
-              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              {isSubmitting ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4" />
+              )}
               Save Draft
             </Button>
 
@@ -282,7 +316,11 @@ export default function ArticleEditor() {
               disabled={isSubmitting}
               className="bg-primary hover:bg-primary/90 flex items-center gap-2"
             >
-              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              {isSubmitting ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Send className="w-4 h-4" />
+              )}
               Publish Now
             </Button>
           </div>

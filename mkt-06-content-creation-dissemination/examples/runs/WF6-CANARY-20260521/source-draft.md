@@ -58,4 +58,3 @@ removes the bottleneck the business has already earned the right to remove.
 That is how the wall stops being the end of the road.
 
 It becomes the place where the business finally tells the truth.
-

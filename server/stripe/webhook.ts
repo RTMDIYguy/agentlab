@@ -1,11 +1,17 @@
 import Stripe from "stripe";
-import { upsertSubscription, getPaymentByStripeId, createPayment, updatePaymentStatus } from "./db";
-import { getUserByOpenId } from "../db";
-import { users } from "../../drizzle/schema";
+import {
+  upsertSubscription,
+  getPaymentByStripeId,
+  createPayment,
+  updatePaymentStatus,
+} from "./db";
+import { users, workspacePackages } from "../schema";
 import { eq } from "drizzle-orm";
 import { getDb } from "../db";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+const stripe = new Stripe((process.env.STRIPE_SECRET_KEY as string) || "sk_test_123", {
+  apiVersion: "2024-04-10", // use latest supported version
+});
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
 
 /**
@@ -22,142 +28,47 @@ export function constructWebhookEvent(body: Buffer, signature: string) {
 /**
  * Handle checkout session completed event
  */
-export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
-  const userId = parseInt(session.client_reference_id || "0");
+export async function handleCheckoutSessionCompleted(
+  session: Stripe.Checkout.Session
+) {
   const metadata = session.metadata || {};
+  const workspaceId = metadata.workspaceId;
+  const packageId = metadata.packageId;
 
-  if (!userId || userId === 0) {
-    console.error("[Webhook] Invalid user ID in checkout session");
+  if (!workspaceId || !packageId) {
+    console.error("[Webhook] Missing workspaceId or packageId in checkout session metadata");
     return;
   }
 
   // Get subscription details
   if (session.subscription && typeof session.subscription === "string") {
-    const subscription = await stripe.subscriptions.retrieve(session.subscription);
+    const subscriptionId = session.subscription;
 
-    // Extract plan from metadata
-    const plan = metadata.plan || "starter";
-    const billingCycle = metadata.billing_cycle || "monthly";
+    const db = await getDb();
+    if (!db) {
+      console.error("[Webhook] Database unavailable");
+      return;
+    }
 
-    // Store subscription in database
-    await upsertSubscription({
-      userId,
-      stripeSubscriptionId: subscription.id,
-      stripeCustomerId: subscription.customer as string,
-      plan,
-      status: subscription.status,
-      currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
-      currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
+    await db.insert(workspacePackages).values({
+      workspaceId,
+      packageId,
+      status: 'active',
+      stripeSubscriptionId: subscriptionId,
+      unlockedAt: new Date(),
+    }).onConflictDoUpdate({
+      target: [workspacePackages.workspaceId, workspacePackages.packageId],
+      set: {
+        status: 'active',
+        stripeSubscriptionId: subscriptionId,
+        unlockedAt: new Date(),
+      }
     });
 
-    console.log(`[Webhook] Subscription created for user ${userId}: ${subscription.id}`);
+    console.log(
+      `[Webhook] Package ${packageId} unlocked for workspace ${workspaceId} with subscription ${subscriptionId}`
+    );
   }
 }
 
-/**
- * Handle subscription updated event
- */
-export async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
-  const stripeSubscriptionId = subscription.id;
 
-  // Update subscription status in database
-  await upsertSubscription({
-    stripeSubscriptionId,
-    stripeCustomerId: subscription.customer as string,
-    userId: 0, // Will be overwritten by upsert
-    plan: "starter", // Will be overwritten by upsert
-    status: subscription.status,
-    currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
-    currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
-    canceledAt: (subscription as any).canceled_at ? new Date((subscription as any).canceled_at * 1000) : null,
-  });
-
-  console.log(`[Webhook] Subscription updated: ${stripeSubscriptionId}`);
-}
-
-/**
- * Handle subscription deleted event
- */
-export async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
-  const stripeSubscriptionId = subscription.id;
-
-  // Update subscription status to canceled
-  await upsertSubscription({
-    stripeSubscriptionId,
-    stripeCustomerId: subscription.customer as string,
-    userId: 0, // Will be overwritten by upsert
-    plan: "starter", // Will be overwritten by upsert
-    status: "canceled",
-    canceledAt: new Date(),
-  });
-
-  console.log(`[Webhook] Subscription deleted: ${stripeSubscriptionId}`);
-}
-
-/**
- * Handle payment intent succeeded event
- */
-export async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent) {
-  const stripePaymentIntentId = paymentIntent.id;
-  const metadata = paymentIntent.metadata || {};
-  const userId = parseInt(metadata.user_id || "0");
-
-  if (!userId || userId === 0) {
-    console.error("[Webhook] Invalid user ID in payment intent");
-    return;
-  }
-
-  // Check if payment already exists
-  const existingPayment = await getPaymentByStripeId(stripePaymentIntentId);
-  if (existingPayment) {
-    // Update status
-    await updatePaymentStatus(stripePaymentIntentId, "succeeded");
-  } else {
-    // Create new payment record
-    await createPayment({
-      userId,
-      stripePaymentIntentId,
-      stripeInvoiceId: (paymentIntent as any).invoice as string | undefined,
-      amount: (paymentIntent.amount / 100).toString(), // Convert cents to dollars
-      currency: paymentIntent.currency.toUpperCase(),
-      status: "succeeded",
-      description: paymentIntent.description || undefined,
-    });
-  }
-
-  console.log(`[Webhook] Payment succeeded for user ${userId}: ${stripePaymentIntentId}`);
-}
-
-/**
- * Handle payment intent failed event
- */
-export async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
-  const stripePaymentIntentId = paymentIntent.id;
-  const metadata = paymentIntent.metadata || {};
-  const userId = parseInt(metadata.user_id || "0");
-
-  if (!userId || userId === 0) {
-    console.error("[Webhook] Invalid user ID in payment intent");
-    return;
-  }
-
-  // Check if payment already exists
-  const existingPayment = await getPaymentByStripeId(stripePaymentIntentId);
-  if (existingPayment) {
-    // Update status
-    await updatePaymentStatus(stripePaymentIntentId, "failed");
-  } else {
-    // Create new payment record with failed status
-    await createPayment({
-      userId,
-      stripePaymentIntentId,
-      stripeInvoiceId: (paymentIntent as any).invoice as string | undefined,
-      amount: (paymentIntent.amount / 100).toString(),
-      currency: paymentIntent.currency.toUpperCase(),
-      status: "failed",
-      description: paymentIntent.description || undefined,
-    });
-  }
-
-  console.log(`[Webhook] Payment failed for user ${userId}: ${stripePaymentIntentId}`);
-}

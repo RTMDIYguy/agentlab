@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 export interface WorkflowStep {
   stepNumber: number;
-  type: 'trigger' | 'agent' | 'guardrail' | 'destination';
+  type: "trigger" | "agent" | "guardrail" | "destination";
   title: string;
   detail: string;
   agentId?: string;
@@ -37,16 +37,16 @@ export const WorkflowProposalCard: React.FC<WorkflowProposalCardProps> = ({
     if (onApprove) onApprove(proposal.id);
   };
 
-  const getStepBadge = (type: WorkflowStep['type']) => {
+  const getStepBadge = (type: WorkflowStep["type"]) => {
     switch (type) {
-      case 'trigger':
-        return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
-      case 'agent':
-        return 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30';
-      case 'guardrail':
-        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-      case 'destination':
-        return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+      case "trigger":
+        return "bg-purple-500/10 text-purple-400 border-purple-500/30";
+      case "agent":
+        return "bg-cyan-500/10 text-cyan-400 border-cyan-500/30";
+      case "guardrail":
+        return "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
+      case "destination":
+        return "bg-amber-500/10 text-amber-400 border-amber-500/30";
     }
   };
 
@@ -59,7 +59,9 @@ export const WorkflowProposalCard: React.FC<WorkflowProposalCardProps> = ({
             <span className="text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
               Autonomic Blueprint Proposal
             </span>
-            <span className="text-xs font-mono text-slate-500">{proposal.id}</span>
+            <span className="text-xs font-mono text-slate-500">
+              {proposal.id}
+            </span>
           </div>
           <h3 className="font-poppins text-base font-semibold text-white tracking-wide">
             {proposal.name}
@@ -76,7 +78,7 @@ export const WorkflowProposalCard: React.FC<WorkflowProposalCardProps> = ({
           Execution Flow (DAG)
         </div>
         <div className="space-y-2">
-          {proposal.steps.map((step) => (
+          {proposal.steps.map(step => (
             <div
               key={step.stepNumber}
               className="flex items-center justify-between p-2.5 rounded-xl bg-navy-900/80 border border-navy-800/80 text-xs font-inter"
@@ -87,10 +89,14 @@ export const WorkflowProposalCard: React.FC<WorkflowProposalCardProps> = ({
                 </span>
                 <div>
                   <span className="text-white font-medium">{step.title}</span>
-                  <span className="text-slate-400 text-[11px] ml-2">({step.detail})</span>
+                  <span className="text-slate-400 text-[11px] ml-2">
+                    ({step.detail})
+                  </span>
                 </div>
               </div>
-              <span className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded border ${getStepBadge(step.type)}`}>
+              <span
+                className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded border ${getStepBadge(step.type)}`}
+              >
                 {step.type}
               </span>
             </div>
@@ -126,8 +132,18 @@ export const WorkflowProposalCard: React.FC<WorkflowProposalCardProps> = ({
       <div className="flex items-center justify-end gap-3 pt-3 border-t border-navy-800/80">
         {isApproved ? (
           <div className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium font-inter">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
             Approved & Deployed to Runtime
           </div>

@@ -1,29 +1,38 @@
-# Use an official, lightweight Python runtime as a parent image
-FROM python:3.11-slim
-
-# Prevent Python from writing pyc files to disc and buffering stdout/stderr
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Set the working directory inside the container
+# Base Stage
+FROM node:20-alpine AS base
 WORKDIR /app
+# Enable corepack for pnpm if needed, or install pnpm globally
+RUN npm install -g pnpm@10.33.0
 
-# Install system dependencies if required (e.g., git, curl)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# Builder Stage
+FROM base AS builder
+# Copy package.json and lockfile
+COPY package.json pnpm-lock.yaml ./
+# Install all dependencies (including devDependencies)
+RUN pnpm install --frozen-lockfile
 
-# Copy only requirements first to leverage Docker build caching
-COPY requirements.txt .
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the application code to the container
+# Copy the rest of the source code
 COPY . .
 
-# Create the mount point directory for your GCS bucket
-RUN mkdir -p /gcs-bucket-vol
+# Run the build script
+RUN pnpm run build
 
-# Set the default command to execute your workflow runner
-CMD ["python", "runner.py"]
+# Production Stage
+FROM base AS runner
+ENV NODE_ENV=production
+
+# Copy package.json and lockfile
+COPY package.json pnpm-lock.yaml ./
+# Install only production dependencies
+RUN pnpm install --prod --frozen-lockfile
+
+# Copy the built assets from the builder stage
+# dist/public contains the built Vite frontend
+# dist/index.js contains the esbuild compiled backend
+COPY --from=builder /app/dist ./dist
+
+# Expose port 8080 (the default for Google Cloud Run)
+EXPOSE 8080
+
+# Define the start command
+CMD ["npm", "start"]

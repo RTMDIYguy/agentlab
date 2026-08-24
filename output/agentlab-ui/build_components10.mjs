@@ -1,13 +1,13 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const SRC_DIR = path.join(__dirname, 'src');
+const SRC_DIR = path.join(__dirname, "src");
 
 const files = {
-  'WorkflowSlideOver.tsx': `
+  "WorkflowSlideOver.tsx": `
 import React from 'react';
 import { WorkflowCardProps } from './WorkflowCard';
 import { Button } from './Button';
@@ -140,7 +140,7 @@ export const WorkflowSlideOver: React.FC<WorkflowSlideOverProps> = ({ workflow, 
   );
 };
   `,
-  'WorkflowCard.tsx': `
+  "WorkflowCard.tsx": `
 import React from 'react';
 
 export interface WorkflowCardProps {
@@ -187,7 +187,7 @@ export const WorkflowCard: React.FC<WorkflowCardProps> = ({ name, description, s
   );
 };
   `,
-  'Workflows.tsx': `
+  "Workflows.tsx": `
 import React, { useState } from 'react';
 import { WorkflowCard, WorkflowCardProps } from './WorkflowCard';
 import { WorkflowSlideOver } from './WorkflowSlideOver';
@@ -226,8 +226,10 @@ export const Workflows: React.FC = () => {
     </div>
   );
 };
-  `
+  `,
 };
 
-Object.entries(files).forEach(([file, content]) => fs.writeFileSync(path.join(SRC_DIR, file), content.trim()));
-console.log('Phase 2 Workflows Slide-over built successfully!');
+Object.entries(files).forEach(([file, content]) =>
+  fs.writeFileSync(path.join(SRC_DIR, file), content.trim())
+);
+console.log("Phase 2 Workflows Slide-over built successfully!");

@@ -98,7 +98,10 @@ export default function About() {
                 and walk beside clients through the parts of implementation that
                 still require context, care, and responsibility.
               </p>
-              <Button onClick={() => navigate("/services")} className="bg-primary hover:bg-primary/90">
+              <Button
+                onClick={() => navigate("/services")}
+                className="bg-primary hover:bg-primary/90"
+              >
                 Explore Services
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -111,7 +114,7 @@ export default function About() {
                 Values become proof when they change the work.
               </h3>
               <ul className="space-y-3">
-                {operatingProof.map((item) => (
+                {operatingProof.map(item => (
                   <li key={item} className="flex gap-3 text-muted-foreground">
                     <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                     <span>{item}</span>
@@ -136,15 +139,22 @@ export default function About() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {values.map((value) => {
+            {values.map(value => {
               const Icon = value.icon;
               return (
-                <Card key={value.title} className="p-8 border border-border hover:border-primary/50 transition-colors">
+                <Card
+                  key={value.title}
+                  className="p-8 border border-border hover:border-primary/50 transition-colors"
+                >
                   <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
                     <Icon className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-foreground mb-3">{value.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{value.description}</p>
+                  <h3 className="text-xl font-bold text-foreground mb-3">
+                    {value.title}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {value.description}
+                  </p>
                 </Card>
               );
             })}
@@ -162,7 +172,10 @@ export default function About() {
             move is not another dashboard. It is a clearer operating loop,
             responsible automation, and a human review point where it matters.
           </p>
-          <Button onClick={() => navigate("/help#contact")} className="bg-primary hover:bg-primary/90">
+          <Button
+            onClick={() => navigate("/help#contact")}
+            className="bg-primary hover:bg-primary/90"
+          >
             Start a Conversation
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>

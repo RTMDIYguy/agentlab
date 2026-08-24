@@ -25,8 +25,8 @@ function listFiles(dirPath) {
   if (!fs.existsSync(dirPath)) return [];
   return fs
     .readdirSync(dirPath, { withFileTypes: true })
-    .filter((entry) => entry.isFile())
-    .map((entry) => entry.name)
+    .filter(entry => entry.isFile())
+    .map(entry => entry.name)
     .sort((a, b) => a.localeCompare(b));
 }
 
@@ -58,7 +58,7 @@ function packageMetadata(slug, kit) {
 
 function packageReadme({ slug, title, trackerFiles }) {
   const trackerList = trackerFiles.length
-    ? trackerFiles.map((name) => `- \`trackers/${name}\``).join("\n")
+    ? trackerFiles.map(name => `- \`trackers/${name}\``).join("\n")
     : "- No tracker/dashboard workbook is currently attached. Build or attach one before client delivery if the workflow requires a working surface.";
 
   return `# ${title || slug} Package
@@ -112,20 +112,26 @@ for (const entry of fs.readdirSync(workflowsRoot, { withFileTypes: true })) {
   const trackerSource = path.join(sourceFolder, "trackers");
   const trackerFiles = listFiles(trackerSource);
   for (const tracker of trackerFiles) {
-    copyFile(path.join(trackerSource, tracker), path.join(trackerFolder, tracker));
+    copyFile(
+      path.join(trackerSource, tracker),
+      path.join(trackerFolder, tracker)
+    );
   }
 
   if (!trackerFiles.length) {
     fs.writeFileSync(
       path.join(trackerFolder, "README.md"),
-      `# Trackers\n\nNo tracker/dashboard attachment is currently present for \`${slug}\`. Build or attach the working surface before client delivery if this workflow needs one.\n`,
+      `# Trackers\n\nNo tracker/dashboard attachment is currently present for \`${slug}\`. Build or attach the working surface before client delivery if this workflow needs one.\n`
     );
   }
 
   const kit = read(kitPath);
   const { title, department, workflowId } = packageMetadata(slug, kit);
 
-  fs.writeFileSync(path.join(packageFolder, "README.md"), packageReadme({ slug, title, trackerFiles }));
+  fs.writeFileSync(
+    path.join(packageFolder, "README.md"),
+    packageReadme({ slug, title, trackerFiles })
+  );
 
   packageRows.push({
     slug,
@@ -155,8 +161,8 @@ The source workflow folders under \`workflows/\` remain the editable provenance 
 | --- | --- | --- | ---: | --- |
 ${packageRows
   .map(
-    (row) =>
-      `| ${row.workflowId} - ${row.title.replace(`${row.workflowId} - `, "")} | ${row.department} | \`${row.slug}/\` | ${row.trackerCount} | ${row.trackers || "Pending"} |`,
+    row =>
+      `| ${row.workflowId} - ${row.title.replace(`${row.workflowId} - `, "")} | ${row.department} | \`${row.slug}/\` | ${row.trackerCount} | ${row.trackers || "Pending"} |`
   )
   .join("\n")}
 
@@ -168,7 +174,7 @@ fs.writeFileSync(
   path.join(outputRoot, "package-index.csv"),
   [
     "workflow_id,slug,title,department,tracker_count,trackers",
-    ...packageRows.map((row) =>
+    ...packageRows.map(row =>
       [
         row.workflowId,
         row.slug,
@@ -176,9 +182,11 @@ fs.writeFileSync(
         `"${row.department.replace(/"/g, '""')}"`,
         row.trackerCount,
         `"${row.trackers.replace(/"/g, '""')}"`,
-      ].join(","),
+      ].join(",")
     ),
-  ].join("\n"),
+  ].join("\n")
 );
 
-console.log(`Packaged ${packageRows.length} workflow kits into ${path.relative(root, outputRoot)}.`);
+console.log(
+  `Packaged ${packageRows.length} workflow kits into ${path.relative(root, outputRoot)}.`
+);

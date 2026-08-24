@@ -11,18 +11,15 @@ import { serveStatic, setupVite } from "./vite";
 import {
   constructWebhookEvent,
   handleCheckoutSessionCompleted,
-  handleSubscriptionUpdated,
-  handleSubscriptionDeleted,
-  handlePaymentIntentSucceeded,
-  handlePaymentIntentFailed,
 } from "../stripe/webhook";
-import { startScheduledPublisher } from "../blog/scheduled-publisher";
 import { registerAICoachesWebhookRoutes } from "../aicoaches/webhook";
+import { apiRouter } from "../routes/api";
+import { tenantMiddleware } from "../middleware/tenant";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
     const server = net.createServer();
-    server.listen(port, () => {
+    server.listen(port, "127.0.0.1", () => {
       server.close(() => resolve(true));
     });
     server.on("error", () => resolve(false));
@@ -68,18 +65,6 @@ async function startServer() {
           case "checkout.session.completed":
             await handleCheckoutSessionCompleted(event.data.object as any);
             break;
-          case "customer.subscription.updated":
-            await handleSubscriptionUpdated(event.data.object as any);
-            break;
-          case "customer.subscription.deleted":
-            await handleSubscriptionDeleted(event.data.object as any);
-            break;
-          case "payment_intent.succeeded":
-            await handlePaymentIntentSucceeded(event.data.object as any);
-            break;
-          case "payment_intent.payment_failed":
-            await handlePaymentIntentFailed(event.data.object as any);
-            break;
           default:
             console.log(`[Webhook] Unhandled event type: ${event.type}`);
         }
@@ -110,6 +95,10 @@ async function startServer() {
       createContext,
     })
   );
+
+  // REST API with tenant middleware
+  app.use("/api", tenantMiddleware, apiRouter);
+
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
@@ -117,8 +106,6 @@ async function startServer() {
     serveStatic(app);
   }
 
-  // Start scheduled post publisher
-  startScheduledPublisher();
 
   const preferredPort = parseInt(process.env.PORT || "3000");
   const port = await findAvailablePort(preferredPort);
@@ -127,8 +114,8 @@ async function startServer() {
     console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
 
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
+  server.listen(port, "127.0.0.1", () => {
+    console.log(`Server running on http://127.0.0.1:${port}/`);
   });
 }
 

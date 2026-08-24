@@ -12,9 +12,9 @@ agile
 swarm-coordination difficulty: intermediate prerequisites:
 GitHub CLI (gh) installed and authenticated
 ruv-swarm or claude-flow MCP server configured
-Repository access permissions tools_required:
-mcp__github__*
-mcp__claude-flow__*
+Repository access permissions tools*required:
+mcp**github***
+mcp**claude-flow**\_
 Bash
 Read
 Write
@@ -28,7 +28,8 @@ A comprehensive skill for managing GitHub projects using AI swarm coordination. 
 
 Quick Start
 Basic Issue Creation with Swarm Coordination
-```bash
+
+````bash
 
 Create a coordinated issue
 gh issue create \ --title "Feature: Advanced Authentication" \ --body "Implement OAuth2 with social login..." \ --label "enhancement,swarm-ready"
@@ -347,3 +348,4 @@ GitHub Projects Documentation
 Swarm Coordination Guide
 Claude Flow Documentation
 Last Updated: 2025-10-19 Version: 2.0.0 Maintainer: Claude Code
+````

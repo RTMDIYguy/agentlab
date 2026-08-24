@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | MKT-08 |
-| Department | Marketing |
-| Automation level | 80-85% |
-| Owner | Marcus + Robert |
-| Trigger | 25th of prior month (calendar planning) |
-| Cycle time | 30-day calendar; daily posts |
-| Source status | Automation scaffold only |
+| Field            | Value                                   |
+| ---------------- | --------------------------------------- |
+| Workflow ID      | MKT-08                                  |
+| Department       | Marketing                               |
+| Automation level | 80-85%                                  |
+| Owner            | Marcus + Robert                         |
+| Trigger          | 25th of prior month (calendar planning) |
+| Cycle time       | 30-day calendar; daily posts            |
+| Source status    | Automation scaffold only                |
 
 ## Inputs
 
@@ -85,15 +85,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
+| Artifact                                       | Purpose                                                                     |
+| ---------------------------------------------- | --------------------------------------------------------------------------- |
 | `automation/MKT08-Social-Media-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### automation/MKT08-Social-Media-Blueprint.json
 
-````json
+```json
 {
   "name": "MKT08: Social Media Scheduling & Engagement Monitor (Make.com Blueprint)",
   "flow": [
@@ -210,7 +210,7 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -381,6 +381,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

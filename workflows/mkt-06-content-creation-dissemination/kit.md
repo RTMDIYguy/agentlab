@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | MKT-06 |
-| Department | Marketing |
-| Automation level | 75-80% |
-| Owner | Marcus + Robert |
-| Trigger | Content calendar; trending topic detected |
-| Cycle time | Draft: 4-8 hrs; distribution: ongoing |
-| Source status | Active package; live/manual Independence Chapter canary passed with manual workarounds on 2026-05-21 |
+| Field            | Value                                                                                                |
+| ---------------- | ---------------------------------------------------------------------------------------------------- |
+| Workflow ID      | MKT-06                                                                                               |
+| Department       | Marketing                                                                                            |
+| Automation level | 75-80%                                                                                               |
+| Owner            | Marcus + Robert                                                                                      |
+| Trigger          | Content calendar; trending topic detected                                                            |
+| Cycle time       | Draft: 4-8 hrs; distribution: ongoing                                                                |
+| Source status    | Active package; live/manual Independence Chapter canary passed with manual workarounds on 2026-05-21 |
 
 ## Inputs
 
@@ -85,19 +85,19 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `source/URC-MKT-06_Content_Creation_Dissemination.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                                         | Purpose                                                                     |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `source/URC-MKT-06_Content_Creation_Dissemination.md`            | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `assets/Marketing_Workflow_6_Content_Creation_Dissemination.csv` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `assets/MKT06-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/MKT06-Content-Distribution-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/MKT06_Content_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `assets/MKT06-Assets.md`                                         | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/MKT06-Content-Distribution-Blueprint.json`           | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/MKT06_Content_Tracker.xlsx`                            | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-MKT-06_Content_Creation_Dissemination.md
 
-````markdown
+```markdown
 # MKT-06 - Content Creation & Dissemination Source
 
 Source: `Marketing Department\urc marketing\URC-MKT-06_Content_Creation_Dissemination.docx`
@@ -108,7 +108,7 @@ This Markdown file is a text extraction of the source `.docx` for GitHub-readabl
 
 URC-MKT-06 — Content Creation & Dissemination
 
-Owner: Robert T. McCarthy, Founder & CEO   |   Version: v1.0   |   Updated: March 21, 2026
+Owner: Robert T. McCarthy, Founder & CEO | Version: v1.0 | Updated: March 21, 2026
 
 1. Document Purpose
 
@@ -495,11 +495,11 @@ March 21, 2026
 R. McCarthy
 
 Initial URC-specific document
-````
+```
 
 ### assets/Marketing_Workflow_6_Content_Creation_Dissemination.csv
 
-````csv
+```csv
 Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 1,TRIGGER: Content calendar scheduled OR Trending topic detected OR Campaign launched OR Performance threshold,System/Content Team,"Content calendar (CoSchedule, Airtable) / Trend monitoring / Campaign planner","trigger_type, content_id, scheduled_date, campaign_association, priority",Per calendar schedule
 2,"Generate content ideas using AI based on SEO research, trending topics, audience interests, gaps",AI + Content Strategist,"AI content tools (ChatGPT, Jasper, Copy.ai) / SEO tools (Ahrefs, Semrush) / Trend analysis","topic, keywords, search_volume, content_type, target_audience, seo_opportunity",< 2 hours for ideation
@@ -515,7 +515,7 @@ Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 12,IF NO: Continue monitoring + test different headlines/formats + retire poor performers,System continues monitoring,Performance monitoring continues,"performance_monitoring_continues, underperformer_flag",Continuous
 13,"Repurpose high-performing content into different formats (blog → video, podcast → infographic)",Content Team + Automation,"Repurposing tools (Descript, OpusClip, Canva) / Format conversion automation","repurposed_formats, derivative_content_created, cross_channel_versions",Weekly repurposing batch
 14,Generate content performance reports and identify topics/formats for future content strategy,Content Strategist + Analytics,Content analytics platform / Topic clustering / Performance attribution / Strategy planning,"report_id, top_topics, best_formats, audience_preferences, content_gaps",Monthly reporting
-````
+```
 
 ### assets/MKT06-Assets.md
 
@@ -525,7 +525,9 @@ Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 ## 1. AI Prompt Library for Content Generation
 
 ### Prompt: Blog Post Outline Generation
-*Use in ChatGPT / Jasper / Copy.ai*
+
+_Use in ChatGPT / Jasper / Copy.ai_
+
 ```text
 Act as a B2B Content Strategist. I need to write an SEO-optimized blog post targeting the keyword "[Target Keyword]".
 
@@ -541,7 +543,9 @@ Ensure the tone is professional, authoritative, but conversational and easy to s
 ```
 
 ### Prompt: LinkedIn Post from Long-Form Content
-*Use in ChatGPT / Jasper / Copy.ai*
+
+_Use in ChatGPT / Jasper / Copy.ai_
+
 ```text
 I just wrote a blog post about [Topic]. Here is the text of the post:
 [Insert Blog Post Text]
@@ -556,7 +560,9 @@ For each post, do NOT use hashtags. Keep sentences short. Use plenty of whitespa
 ```
 
 ### Prompt: Email Newsletter Teaser
-*Use in ChatGPT / Jasper / Copy.ai*
+
+_Use in ChatGPT / Jasper / Copy.ai_
+
 ```text
 Write a 150-word email newsletter section teasing our latest piece of content: "[Content Title]".
 
@@ -574,27 +580,31 @@ When you create one piece of "Hero Content" (e.g., a 2,000-word definitive guide
 **Hero Content:** 1x Webinar / Long-form Guide
 ⬇️
 **Blog:**
+
 - [ ] 1x Summary Blog Post (embedded video/download link)
 - [ ] 2x Spin-off Blog Posts diving deep into specific sub-topics mentioned in the hero content.
 
 **Social Media (LinkedIn/Twitter):**
+
 - [ ] 3x Text-only posts summarizing key frameworks
 - [ ] 2x Carousel posts (PDF format for LinkedIn) outlining step-by-step processes
 - [ ] 2x Quote graphics featuring strong statements from the hero content
 - [ ] 1x Poll asking the audience about the core problem addressed
 
 **Email:**
+
 - [ ] 1x Dedicated broadcast email announcing the hero content
 - [ ] 1x "P.S." link added to the standard newsletter template for the next 4 weeks
 
 **Video (If Hero was text) / Shorts (If Hero was video):**
+
 - [ ] 3x 60-second clips for YouTube Shorts / TikTok / Reels highlighting the best "Aha!" moments
 - [ ] 1x 3-minute Loom video walking through the core framework on a whiteboard
 ````
 
 ### automation/MKT06-Content-Distribution-Blueprint.json
 
-````json
+```json
 {
   "name": "MKT06: Content Distribution (Make.com Blueprint)",
   "flow": [
@@ -675,7 +685,7 @@ When you create one piece of "Hero Content" (e.g., a 2,000-word definitive guide
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -810,6 +820,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

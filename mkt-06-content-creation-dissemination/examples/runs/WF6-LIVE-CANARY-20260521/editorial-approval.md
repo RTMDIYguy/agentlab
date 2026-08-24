@@ -13,11 +13,10 @@ Evidence:
 
 Internal pre-screen:
 
-| Check | Result |
-| --- | --- |
-| Specificity | Pass - each Touch 1 draft references the company context |
-| CTA discipline | Pass - one low-friction diagnostic/intro ask |
-| Follow-up discipline | Pass - Touch 2 is value-only/no new ask |
-| Compliance posture | Manual QA required for sender identity and opt-out language |
-| Tooling posture | Pass - manual route used instead of paid automation upgrade |
-
+| Check                | Result                                                      |
+| -------------------- | ----------------------------------------------------------- |
+| Specificity          | Pass - each Touch 1 draft references the company context    |
+| CTA discipline       | Pass - one low-friction diagnostic/intro ask                |
+| Follow-up discipline | Pass - Touch 2 is value-only/no new ask                     |
+| Compliance posture   | Manual QA required for sender identity and opt-out language |
+| Tooling posture      | Pass - manual route used instead of paid automation upgrade |

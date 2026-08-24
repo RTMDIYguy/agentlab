@@ -9,7 +9,7 @@
         "url": "https://api.openai.com/v1/dashboard/billing/usage",
         "method": "GET",
         "headers": [
-          {"name": "Authorization", "value": "Bearer {{OPENAI_API_KEY}}"}
+          { "name": "Authorization", "value": "Bearer {{OPENAI_API_KEY}}" }
         ]
       }
     },

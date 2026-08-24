@@ -58,9 +58,7 @@ export function NewsletterSignup({
     return (
       <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg border border-primary/20 p-8">
         <div className="max-w-md mx-auto">
-          {showIcon && (
-            <Mail className="w-8 h-8 text-primary mb-4" />
-          )}
+          {showIcon && <Mail className="w-8 h-8 text-primary mb-4" />}
           <h3 className="text-xl font-bold text-foreground mb-2">{title}</h3>
           <p className="text-sm text-muted-foreground mb-6">{description}</p>
 
@@ -77,14 +75,14 @@ export function NewsletterSignup({
                 type="text"
                 placeholder="Your name (optional)"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
                 className="w-full px-4 py-2 border-2 border-slate-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm bg-white"
               />
               <input
                 type="email"
                 placeholder="your@email.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 required
                 className="w-full px-4 py-2 border-2 border-slate-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm bg-white"
               />
@@ -119,7 +117,7 @@ export function NewsletterSignup({
               type="email"
               placeholder="your@email.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               required
               className="flex-1 px-3 py-2 border-2 border-slate-400 rounded text-xs focus:outline-none focus:ring-2 focus:ring-primary bg-white"
             />
@@ -166,14 +164,14 @@ export function NewsletterSignup({
               type="text"
               placeholder="Your name (optional)"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={e => setName(e.target.value)}
               className="w-full px-4 py-2 border-2 border-slate-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm bg-white"
             />
             <input
               type="email"
               placeholder="your@email.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               required
               className="w-full px-4 py-2 border-2 border-slate-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm bg-white"
             />

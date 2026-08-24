@@ -45,4 +45,3 @@ Source signals:
 Single CTA: Reply with one word: `wall`.
 
 Brief status: Ready to draft by local canary standards.
-

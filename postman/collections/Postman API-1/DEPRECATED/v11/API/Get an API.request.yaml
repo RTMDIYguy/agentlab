@@ -16,7 +16,8 @@ queryParams:
   - key: include
     value: ""
     disabled: true
-    description: "A comma-separated list of one or more of the following additional resources to include in the response. Use this parameter to query for element links to the API, such as collections and schemas:
+    description:
+      "A comma-separated list of one or more of the following additional resources to include in the response. Use this parameter to query for element links to the API, such as collections and schemas:
 
       - `collections` — Query for linked Postman collections.
 

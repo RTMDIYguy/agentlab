@@ -40,82 +40,325 @@ const depthLabels: Record<Depth, string> = {
 
 // Diagnostic rules linking detected signals to Gaps and Next Steps
 const diagnosticRules: Record<string, { gap: string; nextStep: string }> = {
-  workflow: { gap: "Undocumented core workflows causing inconsistent delivery.", nextStep: "Document the step-by-step Standard Operating Procedure (SOP) for fulfillment." },
-  handoff: { gap: "Friction and data drops during team or department handoffs.", nextStep: "Define clear criteria and checklist requirements for client handoffs." },
-  delay: { gap: "Operational bottlenecks dragging down project timelines.", nextStep: "Map time-to-delivery metrics to pinpoint exactly where friction occurs." },
-  lead: { gap: "Inconsistent lead tracking creating a leaky marketing funnel.", nextStep: "Implement a structured pipeline in the CRM with explicit stage definitions." },
-  "follow up": { gap: "Lost revenue due to dropped or delayed sales follow-ups.", nextStep: "Set up automated task reminders or automated email sequences for warm leads." },
-  crm: { gap: "Underutilized sales infrastructure leading to tracking blindspots.", nextStep: "Clean up historical data and enforce centralized CRM logging for all reps." },
-  content: { gap: "Marketing activity is volume-focused rather than high-intent conversation generation.", nextStep: "Shift editorial calendar toward addressing top client objections." },
-  cash: { gap: "Limited short-term financial visibility impacting real-time decisions.", nextStep: "Build a weekly 13-week cash flow forecasting dashboard." },
-  budget: { gap: "Tooling and operational overhead growing without ROI auditing.", nextStep: "Conduct a comprehensive software spend audit to eliminate duplicate seats." },
-  tool: { gap: "Siloed platforms causing duplicate data entry across departments.", nextStep: "Build native data integrations or utilize webhooks to sync applications." },
-  manual: { gap: "Valuable labor hours spent on repetitive data entry.", nextStep: "Deploy a workflow automation script to eliminate human-in-the-loop copying." },
-  automate: { gap: "Lack of core systems leverage preventing operational scaling.", nextStep: "Identify the highest-frequency task and map its automation logic safely." },
-  decision: { gap: "Unclear operational ownership causing decision-making latency.", nextStep: "Establish a clear accountability matrix for leadership roles." },
-  knowledge: { gap: "High key-person dependency with mission-critical training locked in heads.", nextStep: "Build a centralized internal wiki/knowledge base." },
+  workflow: {
+    gap: "Undocumented core workflows causing inconsistent delivery.",
+    nextStep:
+      "Document the step-by-step Standard Operating Procedure (SOP) for fulfillment.",
+  },
+  handoff: {
+    gap: "Friction and data drops during team or department handoffs.",
+    nextStep:
+      "Define clear criteria and checklist requirements for client handoffs.",
+  },
+  delay: {
+    gap: "Operational bottlenecks dragging down project timelines.",
+    nextStep:
+      "Map time-to-delivery metrics to pinpoint exactly where friction occurs.",
+  },
+  lead: {
+    gap: "Inconsistent lead tracking creating a leaky marketing funnel.",
+    nextStep:
+      "Implement a structured pipeline in the CRM with explicit stage definitions.",
+  },
+  "follow up": {
+    gap: "Lost revenue due to dropped or delayed sales follow-ups.",
+    nextStep:
+      "Set up automated task reminders or automated email sequences for warm leads.",
+  },
+  crm: {
+    gap: "Underutilized sales infrastructure leading to tracking blindspots.",
+    nextStep:
+      "Clean up historical data and enforce centralized CRM logging for all reps.",
+  },
+  content: {
+    gap: "Marketing activity is volume-focused rather than high-intent conversation generation.",
+    nextStep:
+      "Shift editorial calendar toward addressing top client objections.",
+  },
+  cash: {
+    gap: "Limited short-term financial visibility impacting real-time decisions.",
+    nextStep: "Build a weekly 13-week cash flow forecasting dashboard.",
+  },
+  budget: {
+    gap: "Tooling and operational overhead growing without ROI auditing.",
+    nextStep:
+      "Conduct a comprehensive software spend audit to eliminate duplicate seats.",
+  },
+  tool: {
+    gap: "Siloed platforms causing duplicate data entry across departments.",
+    nextStep:
+      "Build native data integrations or utilize webhooks to sync applications.",
+  },
+  manual: {
+    gap: "Valuable labor hours spent on repetitive data entry.",
+    nextStep:
+      "Deploy a workflow automation script to eliminate human-in-the-loop copying.",
+  },
+  automate: {
+    gap: "Lack of core systems leverage preventing operational scaling.",
+    nextStep:
+      "Identify the highest-frequency task and map its automation logic safely.",
+  },
+  decision: {
+    gap: "Unclear operational ownership causing decision-making latency.",
+    nextStep: "Establish a clear accountability matrix for leadership roles.",
+  },
+  knowledge: {
+    gap: "High key-person dependency with mission-critical training locked in heads.",
+    nextStep: "Build a centralized internal wiki/knowledge base.",
+  },
 };
 
 const questionBank: Question[] = [
-  { id: "ops-1", domain: "Operations", depth: "exploratory", text: "Walk me through what happens from the moment a new client says yes to the moment the work is fully delivered.", skill: "Process Discovery", evaluation: "Looks for sequence clarity, hidden handoffs, undocumented steps, and delay points.", signals: ["workflow", "handoff", "delivery", "onboarding", "process"] },
-  { id: "ops-2", domain: "Operations", depth: "diagnostic", text: "Where does work most often slow down, get rechecked, or require someone to chase an update?", skill: "Bottleneck Identification", evaluation: "Assesses whether the client can name friction points and distinguish symptoms from root causes.", signals: ["delay", "bottleneck", "follow up", "status", "rework", "chase"] },
-  { id: "ops-3", domain: "Operations", depth: "executive", text: "If the business doubled next quarter, which part of the operating system would break first?", skill: "Scalability Assessment", evaluation: "Reveals the highest-risk constraint in people, process, tools, or decision flow.", signals: ["scale", "growth", "capacity", "team", "break"] },
-  { id: "sales-1", domain: "Sales", depth: "exploratory", text: "How does a new lead usually enter the business, and what has to happen before they become a qualified opportunity?", skill: "Lead Path Mapping", evaluation: "Checks whether the client has a defined path from attention to qualification.", signals: ["lead", "prospect", "referral", "inquiry", "pipeline"] },
-  { id: "sales-2", domain: "Sales", depth: "diagnostic", text: "Which follow-up step is most likely to be missed when someone shows interest?", skill: "Follow-Up Reliability", evaluation: "Identifies lost revenue risk from inconsistent nurture, ownership, or timing.", signals: ["follow up", "reply", "email", "call", "missed", "nurture"] },
-  { id: "sales-3", domain: "Sales", depth: "executive", text: "What would make the current sales process easier to trust without adding more meetings?", skill: "Sales System Design", evaluation: "Tests whether the client needs better tracking, clearer stages, stronger handoffs, or decision rules.", signals: ["trust", "meeting", "crm", "stage", "decision"] },
-  { id: "marketing-1", domain: "Marketing", depth: "exploratory", text: "What are you currently publishing or sharing that reliably starts useful conversations?", skill: "Content Signal Review", evaluation: "Looks for proof that content is tied to audience response rather than activity volume.", signals: ["content", "linkedin", "post", "campaign", "engagement"] },
-  { id: "marketing-2", domain: "Marketing", depth: "diagnostic", text: "How do you connect marketing activity to leads, booked calls, or revenue opportunities today?", skill: "Marketing Attribution", evaluation: "Assesses whether the client can trace marketing effort to business outcomes.", signals: ["roi", "analytics", "lead", "revenue", "conversion", "campaign"] },
-  { id: "marketing-3", domain: "Marketing", depth: "executive", text: "Which market message is strongest enough that the business should build repeatable campaigns around it?", skill: "Positioning Judgment", evaluation: "Tests clarity of offer, audience, pain point, and proof.", signals: ["positioning", "message", "offer", "audience", "proof"] },
-  { id: "finance-1", domain: "Finance", depth: "exploratory", text: "Which numbers do you review every week before deciding what the business can afford to do next?", skill: "Financial Visibility", evaluation: "Surfaces whether the client has a working control layer for cash, revenue, and obligations.", signals: ["cash", "budget", "expense", "invoice", "revenue"] },
-  { id: "finance-2", domain: "Finance", depth: "diagnostic", text: "Where do expenses, subscriptions, or tool costs become hard to justify against current revenue?", skill: "Cost Control", evaluation: "Identifies free-bootstrap or paid-tool limit walls before they become emergencies.", signals: ["subscription", "tool", "cost", "credit", "bill", "budget"] },
-  { id: "finance-3", domain: "Finance", depth: "executive", text: "What revenue signal would justify upgrading the next paid tool or hiring outside help?", skill: "Investment Threshold Design", evaluation: "Tests whether spending decisions are tied to revenue, capacity, and timing.", signals: ["upgrade", "hire", "funding", "investment", "revenue"] },
-  { id: "technology-1", domain: "Technology", depth: "exploratory", text: "Which tools does the team rely on every day, and where does information have to be copied by hand?", skill: "Toolchain Mapping", evaluation: "Finds integration gaps, duplicate data entry, and tool sprawl.", signals: ["tool", "software", "spreadsheet", "copy", "manual", "integration"] },
-  { id: "technology-2", domain: "Technology", depth: "diagnostic", text: "What repetitive task would create the most relief if it were automated safely?", skill: "Automation Opportunity Sizing", evaluation: "Separates high-leverage automation candidates from convenience automations.", signals: ["automate", "automation", "repeat", "manual", "relief", "task"] },
-  { id: "technology-3", domain: "Technology", depth: "executive", text: "Where would automation create risk if the approval step or exception path were not designed well?", skill: "Automation Governance", evaluation: "Checks for judgment gates, compliance needs, exception handling, and rollback plans.", signals: ["approval", "risk", "exception", "compliance", "automation"] },
-  { id: "leadership-1", domain: "Leadership", depth: "exploratory", text: "Who makes the final call when priorities conflict, and how does the team know the decision was made?", skill: "Decision Flow", evaluation: "Reveals unclear ownership, decision latency, and communication gaps.", signals: ["decision", "priority", "owner", "team", "communication"] },
-  { id: "leadership-2", domain: "Leadership", depth: "diagnostic", text: "Which responsibilities live in someone's head instead of in a process the team can repeat?", skill: "Knowledge Capture", evaluation: "Identifies key-person dependency and documentation needs.", signals: ["knowledge", "training", "sop", "documentation", "responsibility"] },
-  { id: "leadership-3", domain: "Leadership", depth: "executive", text: "What operating habit would most improve trust between leadership, staff, and clients?", skill: "Operating Culture", evaluation: "Surfaces cadence, transparency, accountability, and service expectations.", signals: ["trust", "cadence", "accountability", "client", "staff"] },
+  {
+    id: "ops-1",
+    domain: "Operations",
+    depth: "exploratory",
+    text: "Walk me through what happens from the moment a new client says yes to the moment the work is fully delivered.",
+    skill: "Process Discovery",
+    evaluation:
+      "Looks for sequence clarity, hidden handoffs, undocumented steps, and delay points.",
+    signals: ["workflow", "handoff", "delivery", "onboarding", "process"],
+  },
+  {
+    id: "ops-2",
+    domain: "Operations",
+    depth: "diagnostic",
+    text: "Where does work most often slow down, get rechecked, or require someone to chase an update?",
+    skill: "Bottleneck Identification",
+    evaluation:
+      "Assesses whether the client can name friction points and distinguish symptoms from root causes.",
+    signals: ["delay", "bottleneck", "follow up", "status", "rework", "chase"],
+  },
+  {
+    id: "ops-3",
+    domain: "Operations",
+    depth: "executive",
+    text: "If the business doubled next quarter, which part of the operating system would break first?",
+    skill: "Scalability Assessment",
+    evaluation:
+      "Reveals the highest-risk constraint in people, process, tools, or decision flow.",
+    signals: ["scale", "growth", "capacity", "team", "break"],
+  },
+  {
+    id: "sales-1",
+    domain: "Sales",
+    depth: "exploratory",
+    text: "How does a new lead usually enter the business, and what has to happen before they become a qualified opportunity?",
+    skill: "Lead Path Mapping",
+    evaluation:
+      "Checks whether the client has a defined path from attention to qualification.",
+    signals: ["lead", "prospect", "referral", "inquiry", "pipeline"],
+  },
+  {
+    id: "sales-2",
+    domain: "Sales",
+    depth: "diagnostic",
+    text: "Which follow-up step is most likely to be missed when someone shows interest?",
+    skill: "Follow-Up Reliability",
+    evaluation:
+      "Identifies lost revenue risk from inconsistent nurture, ownership, or timing.",
+    signals: ["follow up", "reply", "email", "call", "missed", "nurture"],
+  },
+  {
+    id: "sales-3",
+    domain: "Sales",
+    depth: "executive",
+    text: "What would make the current sales process easier to trust without adding more meetings?",
+    skill: "Sales System Design",
+    evaluation:
+      "Tests whether the client needs better tracking, clearer stages, stronger handoffs, or decision rules.",
+    signals: ["trust", "meeting", "crm", "stage", "decision"],
+  },
+  {
+    id: "marketing-1",
+    domain: "Marketing",
+    depth: "exploratory",
+    text: "What are you currently publishing or sharing that reliably starts useful conversations?",
+    skill: "Content Signal Review",
+    evaluation:
+      "Looks for proof that content is tied to audience response rather than activity volume.",
+    signals: ["content", "linkedin", "post", "campaign", "engagement"],
+  },
+  {
+    id: "marketing-2",
+    domain: "Marketing",
+    depth: "diagnostic",
+    text: "How do you connect marketing activity to leads, booked calls, or revenue opportunities today?",
+    skill: "Marketing Attribution",
+    evaluation:
+      "Assesses whether the client can trace marketing effort to business outcomes.",
+    signals: ["roi", "analytics", "lead", "revenue", "conversion", "campaign"],
+  },
+  {
+    id: "marketing-3",
+    domain: "Marketing",
+    depth: "executive",
+    text: "Which market message is strongest enough that the business should build repeatable campaigns around it?",
+    skill: "Positioning Judgment",
+    evaluation: "Tests clarity of offer, audience, pain point, and proof.",
+    signals: ["positioning", "message", "offer", "audience", "proof"],
+  },
+  {
+    id: "finance-1",
+    domain: "Finance",
+    depth: "exploratory",
+    text: "Which numbers do you review every week before deciding what the business can afford to do next?",
+    skill: "Financial Visibility",
+    evaluation:
+      "Surfaces whether the client has a working control layer for cash, revenue, and obligations.",
+    signals: ["cash", "budget", "expense", "invoice", "revenue"],
+  },
+  {
+    id: "finance-2",
+    domain: "Finance",
+    depth: "diagnostic",
+    text: "Where do expenses, subscriptions, or tool costs become hard to justify against current revenue?",
+    skill: "Cost Control",
+    evaluation:
+      "Identifies free-bootstrap or paid-tool limit walls before they become emergencies.",
+    signals: ["subscription", "tool", "cost", "credit", "bill", "budget"],
+  },
+  {
+    id: "finance-3",
+    domain: "Finance",
+    depth: "executive",
+    text: "What revenue signal would justify upgrading the next paid tool or hiring outside help?",
+    skill: "Investment Threshold Design",
+    evaluation:
+      "Tests whether spending decisions are tied to revenue, capacity, and timing.",
+    signals: ["upgrade", "hire", "funding", "investment", "revenue"],
+  },
+  {
+    id: "technology-1",
+    domain: "Technology",
+    depth: "exploratory",
+    text: "Which tools does the team rely on every day, and where does information have to be copied by hand?",
+    skill: "Toolchain Mapping",
+    evaluation:
+      "Finds integration gaps, duplicate data entry, and tool sprawl.",
+    signals: [
+      "tool",
+      "software",
+      "spreadsheet",
+      "copy",
+      "manual",
+      "integration",
+    ],
+  },
+  {
+    id: "technology-2",
+    domain: "Technology",
+    depth: "diagnostic",
+    text: "What repetitive task would create the most relief if it were automated safely?",
+    skill: "Automation Opportunity Sizing",
+    evaluation:
+      "Separates high-leverage automation candidates from convenience automations.",
+    signals: ["automate", "automation", "repeat", "manual", "relief", "task"],
+  },
+  {
+    id: "technology-3",
+    domain: "Technology",
+    depth: "executive",
+    text: "Where would automation create risk if the approval step or exception path were not designed well?",
+    skill: "Automation Governance",
+    evaluation:
+      "Checks for judgment gates, compliance needs, exception handling, and rollback plans.",
+    signals: ["approval", "risk", "exception", "compliance", "automation"],
+  },
+  {
+    id: "leadership-1",
+    domain: "Leadership",
+    depth: "exploratory",
+    text: "Who makes the final call when priorities conflict, and how does the team know the decision was made?",
+    skill: "Decision Flow",
+    evaluation:
+      "Reveals unclear ownership, decision latency, and communication gaps.",
+    signals: ["decision", "priority", "owner", "team", "communication"],
+  },
+  {
+    id: "leadership-2",
+    domain: "Leadership",
+    depth: "diagnostic",
+    text: "Which responsibilities live in someone's head instead of in a process the team can repeat?",
+    skill: "Knowledge Capture",
+    evaluation: "Identifies key-person dependency and documentation needs.",
+    signals: [
+      "knowledge",
+      "training",
+      "sop",
+      "documentation",
+      "responsibility",
+    ],
+  },
+  {
+    id: "leadership-3",
+    domain: "Leadership",
+    depth: "executive",
+    text: "What operating habit would most improve trust between leadership, staff, and clients?",
+    skill: "Operating Culture",
+    evaluation:
+      "Surfaces cadence, transparency, accountability, and service expectations.",
+    signals: ["trust", "cadence", "accountability", "client", "staff"],
+  },
 ];
 
-const domains = ["Auto", ...Array.from(new Set(questionBank.map(q => q.domain)))];
-const callObjectives = ["Initial onboarding", "Systems audit", "Automation discovery", "Growth bottleneck review", "Follow-up consultation"];
+const domains = [
+  "Auto",
+  ...Array.from(new Set(questionBank.map(q => q.domain))),
+];
+const callObjectives = [
+  "Initial onboarding",
+  "Systems audit",
+  "Automation discovery",
+  "Growth bottleneck review",
+  "Follow-up consultation",
+];
 
-const domainProfiles: Record<string, { gap: string; recommendation: string }> = {
-  Operations: {
-    gap: "Work appears to depend on informal handoffs, remembered steps, or unclear delivery flow.",
-    recommendation:
-      "Map the current delivery path, identify the slowest handoff, and define a visible status model before adding more tools.",
-  },
-  Sales: {
-    gap: "Lead movement and follow-up reliability may be inconsistent enough to lose warm opportunities.",
-    recommendation:
-      "Define the lead stages, owner, next-action rules, and follow-up timing so every interested prospect has a clear path.",
-  },
-  Marketing: {
-    gap: "Marketing activity may not be tied tightly enough to conversations, opportunities, or revenue signals.",
-    recommendation:
-      "Connect each campaign or content theme to a CTA, tracking field, and weekly review metric.",
-  },
-  Finance: {
-    gap: "Spending decisions may be ahead of the current financial control layer or revenue proof.",
-    recommendation:
-      "Set upgrade thresholds for tools, subscriptions, and outside help based on cash, opportunity value, and capacity.",
-  },
-  Technology: {
-    gap: "The toolchain likely contains manual copying, duplicate entry, or automation candidates without governance.",
-    recommendation:
-      "Choose one high-relief repetitive task, document the field flow, and automate it with an approval or exception path.",
-  },
-  Leadership: {
-    gap: "Decision rights, ownership, or key knowledge may be too dependent on individual memory.",
-    recommendation:
-      "Capture the key responsibilities, decision points, and recurring operating cadence in a short SOP or checklist.",
-  },
-};
+const domainProfiles: Record<string, { gap: string; recommendation: string }> =
+  {
+    Operations: {
+      gap: "Work appears to depend on informal handoffs, remembered steps, or unclear delivery flow.",
+      recommendation:
+        "Map the current delivery path, identify the slowest handoff, and define a visible status model before adding more tools.",
+    },
+    Sales: {
+      gap: "Lead movement and follow-up reliability may be inconsistent enough to lose warm opportunities.",
+      recommendation:
+        "Define the lead stages, owner, next-action rules, and follow-up timing so every interested prospect has a clear path.",
+    },
+    Marketing: {
+      gap: "Marketing activity may not be tied tightly enough to conversations, opportunities, or revenue signals.",
+      recommendation:
+        "Connect each campaign or content theme to a CTA, tracking field, and weekly review metric.",
+    },
+    Finance: {
+      gap: "Spending decisions may be ahead of the current financial control layer or revenue proof.",
+      recommendation:
+        "Set upgrade thresholds for tools, subscriptions, and outside help based on cash, opportunity value, and capacity.",
+    },
+    Technology: {
+      gap: "The toolchain likely contains manual copying, duplicate entry, or automation candidates without governance.",
+      recommendation:
+        "Choose one high-relief repetitive task, document the field flow, and automate it with an approval or exception path.",
+    },
+    Leadership: {
+      gap: "Decision rights, ownership, or key knowledge may be too dependent on individual memory.",
+      recommendation:
+        "Capture the key responsibilities, decision points, and recurring operating cadence in a short SOP or checklist.",
+    },
+  };
 
-function scoreQuestion(question: Question, notes: string, domain: string, depth: Depth) {
+function scoreQuestion(
+  question: Question,
+  notes: string,
+  domain: string,
+  depth: Depth
+) {
   const normalized = notes.toLowerCase();
-  const signalHits = question.signals.filter(signal => normalized.includes(signal)).length;
+  const signalHits = question.signals.filter(signal =>
+    normalized.includes(signal)
+  ).length;
   const domainScore = domain === "Auto" || question.domain === domain ? 6 : 0;
   const depthScore = question.depth === depth ? 4 : 0;
   return domainScore + depthScore + signalHits * 3;
@@ -129,20 +372,25 @@ function inferSignals(notes: string) {
 
   const unique = new Map<string, string>();
   hits.forEach(item => unique.set(item.signal, item.domain));
-  return Array.from(unique.entries()).map(([signal, domain]) => ({ signal, domain }));
+  return Array.from(unique.entries()).map(([signal, domain]) => ({
+    signal,
+    domain,
+  }));
 }
 
 function buildFindings(notes: string): Finding[] {
   const normalized = notes.toLowerCase();
   const findings = Object.entries(domainProfiles)
     .map(([domain, profile]) => {
-      const questions = questionBank.filter(question => question.domain === domain);
+      const questions = questionBank.filter(
+        question => question.domain === domain
+      );
       const evidence = Array.from(
         new Set(
           questions.flatMap(question =>
-            question.signals.filter(signal => normalized.includes(signal)),
-          ),
-        ),
+            question.signals.filter(signal => normalized.includes(signal))
+          )
+        )
       );
 
       return {
@@ -185,10 +433,15 @@ export default function AssessmentQuestionGenerator() {
 
   const selectedQuestions = useMemo(() => {
     return [...questionBank]
-      .map(q => ({ question: q, score: scoreQuestion(q, notes, domain, depth) }))
+      .map(q => ({
+        question: q,
+        score: scoreQuestion(q, notes, domain, depth),
+      }))
       .sort((a, b) => {
         if (b.score !== a.score) return b.score - a.score;
-        return (a.question.id + refreshSeed).localeCompare(b.question.id + refreshSeed);
+        return (a.question.id + refreshSeed).localeCompare(
+          b.question.id + refreshSeed
+        );
       })
       .slice(0, count || 3)
       .map(item => item.question);
@@ -201,9 +454,11 @@ export default function AssessmentQuestionGenerator() {
           `DIAGNOSTIC ARCHETYPE #${i + 1}: [Domain: ${ins.domain} / Tag: ${ins.signal}]`,
           `Identified Systemic Gap: ${ins.gap}`,
           `Recommended Next Step:  ${ins.nextStep}`,
-          ""
+          "",
         ])
-      : ["No core structural gaps explicitly auto-detected from current live notes yet."];
+      : [
+          "No core structural gaps explicitly auto-detected from current live notes yet.",
+        ];
 
     const findingsSection = findings.length
       ? findings.flatMap((finding, i) => [
@@ -211,9 +466,11 @@ export default function AssessmentQuestionGenerator() {
           `Likely Gap: ${finding.gap}`,
           `Recommended Next Step: ${finding.recommendation}`,
           `Evidence Signals: ${finding.evidence.join(", ")}`,
-          ""
+          "",
         ])
-      : ["No strong domain-level gap signals detected yet. Add more call notes for a fuller picture."];
+      : [
+          "No strong domain-level gap signals detected yet. Add more call notes for a fuller picture.",
+        ];
 
     return [
       `==================================================`,
@@ -240,10 +497,19 @@ export default function AssessmentQuestionGenerator() {
         `${idx + 1}. ${q.text}`,
         `   Targeted Metric: ${q.skill}`,
         `   Evaluation Gate: ${q.evaluation}`,
-        ""
-      ])
+        "",
+      ]),
     ].join("\n");
-  }, [clientName, objective, depth, domain, notes, activeInsights, findings, selectedQuestions]);
+  }, [
+    clientName,
+    objective,
+    depth,
+    domain,
+    notes,
+    activeInsights,
+    findings,
+    selectedQuestions,
+  ]);
 
   const copyQuestions = async () => {
     await navigator.clipboard.writeText(masterReportText);
@@ -255,13 +521,17 @@ export default function AssessmentQuestionGenerator() {
     if (!activeInsights.length) return;
     const reportAppend = [
       "\n\n--- AUTO-SYNTHESIZED METRICS DISCOVERED ---",
-      ...activeInsights.map(ins => `• [${ins.domain}] Gap: ${ins.gap} -> Next Step: ${ins.nextStep}`)
+      ...activeInsights.map(
+        ins => `• [${ins.domain}] Gap: ${ins.gap} -> Next Step: ${ins.nextStep}`
+      ),
     ].join("\n");
     setNotes(prev => prev + reportAppend);
   };
 
   const exportClientPacketFile = () => {
-    const blob = new Blob([masterReportText], { type: "text/plain;charset=utf-8" });
+    const blob = new Blob([masterReportText], {
+      type: "text/plain;charset=utf-8",
+    });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -359,17 +629,24 @@ export default function AssessmentQuestionGenerator() {
                     max={8}
                     value={count || ""}
                     onChange={event => {
-                      const val = event.target.value === "" ? 0 : Number(event.target.value);
+                      const val =
+                        event.target.value === ""
+                          ? 0
+                          : Number(event.target.value);
                       setCount(Math.min(8, Math.max(0, val)));
                     }}
-                    onBlur={() => { if (count < 3) setCount(3); }}
+                    onBlur={() => {
+                      if (count < 3) setCount(3);
+                    }}
                     className="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-blue-700"
                   />
                 </label>
               </div>
 
               <div className="mt-4">
-                <div className="mb-2 text-sm font-medium text-slate-700">Depth</div>
+                <div className="mb-2 text-sm font-medium text-slate-700">
+                  Depth
+                </div>
                 <div className="grid grid-cols-3 gap-2">
                   {(Object.keys(depthLabels) as Depth[]).map(item => (
                     <button
@@ -438,7 +715,10 @@ export default function AssessmentQuestionGenerator() {
                     ))}
                   </div>
                 ) : (
-                  <span>Signal tags appear here as notes mention workflow, leads, tools, costs, automation, ownership, or follow-up.</span>
+                  <span>
+                    Signal tags appear here as notes mention workflow, leads,
+                    tools, costs, automation, ownership, or follow-up.
+                  </span>
                 )}
               </div>
             </div>
@@ -454,17 +734,32 @@ export default function AssessmentQuestionGenerator() {
               <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
                 {activeInsights.length ? (
                   activeInsights.map((ins, i) => (
-                    <div key={i} className="rounded border border-slate-100 bg-slate-50 p-2.5 text-xs">
+                    <div
+                      key={i}
+                      className="rounded border border-slate-100 bg-slate-50 p-2.5 text-xs"
+                    >
                       <div className="font-bold text-blue-700 uppercase tracking-wide mb-1">
                         [{ins.domain}] Detected Signal: "{ins.signal}"
                       </div>
-                      <div className="text-slate-900 mb-1"><span className="font-semibold text-slate-700">Systemic Gap:</span> {ins.gap}</div>
-                      <div className="text-slate-600"><span className="font-semibold text-slate-700">Immediate Action:</span> {ins.nextStep}</div>
+                      <div className="text-slate-900 mb-1">
+                        <span className="font-semibold text-slate-700">
+                          Systemic Gap:
+                        </span>{" "}
+                        {ins.gap}
+                      </div>
+                      <div className="text-slate-600">
+                        <span className="font-semibold text-slate-700">
+                          Immediate Action:
+                        </span>{" "}
+                        {ins.nextStep}
+                      </div>
                     </div>
                   ))
                 ) : (
                   <div className="text-xs text-slate-500 py-4 text-center border border-dashed border-slate-200 rounded">
-                    Operational gap detections and strategic actionable next steps will generate automatically here as you capture live keywords.
+                    Operational gap detections and strategic actionable next
+                    steps will generate automatically here as you capture live
+                    keywords.
                   </div>
                 )}
               </div>
@@ -484,21 +779,34 @@ export default function AssessmentQuestionGenerator() {
 
               <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
                 {selectedQuestions.map((question, index) => (
-                  <article key={question.id} className="rounded-md border border-slate-200 bg-slate-50 p-4 text-xs">
+                  <article
+                    key={question.id}
+                    className="rounded-md border border-slate-200 bg-slate-50 p-4 text-xs"
+                  >
                     <div className="mb-2 flex flex-wrap items-center gap-2 font-semibold uppercase text-slate-500">
-                      <span className="bg-slate-200 px-1.5 py-0.5 rounded text-slate-700">{index + 1}</span>
+                      <span className="bg-slate-200 px-1.5 py-0.5 rounded text-slate-700">
+                        {index + 1}
+                      </span>
                       <span>{question.domain}</span>
                       <span>{depthLabels[question.depth]}</span>
                     </div>
-                    <p className="text-base font-semibold leading-7 text-slate-950 my-1.5">{question.text}</p>
+                    <p className="text-base font-semibold leading-7 text-slate-950 my-1.5">
+                      {question.text}
+                    </p>
                     <div className="grid gap-2 border-t border-slate-200 pt-3 mt-3 text-sm leading-6 md:grid-cols-2">
                       <div>
-                        <div className="font-semibold text-slate-800">Skill Evaluation Metric</div>
+                        <div className="font-semibold text-slate-800">
+                          Skill Evaluation Metric
+                        </div>
                         <div className="text-slate-600">{question.skill}</div>
                       </div>
                       <div>
-                        <div className="font-semibold text-slate-800">Target Indicator Gate</div>
-                        <div className="text-slate-600">{question.evaluation}</div>
+                        <div className="font-semibold text-slate-800">
+                          Target Indicator Gate
+                        </div>
+                        <div className="text-slate-600">
+                          {question.evaluation}
+                        </div>
                       </div>
                     </div>
                   </article>
@@ -516,7 +824,8 @@ export default function AssessmentQuestionGenerator() {
               Domain Gap Findings
             </div>
             <div className="text-xs text-slate-500">
-              Aggregated from current notes and detected signals across all domains
+              Aggregated from current notes and detected signals across all
+              domains
             </div>
           </div>
 
@@ -528,23 +837,33 @@ export default function AssessmentQuestionGenerator() {
                   className="rounded-md border border-slate-200 bg-slate-50 p-4"
                 >
                   <div className="mb-2 flex items-center justify-between gap-3">
-                    <h2 className="text-base font-semibold text-slate-950">{finding.domain}</h2>
+                    <h2 className="text-base font-semibold text-slate-950">
+                      {finding.domain}
+                    </h2>
                     <span className="rounded-md bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
                       {finding.score} signals
                     </span>
                   </div>
                   <div className="space-y-3 text-sm leading-6">
                     <div>
-                      <div className="font-semibold text-slate-800">Likely gap</div>
+                      <div className="font-semibold text-slate-800">
+                        Likely gap
+                      </div>
                       <p className="text-slate-600">{finding.gap}</p>
                     </div>
                     <div>
-                      <div className="font-semibold text-slate-800">Suggested next step</div>
+                      <div className="font-semibold text-slate-800">
+                        Suggested next step
+                      </div>
                       <p className="text-slate-600">{finding.recommendation}</p>
                     </div>
                     <div>
-                      <div className="font-semibold text-slate-800">Evidence signals</div>
-                      <p className="text-slate-600">{finding.evidence.join(", ")}</p>
+                      <div className="font-semibold text-slate-800">
+                        Evidence signals
+                      </div>
+                      <p className="text-slate-600">
+                        {finding.evidence.join(", ")}
+                      </p>
                     </div>
                   </div>
                 </article>
@@ -552,8 +871,9 @@ export default function AssessmentQuestionGenerator() {
             </div>
           ) : (
             <div className="rounded-md border border-dashed border-slate-300 bg-slate-50 p-5 text-sm leading-6 text-slate-600">
-              Add notes from the call and this section will draft likely gaps, evidence signals,
-              and practical next steps per domain. Stays conservative until enough signals appear.
+              Add notes from the call and this section will draft likely gaps,
+              evidence signals, and practical next steps per domain. Stays
+              conservative until enough signals appear.
             </div>
           )}
         </section>

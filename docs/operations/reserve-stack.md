@@ -93,8 +93,8 @@ the reserve:
 - Cloudflare DNS (infrastructure; treated separately)
 
 Some of these could survive a hammer fall; some could not. The Reserve
-Stack is what we plan to step *down to* if the active stack becomes
-unusable, not what we plan to step *across to*.
+Stack is what we plan to step _down to_ if the active stack becomes
+unusable, not what we plan to step _across to_.
 
 ## Operating Practice
 
@@ -177,6 +177,6 @@ is what the Reserve Stack respects going forward.
 
 ## Change Log
 
-| Date | Change ID | Type | Summary | Author |
-| --- | --- | --- | --- | --- |
+| Date       | Change ID         | Type    | Summary                                                                                                                                                                                                                                                                                                                                                                                  | Author |
+| ---------- | ----------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
 | 2026-05-16 | CC-2026-05-16-006 | initial | Documented the Reserve Stack doctrine: ClickUp, Notion, and Beacons.ai as cold-standby platforms held against active-stack collapse. Authored from a live ClickUp archaeology session and a direct operator correction on tool posture ("held in reserve" vs "demoted"). Names the qualifying criteria, current reserve members, operating practice, triggers for pullback, and history. | Claude |

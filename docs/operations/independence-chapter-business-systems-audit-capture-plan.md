@@ -28,9 +28,9 @@ Visible tabs from the live sheet:
 The Independence Chapter Business-Systems Audit and the local Consulting
 Assessment Question Generator are related, but they are not the same tool.
 
-| Tool | Current Job | Should It Store Audit Records? |
-| --- | --- | --- |
-| Business-Systems Audit Google Sheet | Participant-facing or chapter-facing scorecard for the five core systems | Yes, through a response/results log or connected form |
+| Tool                                     | Current Job                                                                  | Should It Store Audit Records?                                                   |
+| ---------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Business-Systems Audit Google Sheet      | Participant-facing or chapter-facing scorecard for the five core systems     | Yes, through a response/results log or connected form                            |
 | Consulting Assessment Question Generator | Internal consultant helper for asking better questions and drafting findings | Not as the source of truth; it can later enrich reports from saved audit records |
 
 The Google Sheet should remain the source capture lane for the Independence
@@ -61,27 +61,27 @@ Create a separate Google Sheet for audit outputs, with protected tabs such as:
 
 Each completed audit should append one row:
 
-| Field | Purpose |
-| --- | --- |
-| Audit ID | Durable record ID |
-| Submitted at | Timestamp |
-| Name | Participant identity |
-| Email | Follow-up and dedupe |
-| Business / organization | Context |
-| Event / RoundTable | MKT-09 source event |
-| Source | Book, LinkedIn, Reach, Apollo, referral, community, partner, manual |
-| Lead generation score | System 1 score |
-| Revenue generation score | System 2 score |
-| Delivery score | System 3 score |
-| Client retention score | System 4 score |
-| Financial management score | System 5 score |
-| Overall score | Total score |
-| Lowest system | First priority system |
-| Interpretation band | Optimized, Functional, Developing, Reactive, or Critical |
-| Recommended next step | RoundTable, diagnostic, workshop, membership, consulting, nurture, no follow-up |
-| Owner | Robert, Marcus, agent, or account manager |
-| Follow-up date | Next action date |
-| Notes | Human context |
+| Field                      | Purpose                                                                         |
+| -------------------------- | ------------------------------------------------------------------------------- |
+| Audit ID                   | Durable record ID                                                               |
+| Submitted at               | Timestamp                                                                       |
+| Name                       | Participant identity                                                            |
+| Email                      | Follow-up and dedupe                                                            |
+| Business / organization    | Context                                                                         |
+| Event / RoundTable         | MKT-09 source event                                                             |
+| Source                     | Book, LinkedIn, Reach, Apollo, referral, community, partner, manual             |
+| Lead generation score      | System 1 score                                                                  |
+| Revenue generation score   | System 2 score                                                                  |
+| Delivery score             | System 3 score                                                                  |
+| Client retention score     | System 4 score                                                                  |
+| Financial management score | System 5 score                                                                  |
+| Overall score              | Total score                                                                     |
+| Lowest system              | First priority system                                                           |
+| Interpretation band        | Optimized, Functional, Developing, Reactive, or Critical                        |
+| Recommended next step      | RoundTable, diagnostic, workshop, membership, consulting, nurture, no follow-up |
+| Owner                      | Robert, Marcus, agent, or account manager                                       |
+| Follow-up date             | Next action date                                                                |
+| Notes                      | Human context                                                                   |
 
 ### Option B: Use A Google Form
 
@@ -109,7 +109,7 @@ The submit action should create both:
 
 - a submission log row
 - an action-plan source record that can populate the moved `Action Plan
-  Template`
+Template`
 
 ## Recommended Path
 

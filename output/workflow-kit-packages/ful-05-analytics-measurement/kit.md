@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | FUL-05 |
-| Department | Fulfillment |
-| Automation level | 85-90% |
-| Owner | Robert + Operations Lead |
-| Trigger | Real-time/daily automated refresh |
-| Cycle time | Dashboard: real-time; reports: weekly/monthly |
-| Source status | Imported source |
+| Field            | Value                                         |
+| ---------------- | --------------------------------------------- |
+| Workflow ID      | FUL-05                                        |
+| Department       | Fulfillment                                   |
+| Automation level | 85-90%                                        |
+| Owner            | Robert + Operations Lead                      |
+| Trigger          | Real-time/daily automated refresh             |
+| Cycle time       | Dashboard: real-time; reports: weekly/monthly |
+| Source status    | Imported source                               |
 
 ## Inputs
 
@@ -85,17 +85,17 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `source/URC-FUL-05_Analytics_Measurement.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                                | Purpose                                                                     |
+| ------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `source/URC-FUL-05_Analytics_Measurement.md`            | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `automation/FUL05-Analytics-Measurement-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/FUL-05_Analytics_KPI_Dashboard.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/FUL-05_Analytics_KPI_Dashboard.xlsx`          | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-FUL-05_Analytics_Measurement.md
 
-````markdown
+```markdown
 # FUL-05 - Analytics & Measurement Source
 
 Source: `Fulfillment Department\URC Fulfillment\URC-FUL-05_Analytics_Measurement.docx`
@@ -108,7 +108,7 @@ URC-FUL-05 — Analytics & Measurement
 
 The Numbers That Tell the Truth About How URC Is Performing
 
-Robert T. McCarthy & Sheena Burns   |   v1.0   |   March 23, 2026
+Robert T. McCarthy & Sheena Burns | v1.0 | March 23, 2026
 
 1. Why This Workflow Exists
 
@@ -405,11 +405,11 @@ March 23, 2026
 R. McCarthy & S. Burns
 
 Initial URC Fulfillment document — built from actual operations
-````
+```
 
 ### automation/FUL05-Analytics-Measurement-Blueprint.json
 
-````json
+```json
 {
   "name": "FUL05: ROI Dashboard Refresh & Client Report (Make.com Blueprint)",
   "flow": [
@@ -485,7 +485,12 @@ Initial URC Fulfillment document — built from actual operations
         "spreadsheetId": "YOUR_FUL05_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{3.choices[0].message.content.totalExecutions}}", "{{3.choices[0].message.content.timeSavedHours}}", "{{3.choices[0].message.content.costSaved}}"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD')}}",
+          "{{3.choices[0].message.content.totalExecutions}}",
+          "{{3.choices[0].message.content.timeSavedHours}}",
+          "{{3.choices[0].message.content.costSaved}}"
+        ]
       },
       "metadata": {
         "designer": {
@@ -530,7 +535,7 @@ Initial URC Fulfillment document — built from actual operations
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -616,7 +621,12 @@ Initial URC Fulfillment document — built from actual operations
         "spreadsheetId": "YOUR_FUL05_TRACKER_ID"
       },
       "mapper": {
-        "values": ["{{formatDate(now; 'YYYY-MM-DD')}}", "{{3.choices[0].message.content.totalExecutions}}", "{{3.choices[0].message.content.timeSavedHours}}", "{{3.choices[0].message.content.costSaved}}"]
+        "values": [
+          "{{formatDate(now; 'YYYY-MM-DD')}}",
+          "{{3.choices[0].message.content.totalExecutions}}",
+          "{{3.choices[0].message.content.timeSavedHours}}",
+          "{{3.choices[0].message.content.costSaved}}"
+        ]
       },
       "metadata": {
         "designer": {
@@ -705,6 +715,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

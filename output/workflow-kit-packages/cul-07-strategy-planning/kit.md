@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | CUL-07 |
-| Department | Culture |
-| Automation level | 55-65% |
-| Owner | Robert T. McCarthy |
-| Trigger | December annually; end of each quarter |
-| Cycle time | Annual plan: December; monthly check: 30 min |
-| Source status | Imported source |
+| Field            | Value                                        |
+| ---------------- | -------------------------------------------- |
+| Workflow ID      | CUL-07                                       |
+| Department       | Culture                                      |
+| Automation level | 55-65%                                       |
+| Owner            | Robert T. McCarthy                           |
+| Trigger          | December annually; end of each quarter       |
+| Cycle time       | Annual plan: December; monthly check: 30 min |
+| Source status    | Imported source                              |
 
 ## Inputs
 
@@ -85,8 +85,8 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
+| Artifact                                           | Purpose                                                                     |
+| -------------------------------------------------- | --------------------------------------------------------------------------- |
 | `trackers/CUL-07_Strategy_Planning_Dashboard.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
@@ -143,6 +143,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

@@ -50,8 +50,6 @@ Framework: unknown
 
 ## Dependents (independently_created: false)
 
-
-
 ## Dual-creation models (independently_created AND created_by)
 
 None

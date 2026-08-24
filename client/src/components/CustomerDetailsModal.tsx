@@ -14,7 +14,9 @@ export default function CustomerDetailsModal({
   customerId,
   onClose,
 }: CustomerDetailsModalProps) {
-  const [selectedStatus, setSelectedStatus] = useState<"active" | "canceled" | "past_due" | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<
+    "active" | "canceled" | "past_due" | null
+  >(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
   const { data: customer, isLoading } = trpc.admin.getCustomerDetails.useQuery({
@@ -32,7 +34,9 @@ export default function CustomerDetailsModal({
     },
   });
 
-  const handleStatusChange = (newStatus: "active" | "canceled" | "past_due") => {
+  const handleStatusChange = (
+    newStatus: "active" | "canceled" | "past_due"
+  ) => {
     setSelectedStatus(newStatus);
     setShowConfirm(true);
   };
@@ -50,7 +54,9 @@ export default function CustomerDetailsModal({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <Card className="w-full max-w-md border border-border">
         <div className="flex items-center justify-between p-6 border-b border-border">
-          <h2 className="text-xl font-bold text-foreground">Customer Details</h2>
+          <h2 className="text-xl font-bold text-foreground">
+            Customer Details
+          </h2>
           <button
             onClick={onClose}
             className="text-muted-foreground hover:text-foreground transition-colors"
@@ -61,8 +67,11 @@ export default function CustomerDetailsModal({
 
         {isLoading ? (
           <div className="p-6 space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-12 bg-muted rounded animate-pulse"></div>
+            {[1, 2, 3].map(i => (
+              <div
+                key={i}
+                className="h-12 bg-muted rounded animate-pulse"
+              ></div>
             ))}
           </div>
         ) : customer ? (
@@ -70,7 +79,9 @@ export default function CustomerDetailsModal({
             {/* Customer Info */}
             <div>
               <p className="text-sm text-muted-foreground mb-1">User ID</p>
-              <p className="text-lg font-semibold text-foreground">{customer.userId}</p>
+              <p className="text-lg font-semibold text-foreground">
+                {customer.userId}
+              </p>
             </div>
 
             <div>
@@ -81,7 +92,9 @@ export default function CustomerDetailsModal({
             </div>
 
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Current Status</p>
+              <p className="text-sm text-muted-foreground mb-1">
+                Current Status
+              </p>
               <span
                 className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
                   customer.status === "active"
@@ -96,14 +109,18 @@ export default function CustomerDetailsModal({
             </div>
 
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Stripe Subscription ID</p>
+              <p className="text-sm text-muted-foreground mb-1">
+                Stripe Subscription ID
+              </p>
               <p className="text-sm font-mono text-foreground break-all">
                 {customer.stripeSubscriptionId || "N/A"}
               </p>
             </div>
 
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Current Period</p>
+              <p className="text-sm text-muted-foreground mb-1">
+                Current Period
+              </p>
               <p className="text-sm text-foreground">
                 {customer.currentPeriodStart && customer.currentPeriodEnd
                   ? `${new Date(customer.currentPeriodStart).toLocaleDateString()} - ${new Date(customer.currentPeriodEnd).toLocaleDateString()}`
@@ -114,11 +131,15 @@ export default function CustomerDetailsModal({
             {/* Status Change Actions */}
             {!showConfirm ? (
               <div className="space-y-3 pt-4 border-t border-border">
-                <p className="text-sm font-semibold text-foreground">Change Status</p>
+                <p className="text-sm font-semibold text-foreground">
+                  Change Status
+                </p>
                 <div className="grid grid-cols-3 gap-2">
                   <Button
                     size="sm"
-                    variant={customer.status === "active" ? "default" : "outline"}
+                    variant={
+                      customer.status === "active" ? "default" : "outline"
+                    }
                     onClick={() => handleStatusChange("active")}
                     disabled={customer.status === "active"}
                   >
@@ -126,7 +147,9 @@ export default function CustomerDetailsModal({
                   </Button>
                   <Button
                     size="sm"
-                    variant={customer.status === "past_due" ? "default" : "outline"}
+                    variant={
+                      customer.status === "past_due" ? "default" : "outline"
+                    }
                     onClick={() => handleStatusChange("past_due")}
                     disabled={customer.status === "past_due"}
                   >
@@ -134,7 +157,9 @@ export default function CustomerDetailsModal({
                   </Button>
                   <Button
                     size="sm"
-                    variant={customer.status === "canceled" ? "destructive" : "outline"}
+                    variant={
+                      customer.status === "canceled" ? "destructive" : "outline"
+                    }
                     onClick={() => handleStatusChange("canceled")}
                     disabled={customer.status === "canceled"}
                   >

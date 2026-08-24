@@ -17,7 +17,10 @@ type ContextDoc = {
   content: string;
 };
 
-async function safeReadTextFile(label: string, filePath: string): Promise<ContextDoc | null> {
+async function safeReadTextFile(
+  label: string,
+  filePath: string
+): Promise<ContextDoc | null> {
   try {
     const content = await fs.readFile(filePath, "utf8");
     return {
@@ -33,12 +36,10 @@ async function safeReadTextFile(label: string, filePath: string): Promise<Contex
 async function safeListDirectory(targetPath: string) {
   try {
     const entries = await fs.readdir(targetPath, { withFileTypes: true });
-    return entries
-      .slice(0, 60)
-      .map(entry => ({
-        name: entry.name,
-        type: entry.isDirectory() ? "dir" : "file",
-      }));
+    return entries.slice(0, 60).map(entry => ({
+      name: entry.name,
+      type: entry.isDirectory() ? "dir" : "file",
+    }));
   } catch {
     return [];
   }
@@ -50,37 +51,38 @@ function getRepoDocsRoot() {
 
 async function loadContextDocs() {
   const repoDocsRoot = getRepoDocsRoot();
-  const businessRoot = process.env.OPS_AGENT_BUSINESS_ROOT || DEFAULT_BUSINESS_ROOT;
+  const businessRoot =
+    process.env.OPS_AGENT_BUSINESS_ROOT || DEFAULT_BUSINESS_ROOT;
 
   const docs = await Promise.all([
     safeReadTextFile("Repo Agent Guide", path.join(process.cwd(), "AGENTS.md")),
     safeReadTextFile(
       "URC Agent Execution Checklist",
-      path.join(repoDocsRoot, "urc-agent-execution-checklist.md"),
+      path.join(repoDocsRoot, "urc-agent-execution-checklist.md")
     ),
     safeReadTextFile(
       "URC V1 Operating Architecture",
-      path.join(repoDocsRoot, "urc-v1-operating-architecture.md"),
+      path.join(repoDocsRoot, "urc-v1-operating-architecture.md")
     ),
     safeReadTextFile(
       "URC 90-Day Implementation Plan",
-      path.join(repoDocsRoot, "urc-90-day-implementation-plan.md"),
+      path.join(repoDocsRoot, "urc-90-day-implementation-plan.md")
     ),
     safeReadTextFile(
       "Founder Intake Agent Notes",
-      path.join(repoDocsRoot, "founder-intake-agent.md"),
+      path.join(repoDocsRoot, "founder-intake-agent.md")
     ),
     safeReadTextFile(
       "Business Agent Handoff Prompt",
-      path.join(businessRoot, "Agent Handoff Prompt.md"),
+      path.join(businessRoot, "Agent Handoff Prompt.md")
     ),
     safeReadTextFile(
       "Business Consolidation Blueprint",
-      path.join(businessRoot, "Agent Consolidation Blueprint.md"),
+      path.join(businessRoot, "Agent Consolidation Blueprint.md")
     ),
     safeReadTextFile(
       "Business Agent Task Queue",
-      path.join(businessRoot, "Agent Task Queue.md"),
+      path.join(businessRoot, "Agent Task Queue.md")
     ),
   ]);
 
@@ -88,13 +90,15 @@ async function loadContextDocs() {
 }
 
 async function loadInventories() {
-  const businessRoot = process.env.OPS_AGENT_BUSINESS_ROOT || DEFAULT_BUSINESS_ROOT;
+  const businessRoot =
+    process.env.OPS_AGENT_BUSINESS_ROOT || DEFAULT_BUSINESS_ROOT;
   const recoveryRoots = (process.env.OPS_AGENT_RECOVERY_ROOTS || "")
     .split(";")
     .map(value => value.trim())
     .filter(Boolean);
 
-  const targets = recoveryRoots.length > 0 ? recoveryRoots : DEFAULT_RECOVERY_DIRS;
+  const targets =
+    recoveryRoots.length > 0 ? recoveryRoots : DEFAULT_RECOVERY_DIRS;
 
   const [businessWorkspace, ...recoveryInventories] = await Promise.all([
     safeListDirectory(businessRoot),
@@ -110,9 +114,15 @@ async function loadInventories() {
   };
 }
 
-function buildFallbackReply(task: string, docs: ContextDoc[], inventory: Awaited<ReturnType<typeof loadInventories>>) {
+function buildFallbackReply(
+  task: string,
+  docs: ContextDoc[],
+  inventory: Awaited<ReturnType<typeof loadInventories>>
+) {
   const recoverySummary = inventory.recoveryInventories
-    .map(item => `- ${item.path}: ${item.entries.length} top-level entries sampled`)
+    .map(
+      item => `- ${item.path}: ${item.entries.length} top-level entries sampled`
+    )
     .join("\n");
 
   const docSummary = docs.map(doc => `- ${doc.label}`).join("\n");
@@ -139,25 +149,29 @@ function buildFallbackReply(task: string, docs: ContextDoc[], inventory: Awaited
   ].join("\n");
 }
 
-async function callOpenAI(task: string, docs: ContextDoc[], inventory: Awaited<ReturnType<typeof loadInventories>>) {
+async function callOpenAI(
+  task: string,
+  docs: ContextDoc[],
+  inventory: Awaited<ReturnType<typeof loadInventories>>
+) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return null;
 
   const model = process.env.OPENAI_OPS_AGENT_MODEL || "gpt-5-mini";
   const contextBlock = docs
-    .map(
-      doc =>
-        `## ${doc.label}\nPATH: ${doc.filePath}\n${doc.content}`,
-    )
+    .map(doc => `## ${doc.label}\nPATH: ${doc.filePath}\n${doc.content}`)
     .join("\n\n");
 
   const inventoryBlock = [
     "## Business Workspace Top-Level Sample",
-    inventory.businessWorkspace.map(entry => `- [${entry.type}] ${entry.name}`).join("\n") || "- None",
+    inventory.businessWorkspace
+      .map(entry => `- [${entry.type}] ${entry.name}`)
+      .join("\n") || "- None",
     "",
     ...inventory.recoveryInventories.flatMap(item => [
       `## Recovery Sample: ${item.path}`,
-      item.entries.map(entry => `- [${entry.type}] ${entry.name}`).join("\n") || "- None",
+      item.entries.map(entry => `- [${entry.type}] ${entry.name}`).join("\n") ||
+        "- None",
       "",
     ]),
   ].join("\n");
@@ -209,11 +223,15 @@ Return:
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error("[Ops Cleanup Agent] OpenAI error:", response.status, errorText);
+    console.error(
+      "[Ops Cleanup Agent] OpenAI error:",
+      response.status,
+      errorText
+    );
     return null;
   }
 
-  const payload = await response.json() as any;
+  const payload = (await response.json()) as any;
   const outputText =
     typeof payload.output_text === "string"
       ? payload.output_text
@@ -232,7 +250,7 @@ export const opsCleanupRouter = router({
     .input(
       z.object({
         task: z.string().min(10).max(5000),
-      }),
+      })
     )
     .mutation(async ({ input }) => {
       const [docs, inventory] = await Promise.all([

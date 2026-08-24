@@ -19,4 +19,3 @@ The core message:
 
 Founders do not need a heavier stack. They need the tools they already have to
 work together clearly enough that leads, follow-up, and delivery stop leaking.
-

@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | OPS-02 |
-| Department | Operations |
-| Automation level | N/A - Framework |
-| Owner | Founder/CEO |
-| Trigger | Annual or major pivot |
-| Cycle time | Annual mission; governance monthly |
-| Source status | Imported source |
+| Field            | Value                              |
+| ---------------- | ---------------------------------- |
+| Workflow ID      | OPS-02                             |
+| Department       | Operations                         |
+| Automation level | N/A - Framework                    |
+| Owner            | Founder/CEO                        |
+| Trigger          | Annual or major pivot              |
+| Cycle time       | Annual mission; governance monthly |
+| Source status    | Imported source                    |
 
 ## Inputs
 
@@ -85,34 +85,38 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `assets/OPS02-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/OPS02-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                                | Purpose                                                                     |
+| ------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `assets/OPS02-Assets.md`                                | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/OPS02-Blueprint.json`                       | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `trackers/OPS02_Team_Roles_Access_Control_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### assets/OPS02-Assets.md
 
-````markdown
+```markdown
 # OPS02: Mission & Governance Assets
 
 ## 1. Governance Meeting Agenda Templates
 
 ### Weekly Operations Sync (30 Mins)
+
 **Purpose:** Clear blockers and align on weekly capacity.
 **Attendees:** Operations, Delivery leads.
 **Agenda:**
+
 1. **Metrics Snapshot (5 mins):** Red/Yellow/Green status on key delivery metrics.
 2. **Hot Issues & Blockers (15 mins):** What is stuck? Who needs help? (Focus on resolution, not storytelling).
 3. **Capacity Check (5 mins):** Are we over/under capacity for the week?
 4. **Action Items (5 mins):** Who is doing what by when?
 
 ### Monthly Strategy Review (60-90 Mins)
+
 **Purpose:** Zoom out and check progress against annual goals.
 **Attendees:** Founder, Leadership team.
 **Agenda:**
+
 1. **Financial & Pipeline Update (15 mins):** Revenue vs. Target, Cash runway, Pipeline health.
 2. **Strategic Initiative Updates (30 mins):** Progress on quarterly OKRs. (Are we on track? If not, why?)
 3. **Major Decisions / Roadblocks (30 mins):** Discuss any Level 3 (Strategic) decisions that require founder input.
@@ -121,20 +125,22 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 ---
 
 ## 2. Escalation Protocol Matrix
-*Quick reference guide for team members on when and how to escalate issues.*
 
-| Scenario | Risk Level | Who to Escalate To | Channel | Expected Response Time |
-| :--- | :--- | :--- | :--- | :--- |
-| **Client is unhappy but not leaving** | Level 1 (Low) | Head of Delivery | Slack (Standard) | 24 Hours |
-| **Slight budget/timeline overrun** | Level 1 (Low) | Head of Operations | Project Mgmt Tool | 24 Hours |
-| **Client threatens to churn/cancel** | Level 2 (Medium) | Founder / CEO | Slack (Urgent tag) | 4 Hours |
-| **Data breach or severe security issue** | Level 3 (High) | Founder / CEO & IT | Phone Call | Immediate |
-| **Legal threat or compliance breach** | Level 3 (High) | Founder & Legal Counsel | Phone Call | Immediate |
+_Quick reference guide for team members on when and how to escalate issues._
+
+| Scenario                                 | Risk Level       | Who to Escalate To      | Channel            | Expected Response Time |
+| :--------------------------------------- | :--------------- | :---------------------- | :----------------- | :--------------------- |
+| **Client is unhappy but not leaving**    | Level 1 (Low)    | Head of Delivery        | Slack (Standard)   | 24 Hours               |
+| **Slight budget/timeline overrun**       | Level 1 (Low)    | Head of Operations      | Project Mgmt Tool  | 24 Hours               |
+| **Client threatens to churn/cancel**     | Level 2 (Medium) | Founder / CEO           | Slack (Urgent tag) | 4 Hours                |
+| **Data breach or severe security issue** | Level 3 (High)   | Founder / CEO & IT      | Phone Call         | Immediate              |
+| **Legal threat or compliance breach**    | Level 3 (High)   | Founder & Legal Counsel | Phone Call         | Immediate              |
 
 ---
 
 ## 3. Decision Log Template
-*Maintained in a central repository (e.g., Notion) to track major strategic decisions and their rationale.*
+
+_Maintained in a central repository (e.g., Notion) to track major strategic decisions and their rationale._
 
 **Date of Decision:** [Date]
 **Decision Maker(s):** [Names]
@@ -143,11 +149,11 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 **Rationale:** [Why did we choose this path over the alternatives?]
 **Expected Outcome:** [What do we expect to happen because of this?]
 **Review Date:** [When will we look back to see if this was the right call?]
-````
+```
 
 ### automation/OPS02-Blueprint.json
 
-````json
+```json
 {
   "name": "OPS02: Knowledge Base & SOPs (Make.com Blueprint)",
   "flow": [
@@ -185,7 +191,7 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
     }
   ]
 }
-````
+```
 
 ## Binary Attachments
 
@@ -277,6 +283,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

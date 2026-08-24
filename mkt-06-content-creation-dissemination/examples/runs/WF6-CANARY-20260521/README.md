@@ -27,18 +27,18 @@ Source signal:
 
 ## Evidence Chain
 
-| # | Checkpoint | Evidence | Status |
-| --- | --- | --- | --- |
-| 1 | Planning item | `content-brief.md` | Manual pass |
-| 2 | Task record | `local-task-record.md` | Manual workaround |
-| 3 | Source draft | `source-draft.md` | Pass |
-| 4 | Repository artifact | This committed packet | Manual workaround |
-| 5 | Editorial approval | `editorial-approval.md` | Manual pass |
-| 6 | SEO completion | `seo-checklist.md` | Manual pass |
-| 7 | Adaptation asset | `adaptations/email.md`; `adaptations/linkedin.md` | Pass |
-| 8 | Distribution proof | `distribution-preview.md` | Manual workaround |
-| 9 | Step 7 tracker row | `performance-tracker-row.md` | Pass |
-| 10 | Final decision | `final-decision.md` | Pass with Manual Workarounds |
+| #   | Checkpoint          | Evidence                                          | Status                       |
+| --- | ------------------- | ------------------------------------------------- | ---------------------------- |
+| 1   | Planning item       | `content-brief.md`                                | Manual pass                  |
+| 2   | Task record         | `local-task-record.md`                            | Manual workaround            |
+| 3   | Source draft        | `source-draft.md`                                 | Pass                         |
+| 4   | Repository artifact | This committed packet                             | Manual workaround            |
+| 5   | Editorial approval  | `editorial-approval.md`                           | Manual pass                  |
+| 6   | SEO completion      | `seo-checklist.md`                                | Manual pass                  |
+| 7   | Adaptation asset    | `adaptations/email.md`; `adaptations/linkedin.md` | Pass                         |
+| 8   | Distribution proof  | `distribution-preview.md`                         | Manual workaround            |
+| 9   | Step 7 tracker row  | `performance-tracker-row.md`                      | Pass                         |
+| 10  | Final decision      | `final-decision.md`                               | Pass with Manual Workarounds |
 
 ## Final Decision
 
@@ -51,4 +51,3 @@ empty testing prep to a local canary baseline. Live promotion still requires:
 - one real OneDrive/SharePoint document link
 - one controlled distribution preview or test send
 - one live Step 7 tracker row in Microsoft Lists, Excel, Notion, or HubSpot
-

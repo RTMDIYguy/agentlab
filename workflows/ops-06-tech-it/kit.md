@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | OPS-06 |
-| Department | Operations |
-| Automation level | N/A - Framework |
-| Owner | Head of Operations |
-| Trigger | Tool adoption or monthly review |
-| Cycle time | Registry: monthly; audit: annual |
-| Source status | Imported source |
+| Field            | Value                            |
+| ---------------- | -------------------------------- |
+| Workflow ID      | OPS-06                           |
+| Department       | Operations                       |
+| Automation level | N/A - Framework                  |
+| Owner            | Head of Operations               |
+| Trigger          | Tool adoption or monthly review  |
+| Cycle time       | Registry: monthly; audit: annual |
+| Source status    | Imported source                  |
 
 ## Inputs
 
@@ -85,44 +85,46 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `assets/OPS06-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/OPS06-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                            | Purpose                                                                     |
+| --------------------------------------------------- | --------------------------------------------------------------------------- |
+| `assets/OPS06-Assets.md`                            | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/OPS06-Blueprint.json`                   | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `trackers/OPS06_Skill_Matrix_Training_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### assets/OPS06-Assets.md
 
-````markdown
+```markdown
 # OPS06: Tech & IT Assets
 
 ## 1. Tool Evaluation Matrix (Spreadsheet)
-*Use this scoring matrix before purchasing new software.*
 
-**Tool Name:** _____________________
-**Cost ($/mo):** _____________________
+_Use this scoring matrix before purchasing new software._
 
-| Criteria | Weight (1-3) | Score (1-5) | Weighted Score | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Must-Have Features** | 3 | | | |
-| **Ease of Use** | 3 | | | |
-| **Integration Capability** | 3 | | | |
-| **Security & Privacy** | 3 | | | |
-| **Nice-to-Have Features** | 1 | | | |
-| **Support Quality** | 2 | | | |
-| **Scalability** | 2 | | | |
-| **TOTAL SCORE:** | | | | / 85 Max |
+**Tool Name:** ****\*\*****\_****\*\*****
+**Cost ($/mo):** ****\*\*****\_****\*\*****
 
-*Decision threshold: Must score > 65 to be considered for a paid plan.*
+| Criteria                   | Weight (1-3) | Score (1-5) | Weighted Score | Notes    |
+| :------------------------- | :----------- | :---------- | :------------- | :------- |
+| **Must-Have Features**     | 3            |             |                |          |
+| **Ease of Use**            | 3            |             |                |          |
+| **Integration Capability** | 3            |             |                |          |
+| **Security & Privacy**     | 3            |             |                |          |
+| **Nice-to-Have Features**  | 1            |             |                |          |
+| **Support Quality**        | 2            |             |                |          |
+| **Scalability**            | 2            |             |                |          |
+| **TOTAL SCORE:**           |              |             |                | / 85 Max |
+
+_Decision threshold: Must score > 65 to be considered for a paid plan._
 
 ---
 
 ## 2. Agency Tech Stack Audit (Quarterly Checklist)
-*Run this every 3 months to cull unused tools and optimize spend.*
 
-**Date:** _______________ **Conducted By:** _______________
+_Run this every 3 months to cull unused tools and optimize spend._
+
+**Date:** **\*\***\_\_\_**\*\*** **Conducted By:** **\*\***\_\_\_**\*\***
 
 - [ ] Export a list of all recurring software charges from the company credit card/QuickBooks.
 - [ ] Cross-reference charges with the official Tech Stack Inventory (OPS-06).
@@ -132,34 +134,39 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 - [ ] Review annual renewals coming up in the next 90 days. Negotiate or prep to switch.
 - [ ] Review automation error logs (Zapier/Make). Fix or delete broken zaps.
 
-**Savings Identified ($):** _______________
+**Savings Identified ($):** **\*\***\_\_\_**\*\***
 
 ---
 
 ## 3. Internal IT Support Quick-Reference
-*Post this in a pinned Slack message or internal wiki.*
+
+_Post this in a pinned Slack message or internal wiki._
 
 **"My tool is broken! What do I do?"**
 
 **Step 1:** Check your own setup.
+
 - Clear browser cache.
 - Try an Incognito window.
 - Restart your computer.
 
 **Step 2:** Check if it's a global outage.
+
 - Google "[Tool Name] status" (e.g., "Slack status") to see if their servers are down.
 
 **Step 3:** Internal Support.
+
 - Post in the `#it-help` Slack channel. Include a screenshot of the error and what you were trying to do.
 - Tag [@OpsLead]. Response SLA is 4 hours for non-critical, immediate for critical blockers.
 
 **Step 4:** Vendor Support.
+
 - If directed by Ops, open a support ticket directly with the vendor.
-````
+```
 
 ### automation/OPS06-Blueprint.json
 
-````json
+```json
 {
   "name": "OPS06: Capacity & Resource Planning (Make.com Blueprint)",
   "flow": [
@@ -197,7 +204,7 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
     }
   ]
 }
-````
+```
 
 ## Binary Attachments
 
@@ -289,6 +296,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

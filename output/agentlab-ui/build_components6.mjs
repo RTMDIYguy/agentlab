@@ -1,13 +1,13 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const SRC_DIR = path.join(__dirname, 'src');
+const SRC_DIR = path.join(__dirname, "src");
 
 const files = {
-  'AgentSlideOver.tsx': `
+  "AgentSlideOver.tsx": `
 import React from 'react';
 
 interface AgentSlideOverProps {
@@ -99,7 +99,7 @@ export const AgentSlideOver: React.FC<AgentSlideOverProps> = ({ agent, onClose }
   );
 };
   `,
-  'AgentCard.tsx': `
+  "AgentCard.tsx": `
 import React from 'react';
 
 interface AgentCardProps {
@@ -153,7 +153,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({ id, name, role, status, ta
   );
 };
   `,
-  'Agents.tsx': `
+  "Agents.tsx": `
 import React, { useState } from 'react';
 import { AgentCard } from './AgentCard';
 import { AgentSlideOver } from './AgentSlideOver';
@@ -188,8 +188,10 @@ export const Agents: React.FC = () => {
     </div>
   );
 };
-  `
+  `,
 };
 
-Object.entries(files).forEach(([file, content]) => fs.writeFileSync(path.join(SRC_DIR, file), content.trim()));
-console.log('Phase 2 Agent Components built successfully!');
+Object.entries(files).forEach(([file, content]) =>
+  fs.writeFileSync(path.join(SRC_DIR, file), content.trim())
+);
+console.log("Phase 2 Agent Components built successfully!");

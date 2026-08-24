@@ -1,139 +1,268 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Market Marksman - Interactive Beta Feedback</title>
-  <!-- 🪐 Live Tailwind CSS compiler to guarantee gorgeous out-of-the-box local and web previews! -->
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-950 flex items-center justify-center min-h-screen p-4 sm:p-6">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Market Marksman - Interactive Beta Feedback</title>
+    <!-- 🪐 Live Tailwind CSS compiler to guarantee gorgeous out-of-the-box local and web previews! -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-slate-950 flex items-center justify-center min-h-screen p-4 sm:p-6"
+  >
+    <!-- Main Web Component -->
+    <div
+      class="max-w-2xl w-full bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-2xl text-slate-100 font-sans"
+    >
+      <div
+        class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 mb-6 gap-4"
+      >
+        <div>
+          <h2
+            class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2"
+          >
+            <span>🚀</span> Market Marksman Feedback
+          </h2>
+          <p
+            class="text-xs font-semibold text-sky-400 mt-1 uppercase tracking-wider"
+          >
+            Active Beta Tester Submission Portal
+          </p>
+        </div>
+        <div
+          class="bg-slate-950 px-3 py-1.5 rounded-full border border-sky-500/20 text-xs font-semibold text-sky-400"
+        >
+          Beta Phase 1.0
+        </div>
+      </div>
 
-  <!-- Main Web Component -->
-  <div class="max-w-2xl w-full bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-2xl text-slate-100 font-sans">
-    
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 mb-6 gap-4">
-      <div>
-        <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-          <span>🚀</span> Market Marksman Feedback
-        </h2>
-        <p class="text-xs font-semibold text-sky-400 mt-1 uppercase tracking-wider">Active Beta Tester Submission Portal</p>
-      </div>
-      <div class="bg-slate-950 px-3 py-1.5 rounded-full border border-sky-500/20 text-xs font-semibold text-sky-400">
-        Beta Phase 1.0
-      </div>
+      <form id="betaFeedbackForm" class="space-y-6">
+        <!-- Part 1: Verification Quality -->
+        <div>
+          <label class="block text-sm font-bold text-slate-200 mb-2"
+            >1. Predictive Accuracy & Verification</label
+          >
+          <p class="text-xs text-slate-400 mb-3">
+            How accurate did the alternative data signals (patents, funding,
+            hiring) prove during manual vetting?
+          </p>
+          <div class="space-y-2">
+            <label
+              class="flex items-start gap-3 p-3 bg-slate-950/40 rounded-lg border border-slate-850 hover:bg-sky-500/5 hover:border-sky-500/20 transition cursor-pointer"
+            >
+              <input
+                type="radio"
+                name="accuracy"
+                value="high"
+                class="mt-1 accent-sky-500"
+                required
+              />
+              <div>
+                <span class="text-sm font-semibold text-white"
+                  >Extremely High-Quality</span
+                >
+                <span class="block text-xs text-slate-400"
+                  >Signals are accurate and required minimal external vetting to
+                  verify.</span
+                >
+              </div>
+            </label>
+            <label
+              class="flex items-start gap-3 p-3 bg-slate-950/40 rounded-lg border border-slate-850 hover:bg-sky-500/5 hover:border-sky-500/20 transition cursor-pointer"
+            >
+              <input
+                type="radio"
+                name="accuracy"
+                value="medium"
+                class="mt-1 accent-sky-500"
+              />
+              <div>
+                <span class="text-sm font-semibold text-white"
+                  >Highly Directional</span
+                >
+                <span class="block text-xs text-slate-400"
+                  >Signals are real and valuable, but require manual
+                  confirmation first.</span
+                >
+              </div>
+            </label>
+            <label
+              class="flex items-start gap-3 p-3 bg-slate-950/40 rounded-lg border border-slate-850 hover:bg-sky-500/5 hover:border-sky-500/20 transition cursor-pointer"
+            >
+              <input
+                type="radio"
+                name="accuracy"
+                value="low"
+                class="mt-1 accent-sky-500"
+              />
+              <div>
+                <span class="text-sm font-semibold text-white"
+                  >Unverified / Clunky Data</span
+                >
+                <span class="block text-xs text-slate-400"
+                  >Encountered high rates of stale or incorrect entries.</span
+                >
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Part 2: Layout Experience -->
+        <div>
+          <label class="block text-sm font-bold text-slate-200 mb-2"
+            >2. Interface & Navigation (1-5)</label
+          >
+          <p class="text-xs text-slate-400 mb-3">
+            Please rate how intuitive the layout and transition was between
+            tabs.
+          </p>
+          <div class="grid grid-cols-5 gap-2">
+            <label
+              class="text-center p-3 bg-slate-950/40 border border-slate-800 rounded-lg hover:border-sky-500/30 transition cursor-pointer flex flex-col items-center"
+            >
+              <input
+                type="radio"
+                name="rating"
+                value="1"
+                class="mb-1 accent-sky-500"
+                required
+              />
+              <span class="text-xs text-slate-300">1</span>
+            </label>
+            <label
+              class="text-center p-3 bg-slate-950/40 border border-slate-800 rounded-lg hover:border-sky-500/30 transition cursor-pointer flex flex-col items-center"
+            >
+              <input
+                type="radio"
+                name="rating"
+                value="2"
+                class="mb-1 accent-sky-500"
+              />
+              <span class="text-xs text-slate-300">2</span>
+            </label>
+            <label
+              class="text-center p-3 bg-slate-950/40 border border-slate-800 rounded-lg hover:border-sky-500/30 transition cursor-pointer flex flex-col items-center"
+            >
+              <input
+                type="radio"
+                name="rating"
+                value="3"
+                class="mb-1 accent-sky-500"
+              />
+              <span class="text-xs text-slate-300">3</span>
+            </label>
+            <label
+              class="text-center p-3 bg-slate-950/40 border border-slate-800 rounded-lg hover:border-sky-500/30 transition cursor-pointer flex flex-col items-center"
+            >
+              <input
+                type="radio"
+                name="rating"
+                value="4"
+                class="mb-1 accent-sky-500"
+              />
+              <span class="text-xs text-slate-300">4</span>
+            </label>
+            <label
+              class="text-center p-3 bg-slate-950/40 border border-slate-800 rounded-lg hover:border-sky-500/30 transition cursor-pointer flex flex-col items-center"
+            >
+              <input
+                type="radio"
+                name="rating"
+                value="5"
+                class="mb-1 accent-sky-500"
+              />
+              <span class="text-xs text-slate-300">5</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Part 3: Written Notes -->
+        <div>
+          <label class="block text-sm font-bold text-slate-200 mb-2"
+            >3. Missing Features & Suggestions</label
+          >
+          <textarea
+            name="suggestions"
+            rows="4"
+            class="w-full bg-slate-950/60 border border-slate-800 rounded-lg p-3 text-sm text-slate-200 placeholder-slate-650 focus:outline-none focus:border-sky-500/50"
+            placeholder="Are we missing any specific buttons, indicators, data streams, or tools that would make this an indispensable daily asset for you?"
+          ></textarea>
+        </div>
+
+        <!-- Submit Block -->
+        <button
+          type="submit"
+          class="w-full bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-sky-500/10 active:translate-y-px transition"
+        >
+          Submit Active Beta Feedback
+        </button>
+      </form>
+
+      <div
+        id="feedbackStatus"
+        class="hidden mt-4 p-3 rounded-lg text-center text-xs font-semibold"
+      ></div>
     </div>
 
-    <form id="betaFeedbackForm" class="space-y-6">
-      
-      <!-- Part 1: Verification Quality -->
-      <div>
-        <label class="block text-sm font-bold text-slate-200 mb-2">1. Predictive Accuracy & Verification</label>
-        <p class="text-xs text-slate-400 mb-3">How accurate did the alternative data signals (patents, funding, hiring) prove during manual vetting?</p>
-        <div class="space-y-2">
-          <label class="flex items-start gap-3 p-3 bg-slate-950/40 rounded-lg border border-slate-850 hover:bg-sky-500/5 hover:border-sky-500/20 transition cursor-pointer">
-            <input type="radio" name="accuracy" value="high" class="mt-1 accent-sky-500" required>
-            <div>
-              <span class="text-sm font-semibold text-white">Extremely High-Quality</span>
-              <span class="block text-xs text-slate-400">Signals are accurate and required minimal external vetting to verify.</span>
-            </div>
-          </label>
-          <label class="flex items-start gap-3 p-3 bg-slate-950/40 rounded-lg border border-slate-850 hover:bg-sky-500/5 hover:border-sky-500/20 transition cursor-pointer">
-            <input type="radio" name="accuracy" value="medium" class="mt-1 accent-sky-500">
-            <div>
-              <span class="text-sm font-semibold text-white">Highly Directional</span>
-              <span class="block text-xs text-slate-400">Signals are real and valuable, but require manual confirmation first.</span>
-            </div>
-          </label>
-          <label class="flex items-start gap-3 p-3 bg-slate-950/40 rounded-lg border border-slate-850 hover:bg-sky-500/5 hover:border-sky-500/20 transition cursor-pointer">
-            <input type="radio" name="accuracy" value="low" class="mt-1 accent-sky-500">
-            <div>
-              <span class="text-sm font-semibold text-white">Unverified / Clunky Data</span>
-              <span class="block text-xs text-slate-400">Encountered high rates of stale or incorrect entries.</span>
-            </div>
-          </label>
-        </div>
-      </div>
+    <script>
+      document
+        .getElementById("betaFeedbackForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const payload = {
+            accuracy: formData.get("accuracy"),
+            rating: formData.get("rating"),
+            suggestions: formData.get("suggestions"),
+            submittedAt: new Date().toISOString(),
+          };
 
-      <!-- Part 2: Layout Experience -->
-      <div>
-        <label class="block text-sm font-bold text-slate-200 mb-2">2. Interface & Navigation (1-5)</label>
-        <p class="text-xs text-slate-400 mb-3">Please rate how intuitive the layout and transition was between tabs.</p>
-        <div class="grid grid-cols-5 gap-2">
-          <label class="text-center p-3 bg-slate-950/40 border border-slate-800 rounded-lg hover:border-sky-500/30 transition cursor-pointer flex flex-col items-center">
-            <input type="radio" name="rating" value="1" class="mb-1 accent-sky-500" required>
-            <span class="text-xs text-slate-300">1</span>
-          </label>
-          <label class="text-center p-3 bg-slate-950/40 border border-slate-800 rounded-lg hover:border-sky-500/30 transition cursor-pointer flex flex-col items-center">
-            <input type="radio" name="rating" value="2" class="mb-1 accent-sky-500">
-            <span class="text-xs text-slate-300">2</span>
-          </label>
-          <label class="text-center p-3 bg-slate-950/40 border border-slate-800 rounded-lg hover:border-sky-500/30 transition cursor-pointer flex flex-col items-center">
-            <input type="radio" name="rating" value="3" class="mb-1 accent-sky-500">
-            <span class="text-xs text-slate-300">3</span>
-          </label>
-          <label class="text-center p-3 bg-slate-950/40 border border-slate-800 rounded-lg hover:border-sky-500/30 transition cursor-pointer flex flex-col items-center">
-            <input type="radio" name="rating" value="4" class="mb-1 accent-sky-500">
-            <span class="text-xs text-slate-300">4</span>
-          </label>
-          <label class="text-center p-3 bg-slate-950/40 border border-slate-800 rounded-lg hover:border-sky-500/30 transition cursor-pointer flex flex-col items-center">
-            <input type="radio" name="rating" value="5" class="mb-1 accent-sky-500">
-            <span class="text-xs text-slate-300">5</span>
-          </label>
-        </div>
-      </div>
+          const statusEl = document.getElementById("feedbackStatus");
+          statusEl.classList.remove(
+            "hidden",
+            "bg-emerald-950/40",
+            "border-emerald-500/20",
+            "text-emerald-400",
+            "bg-rose-950/40",
+            "border-rose-500/20",
+            "text-rose-400"
+          );
 
-      <!-- Part 3: Written Notes -->
-      <div>
-        <label class="block text-sm font-bold text-slate-200 mb-2">3. Missing Features & Suggestions</label>
-        <textarea name="suggestions" rows="4" class="w-full bg-slate-950/60 border border-slate-800 rounded-lg p-3 text-sm text-slate-200 placeholder-slate-650 focus:outline-none focus:border-sky-500/50" placeholder="Are we missing any specific buttons, indicators, data streams, or tools that would make this an indispensable daily asset for you?"></textarea>
-      </div>
+          try {
+            const response = await fetch("/api/feedback", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
 
-      <!-- Submit Block -->
-      <button type="submit" class="w-full bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-sky-500/10 active:translate-y-px transition">
-        Submit Active Beta Feedback
-      </button>
-    </form>
-
-    <div id="feedbackStatus" class="hidden mt-4 p-3 rounded-lg text-center text-xs font-semibold"></div>
-  </div>
-
-  <script>
-    document.getElementById('betaFeedbackForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const payload = {
-        accuracy: formData.get('accuracy'),
-        rating: formData.get('rating'),
-        suggestions: formData.get('suggestions'),
-        submittedAt: new Date().toISOString()
-      };
-
-      const statusEl = document.getElementById('feedbackStatus');
-      statusEl.classList.remove('hidden', 'bg-emerald-950/40', 'border-emerald-500/20', 'text-emerald-400', 'bg-rose-950/40', 'border-rose-500/20', 'text-rose-400');
-      
-      try {
-        const response = await fetch('/api/feedback', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+            if (response.ok) {
+              statusEl.textContent =
+                "✅ Feedback submitted successfully! Thank you for testing Market Marksman.";
+              statusEl.classList.add(
+                "bg-emerald-950/40",
+                "border-emerald-500/20",
+                "text-emerald-400"
+              );
+              statusEl.classList.remove("hidden");
+              e.target.reset();
+            } else {
+              throw new Error("API Error");
+            }
+          } catch (err) {
+            statusEl.textContent =
+              "💾 Saved locally! (API Endpoint not yet connected - ready for AgentMail integration).";
+            statusEl.classList.add(
+              "bg-amber-950/40",
+              "border-amber-500/20",
+              "text-amber-400"
+            );
+            statusEl.classList.remove("hidden");
+            localStorage.setItem(
+              "marksmanBetaFeedback",
+              JSON.stringify(payload)
+            );
+          }
         });
-        
-        if(response.ok) {
-          statusEl.textContent = '✅ Feedback submitted successfully! Thank you for testing Market Marksman.';
-          statusEl.classList.add('bg-emerald-950/40', 'border-emerald-500/20', 'text-emerald-400');
-          statusEl.classList.remove('hidden');
-          e.target.reset();
-        } else {
-          throw new Error('API Error');
-        }
-      } catch(err) {
-        statusEl.textContent = '💾 Saved locally! (API Endpoint not yet connected - ready for AgentMail integration).';
-        statusEl.classList.add('bg-amber-950/40', 'border-amber-500/20', 'text-amber-400');
-        statusEl.classList.remove('hidden');
-        localStorage.setItem('marksmanBetaFeedback', JSON.stringify(payload));
-      }
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>

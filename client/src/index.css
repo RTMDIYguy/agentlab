@@ -43,12 +43,20 @@
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
   @keyframes accordion-down {
-    from { height: 0; }
-    to { height: var(--radix-accordion-content-height); }
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
   }
   @keyframes accordion-up {
-    from { height: var(--radix-accordion-content-height); }
-    to { height: 0; }
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
   }
 }
 
@@ -65,13 +73,13 @@
     --popover-foreground: 210 40% 98%;
 
     /* Primary: Electric Blue (#0066ff) */
-    --primary: 216 100% 50%; 
+    --primary: 216 100% 50%;
     --primary-foreground: 210 40% 98%;
 
     /* Secondary/Accent: Vibrant Cyan (#00d9ff) */
     --secondary: 189 100% 50%;
     --secondary-foreground: 231 38% 16%;
-    
+
     --accent: 189 100% 50%;
     --accent-foreground: 231 38% 16%;
 
@@ -89,7 +97,7 @@
     --ring: 216 100% 50%;
 
     /* Sharp, modern corner radius */
-    --radius: 0.3rem; 
+    --radius: 0.3rem;
   }
 
   .dark {
@@ -97,18 +105,18 @@
        Keeping values identical or slightly adjusted for dark context */
     --background: 231 38% 12%; /* Even deeper navy */
     --foreground: 210 40% 98%;
-    
+
     --card: 231 30% 16%;
     --card-foreground: 210 40% 98%;
     --popover: 231 30% 16%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 216 100% 50%; 
+    --primary: 216 100% 50%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 189 100% 50%;
     --secondary-foreground: 231 38% 16%;
-    
+
     --accent: 189 100% 50%;
     --accent-foreground: 231 38% 16%;
 
@@ -126,12 +134,17 @@
   * {
     @apply border-border outline-ring/50;
   }
-  
+
   body {
     @apply bg-background text-foreground font-sans antialiased selection:bg-primary selection:text-primary-foreground;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-heading tracking-tight text-foreground;
   }
 
@@ -199,7 +212,7 @@
   }
 
   .button-glow::before {
-    content: '';
+    content: "";
     @apply absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300;
   }
 }

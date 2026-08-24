@@ -37,12 +37,12 @@ Use the existing n8n workflow as the starting pattern:
 
 Observed in local n8n on 2026-05-17:
 
-| Workflow | Observed Role | Status / Notes |
-| --- | --- | --- |
-| `MKT-06 - Content Creation & Dissemination` | Main MKT-06 package template | Imported and nominally tested; still needs node-by-node certification before being treated as fully certified. Do not disturb while building Founder Signal. |
-| `Automated AI Lead Enrichment: Hubspot to Explorium for Enhanced Prospect Data` | Lead enrichment reference workflow | Useful as a HubSpot/enrichment pattern, but not the v1 Founder Signal runtime. Keep separate. |
-| `MKT-06 TEST - HubSpot Attribution Read Check` | Isolated HubSpot read test | Keep as a service credential/read-node validation harness. This supports certification evidence. |
-| `My workflow` | n8n starter AI-agent example | Appears to be the only active/live workflow. Treat as a sandbox/tutorial workflow unless Robert confirms it is serving a real process. |
+| Workflow                                                                        | Observed Role                      | Status / Notes                                                                                                                                               |
+| ------------------------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `MKT-06 - Content Creation & Dissemination`                                     | Main MKT-06 package template       | Imported and nominally tested; still needs node-by-node certification before being treated as fully certified. Do not disturb while building Founder Signal. |
+| `Automated AI Lead Enrichment: Hubspot to Explorium for Enhanced Prospect Data` | Lead enrichment reference workflow | Useful as a HubSpot/enrichment pattern, but not the v1 Founder Signal runtime. Keep separate.                                                                |
+| `MKT-06 TEST - HubSpot Attribution Read Check`                                  | Isolated HubSpot read test         | Keep as a service credential/read-node validation harness. This supports certification evidence.                                                             |
+| `My workflow`                                                                   | n8n starter AI-agent example       | Appears to be the only active/live workflow. Treat as a sandbox/tutorial workflow unless Robert confirms it is serving a real process.                       |
 
 Working rule: create a new separate workflow named
 `Founder Signal System - Intake to Setup Packet`. Do not modify the imported

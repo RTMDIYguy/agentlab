@@ -175,16 +175,16 @@ Do not use Notion as the archive or main SOP repository.
 The agency is evaluating platform options for a later SaaS, marketplace, or
 Ownable OS layer. Current candidates and inputs include:
 
-| Candidate | Current Posture | Evaluate For | Guardrail |
-| --- | --- | --- | --- |
-| Azure | Cloud learning and possible guarded sandbox | App hosting, identity, automation, AI services, compliance support | Cost caps and shutdown rules before production use |
-| Google Cloud | Existing project and CLI references | Service platform fit, APIs, data workflows, potential infrastructure | Billing and permission limits must be understood first |
-| AWS | Reference and marketplace candidate | Marketplace/channel options, infrastructure breadth | Avoid complexity until there is a clear use case |
-| GitHub | Repo, versioning, automation, and future deployment surface | Source control, CI/CD, package evidence, agent collaboration | Do not store secrets in Git |
-| Stripe Connect / Stripe SaaS | Existing transaction connector and SaaS-platform research candidate | Connected accounts, subscriptions, application fees, payouts, merchant-of-record implications | Candidate only; no route chosen |
-| SaaSify / marketplaces | Research shelf | AWS, Azure, or GCP marketplace distribution | Candidate only |
-| DatabaseMart VPS | Existing low-cost sandbox | Linux hosting, prototypes, learning, lightweight internal services | Keep separate from critical production until hardened |
-| KNIME | Analytics and workflow-learning platform | Data exploration, workflow analytics, repeatable reporting, evidence discovery | Use for learning and analysis without making it a hidden source of truth |
+| Candidate                    | Current Posture                                                     | Evaluate For                                                                                  | Guardrail                                                                |
+| ---------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Azure                        | Cloud learning and possible guarded sandbox                         | App hosting, identity, automation, AI services, compliance support                            | Cost caps and shutdown rules before production use                       |
+| Google Cloud                 | Existing project and CLI references                                 | Service platform fit, APIs, data workflows, potential infrastructure                          | Billing and permission limits must be understood first                   |
+| AWS                          | Reference and marketplace candidate                                 | Marketplace/channel options, infrastructure breadth                                           | Avoid complexity until there is a clear use case                         |
+| GitHub                       | Repo, versioning, automation, and future deployment surface         | Source control, CI/CD, package evidence, agent collaboration                                  | Do not store secrets in Git                                              |
+| Stripe Connect / Stripe SaaS | Existing transaction connector and SaaS-platform research candidate | Connected accounts, subscriptions, application fees, payouts, merchant-of-record implications | Candidate only; no route chosen                                          |
+| SaaSify / marketplaces       | Research shelf                                                      | AWS, Azure, or GCP marketplace distribution                                                   | Candidate only                                                           |
+| DatabaseMart VPS             | Existing low-cost sandbox                                           | Linux hosting, prototypes, learning, lightweight internal services                            | Keep separate from critical production until hardened                    |
+| KNIME                        | Analytics and workflow-learning platform                            | Data exploration, workflow analytics, repeatable reporting, evidence discovery                | Use for learning and analysis without making it a hidden source of truth |
 
 No candidate becomes the operating backbone without a decision record that
 covers cost, ownership, compliance, data portability, security, maintenance,

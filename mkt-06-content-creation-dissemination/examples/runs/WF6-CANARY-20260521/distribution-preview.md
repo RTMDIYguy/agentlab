@@ -24,4 +24,3 @@ Live-service upgrade required before Active:
 - create a Klaviyo preview or internal test send
 - capture campaign ID, preview URL, screenshot, or sent-test evidence
 - record the result in the evidence log
-

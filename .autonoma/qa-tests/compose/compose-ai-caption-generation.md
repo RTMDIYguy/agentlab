@@ -13,6 +13,7 @@ verification: "The content textarea is populated with the AI-generated caption."
 **Intent**: Pulse provides AI assistance to help creators write captions. This test verifies that entering a topic and selecting a tone allows the AI to generate content that is then automatically inserted into the post editor.
 
 **Steps**:
+
 1. type: type: "New summer collection launch" into the AI Topic input field in the AI panel
 2. click: click: the tone dropdown trigger (currently showing "energetic") in the AI panel
 3. click: click: the "playful" tone option in the dropdown menu in the dropdown menu
@@ -21,6 +22,7 @@ verification: "The content textarea is populated with the AI-generated caption."
 6. assert: assert: the Content textarea is not empty and contains generated text in the composer card
 
 **Verification**:
+
 1. assert: assert: the Content textarea is not empty in the composer card
 
 **Expected Result**: The AI generates a caption based on the topic and tone, and it appears in the content textarea.

@@ -8,7 +8,7 @@ UNCLE ROBERT CONSULTING LLC
 
 Finance Department — Master Edition
 
-URC-FIN-MASTER  |  FINANCE DEPARTMENT WORKFLOW LIBRARY
+URC-FIN-MASTER | FINANCE DEPARTMENT WORKFLOW LIBRARY
 
 Document ID
 
@@ -48,85 +48,85 @@ Table of Contents
 
 3.  Finance Department Context
 
-3.1  Workflow Overview
+3.1 Workflow Overview
 
-3.2  Human Involvement
+3.2 Human Involvement
 
-3.3  Core Principles
+3.3 Core Principles
 
 4.  URC-FIN-01 — Pricing & Expenses
 
-4.1  Workflow Purpose & Key Objectives
+4.1 Workflow Purpose & Key Objectives
 
-4.2  Detailed Steps (12 Steps)
+4.2 Detailed Steps (12 Steps)
 
-4.3  Integration Points
+4.3 Integration Points
 
-4.4  Technology Stack
+4.4 Technology Stack
 
-4.5  Key Performance Indicators
+4.5 Key Performance Indicators
 
-4.6  Implementation Checklist (3 Phases)
+4.6 Implementation Checklist (3 Phases)
 
 5.  URC-FIN-02 — Taxes & Fees
 
-5.1  Workflow Purpose & Key Objectives
+5.1 Workflow Purpose & Key Objectives
 
-5.2  Detailed Steps (12 Steps)
+5.2 Detailed Steps (12 Steps)
 
-5.3  Integration Points
+5.3 Integration Points
 
-5.4  Technology Stack
+5.4 Technology Stack
 
-5.5  Key Performance Indicators
+5.5 Key Performance Indicators
 
-5.6  Implementation Checklist (3 Phases)
+5.6 Implementation Checklist (3 Phases)
 
 6.  URC-FIN-03 — Accounts Receivable & Payable
 
-6.1  Workflow Purpose & Key Objectives
+6.1 Workflow Purpose & Key Objectives
 
-6.2  Detailed Steps (14 Steps — AR & AP Parallel)
+6.2 Detailed Steps (14 Steps — AR & AP Parallel)
 
-6.3  Integration Points
+6.3 Integration Points
 
-6.4  Technology Stack
+6.4 Technology Stack
 
-6.5  Key Performance Indicators
+6.5 Key Performance Indicators
 
-6.6  Implementation Checklist (3 Phases)
+6.6 Implementation Checklist (3 Phases)
 
 7.  URC-FIN-04 — Accounting & Auditing
 
-7.1  Workflow Purpose & Key Objectives
+7.1 Workflow Purpose & Key Objectives
 
-7.2  Detailed Steps (12 Steps)
+7.2 Detailed Steps (12 Steps)
 
-7.3  Integration Points
+7.3 Integration Points
 
-7.4  Technology Stack
+7.4 Technology Stack
 
-7.5  Key Performance Indicators
+7.5 Key Performance Indicators
 
-7.6  Implementation Checklist (3 Phases)
+7.6 Implementation Checklist (3 Phases)
 
 8.  URC-FIN-05 — Investment & Savings
 
-8.1  Workflow Purpose & Key Objectives
+8.1 Workflow Purpose & Key Objectives
 
-8.2  Detailed Steps (12 Steps)
+8.2 Detailed Steps (12 Steps)
 
-8.3  Integration Points
+8.3 Integration Points
 
-8.4  Technology Stack
+8.4 Technology Stack
 
-8.5  Key Performance Indicators
+8.5 Key Performance Indicators
 
-8.6  Implementation Checklist (3 Phases)
+8.6 Implementation Checklist (3 Phases)
 
 9.  Finance Department Integration Map
 
-9.1  Cross-Department Dependencies
+9.1 Cross-Department Dependencies
 
 Finance Department Context
 
@@ -302,7 +302,7 @@ Plaid API via Make.com
 
 N/A — direct bank feed
 
-URC-FIN-01  |  PRICING & EXPENSES
+URC-FIN-01 | PRICING & EXPENSES
 
 Document ID
 
@@ -340,7 +340,7 @@ Maintain audit-ready documentation for every expense with receipt, category, and
 
 Detailed Steps
 
-## Step #
+## Step
 
 Action / Trigger Description
 
@@ -578,7 +578,7 @@ Build cost driver change detector — alert when any category increases 10%+ mon
 
 Conduct first pricing model review using 3 months of expense data as baseline
 
-URC-FIN-02  |  TAXES & FEES
+URC-FIN-02 | TAXES & FEES
 
 Document ID
 
@@ -616,7 +616,7 @@ Identify deductible expenses automatically and flag missed deductions for CPA re
 
 Detailed Steps
 
-## Step #
+## Step
 
 Action / Trigger Description
 
@@ -852,7 +852,7 @@ Set annual review with CPA to assess entity structure optimization (LLC vs S-Cor
 
 Document all tax positions taken for consistent treatment year over year
 
-URC-FIN-03  |  ACCOUNTS RECEIVABLE & PAYABLE
+URC-FIN-03 | ACCOUNTS RECEIVABLE & PAYABLE
 
 Document ID
 
@@ -890,7 +890,7 @@ Flag accounts 30+ days overdue for collections escalation automatically
 
 Detailed Steps
 
-## Step #
+## Step
 
 Action / Trigger Description
 
@@ -1138,7 +1138,7 @@ Review DSO monthly and adjust reminder timing if collection rate drops below tar
 
 Quarterly review of vendor payment terms — negotiate extended terms with high-spend vendors
 
-URC-FIN-04  |  ACCOUNTING & AUDITING
+URC-FIN-04 | ACCOUNTING & AUDITING
 
 Document ID
 
@@ -1176,7 +1176,7 @@ Produce executive dashboard showing Robert's key financial metrics in real-time
 
 Detailed Steps
 
-## Step #
+## Step
 
 Action / Trigger Description
 
@@ -1414,7 +1414,7 @@ Conduct first quarterly internal audit using the compliance documentation packag
 
 Set up annual review process for chart of accounts — add/remove categories as business evolves
 
-URC-FIN-05  |  INVESTMENT & SAVINGS
+URC-FIN-05 | INVESTMENT & SAVINGS
 
 Document ID
 
@@ -1452,7 +1452,7 @@ Generate monthly investment performance and goal progress report for Robert
 
 Detailed Steps
 
-## Step #
+## Step
 
 Action / Trigger Description
 
@@ -1928,6 +1928,6 @@ Robert
 
 — END OF DOCUMENT —
 
-Uncle Robert Consulting LLC  |  Finance Department — Master Edition  |  URC-FIN-MASTER  |  v1.0  |  March 2026
+Uncle Robert Consulting LLC | Finance Department — Master Edition | URC-FIN-MASTER | v1.0 | March 2026
 
 Confidential — Internal Use Only. This document and all contents are proprietary to Uncle Robert Consulting LLC.

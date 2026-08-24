@@ -22,13 +22,13 @@ right place fast.
 
 ## Start Here Today
 
-| Question | Go Here | What To Do |
-| --- | --- | --- |
-| What matters today? | Latest dated file in `docs/operations/daily-command-center/` | Read the top actions, handoffs, money checks, and parking lot. |
-| What did the first running test prove? | `docs/operations/daily-command-center/2026-06-04-running-test.md` | Use the test verdict and MKT-09 audit snapshot to decide next artifact work. |
-| What workflow is the current canary? | `docs/operations/mkt-09-roundtable-operating-slice.md` | Confirm the next RoundTable, Google response path, tracker location, and follow-up messages. |
-| What is the whole operating spine? | `docs/operations/agency-operating-manual.md` | Use this when the business lanes, source map, or automation rules are unclear. |
-| What changed recently? | `docs/operations/change-control-register.md` | Read the newest entries before changing source-of-truth docs. |
+| Question                               | Go Here                                                           | What To Do                                                                                   |
+| -------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| What matters today?                    | Latest dated file in `docs/operations/daily-command-center/`      | Read the top actions, handoffs, money checks, and parking lot.                               |
+| What did the first running test prove? | `docs/operations/daily-command-center/2026-06-04-running-test.md` | Use the test verdict and MKT-09 audit snapshot to decide next artifact work.                 |
+| What workflow is the current canary?   | `docs/operations/mkt-09-roundtable-operating-slice.md`            | Confirm the next RoundTable, Google response path, tracker location, and follow-up messages. |
+| What is the whole operating spine?     | `docs/operations/agency-operating-manual.md`                      | Use this when the business lanes, source map, or automation rules are unclear.               |
+| What changed recently?                 | `docs/operations/change-control-register.md`                      | Read the newest entries before changing source-of-truth docs.                                |
 
 ## Today's Top Actions
 
@@ -56,13 +56,13 @@ Current next decisions:
 
 Before optional platform experiments, check:
 
-| Area | Check |
-| --- | --- |
-| Proposals | Is any proposal waiting for review, send, revision, or follow-up? |
-| Onboarding | Did any signed work create a folder, packet, access, or kickoff need? |
-| Receivables | Is any invoice, payment status, or unpaid amount unclear? |
-| Client issues | Is any client, beta user, or respondent waiting on a promised next step? |
-| Paid tools | Does any paid-tool, cloud, VPS, KNIME, or Stripe Connect work have a current revenue, client-trust, or learning reason? |
+| Area          | Check                                                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Proposals     | Is any proposal waiting for review, send, revision, or follow-up?                                                       |
+| Onboarding    | Did any signed work create a folder, packet, access, or kickoff need?                                                   |
+| Receivables   | Is any invoice, payment status, or unpaid amount unclear?                                                               |
+| Client issues | Is any client, beta user, or respondent waiting on a promised next step?                                                |
+| Paid tools    | Does any paid-tool, cloud, VPS, KNIME, or Stripe Connect work have a current revenue, client-trust, or learning reason? |
 
 If the answer is yes, handle that before sandbox work.
 
@@ -70,18 +70,18 @@ If the answer is yes, handle that before sandbox work.
 
 Source: `docs/operations/agency-operating-manual.md`
 
-| Priority | Workflow | Mode | Next Target |
-| --- | --- | --- | --- |
-| 1 | `MKT-05 Outreach & Engagement` | Manual / Reach-assisted | Outreach batch setup, tracking, reply handling |
-| 2 | `MKT-02 Email/SMS Nurture` | Manual / scheduled campaigns | Nurture rules, stop conditions, handoff rules |
-| 3 | `MKT-01 Lead Generation & Conversion` | Manual CSV review | Qualification, dedupe, bridge-tracker import |
-| 4 | `SAL-02 OnBoarding` | Zapier + manual gap | Google Drive packet copy, folder population, sharing |
-| 5 | `SAL-01 Proposals & Contracts` | Manual / template-driven | Proposal prep, review, send, status tracking |
-| 6 | `FUL-02 Client Success` | Manual | Client success tracker and check-in cadence |
-| 7 | `FUL-03 Customer Service` | Manual | Issue intake, tiering, escalation |
-| 8 | `FIN-03 Accounts Receivable & Payable` | Manual / owned finance tracker | Invoice, receivables, payment status, SKU/account mapping |
-| 9 | `MKT-04 Reviews & Referrals` | Manual | Testimonial request, referral ask, proof capture |
-| 10 | `MKT-09 Event & Webinar Marketing` | v0 runnable slice | RoundTable invite, RSVP/assessment response tracking, event follow-up |
+| Priority | Workflow                               | Mode                           | Next Target                                                           |
+| -------- | -------------------------------------- | ------------------------------ | --------------------------------------------------------------------- |
+| 1        | `MKT-05 Outreach & Engagement`         | Manual / Reach-assisted        | Outreach batch setup, tracking, reply handling                        |
+| 2        | `MKT-02 Email/SMS Nurture`             | Manual / scheduled campaigns   | Nurture rules, stop conditions, handoff rules                         |
+| 3        | `MKT-01 Lead Generation & Conversion`  | Manual CSV review              | Qualification, dedupe, bridge-tracker import                          |
+| 4        | `SAL-02 OnBoarding`                    | Zapier + manual gap            | Google Drive packet copy, folder population, sharing                  |
+| 5        | `SAL-01 Proposals & Contracts`         | Manual / template-driven       | Proposal prep, review, send, status tracking                          |
+| 6        | `FUL-02 Client Success`                | Manual                         | Client success tracker and check-in cadence                           |
+| 7        | `FUL-03 Customer Service`              | Manual                         | Issue intake, tiering, escalation                                     |
+| 8        | `FIN-03 Accounts Receivable & Payable` | Manual / owned finance tracker | Invoice, receivables, payment status, SKU/account mapping             |
+| 9        | `MKT-04 Reviews & Referrals`           | Manual                         | Testimonial request, referral ask, proof capture                      |
+| 10       | `MKT-09 Event & Webinar Marketing`     | v0 runnable slice              | RoundTable invite, RSVP/assessment response tracking, event follow-up |
 
 ## Current Canary: MKT-09
 
@@ -114,32 +114,32 @@ Open checks:
 
 These are active, but not all are today's first work:
 
-| Item | Owner | Status |
-| --- | --- | --- |
-| Draft SOP for Reach outreach batch setup and monitoring | Agent | Needed |
-| Refill Agent Lab LinkedIn content queue | Agent | Needed |
-| Build MKT-09 RoundTable response tracker and first follow-up copy | Robert + agent | Needed |
-| Draft SOP for Google Drive client-folder packet population | Agent | Needed |
-| Decide Independence Chapter CRM-lite bridge location and required CRM-compatible columns | Robert + agent | Needed |
-| Reconcile Independence Chapter messaging against MVP beta messaging | Robert + agent | Needed |
-| Build first repo-native Owner's Manual from the blueprint | Robert + agent | Needed |
-| Run weekly workflow audit bank across the active queue | Robert + agent | Needed |
-| Promote the operating manual into the agency Operations folder / Google Drive source | Robert + agent | Pending |
+| Item                                                                                     | Owner          | Status  |
+| ---------------------------------------------------------------------------------------- | -------------- | ------- |
+| Draft SOP for Reach outreach batch setup and monitoring                                  | Agent          | Needed  |
+| Refill Agent Lab LinkedIn content queue                                                  | Agent          | Needed  |
+| Build MKT-09 RoundTable response tracker and first follow-up copy                        | Robert + agent | Needed  |
+| Draft SOP for Google Drive client-folder packet population                               | Agent          | Needed  |
+| Decide Independence Chapter CRM-lite bridge location and required CRM-compatible columns | Robert + agent | Needed  |
+| Reconcile Independence Chapter messaging against MVP beta messaging                      | Robert + agent | Needed  |
+| Build first repo-native Owner's Manual from the blueprint                                | Robert + agent | Needed  |
+| Run weekly workflow audit bank across the active queue                                   | Robert + agent | Needed  |
+| Promote the operating manual into the agency Operations folder / Google Drive source     | Robert + agent | Pending |
 
 ## Navigation Map
 
-| Need | Source |
-| --- | --- |
-| Whole-agency orientation | `docs/operations/agency-operating-manual.md` |
-| Daily generated brief | `docs/operations/daily-command-center/` |
-| Workflow list | `docs/operations/workflow-registry.md` |
-| Workflow relationships | `docs/operations/workflow-relationship-map.md` |
-| Weekly workflow audit | `docs/operations/weekly-workflow-audit-bank.md` |
-| SOP list | `docs/operations/sop-manual-index.md` |
-| Owner's Manual plan | `docs/operations/agency-owners-manual-blueprint.md` |
-| Security and secrets | `docs/operations/secret-handling-standard.md` |
+| Need                      | Source                                                                     |
+| ------------------------- | -------------------------------------------------------------------------- |
+| Whole-agency orientation  | `docs/operations/agency-operating-manual.md`                               |
+| Daily generated brief     | `docs/operations/daily-command-center/`                                    |
+| Workflow list             | `docs/operations/workflow-registry.md`                                     |
+| Workflow relationships    | `docs/operations/workflow-relationship-map.md`                             |
+| Weekly workflow audit     | `docs/operations/weekly-workflow-audit-bank.md`                            |
+| SOP list                  | `docs/operations/sop-manual-index.md`                                      |
+| Owner's Manual plan       | `docs/operations/agency-owners-manual-blueprint.md`                        |
+| Security and secrets      | `docs/operations/secret-handling-standard.md`                              |
 | Naming, SKUs, identifiers | `docs/operations/SOP-OPS-005-naming-conventions-and-identifier-control.md` |
-| Change history | `docs/operations/change-control-register.md` |
+| Change history            | `docs/operations/change-control-register.md`                               |
 
 ## Update Rule
 

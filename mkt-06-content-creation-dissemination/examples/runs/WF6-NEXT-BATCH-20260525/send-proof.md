@@ -3,17 +3,17 @@
 Run ID: WF6-NEXT-BATCH-20260525
 Status: Pending send
 
-| Field | Value |
-| --- | --- |
-| Planned send date | 2026-05-25, operator-confirmed |
-| Actual send date |  |
-| Channel/tool | Reach or manual email fallback |
-| Audience/segment | Independence Chapter Batch 2 |
-| Recipients attempted | 5 |
-| Recipients sent |  |
-| Suppressed/skipped |  |
-| Proof location |  |
-| Operator | Robert T. McCarthy |
+| Field                | Value                          |
+| -------------------- | ------------------------------ |
+| Planned send date    | 2026-05-25, operator-confirmed |
+| Actual send date     |                                |
+| Channel/tool         | Reach or manual email fallback |
+| Audience/segment     | Independence Chapter Batch 2   |
+| Recipients attempted | 5                              |
+| Recipients sent      |                                |
+| Suppressed/skipped   |                                |
+| Proof location       |                                |
+| Operator             | Robert T. McCarthy             |
 
 ## Pre-Send Checklist
 

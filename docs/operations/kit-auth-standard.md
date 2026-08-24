@@ -26,17 +26,17 @@ authPolicy:
 
 ## Auth Method Taxonomy
 
-| Method | Use For | Notes |
-| --- | --- | --- |
-| `oauth2-delegated` | User-granted access | Preferred for buyer-owned SaaS accounts |
-| `oauth2-admin` | Admin-consent apps | Use when tenant-wide scopes are required |
-| `connection-prompt` | Make, n8n, Zapier, or similar built-in connector prompts | Preferred for standard self-serve installs |
-| `api-key-vault` | Services that require API keys | Store only in the automation platform credential store or approved vault |
-| `pat-vault` | GitHub or similar personal access tokens | Prefer fine-grained tokens with least privilege |
-| `service-account` | Google-style service accounts or workload identities | Use when delegation is impractical |
-| `webhook-secret` | Generated shared secret for inbound workflow calls | Generate per install; never reuse across buyers |
-| `basic-vault` | Legacy systems only | Avoid unless no better option exists |
-| `manual-fallback` | Last-resort documented setup path | Must not be the default premium experience |
+| Method              | Use For                                                  | Notes                                                                    |
+| ------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `oauth2-delegated`  | User-granted access                                      | Preferred for buyer-owned SaaS accounts                                  |
+| `oauth2-admin`      | Admin-consent apps                                       | Use when tenant-wide scopes are required                                 |
+| `connection-prompt` | Make, n8n, Zapier, or similar built-in connector prompts | Preferred for standard self-serve installs                               |
+| `api-key-vault`     | Services that require API keys                           | Store only in the automation platform credential store or approved vault |
+| `pat-vault`         | GitHub or similar personal access tokens                 | Prefer fine-grained tokens with least privilege                          |
+| `service-account`   | Google-style service accounts or workload identities     | Use when delegation is impractical                                       |
+| `webhook-secret`    | Generated shared secret for inbound workflow calls       | Generate per install; never reuse across buyers                          |
+| `basic-vault`       | Legacy systems only                                      | Avoid unless no better option exists                                     |
+| `manual-fallback`   | Last-resort documented setup path                        | Must not be the default premium experience                               |
 
 ## Connector Contract
 
@@ -65,19 +65,19 @@ auth:
 
 ## Required Fields
 
-| Field | Required | Meaning |
-| --- | --- | --- |
-| `id` | yes | Stable connector ID used by installer and validation reports |
-| `service` | yes | Human-readable service name |
-| `required` | yes | Whether the workflow can run without this connector |
-| `method` | yes | One auth method from the taxonomy |
-| `setupMode` | yes | `guided`, `auto-generated`, `platform-prompt`, `vault-entry`, or `manual` |
-| `grantedBy` | yes | `buyer`, `buyer-admin`, `agency`, or `system` |
-| `scopes` | yes, if applicable | Least-privilege permissions or API capabilities |
-| `validation` | yes | Test name and expected result |
-| `fallback` | yes | Backup setup path |
-| `revocation` | yes | How to revoke access |
-| `missingImpact` | yes | What breaks if the connector is unavailable |
+| Field           | Required           | Meaning                                                                   |
+| --------------- | ------------------ | ------------------------------------------------------------------------- |
+| `id`            | yes                | Stable connector ID used by installer and validation reports              |
+| `service`       | yes                | Human-readable service name                                               |
+| `required`      | yes                | Whether the workflow can run without this connector                       |
+| `method`        | yes                | One auth method from the taxonomy                                         |
+| `setupMode`     | yes                | `guided`, `auto-generated`, `platform-prompt`, `vault-entry`, or `manual` |
+| `grantedBy`     | yes                | `buyer`, `buyer-admin`, `agency`, or `system`                             |
+| `scopes`        | yes, if applicable | Least-privilege permissions or API capabilities                           |
+| `validation`    | yes                | Test name and expected result                                             |
+| `fallback`      | yes                | Backup setup path                                                         |
+| `revocation`    | yes                | How to revoke access                                                      |
+| `missingImpact` | yes                | What breaks if the connector is unavailable                               |
 
 ## Installation Modes
 
@@ -125,6 +125,6 @@ No workflow can be certified until every required connector has:
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-07 | CC-2026-05-07-003 | 1.0.0 | standard | Added flexible connector auth contract for one-click and agentic kit installation. | codex |
+| Date       | Change ID         | Version | Type     | Summary                                                                            | Author |
+| ---------- | ----------------- | ------- | -------- | ---------------------------------------------------------------------------------- | ------ |
+| 2026-05-07 | CC-2026-05-07-003 | 1.0.0   | standard | Added flexible connector auth contract for one-click and agentic kit installation. | codex  |

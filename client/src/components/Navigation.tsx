@@ -52,6 +52,18 @@ export function Navigation() {
                   >
                     Ops Agent
                   </a>
+                  <a
+                    href="/marketplace"
+                    className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                  >
+                    Marketplace
+                  </a>
+                  <a
+                    href="/command-center"
+                    className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                  >
+                    Command Center
+                  </a>
                   <div className="border-t border-border my-1"></div>
                 </>
               )}
@@ -65,7 +77,10 @@ export function Navigation() {
           </div>
 
           {/* Features link */}
-          <a href="/features" className="px-3 py-2 text-foreground hover:text-primary transition-colors">
+          <a
+            href="/features"
+            className="px-3 py-2 text-foreground hover:text-primary transition-colors"
+          >
             Features
           </a>
 
@@ -101,12 +116,18 @@ export function Navigation() {
           </div>
 
           {/* Pricing link */}
-          <a href="/pricing" className="px-3 py-2 text-foreground hover:text-primary transition-colors">
+          <a
+            href="/pricing"
+            className="px-3 py-2 text-foreground hover:text-primary transition-colors"
+          >
             Pricing
           </a>
 
           {/* Support link */}
-          <a href="#contact" className="px-3 py-2 text-foreground hover:text-primary transition-colors">
+          <a
+            href="#contact"
+            className="px-3 py-2 text-foreground hover:text-primary transition-colors"
+          >
             Support
           </a>
         </div>
@@ -114,7 +135,9 @@ export function Navigation() {
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
             <>
-              <span className="text-sm text-muted-foreground hidden sm:inline">{user?.name}</span>
+              <span className="text-sm text-muted-foreground hidden sm:inline">
+                {user?.name}
+              </span>
               <Button variant="outline" size="sm" onClick={logout}>
                 Sign Out
               </Button>

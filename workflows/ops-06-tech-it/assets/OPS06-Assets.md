@@ -1,30 +1,32 @@
 # OPS06: Tech & IT Assets
 
 ## 1. Tool Evaluation Matrix (Spreadsheet)
-*Use this scoring matrix before purchasing new software.*
 
-**Tool Name:** _____________________
-**Cost ($/mo):** _____________________
+_Use this scoring matrix before purchasing new software._
 
-| Criteria | Weight (1-3) | Score (1-5) | Weighted Score | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **Must-Have Features** | 3 | | | |
-| **Ease of Use** | 3 | | | |
-| **Integration Capability** | 3 | | | |
-| **Security & Privacy** | 3 | | | |
-| **Nice-to-Have Features** | 1 | | | |
-| **Support Quality** | 2 | | | |
-| **Scalability** | 2 | | | |
-| **TOTAL SCORE:** | | | | / 85 Max |
+**Tool Name:** ****\*\*****\_****\*\*****
+**Cost ($/mo):** ****\*\*****\_****\*\*****
 
-*Decision threshold: Must score > 65 to be considered for a paid plan.*
+| Criteria                   | Weight (1-3) | Score (1-5) | Weighted Score | Notes    |
+| :------------------------- | :----------- | :---------- | :------------- | :------- |
+| **Must-Have Features**     | 3            |             |                |          |
+| **Ease of Use**            | 3            |             |                |          |
+| **Integration Capability** | 3            |             |                |          |
+| **Security & Privacy**     | 3            |             |                |          |
+| **Nice-to-Have Features**  | 1            |             |                |          |
+| **Support Quality**        | 2            |             |                |          |
+| **Scalability**            | 2            |             |                |          |
+| **TOTAL SCORE:**           |              |             |                | / 85 Max |
+
+_Decision threshold: Must score > 65 to be considered for a paid plan._
 
 ---
 
 ## 2. Agency Tech Stack Audit (Quarterly Checklist)
-*Run this every 3 months to cull unused tools and optimize spend.*
 
-**Date:** _______________ **Conducted By:** _______________
+_Run this every 3 months to cull unused tools and optimize spend._
+
+**Date:** **\*\***\_\_\_**\*\*** **Conducted By:** **\*\***\_\_\_**\*\***
 
 - [ ] Export a list of all recurring software charges from the company credit card/QuickBooks.
 - [ ] Cross-reference charges with the official Tech Stack Inventory (OPS-06).
@@ -34,26 +36,31 @@
 - [ ] Review annual renewals coming up in the next 90 days. Negotiate or prep to switch.
 - [ ] Review automation error logs (Zapier/Make). Fix or delete broken zaps.
 
-**Savings Identified ($):** _______________
+**Savings Identified ($):** **\*\***\_\_\_**\*\***
 
 ---
 
 ## 3. Internal IT Support Quick-Reference
-*Post this in a pinned Slack message or internal wiki.*
+
+_Post this in a pinned Slack message or internal wiki._
 
 **"My tool is broken! What do I do?"**
 
 **Step 1:** Check your own setup.
+
 - Clear browser cache.
 - Try an Incognito window.
 - Restart your computer.
 
 **Step 2:** Check if it's a global outage.
+
 - Google "[Tool Name] status" (e.g., "Slack status") to see if their servers are down.
 
 **Step 3:** Internal Support.
+
 - Post in the `#it-help` Slack channel. Include a screenshot of the error and what you were trying to do.
 - Tag [@OpsLead]. Response SLA is 4 hours for non-critical, immediate for critical blockers.
 
 **Step 4:** Vendor Support.
+
 - If directed by Ops, open a support ticket directly with the vendor.

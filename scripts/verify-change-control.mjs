@@ -7,7 +7,7 @@ const candidateJourneyKitPaths = [
   path.resolve(root, "..", "AI Native Agency Deepened", "Journey_Kit.md"),
 ];
 const canonicalJourneyKitPath =
-  candidateJourneyKitPaths.find((candidate) => fs.existsSync(candidate)) ??
+  candidateJourneyKitPaths.find(candidate => fs.existsSync(candidate)) ??
   candidateJourneyKitPaths[0];
 const requiredFiles = [
   "docs/operations/change-control-register.md",

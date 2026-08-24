@@ -149,13 +149,13 @@ output of the week.
 
 ## Cycle Cadence After Setup
 
-| Day | Activity | Time |
-| --- | --- | --- |
-| Cycle Day 1 | Content brief + draft batch | 60 to 90 min |
-| Cycle Day 2 | Publish first piece + send first 5 outreach messages | 45 to 60 min |
+| Day         | Activity                                                                  | Time         |
+| ----------- | ------------------------------------------------------------------------- | ------------ |
+| Cycle Day 1 | Content brief + draft batch                                               | 60 to 90 min |
+| Cycle Day 2 | Publish first piece + send first 5 outreach messages                      | 45 to 60 min |
 | Cycle Day 3 | Publish second piece + send remaining outreach + Touch 2 from prior cycle | 45 to 60 min |
-| Cycle Day 4 | Light day — reply to inbound + queue Touch 3 where needed | 30 min |
-| Cycle Day 5 | Update proof log + send/confirm Touch 3 + plan next cycle | 45 to 60 min |
+| Cycle Day 4 | Light day — reply to inbound + queue Touch 3 where needed                 | 30 min       |
+| Cycle Day 5 | Update proof log + send/confirm Touch 3 + plan next cycle                 | 45 to 60 min |
 
 After 3 cycles, run a longer review. After 6 cycles, decide whether to add
 an adjacent workflow (MKT-08 social, MKT-07 paid, MKT-09 events, or a full
@@ -163,13 +163,13 @@ nurture library from MKT-02).
 
 ## Common Failure Modes And Fixes
 
-| Failure | Symptom | Fix |
-| --- | --- | --- |
-| Skipped intake | Content "kind of" lands but no replies | Stop. Go back to Day 1. |
-| Content but no outreach | Posts publish, inbox is empty | Set a hard rule: no second cycle until outreach list is contacted |
-| Outreach but no follow-up | First touches sent, never followed up | Schedule Touch 1/2/3 on the calendar the same day the outreach goes out |
-| No proof log | Founder cannot describe what worked last cycle | Make the proof log the literal last step of every cycle, not an "if I have time" task |
-| Scope creep | Founder asks for paid ads or a website rebuild after week 2 | Refer back to README "What Is Intentionally Excluded". Quote the next layer as a separate engagement. |
+| Failure                   | Symptom                                                     | Fix                                                                                                   |
+| ------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Skipped intake            | Content "kind of" lands but no replies                      | Stop. Go back to Day 1.                                                                               |
+| Content but no outreach   | Posts publish, inbox is empty                               | Set a hard rule: no second cycle until outreach list is contacted                                     |
+| Outreach but no follow-up | First touches sent, never followed up                       | Schedule Touch 1/2/3 on the calendar the same day the outreach goes out                               |
+| No proof log              | Founder cannot describe what worked last cycle              | Make the proof log the literal last step of every cycle, not an "if I have time" task                 |
+| Scope creep               | Founder asks for paid ads or a website rebuild after week 2 | Refer back to README "What Is Intentionally Excluded". Quote the next layer as a separate engagement. |
 
 ## Verification
 

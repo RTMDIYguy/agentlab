@@ -46,16 +46,16 @@ First learn what already works.
 
 ## What Each Area Is For
 
-| Area | Job | Use It For Now | Do Not Use It For Yet |
-| --- | --- | --- | --- |
-| Independence Chapter Home | Personal member hub and activation path | Finding the next chapter step, reviewing 90-day plan prompts, seeing chapter context and sponsors | Treating it as the agency command center |
-| Ownable OS Command Center | Weekly business cockpit | Weekly pulse, Simple Bets, Ownable Score, Weekly Close, engine navigation | Final finance/accounting decisions |
-| Financial Engine | Cash and banking intelligence | Mercury connection review, cash health, runway, account classification, transaction scan | Replacing the owned finance tracker until export/control rules are clear |
-| Profit Engine | CRM-driven revenue layer | CRM inbox, pipeline, scorecard, lead/customer targets, sales follow-up discovery | Abandoning CRM-lite before testing the CRM workspace |
-| Value Engine | ProfitFlow and protocol library | Selecting workflow ideas, diagnostic recommendations, workshop modules, implementation packages | Publishing unreviewed protocols as URC offers |
-| People Engine | Team, owner work, and compensation layer | Owner hours, team targets, delegation signals, simple compensation visibility | Complex HR/payroll authority |
-| Weekly Close | Retrospective and snapshot loop | Capturing weekly outcomes and next bets | Backfilling perfect history |
-| Exit Studio / Certification | Guided pathway to ownable business readiness | Following prescribed steps, understanding capital/exit readiness gaps | Letting the platform override URC brand hierarchy |
+| Area                        | Job                                          | Use It For Now                                                                                    | Do Not Use It For Yet                                                    |
+| --------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Independence Chapter Home   | Personal member hub and activation path      | Finding the next chapter step, reviewing 90-day plan prompts, seeing chapter context and sponsors | Treating it as the agency command center                                 |
+| Ownable OS Command Center   | Weekly business cockpit                      | Weekly pulse, Simple Bets, Ownable Score, Weekly Close, engine navigation                         | Final finance/accounting decisions                                       |
+| Financial Engine            | Cash and banking intelligence                | Mercury connection review, cash health, runway, account classification, transaction scan          | Replacing the owned finance tracker until export/control rules are clear |
+| Profit Engine               | CRM-driven revenue layer                     | CRM inbox, pipeline, scorecard, lead/customer targets, sales follow-up discovery                  | Abandoning CRM-lite before testing the CRM workspace                     |
+| Value Engine                | ProfitFlow and protocol library              | Selecting workflow ideas, diagnostic recommendations, workshop modules, implementation packages   | Publishing unreviewed protocols as URC offers                            |
+| People Engine               | Team, owner work, and compensation layer     | Owner hours, team targets, delegation signals, simple compensation visibility                     | Complex HR/payroll authority                                             |
+| Weekly Close                | Retrospective and snapshot loop              | Capturing weekly outcomes and next bets                                                           | Backfilling perfect history                                              |
+| Exit Studio / Certification | Guided pathway to ownable business readiness | Following prescribed steps, understanding capital/exit readiness gaps                             | Letting the platform override URC brand hierarchy                        |
 
 ## Monday Morning Operating Path
 
@@ -209,7 +209,7 @@ First inspection from Robert's 2026-06-03 screenshots:
   - note says AI helps only if a key has been added in Settings
 - Scorecard tab visible:
   - daily snapshots populate after activity
-  - formula shown: momentum = activity * velocity * coverage
+  - formula shown: momentum = activity _ velocity _ coverage
   - columns: Date, Kind, Sent, Replies, Meetings, Won, $ Won, Momentum
   - no snapshots yet
 
@@ -272,14 +272,14 @@ operating lanes clean.
 
 Recommended company split:
 
-| Company Workspace | Job | CRM Use |
-| --- | --- | --- |
-| Uncle Robert Consulting LLC | Main business and consulting owner | Primary CRM for URC diagnostics, advisory, consulting, and workshop pipeline |
-| Bootstrapper Capital | Chapter, events, and community funnel | Roundtable, chapter, membership, sponsor, and founder-community leads |
-| Tactix | Fulfillment and Upwork-facing arm | Delivery opportunities, Upwork-style leads, implementation capacity |
-| Agent Lab | Public proof and workflow-product brand | Beta users, workflow package interest, productized service leads |
-| Test / Sandbox Company | Safe learning area | Dummy records, import tests, field tests, integration experiments |
-| Client Company | Only when explicitly onboarding a client or demo | Client-specific operating cockpit, never mixed with URC internal leads |
+| Company Workspace           | Job                                              | CRM Use                                                                      |
+| --------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------- |
+| Uncle Robert Consulting LLC | Main business and consulting owner               | Primary CRM for URC diagnostics, advisory, consulting, and workshop pipeline |
+| Bootstrapper Capital        | Chapter, events, and community funnel            | Roundtable, chapter, membership, sponsor, and founder-community leads        |
+| Tactix                      | Fulfillment and Upwork-facing arm                | Delivery opportunities, Upwork-style leads, implementation capacity          |
+| Agent Lab                   | Public proof and workflow-product brand          | Beta users, workflow package interest, productized service leads             |
+| Test / Sandbox Company      | Safe learning area                               | Dummy records, import tests, field tests, integration experiments            |
+| Client Company              | Only when explicitly onboarding a client or demo | Client-specific operating cockpit, never mixed with URC internal leads       |
 
 Default rule:
 
@@ -329,17 +329,17 @@ Delete or mark the test record only after documenting what was learned.
 
 Do not activate every integration just because the setup checklist asks for it.
 
-| Integration / Feature | Current Use Recommendation | Reason |
-| --- | --- | --- |
-| CSV/XLSX Import Data | Test only after fields are mapped | Best bridge from local CRM-lite, but easy to pollute clean data |
-| Email & Calendar | Defer until CRM records and source rules are clear | Inbox/calendar sync creates operational dependency |
-| Instantly / Cold Outbound | Defer unless outbound lane is ready and compliant | Could turn the CRM into a sending system before the list and copy are ready |
-| Meetings / Notetaker | Candidate after calendar decision | Useful for diagnostics, but needs privacy and consent rules |
-| Warm Outbound / Content | Candidate as a planning mirror, not source of truth yet | Existing Agent Lab queue already has guardrails and history |
-| Custom Fields | Use early, carefully | Source, offer, next step, follow-up date, and owner fields are essential |
-| Compensation & Quotas | Defer | No sales team/rep payout process is active yet |
-| Team & Seats | Defer until a collaborator needs access | Avoid unnecessary permission sprawl |
-| Scorecard | Observe after activity exists | Empty until the CRM has sends, replies, meetings, or deals |
+| Integration / Feature     | Current Use Recommendation                              | Reason                                                                      |
+| ------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------- |
+| CSV/XLSX Import Data      | Test only after fields are mapped                       | Best bridge from local CRM-lite, but easy to pollute clean data             |
+| Email & Calendar          | Defer until CRM records and source rules are clear      | Inbox/calendar sync creates operational dependency                          |
+| Instantly / Cold Outbound | Defer unless outbound lane is ready and compliant       | Could turn the CRM into a sending system before the list and copy are ready |
+| Meetings / Notetaker      | Candidate after calendar decision                       | Useful for diagnostics, but needs privacy and consent rules                 |
+| Warm Outbound / Content   | Candidate as a planning mirror, not source of truth yet | Existing Agent Lab queue already has guardrails and history                 |
+| Custom Fields             | Use early, carefully                                    | Source, offer, next step, follow-up date, and owner fields are essential    |
+| Compensation & Quotas     | Defer                                                   | No sales team/rep payout process is active yet                              |
+| Team & Seats              | Defer until a collaborator needs access                 | Avoid unnecessary permission sprawl                                         |
+| Scorecard                 | Observe after activity exists                           | Empty until the CRM has sends, replies, meetings, or deals                  |
 
 ## Email And Calendar Sync Status
 
@@ -394,27 +394,27 @@ configuration and Google OAuth publication/tester status.
 
 ## How This Maps To URC
 
-| URC Operating Need | Bootstrapper.ai Area | Local / Control Layer |
-| --- | --- | --- |
-| Founder community and roundtables | Independence Chapter Home | Bootstrapper Capital docs and MKT-09 slice |
-| Weekly operating rhythm | Ownable OS Command Center and Weekly Close | Daily Command Center and weekly workflow audit bank |
-| Lead generation and follow-up | Profit Engine CRM/Pipeline | CRM-lite bridge and outreach trackers |
-| Finance visibility | Financial Engine | Owned finance tracker/dashboard and exports |
-| Offer and workflow ideas | Value Engine ProfitFlow Library | Workflow registry, package docs, change control |
-| Team and fulfillment capacity | People Engine | Tactix delivery notes and agency operating manual |
-| Book-to-client funnel | Chapter, Library, Profit Engine targets | Book control doc, content queue, founder diagnostic assets |
+| URC Operating Need                | Bootstrapper.ai Area                       | Local / Control Layer                                      |
+| --------------------------------- | ------------------------------------------ | ---------------------------------------------------------- |
+| Founder community and roundtables | Independence Chapter Home                  | Bootstrapper Capital docs and MKT-09 slice                 |
+| Weekly operating rhythm           | Ownable OS Command Center and Weekly Close | Daily Command Center and weekly workflow audit bank        |
+| Lead generation and follow-up     | Profit Engine CRM/Pipeline                 | CRM-lite bridge and outreach trackers                      |
+| Finance visibility                | Financial Engine                           | Owned finance tracker/dashboard and exports                |
+| Offer and workflow ideas          | Value Engine ProfitFlow Library            | Workflow registry, package docs, change control            |
+| Team and fulfillment capacity     | People Engine                              | Tactix delivery notes and agency operating manual          |
+| Book-to-client funnel             | Chapter, Library, Profit Engine targets    | Book control doc, content queue, founder diagnostic assets |
 
 ## Offer Ladder Translation
 
 Use Bootstrapper.ai outputs to support the current URC offer ladder:
 
-| Offer Step | Bootstrapper.ai Support |
-| --- | --- |
-| Book / authority asset | Chapter content, library concepts, Ownable framing |
-| Founder session or roundtable | Independence Chapter, activation journey, current 90-day prompt |
-| Diagnostic | Ownable Snapshot, Financial Engine, Profit/Value/People target gaps |
-| Workshop or bootcamp | Exit Studio steps, ProfitFlow protocols, Weekly Close habit |
-| Continuity | Weekly Close, Simple Bets, target updates, chapter rhythm |
+| Offer Step                    | Bootstrapper.ai Support                                                                              |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Book / authority asset        | Chapter content, library concepts, Ownable framing                                                   |
+| Founder session or roundtable | Independence Chapter, activation journey, current 90-day prompt                                      |
+| Diagnostic                    | Ownable Snapshot, Financial Engine, Profit/Value/People target gaps                                  |
+| Workshop or bootcamp          | Exit Studio steps, ProfitFlow protocols, Weekly Close habit                                          |
+| Continuity                    | Weekly Close, Simple Bets, target updates, chapter rhythm                                            |
 | Consulting sprint or advisory | Selected ProfitFlows, CRM/pipeline cleanup, finance/account classification, People Engine delegation |
 
 ## What To Ignore For Now
@@ -435,14 +435,14 @@ Ignore or defer:
 Current answers based on the 2026-06-03 walkthrough and platform structure.
 Update each row as new information is confirmed.
 
-| Question | Current Answer | Confidence | Next Confirmation Step |
-| --- | --- | --- | --- |
-| What exactly lives in the full CRM workspace? | Documented in CRM Discovery Path section above: Command Center, Inbox, Cold/Warm Outbound, Deals (Lead→Won funnel), Accounts, Contacts, Meetings, Scorecard, Settings. Object types are Accounts, Contacts, Deals, Meetings, Notes, Tasks. Pipeline stages are Lead 10%, Qualified 25%, Proposal 50%, Negotiation 75%, Won 100%. | High — confirmed from screenshots | Create one test record and confirm object relationships survive save/edit cycle |
-| Can Bootstrapper.ai export contacts, deals, targets, and weekly close data? | Settings shows CSV/XLSX Import under Profit Engine CRM. Export path is unconfirmed — import capability does not guarantee export. No API docs were visible in the free plan view. | Low — import confirmed, export unknown | During Day 1 CRM inspection: look for Download, Export, or API tab in Settings. Try right-click on a data table. |
-| Which fields should Robert update manually each week? | Based on the Weekly Close structure: Simple Bets (complete/inconclusive/active), target actuals in Profit Engine, cash/runway snapshot in Financial Engine, lead/call/proposal movement in CRM. Owner hours and team targets in People Engine are weekly if active. | Medium — inferred from platform structure | Run one Weekly Close (Day 5 of sprint) and record every field the platform prompts for |
-| Are Financial Engine transactions editable/classifiable enough for control use? | Account classification is visible and appears interactive (business vs. personal labels). Transaction-level categorization is unconfirmed. Mercury connection is the bank link. Export of classified transactions has not been tested. | Low — classification UI exists, depth unknown | During Day 2: attempt to classify one transaction and look for a bulk export or CSV download of the classified ledger |
-| Can ProfitFlows be copied, assigned, or customized? | ProfitFlows appear as protocol/workflow packages in the Value Engine library. The screenshots show selectable items but no edit, copy, or customize action was confirmed. They may be read-only templates at the free tier. | Low — library visible, edit rights unknown | During Day 3: open one ProfitFlow and look for Edit, Duplicate, Assign to Company, or Add to Sprint actions |
-| How does chapter membership connect to URC offers? | The Offer Ladder Translation table maps this: Chapter content → book/authority entry; Independence Chapter activation journey → founder session / roundtable; Ownable Snapshot + engine gaps → diagnostic; Exit Studio steps + ProfitFlows → workshop; Weekly Close habit → continuity; Selected ProfitFlows + CRM cleanup → consulting sprint. The mechanical link (whether a chapter member record auto-populates CRM or requires manual entry) is unconfirmed. | Medium — conceptual mapping clear, platform plumbing unconfirmed | When opening Profit Engine CRM, check whether a chapter member appears as a Contact or whether the connection requires manual import |
+| Question                                                                        | Current Answer                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Confidence                                                       | Next Confirmation Step                                                                                                               |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| What exactly lives in the full CRM workspace?                                   | Documented in CRM Discovery Path section above: Command Center, Inbox, Cold/Warm Outbound, Deals (Lead→Won funnel), Accounts, Contacts, Meetings, Scorecard, Settings. Object types are Accounts, Contacts, Deals, Meetings, Notes, Tasks. Pipeline stages are Lead 10%, Qualified 25%, Proposal 50%, Negotiation 75%, Won 100%.                                                                                                                                  | High — confirmed from screenshots                                | Create one test record and confirm object relationships survive save/edit cycle                                                      |
+| Can Bootstrapper.ai export contacts, deals, targets, and weekly close data?     | Settings shows CSV/XLSX Import under Profit Engine CRM. Export path is unconfirmed — import capability does not guarantee export. No API docs were visible in the free plan view.                                                                                                                                                                                                                                                                                 | Low — import confirmed, export unknown                           | During Day 1 CRM inspection: look for Download, Export, or API tab in Settings. Try right-click on a data table.                     |
+| Which fields should Robert update manually each week?                           | Based on the Weekly Close structure: Simple Bets (complete/inconclusive/active), target actuals in Profit Engine, cash/runway snapshot in Financial Engine, lead/call/proposal movement in CRM. Owner hours and team targets in People Engine are weekly if active.                                                                                                                                                                                               | Medium — inferred from platform structure                        | Run one Weekly Close (Day 5 of sprint) and record every field the platform prompts for                                               |
+| Are Financial Engine transactions editable/classifiable enough for control use? | Account classification is visible and appears interactive (business vs. personal labels). Transaction-level categorization is unconfirmed. Mercury connection is the bank link. Export of classified transactions has not been tested.                                                                                                                                                                                                                            | Low — classification UI exists, depth unknown                    | During Day 2: attempt to classify one transaction and look for a bulk export or CSV download of the classified ledger                |
+| Can ProfitFlows be copied, assigned, or customized?                             | ProfitFlows appear as protocol/workflow packages in the Value Engine library. The screenshots show selectable items but no edit, copy, or customize action was confirmed. They may be read-only templates at the free tier.                                                                                                                                                                                                                                       | Low — library visible, edit rights unknown                       | During Day 3: open one ProfitFlow and look for Edit, Duplicate, Assign to Company, or Add to Sprint actions                          |
+| How does chapter membership connect to URC offers?                              | The Offer Ladder Translation table maps this: Chapter content → book/authority entry; Independence Chapter activation journey → founder session / roundtable; Ownable Snapshot + engine gaps → diagnostic; Exit Studio steps + ProfitFlows → workshop; Weekly Close habit → continuity; Selected ProfitFlows + CRM cleanup → consulting sprint. The mechanical link (whether a chapter member record auto-populates CRM or requires manual entry) is unconfirmed. | Medium — conceptual mapping clear, platform plumbing unconfirmed | When opening Profit Engine CRM, check whether a chapter member appears as a Contact or whether the connection requires manual import |
 
 ## First Seven-Day Learning Sprint
 
@@ -522,18 +522,18 @@ Print or bookmark this. One glance should answer "what do I open and why."
 
 ### Where To Go For What
 
-| I need to… | Open this |
-| --- | --- |
-| Start my week / pick my bets | Ownable OS Command Center → Simple Bets |
-| Check my score and business value | Ownable OS Command Center → Ownable Score |
-| See my leads and follow-ups | Profit Engine → CRM → Inbox / Pipeline |
-| Check cash and runway | Financial Engine → Account classification / cash view |
-| Find a workflow or protocol idea | Value Engine → ProfitFlow Library |
-| Review owner hours and team targets | People Engine → Owner Work / Team |
-| Close the week and log outcomes | Ownable OS → Weekly Close |
-| See my chapter activation path | Independence Chapter Home → 90-day card |
-| Test a new integration or dummy record | Sandbox company (create one first) |
-| Understand my exit readiness | Exit Studio / Certification path |
+| I need to…                             | Open this                                             |
+| -------------------------------------- | ----------------------------------------------------- |
+| Start my week / pick my bets           | Ownable OS Command Center → Simple Bets               |
+| Check my score and business value      | Ownable OS Command Center → Ownable Score             |
+| See my leads and follow-ups            | Profit Engine → CRM → Inbox / Pipeline                |
+| Check cash and runway                  | Financial Engine → Account classification / cash view |
+| Find a workflow or protocol idea       | Value Engine → ProfitFlow Library                     |
+| Review owner hours and team targets    | People Engine → Owner Work / Team                     |
+| Close the week and log outcomes        | Ownable OS → Weekly Close                             |
+| See my chapter activation path         | Independence Chapter Home → 90-day card               |
+| Test a new integration or dummy record | Sandbox company (create one first)                    |
+| Understand my exit readiness           | Exit Studio / Certification path                      |
 
 ### Weekly Minimum (10 minutes)
 
@@ -553,13 +553,13 @@ Daily: One question scan (see Daily Use section).
 
 ### URL Shortcuts (bootstrapper.ai)
 
-| Area | URL |
-| --- | --- |
-| App root | `https://bootstrapper.ai/app` |
-| CRM | `https://bootstrapper.ai/app/crm` |
-| Financial Engine | `https://bootstrapper.ai/app/financial` (confirm) |
-| Ownable OS / Command Center | `https://bootstrapper.ai/app/os` (confirm) |
-| Independence Chapter | `https://bootstrapper.ai/app/chapter` (confirm) |
+| Area                        | URL                                               |
+| --------------------------- | ------------------------------------------------- |
+| App root                    | `https://bootstrapper.ai/app`                     |
+| CRM                         | `https://bootstrapper.ai/app/crm`                 |
+| Financial Engine            | `https://bootstrapper.ai/app/financial` (confirm) |
+| Ownable OS / Command Center | `https://bootstrapper.ai/app/os` (confirm)        |
+| Independence Chapter        | `https://bootstrapper.ai/app/chapter` (confirm)   |
 
 Confirm the Financial Engine, Ownable OS, and Chapter URLs on first visit — they may differ from the patterns above.
 
@@ -649,10 +649,10 @@ activate until the outbound lane, list, and copy are ready and compliant.
 
 ## Where This File Lives
 
-| Copy | Path | Purpose |
-| --- | --- | --- |
-| Source of record | `agent-lab-site/docs/operations/bootstrapper-ai-operating-field-guide.md` | Version-controlled in Git repo — edit here |
-| Working copy | `Working Docs/Bootstrapper Capital/Bootstrapper AI Operating Field Guide.md` | Easy access in agency folder — sync from source after edits |
+| Copy             | Path                                                                         | Purpose                                                     |
+| ---------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| Source of record | `agent-lab-site/docs/operations/bootstrapper-ai-operating-field-guide.md`    | Version-controlled in Git repo — edit here                  |
+| Working copy     | `Working Docs/Bootstrapper Capital/Bootstrapper AI Operating Field Guide.md` | Easy access in agency folder — sync from source after edits |
 
 When updating this guide, edit the source copy in the repo first, then
 overwrite the working copy. Do not maintain two independent versions.

@@ -26,7 +26,9 @@ export default function OpsCleanupAgent() {
   if (loading) {
     return (
       <PageLayout className="bg-stone-50">
-        <div className="container py-16 text-sm text-stone-600">Loading Ops Cleanup Agent...</div>
+        <div className="container py-16 text-sm text-stone-600">
+          Loading Ops Cleanup Agent...
+        </div>
       </PageLayout>
     );
   }
@@ -39,10 +41,13 @@ export default function OpsCleanupAgent() {
             <Bot className="h-3.5 w-3.5" />
             Internal Agent
           </div>
-          <h1 className="font-serif text-4xl text-stone-950">Ops Cleanup Agent</h1>
+          <h1 className="font-serif text-4xl text-stone-950">
+            Ops Cleanup Agent
+          </h1>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-stone-700">
-            This internal agent reads your operating docs, samples the recovered folders, and
-            helps you clean up the business system without rebuilding everything from scratch.
+            This internal agent reads your operating docs, samples the recovered
+            folders, and helps you clean up the business system without
+            rebuilding everything from scratch.
           </p>
         </div>
 
@@ -95,11 +100,13 @@ export default function OpsCleanupAgent() {
                 Agent Output
               </div>
               {analyzeMutation.data ? (
-                <pre className="whitespace-pre-wrap font-sans">{analyzeMutation.data.reply}</pre>
+                <pre className="whitespace-pre-wrap font-sans">
+                  {analyzeMutation.data.reply}
+                </pre>
               ) : (
                 <p className="text-stone-300">
-                  Run a task and the agent will return a cleanup plan, keep/archive/review guidance,
-                  and the next actions to take.
+                  Run a task and the agent will return a cleanup plan,
+                  keep/archive/review guidance, and the next actions to take.
                 </p>
               )}
             </div>
@@ -114,26 +121,41 @@ export default function OpsCleanupAgent() {
               <div className="space-y-2 text-sm text-stone-700">
                 {analyzeMutation.data?.contextFiles?.length ? (
                   analyzeMutation.data.contextFiles.map(file => (
-                    <div key={file.filePath} className="rounded-xl bg-stone-50 px-3 py-2">
-                      <div className="font-medium text-stone-900">{file.label}</div>
-                      <div className="break-all text-xs text-stone-500">{file.filePath}</div>
+                    <div
+                      key={file.filePath}
+                      className="rounded-xl bg-stone-50 px-3 py-2"
+                    >
+                      <div className="font-medium text-stone-900">
+                        {file.label}
+                      </div>
+                      <div className="break-all text-xs text-stone-500">
+                        {file.filePath}
+                      </div>
                     </div>
                   ))
                 ) : (
                   <p className="text-stone-500">
-                    The agent will load repo docs and the business cleanup docs when you run an analysis.
+                    The agent will load repo docs and the business cleanup docs
+                    when you run an analysis.
                   </p>
                 )}
               </div>
             </div>
 
             <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
-              <div className="mb-3 text-sm font-semibold text-stone-900">Recovery Snapshot</div>
+              <div className="mb-3 text-sm font-semibold text-stone-900">
+                Recovery Snapshot
+              </div>
               <div className="space-y-2 text-sm text-stone-700">
                 {recoverySummary.length ? (
                   recoverySummary.map(item => (
-                    <div key={item.path} className="rounded-xl bg-stone-50 px-3 py-2">
-                      <div className="font-medium text-stone-900">{item.path}</div>
+                    <div
+                      key={item.path}
+                      className="rounded-xl bg-stone-50 px-3 py-2"
+                    >
+                      <div className="font-medium text-stone-900">
+                        {item.path}
+                      </div>
                       <div className="text-xs text-stone-500">
                         Sampled {item.count} top-level entries
                       </div>
@@ -141,7 +163,8 @@ export default function OpsCleanupAgent() {
                   ))
                 ) : (
                   <p className="text-stone-500">
-                    Run the agent to sample the recovered folders and the active business workspace.
+                    Run the agent to sample the recovered folders and the active
+                    business workspace.
                   </p>
                 )}
               </div>

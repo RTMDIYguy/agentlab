@@ -26,4 +26,3 @@ Events are written to:
 
 - Treat webhook payloads as PII-containing; do not commit `output/` artifacts to git.
 - Prefer making `phone` optional on the widget to reduce friction.
-

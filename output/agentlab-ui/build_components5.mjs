@@ -1,13 +1,13 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const SRC_DIR = path.join(__dirname, 'src');
+const SRC_DIR = path.join(__dirname, "src");
 
 const files = {
-  'AgentCard.tsx': `
+  "AgentCard.tsx": `
 import React from 'react';
 
 interface AgentCardProps {
@@ -57,7 +57,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({ id, name, role, status, ta
   );
 };
   `,
-  'Agents.tsx': `
+  "Agents.tsx": `
 import React from 'react';
 import { AgentCard } from './AgentCard';
 
@@ -83,7 +83,7 @@ export const Agents: React.FC = () => (
   </div>
 );
   `,
-  'App.tsx': `
+  "App.tsx": `
 import React, { useState } from 'react';
 import { AuthLayout } from './AuthLayout';
 import { LoginForm } from './LoginForm';
@@ -118,8 +118,10 @@ export const App: React.FC = () => {
     </AppContext.Provider>
   );
 };
-  `
+  `,
 };
 
-Object.entries(files).forEach(([file, content]) => fs.writeFileSync(path.join(SRC_DIR, file), content.trim()));
-console.log('Phase 1 Agent Components built successfully!');
+Object.entries(files).forEach(([file, content]) =>
+  fs.writeFileSync(path.join(SRC_DIR, file), content.trim())
+);
+console.log("Phase 1 Agent Components built successfully!");

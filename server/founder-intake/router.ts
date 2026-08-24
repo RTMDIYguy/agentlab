@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../_core/trpc";
-import {
-  createContactSubmission,
-} from "../contact/db";
+import { createContactSubmission } from "../contact/db";
 import {
   sendContactFormEmail,
   sendContactFormReply,
@@ -61,7 +59,10 @@ function normalizeCollectedLead(lead: LeadContext, messages: ChatMessage[]) {
   };
 }
 
-function buildFallbackResponse(lead: LeadContext, messages: ChatMessage[]): IntakeResponse {
+function buildFallbackResponse(
+  lead: LeadContext,
+  messages: ChatMessage[]
+): IntakeResponse {
   const normalizedLead = normalizeCollectedLead(lead, messages);
   const missingName = !normalizedLead.name;
   const missingEmail = !normalizedLead.email;
@@ -88,7 +89,8 @@ function buildFallbackResponse(lead: LeadContext, messages: ChatMessage[]): Inta
         normalizedLead.interest === "Business Systems Diagnostic"
           ? "Business Systems Diagnostic"
           : "Founder Roundtable",
-      recommendedCta: "Share your name and email to get the invite or follow-up.",
+      recommendedCta:
+        "Share your name and email to get the invite or follow-up.",
       shouldCaptureLead: true,
       collected: normalizedLead,
     };
@@ -113,7 +115,10 @@ function buildFallbackResponse(lead: LeadContext, messages: ChatMessage[]): Inta
   };
 }
 
-async function callOpenAI(messages: ChatMessage[], lead: LeadContext): Promise<IntakeResponse | null> {
+async function callOpenAI(
+  messages: ChatMessage[],
+  lead: LeadContext
+): Promise<IntakeResponse | null> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return null;
 
@@ -178,7 +183,7 @@ Return valid JSON with this exact shape:
     return null;
   }
 
-  const payload = await response.json() as any;
+  const payload = (await response.json()) as any;
   const outputText =
     typeof payload.output_text === "string"
       ? payload.output_text
@@ -266,7 +271,9 @@ export const founderIntakeRouter = router({
       const replySent = await sendContactFormReply(input.email, input.name);
 
       if (!emailSent) {
-        console.warn("[Founder Intake] Failed to send intake notification email");
+        console.warn(
+          "[Founder Intake] Failed to send intake notification email"
+        );
       }
 
       if (!replySent) {

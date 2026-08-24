@@ -45,15 +45,15 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Registry Metadata
 
-| Field | Value |
-| --- | --- |
-| Workflow ID | MKT-01 |
-| Department | Marketing |
-| Automation level | 90-95% |
-| Owner | Marcus + Robert |
-| Trigger | Campaign scheduled or budget allocated |
-| Cycle time | 24-72 hrs: lead capture to MQL |
-| Source status | Imported source |
+| Field            | Value                                  |
+| ---------------- | -------------------------------------- |
+| Workflow ID      | MKT-01                                 |
+| Department       | Marketing                              |
+| Automation level | 90-95%                                 |
+| Owner            | Marcus + Robert                        |
+| Trigger          | Campaign scheduled or budget allocated |
+| Cycle time       | 24-72 hrs: lead capture to MQL         |
+| Source status    | Imported source                        |
 
 ## Inputs
 
@@ -85,19 +85,19 @@ Use it as part of the URC operating system first. Convert it into a client-safe 
 
 ## Source Map
 
-| Artifact | Purpose |
-| --- | --- |
-| `source/URC-MKT-01_Lead_Generation_Conversion.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| Artifact                                                     | Purpose                                                                     |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------- |
+| `source/URC-MKT-01_Lead_Generation_Conversion.md`            | Retained provenance/input artifact now referenced by this consolidated kit. |
 | `assets/Marketing_Workflow_1_Lead_Generation_Conversion.csv` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `assets/MKT01-Assets.md` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `automation/MKT01-Lead-Enrichment-Blueprint.json` | Retained provenance/input artifact now referenced by this consolidated kit. |
-| `trackers/MKT01_Lead_Gen_Conversion_Tracker.xlsx` | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `assets/MKT01-Assets.md`                                     | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `automation/MKT01-Lead-Enrichment-Blueprint.json`            | Retained provenance/input artifact now referenced by this consolidated kit. |
+| `trackers/MKT01_Lead_Gen_Conversion_Tracker.xlsx`            | Retained provenance/input artifact now referenced by this consolidated kit. |
 
 ## Embedded Source and Asset Documents
 
 ### source/URC-MKT-01_Lead_Generation_Conversion.md
 
-````markdown
+```markdown
 # MKT-01 - Lead Generation & Conversion Source
 
 Source: `Marketing Department\urc marketing\URC-MKT-01_Lead_Generation_Conversion.docx`
@@ -108,7 +108,7 @@ This Markdown file is a text extraction of the source `.docx` for GitHub-readabl
 
 URC-MKT-01 — Lead Generation & Conversion
 
-Owner: Robert T. McCarthy, Founder & CEO   |   Version: v1.0   |   Updated: March 21, 2026
+Owner: Robert T. McCarthy, Founder & CEO | Version: v1.0 | Updated: March 21, 2026
 
 1. Document Purpose
 
@@ -425,11 +425,11 @@ March 21, 2026
 R. McCarthy
 
 Initial URC-specific document
-````
+```
 
 ### assets/Marketing_Workflow_1_Lead_Generation_Conversion.csv
 
-````csv
+```csv
 Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 1,TRIGGER: Form submitted OR Landing page visited OR Lead magnet downloaded OR Ad clicked,System,Unbounce / Leadpages / Instapage / Form webhook / Ad platform pixel,"trigger_type, timestamp, lead_source, campaign_id, referrer_url, device_type",Immediate
 2,"Capture lead data (name, email, phone, company, source, UTM params) automatically",Automation (Form Handler),Zapier/Make.com / Form processor / Webhook receiver,"name, email, phone, company, website, form_responses, ip_address",< 30 seconds
@@ -445,41 +445,47 @@ Step,Trigger/Action,Owner,Tool/System,Data_Fields,SLA_Target
 12,Update lead score dynamically as new engagement data comes in,Automation (Scoring),Dynamic lead scoring / Engagement decay / Predictive scoring,"current_score, previous_score, score_delta, scoring_factors, last_score_update",Real-time on activity
 13,"Trigger conversion acceleration tactics (limited-time offers, case studies, demos)",Marketing Automation,Scarcity campaigns / Social proof automation / Countdown timers,"acceleration_tactic_triggered, offer_type, expiration_date, cta_presented",Based on lead temperature
 14,Sync lead data and activity across all marketing and sales systems in real-time,Automation (Data Sync),"iPaaS (Zapier, Workato) / Reverse ETL / API webhooks","last_sync_timestamp, synced_systems, sync_status, data_completeness",Every 15 minutes
-````
+```
 
 ### assets/MKT01-Assets.md
 
-````markdown
+```markdown
 # MKT01: Lead Generation & Conversion Assets
 
 ## 1. BANT Qualification Framework
-*To be used by Sales Development Reps (SDRs) or automated chatbots when engaging inbound leads.*
+
+_To be used by Sales Development Reps (SDRs) or automated chatbots when engaging inbound leads._
 
 **Budget**
-* "How is your team currently allocating budget for [Problem Area]?"
-* "Have you evaluated the cost of your current solution versus potential alternatives?"
-* "Is there a dedicated budget set aside for addressing this in the current quarter?"
+
+- "How is your team currently allocating budget for [Problem Area]?"
+- "Have you evaluated the cost of your current solution versus potential alternatives?"
+- "Is there a dedicated budget set aside for addressing this in the current quarter?"
 
 **Authority**
-* "Who else on your team is typically involved in evaluating solutions like this?"
-* "How does the decision-making process work for new tools/services in your department?"
-* "Should we invite [Known Executive Role] to our next conversation to ensure we're aligned with their goals?"
+
+- "Who else on your team is typically involved in evaluating solutions like this?"
+- "How does the decision-making process work for new tools/services in your department?"
+- "Should we invite [Known Executive Role] to our next conversation to ensure we're aligned with their goals?"
 
 **Need**
-* "What is the primary challenge you are trying to solve right now?"
-* "How is this issue currently impacting your team's day-to-day operations?"
-* "What happens if this problem isn't resolved in the next 6 months?"
+
+- "What is the primary challenge you are trying to solve right now?"
+- "How is this issue currently impacting your team's day-to-day operations?"
+- "What happens if this problem isn't resolved in the next 6 months?"
 
 **Timeline**
-* "When are you hoping to have a solution fully implemented?"
-* "Are there any upcoming internal deadlines or events driving this initiative?"
-* "What is the timeline for making a decision on this?"
+
+- "When are you hoping to have a solution fully implemented?"
+- "Are there any upcoming internal deadlines or events driving this initiative?"
+- "What is the timeline for making a decision on this?"
 
 ---
 
 ## 2. High-Converting Ad Copy Templates
 
 ### LinkedIn Ad Template (B2B Focus)
+
 **Headline:** Stop Wasting Time on [Common Pain Point].
 **Body Copy:**
 Are you tired of dealing with [Frustrating Issue]? Our team at [Company Name] helps [Target Audience] achieve [Desired Outcome] in just [Timeframe].
@@ -494,6 +500,7 @@ Download our free guide to see how we helped [Customer Name] increase revenue by
 **Call to Action:** Download Now
 
 ### Google Search Ad Template (High Intent)
+
 **Headline 1:** The Best [Product/Service Category] | [Company Name]
 **Headline 2:** Solve [Pain Point] Today
 **Headline 3:** Start Your Free Trial
@@ -504,7 +511,8 @@ Download our free guide to see how we helped [Customer Name] increase revenue by
 ---
 
 ## 3. Lead Intelligence Brief Template
-*Automatically generated by AI and sent to the SDR prior to lead handoff.*
+
+_Automatically generated by AI and sent to the SDR prior to lead handoff._
 
 **Lead Name:** [Lead First Name] [Lead Last Name]
 **Company:** [Company Name] | **Industry:** [Industry]
@@ -512,22 +520,24 @@ Download our free guide to see how we helped [Customer Name] increase revenue by
 **Lead Score:** [Score] (🔥 Hot)
 
 **Key Engagement Signals:**
-* 📄 Downloaded the "2026 Industry Report"
-* 🖥️ Visited the Pricing Page 3 times in the last 2 days
-* 📧 Clicked the "View Case Study" link in Nurture Email #2
+
+- 📄 Downloaded the "2026 Industry Report"
+- 🖥️ Visited the Pricing Page 3 times in the last 2 days
+- 📧 Clicked the "View Case Study" link in Nurture Email #2
 
 **Firmographic Data:**
-* **Employee Count:** [Size Range]
-* **Estimated Revenue:** [Revenue Range]
-* **Tech Stack:** [Known Competitor Tool], HubSpot, Salesforce
+
+- **Employee Count:** [Size Range]
+- **Estimated Revenue:** [Revenue Range]
+- **Tech Stack:** [Known Competitor Tool], HubSpot, Salesforce
 
 **Suggested Talk Track:**
 "Hi [Name], I noticed you recently downloaded our industry report and have been looking at our pricing. Since your team uses [Known Competitor Tool], I thought it might be helpful to show you how our platform integrates natively with HubSpot to reduce your manual entry time by 40%. Do you have 10 minutes on Tuesday?"
-````
+```
 
 ### automation/MKT01-Lead-Enrichment-Blueprint.json
 
-````json
+```json
 {
   "name": "MKT01: Lead Enrichment & Routing (Make.com Blueprint)",
   "flow": [
@@ -638,7 +648,7 @@ Download our free guide to see how we helped [Customer Name] increase revenue by
     "version": 1
   }
 }
-````
+```
 
 ## Binary Attachments
 
@@ -803,6 +813,6 @@ This kit is now an operative draft, but it is not certified. Certification requi
 
 ## Change Log
 
-| Date | Change ID | Version | Type | Summary | Author |
-| --- | --- | --- | --- | --- | --- |
-| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex |
+| Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
+| ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
+| 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |

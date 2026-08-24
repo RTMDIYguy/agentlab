@@ -1,10 +1,10 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
-const SRC_DIR = path.join(process.cwd(), 'src');
+const SRC_DIR = path.join(process.cwd(), "src");
 
 const files = {
-  'Footer.tsx': `
+  "Footer.tsx": `
 import React from 'react';
 const FOOTER_SECTIONS = { Platform: [{ label: 'System Overview', href: '#' }], Resources: [{ label: 'Documentation', href: '#' }], Company: [{ label: 'About SOE', href: '#' }] };
 export const Footer: React.FC = () => (
@@ -27,7 +27,7 @@ export const Footer: React.FC = () => (
   </footer>
 );
   `,
-  'PageLayout.tsx': `
+  "PageLayout.tsx": `
 import React, { ReactNode } from 'react';
 import { Navigation } from './Navigation';
 import { Footer } from './Footer';
@@ -44,7 +44,9 @@ export const PageLayout: React.FC<PageLayoutProps> = ({ children, sidebarContent
     <Footer />
   </div>
 );
-  `
+  `,
 };
 
-Object.entries(files).forEach(([file, content]) => fs.writeFileSync(path.join(SRC_DIR, file), content.trim()));
+Object.entries(files).forEach(([file, content]) =>
+  fs.writeFileSync(path.join(SRC_DIR, file), content.trim())
+);

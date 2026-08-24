@@ -45,22 +45,22 @@ Bootstrapper's Guide to the World:
 
 ## Current System Map
 
-| System Area | Primary Tool Or Layer | Purpose | Current Note |
-| --- | --- | --- | --- |
-| Public website | B12-hosted Agent Lab site | Marketing pages, product pages, blog, beta requests, account surfaces | Active public site at `https://agent-lab.tech` |
-| SaaS beta backend | Supabase | Authentication, database, Edge Functions, blog/admin functions, future beta app data | Active for blog submission/admin functions; publishing path has a known schema blocker |
-| Payments | Stripe | Planned subscription and checkout layer for SaaS beta offers | Planned for Founder Signal System beta |
-| Core files and documents | OneDrive / local Working Docs | Business source files, SOPs, workflow packages, evidence, operating docs | Active workspace root is `Working Docs` |
-| Office backbone | Microsoft 365 | Preferred future operating backbone for email, calendar, Teams, Word, Excel, PowerPoint, Forms, Lists | Paid access is not assumed; use free/local bridges when needed |
-| Finance | Frappe | Invoices, payment tracking, customer billing records, receivables visibility | Finance system of record |
-| Dashboard layer | Notion | Lightweight dashboard and index only | Not the archive or main SOP repository |
-| Automation | n8n | Local/prototype workflow automation and connector testing | Active for LinkedIn Authority proof lanes and workflow certification work |
-| Lead research | Apollo, LinkedIn, referrals, website requests, events | Lead source discovery and qualification | Human review before outreach |
-| Outreach | Gmail, Reach, LinkedIn, manual review | Prospect communication and follow-up | Manual approval required before external sends |
-| CRM-lite | Microsoft List, Excel, Google Sheet, or repo-tracked tracker | Lead name, company, source, offer interest, stage, next action, owner, follow-up date | Keep lightweight until volume justifies CRM expansion |
-| Workflow packages | GitHub repo and local workflow folders | Source of truth for workflow documentation, kits, assets, change logs, and packaging | Active in `agent-lab-site/workflows` |
-| Evidence and audits | Compliance Audits folder | Cross-workflow proof, test results, readiness notes, compliance logs | Use unless evidence must stay beside a local artifact |
-| Community and funnel | Bootstrapper.ai / Ownable OS, Bootstrapper Capital | Founder chapter, sprints, ProfitFlows, governance cadence, and workflow operating model | Active setup underway |
+| System Area              | Primary Tool Or Layer                                        | Purpose                                                                                               | Current Note                                                                           |
+| ------------------------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Public website           | B12-hosted Agent Lab site                                    | Marketing pages, product pages, blog, beta requests, account surfaces                                 | Active public site at `https://agent-lab.tech`                                         |
+| SaaS beta backend        | Supabase                                                     | Authentication, database, Edge Functions, blog/admin functions, future beta app data                  | Active for blog submission/admin functions; publishing path has a known schema blocker |
+| Payments                 | Stripe                                                       | Planned subscription and checkout layer for SaaS beta offers                                          | Planned for Founder Signal System beta                                                 |
+| Core files and documents | OneDrive / local Working Docs                                | Business source files, SOPs, workflow packages, evidence, operating docs                              | Active workspace root is `Working Docs`                                                |
+| Office backbone          | Microsoft 365                                                | Preferred future operating backbone for email, calendar, Teams, Word, Excel, PowerPoint, Forms, Lists | Paid access is not assumed; use free/local bridges when needed                         |
+| Finance                  | Frappe                                                       | Invoices, payment tracking, customer billing records, receivables visibility                          | Finance system of record                                                               |
+| Dashboard layer          | Notion                                                       | Lightweight dashboard and index only                                                                  | Not the archive or main SOP repository                                                 |
+| Automation               | n8n                                                          | Local/prototype workflow automation and connector testing                                             | Active for LinkedIn Authority proof lanes and workflow certification work              |
+| Lead research            | Apollo, LinkedIn, referrals, website requests, events        | Lead source discovery and qualification                                                               | Human review before outreach                                                           |
+| Outreach                 | Gmail, Reach, LinkedIn, manual review                        | Prospect communication and follow-up                                                                  | Manual approval required before external sends                                         |
+| CRM-lite                 | Microsoft List, Excel, Google Sheet, or repo-tracked tracker | Lead name, company, source, offer interest, stage, next action, owner, follow-up date                 | Keep lightweight until volume justifies CRM expansion                                  |
+| Workflow packages        | GitHub repo and local workflow folders                       | Source of truth for workflow documentation, kits, assets, change logs, and packaging                  | Active in `agent-lab-site/workflows`                                                   |
+| Evidence and audits      | Compliance Audits folder                                     | Cross-workflow proof, test results, readiness notes, compliance logs                                  | Use unless evidence must stay beside a local artifact                                  |
+| Community and funnel     | Bootstrapper.ai / Ownable OS, Bootstrapper Capital           | Founder chapter, sprints, ProfitFlows, governance cadence, and workflow operating model               | Active setup underway                                                                  |
 
 ## Lead Generation Flow
 
