@@ -119,7 +119,7 @@ export default function Blog() {
       </section>
 
       {/* Search and Filter Section */}
-      <section className="py-12 bg-white border-b border-border">
+      <section className="py-12 bg-background border-b border-border">
         <div className="container max-w-4xl">
           {/* Search Bar */}
           <div className="mb-8">
@@ -155,7 +155,7 @@ export default function Blog() {
       </section>
 
       {/* Articles Grid */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container max-w-4xl">
           {displayedArticles.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -238,7 +238,7 @@ export default function Blog() {
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 px-4 py-3 border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+              className="flex-1 px-4 py-3 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <Button className="bg-primary hover:bg-primary/90">
               Subscribe

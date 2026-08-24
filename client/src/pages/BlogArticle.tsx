@@ -208,7 +208,7 @@ export default function BlogArticle() {
       </section>
 
       {/* Article Content */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container max-w-3xl">
           <div className="prose prose-lg max-w-none">
             <article className="text-foreground space-y-6">

@@ -81,7 +81,7 @@ export default function About() {
         </div>
       </section>
 
-      <section id="mission" className="py-20 bg-white">
+      <section id="mission" className="py-20 bg-background">
         <div className="container max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
@@ -162,7 +162,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container max-w-3xl text-center">
           <h2 className="text-4xl font-bold text-foreground mb-6">
             Practical help, not heavier systems

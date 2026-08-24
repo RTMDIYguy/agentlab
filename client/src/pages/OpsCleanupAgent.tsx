@@ -1,8 +1,7 @@
-import { useMemo, useState } from "react";
-import { Bot, FolderTree, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Bot, FolderTree, Sparkles, CheckCircle2 } from "lucide-react";
 import { PageLayout } from "@/components/PageLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { trpc } from "@/lib/trpc";
 
 const starterTasks = [
   "Review the current operating docs and tell me the top 3 cleanup actions I should take this week.",
@@ -10,23 +9,67 @@ const starterTasks = [
   "Identify the likely source-of-truth docs for URC, Bootstrapper Capital, Tactix, and Ownable OS planning.",
 ];
 
-export default function OpsCleanupAgent() {
-  const { loading } = useAuth({ redirectOnUnauthenticated: true });
-  const [task, setTask] = useState(starterTasks[0]);
-  const analyzeMutation = trpc.opsCleanup.analyze.useMutation();
+type WorkflowProposalStep = {
+  stepNumber: number;
+  title: string;
+  type: string;
+  detail: string;
+  agentId?: string;
+};
 
-  const recoverySummary = useMemo(() => {
-    if (!analyzeMutation.data) return [];
-    return analyzeMutation.data.inventory.recoveryInventories.map(item => ({
-      path: item.path,
-      count: item.entries.length,
-    }));
-  }, [analyzeMutation.data]);
+type OrchestratorChatResponse = {
+  reply: string;
+  proposal?: {
+    id: string;
+    name: string;
+    description: string;
+    departmentCode: string;
+    steps: WorkflowProposalStep[];
+  };
+  executionMetrics?: {
+    model: string;
+  };
+};
+
+export default function OpsCleanupAgent() {
+  const { user, loading } = useAuth({ redirectOnUnauthenticated: true });
+  const [task, setTask] = useState(starterTasks[0]);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [agentResponse, setAgentResponse] = useState<OrchestratorChatResponse | null>(null);
+
+  const handleAnalyze = async () => {
+    if (!task.trim()) return;
+    setIsAnalyzing(true);
+    setAgentResponse(null);
+
+    try {
+      const token = await user?.getIdToken();
+      const res = await fetch("/api/orchestrator/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ prompt: task })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setAgentResponse(data);
+      } else {
+        console.error("Failed to analyze", res.statusText);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   if (loading) {
     return (
-      <PageLayout className="bg-stone-50">
-        <div className="container py-16 text-sm text-stone-600">
+      <PageLayout className="bg-background">
+        <div className="container py-16 text-sm text-muted-foreground">
           Loading Ops Cleanup Agent...
         </div>
       </PageLayout>
@@ -34,17 +77,17 @@ export default function OpsCleanupAgent() {
   }
 
   return (
-    <PageLayout className="bg-stone-50">
+    <PageLayout className="bg-background">
       <div className="container py-10">
         <div className="mb-8 max-w-3xl">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-emerald-800">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-primary">
             <Bot className="h-3.5 w-3.5" />
             Internal Agent
           </div>
-          <h1 className="font-serif text-4xl text-stone-950">
+          <h1 className="font-serif text-4xl text-foreground">
             Ops Cleanup Agent
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-7 text-stone-700">
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
             This internal agent reads your operating docs, samples the recovered
             folders, and helps you clean up the business system without
             rebuilding everything from scratch.
@@ -52,9 +95,9 @@ export default function OpsCleanupAgent() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
-            <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-stone-900">
-              <Sparkles className="h-4 w-4" />
+          <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+            <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
+              <Sparkles className="h-4 w-4 text-primary" />
               Ask the agent
             </div>
 
@@ -64,7 +107,7 @@ export default function OpsCleanupAgent() {
                   key={starter}
                   type="button"
                   onClick={() => setTask(starter)}
-                  className="rounded-full border border-stone-300 px-3 py-1.5 text-xs text-stone-700 transition hover:border-stone-950 hover:text-stone-950"
+                  className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:border-primary hover:text-foreground"
                 >
                   {starter}
                 </button>
@@ -75,36 +118,59 @@ export default function OpsCleanupAgent() {
               value={task}
               onChange={event => setTask(event.target.value)}
               rows={8}
-              className="w-full rounded-2xl border border-stone-300 px-4 py-3 text-sm leading-7 outline-none transition focus:border-stone-950"
+              className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm leading-7 text-foreground outline-none transition focus:border-primary"
               placeholder="Describe the cleanup or operating-system task you want help with..."
             />
 
             <div className="mt-4 flex items-center gap-3">
               <button
                 type="button"
-                onClick={() => analyzeMutation.mutate({ task })}
-                disabled={analyzeMutation.isPending || task.trim().length < 10}
-                className="rounded-xl bg-stone-950 px-4 py-2 text-sm font-medium text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:bg-stone-400"
+                onClick={handleAnalyze}
+                disabled={isAnalyzing || task.trim().length < 10}
+                className="rounded-xl bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {analyzeMutation.isPending ? "Analyzing..." : "Run analysis"}
+                {isAnalyzing ? "Analyzing..." : "Run analysis"}
               </button>
-              <div className="text-xs text-stone-500">
-                {analyzeMutation.data?.mode === "openai"
-                  ? "Using OpenAI-powered analysis"
-                  : "Using fallback analysis if no API key is configured"}
+              <div className="text-xs text-muted-foreground">
+                {agentResponse?.executionMetrics?.model
+                  ? `Using ${agentResponse.executionMetrics.model}`
+                  : "Using Orchestrator AI"}
               </div>
             </div>
 
-            <div className="mt-6 rounded-2xl bg-stone-950 p-5 text-sm leading-7 text-stone-100">
-              <div className="mb-3 text-xs uppercase tracking-[0.2em] text-stone-400">
+            <div className="mt-6 rounded-2xl bg-muted/30 border border-border p-5 text-sm leading-7 text-foreground">
+              <div className="mb-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 Agent Output
               </div>
-              {analyzeMutation.data ? (
-                <pre className="whitespace-pre-wrap font-sans">
-                  {analyzeMutation.data.reply}
-                </pre>
+              {agentResponse ? (
+                <div className="space-y-4">
+                  <pre className="whitespace-pre-wrap font-sans">
+                    {agentResponse.reply}
+                  </pre>
+                  
+                  {agentResponse.proposal && (
+                    <div className="mt-6 border-t border-border pt-4">
+                      <h4 className="font-semibold mb-3 text-primary flex items-center gap-2">
+                        <FolderTree className="w-4 h-4" />
+                        Proposed Workflow DAG
+                      </h4>
+                      <div className="space-y-3">
+                        {agentResponse.proposal.steps.map((step) => (
+                          <div key={step.stepNumber} className="bg-background rounded-lg p-3 border border-border text-sm">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="font-semibold text-foreground">Step {step.stepNumber}: {step.title}</span>
+                              <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded uppercase">{step.type}</span>
+                            </div>
+                            <p className="text-muted-foreground text-xs">{step.detail}</p>
+                            {step.agentId && <p className="text-xs text-primary mt-1 font-mono">{step.agentId}</p>}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               ) : (
-                <p className="text-stone-300">
+                <p className="text-muted-foreground">
                   Run a task and the agent will return a cleanup plan,
                   keep/archive/review guidance, and the next actions to take.
                 </p>
@@ -113,60 +179,15 @@ export default function OpsCleanupAgent() {
           </div>
 
           <div className="space-y-6">
-            <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
-              <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-900">
-                <FolderTree className="h-4 w-4" />
-                Context Files
+            <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+              <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
+                <CheckCircle2 className="h-4 w-4 text-primary" />
+                Active Playbooks
               </div>
-              <div className="space-y-2 text-sm text-stone-700">
-                {analyzeMutation.data?.contextFiles?.length ? (
-                  analyzeMutation.data.contextFiles.map(file => (
-                    <div
-                      key={file.filePath}
-                      className="rounded-xl bg-stone-50 px-3 py-2"
-                    >
-                      <div className="font-medium text-stone-900">
-                        {file.label}
-                      </div>
-                      <div className="break-all text-xs text-stone-500">
-                        {file.filePath}
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-stone-500">
-                    The agent will load repo docs and the business cleanup docs
-                    when you run an analysis.
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
-              <div className="mb-3 text-sm font-semibold text-stone-900">
-                Recovery Snapshot
-              </div>
-              <div className="space-y-2 text-sm text-stone-700">
-                {recoverySummary.length ? (
-                  recoverySummary.map(item => (
-                    <div
-                      key={item.path}
-                      className="rounded-xl bg-stone-50 px-3 py-2"
-                    >
-                      <div className="font-medium text-stone-900">
-                        {item.path}
-                      </div>
-                      <div className="text-xs text-stone-500">
-                        Sampled {item.count} top-level entries
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-stone-500">
-                    Run the agent to sample the recovered folders and the active
-                    business workspace.
-                  </p>
-                )}
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p>
+                  The Ops Agent uses your unlocked Marketplace Playbooks to evaluate requests and route to the correct departments.
+                </p>
               </div>
             </div>
           </div>

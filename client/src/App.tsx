@@ -34,6 +34,7 @@ import Bootcamp from "@/pages/Bootcamp";
 import Marketplace from "@/pages/Marketplace";
 import CommandCenter from "@/pages/CommandCenter";
 import Login from "@/pages/Login";
+import Support from "@/pages/Support";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useEffect } from "react";
 
@@ -91,6 +92,7 @@ function Router() {
       <Route path="/admin/events" component={AdminEvents} />
       <Route path="/book" component={Book} />
       <Route path="/bootcamp" component={Bootcamp} />
+      <Route path="/support" component={Support} />
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
