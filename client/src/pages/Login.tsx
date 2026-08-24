@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../_core/firebase";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -78,6 +78,14 @@ export default function Login() {
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
+          </div>
+          
+          <div className="mt-4 text-center text-sm">
+            <Link href="/signup">
+              <a className="font-medium text-indigo-600 hover:text-indigo-500">
+                Don't have an account? Sign Up
+              </a>
+            </Link>
           </div>
         </form>
       </div>

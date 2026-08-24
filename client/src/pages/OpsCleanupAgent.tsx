@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Bot, FolderTree, Sparkles, CheckCircle2 } from "lucide-react";
 import { PageLayout } from "@/components/PageLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useLocation } from "wouter";
 
 const starterTasks = [
   "Review the current operating docs and tell me the top 3 cleanup actions I should take this week.",
@@ -35,7 +36,9 @@ export default function OpsCleanupAgent() {
   const { user, loading } = useAuth({ redirectOnUnauthenticated: true });
   const [task, setTask] = useState(starterTasks[0]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isDeploying, setIsDeploying] = useState(false);
   const [agentResponse, setAgentResponse] = useState<OrchestratorChatResponse | null>(null);
+  const [, setLocation] = useLocation();
 
   const handleAnalyze = async () => {
     if (!task.trim()) return;
@@ -63,6 +66,33 @@ export default function OpsCleanupAgent() {
       console.error(err);
     } finally {
       setIsAnalyzing(false);
+    }
+  };
+
+  const handleDeploy = async () => {
+    if (!agentResponse?.proposal) return;
+    setIsDeploying(true);
+
+    try {
+      const token = await user?.getIdToken();
+      const res = await fetch("/api/workflows/deploy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(agentResponse.proposal)
+      });
+
+      if (res.ok) {
+        setLocation("/command-center");
+      } else {
+        console.error("Failed to deploy", res.statusText);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsDeploying(false);
     }
   };
 
@@ -165,6 +195,16 @@ export default function OpsCleanupAgent() {
                             {step.agentId && <p className="text-xs text-primary mt-1 font-mono">{step.agentId}</p>}
                           </div>
                         ))}
+                      </div>
+                      <div className="mt-4 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={handleDeploy}
+                          disabled={isDeploying}
+                          className="rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-bold text-white shadow hover:bg-indigo-700 disabled:opacity-50 transition"
+                        >
+                          {isDeploying ? "Deploying..." : "Deploy & Execute"}
+                        </button>
                       </div>
                     </div>
                   )}

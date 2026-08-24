@@ -1,5 +1,6 @@
-import { generateText } from "ai";
+import { generateText, tool } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { z } from "zod";
 
 // Create a Google instance for the AI SDK.
 // It will automatically use the GOOGLE_GENERATIVE_AI_API_KEY environment variable.
@@ -25,17 +26,33 @@ export async function runAgentStep(
 ): Promise<AgentRunnerResult> {
   const startTime = Date.now();
 
-  // Build the prompt containing the action instructions and the current state/context
   let fullPrompt = actionPrompt;
   if (Object.keys(inputContext).length > 0) {
     fullPrompt += `\n\n[Current Run Context]:\n${JSON.stringify(inputContext, null, 2)}`;
   }
+  
+  const finalSystemPrompt = `${systemPrompt || ""}\n\nYou have access to tools. If the step requires sending an email or updating a CRM, you MUST call the appropriate tool.`;
 
   // Generate text using the AI SDK
   const { text, usage } = await generateText({
     model: google("gemini-1.5-pro") as any,
-    system: systemPrompt || undefined,
+    system: finalSystemPrompt,
     prompt: fullPrompt,
+    maxSteps: 5,
+    tools: {
+      sendAgentMail: tool({
+        description: "Send an email via the AgentMail relay.",
+        parameters: z.object({
+          to: z.string(),
+          subject: z.string(),
+          body: z.string(),
+        }),
+        execute: async ({ to, subject, body }) => {
+          console.log("[TOOL EXECUTED] Sending email to:", to);
+          return "Email successfully queued.";
+        },
+      }),
+    },
   });
 
   const latencyMs = Date.now() - startTime;
