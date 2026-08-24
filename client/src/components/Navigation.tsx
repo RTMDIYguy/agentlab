@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import { getLoginUrl } from "@/const";
+
 
 export function Navigation() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -138,7 +138,14 @@ export function Navigation() {
               <span className="text-sm text-muted-foreground hidden sm:inline">
                 {user?.name}
               </span>
-              <Button variant="outline" size="sm" onClick={logout}>
+              <Button
+                variant="outline"
+                className="hidden sm:inline-flex"
+                onClick={() => (window.location.href = "/dashboard")}
+              >
+                Go to Dashboard
+              </Button>
+              <Button variant="ghost" size="sm" onClick={logout}>
                 Sign Out
               </Button>
             </>
@@ -147,13 +154,13 @@ export function Navigation() {
               <Button
                 variant="outline"
                 className="hidden sm:inline-flex"
-                onClick={() => (window.location.href = getLoginUrl())}
+                onClick={() => (window.location.href = "/login")}
               >
                 Sign In
               </Button>
               <Button
                 className="bg-primary hover:bg-primary/90"
-                onClick={() => (window.location.href = getLoginUrl())}
+                onClick={() => (window.location.href = "/login")}
               >
                 Get Started
               </Button>

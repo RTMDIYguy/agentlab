@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LiveChat } from "./components/LiveChat";
@@ -34,12 +34,30 @@ import Bootcamp from "@/pages/Bootcamp";
 import Marketplace from "@/pages/Marketplace";
 import CommandCenter from "@/pages/CommandCenter";
 import Login from "@/pages/Login";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { useEffect } from "react";
+
+function RootRoute() {
+  const { isAuthenticated, isLoading } = useAuth();
+  const [, setLocation] = useLocation();
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      setLocation("/dashboard");
+    }
+  }, [isAuthenticated, isLoading, setLocation]);
+
+  if (isLoading) return null;
+  if (isAuthenticated) return null; // Wait for redirect
+  
+  return <Home />;
+}
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
+      <Route path={"/"} component={RootRoute} />
       <Route path={"/login"} component={Login} />
       <Route path={"/services"} component={Services} />
       <Route path={"/features"} component={Features} />
@@ -94,5 +112,3 @@ function App() {
 }
 
 export default App;
-
-// Cache bust: 08/24/2026 09:12:00
