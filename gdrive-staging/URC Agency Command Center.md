@@ -1,13 +1,14 @@
 # Agency Command Center
 
-Status: V1 human navigation layer
-Last updated: 2026-06-04
+Status: V2 Cloud Execution layer
+Last updated: 2026-08-24
+Live Platform: [AgentLab Production](https://agentlab-718497644379.us-central1.run.app)
 
 ## Purpose
 
-This is the front door for deciding what to work on next.
+This is the front door for deciding what to work on next and overseeing autonomous operations.
 
-Use this page when Robert or an agent needs to:
+Use this page (or the live SaaS Dashboard) when Robert or an agent needs to:
 
 - get oriented without hunting through folders
 - check today's operating priorities

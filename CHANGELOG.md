@@ -4,6 +4,26 @@ All notable changes to the AI Native Agency Deepened/agentlab repo are documente
 
 ---
 
+## [Unreleased] - 2026-08-24
+
+### Added
+
+- **Multi-Tenant Postgres Schema**: Rebuilt the database schema using Drizzle ORM to support isolated workspaces, enabling "blank models" for clients.
+- **Execution Engine**: Implemented a Postgres-backed background queue processor (`queue-processor.ts`) and Gemini 1.5 Pro agent runner (`agent-runner.ts`) to execute Directed Acyclic Graph (DAG) workflows autonomously.
+- **Marketplace Storefront**: Built the backend APIs and UI to catalog monetizable Knowledge Packages (Playbooks) and manage tenant subscriptions via Stripe.
+- **Firebase Authentication**: Integrated Google Cloud Identity (Firebase Auth) for secure login, complete with a "God-Mode" middleware bypass for agency admins.
+- **Adaptive Billing & Metering**: Created a Stripe metering job to bill workflow execution costs at a margin, plus an AI-driven `adaptive-downgrade.ts` script that uses Gemini to intelligently tailor free-tier limits for expiring trials.
+- **Command Center UI Overhaul**: Replaced raw JSON inputs with dynamic forms, live step-by-step execution tracking, and a dedicated Human-in-the-Loop "Review Required" modal.
+- **Proprietary Playbook Ingestion**: Successfully seeded the active database with the actual URC Ops, Finance, Fulfillment, Marketing, and Sales playbooks.
+- **Cloud Infrastructure**: Dockerized the full stack (Vite + Node.js) into a multi-stage `Dockerfile` and deployed the live application to Google Cloud Run.
+
+### Changed
+
+- **Database Migration**: Switched the entire backend ORM driver from MySQL to PostgreSQL (Neon Serverless Postgres), including connection pooling for serverless scaling.
+- **UI Alignment**: Swept the marketing pages (Features, About, Blog) to fully support the dynamic Tailwind dark mode theme and accurately reflect all 7 URC departments.
+
+---
+
 ## [Unreleased] - 2026-08-21
 
 ### Added

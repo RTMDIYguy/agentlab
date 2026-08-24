@@ -15,6 +15,7 @@ import {
   type InferSelectModel,
   type InferInsertModel,
   relations,
+  sql,
 } from "drizzle-orm";
 
 // ==============================================================================
@@ -42,6 +43,9 @@ export const workspaces = pgTable(
       .notNull()
       .default(true),
     auditRetentionDays: integer("audit_retention_days").notNull().default(90),
+    stripeCustomerId: varchar("stripe_customer_id", { length: 128 }),
+    trialEndsAt: timestamp("trial_ends_at", { withTimezone: true })
+      .default(sql`now() + interval '14 days'`),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -210,6 +214,7 @@ export const auditLogs = pgTable(
     latencyMs: integer("latency_ms").notNull().default(0),
     status: varchar("status", { length: 32 }).notNull().default("success"), // 'success' | 'warning' | 'error'
     errorMessage: text("error_message"),
+    billed: boolean("billed").notNull().default(false),
     policyChecks: jsonb("policy_checks").notNull().default({
       saifPassed: true,
       piiDetected: 0,
@@ -331,6 +336,7 @@ export const workspacePackages = pgTable(
       .references(() => knowledgePackages.id, { onDelete: "cascade" }),
     status: varchar("status", { length: 32 }).notNull().default("active"), // 'active', 'canceled', 'past_due'
     stripeSubscriptionId: varchar("stripe_subscription_id", { length: 128 }),
+    dailyRunLimit: integer("daily_run_limit"),
     unlockedAt: timestamp("unlocked_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

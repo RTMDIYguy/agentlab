@@ -186,6 +186,8 @@ the evaluation layer until a decision record promotes them. Stripe remains an
 active payment connector, but Stripe Connect / SaaS platform architecture is a
 candidate path rather than a chosen route.
 
+*Update (2026-08-24)*: **AgentLab is now live in production**. The SaaS platform acts as the technical execution arm of the agency. It is hosted on Google Cloud Run with a Neon Serverless PostgreSQL database, Firebase Authentication, and Stripe Metered Billing. It executes the proprietary URC playbooks via a DAG Execution Engine and delivers them to clients through the AgentLab Marketplace.
+
 ## Source Of Truth Map
 
 | Artifact Type                            | Human-facing Source                                   | Agent / Versioned Source                                                                              | Notes                                                                                                                                   |

@@ -8,6 +8,13 @@
       "when": 1787526268788,
       "tag": "0000_lumpy_norrin_radd",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1787595749598,
+      "tag": "0001_blue_robbie_robertson",
+      "breakpoints": true
     }
   ]
 }
