@@ -54,13 +54,13 @@ export function Navigation() {
                   </a>
                   <a
                     href="/marketplace"
-                    className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                    className="marketplace-link block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
                   >
                     Marketplace
                   </a>
                   <a
                     href="/command-center"
-                    className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                    className="command-center-link block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
                   >
                     Command Center
                   </a>

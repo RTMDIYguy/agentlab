@@ -206,10 +206,10 @@ export default function CommandCenter() {
                     </CardContent>
                     <div className="p-6 pt-0 mt-auto">
                       <Button 
-                        className="w-full gap-2" 
+                        className="run-workflow-btn w-full gap-2" 
                         onClick={() => handleRunClick(wf.id)}
                       >
-                        <PlayCircle className="w-4 h-4" /> Start Workflow
+                        <PlayCircle className="w-4 h-4" /> Run Workflow
                       </Button>
                     </div>
                   </Card>

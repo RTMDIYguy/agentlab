@@ -37,6 +37,13 @@ import Login from "@/pages/Login";
 import Support from "@/pages/Support";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useEffect } from "react";
+import { AgenticTour } from "./components/AgenticTour";
+
+function AuthenticatedTour() {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) return null;
+  return <AgenticTour />;
+}
 
 function RootRoute() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -106,6 +113,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <LiveChat />
+          <AuthenticatedTour />
           <Router />
         </TooltipProvider>
       </ThemeProvider>
