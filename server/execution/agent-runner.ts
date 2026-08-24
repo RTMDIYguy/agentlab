@@ -1,6 +1,7 @@
 import { generateText, tool } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { z } from "zod";
+import { AgentMailClient } from "../tools/agentmail";
 
 // Create a Google instance for the AI SDK.
 // It will automatically use the GOOGLE_GENERATIVE_AI_API_KEY environment variable.
@@ -31,7 +32,7 @@ export async function runAgentStep(
     fullPrompt += `\n\n[Current Run Context]:\n${JSON.stringify(inputContext, null, 2)}`;
   }
   
-  const finalSystemPrompt = `${systemPrompt || ""}\n\nYou have access to tools. If the step requires sending an email or updating a CRM, you MUST call the appropriate tool.`;
+  const finalSystemPrompt = `${systemPrompt || ""}\n\nYou have access to tools. If the step requires sending an email or updating a CRM, you MUST call the appropriate tool. For sending an email, use the sendAgentMail tool and pass the correct 'to', 'subject', and 'body' arguments.`;
 
   // Generate text using the AI SDK
   const { text, usage } = await generateText({
@@ -49,7 +50,22 @@ export async function runAgentStep(
         }),
         execute: async ({ to, subject, body }) => {
           console.log("[TOOL EXECUTED] Sending email to:", to);
-          return "Email successfully queued.";
+          try {
+            const mailClient = new AgentMailClient();
+            const result = await mailClient.sendEmail(
+              "urcagentcomms@agentmail.to",
+              to,
+              subject,
+              body
+            );
+            if (result.success) {
+              return `Email successfully sent. Message ID: ${result.messageId}`;
+            } else {
+              return `Failed to send email. Error: ${result.error || result.reason}`;
+            }
+          } catch (e: any) {
+            return `Failed to send email. Exception: ${e.message}`;
+          }
         },
       }),
     },
