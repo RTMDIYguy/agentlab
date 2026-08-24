@@ -60,10 +60,22 @@ createRoot(document.getElementById("root")!).render(
   </trpc.Provider>
 );
 
-if ("serviceWorker" in navigator && import.meta.env.PROD) {
+if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(error => {
-      console.warn("[PWA] Service worker registration failed", error);
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      for (const registration of registrations) {
+        registration.unregister();
+      }
+    }).catch(error => {
+      console.warn("[PWA] Service worker unregistration failed", error);
     });
+
+    if (window.caches) {
+      caches.keys().then(names => {
+        for (let name of names) {
+          caches.delete(name);
+        }
+      });
+    }
   });
 }
