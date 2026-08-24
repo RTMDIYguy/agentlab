@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Joyride, CallBackProps, STATUS, Step } from 'react-joyride';
+import { useAuth } from "@/_core/hooks/useAuth";
 
 export function AgenticTour() {
+  const { user } = useAuth();
   const [run, setRun] = useState(false);
   const [steps, setSteps] = useState<Step[]>([]);
   
   useEffect(() => {
+    if (!user) return;
+    
     const hasSeenTour = localStorage.getItem('hasSeenTour');
     if (!hasSeenTour) {
       // Start the tour
@@ -14,9 +18,13 @@ export function AgenticTour() {
       // Fetch dynamic welcome message
       const fetchAgentWelcome = async () => {
         try {
+          const token = await user.getIdToken();
           const res = await fetch("/api/orchestrator/chat", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
             body: JSON.stringify({
               prompt: "The user just logged in. Give them a 2-sentence welcome message explaining how the URC playbooks can automate their agency."
             })
@@ -47,11 +55,6 @@ export function AgenticTour() {
               target: '.command-center-link',
               content: 'The Command Center is where you orchestrate and monitor your active AI agents.',
               placement: 'right',
-            },
-            {
-              target: '.run-workflow-btn',
-              content: 'Click here to execute a workflow and let the agents do the heavy lifting!',
-              placement: 'bottom',
             }
           ]);
         } catch (error) {
@@ -68,11 +71,6 @@ export function AgenticTour() {
               target: '.command-center-link',
               content: 'The Command Center is where you orchestrate and monitor your active AI agents.',
               placement: 'right',
-            },
-            {
-              target: '.run-workflow-btn',
-              content: 'Click here to execute a workflow and let the agents do the heavy lifting!',
-              placement: 'bottom',
             }
           ]);
         }
@@ -80,7 +78,7 @@ export function AgenticTour() {
       
       fetchAgentWelcome();
     }
-  }, []);
+  }, [user]);
 
   const handleJoyrideCallback = (data: CallBackProps) => {
     const { status } = data;
