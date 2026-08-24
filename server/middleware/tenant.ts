@@ -1,4 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
+import { decodeJwt } from "jose";
+import { db } from "../db";
+import { users } from "../schema";
+import { eq } from "drizzle-orm";
 
 // Extend Express Request interface with multi-tenant context
 declare global {
@@ -11,19 +15,68 @@ declare global {
   }
 }
 
-export const tenantMiddleware = (
+const GOD_MODE_EMAILS = [
+  'thebossrob@gmail.com',
+  'agentlab.tech@gmail.com',
+  'robert@unclerobertconsulting.com',
+  'robmccarthymaed@yahoo.com',
+  'robert@agent-lab.tech',
+  'burnssheena335@gmail.com'
+];
+
+export const tenantMiddleware = async (
   req: Request,
-  _res: Response,
+  res: Response,
   next: NextFunction
 ) => {
-  // Extract tenant workspace ID from header, query param, or fallback to default tenant
-  const workspaceHeader = req.headers["x-workspace-id"] as string;
+  try {
+    const authHeader = req.headers.authorization;
+    let decodedEmail = "";
 
-  // Default fallback workspace ID for local development / single-tenant preview
-  req.workspaceId = workspaceHeader || "00000000-0000-0000-0000-000000000001";
-  req.userEmail =
-    (req.headers["x-user-email"] as string) || "operator@agentlab.local";
-  req.userRole = (req.headers["x-user-role"] as string) || "admin";
+    if (authHeader?.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
+      try {
+        const decoded = decodeJwt(token);
+        if (decoded && decoded.email) {
+          decodedEmail = decoded.email as string;
+        }
+      } catch (err) {
+        console.warn("[Tenant Middleware] Failed to decode JWT:", err);
+      }
+    }
 
-  next();
+    if (decodedEmail) {
+      req.userEmail = decodedEmail;
+      
+      if (GOD_MODE_EMAILS.includes(decodedEmail)) {
+        req.workspaceId = '00000000-0000-0000-0000-000000000000';
+        req.userRole = 'admin';
+      } else {
+        const userRecords = await db
+          .select({ workspaceId: users.workspaceId, role: users.role })
+          .from(users)
+          .where(eq(users.email, decodedEmail))
+          .limit(1);
+
+        if (userRecords.length > 0) {
+          req.workspaceId = userRecords[0].workspaceId || undefined;
+          req.userRole = userRecords[0].role;
+        } else {
+          // If user exists in Firebase but not in our DB, we can optionally handle it or leave workspaceId undefined
+          req.userRole = 'operator';
+        }
+      }
+    } else {
+      // Legacy fallback
+      const workspaceHeader = req.headers["x-workspace-id"] as string;
+      req.workspaceId = workspaceHeader || "00000000-0000-0000-0000-000000000001";
+      req.userEmail = (req.headers["x-user-email"] as string) || "operator@agentlab.local";
+      req.userRole = (req.headers["x-user-role"] as string) || "admin";
+    }
+
+    next();
+  } catch (error) {
+    console.error("[Tenant Middleware] Error:", error);
+    next();
+  }
 };

@@ -33,12 +33,14 @@ import Book from "@/pages/Book";
 import Bootcamp from "@/pages/Bootcamp";
 import Marketplace from "@/pages/Marketplace";
 import CommandCenter from "@/pages/CommandCenter";
+import Login from "@/pages/Login";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/login"} component={Login} />
       <Route path={"/services"} component={Services} />
       <Route path={"/features"} component={Features} />
       <Route path={"/pricing"} component={Pricing} />
@@ -92,3 +94,5 @@ function App() {
 }
 
 export default App;
+
+// Cache bust: 08/24/2026 09:12:00

@@ -66,11 +66,12 @@ export async function getPackages(req: Request, res: Response): Promise<void> {
         )
       );
 
+    const isGodMode = workspaceId === "00000000-0000-0000-0000-000000000000";
     const unlockedPackageIds = new Set(subscriptions.map((sub) => sub.packageId));
 
     const packagesWithStatus = catalog.map((pkg) => ({
       ...pkg,
-      isUnlocked: unlockedPackageIds.has(pkg.id),
+      isUnlocked: isGodMode || unlockedPackageIds.has(pkg.id),
     }));
 
     res.status(200).json({

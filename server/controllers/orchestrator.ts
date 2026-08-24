@@ -216,7 +216,7 @@ export async function handleOrchestratorChat(
   let unlockedDepartments: string[] = [];
   const workspaceId = req.workspaceId;
 
-  if (workspaceId === "0000-URC") {
+  if (workspaceId === "00000000-0000-0000-0000-000000000000") {
     unlockedDepartments = ["ALL"];
   } else if (workspaceId) {
     try {

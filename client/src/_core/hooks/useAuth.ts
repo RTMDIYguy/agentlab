@@ -1,7 +1,7 @@
 import { getLoginUrl } from "@/const";
-import { trpc } from "@/lib/trpc";
-import { TRPCClientError } from "@trpc/client";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { auth } from "../firebase";
 
 type UseAuthOptions = {
   redirectOnUnauthenticated?: boolean;
@@ -11,75 +11,68 @@ type UseAuthOptions = {
 export function useAuth(options?: UseAuthOptions) {
   const { redirectOnUnauthenticated = false } = options ?? {};
   const redirectPath = options?.redirectPath;
-  const utils = trpc.useUtils();
 
-  const meQuery = trpc.auth.me.useQuery(undefined, {
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  const logoutMutation = trpc.auth.logout.useMutation({
-    onSuccess: () => {
-      utils.auth.me.setData(undefined, null);
-    },
-  });
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      async (firebaseUser) => {
+        if (firebaseUser) {
+          const token = await firebaseUser.getIdToken();
+          localStorage.setItem("manus-runtime-token", token);
+          setUser(firebaseUser);
+        } else {
+          localStorage.removeItem("manus-runtime-token");
+          setUser(null);
+        }
+        setLoading(false);
+      },
+      (err) => {
+        setError(err);
+        setLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
 
   const logout = useCallback(async () => {
     try {
-      await logoutMutation.mutateAsync();
-    } catch (error: unknown) {
-      if (
-        error instanceof TRPCClientError &&
-        error.data?.code === "UNAUTHORIZED"
-      ) {
-        return;
-      }
-      throw error;
-    } finally {
-      utils.auth.me.setData(undefined, null);
-      await utils.auth.me.invalidate();
+      await signOut(auth);
+      setUser(null);
+      localStorage.removeItem("manus-runtime-token");
+    } catch (err: any) {
+      setError(err);
+      throw err;
     }
-  }, [logoutMutation, utils]);
+  }, []);
 
-  const state = useMemo(() => {
-    localStorage.setItem(
-      "manus-runtime-user-info",
-      JSON.stringify(meQuery.data)
-    );
-    return {
-      user: meQuery.data ?? null,
-      loading: meQuery.isLoading || logoutMutation.isPending,
-      error: meQuery.error ?? logoutMutation.error ?? null,
-      isAuthenticated: Boolean(meQuery.data),
-    };
-  }, [
-    meQuery.data,
-    meQuery.error,
-    meQuery.isLoading,
-    logoutMutation.error,
-    logoutMutation.isPending,
-  ]);
+  const isAuthenticated = Boolean(user);
 
   useEffect(() => {
     if (!redirectOnUnauthenticated) return;
-    if (meQuery.isLoading || logoutMutation.isPending) return;
-    if (state.user) return;
+    if (loading) return;
+    if (isAuthenticated) return;
     if (typeof window === "undefined") return;
     const destination = redirectPath ?? getLoginUrl();
     if (window.location.pathname === destination) return;
 
     window.location.href = destination;
-  }, [
-    redirectOnUnauthenticated,
-    redirectPath,
-    logoutMutation.isPending,
-    meQuery.isLoading,
-    state.user,
-  ]);
+  }, [redirectOnUnauthenticated, redirectPath, loading, isAuthenticated]);
 
   return {
-    ...state,
-    refresh: () => meQuery.refetch(),
+    user,
+    loading,
+    error,
+    isAuthenticated,
+    refresh: async () => {
+      if (auth.currentUser) {
+        await auth.currentUser.getIdToken(true);
+      }
+    },
     logout,
   };
 }
