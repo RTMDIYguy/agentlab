@@ -17,7 +17,7 @@ export default function Login() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setLocation("/command-center");
+      setLocation("/dashboard");
     } catch (err: any) {
       setError(err.message || "Failed to login");
     } finally {
