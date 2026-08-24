@@ -1,5 +1,5 @@
 # Base Stage
-FROM node:20.10.0-alpine AS base
+FROM node:20-alpine AS base
 WORKDIR /app
 # Enable corepack for pnpm if needed, or install pnpm globally
 RUN npm install -g pnpm@10.33.0
