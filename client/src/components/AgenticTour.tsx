@@ -3,12 +3,12 @@ import { Joyride, CallBackProps, STATUS, Step } from 'react-joyride';
 import { useAuth } from "@/_core/hooks/useAuth";
 
 export function AgenticTour() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [run, setRun] = useState(false);
   const [steps, setSteps] = useState<Step[]>([]);
   
   useEffect(() => {
-    if (!user) return;
+    if (!isAuthenticated || !user) return;
     
     const hasSeenTour = localStorage.getItem('hasSeenTour');
     if (!hasSeenTour) {
@@ -57,6 +57,7 @@ export function AgenticTour() {
               placement: 'right',
             }
           ]);
+          setRun(true);
         } catch (error) {
           console.error("Failed to fetch tour message", error);
           // Fallback steps
@@ -73,12 +74,13 @@ export function AgenticTour() {
               placement: 'right',
             }
           ]);
+          setRun(true);
         }
       };
       
       fetchAgentWelcome();
     }
-  }, [user]);
+  }, [user, isAuthenticated]);
 
   const handleJoyrideCallback = (data: CallBackProps) => {
     const { status } = data;
