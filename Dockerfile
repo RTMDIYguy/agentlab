@@ -8,6 +8,7 @@ RUN npm install -g pnpm@10.33.0
 FROM base AS builder
 # Copy package.json and lockfile
 COPY package.json pnpm-lock.yaml ./
+COPY patches ./patches
 # Install all dependencies (including devDependencies)
 RUN pnpm install --frozen-lockfile
 
@@ -23,6 +24,7 @@ ENV NODE_ENV=production
 
 # Copy package.json and lockfile
 COPY package.json pnpm-lock.yaml ./
+COPY patches ./patches
 # Install only production dependencies
 RUN pnpm install --prod --frozen-lockfile
 
@@ -35,4 +37,4 @@ COPY --from=builder /app/dist ./dist
 EXPOSE 8080
 
 # Define the start command
-CMD ["npm", "start"]
+CMD ["node", "dist/index.js"]

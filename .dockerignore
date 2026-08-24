@@ -23,3 +23,10 @@ postgres.tgz
 *.tgz
 *.zip
 workflows_export.json
+
+gdrive-staging/
+.claude/
+.autonoma/
+postman/
+.postman/
+.github/

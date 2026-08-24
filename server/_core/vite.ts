@@ -3,8 +3,7 @@ import fs from "fs";
 import { type Server } from "http";
 import { nanoid } from "nanoid";
 import path from "path";
-import { createServer as createViteServer } from "vite";
-import viteConfig from "../../vite.config";
+
 
 export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
@@ -12,6 +11,13 @@ export async function setupVite(app: Express, server: Server) {
     hmr: { server },
     allowedHosts: true as const,
   };
+
+  // Bypass esbuild static analysis so it doesn't hoist devDependencies
+  const vitePkg = "vite";
+  const { createServer: createViteServer } = await import(vitePkg);
+  
+  const viteConfigPath = "../../vite" + ".config";
+  const { default: viteConfig } = await import(viteConfigPath);
 
   const vite = await createViteServer({
     ...viteConfig,
