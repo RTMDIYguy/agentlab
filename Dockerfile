@@ -39,6 +39,7 @@ RUN pnpm install --prod --frozen-lockfile
 # dist/public contains the built Vite frontend
 # dist/index.js contains the esbuild compiled backend
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/workflows ./workflows
 
 # Expose port 8080 (the default for Google Cloud Run)
 EXPOSE 8080
