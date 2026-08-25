@@ -50,7 +50,7 @@ const DEFAULT_WORKSPACE_WORKFLOWS: WorkflowSummaryDto[] = [
 
 import { getDb } from "../db";
 import { workflows, workflowSteps } from "../schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export async function getWorkflows(req: Request, res: Response): Promise<void> {
   try {
@@ -111,20 +111,40 @@ export async function deployWorkflow(
       return;
     }
 
-    const workflowName =
+    let workflowName =
       proposal?.name || `Workflow-${proposalId || Date.now()}`;
-    const newWorkflowId = proposalId || `wf-${Date.now().toString().slice(-4)}`; // Use proposalId if available
+      
+    const newWorkflowId = proposalId || `wf-${Date.now().toString().slice(-4)}`;
 
-    const [insertedWorkflow] = await db
-      .insert(workflows)
-      .values({
-        workspaceId,
-        name: workflowName,
-        description: proposal?.description || "",
-        triggerType: proposal?.triggerType || "manual",
-        status: "active",
-      })
-      .returning();
+    let insertedWorkflow: any = null;
+    let suffix = 0;
+    
+    // Retry loop to handle concurrent inserts that might violate the unique constraint
+    while (!insertedWorkflow) {
+      try {
+        const finalName = suffix === 0 ? workflowName : `${workflowName} (${suffix})`;
+        
+        const [result] = await db
+          .insert(workflows)
+          .values({
+            workspaceId,
+            name: finalName,
+            description: proposal?.description || "",
+            triggerType: proposal?.triggerType || "manual",
+            status: "active",
+          })
+          .returning();
+          
+        insertedWorkflow = result;
+      } catch (err: any) {
+        // Check for Postgres unique constraint violation on uq_workspace_workflow_name
+        if (err.code === '23505' || err.message?.includes('uq_workspace_workflow_name')) {
+          suffix++;
+        } else {
+          throw err;
+        }
+      }
+    }
 
     if (proposal?.steps && Array.isArray(proposal.steps)) {
       const stepValues = proposal.steps.map((step: any, index) => ({

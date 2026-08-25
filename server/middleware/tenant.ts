@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { decodeJwt } from "jose";
 import { db } from "../db";
-import { users } from "../schema";
+import { users, workspaces } from "../schema";
 import { eq } from "drizzle-orm";
 
 // Extend Express Request interface with multi-tenant context
@@ -62,8 +62,28 @@ export const tenantMiddleware = async (
           req.workspaceId = userRecords[0].workspaceId || undefined;
           req.userRole = userRecords[0].role;
         } else {
-          // If user exists in Firebase but not in our DB, we can optionally handle it or leave workspaceId undefined
-          req.userRole = 'operator';
+          // Auto-provision user and workspace if they don't exist
+          try {
+            const [newWorkspace] = await db.insert(workspaces).values({
+              name: `${decodedEmail.split('@')[0]}'s Workspace`,
+              slug: `ws-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000)}`,
+            }).returning();
+
+            await db.insert(users).values({
+              openId: decodedEmail, // using email as openId for uniqueness
+              email: decodedEmail,
+              name: decodedEmail.split('@')[0],
+              workspaceId: newWorkspace.id,
+              role: 'owner',
+            });
+            
+            req.workspaceId = newWorkspace.id;
+            req.userRole = 'owner';
+            console.log(`[Tenant Middleware] Auto-provisioned workspace ${newWorkspace.id} for ${decodedEmail}`);
+          } catch (insertErr) {
+            console.error("[Tenant Middleware] Failed to auto-provision user/workspace:", insertErr);
+            req.userRole = 'operator';
+          }
         }
       }
     } else {
