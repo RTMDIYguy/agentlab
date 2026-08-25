@@ -47,41 +47,55 @@ export async function runAgentStep(
     };
   }
 
+  console.log("[Agent Runner] Calling AI SDK generateText with model gemini-1.5-pro...");
   // Generate text using the AI SDK
-  const { text, usage } = await generateText({
-    model: google("gemini-1.5-pro") as any,
-    system: finalSystemPrompt,
-    prompt: fullPrompt,
-    tools: {
-      sendAgentMail: tool({
-        description: "Send an email via the AgentMail relay.",
-        parameters: z.object({
-          to: z.string(),
-          subject: z.string(),
-          body: z.string(),
-        }),
-        execute: async ({ to, subject, body }: { to: string; subject: string; body: string; }) => {
-          console.log("[TOOL EXECUTED] Sending email to:", to);
-          try {
-            const mailClient = new AgentMailClient();
-            const result = await mailClient.sendEmail(
-              "urcagentcomms@agentmail.to",
-              to,
-              subject,
-              body
-            );
-            if (result.success) {
-              return `Email successfully sent. Message ID: ${result.messageId}`;
-            } else {
-              return `Failed to send email. Error: ${result.error || result.reason}`;
+  let text = "";
+  let usage: any = {};
+  try {
+    const response = await generateText({
+      model: google("gemini-1.5-pro") as any,
+      system: finalSystemPrompt,
+      prompt: fullPrompt,
+      tools: {
+        sendAgentMail: tool({
+          description: "Send an email via the AgentMail relay.",
+          parameters: z.object({
+            to: z.string(),
+            subject: z.string(),
+            body: z.string(),
+          }),
+          execute: async ({ to, subject, body }: { to: string; subject: string; body: string; }) => {
+            console.log("[TOOL EXECUTED] Sending email to:", to);
+            try {
+              const mailClient = new AgentMailClient();
+              const result = await mailClient.sendEmail(
+                "urcagentcomms@agentmail.to",
+                to,
+                subject,
+                body
+              );
+              if (result.success) {
+                return `Email successfully sent. Message ID: ${result.messageId}`;
+              } else {
+                return `Failed to send email. Error: ${result.error || result.reason}`;
+              }
+            } catch (e: any) {
+              return `Failed to send email. Exception: ${e.message}`;
             }
-          } catch (e: any) {
-            return `Failed to send email. Exception: ${e.message}`;
-          }
-        },
-      }),
-    },
-  });
+          },
+        }),
+      },
+    });
+    text = response.text;
+    usage = response.usage;
+    console.log("[Agent Runner] AI SDK generateText succeeded.");
+  } catch (sdkError: any) {
+    console.error("[Agent Runner] FATAL: AI SDK generateText threw an error:", sdkError);
+    if (sdkError.stack) {
+      console.error("[Agent Runner] SDK Error Stack:", sdkError.stack);
+    }
+    throw sdkError; // Re-throw to be caught by queue-processor
+  }
 
   const latencyMs = Date.now() - startTime;
 
@@ -112,3 +126,4 @@ export async function runAgentStep(
     latencyMs,
   };
 }
+// Cache bust API key: 20260825153256
