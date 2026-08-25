@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { generateObject } from "ai";
-import { google } from "@ai-sdk/google";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { eq, and } from "drizzle-orm";
 import { getDb } from "../db";
 import { knowledgePackages, workspacePackages } from "../schema";
@@ -252,6 +252,7 @@ export async function handleOrchestratorChat(
 
   // Attempt dynamic LLM orchestration via Vercel AI SDK & Google Gemini / Vertex AI
   try {
+    const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY });
     const systemPrompt = buildSystemPrompt(unlockedDepartments);
     const result = await generateObject({
       model: google("gemini-1.5-pro") as any,

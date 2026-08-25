@@ -3,9 +3,9 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { z } from "zod";
 import { AgentMailClient } from "../tools/agentmail";
 
-// Create a Google instance for the AI SDK.
-// It will automatically use the GOOGLE_GENERATIVE_AI_API_KEY environment variable.
-const google = createGoogleGenerativeAI();
+// We will create the google instance dynamically inside the runner
+// so that process.env is read at execution time.
+// const google = createGoogleGenerativeAI();
 
 export interface AgentRunnerResult {
   outputPayload: any;
@@ -52,6 +52,7 @@ export async function runAgentStep(
   let text = "";
   let usage: any = {};
   try {
+    const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY });
     const response = await generateText({
       model: google("gemini-1.5-pro") as any,
       system: finalSystemPrompt,
@@ -128,3 +129,4 @@ export async function runAgentStep(
 }
 // Cache bust API key: 20260825153256
 // Cache bust API key: 2026-08-25T15:52:07
+// Cache bust API key: 2026-08-25T16:11:51
