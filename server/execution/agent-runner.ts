@@ -2,6 +2,8 @@ import { generateText, tool } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { z } from "zod";
 import { AgentMailClient } from "../tools/agentmail";
+import fs from "fs";
+import path from "path";
 
 // We will create the google instance dynamically inside the runner
 // so that process.env is read at execution time.
@@ -32,7 +34,7 @@ export async function runAgentStep(
     fullPrompt += `\n\n[Current Run Context]:\n${JSON.stringify(inputContext, null, 2)}`;
   }
   
-  const finalSystemPrompt = `${systemPrompt || ""}\n\nYou have access to tools. If the step requires sending an email or updating a CRM, you MUST call the appropriate tool. For sending an email, use the sendAgentMail tool and pass the correct 'to', 'subject', and 'body' arguments.`;
+  const finalSystemPrompt = `${systemPrompt || ""}\n\nYou have access to tools. If the step requires sending an email or updating a CRM, you MUST call the appropriate tool. For sending an email, use the sendAgentMail tool. If you need to read internal documentation, standard operating procedures (SOPs), blueprints, or workflow kits, you MUST use the searchLocalFiles tool to find the document path, and then the readLocalFile tool to read its contents.`;
 
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
     console.warn("[Agent Runner] Missing GOOGLE_GENERATIVE_AI_API_KEY, returning mock response.");
@@ -84,6 +86,66 @@ export async function runAgentStep(
               return `Failed to send email. Exception: ${e.message}`;
             }
           },
+        }),
+        searchLocalFiles: tool({
+          description: "Search the local repository for files matching a keyword. Use this to find the exact file path of SOPs, blueprints, or workflow kits.",
+          parameters: z.object({
+            keyword: z.string().describe("The keyword to search for in filenames (e.g., 'cul-03', 'workflow-registry')"),
+          }),
+          execute: async ({ keyword }: { keyword: string }) => {
+            console.log("[TOOL EXECUTED] Searching local files for:", keyword);
+            try {
+              // Extremely simple recursive search in current directory (Cloud Run repo root)
+              const results: string[] = [];
+              const searchDir = (dir: string) => {
+                const files = fs.readdirSync(dir);
+                for (const file of files) {
+                  // Skip node_modules and .git
+                  if (file === "node_modules" || file === ".git" || file === "dist") continue;
+                  
+                  const fullPath = path.join(dir, file);
+                  const stat = fs.statSync(fullPath);
+                  
+                  if (stat.isDirectory()) {
+                    searchDir(fullPath);
+                  } else if (file.toLowerCase().includes(keyword.toLowerCase())) {
+                    results.push(fullPath);
+                  }
+                }
+              };
+              searchDir(process.cwd());
+              
+              if (results.length === 0) {
+                return `No files found matching keyword: ${keyword}`;
+              }
+              return `Found ${results.length} files matching '${keyword}':\n${results.join("\n")}`;
+            } catch (e: any) {
+              return `Search failed: ${e.message}`;
+            }
+          },
+        }),
+        readLocalFile: tool({
+          description: "Read the text contents of a local file in the repository.",
+          parameters: z.object({
+            filePath: z.string().describe("The absolute or relative path to the file to read, as returned by searchLocalFiles."),
+          }),
+          execute: async ({ filePath }: { filePath: string }) => {
+            console.log("[TOOL EXECUTED] Reading local file:", filePath);
+            try {
+              const fullPath = path.resolve(process.cwd(), filePath);
+              if (!fs.existsSync(fullPath)) {
+                return `File not found at path: ${fullPath}`;
+              }
+              const contents = fs.readFileSync(fullPath, "utf-8");
+              // Truncate if insanely large to prevent breaking the prompt limit, but typically MD files are fine
+              if (contents.length > 50000) {
+                return contents.substring(0, 50000) + "\n\n...[FILE TRUNCATED DUE TO SIZE]...";
+              }
+              return contents;
+            } catch (e: any) {
+              return `Failed to read file: ${e.message}`;
+            }
+          }
         }),
       },
     });
