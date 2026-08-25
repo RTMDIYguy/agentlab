@@ -47,7 +47,7 @@ apiRouter.get("/debug/llm", async (req, res) => {
     const { generateText } = await import("ai");
     const google = createGoogleGenerativeAI({ apiKey: key });
     await generateText({
-      model: google("gemini-1.5-pro") as any,
+      model: google("gemini-2.5-pro") as any,
       prompt: "Say the word test.",
     });
     success = true;
