@@ -47,14 +47,14 @@ export async function runAgentStep(
     };
   }
 
-  console.log("[Agent Runner] Calling AI SDK generateText with model gemini-3.1-pro-preview...");
+  console.log("[Agent Runner] Calling AI SDK generateText with model gemini-2.5-flash...");
   // Generate text using the AI SDK
   let text = "";
   let usage: any = {};
   try {
     const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY });
     const response = await generateText({
-      model: google("gemini-3.1-pro-preview") as any,
+      model: google("gemini-2.5-flash") as any,
       system: finalSystemPrompt,
       prompt: fullPrompt,
       tools: {
@@ -105,7 +105,7 @@ export async function runAgentStep(
   const tokensCompletion = usageAny?.completionTokens || 0;
   const tokensTotal = usageAny?.totalTokens || 0;
 
-  // Example cost calculation for gemini-3.1-pro-preview ($1.25/1M input, $5.00/1M output)
+  // Example cost calculation for gemini-2.5-flash ($1.25/1M input, $5.00/1M output)
   const cost =
     (tokensPrompt / 1_000_000) * 1.25 + (tokensCompletion / 1_000_000) * 5.0;
 

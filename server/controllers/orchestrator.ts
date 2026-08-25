@@ -247,7 +247,7 @@ export async function handleOrchestratorChat(
 
   let proposal: WorkflowProposal | undefined;
   let reply = "";
-  let modelUsed = "gemini-3.1-pro-preview";
+  let modelUsed = "gemini-2.5-flash";
   let tokensUsed = 0;
 
   // Attempt dynamic LLM orchestration via Vercel AI SDK & Google Gemini / Vertex AI
@@ -255,7 +255,7 @@ export async function handleOrchestratorChat(
     const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY });
     const systemPrompt = buildSystemPrompt(unlockedDepartments);
     const result = await generateObject({
-      model: google("gemini-3.1-pro-preview") as any,
+      model: google("gemini-2.5-flash") as any,
       schema: workflowProposalSchema,
       system: systemPrompt,
       prompt: prompt,
