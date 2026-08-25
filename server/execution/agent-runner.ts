@@ -59,6 +59,7 @@ export async function runAgentStep(
       model: google("gemini-2.5-flash") as any,
       system: finalSystemPrompt,
       prompt: fullPrompt,
+      maxSteps: 5,
       tools: {
         sendAgentMail: tool({
           description: "Send an email via the AgentMail relay.",
