@@ -54,7 +54,7 @@
     "@trpc/react-query": "^11.6.0",
     "@trpc/server": "^11.6.0",
     "@types/react-joyride": "^2.0.5",
-    "ai": "^6.0.191",
+    "ai": "^7.0.77",
     "axios": "^1.17.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

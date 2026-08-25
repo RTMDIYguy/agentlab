@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { eq, desc, and, asc } from "drizzle-orm";
 import { getDb } from "../db";
 import { workflowRuns, workflowRunSteps, workflows, auditLogs } from "../schema";
+import { processPendingRuns } from "../execution/queue-processor";
 
 export async function triggerRun(req: Request, res: Response): Promise<void> {
   try {
@@ -47,6 +48,9 @@ export async function triggerRun(req: Request, res: Response): Promise<void> {
       triggerSource: triggerSource || "manual",
       initialContext: initialContext || {},
     } as any);
+
+    // Explicitly run the queue processor synchronously to avoid serverless CPU throttling
+    await processPendingRuns();
 
     res.status(201).json({
       message: "Workflow run triggered successfully",
@@ -183,6 +187,9 @@ export async function approveRun(req: Request, res: Response): Promise<void> {
       .update(workflowRuns)
       .set({ status: "pending", updatedAt: new Date() })
       .where(eq(workflowRuns.id, runId));
+
+    // Explicitly run the queue processor synchronously
+    await processPendingRuns();
 
     res.status(200).json({ message: "Run approved and resumed" });
   } catch (error) {

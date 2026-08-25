@@ -18,30 +18,43 @@ export async function processPendingRuns() {
 
   try {
     // 1. Query pending runs
+    console.log("[QueueProcessor] DB QUERY: Selecting pending runs from workflowRuns...");
     const pendingRuns = await db
       .select()
       .from(workflowRuns)
       .where(eq(workflowRuns.status, "pending"));
+    console.log(`[QueueProcessor] DB QUERY DONE: Found ${pendingRuns.length} pending runs.`);
+
+    if (pendingRuns.length > 0) {
+      console.log(`[QueueProcessor] Found ${pendingRuns.length} pending runs.`);
+    }
 
     for (const run of pendingRuns) {
+      console.log(`[QueueProcessor] Processing run ${run.id}...`);
       // 2. Update status to running
+      console.log(`[QueueProcessor] DB QUERY: Updating run ${run.id} to running...`);
       await db
         .update(workflowRuns)
         .set({ status: "running", updatedAt: new Date() })
         .where(eq(workflowRuns.id, run.id));
+      console.log(`[QueueProcessor] DB QUERY DONE: Updated run ${run.id} to running.`);
 
       // 3. Fetch all workflow_steps ordered by orderIndex
+      console.log(`[QueueProcessor] DB QUERY: Selecting workflowSteps for workflow ${run.workflowId}...`);
       const steps = await db
         .select()
         .from(workflowSteps)
         .where(eq(workflowSteps.workflowId, run.workflowId))
         .orderBy(asc(workflowSteps.orderIndex));
+      console.log(`[QueueProcessor] DB QUERY DONE: Found ${steps.length} steps.`);
 
       // 3.5 Fetch existing completed workflowRunSteps for this run
+      console.log(`[QueueProcessor] DB QUERY: Selecting existing workflowRunSteps for run ${run.id}...`);
       const existingRunSteps = await db
         .select()
         .from(workflowRunSteps)
         .where(eq(workflowRunSteps.workflowRunId, run.id));
+      console.log(`[QueueProcessor] DB QUERY DONE: Found ${existingRunSteps.length} existing run steps.`);
 
       const completedStepIds = new Set(
         existingRunSteps.filter(rs => rs.status === "completed").map(rs => rs.workflowStepId)
@@ -69,6 +82,7 @@ export async function processPendingRuns() {
         // Using crypto.randomUUID() since uuid() in pgTable isn't autoincrement in this setup without db support
         const runStepId = crypto.randomUUID();
 
+        console.log(`[QueueProcessor] DB QUERY: Inserting workflowRunStep ${runStepId}...`);
         await db.insert(workflowRunSteps).values({
           id: runStepId,
           workspaceId: run.workspaceId,
@@ -78,6 +92,7 @@ export async function processPendingRuns() {
           startedAt: new Date(),
           inputContext: currentContext,
         } as any); // Using 'as any' safely assuming DB handles default values well
+        console.log(`[QueueProcessor] DB QUERY DONE: Inserted workflowRunStep ${runStepId}.`);
 
         // 6. Guardrail check
         if (step.stepType === "guardrail") {
@@ -101,11 +116,13 @@ export async function processPendingRuns() {
             // Fetch agent for system prompt
             let systemPrompt: string | undefined = undefined;
             if (step.agentId) {
+              console.log(`[QueueProcessor] DB QUERY: Selecting agent ${step.agentId}...`);
               const agentData = await db
                 .select()
                 .from(agents)
                 .where(eq(agents.id, step.agentId))
                 .limit(1);
+              console.log(`[QueueProcessor] DB QUERY DONE: Found agent ${step.agentId}.`);
               if (agentData.length > 0) {
                 systemPrompt = agentData[0].systemPrompt;
               }
@@ -121,6 +138,7 @@ export async function processPendingRuns() {
             currentContext = { ...currentContext, ...result.outputPayload };
 
             // 9. Mark run step as completed
+            console.log(`[QueueProcessor] DB QUERY: Updating workflowRunStep ${runStepId} to completed...`);
             await db
               .update(workflowRunSteps)
               .set({
@@ -131,8 +149,10 @@ export async function processPendingRuns() {
                 latencyMs: result.latencyMs,
               })
               .where(eq(workflowRunSteps.id, runStepId));
+            console.log(`[QueueProcessor] DB QUERY DONE: Updated workflowRunStep ${runStepId} to completed.`);
 
             // 10. Create auditLog entry
+            console.log(`[QueueProcessor] DB QUERY: Inserting auditLog for runStep ${runStepId}...`);
             await db.insert(auditLogs).values({
               workspaceId: run.workspaceId,
               workflowId: run.workflowId,
@@ -148,9 +168,14 @@ export async function processPendingRuns() {
               latencyMs: result.latencyMs,
               status: "success",
             } as any);
+            console.log(`[QueueProcessor] DB QUERY DONE: Inserted auditLog.`);
           } catch (error: any) {
-            console.error(`[QueueProcessor] Step failed:`, error);
+            console.error(`[QueueProcessor] Step failed. error.message=${error.message}`, error);
+            if (error.stack) {
+              console.error(`[QueueProcessor] Stack trace:`, error.stack);
+            }
 
+            console.log(`[QueueProcessor] DB QUERY: Updating workflowRunStep ${runStepId} to failed...`);
             await db
               .update(workflowRunSteps)
               .set({
@@ -159,7 +184,9 @@ export async function processPendingRuns() {
                 errorMessage: error.message,
               })
               .where(eq(workflowRunSteps.id, runStepId));
+            console.log(`[QueueProcessor] DB QUERY DONE: Updated workflowRunStep ${runStepId} to failed.`);
 
+            console.log(`[QueueProcessor] DB QUERY: Updating workflowRuns ${run.id} to failed...`);
             await db
               .update(workflowRuns)
               .set({
@@ -169,6 +196,7 @@ export async function processPendingRuns() {
                 updatedAt: new Date(),
               })
               .where(eq(workflowRuns.id, run.id));
+            console.log(`[QueueProcessor] DB QUERY DONE: Updated workflowRuns ${run.id} to failed.`);
 
             runFailed = true;
             break;
@@ -176,8 +204,10 @@ export async function processPendingRuns() {
         }
       }
 
+      console.log(`[QueueProcessor] Finished processing run ${run.id}. runFailed=${runFailed}`);
       // 11. Complete run if not failed/halted
       if (!runFailed) {
+        console.log(`[QueueProcessor] DB QUERY: Updating run ${run.id} to completed...`);
         await db
           .update(workflowRuns)
           .set({
@@ -186,6 +216,7 @@ export async function processPendingRuns() {
             updatedAt: new Date(),
           })
           .where(eq(workflowRuns.id, run.id));
+        console.log(`[QueueProcessor] DB QUERY DONE: Updated run ${run.id} to completed.`);
       }
     }
   } catch (err) {
