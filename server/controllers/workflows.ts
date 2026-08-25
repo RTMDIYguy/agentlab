@@ -127,13 +127,13 @@ export async function deployWorkflow(
       .returning();
 
     if (proposal?.steps && Array.isArray(proposal.steps)) {
-      const stepValues = proposal.steps.map((step, index) => ({
+      const stepValues = proposal.steps.map((step: any, index) => ({
         workspaceId,
         workflowId: insertedWorkflow.id,
         orderIndex: index,
-        stepType: "agent",
-        title: step.description.substring(0, 50),
-        actionPrompt: step.description,
+        stepType: step.type || "agent",
+        title: step.title ? step.title.substring(0, 128) : `Step ${index + 1}`,
+        actionPrompt: step.detail || step.title || "",
       }));
       if (stepValues.length > 0) {
         await db.insert(workflowSteps).values(stepValues);
