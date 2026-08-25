@@ -23,6 +23,48 @@ apiRouter.get("/health", (_req, res) => {
   });
 });
 
+apiRouter.get("/debug/llm", async (req, res) => {
+  const key = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+  let keyStatus = "Missing";
+  let keyLength = 0;
+  let keyPrefix = "";
+
+  if (key) {
+    if (key.startsWith('"') || key.endsWith('"')) {
+      keyStatus = "Has Quotes";
+    } else {
+      keyStatus = "Present";
+    }
+    keyLength = key.length;
+    keyPrefix = key.substring(0, 5);
+  }
+
+  let success = false;
+  let errorMessage = "";
+
+  try {
+    const { createGoogleGenerativeAI } = await import("@ai-sdk/google");
+    const { generateText } = await import("ai");
+    const google = createGoogleGenerativeAI({ apiKey: key });
+    await generateText({
+      model: google("gemini-1.5-pro") as any,
+      prompt: "Say the word test.",
+    });
+    success = true;
+  } catch (e: any) {
+    success = false;
+    errorMessage = e.stack || e.message;
+  }
+
+  res.status(200).json({
+    key_status: keyStatus,
+    key_length: keyLength,
+    key_prefix: keyPrefix,
+    success,
+    error_message: errorMessage,
+  });
+});
+
 // Orchestrator Synthesis Engine
 apiRouter.post("/orchestrator/chat", handleOrchestratorChat);
 
