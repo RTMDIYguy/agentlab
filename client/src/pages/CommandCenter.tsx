@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { PageLayout } from "@/components/PageLayout";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Loader2, PlayCircle, Clock, CheckCircle2, AlertCircle, PauseCircle, ChevronRight, Eye } from "lucide-react";
 import { formatDate } from "date-fns";
 
@@ -44,6 +45,7 @@ interface RunStep {
 }
 
 export default function CommandCenter() {
+  const { user } = useAuth({ redirectOnUnauthenticated: true });
   // Run Workflow Form State
   const [selectedWorkflowId, setSelectedWorkflowId] = useState<string | null>(null);
   const [isRunModalOpen, setIsRunModalOpen] = useState(false);
@@ -59,7 +61,10 @@ export default function CommandCenter() {
   const { data: workflowsData, isLoading: isLoadingWorkflows } = useQuery<{ workflows: Workflow[] }>({
     queryKey: ["workflows"],
     queryFn: async () => {
-      const res = await fetch("/api/workflows");
+      const token = await user?.getIdToken();
+      const res = await fetch("/api/workflows", {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
       if (!res.ok) throw new Error("Failed to fetch workflows");
       return res.json();
     },
@@ -69,7 +74,10 @@ export default function CommandCenter() {
   const { data: runsData, refetch: refetchRuns } = useQuery<{ runs: Run[] }>({
     queryKey: ["runs"],
     queryFn: async () => {
-      const res = await fetch("/api/runs");
+      const token = await user?.getIdToken();
+      const res = await fetch("/api/runs", {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
       if (!res.ok) throw new Error("Failed to fetch runs");
       return res.json();
     },
@@ -82,7 +90,10 @@ export default function CommandCenter() {
     queryKey: ["run-details", activeDetailRunId],
     queryFn: async () => {
       if (!activeDetailRunId) return null;
-      const res = await fetch(`/api/runs/${activeDetailRunId}`);
+      const token = await user?.getIdToken();
+      const res = await fetch(`/api/runs/${activeDetailRunId}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
       if (!res.ok) throw new Error("Failed to fetch run details");
       return res.json();
     },
@@ -101,9 +112,13 @@ export default function CommandCenter() {
         targetAudience,
         additionalContext
       };
+      const token = await user?.getIdToken();
       const res = await fetch(`/api/workflows/${workflowId}/run`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ initialContext: parsedContext, triggerSource: "manual" }),
       });
       if (!res.ok) throw new Error("Failed to trigger run");
@@ -125,8 +140,10 @@ export default function CommandCenter() {
   // Approve Run Mutation
   const approveRunMutation = useMutation({
     mutationFn: async (runId: string) => {
+      const token = await user?.getIdToken();
       const res = await fetch(`/api/runs/${runId}/approve`, {
         method: "POST",
+        headers: { "Authorization": `Bearer ${token}` }
       });
       if (!res.ok) throw new Error("Failed to approve run");
       return res.json();

@@ -81,7 +81,7 @@ export default function OpsCleanupAgent() {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify(agentResponse.proposal)
+        body: JSON.stringify({ proposal: agentResponse.proposal })
       });
 
       if (res.ok) {
