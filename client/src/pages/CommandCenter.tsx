@@ -107,14 +107,17 @@ export default function CommandCenter() {
     }
   });
 
+  const selectedWorkflow = workflowsData?.workflows.find(w => w.id === selectedWorkflowId);
+  const isPlaybook = selectedWorkflow ? ["wf-001", "wf-002", "wf-003"].includes(selectedWorkflow.id) || selectedWorkflow.id.startsWith("wf-") : false;
+  const isDIY = !isPlaybook;
+
   // Run Workflow Mutation
   const triggerRunMutation = useMutation({
     mutationFn: async (workflowId: string) => {
-      const parsedContext = {
-        primaryObjective,
-        targetAudience,
-        additionalContext
-      };
+      const parsedContext = isPlaybook 
+        ? { targetData: additionalContext, formula: selectedWorkflow?.description }
+        : { primaryObjective, targetAudience, additionalContext };
+
       const token = await user?.getIdToken();
       const res = await fetch(`/api/workflows/${workflowId}/run`, {
         method: "POST",
@@ -330,31 +333,35 @@ export default function CommandCenter() {
               </DialogDescription>
             </DialogHeader>
             <div className="py-4 space-y-4">
+              {isDIY && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="objective">Primary Objective</Label>
+                    <Input 
+                      id="objective"
+                      value={primaryObjective}
+                      onChange={(e) => setPrimaryObjective(e.target.value)}
+                      placeholder="Primary objective or goal..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="audience">Target Audience</Label>
+                    <Input 
+                      id="audience"
+                      value={targetAudience}
+                      onChange={(e) => setTargetAudience(e.target.value)}
+                      placeholder="Target entity, client, file, or record..."
+                    />
+                  </div>
+                </>
+              )}
               <div className="space-y-2">
-                <Label htmlFor="objective">Input 1</Label>
-                <Input 
-                  id="objective"
-                  value={primaryObjective}
-                  onChange={(e) => setPrimaryObjective(e.target.value)}
-                  placeholder="Primary objective or goal..."
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="audience">Input 2</Label>
-                <Input 
-                  id="audience"
-                  value={targetAudience}
-                  onChange={(e) => setTargetAudience(e.target.value)}
-                  placeholder="Target entity, client, file, or record..."
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="context">Additional Context</Label>
+                <Label htmlFor="context">{isPlaybook ? "Target Data / Input Context" : "Additional Context"}</Label>
                 <Textarea 
                   id="context"
                   value={additionalContext}
                   onChange={(e) => setAdditionalContext(e.target.value)}
-                  placeholder="Any specific instructions or constraints for the agent..."
+                  placeholder={isPlaybook ? "Paste relevant URLs, documents, or data required for this playbook..." : "Any specific instructions or constraints for the agent..."}
                   className="h-24 resize-none"
                 />
               </div>
