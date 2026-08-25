@@ -3,6 +3,7 @@ import { Bot, FolderTree, Sparkles, CheckCircle2 } from "lucide-react";
 import { PageLayout } from "@/components/PageLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
+import { useQueryClient } from "@tanstack/react-query";
 
 const starterTasks = [
   "Review the current operating docs and tell me the top 3 cleanup actions I should take this week.",
@@ -39,6 +40,7 @@ export default function OpsCleanupAgent() {
   const [isDeploying, setIsDeploying] = useState(false);
   const [agentResponse, setAgentResponse] = useState<OrchestratorChatResponse | null>(null);
   const [, setLocation] = useLocation();
+  const queryClient = useQueryClient();
 
   const handleAnalyze = async () => {
     if (!task.trim()) return;
@@ -85,6 +87,24 @@ export default function OpsCleanupAgent() {
       });
 
       if (res.ok) {
+        const data = await res.json();
+        
+        // Immediately execute the deployed workflow
+        if (data.workflow?.id) {
+          await fetch(`/api/workflows/${data.workflow.id}/run`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ 
+              initialContext: { source: "Deploy & Execute", task },
+              triggerSource: "deploy_and_execute"
+            })
+          });
+        }
+
+        await queryClient.invalidateQueries({ queryKey: ["workflows"] });
         setLocation("/command-center");
       } else {
         console.error("Failed to deploy", res.statusText);

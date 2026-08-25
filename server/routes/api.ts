@@ -7,6 +7,7 @@ import {
   listRuns,
   getRunDetails,
   approveRun,
+  rejectRun,
 } from "../controllers/runs";
 import { getPackages, subscribeToPackage } from "../controllers/marketplace";
 
@@ -37,6 +38,7 @@ apiRouter.post("/workflows/:workflowId/run", triggerRun);
 apiRouter.get("/runs", listRuns);
 apiRouter.get("/runs/:runId", getRunDetails);
 apiRouter.post("/runs/:runId/approve", approveRun);
+apiRouter.post("/runs/:runId/reject", rejectRun);
 
 // Marketplace Storefront
 apiRouter.get("/marketplace/packages", getPackages);

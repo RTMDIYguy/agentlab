@@ -9,9 +9,7 @@ import { users, workspacePackages } from "../schema";
 import { eq } from "drizzle-orm";
 import { getDb } from "../db";
 
-const stripe = new Stripe((process.env.STRIPE_SECRET_KEY as string) || "sk_test_123", {
-  apiVersion: "2024-04-10", // use latest supported version
-});
+const stripe = new Stripe((process.env.STRIPE_SECRET_KEY as string) || "sk_test_123");
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
 
 /**

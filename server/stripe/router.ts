@@ -256,7 +256,7 @@ export const adminRouter = router({
    * Get customer details (admin only)
    */
   getCustomerDetails: protectedProcedure
-    .input(z.object({ userId: z.number() }))
+    .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const user = ctx.user;
       if (!user || user.role !== "admin")
@@ -272,7 +272,7 @@ export const adminRouter = router({
   updateCustomerStatus: protectedProcedure
     .input(
       z.object({
-        userId: z.number(),
+        userId: z.string(),
         newStatus: z.enum(["active", "canceled", "past_due"]),
       })
     )

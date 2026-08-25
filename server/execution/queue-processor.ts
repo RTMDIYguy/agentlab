@@ -37,12 +37,34 @@ export async function processPendingRuns() {
         .where(eq(workflowSteps.workflowId, run.workflowId))
         .orderBy(asc(workflowSteps.orderIndex));
 
+      // 3.5 Fetch existing completed workflowRunSteps for this run
+      const existingRunSteps = await db
+        .select()
+        .from(workflowRunSteps)
+        .where(eq(workflowRunSteps.workflowRunId, run.id));
+
+      const completedStepIds = new Set(
+        existingRunSteps.filter(rs => rs.status === "completed").map(rs => rs.workflowStepId)
+      );
+      
+      const existingStepPayloads = new Map(
+        existingRunSteps.filter(rs => rs.status === "completed" && rs.outputPayload).map(rs => [rs.workflowStepId, rs.outputPayload])
+      );
+
       // Ensure initialContext is treated as an object
       let currentContext = (run.initialContext as Record<string, any>) || {};
       let runFailed = false;
 
       // 4. Iterate sequentially
       for (const step of steps) {
+        if (completedStepIds.has(step.id)) {
+          // Skip already completed step
+          const payload = existingStepPayloads.get(step.id);
+          if (payload) {
+             currentContext = { ...currentContext, ...(payload as Record<string, any>) };
+          }
+          continue;
+        }
         // 5. Create workflow_run_steps record (status running)
         // Using crypto.randomUUID() since uuid() in pgTable isn't autoincrement in this setup without db support
         const runStepId = crypto.randomUUID();

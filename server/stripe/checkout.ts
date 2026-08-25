@@ -13,7 +13,7 @@ function getStripeClient() {
 }
 
 export interface CreateCheckoutSessionParams {
-  userId: number;
+  userId: string;
   userEmail: string;
   userName: string;
   plan: PlanId;
@@ -70,7 +70,7 @@ export async function createCheckoutSession(
 }
 
 export interface CreateOneTimeCheckoutSessionParams {
-  userId?: number;
+  userId?: string;
   userEmail?: string;
   userName?: string;
   product?: string;

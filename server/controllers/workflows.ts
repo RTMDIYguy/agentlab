@@ -138,7 +138,11 @@ export async function deployWorkflow(
         insertedWorkflow = result;
       } catch (err: any) {
         // Check for Postgres unique constraint violation on uq_workspace_workflow_name
-        if (err.code === '23505' || err.message?.includes('uq_workspace_workflow_name')) {
+        // Drizzle may wrap Postgres errors in a DrizzleQueryError, so we must check err.cause
+        const pgErrorCode = err.code || err.cause?.code;
+        const pgErrorMessage = err.message || err.cause?.message || "";
+        
+        if (pgErrorCode === '23505' || pgErrorMessage.includes('uq_workspace_workflow_name')) {
           suffix++;
         } else {
           throw err;

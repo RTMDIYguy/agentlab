@@ -31,6 +31,7 @@ interface Run {
   startedAt: string | null;
   createdAt: string;
   completedAt: string | null;
+  initialContext?: any;
 }
 
 interface RunStep {
@@ -59,7 +60,7 @@ export default function CommandCenter() {
 
   // Fetch Workflows
   const { data: workflowsData, isLoading: isLoadingWorkflows } = useQuery<{ workflows: Workflow[] }>({
-    queryKey: ["workflows"],
+    queryKey: ["workflows", user?.uid],
     queryFn: async () => {
       const token = await user?.getIdToken();
       const res = await fetch("/api/workflows", {
@@ -68,11 +69,12 @@ export default function CommandCenter() {
       if (!res.ok) throw new Error("Failed to fetch workflows");
       return res.json();
     },
+    enabled: !!user,
   });
 
   // Fetch Runs (poll every 5 seconds)
   const { data: runsData, refetch: refetchRuns } = useQuery<{ runs: Run[] }>({
-    queryKey: ["runs"],
+    queryKey: ["runs", user?.uid],
     queryFn: async () => {
       const token = await user?.getIdToken();
       const res = await fetch("/api/runs", {
@@ -81,13 +83,14 @@ export default function CommandCenter() {
       if (!res.ok) throw new Error("Failed to fetch runs");
       return res.json();
     },
+    enabled: !!user,
     refetchInterval: 5000,
   });
 
   // Fetch specific run details for timeline / approval
   const activeDetailRunId = approvalRunId || selectedRunId;
   const { data: runDetails, isLoading: isLoadingRunDetails } = useQuery<{ run: Run, steps: RunStep[] }>({
-    queryKey: ["run-details", activeDetailRunId],
+    queryKey: ["run-details", activeDetailRunId, user?.uid],
     queryFn: async () => {
       if (!activeDetailRunId) return null;
       const token = await user?.getIdToken();
@@ -97,7 +100,7 @@ export default function CommandCenter() {
       if (!res.ok) throw new Error("Failed to fetch run details");
       return res.json();
     },
-    enabled: !!activeDetailRunId,
+    enabled: !!activeDetailRunId && !!user,
     refetchInterval: (query) => {
       if (query.state.data?.run.status === "running") return 3000;
       return false;
@@ -150,6 +153,27 @@ export default function CommandCenter() {
     },
     onSuccess: () => {
       toast.success("Run approved and resumed");
+      setApprovalRunId(null);
+      refetchRuns();
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  // Reject Run Mutation
+  const rejectRunMutation = useMutation({
+    mutationFn: async (runId: string) => {
+      const token = await user?.getIdToken();
+      const res = await fetch(`/api/runs/${runId}/reject`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error("Failed to reject run");
+      return res.json();
+    },
+    onSuccess: () => {
+      toast.success("Run rejected and cancelled");
       setApprovalRunId(null);
       refetchRuns();
     },
@@ -300,26 +324,28 @@ export default function CommandCenter() {
             <DialogHeader>
               <DialogTitle>Configure Execution: {workflowsData?.workflows.find(w => w.id === selectedWorkflowId)?.name}</DialogTitle>
               <DialogDescription>
-                Provide context for this workflow run. These parameters will be passed to the agent.
+                Instructions: Provide the necessary inputs for {workflowsData?.workflows.find(w => w.id === selectedWorkflowId)?.name}.
+                <br/>
+                Description: {workflowsData?.workflows.find(w => w.id === selectedWorkflowId)?.description}
               </DialogDescription>
             </DialogHeader>
             <div className="py-4 space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="objective">Workflow Objective / Goal</Label>
+                <Label htmlFor="objective">Input 1</Label>
                 <Input 
                   id="objective"
                   value={primaryObjective}
                   onChange={(e) => setPrimaryObjective(e.target.value)}
-                  placeholder="e.g. Generate 5 warm leads"
+                  placeholder="Primary objective or goal..."
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="audience">Target Entity (Client, File, or Record)</Label>
+                <Label htmlFor="audience">Input 2</Label>
                 <Input 
                   id="audience"
                   value={targetAudience}
                   onChange={(e) => setTargetAudience(e.target.value)}
-                  placeholder="e.g. B2B SaaS Founders"
+                  placeholder="Target entity, client, file, or record..."
                 />
               </div>
               <div className="space-y-2">
@@ -417,33 +443,43 @@ export default function CommandCenter() {
                 <div className="space-y-4">
                   <div className="bg-card border border-border p-5 rounded-lg shadow-sm">
                     <h3 className="text-sm font-medium mb-4 text-foreground border-b border-border pb-2">Proposed Output payload</h3>
-                    {runDetails?.steps && runDetails.steps.length > 0 ? (
-                      <div className="space-y-3">
-                        {Object.entries(runDetails.steps[runDetails.steps.length - 1].outputPayload || {}).map(([key, value]) => (
-                          <div key={key} className="grid grid-cols-3 gap-4 text-sm">
-                            <div className="font-semibold text-muted-foreground capitalize">{key.replace(/_/g, ' ')}:</div>
-                            <div className="col-span-2 text-foreground break-words">
-                              {typeof value === 'object' ? (
-                                <pre className="bg-muted p-2 rounded text-xs overflow-x-auto">{JSON.stringify(value, null, 2)}</pre>
-                              ) : (
-                                String(value)
-                              )}
-                            </div>
+                    {(() => {
+                      const payloadToReview = (runDetails?.steps && [...runDetails.steps].reverse().find(s => s.outputPayload)?.outputPayload) || runDetails?.run?.initialContext;
+                      
+                      if (payloadToReview && Object.keys(payloadToReview).length > 0) {
+                        return (
+                          <div className="space-y-3">
+                            {Object.entries(payloadToReview).map(([key, value]) => (
+                              <div key={key} className="grid grid-cols-3 gap-4 text-sm">
+                                <div className="font-semibold text-muted-foreground capitalize">{key.replace(/_/g, ' ')}:</div>
+                                <div className="col-span-2 text-foreground break-words">
+                                  {typeof value === 'object' ? (
+                                    <pre className="bg-muted p-2 rounded text-xs overflow-x-auto">{JSON.stringify(value, null, 2)}</pre>
+                                  ) : (
+                                    String(value)
+                                  )}
+                                </div>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                        {!runDetails.steps[runDetails.steps.length - 1].outputPayload && (
-                           <p className="text-sm text-muted-foreground italic">Empty payload.</p>
-                        )}
-                      </div>
-                    ) : (
-                      <p className="text-sm text-muted-foreground">No data available for review.</p>
-                    )}
+                        );
+                      }
+                      
+                      return <p className="text-sm text-muted-foreground italic">Empty payload.</p>;
+                    })()}
                   </div>
                 </div>
               )}
             </div>
             <DialogFooter className="mt-4">
-              <Button variant="outline" onClick={() => setApprovalRunId(null)}>Reject / Cancel</Button>
+              <Button 
+                variant="outline" 
+                onClick={() => approvalRunId && rejectRunMutation.mutate(approvalRunId)}
+                disabled={rejectRunMutation.isPending || isLoadingRunDetails}
+              >
+                {rejectRunMutation.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                Reject / Cancel
+              </Button>
               <Button 
                 className="bg-amber-500 hover:bg-amber-600 text-white"
                 onClick={() => approvalRunId && approveRunMutation.mutate(approvalRunId)}
