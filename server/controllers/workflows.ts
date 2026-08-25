@@ -49,7 +49,7 @@ const DEFAULT_WORKSPACE_WORKFLOWS: WorkflowSummaryDto[] = [
 ];
 
 import { getDb } from "../db";
-import { workflows } from "../schema";
+import { workflows, workflowSteps } from "../schema";
 import { eq } from "drizzle-orm";
 
 export async function getWorkflows(req: Request, res: Response): Promise<void> {
@@ -100,23 +100,56 @@ export async function deployWorkflow(
       return;
     }
 
+    if (!workspaceId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
     const workflowName =
       proposal?.name || `Workflow-${proposalId || Date.now()}`;
-    const newWorkflowId = `wf-${Date.now().toString().slice(-4)}`;
+    const newWorkflowId = proposalId || `wf-${Date.now().toString().slice(-4)}`; // Use proposalId if available
 
-    // In production, insert into Cloud SQL using Drizzle ORM:
-    // await db.insert(workflows).values({ id: newWorkflowId, workspaceId, name: workflowName, ... });
+    const [insertedWorkflow] = await db
+      .insert(workflows)
+      .values({
+        workspaceId,
+        name: workflowName,
+        description: proposal?.description || "",
+        triggerType: proposal?.triggerType || "manual",
+        status: "active",
+      })
+      .returning();
+
+    if (proposal?.steps && Array.isArray(proposal.steps)) {
+      const stepValues = proposal.steps.map((step, index) => ({
+        workspaceId,
+        workflowId: insertedWorkflow.id,
+        orderIndex: index,
+        stepType: "agent",
+        title: step.description.substring(0, 50),
+        actionPrompt: step.description,
+      }));
+      if (stepValues.length > 0) {
+        await db.insert(workflowSteps).values(stepValues);
+      }
+    }
 
     res.status(201).json({
       message: `Workflow "${workflowName}" successfully approved and deployed to active runtime.`,
       workspaceId,
       workflow: {
-        id: newWorkflowId,
-        name: workflowName,
-        status: "active",
-        triggerType: proposal?.triggerType || "webhook",
-        stepsCount: proposal?.steps?.length || 4,
-        deployedAt: new Date().toISOString(),
+        id: insertedWorkflow.id,
+        name: insertedWorkflow.name,
+        status: insertedWorkflow.status,
+        triggerType: insertedWorkflow.triggerType,
+        stepsCount: proposal?.steps?.length || 0,
+        deployedAt: insertedWorkflow.createdAt,
       },
     });
   } catch (error) {

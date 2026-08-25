@@ -161,7 +161,7 @@ export default function CommandCenter() {
     }
   };
 
-  const handleRunClick = (workflowId: string) => {
+  const handleRunClick = (workflowId: string, workflowName: string) => {
     setSelectedWorkflowId(workflowId);
     setPrimaryObjective("");
     setTargetAudience("");
@@ -207,7 +207,7 @@ export default function CommandCenter() {
                     <div className="p-6 pt-0 mt-auto">
                       <Button 
                         className="run-workflow-btn w-full gap-2" 
-                        onClick={() => handleRunClick(wf.id)}
+                        onClick={() => handleRunClick(wf.id, wf.name)}
                       >
                         <PlayCircle className="w-4 h-4" /> Run Workflow
                       </Button>
@@ -281,14 +281,14 @@ export default function CommandCenter() {
         <Dialog open={isRunModalOpen} onOpenChange={setIsRunModalOpen}>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle>Configure Execution</DialogTitle>
+              <DialogTitle>Configure Execution: {workflowsData?.workflows.find(w => w.id === selectedWorkflowId)?.name}</DialogTitle>
               <DialogDescription>
                 Provide context for this workflow run. These parameters will be passed to the agent.
               </DialogDescription>
             </DialogHeader>
             <div className="py-4 space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="objective">Primary Objective</Label>
+                <Label htmlFor="objective">Workflow Objective / Goal</Label>
                 <Input 
                   id="objective"
                   value={primaryObjective}
@@ -297,7 +297,7 @@ export default function CommandCenter() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="audience">Target Audience / Entity</Label>
+                <Label htmlFor="audience">Target Entity (Client, File, or Record)</Label>
                 <Input 
                   id="audience"
                   value={targetAudience}
