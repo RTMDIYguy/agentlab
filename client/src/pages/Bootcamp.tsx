@@ -169,15 +169,31 @@ export default function Bootcamp() {
 
   const totalQuizSteps = STEPS.length;
 
-  const createContact = trpc.hubspot.createContact.useMutation({
-    onSuccess: () => {
+  const [loading, setLoading] = useState(false);
+
+  const onEmailSubmit = async (data: EmailForm) => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/intake", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: data.email,
+          contactName: data.firstname,
+          source: "AgentLab Website - Bootcamp Quiz",
+          serviceLine: "Bootcamp",
+          notes: `Quiz answers: ${JSON.stringify(answers)}`
+        })
+      });
+      if (!res.ok) throw new Error("Failed");
       setCaptured(true);
       setStep(totalQuizSteps + 2); // show result
-    },
-    onError: err => {
-      toast.error(err.message ?? "Something went wrong. Please try again.");
-    },
-  });
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const createBootcampCheckout = trpc.stripe.createBootcampCheckout.useMutation(
     {
@@ -209,13 +225,6 @@ export default function Bootcamp() {
     }
   };
 
-  const onEmailSubmit = (data: EmailForm) => {
-    createContact.mutate({
-      email: data.email,
-      firstname: data.firstname,
-      source: "bootcamp",
-    });
-  };
 
   const currentQuizStep =
     step >= 1 && step <= totalQuizSteps ? STEPS[step - 1] : null;
@@ -373,9 +382,9 @@ export default function Bootcamp() {
                       <Button
                         type="submit"
                         className="w-full"
-                        disabled={createContact.isPending}
+                        disabled={loading}
                       >
-                        {createContact.isPending ? (
+                        {loading ? (
                           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                         ) : (
                           <Zap className="h-4 w-4 mr-2" />

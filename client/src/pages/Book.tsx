@@ -87,8 +87,28 @@ export default function Book() {
     formState: { errors },
   } = useForm<EmailForm>({ resolver: zodResolver(emailSchema) });
 
-  const onFreeChapter = (data: EmailForm) => {
-    createContact.mutate({ email: data.email, source: "book-free-chapter" });
+  const [loading, setLoading] = useState(false);
+
+  const onFreeChapter = async (data: EmailForm) => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/intake", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: data.email,
+          source: "AgentLab Website - Book Free Chapter",
+          serviceLine: "Book Free Chapter",
+        })
+      });
+      if (!res.ok) throw new Error("Failed");
+      setChapterSent(true);
+      toast.success("Check your inbox — free chapter is on the way!");
+    } catch (err) {
+      toast.error("Something went wrong. Try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleBuy = () => {
@@ -229,9 +249,9 @@ export default function Book() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={createContact.isPending}
+                disabled={loading}
               >
-                {createContact.isPending ? (
+                {loading ? (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 ) : (
                   <ArrowRight className="h-4 w-4 mr-2" />

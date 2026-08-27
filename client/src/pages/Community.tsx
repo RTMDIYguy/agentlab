@@ -34,39 +34,42 @@ type FormData = z.infer<typeof schema>;
 export default function Community() {
   const [submitted, setSubmitted] = useState(false);
 
-  const createContact = trpc.hubspot.createContact.useMutation({
-    onSuccess: () => {
-      setSubmitted(true);
-      toast.success("You're in! Welcome to the Roundtable.");
-    },
-    onError: err => {
-      toast.error(err.message ?? "Something went wrong. Please try again.");
-    },
-  });
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
   const consentValue = watch("consent");
 
-  const onSubmit = (data: FormData) => {
-    createContact.mutate({
-      email: data.email,
-      firstname: data.firstname,
-      lastname: data.lastname,
-      company: data.company,
-      what_are_you_building: data.what_are_you_building,
-      referral_code: data.referral_code,
-      source: "community",
-      consent: data.consent,
-    });
+  const onSubmit = async (data: FormData) => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/intake", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: data.email,
+          contactName: `${data.firstname} ${data.lastname || ""}`.trim(),
+          source: "AgentLab Website - KC Bootstrapper Roundtable",
+          serviceLine: "Community",
+          notes: `Company: ${data.company}\nBuilding: ${data.what_are_you_building}\nReferral Code: ${data.referral_code}\nConsent: ${data.consent}`
+        })
+      });
+      if (!res.ok) throw new Error("Failed");
+      setSubmitted(true);
+      toast.success("You're in! Welcome to the Roundtable.");
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -236,11 +239,10 @@ export default function Community() {
 
                       <Button
                         type="submit"
-                        size="lg"
-                        className="w-full"
-                        disabled={isSubmitting || createContact.isPending}
+                        className="w-full h-12 text-lg"
+                        disabled={loading}
                       >
-                        {createContact.isPending ? (
+                        {loading ? (
                           <>
                             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                             Submitting…

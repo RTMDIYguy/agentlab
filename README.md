@@ -1,117 +1,61 @@
-# Agent Lab Site
+# AgentLab
 
-Agent Lab is the working web and operations repository for Uncle Robert
-Consulting's AI-native agency system.
+> The AI-native operating system for Uncle Robert Consulting & our partners.
 
-The repo started as a site build, but it now serves two jobs:
+AgentLab is an advanced AI workflow orchestration platform built to automate business operations. It provides a highly scalable, multi-tenant Command Center for managing automated AI agents, processing data pipelines, and executing scheduled outreach workflows.
 
-- the public-facing Agent Lab / URC web application
-- the repo-native home for workflow packages, operating docs, and agent handoff
-  materials used to move the business from planning into execution
+![AgentLab Command Center](./client/public/command-center-preview.png)
+*(Drop a screenshot of the Command Center at `client/public/command-center-preview.png`)*
 
-## What This Project Supports
+---
 
-This repository supports the operating architecture for:
+## 🚀 How It Works (Delivery Models)
 
-- Uncle Robert Consulting (`URC`) as the main business and owner of client
-  relationships, delivery standards, IP, and invoicing
-- `Tactix` as the fulfillment and Upwork-facing execution arm
-- `Bootstrapper Capital` as the founder audience, event, and funnel layer
-- `Bootstrapper's Guide to the World` as an authority asset that feeds the
-  founder funnel
+We offer two distinct ways to access and deploy AgentLab based on your technical requirements and data sovereignty needs:
 
-The current execution focus is practical: clarify the offer ladder, package
-sellable starter workflows, support book-to-client CTAs, build lightweight
-CRM/follow-up rhythms, and turn the 90-day plan into weekly actions.
+### 1. SaaS Cloud-Hosted (Recommended for most)
+AgentLab is delivered primarily as a **Software as a Service (SaaS)** platform hosted at [agent-lab.tech](https://agent-lab.tech).
+- **Delivery:** Immediate access upon purchase.
+- **Process:** Create an account, browse the marketplace, subscribe to workflow playbooks, and execute them directly from our secure cloud infrastructure.
+- **Benefits:** No servers to manage, automatic updates, and zero maintenance.
 
-## Repository Map
+### 2. Enterprise Self-Hosted (For absolute control)
+For enterprise clients who require absolute control or "Done-With-You" implementations, you can purchase a self-hosted license.
+- **Delivery:** Upon purchase, you will receive an automated email containing a unique **License Key** and an invite to our **Private GitHub Repository** (or a secure download link for the deployment bundle).
+- **Process:** Clone the repository, inject your license key into the `.env` file, and deploy using our provided Docker configurations.
+- **Benefits:** Full source code access (excluding proprietary LLM backend heuristics), deploy on your own VPC, and absolute data privacy.
 
-| Path               | Purpose                                                                                       |
-| ------------------ | --------------------------------------------------------------------------------------------- |
-| `src/`             | React client application.                                                                     |
-| `server/`          | Express/tRPC server and backend modules.                                                      |
-| `docs/operations/` | Operating architecture, execution plans, change control, workflow registry, and handoff docs. |
-| `workflows/`       | Imported workflow sources and client-facing workflow packages.                                |
-| `scripts/`         | Repo utilities, including change-control verification.                                        |
-| `content/`         | CMS-managed site content.                                                                     |
+![App Store Marketplace](./client/public/app-store-preview.png)
+*(Drop a screenshot of the Marketplace at `client/public/app-store-preview.png`)*
 
-## Current Workflow Direction
+## 🏗️ Architecture
 
-The workflow library is being moved into GitHub-readable Markdown without
-dumping raw archives, credentials, or temporary files into the repo.
+The architecture is built for extreme stability and scale:
+- **Frontend**: React + Vite + TailwindCSS (Dark-mode, Glassmorphism UI)
+- **Backend Engine**: Express + tRPC (Node.js) + n8n automation engine (Port 5678)
+- **Database**: PostgreSQL (via Drizzle ORM) with strict Multi-Tenant Row Level Security.
+- **AI Orchestration**: Deepmind / Gemini models powering the decision engine, strictly adhering to SAIF (Secure AI Framework) principles.
 
-Key operating docs:
+## 🔐 Security & Telemetry
 
-- `docs/operations/urc-agent-execution-checklist.md`
-- `docs/operations/urc-v1-operating-architecture.md`
-- `docs/operations/urc-90-day-implementation-plan.md`
-- `docs/operations/workflow-registry.md`
-- `docs/operations/change-control-register.md`
+AgentLab doesn't just run agents; it audits them.
+- **Hard Budget Caps**: Every tenant has an auto-pause threshold. The Billing Engine checks limits before any LLM token is spent.
+- **Audit Logging**: Every agent step, token count, and data mutation is securely logged to the `audit_logs` table for compliance review.
+- **PII Redaction**: Built-in scrubbing ensures sensitive data never hits the AI models blindly.
 
-The current client-facing starter package is:
+## 🛠️ Development (For Contributors)
 
-- `workflows/marketing-founder-signal-system/`
-
-That package is a thin, sellable vertical slice across founder intake, signal
-capture, content brief creation, outreach, follow-up, and proof capture. It is
-priced as a starter setup and remains draft until tested with real founder
-cycles.
-
-## Development
-
-This project uses `pnpm`.
+If you are a certified partner accessing this repo, here is how to run AgentLab locally:
 
 ```bash
-pnpm install
-pnpm dev
+# Install dependencies
+npm install
+
+# Start the full stack (Frontend on Vite, Backend on Express)
+npm run dev
 ```
 
-Useful commands:
+---
 
-```bash
-pnpm check
-pnpm test
-pnpm build
-pnpm change-control:check
-```
-
-## Change Control
-
-Meaningful changes to workflow packages, operating docs, agent prompts,
-tracker schemas, funnel control files, or kit manifests should be recorded in:
-
-- `docs/operations/change-control-register.md`
-- `docs/operations/scheduled-change-queue.md` when the change should be held
-  for later
-
-Before calling workflow-package changes complete, run:
-
-```bash
-pnpm change-control:check
-```
-
-## Agent Guidance
-
-Agents should read `AGENTS.md` before changing business architecture,
-workflow packages, or funnel materials.
-
-Default posture:
-
-- implement the existing operating plan instead of redesigning the business
-- preserve current business data and source files
-- keep Microsoft 365 as the default operating backbone
-- use Notion only as a lightweight dashboard layer
-- keep URC as the main brand, Bootstrapper Capital as the audience/funnel
-  layer, and Tactix as the fulfillment arm
-- prefer low-cost, testable, practical execution over tool sprawl
-
-## What Success Looks Like
-
-This repo is working when it helps the business ship:
-
-- a clear offer ladder
-- a defined book CTA and founder funnel
-- practical CRM-lite tracking and follow-up
-- Bootstrapper Capital roundtables or founder events
-- client-facing workflow packages that can be tested, certified, sold, and
-  improved without losing the audit trail
+*AgentLab, a Uncle Robert Consulting LLC project. All rights reserved.*
+*Servant leadership, honest communication, and radical transparency.*

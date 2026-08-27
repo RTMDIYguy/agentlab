@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { tenantMiddleware } from "./middleware/tenant";
 import { apiRouter } from "./routes/api";
+import { intakeRouter } from "./routes/intake";
 import { processPendingRuns } from "./execution/queue-processor";
 import { processTrialExpirations } from "./execution/billing-engine";
 import { runStartupDiagnostics, runPeriodicWatchdog } from "./execution/watchdog";
@@ -32,6 +33,7 @@ async function startServer() {
   app.use(tenantMiddleware);
 
   // API Routes
+  app.use("/api/intake", intakeRouter);
   app.use("/api", apiRouter);
 
   // Top-level Health Check

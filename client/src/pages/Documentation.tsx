@@ -1,12 +1,10 @@
-import { MainNav } from "@/components/MainNav";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/PageLayout";
 import { BookOpen, Code, Terminal, Zap, Shield, HelpCircle } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
 export default function Documentation() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <MainNav />
+    <PageLayout className="min-h-screen bg-background flex flex-col">
       <main className="flex-grow pt-24 pb-16">
         <div className="container max-w-5xl mx-auto px-4">
           <div className="text-center mb-16">
@@ -134,7 +132,6 @@ export default function Documentation() {
           </div>
         </div>
       </main>
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }

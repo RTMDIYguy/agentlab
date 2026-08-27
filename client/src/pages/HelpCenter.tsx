@@ -29,7 +29,18 @@ function ContactFormComponent() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await submitMutation.mutateAsync(formData);
+      const res = await fetch("/api/intake", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contactName: formData.name,
+          email: formData.email,
+          source: "AgentLab Website - Help Center",
+          serviceLine: "Support",
+          notes: `Subject: ${formData.subject}\nMessage: ${formData.message}`
+        })
+      });
+      if (!res.ok) throw new Error("Failed");
       toast.success("Message sent successfully! We'll get back to you soon.");
       setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (error) {

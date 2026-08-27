@@ -1,0 +1,86 @@
+{
+  "name": "AgentLab Lead Intake Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "agentlab-intake",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "agentlab-intake"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID_HERE",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "id"
+        },
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Contact Name": "={{ $json.body.contactName }}",
+            "Email": "={{ $json.body.email }}",
+            "Phone": "={{ $json.body.phone }}",
+            "Company": "={{ $json.body.company }}",
+            "Service Line": "={{ $json.body.serviceLine }}",
+            "Source": "={{ $json.body.source }}",
+            "Pipeline Stage": "1 - New Lead",
+            "Notes": "={{ $json.body.notes }}",
+            "Date Added": "={{ $now }}"
+          }
+        }
+      },
+      "id": "google-sheets",
+      "name": "Add to CRM-Lite",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        450,
+        300
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Add to CRM-Lite",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f7ab0a72-76be-45eb-92c4-367098e727e4",
+  "id": "agentlab-intake-workflow",
+  "meta": {
+    "instanceId": "local"
+  },
+  "tags": []
+}

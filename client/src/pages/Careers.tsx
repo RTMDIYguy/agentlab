@@ -1,11 +1,9 @@
-import { MainNav } from "@/components/MainNav";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/PageLayout";
 import { Briefcase, Users, Zap, Heart } from "lucide-react";
 
 export default function Careers() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <MainNav />
+    <PageLayout className="min-h-screen bg-background flex flex-col">
       <main className="flex-grow pt-24 pb-16">
         <div className="container max-w-5xl mx-auto px-4">
           <div className="text-center mb-16">
@@ -111,7 +109,6 @@ export default function Careers() {
           </div>
         </div>
       </main>
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }

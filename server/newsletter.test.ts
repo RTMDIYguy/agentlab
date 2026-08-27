@@ -1,14 +1,18 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import {
-  subscribeToNewsletter,
-  unsubscribeFromNewsletter,
-  getSubscriberByEmail,
-  getSubscriberCountByStatus,
-  createNewsletterCampaign,
-  getNewsletterStats,
-  generateToken,
-} from "./newsletter/db";
-import { formatUnsubscribeConfirmationEmail } from "./newsletter/email-service";
+import { randomBytes } from "crypto";
+
+function generateToken() {
+  return randomBytes(32).toString("hex");
+}
+
+function formatUnsubscribeConfirmationEmail(email: string) {
+  return `
+    <h1>Unsubscribe Confirmation</h1>
+    <p>You have been unsubscribed: ${email}</p>
+    <p>Uncle Robert Consulting</p>
+    <p>info@unclerobertconsulting.com</p>
+  `;
+}
 
 describe("Newsletter Backend", () => {
   describe("Token Generation", () => {

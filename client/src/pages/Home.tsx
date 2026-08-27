@@ -27,81 +27,81 @@ export default function Home() {
   const capabilities = [
     {
       icon: Zap,
-      title: "Intelligent Automation",
+      title: "Instant Tenant Provisioning",
       description:
-        "Automate complex business processes with intelligent decision-making capabilities, reducing manual work and increasing operational efficiency.",
+        "Create an account and immediately receive a secure, isolated workspace. No complex infrastructure setup required.",
     },
     {
       icon: Brain,
-      title: "Machine Learning",
+      title: "App Store Modular Workflows",
       description:
-        "Advanced algorithms enable agents to continuously learn from data patterns, adapt to changing conditions, and improve performance over time.",
+        "Browse the Marketplace and unlock highly-specialized workflows like 'Daily LinkedIn Outreach' tailored for your business.",
     },
     {
       icon: Network,
-      title: "Multi-Agent Systems",
+      title: "Multi-Agent Orchestration",
       description:
-        "Deploy coordinated teams of AI agents that work together seamlessly, sharing information and collaborating to solve complex challenges.",
+        "Watch as the Orchestrator LLM automatically delegates tasks to specialized AI agents within your secure boundaries.",
     },
     {
       icon: Clock,
-      title: "Real-time Processing",
+      title: "Scheduled CRON Execution",
       description:
-        "Process and analyze data in real-time with lightning-fast response times, enabling immediate decision-making and adaptation.",
+        "Put your business on autopilot. Agents run in the background on precise schedules without manual intervention.",
     },
     {
       icon: Shield,
-      title: "Enterprise Security",
+      title: "Row Level Security (RLS)",
       description:
-        "Built with enterprise-grade security features including end-to-end encryption, secure authentication, and compliance with industry standards.",
+        "Your data is strictly isolated. Our Multi-Tenant Postgres architecture ensures your workflows and secrets never leak.",
     },
     {
       icon: Cpu,
-      title: "Scalable Infrastructure",
+      title: "Hard Budget Caps",
       description:
-        "Cloud-native architecture that scales automatically with your business needs, from startup to enterprise level.",
+        "Never get surprised by LLM API bills. Set strict token budgets and our Billing Engine will auto-pause agents that exceed limits.",
     },
   ];
 
   const features = [
     {
-      title: "Autonomous AI Systems",
-      description: "Self-managing systems that operate 24/7",
+      title: "Zero-Setup SaaS Delivery",
+      description: "Log in and start running agents instantly.",
     },
     {
-      title: "Real-time Learning",
-      description: "Continuous improvement from live data",
+      title: "The 'Done-With-You' Tier",
+      description: "Enterprise self-hosted repo access available.",
     },
     {
-      title: "Enterprise-grade Security",
-      description: "SOC 2 and GDPR compliant",
+      title: "Stripe Billing Engine",
+      description: "Secure, automated module unlocking.",
     },
-    { title: "Scalable Architecture", description: "Grows with your business" },
+    { title: "Vertex AI Integration", description: "Powered by Gemini 1.5 Pro." },
     {
-      title: "24/7 Operation",
-      description: "Always-on intelligent automation",
+      title: "Audit Telemetry",
+      description: "Every token and action is logged.",
     },
-    { title: "Industry Expertise", description: "Built for enterprise needs" },
+    { title: "PII Redaction", description: "Sensitive data is scrubbed before LLM processing." },
   ];
 
   const testimonials = [
     {
       quote:
-        "AgentLab transformed how we manage our operations. The AI agents handle complex workflows with remarkable accuracy and speed.",
+        "AgentLab transformed how we manage our operations. The modular 'App Store' approach let us unlock only the workflows we needed.",
       author: "Sarah Chen",
       role: "CTO at TechCorp",
       company: "@TechCorp",
     },
     {
       quote:
-        "The level of automation we achieved with AgentLab exceeded our expectations. It's intuitive, powerful, and production-ready.",
+        "The Row Level Security and hard budget caps gave our compliance team the confidence to let AI run autonomously in production.",
       author: "Michael Rodriguez",
       role: "Operations Director at GlobalSys",
       company: "@GlobalSys",
     },
     {
       quote:
-        "Implementing AgentLab reduced our operational costs by 40% while improving service quality. Highly recommended for any enterprise.",
+        "Implementing the URC Marketing Starter Kit reduced our operational costs by 40%. The 30-day trial was completely frictionless.",
       author: "Emma Thompson",
       role: "VP of Innovation at FutureTech",
       company: "@FutureTech",
@@ -110,49 +110,48 @@ export default function Home() {
 
   const pricingPlans = [
     {
-      name: "Starter",
-      monthlyPrice: 40,
-      yearlyPrice: 400,
-      description: "Perfect for small teams and startups",
+      name: "Starter Workspace",
+      monthlyPrice: 49,
+      yearlyPrice: 490,
+      description: "Perfect for solo founders scaling up",
       features: [
-        "Up to 5 AI agents",
-        "Basic automation workflows",
-        "Email support",
-        "Community access",
-        "Monthly updates",
+        "1 Isolated Workspace",
+        "Unlock up to 3 Workflow Modules",
+        "Shared LLM Budget Pool",
+        "Community Support",
+        "7-Day Audit Log Retention",
       ],
       highlighted: false,
       stripeId: "starter",
     },
     {
-      name: "Professional",
+      name: "Professional Agency",
       monthlyPrice: 199,
       yearlyPrice: 1990,
-      description: "For growing businesses and teams",
+      description: "For growing teams running multiple departments",
       features: [
-        "Unlimited AI agents",
-        "Advanced automation workflows",
-        "Priority email & chat support",
-        "Custom integrations",
-        "Weekly updates",
-        "Analytics dashboard",
+        "Unlimited Workspaces",
+        "Access to All Marketplace Modules",
+        "Custom LLM API Keys",
+        "Priority Support",
+        "30-Day Audit Log Retention",
+        "Custom Agent creation",
       ],
       highlighted: true,
       stripeId: "professional",
     },
     {
-      name: "Enterprise",
-      monthlyPrice: 599,
-      yearlyPrice: 5990,
-      description: "For large organizations",
+      name: "Enterprise 'Done-With-You'",
+      monthlyPrice: 999,
+      yearlyPrice: 9990,
+      description: "Full Source Code & Self-Hosting",
       features: [
-        "Unlimited everything",
-        "Custom AI agent development",
-        "24/7 dedicated support",
+        "Private GitHub Repo Access",
+        "Deploy to your own GCP / AWS",
         "White-label options",
-        "Real-time updates",
-        "Advanced security features",
-        "SLA guarantee",
+        "24/7 Dedicated Slack Channel",
+        "Custom Workflow Engineering",
+        "On-Premises Security Audits",
       ],
       highlighted: false,
       stripeId: "enterprise",
@@ -469,13 +468,40 @@ export default function Home() {
             </div>
 
             <Card className="p-8 border border-border">
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const contactName = formData.get("name") as string;
+                const email = formData.get("email") as string;
+                const notes = formData.get("message") as string;
+                
+                try {
+                  const res = await fetch("/api/intake", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      contactName,
+                      email,
+                      notes,
+                      source: "AgentLab Website - Home Page",
+                      serviceLine: "General Inquiry"
+                    })
+                  });
+                  if (!res.ok) throw new Error("Failed to send");
+                  toast.success("Message sent successfully! We will be in touch.");
+                  (e.target as HTMLFormElement).reset();
+                } catch (err) {
+                  toast.error("Failed to send message. Please try again later.");
+                }
+              }}>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
                     Your Name
                   </label>
                   <input
+                    name="name"
                     type="text"
+                    required
                     placeholder="John Doe"
                     className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                   />
@@ -485,7 +511,9 @@ export default function Home() {
                     Your Email
                   </label>
                   <input
+                    name="email"
                     type="email"
+                    required
                     placeholder="john@example.com"
                     className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                   />
@@ -495,13 +523,15 @@ export default function Home() {
                     Your Message
                   </label>
                   <textarea
+                    name="message"
+                    required
                     placeholder="Tell us how we can help..."
                     rows={5}
                     className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
-                <Button className="w-full bg-primary hover:bg-primary/90">
-                  Submit Ticket
+                <Button type="submit" size="lg" className="w-full">
+                  Send Message
                 </Button>
               </form>
             </Card>

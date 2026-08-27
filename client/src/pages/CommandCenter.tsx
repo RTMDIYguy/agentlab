@@ -299,18 +299,39 @@ export default function CommandCenter() {
   const allWorkflows = workflowsData?.workflows || [];
   const allRuns = runsData?.runs || [];
 
-  const availablePlaybooks = allWorkflows.filter(wf => {
-    const isPlaybook = ["wf-001", "wf-002", "wf-003"].includes(wf.id) || wf.id.startsWith("wf-");
+  // Deduplicate workflows by name to avoid duplicate subscription cards
+  const uniqueWorkflowsMap = new Map<string, Workflow>();
+  for (const wf of allWorkflows) {
+    // Keep the one that has runs or is scheduled, or just the first one we see
+    if (!uniqueWorkflowsMap.has(wf.name)) {
+      uniqueWorkflowsMap.set(wf.name, wf);
+    } else {
+      const existing = uniqueWorkflowsMap.get(wf.name)!;
+      const existingHasRuns = allRuns.some(r => r.workflowId === existing.id);
+      const newHasRuns = allRuns.some(r => r.workflowId === wf.id);
+      if (newHasRuns && !existingHasRuns) {
+        uniqueWorkflowsMap.set(wf.name, wf);
+      } else if (wf.triggerType === "schedule" && existing.triggerType !== "schedule") {
+        uniqueWorkflowsMap.set(wf.name, wf);
+      }
+    }
+  }
+  const deduplicatedWorkflows = Array.from(uniqueWorkflowsMap.values());
+
+  const availablePlaybooks = deduplicatedWorkflows.filter(wf => {
+    const isSubscription = wf.id.startsWith("wf-") || ["Inbound Lead Enrichment", "M365 Daily Financial Reconciliation", "Automated CI/CD Test & Refactor Suite"].includes(wf.name);
     const hasRuns = allRuns.some(r => r.workflowId === wf.id);
     const isScheduled = wf.triggerType === "schedule";
-    return isPlaybook && !hasRuns && !isScheduled;
+    // Available = subscription workflows they haven't run and aren't scheduled
+    return isSubscription && !hasRuns && !isScheduled;
   });
 
-  const activeWorkflows = allWorkflows.filter(wf => {
-    const isPlaybook = ["wf-001", "wf-002", "wf-003"].includes(wf.id) || wf.id.startsWith("wf-");
+  const activeWorkflows = deduplicatedWorkflows.filter(wf => {
+    const isSubscription = wf.id.startsWith("wf-") || ["Inbound Lead Enrichment", "M365 Daily Financial Reconciliation", "Automated CI/CD Test & Refactor Suite"].includes(wf.name);
     const hasRuns = allRuns.some(r => r.workflowId === wf.id);
     const isScheduled = wf.triggerType === "schedule";
-    return !isPlaybook || hasRuns || isScheduled;
+    // Active = their own workflows, OR subscription workflows they have run or scheduled
+    return !isSubscription || hasRuns || isScheduled;
   });
 
   return (

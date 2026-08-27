@@ -1,11 +1,9 @@
-import { MainNav } from "@/components/MainNav";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/PageLayout";
 import { Shield, Lock, FileKey2, CheckCircle2 } from "lucide-react";
 
 export default function Security() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <MainNav />
+    <PageLayout className="min-h-screen bg-background flex flex-col">
       <main className="flex-grow pt-24 pb-16">
         <div className="container max-w-4xl mx-auto px-4">
           <div className="text-center mb-16">
@@ -65,7 +63,6 @@ export default function Security() {
           </div>
         </div>
       </main>
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }
