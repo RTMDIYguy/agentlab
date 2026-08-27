@@ -25,6 +25,9 @@ import NewsletterManager from "./pages/NewsletterManager";
 import Services from "./pages/Services";
 import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
+import Billing from "./pages/Billing";
+import Agents from "./pages/Agents";
+import Auditing from "./pages/Auditing";
 import OpsCleanupAgent from "./pages/OpsCleanupAgent";
 import AssessmentQuestionGenerator from "./pages/AssessmentQuestionGenerator";
 import Community from "@/pages/Community";
@@ -36,6 +39,9 @@ import CommandCenter from "@/pages/CommandCenter";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import Support from "@/pages/Support";
+import Security from "@/pages/Security";
+import Careers from "@/pages/Careers";
+import Documentation from "@/pages/Documentation";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useEffect } from "react";
 import { AgenticTour } from "./components/AgenticTour";
@@ -79,6 +85,9 @@ function Router() {
       <Route path={"/article/:slug"} component={ArticleEditor} />
       <Route path={"/blog-manager"} component={BlogManager} />
       <Route path={"/dashboard"} component={Dashboard} />
+      <Route path={"/billing"} component={Billing} />
+      <Route path={"/agents"} component={Agents} />
+      <Route path={"/auditing"} component={Auditing} />
       <Route path={"/ops-agent"} component={OpsCleanupAgent} />
       <Route
         path={"/assessment-generator"}
@@ -91,6 +100,9 @@ function Router() {
       <Route path={"/privacy"} component={Privacy} />
       <Route path={"/terms"} component={Terms} />
       <Route path={"/cookies"} component={Cookies} />
+      <Route path={"/security"} component={Security} />
+      <Route path={"/careers"} component={Careers} />
+      <Route path={"/docs"} component={Documentation} />
       <Route path="/help" component={HelpCenter} />
       <Route path="/status" component={Status} />
       <Route path="/newsletter/verify" component={NewsletterVerify} />

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { handleOrchestratorChat } from "../controllers/orchestrator";
 import { getAgents } from "../controllers/agents";
-import { getWorkflows, deployWorkflow } from "../controllers/workflows";
+import { getWorkflows, deployWorkflow, createCustomWorkflow, updateWorkflowSchedule } from "../controllers/workflows";
 import {
   triggerRun,
   listRuns,
@@ -73,8 +73,10 @@ apiRouter.get("/agents", getAgents);
 
 // Workflows & Autonomic DAG Deployments
 apiRouter.get("/workflows", getWorkflows);
+apiRouter.post("/workflows", createCustomWorkflow);
 apiRouter.post("/workflows/deploy", deployWorkflow);
 apiRouter.post("/workflows/:workflowId/run", triggerRun);
+apiRouter.patch("/workflows/:workflowId/schedule", updateWorkflowSchedule);
 
 // Runs & Execution State
 apiRouter.get("/runs", listRuns);

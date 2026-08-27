@@ -15,6 +15,13 @@
       "when": 1787595749598,
       "tag": "0001_blue_robbie_robertson",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787792701383,
+      "tag": "0002_damp_nextwave",
+      "breakpoints": true
     }
   ]
 }

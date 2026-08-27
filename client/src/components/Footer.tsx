@@ -23,7 +23,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/security" className="hover:text-primary transition-colors">
                   Security
                 </a>
               </li>
@@ -49,7 +49,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/careers" className="hover:text-primary transition-colors">
                   Careers
                 </a>
               </li>
@@ -111,6 +111,14 @@ export function Footer() {
                   Status
                 </a>
               </li>
+              <li>
+                <a
+                  href="/docs"
+                  className="hover:text-primary transition-colors"
+                >
+                  Documentation
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -118,7 +126,7 @@ export function Footer() {
         <div className="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between">
           <div className="text-center md:text-left">
             <p className="text-muted-foreground text-sm">
-              © 2025 AgentLab. All rights reserved.
+              © 2026 AgentLab, a Uncle Robert Consulting LLC project. All rights reserved.
             </p>
             <p className="text-muted-foreground text-xs mt-2 max-w-2xl">
               Servant leadership, honest build logs, human judgment, responsible
@@ -126,7 +134,7 @@ export function Footer() {
             </p>
           </div>
           <p className="text-muted-foreground text-sm mt-4 md:mt-0">
-            Built with <span className="text-primary">❤</span> using Manus
+            Built with <span className="text-primary">❤</span> using Gemini & Deepmind
           </p>
         </div>
       </div>

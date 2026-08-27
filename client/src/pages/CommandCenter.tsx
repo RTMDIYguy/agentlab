@@ -9,9 +9,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { PageLayout } from "@/components/PageLayout";
+import { DashboardLayout } from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Loader2, PlayCircle, Clock, CheckCircle2, AlertCircle, PauseCircle, ChevronRight, Eye } from "lucide-react";
+import { Loader2, PlayCircle, Clock, CheckCircle2, AlertCircle, PauseCircle, ChevronRight, Eye, Plus, Calendar } from "lucide-react";
 import { formatDate } from "date-fns";
 
 interface Workflow {
@@ -22,6 +22,8 @@ interface Workflow {
   status: string;
   successRate: number;
   stepsCount: number;
+  cronExpression?: string;
+  nextRunAt?: string;
 }
 
 interface Run {
@@ -54,9 +56,18 @@ export default function CommandCenter() {
   const [targetAudience, setTargetAudience] = useState("");
   const [additionalContext, setAdditionalContext] = useState("");
   
-  // Tracking & Approval State
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
   const [approvalRunId, setApprovalRunId] = useState<string | null>(null);
+
+  // Create Custom Workflow Form State
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newWorkflowName, setNewWorkflowName] = useState("");
+  const [newWorkflowDescription, setNewWorkflowDescription] = useState("");
+  const [newWorkflowPrompt, setNewWorkflowPrompt] = useState("");
+
+  // Schedule Modal State
+  const [scheduleWorkflowId, setScheduleWorkflowId] = useState<string | null>(null);
+  const [cronExpression, setCronExpression] = useState("");
 
   // Fetch Workflows
   const { data: workflowsData, isLoading: isLoadingWorkflows } = useQuery<{ workflows: Workflow[] }>({
@@ -185,6 +196,72 @@ export default function CommandCenter() {
     },
   });
 
+  // Create Custom Workflow Mutation
+  const createWorkflowMutation = useMutation({
+    mutationFn: async () => {
+      const token = await user?.getIdToken();
+      const res = await fetch(`/api/workflows`, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ 
+          name: newWorkflowName,
+          description: newWorkflowDescription,
+          actionPrompt: newWorkflowPrompt
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to create workflow");
+      return res.json();
+    },
+    onSuccess: () => {
+      toast.success("Custom workflow created");
+      setIsCreateModalOpen(false);
+      setNewWorkflowName("");
+      setNewWorkflowDescription("");
+      setNewWorkflowPrompt("");
+      // @ts-ignore
+      refetchRuns();
+      // @ts-ignore
+      window.location.reload(); 
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  // Update Schedule Mutation
+  const scheduleWorkflowMutation = useMutation({
+    mutationFn: async () => {
+      if (!scheduleWorkflowId) return;
+      const token = await user?.getIdToken();
+      const triggerType = cronExpression ? "schedule" : "manual";
+      const res = await fetch(`/api/workflows/${scheduleWorkflowId}/schedule`, {
+        method: "PATCH",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ triggerType, cronExpression }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to update schedule");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      toast.success("Schedule updated");
+      setScheduleWorkflowId(null);
+      setCronExpression("");
+      window.location.reload();
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "completed": return <CheckCircle2 className="w-4 h-4 text-green-500" />;
@@ -213,26 +290,112 @@ export default function CommandCenter() {
     setIsRunModalOpen(true);
   };
 
+  const handleScheduleClick = (workflow: Workflow) => {
+    setScheduleWorkflowId(workflow.id);
+    setCronExpression(workflow.cronExpression || "");
+  };
+
+  // Derived state for Categorization
+  const allWorkflows = workflowsData?.workflows || [];
+  const allRuns = runsData?.runs || [];
+
+  const availablePlaybooks = allWorkflows.filter(wf => {
+    const isPlaybook = ["wf-001", "wf-002", "wf-003"].includes(wf.id) || wf.id.startsWith("wf-");
+    const hasRuns = allRuns.some(r => r.workflowId === wf.id);
+    const isScheduled = wf.triggerType === "schedule";
+    return isPlaybook && !hasRuns && !isScheduled;
+  });
+
+  const activeWorkflows = allWorkflows.filter(wf => {
+    const isPlaybook = ["wf-001", "wf-002", "wf-003"].includes(wf.id) || wf.id.startsWith("wf-");
+    const hasRuns = allRuns.some(r => r.workflowId === wf.id);
+    const isScheduled = wf.triggerType === "schedule";
+    return !isPlaybook || hasRuns || isScheduled;
+  });
+
   return (
-    <PageLayout>
+    <DashboardLayout>
       <div className="container py-12">
-        <div className="mb-10 flex items-center justify-between">
+        <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-4xl font-bold text-foreground mb-2">Command Center</h1>
             <p className="text-muted-foreground">Execute, monitor, and approve your automated AgentLab workflows.</p>
           </div>
+          <Button 
+            variant="default"
+            className="shrink-0 gap-2"
+            onClick={() => window.location.href = "/marketplace"}
+          >
+            Browse Marketplace <ChevronRight className="w-4 h-4" />
+          </Button>
         </div>
 
         <div className="space-y-12">
-          {/* Workflows Section */}
+          {/* Active Workflows Section */}
           <section>
-            <h2 className="text-2xl font-semibold mb-6">Available Workflows</h2>
+            <h2 className="text-2xl font-semibold mb-6">Active & Scheduled Workflows</h2>
             {isLoadingWorkflows ? (
               <div className="flex justify-center py-10"><Loader2 className="w-8 h-8 animate-spin" /></div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {workflowsData?.workflows.map((wf) => (
+                {/* Create Custom Workflow Card */}
+                <Card 
+                  className="flex flex-col border-dashed border-2 border-border/60 hover:border-primary/50 transition-colors cursor-pointer bg-muted/20 items-center justify-center text-center p-6 min-h-[250px]"
+                  onClick={() => setIsCreateModalOpen(true)}
+                >
+                  <Plus className="w-10 h-10 text-muted-foreground mb-4" />
+                  <CardTitle className="text-xl mb-2 text-foreground">Create Custom Workflow</CardTitle>
+                  <CardDescription>
+                    Define your own autonomous agent workflow from scratch using a custom system prompt.
+                  </CardDescription>
+                </Card>
+
+                {activeWorkflows.map((wf) => (
                   <Card key={wf.id} className="flex flex-col border-border/60 hover:border-border transition-colors">
+                    <CardHeader>
+                      <CardTitle className="text-xl flex items-start justify-between">
+                        {wf.name}
+                        <Badge variant="secondary">{wf.stepsCount} steps</Badge>
+                      </CardTitle>
+                      <CardDescription>{wf.description || "Custom Workflow"}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                      <div className="flex items-center justify-between text-sm text-muted-foreground mb-1">
+                        <span><strong>Trigger:</strong> {wf.triggerType}</span>
+                        {wf.triggerType === "schedule" && wf.cronExpression && (
+                          <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-700 border-blue-200">
+                            {wf.cronExpression}
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        <strong>Success Rate:</strong> {wf.successRate}%
+                      </p>
+                    </CardContent>
+                    <div className="p-6 pt-0 mt-auto flex gap-2">
+                      <Button 
+                        className="run-workflow-btn flex-grow gap-2" 
+                        onClick={() => handleRunClick(wf.id, wf.name)}
+                      >
+                        <PlayCircle className="w-4 h-4" /> Run Now
+                      </Button>
+                      <Button variant="outline" size="icon" onClick={() => handleScheduleClick(wf)}>
+                        <Calendar className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* Available Playbooks Section */}
+          {availablePlaybooks.length > 0 && (
+            <section>
+              <h2 className="text-2xl font-semibold mb-6">Available Playbooks</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {availablePlaybooks.map((wf) => (
+                  <Card key={wf.id} className="flex flex-col border-border/60 hover:border-border transition-colors opacity-90">
                     <CardHeader>
                       <CardTitle className="text-xl flex items-start justify-between">
                         {wf.name}
@@ -248,22 +411,22 @@ export default function CommandCenter() {
                         <strong>Success Rate:</strong> {wf.successRate}%
                       </p>
                     </CardContent>
-                    <div className="p-6 pt-0 mt-auto">
+                    <div className="p-6 pt-0 mt-auto flex gap-2">
                       <Button 
-                        className="run-workflow-btn w-full gap-2" 
+                        className="run-workflow-btn flex-grow gap-2" 
                         onClick={() => handleRunClick(wf.id, wf.name)}
                       >
                         <PlayCircle className="w-4 h-4" /> Run Workflow
                       </Button>
+                      <Button variant="outline" size="icon" onClick={() => handleScheduleClick(wf)}>
+                        <Calendar className="w-4 h-4" />
+                      </Button>
                     </div>
                   </Card>
                 ))}
-                {workflowsData?.workflows.length === 0 && (
-                  <p className="text-muted-foreground col-span-3 py-4">No active workflows found. Unlock packages in the Marketplace to see workflows here.</p>
-                )}
               </div>
-            )}
-          </section>
+            </section>
+          )}
 
           {/* Recent Runs Section */}
           <section>
@@ -374,6 +537,93 @@ export default function CommandCenter() {
               >
                 {triggerRunMutation.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
                 Execute Workflow
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Create Custom Workflow Modal */}
+        <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>Create Custom Workflow</DialogTitle>
+              <DialogDescription>
+                Define the parameters and the system prompt for your new autonomous workflow.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-4 space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="wfName">Workflow Name</Label>
+                <Input 
+                  id="wfName"
+                  value={newWorkflowName}
+                  onChange={(e) => setNewWorkflowName(e.target.value)}
+                  placeholder="e.g. Lead Generation Sweeper"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="wfDesc">Description</Label>
+                <Input 
+                  id="wfDesc"
+                  value={newWorkflowDescription}
+                  onChange={(e) => setNewWorkflowDescription(e.target.value)}
+                  placeholder="Brief description of the workflow's purpose..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="wfPrompt">Agent Action Prompt</Label>
+                <Textarea 
+                  id="wfPrompt"
+                  value={newWorkflowPrompt}
+                  onChange={(e) => setNewWorkflowPrompt(e.target.value)}
+                  placeholder="Detailed instructions for what the agent should do..."
+                  className="h-32 resize-none"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsCreateModalOpen(false)}>Cancel</Button>
+              <Button 
+                onClick={() => createWorkflowMutation.mutate()}
+                disabled={createWorkflowMutation.isPending}
+              >
+                {createWorkflowMutation.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                Create Workflow
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Schedule Modal */}
+        <Dialog open={!!scheduleWorkflowId} onOpenChange={(open) => !open && setScheduleWorkflowId(null)}>
+          <DialogContent className="sm:max-w-[400px]">
+            <DialogHeader>
+              <DialogTitle>Set Schedule</DialogTitle>
+              <DialogDescription>
+                Provide a CRON expression to automate this workflow. Clear the field to revert to manual triggers.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-4 space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="cron">CRON Expression</Label>
+                <Input 
+                  id="cron"
+                  value={cronExpression}
+                  onChange={(e) => setCronExpression(e.target.value)}
+                  placeholder="e.g. 0 18 * * * (Daily at 6PM)"
+                />
+                <p className="text-xs text-muted-foreground mt-2">Format: Minute Hour Day Month Weekday</p>
+                <p className="text-xs text-muted-foreground">Every Minute: * * * * *</p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setScheduleWorkflowId(null)}>Cancel</Button>
+              <Button 
+                onClick={() => scheduleWorkflowMutation.mutate()}
+                disabled={scheduleWorkflowMutation.isPending}
+              >
+                {scheduleWorkflowMutation.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                Save Schedule
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -500,6 +750,6 @@ export default function CommandCenter() {
         </Dialog>
 
       </div>
-    </PageLayout>
+    </DashboardLayout>
   );
 }

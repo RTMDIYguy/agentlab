@@ -112,3 +112,4 @@ n8n-service-account.json
 .claude/
 .manus-logs/
 .postman/
+postgres.zip

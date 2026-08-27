@@ -18,6 +18,23 @@ export interface AgentRunnerResult {
   latencyMs: number;
 }
 
+function isPathAllowed(filePath: string, unlockedDepartments: string[]): boolean {
+  if (unlockedDepartments.includes("ALL")) return true;
+  
+  // Normalize paths for cross-platform checking
+  const normalizedPath = filePath.replace(/\\/g, '/');
+  
+  // Enforce the paywall if path includes the workflows directory
+  const workflowsMatch = normalizedPath.match(/\/workflows\/([a-z]{3})-[^\/]+\/?/i);
+  if (workflowsMatch) {
+    const deptCode = workflowsMatch[1].toLowerCase();
+    if (!unlockedDepartments.includes(deptCode)) {
+      return false; // Paywall block
+    }
+  }
+  return true;
+}
+
 /**
  * Runs a single agent step by combining the system prompt, action prompt,
  * and context, then calling Gemini 1.5 Pro.
@@ -25,7 +42,9 @@ export interface AgentRunnerResult {
 export async function runAgentStep(
   actionPrompt: string,
   systemPrompt: string | undefined | null,
-  inputContext: Record<string, any> = {}
+  inputContext: Record<string, any> = {},
+  workspaceId: string,
+  unlockedDepartments: string[]
 ): Promise<AgentRunnerResult> {
   const startTime = Date.now();
 
@@ -53,7 +72,12 @@ export async function runAgentStep(
   // Generate text using the AI SDK
   let text = "";
   let usage: any = {};
-  try {
+  const maxRetries = 3;
+  let attempt = 0;
+  let success = false;
+
+  while (attempt < maxRetries && !success) {
+    try {
     const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY });
     const response = await generateText({
       model: google("gemini-2.5-flash") as any,
@@ -110,7 +134,9 @@ export async function runAgentStep(
                   if (stat.isDirectory()) {
                     searchDir(fullPath);
                   } else if (file.toLowerCase().includes(keyword.toLowerCase())) {
-                    results.push(fullPath);
+                    if (isPathAllowed(fullPath, unlockedDepartments)) {
+                      results.push(fullPath);
+                    }
                   }
                 }
               };
@@ -137,6 +163,9 @@ export async function runAgentStep(
               if (!fs.existsSync(fullPath)) {
                 return `File not found at path: ${fullPath}`;
               }
+              if (!isPathAllowed(fullPath, unlockedDepartments)) {
+                return `UNAUTHORIZED: You do not have the required Playbook installed to read this file. Please visit the Marketplace to unlock it.`;
+              }
               const contents = fs.readFileSync(fullPath, "utf-8");
               // Truncate if insanely large to prevent breaking the prompt limit, but typically MD files are fine
               if (contents.length > 50000) {
@@ -153,12 +182,19 @@ export async function runAgentStep(
     text = response.text;
     usage = response.usage;
     console.log("[Agent Runner] AI SDK generateText succeeded.");
+    success = true;
   } catch (sdkError: any) {
-    console.error("[Agent Runner] FATAL: AI SDK generateText threw an error:", sdkError);
-    if (sdkError.stack) {
-      console.error("[Agent Runner] SDK Error Stack:", sdkError.stack);
+    attempt++;
+    console.error(`[Agent Runner] AI SDK generateText threw an error (Attempt ${attempt}/${maxRetries}):`, sdkError);
+    if (attempt >= maxRetries) {
+      if (sdkError.stack) {
+        console.error("[Agent Runner] SDK Error Stack:", sdkError.stack);
+      }
+      throw sdkError; // Re-throw to be caught by queue-processor
     }
-    throw sdkError; // Re-throw to be caught by queue-processor
+    // Exponential backoff
+    await new Promise(res => setTimeout(res, Math.pow(2, attempt) * 1000));
+  }
   }
 
   const latencyMs = Date.now() - startTime;

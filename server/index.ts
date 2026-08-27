@@ -6,6 +6,9 @@ import { fileURLToPath } from "url";
 import { tenantMiddleware } from "./middleware/tenant";
 import { apiRouter } from "./routes/api";
 import { processPendingRuns } from "./execution/queue-processor";
+import { processTrialExpirations } from "./execution/billing-engine";
+import { runStartupDiagnostics, runPeriodicWatchdog } from "./execution/watchdog";
+import { processScheduledWorkflows } from "./execution/scheduler";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -60,10 +63,13 @@ async function startServer() {
 
   const port = process.env.PORT || 3000;
 
-  server.listen(port, () => {
+  server.listen(port, async () => {
     console.log(
       `[AgentLab Server] Running on http://localhost:${port}/ (Environment: ${process.env.NODE_ENV || "development"})`
     );
+
+    // Run Startup Diagnostics
+    await runStartupDiagnostics();
 
     // Start the Execution Engine background poller
     setInterval(async () => {
@@ -74,6 +80,37 @@ async function startServer() {
       }
     }, 5000); // Check every 5 seconds
     console.log(`[Execution Engine] Background poller started.`);
+    
+    // Start the Billing Engine (Smart Downgrade) poller
+    // Runs every hour to check for expired trials
+    setInterval(async () => {
+      try {
+        await processTrialExpirations();
+      } catch (e) {
+        console.error("[Billing Engine Poller] Error:", e);
+      }
+    }, 60 * 60 * 1000);
+    console.log(`[Billing Engine] Smart downgrade poller started.`);
+
+    // Start System Watchdog
+    setInterval(async () => {
+      try {
+        await runPeriodicWatchdog();
+      } catch (e) {
+        console.error("[System Watchdog] Error in periodic poller:", e);
+      }
+    }, 5 * 60 * 1000); // 5 minutes
+    console.log(`[System Watchdog] Background diagnostic poller started.`);
+
+    // Start Scheduler Engine
+    setInterval(async () => {
+      try {
+        await processScheduledWorkflows();
+      } catch (e) {
+        console.error("[Scheduler] Error in periodic poller:", e);
+      }
+    }, 60 * 1000); // 1 minute
+    console.log(`[Scheduler Engine] Background CRON poller started.`);
   });
 }
 

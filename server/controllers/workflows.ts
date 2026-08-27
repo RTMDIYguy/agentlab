@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import type { ProposedWorkflow } from "./orchestrator";
+import cronParser from "cron-parser";
 
 export interface WorkflowSummaryDto {
   id: string;
@@ -181,3 +182,109 @@ export async function deployWorkflow(
     res.status(500).json({ error: "Failed to deploy workflow." });
   }
 }
+
+export async function createCustomWorkflow(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId;
+    if (!workspaceId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { name, description, triggerType, cronExpression, actionPrompt } = req.body;
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
+    let nextRunAt: Date | null = null;
+    if (triggerType === "schedule" && cronExpression) {
+      try {
+        const interval = cronParser.parseExpression(cronExpression);
+        nextRunAt = interval.next().toDate();
+      } catch (e) {
+        res.status(400).json({ error: "Invalid CRON expression" });
+        return;
+      }
+    }
+
+    const [workflow] = await db
+      .insert(workflows)
+      .values({
+        workspaceId,
+        name: name || "Custom Workflow",
+        description: description || "",
+        triggerType: triggerType || "manual",
+        cronExpression: cronExpression || null,
+        nextRunAt,
+        status: "active",
+      })
+      .returning();
+
+    // Add a single step for the actionPrompt
+    await db.insert(workflowSteps).values({
+      workspaceId,
+      workflowId: workflow.id,
+      orderIndex: 0,
+      stepType: "agent",
+      title: "Custom Action",
+      actionPrompt: actionPrompt || "Execute custom workflow",
+    });
+
+    res.status(201).json({ workflow });
+  } catch (error) {
+    console.error("[createCustomWorkflow Error]:", error);
+    res.status(500).json({ error: "Failed to create custom workflow." });
+  }
+}
+
+export async function updateWorkflowSchedule(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId;
+    if (!workspaceId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { workflowId } = req.params;
+    const { triggerType, cronExpression } = req.body;
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
+    let nextRunAt: Date | null = null;
+    if (triggerType === "schedule" && cronExpression) {
+      try {
+        const interval = cronParser.parseExpression(cronExpression);
+        nextRunAt = interval.next().toDate();
+      } catch (e) {
+        res.status(400).json({ error: "Invalid CRON expression" });
+        return;
+      }
+    }
+
+    const [updated] = await db
+      .update(workflows)
+      .set({
+        triggerType,
+        cronExpression: cronExpression || null,
+        nextRunAt,
+      })
+      .where(and(eq(workflows.id, workflowId), eq(workflows.workspaceId, workspaceId)))
+      .returning();
+
+    if (!updated) {
+      res.status(404).json({ error: "Workflow not found" });
+      return;
+    }
+
+    res.status(200).json({ workflow: updated });
+  } catch (error) {
+    console.error("[updateWorkflowSchedule Error]:", error);
+    res.status(500).json({ error: "Failed to update schedule." });
+  }
+}
+

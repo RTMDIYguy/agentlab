@@ -1,4 +1,4 @@
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, and } from "drizzle-orm";
 import { getDb } from "../db";
 import {
   workflowRuns,
@@ -6,6 +6,8 @@ import {
   workflowRunSteps,
   auditLogs,
   agents,
+  workspacePackages,
+  knowledgePackages,
 } from "../schema";
 import { runAgentStep } from "./agent-runner";
 
@@ -31,6 +33,19 @@ export async function processPendingRuns() {
 
     for (const run of pendingRuns) {
       console.log(`[QueueProcessor] Processing run ${run.id}...`);
+      
+      let unlockedDepartments: string[] = [];
+      if (run.workspaceId === "00000000-0000-0000-0000-000000000000") {
+        unlockedDepartments = ["ALL"];
+      } else if (run.workspaceId) {
+        const subs = await db
+          .select({ departmentCode: knowledgePackages.departmentCode })
+          .from(workspacePackages)
+          .innerJoin(knowledgePackages, eq(workspacePackages.packageId, knowledgePackages.id))
+          .where(and(eq(workspacePackages.workspaceId, run.workspaceId), eq(workspacePackages.status, "active")));
+        unlockedDepartments = subs.map((s: any) => s.departmentCode);
+      }
+
       // 2. Update status to running
       console.log(`[QueueProcessor] DB QUERY: Updating run ${run.id} to running...`);
       await db
@@ -128,10 +143,16 @@ export async function processPendingRuns() {
               }
             }
 
+            if (unlockedDepartments.length > 0 && !unlockedDepartments.includes("ALL")) {
+               systemPrompt = (systemPrompt || "") + `\n\n[ACCESS CONTROL]: You are operating with the following active Playbook contexts: ${unlockedDepartments.join(", ")}. The system will actively block you from accessing SOPs outside these areas.`;
+            }
+
             const result = await runAgentStep(
               step.actionPrompt,
               systemPrompt,
-              currentContext
+              currentContext,
+              run.workspaceId,
+              unlockedDepartments
             );
 
             // 8. Save output and update context
@@ -201,6 +222,18 @@ export async function processPendingRuns() {
             runFailed = true;
             break;
           }
+        } else if (step.stepType !== "guardrail") {
+          // Handle 'trigger', 'destination', or other non-agent steps that were previously left "running"
+          console.log(`[QueueProcessor] DB QUERY: Updating non-agent workflowRunStep ${runStepId} to completed...`);
+          await db
+            .update(workflowRunSteps)
+            .set({
+              status: "completed",
+              completedAt: new Date(),
+              outputPayload: { message: `Step of type ${step.stepType} completed implicitly.` }
+            })
+            .where(eq(workflowRunSteps.id, runStepId));
+          console.log(`[QueueProcessor] DB QUERY DONE: Updated workflowRunStep ${runStepId} to completed.`);
         }
       }
 

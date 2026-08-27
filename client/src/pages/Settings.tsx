@@ -6,20 +6,74 @@ import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
-import { ArrowLeft, Mail, Lock, MapPin, Bell } from "lucide-react";
+import {
+  ArrowLeft,
+  Mail,
+  Lock,
+  MapPin,
+  Bell,
+  Settings2,
+  Key,
+  Plug,
+} from "lucide-react";
 
 export default function Settings() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState<
-    "profile" | "billing" | "notifications" | "security"
+    | "profile"
+    | "billing"
+    | "notifications"
+    | "security"
+    | "llm"
+    | "secrets"
+    | "integrations"
   >("profile");
 
+  const utils = trpc.useContext();
+
+  // Queries
+  const { data: workspaceSettings } = trpc.settings.getWorkspaceSettings.useQuery(undefined, {
+    enabled: !!user,
+  });
+  const { data: secrets } = trpc.settings.getSecrets.useQuery(undefined, {
+    enabled: !!user,
+  });
+  const { data: integrations } = trpc.settings.getIntegrations.useQuery(undefined, {
+    enabled: !!user,
+  });
+
+  // Mutations
+  const updateSettingsMut = trpc.settings.updateWorkspaceSettings.useMutation({
+    onSuccess: () => {
+      toast.success("Workspace settings updated.");
+      utils.settings.getWorkspaceSettings.invalidate();
+    },
+    onError: () => toast.error("Failed to update settings."),
+  });
+
+  const upsertSecretMut = trpc.settings.upsertSecret.useMutation({
+    onSuccess: () => {
+      toast.success("Secret saved successfully.");
+      utils.settings.getSecrets.invalidate();
+      setNewSecret({ provider: "", value: "" });
+    },
+    onError: () => toast.error("Failed to save secret."),
+  });
+
+  const deleteSecretMut = trpc.settings.deleteSecret.useMutation({
+    onSuccess: () => {
+      toast.success("Secret deleted.");
+      utils.settings.getSecrets.invalidate();
+    },
+    onError: () => toast.error("Failed to delete secret."),
+  });
+
+  // Local State
   const [profileData, setProfileData] = useState({
     name: user?.name || "",
     email: user?.email || "",
   });
-
   const [billingData, setBillingData] = useState({
     address: "",
     city: "",
@@ -27,13 +81,31 @@ export default function Settings() {
     zipCode: "",
     country: "",
   });
-
   const [notificationSettings, setNotificationSettings] = useState({
     emailNotifications: true,
     invoiceNotifications: true,
     renewalReminders: true,
     promotionalEmails: false,
   });
+  
+  // LLM Local State
+  const [llmForm, setLlmForm] = useState({
+    orchestratorName: "",
+    defaultModel: "",
+    orchestratorSystemPrompt: "",
+  });
+
+  // Ensure state matches fetched data
+  if (workspaceSettings && llmForm.orchestratorName === "" && llmForm.defaultModel === "") {
+    setLlmForm({
+      orchestratorName: workspaceSettings.orchestratorName || "",
+      defaultModel: workspaceSettings.defaultModel || "",
+      orchestratorSystemPrompt: workspaceSettings.orchestratorSystemPrompt || "",
+    });
+  }
+
+  // Secrets Local State
+  const [newSecret, setNewSecret] = useState({ provider: "", value: "" });
 
   if (!user) {
     return (
@@ -53,28 +125,24 @@ export default function Settings() {
     );
   }
 
-  const handleProfileSave = async () => {
-    try {
-      toast.success("Profile updated successfully");
-    } catch (error) {
-      toast.error("Failed to update profile");
-    }
+  const handleProfileSave = async () => toast.success("Profile updated");
+  const handleBillingSave = async () => toast.success("Billing address updated");
+  const handleNotificationSave = async () => toast.success("Notification preferences updated");
+
+  const handleLlmSave = () => {
+    updateSettingsMut.mutate({
+      orchestratorName: llmForm.orchestratorName,
+      defaultModel: llmForm.defaultModel,
+      orchestratorSystemPrompt: llmForm.orchestratorSystemPrompt,
+    });
   };
 
-  const handleBillingSave = async () => {
-    try {
-      toast.success("Billing address updated successfully");
-    } catch (error) {
-      toast.error("Failed to update billing address");
+  const handleAddSecret = () => {
+    if (!newSecret.provider || !newSecret.value) {
+      toast.error("Please fill in both fields.");
+      return;
     }
-  };
-
-  const handleNotificationSave = async () => {
-    try {
-      toast.success("Notification preferences updated successfully");
-    } catch (error) {
-      toast.error("Failed to update notification preferences");
-    }
+    upsertSecretMut.mutate(newSecret);
   };
 
   return (
@@ -104,7 +172,7 @@ export default function Settings() {
                   onClick={() => setActiveTab("profile")}
                   className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
                     activeTab === "profile"
-                      ? "bg-primary text-white"
+                      ? "bg-primary text-primary-foreground"
                       : "text-foreground hover:bg-muted"
                   }`}
                 >
@@ -115,7 +183,7 @@ export default function Settings() {
                   onClick={() => setActiveTab("billing")}
                   className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
                     activeTab === "billing"
-                      ? "bg-primary text-white"
+                      ? "bg-primary text-primary-foreground"
                       : "text-foreground hover:bg-muted"
                   }`}
                 >
@@ -126,7 +194,7 @@ export default function Settings() {
                   onClick={() => setActiveTab("notifications")}
                   className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
                     activeTab === "notifications"
-                      ? "bg-primary text-white"
+                      ? "bg-primary text-primary-foreground"
                       : "text-foreground hover:bg-muted"
                   }`}
                 >
@@ -137,13 +205,52 @@ export default function Settings() {
                   onClick={() => setActiveTab("security")}
                   className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
                     activeTab === "security"
-                      ? "bg-primary text-white"
+                      ? "bg-primary text-primary-foreground"
                       : "text-foreground hover:bg-muted"
                   }`}
                 >
                   <Lock className="w-4 h-4 inline-block mr-2" />
                   Security
                 </button>
+                
+                <div className="pt-4 mt-4 border-t border-border">
+                  <p className="px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    Agency & Platform
+                  </p>
+                  <button
+                    onClick={() => setActiveTab("llm")}
+                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                      activeTab === "llm"
+                        ? "bg-primary text-primary-foreground"
+                        : "text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    <Settings2 className="w-4 h-4 inline-block mr-2" />
+                    LLM Controls
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("secrets")}
+                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                      activeTab === "secrets"
+                        ? "bg-primary text-primary-foreground"
+                        : "text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    <Key className="w-4 h-4 inline-block mr-2" />
+                    Secrets Vault
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("integrations")}
+                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                      activeTab === "integrations"
+                        ? "bg-primary text-primary-foreground"
+                        : "text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    <Plug className="w-4 h-4 inline-block mr-2" />
+                    Integrations (MCP)
+                  </button>
+                </div>
               </nav>
             </Card>
           </div>
@@ -186,12 +293,7 @@ export default function Settings() {
                       className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
-                  <Button
-                    onClick={handleProfileSave}
-                    className="bg-primary hover:bg-primary/90"
-                  >
-                    Save Changes
-                  </Button>
+                  <Button onClick={handleProfileSave}>Save Changes</Button>
                 </div>
               </Card>
             )}
@@ -210,94 +312,31 @@ export default function Settings() {
                     <input
                       type="text"
                       value={billingData.address}
-                      onChange={e =>
-                        setBillingData({
-                          ...billingData,
-                          address: e.target.value,
-                        })
-                      }
-                      placeholder="123 Main St"
+                      onChange={e => setBillingData({ ...billingData, address: e.target.value })}
                       className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        City
-                      </label>
+                      <label className="block text-sm font-medium text-foreground mb-2">City</label>
                       <input
                         type="text"
                         value={billingData.city}
-                        onChange={e =>
-                          setBillingData({
-                            ...billingData,
-                            city: e.target.value,
-                          })
-                        }
-                        placeholder="San Francisco"
+                        onChange={e => setBillingData({ ...billingData, city: e.target.value })}
                         className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        State/Province
-                      </label>
+                      <label className="block text-sm font-medium text-foreground mb-2">State/Province</label>
                       <input
                         type="text"
                         value={billingData.state}
-                        onChange={e =>
-                          setBillingData({
-                            ...billingData,
-                            state: e.target.value,
-                          })
-                        }
-                        placeholder="CA"
+                        onChange={e => setBillingData({ ...billingData, state: e.target.value })}
                         className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        ZIP Code
-                      </label>
-                      <input
-                        type="text"
-                        value={billingData.zipCode}
-                        onChange={e =>
-                          setBillingData({
-                            ...billingData,
-                            zipCode: e.target.value,
-                          })
-                        }
-                        placeholder="94102"
-                        className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        Country
-                      </label>
-                      <input
-                        type="text"
-                        value={billingData.country}
-                        onChange={e =>
-                          setBillingData({
-                            ...billingData,
-                            country: e.target.value,
-                          })
-                        }
-                        placeholder="United States"
-                        className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
-                    </div>
-                  </div>
-                  <Button
-                    onClick={handleBillingSave}
-                    className="bg-primary hover:bg-primary/90"
-                  >
-                    Save Billing Address
-                  </Button>
+                  <Button onClick={handleBillingSave}>Save Billing Address</Button>
                 </div>
               </Card>
             )}
@@ -308,95 +347,23 @@ export default function Settings() {
                 <h2 className="text-2xl font-bold text-foreground mb-6">
                   Notification Preferences
                 </h2>
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between p-4 border border-border rounded-lg">
-                    <div>
-                      <p className="font-semibold text-foreground">
-                        Email Notifications
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Receive general email notifications
-                      </p>
+                <div className="space-y-4">
+                  {Object.entries(notificationSettings).map(([key, value]) => (
+                    <div key={key} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                      <div className="capitalize font-semibold text-foreground">
+                        {key.replace(/([A-Z])/g, " $1")}
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={value as boolean}
+                        onChange={e =>
+                          setNotificationSettings({ ...notificationSettings, [key]: e.target.checked })
+                        }
+                        className="w-5 h-5"
+                      />
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={notificationSettings.emailNotifications}
-                      onChange={e =>
-                        setNotificationSettings({
-                          ...notificationSettings,
-                          emailNotifications: e.target.checked,
-                        })
-                      }
-                      className="w-5 h-5"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between p-4 border border-border rounded-lg">
-                    <div>
-                      <p className="font-semibold text-foreground">
-                        Invoice Notifications
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Receive notifications when invoices are available
-                      </p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={notificationSettings.invoiceNotifications}
-                      onChange={e =>
-                        setNotificationSettings({
-                          ...notificationSettings,
-                          invoiceNotifications: e.target.checked,
-                        })
-                      }
-                      className="w-5 h-5"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between p-4 border border-border rounded-lg">
-                    <div>
-                      <p className="font-semibold text-foreground">
-                        Renewal Reminders
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Get reminded before your subscription renews
-                      </p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={notificationSettings.renewalReminders}
-                      onChange={e =>
-                        setNotificationSettings({
-                          ...notificationSettings,
-                          renewalReminders: e.target.checked,
-                        })
-                      }
-                      className="w-5 h-5"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between p-4 border border-border rounded-lg">
-                    <div>
-                      <p className="font-semibold text-foreground">
-                        Promotional Emails
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Receive offers and promotional content
-                      </p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={notificationSettings.promotionalEmails}
-                      onChange={e =>
-                        setNotificationSettings({
-                          ...notificationSettings,
-                          promotionalEmails: e.target.checked,
-                        })
-                      }
-                      className="w-5 h-5"
-                    />
-                  </div>
-                  <Button
-                    onClick={handleNotificationSave}
-                    className="bg-primary hover:bg-primary/90"
-                  >
+                  ))}
+                  <Button onClick={handleNotificationSave} className="mt-4">
                     Save Preferences
                   </Button>
                 </div>
@@ -406,43 +373,205 @@ export default function Settings() {
             {/* Security Tab */}
             {activeTab === "security" && (
               <Card className="p-8 border border-border">
-                <h2 className="text-2xl font-bold text-foreground mb-6">
-                  Security Settings
-                </h2>
+                <h2 className="text-2xl font-bold text-foreground mb-6">Security Settings</h2>
                 <div className="space-y-6">
                   <div className="p-6 bg-muted/50 border border-border rounded-lg">
-                    <h3 className="font-semibold text-foreground mb-2">
-                      Password
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Your password is managed through your Manus account. To
-                      change your password, visit your account settings.
-                    </p>
+                    <h3 className="font-semibold text-foreground mb-2">Password</h3>
                     <Button variant="outline">Manage Account Settings</Button>
-                  </div>
-                  <div className="p-6 bg-muted/50 border border-border rounded-lg">
-                    <h3 className="font-semibold text-foreground mb-2">
-                      Two-Factor Authentication
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Add an extra layer of security to your account with
-                      two-factor authentication.
-                    </p>
-                    <Button variant="outline">Enable 2FA</Button>
-                  </div>
-                  <div className="p-6 bg-muted/50 border border-border rounded-lg">
-                    <h3 className="font-semibold text-foreground mb-2">
-                      Active Sessions
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Manage your active sessions and sign out from other
-                      devices.
-                    </p>
-                    <Button variant="outline">View Sessions</Button>
                   </div>
                 </div>
               </Card>
             )}
+
+            {/* LLM Controls Tab */}
+            {activeTab === "llm" && (
+              <Card className="p-8 border border-border">
+                <h2 className="text-2xl font-bold text-foreground mb-2">
+                  LLM Controls (Orchestrator)
+                </h2>
+                <p className="text-muted-foreground mb-6">
+                  Configure the core identity and reasoning parameters of your central AI Orchestrator.
+                </p>
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Orchestrator Name
+                    </label>
+                    <input
+                      type="text"
+                      value={llmForm.orchestratorName}
+                      onChange={e =>
+                        setLlmForm({ ...llmForm, orchestratorName: e.target.value })
+                      }
+                      className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
+                      placeholder="e.g. HAL 9000"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Default Model
+                    </label>
+                    <select
+                      value={llmForm.defaultModel}
+                      onChange={e =>
+                        setLlmForm({ ...llmForm, defaultModel: e.target.value })
+                      }
+                      className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                      <option value="gemini-1.5-pro">Gemini 1.5 Pro (Recommended)</option>
+                      <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                      <option value="gpt-4o">GPT-4o</option>
+                      <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      System Prompt / Personality Context
+                    </label>
+                    <textarea
+                      rows={5}
+                      value={llmForm.orchestratorSystemPrompt}
+                      onChange={e =>
+                        setLlmForm({ ...llmForm, orchestratorSystemPrompt: e.target.value })
+                      }
+                      className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
+                      placeholder="You are an expert AI operations manager..."
+                    />
+                  </div>
+                  <Button onClick={handleLlmSave} disabled={updateSettingsMut.isLoading}>
+                    {updateSettingsMut.isLoading ? "Saving..." : "Save LLM Settings"}
+                  </Button>
+                </div>
+              </Card>
+            )}
+
+            {/* Secrets Vault Tab */}
+            {activeTab === "secrets" && (
+              <Card className="p-8 border border-border">
+                <h2 className="text-2xl font-bold text-foreground mb-2">
+                  Secrets Vault
+                </h2>
+                <p className="text-muted-foreground mb-6">
+                  Manage third-party API credentials. Keys are securely stored in Google Secret Manager and are never retrievable in plaintext.
+                </p>
+                
+                <div className="space-y-6">
+                  {/* List active secrets */}
+                  {secrets && secrets.length > 0 ? (
+                    <div className="border border-border rounded-lg divide-y divide-border">
+                      {secrets.map(secret => (
+                        <div key={secret.id} className="flex items-center justify-between p-4 bg-muted/20">
+                          <div>
+                            <p className="font-semibold capitalize">{secret.provider}</p>
+                            <p className="text-sm font-mono text-muted-foreground">
+                              {secret.maskedPreview} • v{secret.version}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <span className="text-xs px-2 py-1 bg-green-500/10 text-green-500 rounded-full">
+                              {secret.status}
+                            </span>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => deleteSecretMut.mutate({ id: secret.id })}
+                              disabled={deleteSecretMut.isLoading}
+                            >
+                              Revoke
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="p-8 text-center border border-dashed border-border rounded-lg">
+                      <p className="text-muted-foreground">No secrets configured yet.</p>
+                    </div>
+                  )}
+
+                  {/* Add new secret */}
+                  <div className="pt-6 border-t border-border mt-6">
+                    <h3 className="text-lg font-semibold mb-4">Connect Provider</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Provider Name</label>
+                        <select
+                          value={newSecret.provider}
+                          onChange={e => setNewSecret({ ...newSecret, provider: e.target.value })}
+                          className="w-full px-4 py-2 border border-border rounded-lg bg-input"
+                        >
+                          <option value="">Select Provider...</option>
+                          <option value="openai">OpenAI</option>
+                          <option value="anthropic">Anthropic</option>
+                          <option value="google">Google Vertex/AI</option>
+                          <option value="hubspot">HubSpot</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">API Key / Token</label>
+                        <input
+                          type="password"
+                          value={newSecret.value}
+                          onChange={e => setNewSecret({ ...newSecret, value: e.target.value })}
+                          className="w-full px-4 py-2 border border-border rounded-lg bg-input"
+                          placeholder="sk-..."
+                        />
+                      </div>
+                    </div>
+                    <Button onClick={handleAddSecret} disabled={upsertSecretMut.isLoading}>
+                      {upsertSecretMut.isLoading ? "Saving..." : "Save Securely to Vault"}
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            )}
+
+            {/* Integrations Tab */}
+            {activeTab === "integrations" && (
+              <Card className="p-8 border border-border">
+                <h2 className="text-2xl font-bold text-foreground mb-2">
+                  Integrations & Extensibility
+                </h2>
+                <p className="text-muted-foreground mb-6">
+                  Manage third-party integrations and Model Context Protocol (MCP) connections to expand your Orchestrator's capabilities.
+                </p>
+
+                {/* List integrations */}
+                {integrations && integrations.length > 0 ? (
+                  <div className="border border-border rounded-lg divide-y divide-border">
+                    {integrations.map(integration => (
+                      <div key={integration.id} className="p-4 bg-muted/20">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="font-semibold">{integration.name}</p>
+                          <span className="text-xs px-2 py-1 bg-blue-500/10 text-blue-500 uppercase tracking-wider rounded-full">
+                            {integration.type}
+                          </span>
+                        </div>
+                        <p className="text-sm font-mono text-muted-foreground break-all">
+                          {JSON.stringify(integration.config)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-8 text-center border border-dashed border-border rounded-lg">
+                    <p className="text-muted-foreground">No integrations active.</p>
+                  </div>
+                )}
+                
+                {/* Coming soon note for MCP */}
+                <div className="mt-8 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                  <h3 className="font-semibold text-primary flex items-center gap-2">
+                    <Plug className="w-4 h-4" /> 
+                    MCP Ecosystem Preview
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    The Model Context Protocol (MCP) allows your agents to interface with external systems (like Notion, GitHub, and local file systems) standardized across models. The "Add MCP Server" UI is currently under development.
+                  </p>
+                </div>
+              </Card>
+            )}
+
           </div>
         </div>
       </div>

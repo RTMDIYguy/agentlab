@@ -44,8 +44,17 @@ export const workspaces = pgTable(
       .default(true),
     auditRetentionDays: integer("audit_retention_days").notNull().default(90),
     stripeCustomerId: varchar("stripe_customer_id", { length: 128 }),
+    orchestratorName: varchar("orchestrator_name", { length: 128 })
+      .notNull()
+      .default("Orchestrator"),
+    orchestratorSystemPrompt: text("orchestrator_system_prompt")
+      .notNull()
+      .default("You are the central Ops Agent."),
+    defaultModel: varchar("default_model", { length: 64 })
+      .notNull()
+      .default("gemini-1.5-pro"),
     trialEndsAt: timestamp("trial_ends_at", { withTimezone: true })
-      .default(sql`now() + interval '14 days'`),
+      .default(sql`now() + interval '30 days'`),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -136,6 +145,8 @@ export const workflows = pgTable(
     triggerType: varchar("trigger_type", { length: 64 })
       .notNull()
       .default("manual"), // 'manual' | 'webhook' | 'schedule' | 'event'
+    cronExpression: varchar("cron_expression", { length: 64 }),
+    nextRunAt: timestamp("next_run_at", { withTimezone: true }),
     status: varchar("status", { length: 32 }).notNull().default("draft"), // 'active' | 'paused' | 'draft' | 'archived'
     successRate: numeric("success_rate", { precision: 5, scale: 2 })
       .notNull()
@@ -334,7 +345,7 @@ export const workspacePackages = pgTable(
     packageId: varchar("package_id", { length: 64 })
       .notNull()
       .references(() => knowledgePackages.id, { onDelete: "cascade" }),
-    status: varchar("status", { length: 32 }).notNull().default("active"), // 'active', 'canceled', 'past_due'
+    status: varchar("status", { length: 32 }).notNull().default("active"), // 'active', 'canceled', 'past_due', 'pay_as_you_go'
     stripeSubscriptionId: varchar("stripe_subscription_id", { length: 128 }),
     dailyRunLimit: integer("daily_run_limit"),
     unlockedAt: timestamp("unlocked_at", { withTimezone: true })
@@ -344,6 +355,61 @@ export const workspacePackages = pgTable(
   table => [
     uniqueIndex("uq_workspace_package").on(table.workspaceId, table.packageId),
   ]
+);
+
+// ==============================================================================
+// 11. WORKSPACE SECRETS (Metadata for GSM Vault)
+// ==============================================================================
+export const workspaceSecrets = pgTable(
+  "workspace_secrets",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: uuid("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    provider: varchar("provider", { length: 64 }).notNull(), // 'openai', 'anthropic', 'hubspot'
+    gsmSecretId: varchar("gsm_secret_id", { length: 255 }).notNull(),
+    version: varchar("version", { length: 64 }).notNull().default("1"),
+    maskedPreview: varchar("masked_preview", { length: 64 }), // e.g. sk-proj-...1234
+    status: varchar("status", { length: 32 }).notNull().default("connected"), // 'connected', 'rotated', 'error'
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    uniqueIndex("uq_workspace_secret_provider").on(
+      table.workspaceId,
+      table.provider
+    ),
+    index("idx_workspace_secrets_workspace").on(table.workspaceId),
+  ]
+);
+
+// ==============================================================================
+// 12. WORKSPACE INTEGRATIONS (Third-party & MCP connections)
+// ==============================================================================
+export const workspaceIntegrations = pgTable(
+  "workspace_integrations",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: uuid("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    type: varchar("type", { length: 64 }).notNull(), // 'mcp', 'webhook', 'oauth'
+    name: varchar("name", { length: 128 }).notNull(),
+    config: jsonb("config").notNull().default({}), // Tool-specific config
+    status: varchar("status", { length: 32 }).notNull().default("active"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [index("idx_workspace_integrations_workspace").on(table.workspaceId)]
 );
 
 // ==============================================================================
@@ -357,6 +423,8 @@ export const workspacesRelations = relations(workspaces, ({ many }) => ({
   workflowRuns: many(workflowRuns),
   workflowRunSteps: many(workflowRunSteps),
   packages: many(workspacePackages),
+  secrets: many(workspaceSecrets),
+  integrations: many(workspaceIntegrations),
 }));
 
 export const usersRelations = relations(users, ({ one }) => ({
@@ -469,6 +537,26 @@ export const workspacePackagesRelations = relations(
   })
 );
 
+export const workspaceSecretsRelations = relations(
+  workspaceSecrets,
+  ({ one }) => ({
+    workspace: one(workspaces, {
+      fields: [workspaceSecrets.workspaceId],
+      references: [workspaces.id],
+    }),
+  })
+);
+
+export const workspaceIntegrationsRelations = relations(
+  workspaceIntegrations,
+  ({ one }) => ({
+    workspace: one(workspaces, {
+      fields: [workspaceIntegrations.workspaceId],
+      references: [workspaces.id],
+    }),
+  })
+);
+
 // ==============================================================================
 // INFERRED TYPES
 // ==============================================================================
@@ -501,3 +589,13 @@ export type NewKnowledgePackage = InferInsertModel<typeof knowledgePackages>;
 
 export type WorkspacePackage = InferSelectModel<typeof workspacePackages>;
 export type NewWorkspacePackage = InferInsertModel<typeof workspacePackages>;
+
+export type WorkspaceSecret = InferSelectModel<typeof workspaceSecrets>;
+export type NewWorkspaceSecret = InferInsertModel<typeof workspaceSecrets>;
+
+export type WorkspaceIntegration = InferSelectModel<
+  typeof workspaceIntegrations
+>;
+export type NewWorkspaceIntegration = InferInsertModel<
+  typeof workspaceIntegrations
+>;
