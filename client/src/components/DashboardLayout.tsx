@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import { Navigation } from "./Navigation";
-import { DashboardRightSidebar } from "./DashboardRightSidebar";
+// import { DashboardRightSidebar } from "./DashboardRightSidebar";
 import { 
   LayoutDashboard, 
   TerminalSquare, 
@@ -59,7 +59,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </main>
         
         {/* Right Sidebar */}
-        <DashboardRightSidebar />
+        {/* <DashboardRightSidebar /> */}
       </div>
     </div>
   );

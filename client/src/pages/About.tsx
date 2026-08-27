@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { PageLayout } from "@/components/PageLayout";
+import { DashboardLayout } from "@/components/DashboardLayout";
+import { Footer } from "@/components/Footer";
 import {
   ArrowRight,
   Bot,
@@ -63,7 +64,7 @@ export default function About() {
   ];
 
   return (
-    <PageLayout>
+    <DashboardLayout>
       <section className="py-20 bg-gradient-to-br from-primary/10 to-accent/10 border-b border-border">
         <div className="container max-w-4xl">
           <p className="text-sm font-semibold uppercase tracking-wide text-primary mb-4">
@@ -181,6 +182,7 @@ export default function About() {
           </Button>
         </div>
       </section>
-    </PageLayout>
+      <Footer />
+    </DashboardLayout>
   );
 }

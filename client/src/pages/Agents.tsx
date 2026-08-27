@@ -1,97 +1,105 @@
-import { useAuth } from "@/_core/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { AlertCircle, Cpu, Plus, Clock, Terminal } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Bot, Play, Square, Settings, Activity } from "lucide-react";
 
 export default function Agents() {
-  const { user } = useAuth({ redirectOnUnauthenticated: true });
-
-  const mockAgents = [
+  const agents = [
     {
-      id: "agt-core-ops-01",
+      id: "ops-1",
       name: "Ops Cleanup Agent",
-      status: "active",
-      task: "Monitoring unused trial instances",
-      uptime: "48h 12m",
+      status: "running",
+      uptime: "99.9%",
+      tasksCompleted: 142,
+      description: "Manages prompt staging, file triaging, and system cleanup.",
     },
     {
-      id: "agt-fin-audit-03",
-      name: "Financial Auditor",
+      id: "sdr-1",
+      name: "SDR Intake Agent",
       status: "idle",
-      task: "Waiting for next cron trigger",
-      uptime: "12h 00m",
-    }
+      uptime: "100%",
+      tasksCompleted: 8,
+      description: "Handles incoming leads from the LiveChat widget.",
+    },
+    {
+      id: "blog-1",
+      name: "Content Writer",
+      status: "running",
+      uptime: "98.5%",
+      tasksCompleted: 24,
+      description: "Drafts and schedules SEO optimized blog articles.",
+    },
   ];
 
   return (
     <DashboardLayout>
-      <div className="border-b border-border bg-background">
-        <div className="px-6 py-6 flex justify-between items-center">
+      <div className="p-8 max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Agents</h1>
-            <p className="text-sm text-muted-foreground">
-              Monitor and manage autonomous agents
+            <h1 className="text-3xl font-bold flex items-center gap-2">
+              <Bot className="w-8 h-8 text-primary" />
+              Active Agents
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Monitor and manage your deployed AI agents.
             </p>
           </div>
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" /> Spin Up Agent
-          </Button>
-        </div>
-      </div>
-
-      <div className="p-6 space-y-6">
-        <div className="bg-amber-500/10 border border-amber-500/20 text-amber-500 p-4 rounded-lg flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
-          <div>
-            <h4 className="font-semibold text-sm">For Advanced Users</h4>
-            <p className="text-sm opacity-90 mt-1">
-              Direct agent manipulation can cause unexpected system behaviors. Unless you know what you are doing, it is best to leave this to the Orchestrator LLM.
-            </p>
-          </div>
+          <Button className="bg-primary">Deploy New Agent</Button>
         </div>
 
-        <Card className="border-border/60">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Agent ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Current Task</TableHead>
-                <TableHead>Uptime</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockAgents.map((agent) => (
-                <TableRow key={agent.id}>
-                  <TableCell className="font-mono text-xs">{agent.id}</TableCell>
-                  <TableCell className="font-medium flex items-center gap-2">
-                    <Cpu className="w-4 h-4 text-muted-foreground" />
-                    {agent.name}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={agent.status === "active" ? "default" : "secondary"}>
-                      {agent.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground text-sm">{agent.task}</TableCell>
-                  <TableCell className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Clock className="w-3 h-3" /> {agent.uptime}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm">
-                      <Terminal className="w-4 h-4 mr-2" /> Logs
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {agents.map((agent) => (
+            <Card key={agent.id} className="p-6 flex flex-col hover:border-primary transition-colors">
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${agent.status === 'running' ? 'bg-green-100 text-green-700' : 'bg-stone-100 text-stone-600'}`}>
+                    <Bot className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg">{agent.name}</h3>
+                    <div className="flex items-center gap-1 text-xs font-medium">
+                      <span className={`w-2 h-2 rounded-full ${agent.status === 'running' ? 'bg-green-500 animate-pulse' : 'bg-stone-400'}`}></span>
+                      <span className="capitalize">{agent.status}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <p className="text-sm text-muted-foreground mb-6 flex-1">
+                {agent.description}
+              </p>
+
+              <div className="grid grid-cols-2 gap-4 mb-6 p-3 bg-muted/50 rounded-lg">
+                <div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Uptime</div>
+                  <div className="font-semibold">{agent.uptime}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Tasks</div>
+                  <div className="font-semibold">{agent.tasksCompleted}</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-4 border-t border-border">
+                {agent.status === 'running' ? (
+                  <Button variant="outline" size="sm" className="flex-1 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700">
+                    <Square className="w-4 h-4 mr-2" /> Stop
+                  </Button>
+                ) : (
+                  <Button variant="outline" size="sm" className="flex-1 border-green-200 text-green-600 hover:bg-green-50 hover:text-green-700">
+                    <Play className="w-4 h-4 mr-2" /> Start
+                  </Button>
+                )}
+                <Button variant="outline" size="icon" className="shrink-0">
+                  <Settings className="w-4 h-4 text-muted-foreground" />
+                </Button>
+                <Button variant="outline" size="icon" className="shrink-0">
+                  <Activity className="w-4 h-4 text-muted-foreground" />
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
     </DashboardLayout>
   );

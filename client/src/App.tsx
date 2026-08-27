@@ -5,6 +5,7 @@ import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LiveChat } from "./components/LiveChat";
+import { OpsAgentChat } from "./components/OpsAgentChat";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
@@ -25,7 +26,7 @@ import NewsletterManager from "./pages/NewsletterManager";
 import Services from "./pages/Services";
 import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
-import Billing from "./pages/Billing";
+// import Billing from "./pages/Billing";
 import Agents from "./pages/Agents";
 import Auditing from "./pages/Auditing";
 import OpsCleanupAgent from "./pages/OpsCleanupAgent";
@@ -35,21 +36,22 @@ import AdminEvents from "@/pages/AdminEvents";
 import Book from "@/pages/Book";
 import Bootcamp from "@/pages/Bootcamp";
 import Marketplace from "@/pages/Marketplace";
-import CommandCenter from "@/pages/CommandCenter";
-import Login from "@/pages/Login";
-import Signup from "@/pages/Signup";
-import Support from "@/pages/Support";
+// import CommandCenter from "@/pages/CommandCenter";
+// import Login from "@/pages/Login";
+// import Signup from "@/pages/Signup";
+// import Support from "@/pages/Support";
 import Security from "@/pages/Security";
 import Careers from "@/pages/Careers";
 import Documentation from "@/pages/Documentation";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useEffect } from "react";
-import { AgenticTour } from "./components/AgenticTour";
+// import { AgenticTour } from "./components/AgenticTour";
 
 function AuthenticatedTour() {
   const { isAuthenticated } = useAuth();
   if (!isAuthenticated) return null;
-  return <AgenticTour />;
+  // return <AgenticTour />;
+  return null;
 }
 
 function RootRoute() {
@@ -73,8 +75,8 @@ function Router() {
   return (
     <Switch>
       <Route path={"/"} component={RootRoute} />
-      <Route path={"/login"} component={Login} />
-      <Route path={"/signup"} component={Signup} />
+      {/* <Route path={"/login"} component={Login} />
+      <Route path={"/signup"} component={Signup} /> */}
       <Route path={"/services"} component={Services} />
       <Route path={"/features"} component={Features} />
       <Route path={"/pricing"} component={Pricing} />
@@ -85,7 +87,7 @@ function Router() {
       <Route path={"/article/:slug"} component={ArticleEditor} />
       <Route path={"/blog-manager"} component={BlogManager} />
       <Route path={"/dashboard"} component={Dashboard} />
-      <Route path={"/billing"} component={Billing} />
+      {/* <Route path={"/billing"} component={Billing} /> */}
       <Route path={"/agents"} component={Agents} />
       <Route path={"/auditing"} component={Auditing} />
       <Route path={"/ops-agent"} component={OpsCleanupAgent} />
@@ -94,7 +96,7 @@ function Router() {
         component={AssessmentQuestionGenerator}
       />
       <Route path={"/marketplace"} component={Marketplace} />
-      <Route path={"/command-center"} component={CommandCenter} />
+      {/* <Route path={"/command-center"} component={CommandCenter} /> */}
       <Route path={"/dashboard/settings"} component={Settings} />
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/privacy"} component={Privacy} />
@@ -113,7 +115,7 @@ function Router() {
       <Route path="/admin/events" component={AdminEvents} />
       <Route path="/book" component={Book} />
       <Route path="/bootcamp" component={Bootcamp} />
-      <Route path="/support" component={Support} />
+      {/* <Route path="/support" component={Support} /> */}
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
@@ -127,6 +129,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <LiveChat />
+          <OpsAgentChat />
           <AuthenticatedTour />
           <Router />
         </TooltipProvider>

@@ -16,7 +16,7 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { PageLayout } from "@/components/PageLayout";
-import { ConcertHero } from "@/components/ConcertHero";
+// import { ConcertHero } from "@/components/ConcertHero";
 
 export default function Home() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -221,7 +221,10 @@ export default function Home() {
     <PageLayout>
       <div className="min-h-screen bg-background text-foreground">
         {/* Concert Hero Section */}
-        <ConcertHero isAuthenticated={isAuthenticated} />
+        {/* <ConcertHero isAuthenticated={isAuthenticated} /> */}
+        <section className="py-20 text-center">
+          <h1 className="text-4xl font-bold">Welcome to AgentLab</h1>
+        </section>
 
         {/* Capabilities Section */}
         <section id="capabilities" className="py-20 bg-card">

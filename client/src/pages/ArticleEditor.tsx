@@ -69,8 +69,10 @@ export default function ArticleEditor() {
     }
   }, [article]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent, overridingStatus?: "draft" | "scheduled" | "published") => {
     e.preventDefault();
+
+    const finalStatus = overridingStatus || status;
 
     if (!title.trim() || !content.trim()) {
       toast.error("Title and content are required");
@@ -96,9 +98,9 @@ export default function ArticleEditor() {
           content,
           slug: articleSlug,
           category,
-          status,
+          status: finalStatus,
           scheduledFor:
-            status === "scheduled" && scheduledFor
+            finalStatus === "scheduled" && scheduledFor
               ? new Date(scheduledFor)
               : undefined,
           featuredImage: featuredImage || undefined,
@@ -111,9 +113,9 @@ export default function ArticleEditor() {
           excerpt,
           content,
           category,
-          status,
+          status: finalStatus,
           scheduledFor:
-            status === "scheduled" && scheduledFor
+            finalStatus === "scheduled" && scheduledFor
               ? new Date(scheduledFor)
               : undefined,
           featuredImage: featuredImage || undefined,
@@ -126,7 +128,7 @@ export default function ArticleEditor() {
 
   const handleSaveDraft = async () => {
     setStatus("draft");
-    await handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    await handleSubmit({ preventDefault: () => {} } as React.FormEvent, "draft");
   };
 
   const handleSchedule = async () => {
@@ -135,12 +137,12 @@ export default function ArticleEditor() {
       return;
     }
     setStatus("scheduled");
-    await handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    await handleSubmit({ preventDefault: () => {} } as React.FormEvent, "scheduled");
   };
 
   const handlePublish = async () => {
     setStatus("published");
-    await handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    await handleSubmit({ preventDefault: () => {} } as React.FormEvent, "published");
   };
 
   if (!isAuthenticated) {
@@ -302,12 +304,16 @@ export default function ArticleEditor() {
               type="button"
               variant="outline"
               onClick={() => {
-                setStatus("scheduled");
+                if (status === "scheduled" && scheduledFor) {
+                  handleSchedule();
+                } else {
+                  setStatus("scheduled");
+                }
               }}
               className="flex items-center gap-2"
             >
               <Clock className="w-4 h-4" />
-              Schedule
+              {status === "scheduled" && scheduledFor ? "Confirm Schedule" : "Schedule"}
             </Button>
 
             <Button

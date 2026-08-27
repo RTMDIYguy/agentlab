@@ -1,0 +1,1531 @@
+---
+insertId: -wf0e43d6pzo
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudaudit.googleapis.com%2Factivity
+operation:
+  id: operations/build/project-36330a6c-5e91-4901-9dd/NmQ5YWY0YmYtZjdmMy00MGZmLWFiYzUtODZlYWE2MTI0N2Ey
+  last: true
+  producer: cloudbuild.googleapis.com
+protoPayload:
+  '@type': type.googleapis.com/google.cloud.audit.AuditLog
+  authenticationInfo:
+    oauthInfo:
+      oauthClientId: 681255809395-oo8ft2oprdrnp9e3aqf6av3hmdib135j.apps.googleusercontent.com
+    principalEmail: agentlab.tech@gmail.com
+    principalSubject: user:agentlab.tech@gmail.com
+  authorizationInfo:
+  - granted: true
+    permission: cloudbuild.builds.create
+    permissionType: ADMIN_WRITE
+    resource: projects/project-36330a6c-5e91-4901-9dd
+    resourceAttributes:
+      name: projects/project-36330a6c-5e91-4901-9dd/locations/us-central1/builds
+      service: cloudbuild.googleapis.com
+      type: cloudbuild.googleapis.com/Build
+  methodName: google.devtools.cloudbuild.v1.CloudBuild.CreateBuild
+  requestMetadata:
+    destinationAttributes: {}
+    requestAttributes: {}
+  resourceLocation:
+    currentLocations:
+    - us-central1
+  resourceName: projects/project-36330a6c-5e91-4901-9dd/builds
+  serviceName: cloudbuild.googleapis.com
+  status:
+    code: 9
+receiveTimestamp: '2026-08-27T21:12:55.914341744Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: ERROR
+timestamp: '2026-08-27T21:12:55.840968Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7192
+labels:
+  build_step: MAIN
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.234224220Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: 'ERROR: build step 0 "gcr.io/cloud-builders/docker" failed: step exited
+  with non-zero status: 1'
+timestamp: '2026-08-27T21:12:44.116285862Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7191
+labels:
+  build_step: MAIN
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.234224220Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ERROR
+timestamp: '2026-08-27T21:12:44.116264745Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7190
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.105362232Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: "The command '/bin/sh -c pnpm run build' returned a non-zero code: 1"
+timestamp: '2026-08-27T21:12:43.905929872Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7189
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.105362232Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: "\e[0m?ELIFECYCLE? Command failed with exit code 1."
+timestamp: '2026-08-27T21:12:43.560788750Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7188
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.105362232Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: '    at file:///app/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/node-entry.js:21670:26'
+timestamp: '2026-08-27T21:12:43.513424278Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7187
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.105362232Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: '    at ModuleLoader.handleInvalidResolvedId (file:///app/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/node-entry.js:21710:24)'
+timestamp: '2026-08-27T21:12:43.513423246Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7186
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.105362232Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: '    at error (file:///app/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/parseAst.js:398:42)'
+timestamp: '2026-08-27T21:12:43.513422109Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7185
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.105362232Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: '    at getRollupError (file:///app/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/parseAst.js:402:41)'
+timestamp: '2026-08-27T21:12:43.513421452Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7184
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.105362232Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: 'file: /app/client/src/App.tsx'
+timestamp: '2026-08-27T21:12:43.513419885Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7183
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.105362232Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: Could not resolve "./pages/Billing" from "client/src/App.tsx"
+timestamp: '2026-08-27T21:12:43.513418647Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7182
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.105362232Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: "\e[0m\e[91merror during build:"
+timestamp: '2026-08-27T21:12:43.513408896Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7181
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.105362232Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: "\e[91m? Build failed in 2.46s"
+timestamp: '2026-08-27T21:12:43.512806585Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7180
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:44.105362232Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ? 110 modules transformed.
+timestamp: '2026-08-27T21:12:43.507168524Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7179
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:42.115332630Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: "\e[0mtransforming..."
+timestamp: '2026-08-27T21:12:41.144100057Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7178
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:42.115332630Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: "\e[0m\e[91m<script src=\"%VITE_ANALYTICS_ENDPOINT%/umami\"> in \"/index.html\"\
+  \ can't be bundled without type=\"module\" attribute"
+timestamp: '2026-08-27T21:12:41.096762571Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7177
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:41.077114116Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: "\e[0m\e[91m(!) %VITE_ANALYTICS_WEBSITE_ID% is not defined in env variables\
+  \ found in /index.html. Is the variable mistyped?"
+timestamp: '2026-08-27T21:12:41.068462227Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7176
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:41.077114116Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: "\e[91m(!) %VITE_ANALYTICS_ENDPOINT% is not defined in env variables\
+  \ found in /index.html. Is the variable mistyped?"
+timestamp: '2026-08-27T21:12:41.068101433Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7175
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:41.077114116Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: vite v7.3.5 building client environment for production...
+timestamp: '2026-08-27T21:12:40.975332018Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7174
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:41.077114116Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+timestamp: '2026-08-27T21:12:40.234188783Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7173
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:41.077114116Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: '> vite build && esbuild server/_core/index.ts --platform=node --packages=external
+  --bundle --format=esm --outdir=dist'
+timestamp: '2026-08-27T21:12:40.234188239Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7172
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:41.077114116Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: '> agentlab@1.0.0 build /app'
+timestamp: '2026-08-27T21:12:40.234186054Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7171
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:41.077114116Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+timestamp: '2026-08-27T21:12:40.234171782Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7170
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:40.077220168Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> Running in 3b2b1e865ce8'
+timestamp: '2026-08-27T21:12:39.151478253Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7169
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:40.077220168Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: 'Step 15/26 : RUN pnpm run build'
+timestamp: '2026-08-27T21:12:39.110867003Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7168
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:40.077220168Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> 4efbc59ef1d4'
+timestamp: '2026-08-27T21:12:39.110865462Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7167
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:40.077220168Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: Removing intermediate container 8183ac1bb016
+timestamp: '2026-08-27T21:12:39.110851165Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7166
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> Running in 8183ac1bb016'
+timestamp: '2026-08-27T21:12:39.023700539Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7165
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: 'Step 14/26 : ENV VITE_FIREBASE_PROJECT_ID=$VITE_FIREBASE_PROJECT_ID'
+timestamp: '2026-08-27T21:12:38.994907473Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7164
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> b5684608fb6d'
+timestamp: '2026-08-27T21:12:38.994906013Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7163
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: Removing intermediate container 96993f9e3363
+timestamp: '2026-08-27T21:12:38.994890506Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7162
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> Running in 96993f9e3363'
+timestamp: '2026-08-27T21:12:38.904724304Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7161
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: 'Step 13/26 : ARG VITE_FIREBASE_PROJECT_ID'
+timestamp: '2026-08-27T21:12:38.874862548Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7160
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> 5d3cf11492c4'
+timestamp: '2026-08-27T21:12:38.874861040Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7159
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: Removing intermediate container f9b026128860
+timestamp: '2026-08-27T21:12:38.874844357Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7158
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> Running in f9b026128860'
+timestamp: '2026-08-27T21:12:38.778682462Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7157
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: 'Step 12/26 : ENV VITE_FIREBASE_AUTH_DOMAIN=$VITE_FIREBASE_AUTH_DOMAIN'
+timestamp: '2026-08-27T21:12:38.745803904Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7156
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> 5dcd81cf9b0e'
+timestamp: '2026-08-27T21:12:38.745802424Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7155
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: Removing intermediate container 9d5ffb671a31
+timestamp: '2026-08-27T21:12:38.745769196Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7154
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> Running in 9d5ffb671a31'
+timestamp: '2026-08-27T21:12:38.641615955Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7153
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: 'Step 11/26 : ARG VITE_FIREBASE_AUTH_DOMAIN'
+timestamp: '2026-08-27T21:12:38.608251336Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7152
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> 62de9f1b9826'
+timestamp: '2026-08-27T21:12:38.608250397Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7151
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: Removing intermediate container 256f2baf1f85
+timestamp: '2026-08-27T21:12:38.608236723Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7150
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> Running in 256f2baf1f85'
+timestamp: '2026-08-27T21:12:38.516309169Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7149
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: 'Step 10/26 : ENV VITE_FIREBASE_API_KEY=$VITE_FIREBASE_API_KEY'
+timestamp: '2026-08-27T21:12:38.484808052Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7148
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> 7d117c9bf3de'
+timestamp: '2026-08-27T21:12:38.484806056Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7147
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: Removing intermediate container dd116899b8b3
+timestamp: '2026-08-27T21:12:38.484788768Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7146
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> Running in dd116899b8b3'
+timestamp: '2026-08-27T21:12:38.398955493Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7145
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: 'Step 9/26 : ARG VITE_FIREBASE_API_KEY'
+timestamp: '2026-08-27T21:12:38.363960181Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7144
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:39.084147540Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> 9e5afc4f3c50'
+timestamp: '2026-08-27T21:12:38.363948924Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7143
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:35.097989517Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: 'Step 8/26 : COPY . .'
+timestamp: '2026-08-27T21:12:35.021833975Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7142
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:35.097989517Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ' ---> 76e8956f3b73'
+timestamp: '2026-08-27T21:12:35.021832785Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7141
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:35.097989517Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: Removing intermediate container 8b01689cce47
+timestamp: '2026-08-27T21:12:35.021818344Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7140
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: Done in 20.2s using pnpm v10.33.0
+timestamp: '2026-08-27T21:12:02.547687587Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7139
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ????????????????????????????????????????????????????????????????????????????????
+timestamp: '2026-08-27T21:12:02.533829333Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7138
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ?                                                                              ?
+timestamp: '2026-08-27T21:12:02.533828182Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7137
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ?   to run scripts.                                                            ?
+timestamp: '2026-08-27T21:12:02.533827523Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7136
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ?   Run "pnpm approve-builds" to pick which dependencies should be allowed     ?
+timestamp: '2026-08-27T21:12:02.533826846Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7135
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ?   bufferutil@4.1.0, esbuild@0.25.10, protobufjs@7.6.1.                       ?
+timestamp: '2026-08-27T21:12:02.533822317Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7134
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: '?   Ignored build scripts: @firebase/util@1.15.3, @google/genai@1.52.0,        ?'
+timestamp: '2026-08-27T21:12:02.533821584Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7133
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ?                                                                              ?
+timestamp: '2026-08-27T21:12:02.533820451Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7132
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: ? Warning ??????????????????????????????????????????????????????????????????????
+timestamp: '2026-08-27T21:12:02.533790590Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7131
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+timestamp: '2026-08-27T21:12:02.450590007Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7130
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + vitest 4.1.8
+timestamp: '2026-08-27T21:12:02.450589741Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7129
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + vite-plugin-manus-runtime 0.0.57
+timestamp: '2026-08-27T21:12:02.450589132Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7128
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + vite 7.3.5
+timestamp: '2026-08-27T21:12:02.450588630Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7127
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + typescript 5.9.3
+timestamp: '2026-08-27T21:12:02.450588188Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7126
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + tw-animate-css 1.4.0
+timestamp: '2026-08-27T21:12:02.450587672Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7125
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + tsx 4.20.6
+timestamp: '2026-08-27T21:12:02.450587240Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7124
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + tsoa 7.0.0-alpha.0
+timestamp: '2026-08-27T21:12:02.450586669Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7123
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + tailwindcss 4.3.0
+timestamp: '2026-08-27T21:12:02.450586191Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7122
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + swagger-autogen 2.23.7
+timestamp: '2026-08-27T21:12:02.450585437Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7121
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + prettier 3.6.2
+timestamp: '2026-08-27T21:12:02.450584941Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7120
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + postcss 8.5.15
+timestamp: '2026-08-27T21:12:02.450584446Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7119
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + pnpm 10.33.0
+timestamp: '2026-08-27T21:12:02.450583908Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7118
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + jszip 3.10.1
+timestamp: '2026-08-27T21:12:02.450583470Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7117
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + esbuild 0.25.10
+timestamp: '2026-08-27T21:12:02.450583022Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7116
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + drizzle-kit 0.31.10
+timestamp: '2026-08-27T21:12:02.450581761Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7115
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + cross-env 10.1.0
+timestamp: '2026-08-27T21:12:02.450581040Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7114
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + autoprefixer 10.4.21
+timestamp: '2026-08-27T21:12:02.450580670Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7113
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + add 2.0.6
+timestamp: '2026-08-27T21:12:02.450580218Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7112
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + @vitejs/plugin-react 5.0.4
+timestamp: '2026-08-27T21:12:02.450579734Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7111
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + @types/react-dom 19.2.1
+timestamp: '2026-08-27T21:12:02.450579225Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7110
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + @types/react 19.2.1
+timestamp: '2026-08-27T21:12:02.450578650Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7109
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + @types/node 24.7.0
+timestamp: '2026-08-27T21:12:02.450578205Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7108
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + @types/google.maps 3.58.1
+timestamp: '2026-08-27T21:12:02.450577380Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7107
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + @types/express 4.17.21
+timestamp: '2026-08-27T21:12:02.450576724Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7106
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + @tailwindcss/vite 4.3.0
+timestamp: '2026-08-27T21:12:02.450576177Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7105
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + @tailwindcss/typography 0.5.19
+timestamp: '2026-08-27T21:12:02.450575731Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7104
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + @builder.io/vite-plugin-jsx-loc 0.1.1
+timestamp: '2026-08-27T21:12:02.450575276Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7103
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + @browserbasehq/stagehand 3.5.0
+timestamp: '2026-08-27T21:12:02.450574736Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7102
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: 'devDependencies:'
+timestamp: '2026-08-27T21:12:02.450574229Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7101
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+timestamp: '2026-08-27T21:12:02.450573678Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7100
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + zod 4.4.3
+timestamp: '2026-08-27T21:12:02.450573226Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7099
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + wouter 3.7.1
+timestamp: '2026-08-27T21:12:02.450572761Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7098
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + vaul 1.1.2
+timestamp: '2026-08-27T21:12:02.450572314Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7097
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + uuid 11.1.1
+timestamp: '2026-08-27T21:12:02.450571990Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7096
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + tailwindcss-animate 1.0.7
+timestamp: '2026-08-27T21:12:02.450571550Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7095
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + tailwind-merge 3.3.1
+timestamp: '2026-08-27T21:12:02.450571206Z'
+---
+insertId: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2-7094
+labels:
+  build_tags: p-run,r-docker,bt-DOCKER,service_agentlab
+logName: projects/project-36330a6c-5e91-4901-9dd/logs/cloudbuild
+receiveTimestamp: '2026-08-27T21:12:03.078773620Z'
+resource:
+  labels:
+    build_id: 6d9af4bf-f7f3-40ff-abc5-86eaa61247a2
+    build_trigger_id: ''
+    project_id: project-36330a6c-5e91-4901-9dd
+  type: build
+severity: INFO
+textPayload: + superjson 1.13.3
+timestamp: '2026-08-27T21:12:02.450570856Z'

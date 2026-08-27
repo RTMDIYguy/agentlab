@@ -17,7 +17,7 @@ import {
 import { BillingCycle, PlanId, getPriceId } from "./products";
 
 // Book price ID lives server-side only — never expose in client bundles
-const BOOK_PRICE_ID = "price_1TgRz4GmUFddSefto4jcH4Jv";
+const BOOK_PRICE_ID = "price_1U9AVxKAbfp5cgErtM6zsfEO";
 const BOOTCAMP_PRICE_ID = process.env.STRIPE_BOOTCAMP_PRICE_ID || "";
 
 export const stripeRouter = router({

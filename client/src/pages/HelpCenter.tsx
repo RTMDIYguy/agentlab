@@ -138,7 +138,7 @@ export default function HelpCenter() {
       category: "getting-started",
       question: "Do you offer a free trial?",
       answer:
-        "Yes! We offer a 14-day free trial of our Professional plan with full access to all features. No credit card required to start your trial.",
+        "Yes! We offer a 30-day free trial on all plans with full access to all features. No credit card required to start your trial. You can test workflows without risk.",
     },
     {
       category: "billing",
@@ -200,50 +200,50 @@ export default function HelpCenter() {
     {
       id: 1,
       category: "Tutorial",
-      title: "Getting Started with Your First Agent",
+      title: "Setting Up Your Agentic OS Workspace",
       excerpt:
-        "Learn how to create, configure, and deploy your first AI agent in AgentLab.",
+        "Learn how to configure your first AgentLab workspace, invite team members, and set strict LLM budget caps.",
       readTime: "5 min",
     },
     {
       id: 2,
       category: "Integration",
-      title: "Integrating AgentLab with Slack",
+      title: "Adding API Keys to Workspace Secrets",
       excerpt:
-        "Step-by-step guide to connect your AgentLab agents with Slack for seamless communication.",
-      readTime: "8 min",
+        "Step-by-step guide on storing your sensitive API keys, like Vertex AI and OpenAI, securely in the database with KMS encryption.",
+      readTime: "4 min",
     },
     {
       id: 3,
-      category: "Advanced",
-      title: "Building Multi-Agent Systems",
+      category: "Workflows",
+      title: "Implementing the URC Marketing Starter Kit",
       excerpt:
-        "Advanced techniques for coordinating multiple agents to solve complex business problems.",
+        "A complete walkthrough on how to deploy the automated LinkedIn outreach pipeline and content generation system.",
       readTime: "12 min",
     },
     {
       id: 4,
-      category: "API",
-      title: "AgentLab REST API Reference",
+      category: "Events",
+      title: "Setting up Bootstrapper Capital Roundtables",
       excerpt:
-        "Complete reference for the AgentLab API including endpoints, authentication, and examples.",
-      readTime: "15 min",
+        "Configure automated invites, reminders, and follow-up sequences for your founder roundtable events.",
+      readTime: "8 min",
     },
     {
       id: 5,
       category: "Security",
-      title: "Security Best Practices",
+      title: "Auditing Your Agent Output",
       excerpt:
-        "Essential security practices for deploying AI agents in production environments.",
-      readTime: "7 min",
+        "How to use the Auditing dashboard to monitor what your agents are doing, verify telemetry, and block rogue actions.",
+      readTime: "6 min",
     },
     {
       id: 6,
-      category: "Troubleshooting",
-      title: "Common Issues and Solutions",
+      category: "Workflows",
+      title: "Automating the 90-Day Implementation Plan",
       excerpt:
-        "Solutions to frequently encountered problems and how to resolve them quickly.",
-      readTime: "6 min",
+        "Translate the URC 90-day plan into concrete, automated weekly actions managed by the Orchestrator LLM.",
+      readTime: "15 min",
     },
   ];
 
@@ -266,7 +266,8 @@ export default function HelpCenter() {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <PageLayout>
+      <div className="bg-background">
       {/* Header */}
       <section className="py-12 bg-gradient-to-r from-primary/10 to-primary/5 border-b border-border">
         <div className="container max-w-6xl">
@@ -512,6 +513,7 @@ export default function HelpCenter() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </PageLayout>
   );
 }

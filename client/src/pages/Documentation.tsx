@@ -1,137 +1,181 @@
-import { PageLayout } from "@/components/PageLayout";
-import { BookOpen, Code, Terminal, Zap, Shield, HelpCircle } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { DashboardLayout } from "@/components/DashboardLayout";
+import { Card } from "@/components/ui/card";
+import { 
+  Map, 
+  TerminalSquare, 
+  Cpu, 
+  ShieldAlert, 
+  CreditCard, 
+  Settings,
+  ShoppingBag,
+  LifeBuoy,
+  BookOpen
+} from "lucide-react";
+import { Link } from "wouter";
 
 export default function Documentation() {
+  const directorySections = [
+    {
+      title: "Command Center",
+      icon: TerminalSquare,
+      path: "/command-center",
+      description: "Mission control for all active agents and workflows. Monitor live events.",
+      isHere: false,
+    },
+    {
+      title: "Agents",
+      icon: Cpu,
+      path: "/agents",
+      description: "Manage, configure, and monitor individual AI agents and their assignments.",
+      isHere: false,
+    },
+    {
+      title: "Auditing",
+      icon: ShieldAlert,
+      path: "/auditing",
+      description: "Review agent logs, decisions, and security alerts. Enforce human-in-the-loop.",
+      isHere: false,
+    },
+    {
+      title: "Billing",
+      icon: CreditCard,
+      path: "/billing",
+      description: "View usage, manage subscriptions, and analyze cloud spending.",
+      isHere: false,
+    },
+    {
+      title: "Settings",
+      icon: Settings,
+      path: "/dashboard/settings",
+      description: "Configure workspace settings, secrets (Vertex/OpenAI), and integrations.",
+      isHere: false,
+    },
+    {
+      title: "Marketplace",
+      icon: ShoppingBag,
+      path: "/marketplace",
+      description: "Install pre-built workflows and templates to extend your agency's capabilities.",
+      isHere: false,
+    },
+    {
+      title: "Blog Manager",
+      icon: BookOpen,
+      path: "/blog-manager",
+      description: "Manage autonomous content generation and publication pipelines.",
+      isHere: false,
+    },
+    {
+      title: "Support & Knowledge Base",
+      icon: LifeBuoy,
+      path: "/help",
+      description: "Access tutorials, contact support, and read FAQs.",
+      isHere: false,
+    },
+    {
+      title: "Owner's Manual",
+      icon: Map,
+      path: "/docs",
+      description: "The live directory of the entire business operating system.",
+      isHere: true,
+    },
+    {
+      title: "Careers",
+      icon: Cpu,
+      path: "/careers",
+      description: "Apply for roles and join the agentic future.",
+      isHere: false,
+    },
+    {
+      title: "About URC",
+      icon: BookOpen,
+      path: "/about",
+      description: "Agency values and operating promise for Uncle Robert Consulting.",
+      isHere: false,
+    }
+  ];
+
   return (
-    <PageLayout className="min-h-screen bg-background flex flex-col">
-      <main className="flex-grow pt-24 pb-16">
-        <div className="container max-w-5xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-              AgentLab Owner's Manual
+    <DashboardLayout>
+      <div className="p-8 max-w-6xl mx-auto">
+        <div className="mb-10 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-foreground flex items-center gap-3">
+              <Map className="w-10 h-10 text-primary" />
+              Owner's Manual & Directory
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Everything you need to know to build, manage, and scale AI-native workflows on AgentLab.
+            <p className="text-xl text-muted-foreground mt-3">
+              Your business operating system, mapped in real-time. Navigate to any component below.
             </p>
           </div>
+        </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-            {/* Core Concepts */}
-            <Card className="hover:border-primary/50 transition-colors">
-              <CardHeader>
-                <BookOpen className="w-8 h-8 text-primary mb-2" />
-                <CardTitle>Core Concepts</CardTitle>
-                <CardDescription>Understand the architecture</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><a href="#" className="hover:text-primary transition-colors">What is an Agent?</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Workflows vs Playbooks</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">The Execution Queue</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">State Management</a></li>
-                </ul>
-              </CardContent>
-            </Card>
+        {/* The Mall Directory Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
+          {directorySections.map((section) => {
+            const Icon = section.icon;
+            return (
+              <Link key={section.path} href={section.path}>
+                <a className="block h-full relative group">
+                  <Card 
+                    className={`h-full p-6 transition-all border-2 flex flex-col 
+                      ${section.isHere 
+                        ? 'border-red-500 bg-red-500/5 shadow-md scale-[1.02] z-10' 
+                        : 'border-border hover:border-primary hover:shadow-sm'
+                      }`}
+                  >
+                    {section.isHere && (
+                      <div className="absolute -top-4 -right-4 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 animate-bounce">
+                        <Map className="w-3 h-3" />
+                        YOU ARE HERE
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className={`p-3 rounded-lg ${section.isHere ? 'bg-red-500/10 text-red-600' : 'bg-primary/10 text-primary'}`}>
+                        <Icon className="w-6 h-6" />
+                      </div>
+                      <h3 className={`text-xl font-bold ${section.isHere ? 'text-red-700' : 'text-foreground'}`}>
+                        {section.title}
+                      </h3>
+                    </div>
+                    
+                    <p className="text-muted-foreground text-sm flex-1 leading-relaxed">
+                      {section.description}
+                    </p>
 
-            {/* Quickstart */}
-            <Card className="hover:border-primary/50 transition-colors">
-              <CardHeader>
-                <Zap className="w-8 h-8 text-primary mb-2" />
-                <CardTitle>Quickstart Guide</CardTitle>
-                <CardDescription>Get up and running</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><a href="#" className="hover:text-primary transition-colors">Creating your first Workflow</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Using the Command Center</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Scheduling CRON jobs</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Reviewing logs</a></li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            {/* Advanced Building */}
-            <Card className="hover:border-primary/50 transition-colors">
-              <CardHeader>
-                <Code className="w-8 h-8 text-primary mb-2" />
-                <CardTitle>Custom Prompts</CardTitle>
-                <CardDescription>Write better agent instructions</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><a href="#" className="hover:text-primary transition-colors">Prompt Engineering Basics</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Giving Agents context</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Handling edge cases</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Dynamic variables</a></li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            {/* Security */}
-            <Card className="hover:border-primary/50 transition-colors">
-              <CardHeader>
-                <Shield className="w-8 h-8 text-primary mb-2" />
-                <CardTitle>Security & Access</CardTitle>
-                <CardDescription>Keep your data safe</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><a href="#" className="hover:text-primary transition-colors">Managing Secrets</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Environment Variables</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Audit Logging</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Role-based Access Control</a></li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            {/* Integration */}
-            <Card className="hover:border-primary/50 transition-colors">
-              <CardHeader>
-                <Terminal className="w-8 h-8 text-primary mb-2" />
-                <CardTitle>API & Integrations</CardTitle>
-                <CardDescription>Connect external services</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><a href="#" className="hover:text-primary transition-colors">REST API Reference</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Webhooks</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Connecting Gmail/Slack</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Marketplace Packages</a></li>
-                </ul>
-              </CardContent>
-            </Card>
-            
-            {/* Troubleshooting */}
-            <Card className="hover:border-primary/50 transition-colors">
-              <CardHeader>
-                <HelpCircle className="w-8 h-8 text-primary mb-2" />
-                <CardTitle>Troubleshooting</CardTitle>
-                <CardDescription>Fixing common issues</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><a href="#" className="hover:text-primary transition-colors">Why did my agent fail?</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Understanding error codes</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Billing and limits</a></li>
-                  <li><a href="#" className="hover:text-primary transition-colors">Contact Support</a></li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-          
-          <div className="bg-muted/50 rounded-2xl p-8 border border-border">
-            <h3 className="text-xl font-semibold mb-4">Can't find what you're looking for?</h3>
-            <p className="text-muted-foreground mb-4">
-              Our documentation is constantly evolving. If you need help with a specific use case or have a question that isn't covered here, our community and support team are ready to help.
-            </p>
-            <div className="flex gap-4">
-              <a href="/support" className="text-sm font-medium text-primary hover:underline">Contact Support &rarr;</a>
-              <a href="/community" className="text-sm font-medium text-primary hover:underline">Join Community &rarr;</a>
+                    <div className={`mt-4 text-sm font-medium ${section.isHere ? 'text-red-600' : 'text-primary opacity-0 group-hover:opacity-100 transition-opacity'}`}>
+                      {section.isHere ? 'Current Location' : 'Access Node →'}
+                    </div>
+                  </Card>
+                </a>
+              </Link>
+            );
+          })}
+        </div>
+        
+        {/* Real-time Status Board Footer */}
+        <div className="mt-12 p-6 bg-muted/30 border border-border rounded-xl">
+          <h3 className="text-lg font-semibold text-foreground mb-4">Live System Status</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="flex flex-col">
+              <span className="text-sm text-muted-foreground uppercase tracking-wider font-semibold">Active Agents</span>
+              <span className="text-2xl font-bold text-foreground">3</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm text-muted-foreground uppercase tracking-wider font-semibold">Uptime</span>
+              <span className="text-2xl font-bold text-green-600">99.9%</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm text-muted-foreground uppercase tracking-wider font-semibold">Pending Audits</span>
+              <span className="text-2xl font-bold text-yellow-600">2</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm text-muted-foreground uppercase tracking-wider font-semibold">Version</span>
+              <span className="text-2xl font-bold text-foreground">v1.2.0</span>
             </div>
           </div>
         </div>
-      </main>
-    </PageLayout>
+      </div>
+    </DashboardLayout>
   );
 }

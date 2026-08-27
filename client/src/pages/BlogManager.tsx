@@ -15,6 +15,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { toast } from "sonner";
+import { PageLayout } from "@/components/PageLayout";
 
 export default function BlogManager() {
   const [, navigate] = useLocation();
@@ -77,21 +78,24 @@ export default function BlogManager() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background py-8">
-        <div className="container max-w-6xl">
-          <Card className="p-8 border border-border text-center">
-            <p className="text-foreground mb-4">
-              Please log in to manage articles.
-            </p>
-            <Button className="bg-primary hover:bg-primary/90">Sign In</Button>
-          </Card>
+      <PageLayout>
+        <div className="py-8">
+          <div className="container max-w-6xl">
+            <Card className="p-8 border border-border text-center">
+              <p className="text-foreground mb-4">
+                Please log in to manage articles.
+              </p>
+              <Button className="bg-primary hover:bg-primary/90">Sign In</Button>
+            </Card>
+          </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background py-8">
+    <PageLayout>
+      <div className="py-8">
       <div className="container max-w-6xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -288,6 +292,7 @@ export default function BlogManager() {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </PageLayout>
   );
 }
