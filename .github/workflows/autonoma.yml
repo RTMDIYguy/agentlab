@@ -6,6 +6,9 @@ on:
   deployment_status:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   autonoma-deployment-signal:
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || (github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success')
