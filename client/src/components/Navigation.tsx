@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-
+import { Link, useLocation } from "wouter";
 
 export function Navigation() {
   const { user, isAuthenticated, logout } = useAuth();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [, setLocation] = useLocation();
 
   const handleMouseEnter = (menu: string) => {
     setOpenMenu(menu);
@@ -138,32 +139,27 @@ export function Navigation() {
               <span className="text-sm text-muted-foreground hidden sm:inline">
                 {user?.name}
               </span>
-              <Button
-                variant="outline"
-                className="hidden sm:inline-flex"
-                onClick={() => (window.location.href = "/dashboard")}
-              >
-                Go to Dashboard
-              </Button>
+              <Link href="/dashboard">
+                <Button variant="outline" className="hidden sm:inline-flex">
+                  Go to Dashboard
+                </Button>
+              </Link>
               <Button variant="ghost" size="sm" onClick={logout}>
                 Sign Out
               </Button>
             </>
           ) : (
             <>
-              <Button
-                variant="outline"
-                className="hidden sm:inline-flex"
-                onClick={() => (window.location.href = "/login")}
-              >
-                Sign In
-              </Button>
-              <Button
-                className="bg-primary hover:bg-primary/90"
-                onClick={() => (window.location.href = "/login")}
-              >
-                Get Started
-              </Button>
+              <Link href="/login">
+                <Button variant="outline" className="hidden sm:inline-flex">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                  Get Started
+                </Button>
+              </Link>
             </>
           )}
         </div>

@@ -37,8 +37,8 @@ import Book from "@/pages/Book";
 import Bootcamp from "@/pages/Bootcamp";
 import Marketplace from "@/pages/Marketplace";
 // import CommandCenter from "@/pages/CommandCenter";
-// import Login from "@/pages/Login";
-// import Signup from "@/pages/Signup";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
 // import Support from "@/pages/Support";
 import Security from "@/pages/Security";
 import Careers from "@/pages/Careers";
@@ -75,8 +75,8 @@ function Router() {
   return (
     <Switch>
       <Route path={"/"} component={RootRoute} />
-      {/* <Route path={"/login"} component={Login} />
-      <Route path={"/signup"} component={Signup} /> */}
+      <Route path={"/login"} component={Login} />
+      <Route path={"/signup"} component={Signup} />
       <Route path={"/services"} component={Services} />
       <Route path={"/features"} component={Features} />
       <Route path={"/pricing"} component={Pricing} />

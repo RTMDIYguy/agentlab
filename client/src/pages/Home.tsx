@@ -16,7 +16,7 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { PageLayout } from "@/components/PageLayout";
-// import { ConcertHero } from "@/components/ConcertHero";
+import { Link } from "wouter";
 
 export default function Home() {
   const { user, isAuthenticated, logout } = useAuth();

@@ -1,0 +1,122 @@
+# Agent Lab Canonical Registry: Technical Platforms
+# Level 1 Authority
+
+platforms:
+  - id: PLAT-GCP
+    name: "Google Cloud Platform"
+    category: cloud_infrastructure
+    purpose: "Backend runtime host (Cloud Run), Vertex AI model access, and Secret Manager."
+    environment: production
+    status: active
+    criticality: critical
+    owner: "Robert T. McCarthy / TECH"
+    data_classification: confidential
+    integration_points:
+      - Cloud Run
+      - Vertex AI / Gemini API
+      - Google Secret Manager
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PLAT-POSTGRES
+    name: "PostgreSQL Database"
+    category: database
+    purpose: "Primary production datastore managing multi-tenant workspaces, RLS, audit logs, workflows, and packages via Drizzle ORM."
+    environment: production
+    status: active
+    criticality: critical
+    owner: "Robert T. McCarthy / TECH"
+    data_classification: internal
+    integration_points:
+      - Drizzle ORM
+      - Node/Express backend
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PLAT-VERCEL
+    name: "Vercel"
+    category: edge_hosting
+    purpose: "Frontend application hosting and preview deployment target for React/Vite client."
+    environment: production
+    status: active
+    criticality: high
+    owner: "Robert T. McCarthy / TECH"
+    data_classification: public
+    integration_points:
+      - GitHub CI/CD
+      - React/Vite Client
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PLAT-STRIPE
+    name: "Stripe"
+    category: payment_gateway
+    purpose: "Billing engine, subscription management for Ownable OS and knowledge package marketplace."
+    environment: production
+    status: active
+    criticality: high
+    owner: "Robert T. McCarthy / FIN"
+    data_classification: confidential
+    integration_points:
+      - Stripe Checkout
+      - Stripe Webhooks / Server SDK
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PLAT-AUTONOMA
+    name: "Autonoma"
+    category: e2e_testing
+    purpose: "Automated end-to-end integration and UI regression testing with synthetic factory seeding."
+    environment: development
+    status: active
+    criticality: medium
+    owner: "Robert T. McCarthy / QA"
+    data_classification: internal
+    integration_points:
+      - /api/autonoma
+      - server/_core/autonomaSdk.ts
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PLAT-AIKIDO
+    name: "Aikido Security"
+    category: application_security
+    purpose: "Continuous code security scanning, dependency vulnerability management, and secret leak prevention."
+    environment: production
+    status: active
+    criticality: medium
+    owner: "Robert T. McCarthy / SEC"
+    data_classification: internal
+    integration_points:
+      - GitHub CI/CD
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PLAT-MINTLIFY
+    name: "Mintlify"
+    category: documentation_surface
+    purpose: "Public developer and client documentation portal generated/derived from canonical specs."
+    environment: production
+    status: active
+    criticality: low
+    owner: "Robert T. McCarthy / OPS"
+    data_classification: public
+    integration_points:
+      - docs/
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PLAT-M365
+    name: "Microsoft 365"
+    category: office_backbone
+    purpose: "Business collaboration, document drafting, OneDrive storage, and manual operating bridge."
+    environment: production
+    status: active
+    criticality: high
+    owner: "Robert T. McCarthy / OPS"
+    data_classification: internal
+    integration_points:
+      - OneDrive
+      - Excel / Lists
+    last_verified: "2026-08-28"
+    version: "1.0.0"

@@ -1,3 +1,17 @@
+---
+document_id: DOC-URC-90-DAY-PLAN
+title: "URC 90-Day Implementation Plan"
+document_type: execution_horizon
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources:
+  - governance/registry/
+last_reviewed: 2026-08-28
+next_review: 2026-09-28
+version: "1.0.0"
+---
+
 # URC 90-Day Implementation Plan
 
 ## Purpose

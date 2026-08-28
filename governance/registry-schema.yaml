@@ -1,0 +1,354 @@
+# Agent Lab Governance: Registry Schema Specification
+# Version: 1.0.0
+# Date: 2026-08-28
+
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "AgentLabCanonicalRegistrySchema"
+description: "Canonical schema definitions for all Agent Lab single-source-of-truth registry entities."
+
+definitions:
+  lifecycle_status:
+    type: string
+    enum:
+      - draft
+      - active
+      - deprecated
+      - historical
+      - archived
+      - unknown
+      - decision_pending
+      - implementation_pending
+
+  authority_level:
+    type: string
+    enum:
+      - canonical       # Level 1: Master registry definition
+      - operational     # Level 2: Operating manuals, active SOPs
+      - derived         # Level 3: Generated or synthesized documentation
+      - reference       # Level 4: External or supporting guides
+      - historical      # Level 4: Prior records preserved for lineage
+
+  confidence_level:
+    type: string
+    enum:
+      - verified
+      - probable
+      - disputed
+      - unknown
+
+  entity_header:
+    type: object
+    required:
+      - id
+      - name
+      - status
+      - owner
+      - last_verified
+      - version
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        $ref: "#/definitions/lifecycle_status"
+      owner:
+        type: string
+      last_verified:
+        type: string
+        format: date
+      version:
+        type: string
+      description:
+        type: string
+      change_control_ref:
+        type: string
+
+  organization:
+    allOf:
+      - $ref: "#/definitions/entity_header"
+      - type: object
+        required:
+          - legal_name
+          - role
+        properties:
+          legal_name:
+            type: string
+          role:
+            type: string
+          classification:
+            type: string
+          effective_from:
+            type: string
+            format: date
+          effective_to:
+            type: string
+            format: date
+
+  product:
+    allOf:
+      - $ref: "#/definitions/entity_header"
+      - type: object
+        required:
+          - product_type
+          - target_customer
+          - billing_model
+        properties:
+          product_type:
+            type: string
+          public_description:
+            type: string
+          internal_description:
+            type: string
+          price:
+            type: [number, string]
+          billing_model:
+            type: string
+          currency:
+            type: string
+          target_customer:
+            type: string
+          channel:
+            type: string
+          workspace_behavior:
+            type: string
+          included_modules:
+            type: array
+            items:
+              type: string
+          excluded_modules:
+            type: array
+            items:
+              type: string
+
+  platform:
+    allOf:
+      - $ref: "#/definitions/entity_header"
+      - type: object
+        required:
+          - category
+          - purpose
+          - environment
+        properties:
+          category:
+            type: string
+          purpose:
+            type: string
+          environment:
+            type: string
+          criticality:
+            type: string
+            enum: [critical, high, medium, low]
+          data_classification:
+            type: string
+          integration_points:
+            type: array
+            items:
+              type: string
+
+  service:
+    allOf:
+      - $ref: "#/definitions/entity_header"
+      - type: object
+        required:
+          - service_type
+          - runtime
+          - deployment_platform
+        properties:
+          service_type:
+            type: string
+          runtime:
+            type: string
+          deployment_platform:
+            type: string
+          repository:
+            type: string
+          entrypoint:
+            type: string
+          dependencies:
+            type: array
+            items:
+              type: string
+
+  environment:
+    allOf:
+      - $ref: "#/definitions/entity_header"
+      - type: object
+        required:
+          - env_type
+        properties:
+          env_type:
+            type: string
+            enum: [local, development, staging, preview, production, sandbox, archive]
+          purpose:
+            type: string
+          access_policy:
+            type: string
+
+  workspace:
+    allOf:
+      - $ref: "#/definitions/entity_header"
+      - type: object
+        required:
+          - workspace_type
+          - organization_id
+        properties:
+          workspace_type:
+            type: string
+            enum: [urc, client, trial, demo, internal, sandbox]
+          organization_id:
+            type: string
+          display_name:
+            type: string
+          plan:
+            type: string
+          enabled_modules:
+            type: array
+            items:
+              type: string
+          disabled_modules:
+            type: array
+            items:
+              type: string
+          data_policy:
+            type: object
+
+  agent:
+    allOf:
+      - $ref: "#/definitions/entity_header"
+      - type: object
+        required:
+          - purpose
+          - workspace_scope
+        properties:
+          purpose:
+            type: string
+          workspace_scope:
+            type: string
+          system_prompt_ref:
+            type: string
+          knowledge_scope:
+            type: array
+            items:
+              type: string
+          tools:
+            type: array
+            items:
+              type: string
+          permissions:
+            type: array
+            items:
+              type: string
+          human_approval_required:
+            type: boolean
+
+  workflow:
+    allOf:
+      - $ref: "#/definitions/entity_header"
+      - type: object
+        required:
+          - department
+          - trigger
+          - inputs
+          - outputs
+        properties:
+          department:
+            type: string
+          track:
+            type: string
+          trigger:
+            type: string
+          inputs:
+            type: array
+            items:
+              type: string
+          outputs:
+            type: array
+            items:
+              type: string
+          agent_ref:
+            type: string
+          required_tools:
+            type: array
+            items:
+              type: string
+          required_modules:
+            type: array
+            items:
+              type: string
+          source_files:
+            type: array
+            items:
+              type: string
+
+  knowledge_package:
+    allOf:
+      - $ref: "#/definitions/entity_header"
+      - type: object
+        required:
+          - package_type
+          - department_code
+        properties:
+          package_type:
+            type: string
+          department_code:
+            type: string
+          source_directory:
+            type: string
+          dependencies:
+            type: array
+            items:
+              type: string
+          compatible_agents:
+            type: array
+            items:
+              type: string
+          compatible_workflows:
+            type: array
+            items:
+              type: string
+          commercial_product_ref:
+            type: string
+
+  claim:
+    type: object
+    required:
+      - claim_id
+      - subject
+      - predicate
+      - object
+      - claim_type
+      - status
+      - confidence
+      - audience
+      - public_allowed
+      - verified_by
+      - last_verified
+    properties:
+      claim_id:
+        type: string
+      subject:
+        type: string
+      predicate:
+        type: string
+      object:
+        type: string
+      claim_type:
+        type: string
+        enum: [architecture, pricing, product_capability, security, tenancy, workflow_count, operating_rule]
+      status:
+        $ref: "#/definitions/lifecycle_status"
+      confidence:
+        $ref: "#/definitions/confidence_level"
+      audience:
+        type: string
+        enum: [public, client, internal, operator]
+      public_allowed:
+        type: boolean
+      source_of_evidence:
+        type: string
+      verified_by:
+        type: string
+      last_verified:
+        type: string
+        format: date

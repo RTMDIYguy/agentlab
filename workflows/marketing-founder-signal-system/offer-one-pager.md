@@ -1,3 +1,18 @@
+---
+document_id: DOC-FOUNDER-SIGNAL-ONE-PAGER
+title: "Founder Signal System — Offer One-Pager"
+document_type: sales_one_pager
+authority_level: derived
+status: active
+owner: "Robert T. McCarthy / MKT"
+canonical_sources:
+  - governance/registry/products.yaml
+  - governance/registry/claims.yaml
+last_reviewed: 2026-08-28
+next_review: 2026-09-28
+version: "1.0.0"
+---
+
 # Founder Signal System — Offer One-Pager
 
 A starter marketing system for founders who already have customers but

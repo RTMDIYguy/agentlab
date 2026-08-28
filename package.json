@@ -14,7 +14,8 @@
     "public-scan:browserbase": "tsx scripts/public-scan-browserbase.ts",
     "format": "prettier --write .",
     "test": "vitest run",
-    "db:push": "drizzle-kit generate && drizzle-kit migrate"
+    "db:push": "drizzle-kit generate && drizzle-kit migrate",
+    "drift:scan": "node scripts/drift/drift-scan.mjs"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.48",

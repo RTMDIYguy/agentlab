@@ -1,0 +1,77 @@
+# Agent Lab Canonical Registry: Decisions, Changes, and Policies
+# Level 1 Authority
+
+decisions:
+  - decision_id: DEC-2026-08-001
+    title: "PostgreSQL with Drizzle ORM Established as Production Database"
+    decision: "Migrate from SQLite/TBD to PostgreSQL + Drizzle ORM for all production workloads with workspace_id tenancy."
+    date: "2026-08-20"
+    owner: "Robert T. McCarthy"
+    reason: "Enables multi-tenant workspace isolation, JSONB audit telemetry, and robust relational DAG execution."
+    alternatives_considered:
+      - "SQLite with Turso"
+      - "MongoDB Atlas"
+    affected_entities:
+      - "PLAT-POSTGRES"
+      - "SVC-SERVER-API"
+    affected_documents:
+      - "docs/operations/agency-owners-manual.md"
+    implementation_status: active
+    change_control_ref: "CC-2026-08-20-001"
+
+  - decision_id: DEC-2026-08-002
+    title: "Google Cloud Run Adopted as Primary Production Backend Runtime"
+    decision: "Deploy Node/Express API server and Orchestrator on Google Cloud Run in Docker container."
+    date: "2026-08-20"
+    owner: "Robert T. McCarthy"
+    reason: "Provides serverless scalability, VPC database connectors, and seamless Vertex AI / Secret Manager access."
+    alternatives_considered:
+      - "Vercel Serverless Functions"
+      - "DatabaseMart VPS"
+    affected_entities:
+      - "PLAT-GCP"
+      - "SVC-SERVER-API"
+      - "SVC-ORCHESTRATOR"
+    affected_documents:
+      - "docs/operations/agency-owners-manual.md"
+    implementation_status: active
+    change_control_ref: "CC-2026-08-20-002"
+
+changes:
+  - change_id: CHG-2026-08-28-001
+    change_type: governance_scaffold
+    date: "2026-08-28"
+    actor: "Antigravity Desktop"
+    affected_entities:
+      - "all_registry_entities"
+    before: "Dispersed operational documentation with latent architecture drift between June Owner's Manual and August SaaS codebase."
+    after: "Single source of truth governance framework with YAML registry, JSON schema, and initial drift reconciliation."
+    reason: "Establish canonical truth and prevent informational drift per due diligence review."
+    risk_level: low
+    tests_required:
+      - "pnpm change-control:check"
+    tests_completed:
+      - "Passed change-control verification"
+    documents_impacted:
+      - "governance/registry-schema.yaml"
+      - "governance/terminology.yaml"
+      - "governance/registry/*.yaml"
+      - "governance/current-state-reconciliation.md"
+    status: active
+
+policies:
+  - id: POL-SECURITY-SECRETS
+    name: "Permanent Secret and Credential Prohibition"
+    policy_type: security
+    rule: "No plaintext API keys, tokens, or credentials may be stored in Git, YAML registries, or markdown documents. All secrets must reside in Google Secret Manager or secure environment variables."
+    status: active
+    owner: "Robert T. McCarthy / SEC"
+    last_verified: "2026-08-28"
+
+  - id: POL-DATA-PII-REDACTION
+    name: "PII and Sensitive Data Redaction"
+    policy_type: compliance
+    rule: "Model prompts and telemetry payloads must have automated PII scrubbing applied before persistent logging in audit_logs."
+    status: active
+    owner: "Robert T. McCarthy / COMPLIANCE"
+    last_verified: "2026-08-28"

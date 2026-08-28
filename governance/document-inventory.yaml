@@ -1,0 +1,73 @@
+# Agent Lab Governance: Document Inventory
+# Level 1 Authority Catalog of System Documentation
+
+documents:
+  - document_id: DOC-GOV-README
+    title: "Agent Lab Governance & Single Source of Truth"
+    path: "governance/README.md"
+    document_type: governance_overview
+    authority_level: canonical
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    canonical_sources: ["governance/registry/"]
+    last_reviewed: "2026-08-28"
+
+  - document_id: DOC-AGENCY-OWNERS-MANUAL
+    title: "Agency Owner's Manual"
+    path: "docs/operations/agency-owners-manual.md"
+    document_type: human_operating_map
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    canonical_sources: ["governance/registry/"]
+    last_reviewed: "2026-08-28"
+
+  - document_id: DOC-URC-OPERATING-ARCHITECTURE
+    title: "URC V1 Operating Architecture"
+    path: "docs/operations/urc-v1-operating-architecture.md"
+    document_type: architecture_strategy
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    canonical_sources: ["governance/registry/"]
+    last_reviewed: "2026-08-28"
+
+  - document_id: DOC-URC-90-DAY-PLAN
+    title: "URC 90-Day Implementation Plan"
+    path: "docs/operations/urc-90-day-implementation-plan.md"
+    document_type: execution_horizon
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    canonical_sources: ["governance/registry/"]
+    last_reviewed: "2026-08-28"
+
+  - document_id: DOC-CHANGE-CONTROL-REGISTER
+    title: "Change Control Register"
+    path: "docs/operations/change-control-register.md"
+    document_type: change_audit_ledger
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    canonical_sources: ["governance/registry/changes.yaml"]
+    last_reviewed: "2026-08-28"
+
+  - document_id: DOC-SCHEDULED-CHANGE-QUEUE
+    title: "Scheduled Change Queue"
+    path: "docs/operations/scheduled-change-queue.md"
+    document_type: change_schedule
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    canonical_sources: ["governance/registry/changes.yaml"]
+    last_reviewed: "2026-08-28"
+
+  - document_id: DOC-FOUNDER-SIGNAL-ONE-PAGER
+    title: "Founder Signal System — Offer One-Pager"
+    path: "workflows/marketing-founder-signal-system/offer-one-pager.md"
+    document_type: sales_one_pager
+    authority_level: derived
+    status: active
+    owner: "Robert T. McCarthy / MKT"
+    canonical_sources: ["governance/registry/products.yaml", "governance/registry/claims.yaml"]
+    last_reviewed: "2026-08-28"

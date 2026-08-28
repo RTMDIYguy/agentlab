@@ -1,0 +1,36 @@
+# Agent Lab Canonical Registry: Organizations
+# Level 1 Authority
+
+organizations:
+  - id: ORG-URC
+    name: Uncle Robert Consulting LLC
+    legal_name: Uncle Robert Consulting LLC
+    role: "Parent operating entity, IP owner, consulting/advisory contracts, client billing."
+    owner: "Robert T. McCarthy"
+    status: active
+    classification: commercial
+    effective_from: "2026-01-01"
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: ORG-TACTIX
+    name: Tactix
+    legal_name: "Tactix (URC Delivery Pod)"
+    role: "Fulfillment and delivery arm for agency overflow, freelance coordination, and Upwork engagements."
+    owner: "Robert T. McCarthy / OPS"
+    status: active
+    classification: operational_pod
+    effective_from: "2026-01-01"
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: ORG-BOOTSTRAPPER-CAPITAL
+    name: Bootstrapper Capital
+    legal_name: "Bootstrapper Capital (URC Community Division)"
+    role: "Community gathering, audience building, founder roundtables, workshops, and top-of-funnel lead generation."
+    owner: "Robert T. McCarthy"
+    status: active
+    classification: community_funnel
+    effective_from: "2026-01-01"
+    last_verified: "2026-08-28"
+    version: "1.0.0"

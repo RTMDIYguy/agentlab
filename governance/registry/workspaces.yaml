@@ -1,0 +1,44 @@
+# Agent Lab Canonical Registry: Workspaces
+# Level 1 Authority
+
+workspaces:
+  - id: WS-0000-URC
+    name: "URC Master Workspace"
+    workspace_type: urc
+    organization_id: ORG-URC
+    display_name: "Uncle Robert Consulting Command Center"
+    status: active
+    plan: "internal_unlimited"
+    enabled_modules:
+      - "ops-all"
+      - "mkt-all"
+      - "sal-all"
+      - "fin-all"
+    disabled_modules: []
+    data_policy:
+      retention_days: 365
+      pii_redaction: true
+      saif_enforcement: true
+    owner: "Robert T. McCarthy"
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: WS-CLIENT-ISOLATED
+    name: "Client Tenant Workspace Architecture"
+    workspace_type: client
+    organization_id: ORG-URC
+    display_name: "Isolated Client Tenant Workspace"
+    status: active
+    plan: "workspace_subscription"
+    enabled_modules:
+      - "core_orchestrator"
+      - "licensed_packages"
+    disabled_modules:
+      - "unlicensed_packages"
+    data_policy:
+      retention_days: 90
+      pii_redaction: true
+      saif_enforcement: true
+    owner: "Robert T. McCarthy / TECH"
+    last_verified: "2026-08-28"
+    version: "1.0.0"

@@ -1,0 +1,56 @@
+# Agent Lab Canonical Registry: Documents & Governance Artifacts
+# Level 1 Authority
+
+documents:
+  - id: DOC-AGENCY-OWNERS-MANUAL
+    title: "Agency Owner's Manual"
+    document_type: operating_manual
+    path: "docs/operations/agency-owners-manual.md"
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    version: "v0.3"
+    effective_from: "2026-06-09"
+    last_reviewed: "2026-08-28"
+    next_review: "2026-09-28"
+    supersedes: "docs/operations/agency-operating-manual.md"
+    canonical_sources:
+      - "governance/registry/"
+
+  - id: DOC-V1-OPERATING-ARCHITECTURE
+    title: "URC V1 Operating Architecture"
+    document_type: architecture_strategy
+    path: "docs/operations/urc-v1-operating-architecture.md"
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    version: "1.0.0"
+    effective_from: "2026-05-15"
+    last_reviewed: "2026-08-28"
+    canonical_sources:
+      - "governance/registry/"
+
+  - id: DOC-90-DAY-PLAN
+    title: "URC 90-Day Implementation Plan"
+    document_type: execution_plan
+    path: "docs/operations/urc-90-day-implementation-plan.md"
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    version: "1.0.0"
+    effective_from: "2026-05-15"
+    last_reviewed: "2026-08-28"
+    canonical_sources:
+      - "governance/registry/"
+
+  - id: DOC-AGENT-TASK-QUEUE
+    title: "Agent Task Queue"
+    document_type: task_queue
+    path: "Agent Task Queue.md"
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy"
+    version: "1.0.0"
+    last_reviewed: "2026-08-28"
+    canonical_sources:
+      - "governance/registry/"

@@ -1,3 +1,17 @@
+---
+document_id: DOC-CHANGE-CONTROL-REGISTER
+title: "Change Control Register"
+document_type: change_audit_ledger
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources:
+  - governance/registry/changes.yaml
+last_reviewed: 2026-08-28
+next_review: 2026-09-28
+version: "1.0.0"
+---
+
 # Change Control Register
 
 Date started: 2026-05-07

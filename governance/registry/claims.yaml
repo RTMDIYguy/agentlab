@@ -1,0 +1,81 @@
+# Agent Lab Canonical Registry: Claims
+# Level 1 Authority
+
+claims:
+  - claim_id: CLAIM-DB-POSTGRES
+    subject: "Agent Lab"
+    predicate: "uses production database"
+    object: "PostgreSQL with Drizzle ORM"
+    claim_type: architecture
+    status: active
+    confidence: verified
+    audience: internal
+    public_allowed: true
+    source_of_evidence: "drizzle.config.ts; package.json; server/schema.ts"
+    verified_by: "Antigravity Desktop / TECH"
+    last_verified: "2026-08-28"
+
+  - claim_id: CLAIM-RUNTIME-CLOUDRUN
+    subject: "Agent Lab API & Orchestrator"
+    predicate: "runs on"
+    object: "Google Cloud Run"
+    claim_type: architecture
+    status: active
+    confidence: verified
+    audience: internal
+    public_allowed: true
+    source_of_evidence: "Dockerfile; server/_core/index.ts"
+    verified_by: "Antigravity Desktop / TECH"
+    last_verified: "2026-08-28"
+
+  - claim_id: CLAIM-FRONTEND-REACT-VITE
+    subject: "Agent Lab UI"
+    predicate: "is built with"
+    object: "React 19, Vite, TailwindCSS v4, Radix UI"
+    claim_type: architecture
+    status: active
+    confidence: verified
+    audience: public
+    public_allowed: true
+    source_of_evidence: "client/src/main.tsx; package.json"
+    verified_by: "Antigravity Desktop / TECH"
+    last_verified: "2026-08-28"
+
+  - claim_id: CLAIM-TENANCY-RLS
+    subject: "Agent Lab Multi-Tenancy"
+    predicate: "enforces workspace isolation via"
+    object: "workspace_id and PostgreSQL Row Level Security (RLS)"
+    claim_type: tenancy
+    status: active
+    confidence: verified
+    audience: client
+    public_allowed: true
+    source_of_evidence: "server/schema.ts"
+    verified_by: "Antigravity Desktop / TECH"
+    last_verified: "2026-08-28"
+
+  - claim_id: CLAIM-PRICING-FOUNDER-SIGNAL
+    subject: "Founder Signal System"
+    predicate: "starter setup price is"
+    object: "$1,000 one-time"
+    claim_type: pricing
+    status: active
+    confidence: verified
+    audience: public
+    public_allowed: true
+    source_of_evidence: "workflows/marketing-founder-signal-system/offer-one-pager.md"
+    verified_by: "Robert T. McCarthy"
+    last_verified: "2026-08-28"
+
+  - claim_id: CLAIM-PRICING-OWNABLE-OS
+    subject: "Ownable OS"
+    predicate: "monthly membership price is"
+    object: "$500/month"
+    claim_type: pricing
+    status: active
+    confidence: verified
+    audience: public
+    public_allowed: true
+    source_of_evidence: "docs/operations/agency-owners-manual.md; server/schema.ts"
+    verified_by: "Robert T. McCarthy"
+    last_verified: "2026-08-28"

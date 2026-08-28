@@ -1,3 +1,17 @@
+---
+document_id: DOC-SCHEDULED-CHANGE-QUEUE
+title: "Scheduled Change Queue"
+document_type: change_schedule
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources:
+  - governance/registry/changes.yaml
+last_reviewed: 2026-08-28
+next_review: 2026-09-28
+version: "1.0.0"
+---
+
 # Scheduled Change Queue
 
 Date started: 2026-05-07

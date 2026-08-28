@@ -1,0 +1,78 @@
+# Agent Lab Canonical Registry: Products & Commercial Offerings
+# Level 1 Authority
+
+products:
+  - id: PROD-BOOK-BGW
+    name: "Bootstrapper's Guide to the World"
+    product_type: digital_book
+    status: active
+    owner: "Robert T. McCarthy"
+    target_customer: "Founders, bootstrappers, small agency operators"
+    price: 59.99
+    billing_model: one_time
+    currency: USD
+    channel: "Gumroad / Agent Lab"
+    public_description: "Compendium of 28 bootstrapped business models and operational blueprints."
+    internal_description: "Top-of-funnel trust and authority asset feeding Bootstrapper Capital roundtables."
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PROD-BOOK-SOE
+    name: "Startup Operational Excellence"
+    product_type: digital_book
+    status: active
+    owner: "Robert T. McCarthy"
+    target_customer: "Early-stage founders, startup operators"
+    price: 49.99
+    billing_model: one_time
+    currency: USD
+    channel: "Gumroad / Sales Department landing page"
+    public_description: "Operational playbook for eliminating informational drift and scaling lean operations."
+    internal_description: "Core doctrine for URC and Agent Lab governance."
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PROD-FOUNDER-SIGNAL-SYSTEM
+    name: "Founder Signal System"
+    product_type: starter_sprint
+    status: active
+    owner: "Robert T. McCarthy"
+    target_customer: "Solo founders and boutique agency owners (1-10 people) needing messaging & outreach clarity"
+    price: 1000.00
+    billing_model: one_time
+    currency: USD
+    channel: "Direct consulting / Diagnostic call"
+    public_description: "A 3-5 day starter marketing system providing a signal brief, first content batch, outreach sequence, and proof capture loop."
+    internal_description: "Thin-slice wedge package across MKT-01, MKT-03, MKT-06, MKT-05, MKT-02, and MKT-04."
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PROD-OWNABLE-OS
+    name: "Ownable OS"
+    product_type: recurring_membership
+    status: active
+    owner: "Robert T. McCarthy"
+    target_customer: "Growing businesses migrating from manual tools into structured workflows"
+    price: 500.00
+    billing_model: monthly_subscription
+    currency: USD
+    channel: "Agent Lab SaaS / Bootstrapper Capital"
+    public_description: "Turnkey agency operations platform with pre-packaged workflows and monthly accountability."
+    internal_description: "Commercial wrapper delivering Agent Lab workspaces + unlocked knowledge packages."
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PROD-AGENTLAB-SAAS
+    name: "Agent Lab SaaS Platform"
+    product_type: saas_platform
+    status: active
+    owner: "Robert T. McCarthy / TECH"
+    target_customer: "Clients and operators executing multi-agent workflows"
+    price: "Usage / Subscription"
+    billing_model: tiered_and_pay_as_you_go
+    currency: USD
+    channel: "agent-lab.tech"
+    public_description: "Autonomous agent execution platform with workspace isolation, audit telemetry, and workflow orchestration."
+    internal_description: "Multi-tenant engine powering URC client workspaces."
+    last_verified: "2026-08-28"
+    version: "1.0.0"

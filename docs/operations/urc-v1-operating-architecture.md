@@ -1,3 +1,17 @@
+---
+document_id: DOC-URC-OPERATING-ARCHITECTURE
+title: "URC V1 Operating Architecture"
+document_type: architecture_strategy
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources:
+  - governance/registry/
+last_reviewed: 2026-08-28
+next_review: 2026-09-28
+version: "1.0.0"
+---
+
 # URC V1 Operating Architecture
 
 ## Purpose

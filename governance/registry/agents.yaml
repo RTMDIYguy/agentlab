@@ -1,0 +1,63 @@
+# Agent Lab Canonical Registry: Agents
+# Level 1 Authority
+
+agents:
+  - id: AGT-ORCHESTRATOR
+    name: "Central Ops Orchestrator"
+    purpose: "Primary DAG planning, agent task dispatch, guardrail checking, and error recovery."
+    workspace_scope: "per_workspace"
+    system_prompt_ref: "server/domain/urc-model.ts"
+    knowledge_scope:
+      - "system_operating_rules"
+      - "installed_knowledge_packages"
+    tools:
+      - "dispatch_agent"
+      - "trigger_workflow"
+      - "evaluate_policy"
+    permissions:
+      - "read_workspace_data"
+      - "write_audit_log"
+      - "invoke_model"
+    human_approval_required: false
+    status: active
+    owner: "Robert T. McCarthy / TECH"
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: AGT-CONTENT-DRAFTER
+    name: "MKT-06 Content Drafting Agent"
+    purpose: "Generates high-fidelity founder-voice drafts for LinkedIn, newsletters, and articles adhering to Voice-and-Guardrails."
+    workspace_scope: "per_workspace"
+    system_prompt_ref: "mkt-06-content-creation-dissemination/assets/agent-versions.md"
+    knowledge_scope:
+      - "mkt-06-playbook"
+      - "founder-voice-and-guardrails"
+    tools:
+      - "draft_post"
+      - "score_guardrails"
+    permissions:
+      - "create_draft"
+    human_approval_required: true
+    status: active
+    owner: "Robert T. McCarthy / MKT"
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: AGT-OUTREACH-SPECIALIST
+    name: "MKT-05 Outreach & Follow-up Agent"
+    purpose: "Personalizes three-touch outreach messages and follow-up sequences for qualified signal prospects."
+    workspace_scope: "per_workspace"
+    system_prompt_ref: "workflows/marketing-founder-signal-system/assets/follow-up-sequence-template.md"
+    knowledge_scope:
+      - "signal_brief"
+      - "message_map"
+    tools:
+      - "generate_message"
+      - "log_signal"
+    permissions:
+      - "create_outreach_draft"
+    human_approval_required: true
+    status: active
+    owner: "Robert T. McCarthy / SAL"
+    last_verified: "2026-08-28"
+    version: "1.0.0"

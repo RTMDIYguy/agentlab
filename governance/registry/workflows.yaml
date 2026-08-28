@@ -1,0 +1,85 @@
+# Agent Lab Canonical Registry: Workflows
+# Level 1 Authority
+
+workflows:
+  - id: WF-MKT-06
+    name: "Content Creation & Dissemination Engine"
+    department: Marketing
+    track: organic_growth
+    purpose: "Converts founder POV, customer signals, and theme briefs into approved multi-channel content."
+    trigger: "schedule / manual"
+    inputs:
+      - "content_brief"
+      - "voice_guardrails"
+    outputs:
+      - "published_posts"
+      - "content_queue_entries"
+    agent_ref: "AGT-CONTENT-DRAFTER"
+    required_tools:
+      - "text_editor"
+      - "guardrail_checker"
+    required_modules:
+      - "mkt-06"
+    source_files:
+      - "mkt-06-content-creation-dissemination/kit.md"
+    status: active
+    owner: "Robert T. McCarthy / MKT"
+    change_control_ref: "CC-2026-05-07-001"
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: WF-FOUNDER-SIGNAL-SYSTEM
+    name: "Founder Signal System Starter Workflow"
+    department: Marketing
+    track: starter_package
+    purpose: "5-day sprint cycle covering ICP definition, message mapping, batch content, outreach, and proof logging."
+    trigger: "client_onboarding / cycle_renewal"
+    inputs:
+      - "intake_diagnostic"
+      - "ideal_customer_profile"
+    outputs:
+      - "signal_brief"
+      - "content_batch"
+      - "outreach_list"
+      - "proof_log"
+    agent_ref: "AGT-OUTREACH-SPECIALIST"
+    required_tools:
+      - "signal_brief_template"
+      - "proof_tracker"
+    required_modules:
+      - "mkt-01"
+      - "mkt-03"
+      - "mkt-05"
+      - "mkt-06"
+      - "mkt-02"
+      - "mkt-04"
+    source_files:
+      - "workflows/marketing-founder-signal-system/kit.md"
+    status: active
+    owner: "Robert T. McCarthy / MKT"
+    change_control_ref: "CC-2026-05-15-003"
+    last_verified: "2026-08-28"
+    version: "0.1.0-draft"
+
+  - id: WF-OPS-DAILY-COMMAND
+    name: "Daily Command Center Synchronization"
+    department: Operations
+    track: governance
+    purpose: "Aggregates revenue, audit logs, active agent health, and pending approvals into one operating snapshot."
+    trigger: "schedule (daily)"
+    inputs:
+      - "database_metrics"
+      - "audit_logs"
+    outputs:
+      - "daily_briefing"
+    agent_ref: "AGT-ORCHESTRATOR"
+    required_tools:
+      - "sync-command-center.mjs"
+    required_modules:
+      - "ops-core"
+    source_files:
+      - "scripts/daily-command-center.mjs"
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    last_verified: "2026-08-28"
+    version: "1.0.0"

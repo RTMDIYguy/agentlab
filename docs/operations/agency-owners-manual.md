@@ -1,8 +1,22 @@
+---
+document_id: DOC-AGENCY-OWNERS-MANUAL
+title: "Agency Owner's Manual"
+document_type: operating_manual
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources:
+  - governance/registry/
+last_reviewed: 2026-08-28
+next_review: 2026-09-28
+version: "v0.3"
+---
+
 # Agency Owner's Manual
 
 **Owner:** Robert T. McCarthy / Uncle Robert Consulting LLC
 **Date Created:** 2026-06-09
-**Last Structural Update:** 2026-08-20
+**Last Structural Update:** 2026-08-28
 **Version:** v0.3 — updated with August 2026 automations, UI overhaul, Postman sync, Gumroad, Resend, and Virtusa walkthrough
 **Purpose:** Operational reference for running the URC family of businesses. Covers business orientation, workflows, tools, SOPs, finance controls, secret handling, products, infrastructure, and change control in one navigable document.
 
@@ -77,7 +91,7 @@ to each other, and what each one owns. The source of truth for "which entity doe
 
 **Owner:** Robert T. McCarthy / OPS
 **Last reviewed:** 2026-06-10
-**Status:** Active — v0 architecture, decisions still in progress on platform selection
+**Status:** Active — v1.0 canonical architecture registered in `governance/registry/`
 **Classification:** Public-safe summary; full architecture doc is internal
 
 ### Entities
@@ -87,26 +101,29 @@ to each other, and what each one owns. The source of truth for "which entity doe
 | **Uncle Robert Consulting LLC (URC)**        | Main operating entity. Consulting, advisory, IP ownership, client invoicing.              | All client contracts run through URC.                                                                                                                                                                                                 |
 | **Tactix**                                   | Execution pod. Upwork-facing delivery arm.                                                | Handles billable project work; keeps client-facing delivery separate from URC brand.                                                                                                                                                  |
 | **Bootstrapper Capital**                     | Audience, community, and funnel. Roundtables, bootcamps, continuity programs.             | Independence Chapter on Bootstrapper.ai. Feeds URC pipeline.                                                                                                                                                                          |
-| **Agent Lab**                                | R&D and public demonstration platform. Tests automation, agent workflows, and AI tooling. | Live at https://agent-lab.tech Source repo in this workspace at C:\Users\thebo\OneDrive - Uncle Robert Consulting LLC\Working Docs\AI Native Agency Deepened\agentlab or you can use the URL at https://github.com/RTMDIYguy/agentlab |
+| **Agent Lab**                                | Core SaaS platform & DAG orchestrator. Powers multi-agent execution & client workspaces.  | Live at https://agent-lab.tech. Canonical specifications in `governance/registry/`.                                                                                                                                                  |
 | **Bootstrapper's Guide to the World (book)** | Authority and conversion asset. 28 bootstrapped business models, $59.99.                  | Listed in Agent Lab & Gumroad. Feeds Bootstrapper Capital funnel.                                                                                                                                                                     |
 | **Startup Operational Excellence**           | Authority and conversion asset. Book rewrite & custom Gumroad sales page live.            | Custom landing page live in `Sales Department/landing_soe.html`.                                                                                                                                                                      |
 | **Pulse Social**                             | Multi-platform social media scheduling and real-time engagement analytics web app.        | Live at https://pulse-social-agentlab-projects.vercel.app (React frontend + Cloud Run FastAPI backend + MongoDB Atlas).                                                                                                               |
 
 ### Offer Ladder (Phase 1 LOCKED v1.0)
 
-Book ($59.99) → Roundtable (free/invite) → $1 Bootcamp → $500/mo Ownable OS → URC Workflow engagement
+Book ($59.99) → Roundtable (free/invite) → Founder Signal System ($1,000) → $500/mo Ownable OS → URC Workflow engagement
 
-### Platform Decisions (as of 2026-08-20)
+### Canonical Platform Decisions (as of 2026-08-28)
 
-- **Office backbone:** Microsoft 365 (preferred when available; Google Drive as bridge during bootstrap)
-- **Project/dashboard layer:** Notion (lightweight only; not source of truth for operations)
-- **Development/deployment:** GitHub + Vercel (Agent Lab frontend + API) & Google Cloud Run (Pulse Social backend)
-- **Payments:** Stripe (book checkout live) + Gumroad (custom landing pages for SOE & BGW)
-- **Email Delivery:** Resend SMTP (`unclerobertconsulting.com` verified domain) as zero-cost transactional/nurture backbone
-- **Automation:** n8n (self-hosted, MCP registered in `.agents/mcp_config.json`, active SDR sync & MKT-02 nurture engines)
+- **Office backbone:** Microsoft 365 (preferred when available; local/repo files as bootstrap bridge)
+- **Project/dashboard layer:** Notion (lightweight dashboard only; canonical truth in `governance/registry/`)
+- **Core SaaS Backend & Orchestrator:** Google Cloud Run containerized Node/Express API (PLAT-GCP, SVC-SERVER-API)
+- **Production Database:** PostgreSQL with Drizzle ORM (PLAT-POSTGRES; SQLite is historical/local dev prototype)
+- **Frontend & Edge Hosting:** Vercel (React 19 / Vite SPA) & Cloud Run
+- **Payments & Subscriptions:** Stripe (PLAT-STRIPE) + Gumroad
+- **Email Delivery:** Resend SMTP (`unclerobertconsulting.com` verified domain)
+- **Automation:** Native Agent Lab DAG Engine + self-hosted n8n workflows
 - **CRM:** HubSpot Free Sales CRM (live 2-way sync with CRM-Lite via Google Sheets ADC & n8n)
-- **API Tooling:** Postman Desktop (collections & environments synced locally under `postman/`)
-- **Testing Engine:** Autonoma (`@autonoma-ai/sdk` for automated end-to-end UI verification)
+- **Testing Engine:** Autonoma (`@autonoma-ai/sdk` for automated E2E synthetic testing)
+- **Application Security:** Aikido Security (continuous code, CVE, and secret scanning)
+- **Documentation Surface:** Mintlify (`docs/`) generated/derived from canonical registry
 
 ---
 
@@ -473,25 +490,27 @@ each piece does and its current status. Does not contain access credentials.
 **Bootstrap threshold:** `docs/operations/bootstrap-limit-threshold.md`
 
 **Owner:** Robert T. McCarthy / OPS
-**Last reviewed:** 2026-06-10
-**Status:** Active — bootstrap infrastructure; formal platform decisions pending
+**Last reviewed:** 2026-08-28
+**Status:** Active — production infrastructure; canonical platforms registered in `governance/registry/platforms.yaml`
 **Classification:** Infrastructure names and purposes are internal; no credentials here
 
 ### Current Infrastructure Map
 
-| Layer             | Tool / Platform                | Purpose                                  | Status     |
-| ----------------- | ------------------------------ | ---------------------------------------- | ---------- |
-| Source control    | GitHub                         | Agent Lab codebase; ops docs             | Active     |
-| Deployment        | Vercel                         | Agent Lab & Pulse Social frontends       | Active     |
-| Cloud Compute     | Google Cloud Run               | Pulse Social FastAPI container backend   | Active     |
-| Database          | SQLite (dev) / MongoDB (cloud) | Agent Lab local dev; Pulse Social cloud  | Active     |
-| Email Sending     | Resend SMTP                    | Automated MKT-02 nurture sends           | Active     |
-| Payments          | Stripe & Gumroad               | Checkout sessions; custom landing pages  | Active     |
-| Automation        | n8n                            | SDR sync & nurture workflows; MCP server | Active     |
-| Testing Suite     | Autonoma                       | Automated UI test runner & verification  | Active     |
-| CRM               | HubSpot                        | Contact capture and 2-way deal pipeline  | Active     |
-| Office suite      | Microsoft 365                  | Preferred backbone                       | Active     |
-| Analytics sandbox | KNIME                          | Data analysis — no production dependency | Evaluation |
+| Layer                  | Tool / Platform                | Purpose                                                 | Status     | Canonical Reference        |
+| ---------------------- | ------------------------------ | ------------------------------------------------------- | ---------- | -------------------------- |
+| Source control         | GitHub                         | Agent Lab codebase; ops docs                            | Active     | PLAT-GITHUB                |
+| Frontend Edge          | Vercel                         | React 19 / Vite frontend delivery                       | Active     | PLAT-VERCEL                |
+| Cloud Compute Backend  | Google Cloud Run               | Node/Express API & DAG Orchestrator container           | Active     | PLAT-GCP                   |
+| Production Database    | PostgreSQL (Drizzle ORM)       | Multi-tenant workspaces, RLS, audit logs                | Active     | PLAT-POSTGRES              |
+| Email Sending          | Resend SMTP                    | Automated MKT-02 nurture sends                          | Active     | PLAT-RESEND                |
+| Payments & Metering    | Stripe & Gumroad               | Subscriptions, marketplace packages, landing checkouts  | Active     | PLAT-STRIPE                |
+| Automation Engine      | Native DAG + n8n               | Multi-agent workflow execution; external integrations   | Active     | SVC-ORCHESTRATOR           |
+| Testing Suite          | Autonoma                       | Automated UI test runner & synthetic factory seeding    | Active     | PLAT-AUTONOMA              |
+| Application Security   | Aikido Security                | Continuous CVE, dependency, and secret scanning         | Active     | PLAT-AIKIDO                |
+| CRM                    | HubSpot Free                   | Contact capture and 2-way deal pipeline                 | Active     | PLAT-HUBSPOT               |
+| Office suite           | Microsoft 365                  | Preferred document backbone                             | Active     | PLAT-M365                  |
+| Documentation Surface  | Mintlify                       | Public developer & client documentation portal          | Active     | PLAT-MINTLIFY              |
+| Analytics sandbox      | KNIME                          | Data exploration — isolated; no production dependency   | Evaluation | PLAT-KNIME                 |
 
 ### Sandbox Rules
 

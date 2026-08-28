@@ -1,0 +1,69 @@
+# Agent Lab Governance: Canonical Terminology Dictionary
+# Version: 1.0.0
+# Date: 2026-08-28
+
+terms:
+  - term: workspace
+    canonical: Workspace
+    definition: "An isolated tenant environment in Agent Lab with its own database partition (workspace_id + RLS), security policies, budget thresholds, installed knowledge packages, and agent access controls."
+    forbidden_synonyms:
+      - project folder
+      - local folder
+      - client folder
+      - directory
+
+  - term: workflow
+    canonical: Workflow
+    definition: "A repeatable, auditable operational process with defined trigger conditions, inputs, step-by-step DAG nodes, outputs, and explicit human or agent ownership."
+    forbidden_synonyms:
+      - prompt
+      - script
+      - task list
+      - zap
+
+  - term: agent
+    canonical: Agent
+    definition: "A configured autonomous or semi-autonomous execution role possessing defined system instructions, access to specific tools/APIs, scoped knowledge packages, and explicit permission/approval boundaries."
+    forbidden_synonyms:
+      - chatbot
+      - prompt
+      - AI script
+
+  - term: knowledge_package
+    canonical: Knowledge Package
+    definition: "A versioned, structured collection of domain knowledge, SOPs, and system context (e.g. mkt-*, sal-*, ops-*) that can be modularly unlocked and mounted into an agent or workspace."
+    forbidden_synonyms:
+      - docs folder
+      - text dump
+      - training data
+
+  - term: ownable_os
+    canonical: Ownable OS
+    definition: "The commercial agency-in-a-box offering and operating methodology delivered to clients, composed of packaged Agent Lab workspaces, workflows, and blueprints."
+    forbidden_synonyms:
+      - Agent Lab SaaS (Agent Lab is the software engine/platform; Ownable OS is the commercial package)
+
+  - term: agent_lab
+    canonical: Agent Lab
+    definition: "The core technology platform and SaaS application (React/Vite frontend + Node/Express backend on Cloud Run + PostgreSQL/Drizzle) that orchestrates multi-agent workflows and manages workspace tenancy."
+    forbidden_synonyms:
+      - static site
+      - marketing demo
+
+  - term: runtime_truth
+    canonical: Runtime Truth (Level 0)
+    definition: "The operational reality discovered directly from live code, deployed services, database schemas, and configuration manifests."
+    forbidden_synonyms:
+      - architecture theory
+
+  - term: canonical_registry
+    canonical: Canonical Registry (Level 1)
+    definition: "The single machine-readable system of record in governance/registry/ defining what exists, what is offered, and how it is governed."
+    forbidden_synonyms:
+      - documentation notes
+
+  - term: drift_detector
+    canonical: Drift Detector
+    definition: "A read-only automated scanning mechanism that continuously compares documentation, claims, and public surfaces against the canonical registry to surface contradictions."
+    forbidden_synonyms:
+      - auto-rewriter

@@ -1,0 +1,54 @@
+# Agent Lab Canonical Registry: Knowledge Packages
+# Level 1 Authority
+
+packages:
+  - id: PKG-MKT-PLAYBOOK
+    name: "Marketing Department Full Playbook"
+    package_type: knowledge_bundle
+    department_code: MKT
+    source_directory: "content/packages/mkt"
+    dependencies: []
+    compatible_agents:
+      - "AGT-ORCHESTRATOR"
+      - "AGT-CONTENT-DRAFTER"
+      - "AGT-OUTREACH-SPECIALIST"
+    compatible_workflows:
+      - "WF-MKT-06"
+      - "WF-FOUNDER-SIGNAL-SYSTEM"
+    commercial_product_ref: "PROD-OWNABLE-OS"
+    status: active
+    owner: "Robert T. McCarthy / MKT"
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PKG-OPS-PLAYBOOK
+    name: "Operations & Governance Playbook"
+    package_type: knowledge_bundle
+    department_code: OPS
+    source_directory: "content/packages/ops"
+    dependencies: []
+    compatible_agents:
+      - "AGT-ORCHESTRATOR"
+    compatible_workflows:
+      - "WF-OPS-DAILY-COMMAND"
+    commercial_product_ref: "PROD-OWNABLE-OS"
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: PKG-SAL-PLAYBOOK
+    name: "Sales & CRM Playbook"
+    package_type: knowledge_bundle
+    department_code: SAL
+    source_directory: "content/packages/sal"
+    dependencies: []
+    compatible_agents:
+      - "AGT-ORCHESTRATOR"
+      - "AGT-OUTREACH-SPECIALIST"
+    compatible_workflows: []
+    commercial_product_ref: "PROD-OWNABLE-OS"
+    status: active
+    owner: "Robert T. McCarthy / SAL"
+    last_verified: "2026-08-28"
+    version: "1.0.0"

@@ -1,0 +1,68 @@
+# Agent Lab Canonical Registry: Services & Application Runtime
+# Level 1 Authority
+
+services:
+  - id: SVC-CLIENT-WEB
+    name: "Agent Lab Frontend Web App"
+    service_type: client_spa
+    runtime: "React 19 / Vite"
+    deployment_platform: "Vercel / Cloud Run"
+    repository: "RTMDIYguy/agentlab"
+    entrypoint: "client/src/main.tsx"
+    dependencies:
+      - "@tanstack/react-query"
+      - "wouter"
+      - "radix-ui"
+      - "tailwindcss"
+    status: active
+    owner: "Robert T. McCarthy / TECH"
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: SVC-SERVER-API
+    name: "Agent Lab Express API Server"
+    service_type: api_backend
+    runtime: "Node.js / TypeScript (tsx/esbuild)"
+    deployment_platform: "Google Cloud Run"
+    repository: "RTMDIYguy/agentlab"
+    entrypoint: "server/_core/index.ts"
+    dependencies:
+      - "express"
+      - "drizzle-orm"
+      - "postgres"
+      - "@trpc/server"
+      - "stripe"
+    status: active
+    owner: "Robert T. McCarthy / TECH"
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: SVC-ORCHESTRATOR
+    name: "Agent Lab Workflow & Agent Orchestrator"
+    service_type: execution_engine
+    runtime: "Node.js / Google GenAI SDK"
+    deployment_platform: "Google Cloud Run (in-process)"
+    repository: "RTMDIYguy/agentlab"
+    entrypoint: "server/execution/queue-processor.ts"
+    dependencies:
+      - "@ai-sdk/google"
+      - "ai"
+    status: active
+    owner: "Robert T. McCarthy / TECH"
+    last_verified: "2026-08-28"
+    version: "1.0.0"
+
+  - id: SVC-BILLING-ENGINE
+    name: "Agent Lab Adaptive Billing & Metering Engine"
+    service_type: billing_worker
+    runtime: "Node.js / TypeScript"
+    deployment_platform: "Google Cloud Run"
+    repository: "RTMDIYguy/agentlab"
+    entrypoint: "server/execution/billing-engine.ts"
+    dependencies:
+      - "stripe"
+      - "drizzle-orm"
+    status: active
+    owner: "Robert T. McCarthy / FIN"
+    last_verified: "2026-08-28"
+    version: "1.0.0"
