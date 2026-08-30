@@ -194,16 +194,63 @@ export function registerNativeAuthRoutes(app: Express) {
         userRecord = inMemoryUsers.get(normalizedEmail);
       }
 
-      // If user doesn't exist yet, return error asking them to sign up
+      // If user doesn't exist yet in DB or memory, auto-provision their account & workspace
       if (!userRecord) {
-        res.status(401).json({
-          error: "Account not found with this email. Please check your credentials or create an account.",
-        });
-        return;
-      }
+        const openId = `usr_${randomUUID().replace(/-/g, "").slice(0, 16)}`;
+        const displayName = normalizedEmail.split("@")[0]
+          .replace(/[._-]/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase());
+        let workspaceId = "00000000-0000-0000-0000-000000000001";
 
-      // Update last signed in
-      if (database && userRecord.id) {
+        if (database) {
+          try {
+            const [newWorkspace] = await database
+              .insert(workspaces)
+              .values({
+                name: `${displayName}'s Workspace`,
+                slug: `ws-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000)}`,
+              })
+              .returning();
+
+            if (newWorkspace) {
+              workspaceId = newWorkspace.id;
+            }
+
+            const [newUserRecord] = await database
+              .insert(users)
+              .values({
+                openId,
+                email: normalizedEmail,
+                name: displayName,
+                workspaceId,
+                role: "owner",
+                loginMethod: "email",
+                lastSignedIn: new Date(),
+              })
+              .returning();
+
+            userRecord = newUserRecord;
+          } catch (insertErr) {
+            console.error("[Auth] Database auto-provision user/workspace error:", insertErr);
+          }
+        }
+
+        if (!userRecord) {
+          userRecord = {
+            id: randomUUID(),
+            openId,
+            email: normalizedEmail,
+            name: displayName,
+            workspaceId,
+            role: "owner",
+            loginMethod: "email",
+            lastSignedIn: new Date(),
+          };
+        }
+
+        inMemoryUsers.set(normalizedEmail, userRecord);
+        inMemoryUsers.set(openId, userRecord);
+      } else if (database && userRecord.id) {
         try {
           await database
             .update(users)
