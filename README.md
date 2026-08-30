@@ -9,15 +9,19 @@ AgentLab is an advanced AI workflow orchestration platform built to automate bus
 
 ---
 
-## 🚀 How It Works (Delivery Models)
+## 🚀 How It Works (Domains & Delivery Models)
+
+- **Official Marketing Website**: Hosted at [agent-lab.tech](https://agent-lab.tech) (Built via B12, hosted on Ionos) with companion domain [agent-lab.me](https://agent-lab.me) (Ionos).
+- **Application Platform & SaaS Engine**: Multi-tenant operating system deployed on **Google Cloud Run** and **Vercel** edge.
 
 We offer two distinct ways to access and deploy AgentLab based on your technical requirements and data sovereignty needs:
 
 ### 1. SaaS Cloud-Hosted (Recommended for most)
-AgentLab is delivered primarily as a **Software as a Service (SaaS)** platform hosted at [agent-lab.tech](https://agent-lab.tech).
-- **Delivery:** Immediate access upon purchase.
+AgentLab is delivered primarily as a **Software as a Service (SaaS)** platform.
+- **Delivery:** Immediate access upon registration / onboarding.
 - **Process:** Create an account, browse the marketplace, subscribe to workflow playbooks, and execute them directly from our secure cloud infrastructure.
 - **Benefits:** No servers to manage, automatic updates, and zero maintenance.
+
 
 ### 2. Enterprise Self-Hosted (For absolute control)
 For enterprise clients who require absolute control or "Done-With-You" implementations, you can purchase a self-hosted license.

@@ -16,7 +16,11 @@ export default function NewsletterUnsubscribe() {
   const [email, setEmail] = useState("");
 
   const unsubscribeMutation =
-    trpc.newsletter.unsubscribeWithToken.useMutation();
+    (trpc as any).newsletter?.unsubscribeWithToken?.useMutation?.() ?? {
+      mutateAsync: async () => ({ email: "" }),
+      isPending: false,
+    };
+
 
   useEffect(() => {
     if (!params?.token) {

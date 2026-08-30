@@ -10,6 +10,12 @@ import {
   rejectRun,
 } from "../controllers/runs";
 import { getPackages, subscribeToPackage } from "../controllers/marketplace";
+import {
+  getSyncState,
+  ingestRoamingData,
+  executeRemoteAction,
+  registerMobileWebhook,
+} from "../controllers/aiStudioSync";
 
 export const apiRouter = Router();
 
@@ -90,3 +96,22 @@ apiRouter.post(
   "/marketplace/packages/:packageId/subscribe",
   subscribeToPackage
 );
+
+// ==============================================================================
+// AI Studio Mobile Dashboard & Roaming Data Bridge (Bidirectional)
+// ==============================================================================
+// 1. Live OS State Export -> AI Studio Mobile Dashboard
+apiRouter.get("/aistudio/state", getSyncState);
+apiRouter.get("/sync/state", getSyncState);
+
+// 2. Roaming & Field Data Ingestion -> AgentLab OS
+apiRouter.post("/aistudio/ingest", ingestRoamingData);
+apiRouter.post("/sync/ingest", ingestRoamingData);
+
+// 3. Mobile Remote Actions (Trigger/Approve/Reject) -> AgentLab OS
+apiRouter.post("/aistudio/action", executeRemoteAction);
+apiRouter.post("/sync/action", executeRemoteAction);
+
+// 4. Register Mobile Push Webhooks -> AI Studio
+apiRouter.post("/aistudio/webhook/register", registerMobileWebhook);
+

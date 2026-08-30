@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import type { ProposedWorkflow } from "./orchestrator";
-import cronParser from "cron-parser";
+import { CronExpressionParser } from "cron-parser";
+
 
 export interface WorkflowSummaryDto {
   id: string;
@@ -201,7 +202,7 @@ export async function createCustomWorkflow(req: Request, res: Response): Promise
     let nextRunAt: Date | null = null;
     if (triggerType === "schedule" && cronExpression) {
       try {
-        const interval = cronParser.parseExpression(cronExpression);
+        const interval = CronExpressionParser.parse(cronExpression);
         nextRunAt = interval.next().toDate();
       } catch (e) {
         res.status(400).json({ error: "Invalid CRON expression" });
@@ -258,7 +259,7 @@ export async function updateWorkflowSchedule(req: Request, res: Response): Promi
     let nextRunAt: Date | null = null;
     if (triggerType === "schedule" && cronExpression) {
       try {
-        const interval = cronParser.parseExpression(cronExpression);
+        const interval = CronExpressionParser.parse(cronExpression);
         nextRunAt = interval.next().toDate();
       } catch (e) {
         res.status(400).json({ error: "Invalid CRON expression" });

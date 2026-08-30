@@ -136,4 +136,16 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Change-control verification passed.");
+// Enforce automated drift scanner
+import { spawnSync } from "node:child_process";
+const driftCheck = spawnSync(process.execPath, [path.join(root, "scripts", "drift", "drift-scan.mjs"), "--strict"], {
+  stdio: "inherit",
+});
+
+if (driftCheck.status !== 0) {
+  console.error("\n❌ Change-control verification failed due to documentation drift.");
+  process.exit(driftCheck.status ?? 1);
+}
+
+console.log("\n✅ Change-control and drift verification passed.");
+

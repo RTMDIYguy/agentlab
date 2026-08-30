@@ -438,8 +438,8 @@ export default function Settings() {
                       placeholder="You are an expert AI operations manager..."
                     />
                   </div>
-                  <Button onClick={handleLlmSave} disabled={updateSettingsMut.isLoading}>
-                    {updateSettingsMut.isLoading ? "Saving..." : "Save LLM Settings"}
+                  <Button onClick={handleLlmSave} disabled={updateSettingsMut.isPending}>
+                    {updateSettingsMut.isPending ? "Saving..." : "Save LLM Settings"}
                   </Button>
                 </div>
               </Card>
@@ -475,7 +475,7 @@ export default function Settings() {
                               variant="destructive"
                               size="sm"
                               onClick={() => deleteSecretMut.mutate({ id: secret.id })}
-                              disabled={deleteSecretMut.isLoading}
+                              disabled={deleteSecretMut.isPending}
                             >
                               Revoke
                             </Button>
@@ -518,8 +518,8 @@ export default function Settings() {
                         />
                       </div>
                     </div>
-                    <Button onClick={handleAddSecret} disabled={upsertSecretMut.isLoading}>
-                      {upsertSecretMut.isLoading ? "Saving..." : "Save Securely to Vault"}
+                    <Button onClick={handleAddSecret} disabled={upsertSecretMut.isPending}>
+                      {upsertSecretMut.isPending ? "Saving..." : "Save Securely to Vault"}
                     </Button>
                   </div>
                 </div>

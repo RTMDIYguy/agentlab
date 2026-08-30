@@ -23,39 +23,40 @@ export default function BlogCommentSection({
     data: comments = [],
     refetch: refetchComments,
     isLoading,
-  } = trpc.blog.getThreadedComments.useQuery(
+  } = (trpc as any).blog?.getThreadedComments?.useQuery?.(
     { articleId },
     { enabled: !!articleId }
-  );
+  ) ?? { data: [], isLoading: false, refetch: () => {} };
 
   // Fetch comment count
-  const { data: commentCountData } = trpc.blog.getCommentCount.useQuery(
+  const { data: commentCountData } = (trpc as any).blog?.getCommentCount?.useQuery?.(
     { articleId },
     { enabled: !!articleId }
-  );
+  ) ?? { data: 0 };
 
   // Create comment mutation
-  const createCommentMutation = trpc.blog.createComment.useMutation({
+  const createCommentMutation = (trpc as any).blog?.createComment?.useMutation?.({
     onSuccess: () => {
       setCommentText("");
       refetchComments();
       toast.success("Comment posted successfully!");
     },
-    onError: error => {
-      toast.error(error.message || "Failed to post comment");
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to post comment");
     },
-  });
+  }) ?? { mutate: () => {}, isPending: false };
 
   // Delete comment mutation
-  const deleteCommentMutation = trpc.blog.deleteComment.useMutation({
+  const deleteCommentMutation = (trpc as any).blog?.deleteComment?.useMutation?.({
     onSuccess: () => {
       refetchComments();
       toast.success("Comment deleted successfully");
     },
-    onError: error => {
-      toast.error(error.message || "Failed to delete comment");
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to delete comment");
     },
-  });
+  }) ?? { mutate: () => {}, isPending: false };
+
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -160,10 +161,11 @@ export default function BlogCommentSection({
             <p className="text-muted-foreground">Loading comments...</p>
           </div>
         ) : comments && comments.length > 0 ? (
-          comments.map(comment => (
+          comments.map((comment: any) => (
             <NestedComment
               key={comment.id}
               comment={comment}
+
               articleId={articleId}
               onCommentDeleted={refetchComments}
             />

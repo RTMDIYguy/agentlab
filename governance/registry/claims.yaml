@@ -79,3 +79,30 @@ claims:
     source_of_evidence: "docs/operations/agency-owners-manual.md; server/schema.ts"
     verified_by: "Robert T. McCarthy"
     last_verified: "2026-08-28"
+
+  - claim_id: CLAIM-TENANCY-POLICY
+    subject: "Client Workspaces"
+    predicate: "are offered as"
+    object: "Isolated Client Workspaces (white-label reseller sub-tenancy is unapproved)"
+    claim_type: policy
+    status: active
+    confidence: verified
+    audience: public
+    public_allowed: true
+    source_of_evidence: "governance/current-state-reconciliation.md"
+    verified_by: "Robert T. McCarthy"
+    last_verified: "2026-08-29"
+
+  - claim_id: CLAIM-ECOSYSTEM-LIVE-APPS
+    subject: "Active Live Applications"
+    predicate: "consists of"
+    object: "AgentLab, Market Marksman, Pulse Social, LeadPulse"
+    claim_type: product
+    status: active
+    confidence: verified
+    audience: internal
+    public_allowed: true
+    source_of_evidence: "Working Docs ecosystem inventory; current-state-reconciliation.md"
+    verified_by: "Robert T. McCarthy"
+    last_verified: "2026-08-29"
+

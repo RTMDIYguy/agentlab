@@ -66,3 +66,60 @@ services:
     owner: "Robert T. McCarthy / FIN"
     last_verified: "2026-08-28"
     version: "1.0.0"
+
+  - id: SVC-PULSE-SOCIAL
+    name: "Pulse Social App"
+    service_type: social_syndication_app
+    runtime: "Node.js / React"
+    deployment_platform: "Render / Cloud Run"
+    repository: "Pulse Social"
+    entrypoint: "run_pulse_social.bat"
+    status: active
+    owner: "Robert T. McCarthy / MKT"
+    last_verified: "2026-08-29"
+    version: "1.0.0"
+
+  - id: SVC-MARKET-MARKSMAN
+    name: "Market Marksman (Predictive Business Opportunity App)"
+    service_type: opportunity_discovery_app
+    runtime: "Python / Web App"
+    deployment_platform: "Local / Cloud"
+    repository: "Market Marksman"
+    status: active
+    owner: "Robert T. McCarthy / SAL"
+    last_verified: "2026-08-29"
+    version: "1.0.0"
+
+  - id: SVC-LEADPULSE
+    name: "LeadPulse App"
+    service_type: lead_enrichment_app
+    runtime: "TypeScript / Node"
+    deployment_platform: "Cloud"
+    repository: "LeadPulse"
+    status: active
+    owner: "Robert T. McCarthy / SAL"
+    last_verified: "2026-08-29"
+    version: "1.0.0"
+
+  - id: SVC-CONSULTING-ASSESSMENT-GEN
+    name: "Consulting Assessment Question Generator"
+    service_type: internal_diagnostic_tool
+    runtime: "TypeScript / Node"
+    deployment_platform: "Local / Staged"
+    repository: "Consulting Assessment Question Generator"
+    status: offline
+    owner: "Robert T. McCarthy / OPS"
+    last_verified: "2026-08-29"
+    version: "0.9.0"
+
+  - id: SVC-48HR-LINKEDIN-AUTHORITY
+    name: "48-Hour LinkedIn Authority System"
+    service_type: legacy_campaign_system
+    runtime: "Document / Workflow"
+    deployment_platform: "Offline"
+    repository: "48-Hour LinkedIn Authority System"
+    status: offline
+    owner: "Robert T. McCarthy / MKT"
+    last_verified: "2026-08-29"
+    version: "0.5.0"
+

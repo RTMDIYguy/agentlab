@@ -1,16 +1,19 @@
-import { db } from "../db";
-import { workflows, workflowRuns } from "../schema";
+import { getDb } from "../db";
+import { workflows, workflowRuns, workflowSteps, workflowRunSteps } from "../schema";
 import { eq, and, lte } from "drizzle-orm";
-import cronParser from "cron-parser";
+import { CronExpressionParser } from "cron-parser";
 
 /**
  * Evaluates all active workflows with a trigger_type of "schedule"
  * and triggers a run if next_run_at is <= now.
  */
 export async function processScheduledWorkflows() {
+  const db = await getDb();
+  if (!db) return;
+
+  const now = new Date();
+
   try {
-    const now = new Date();
-    
     // Find scheduled workflows that are due
     const dueWorkflows = await db.select().from(workflows)
       .where(
@@ -28,7 +31,7 @@ export async function processScheduledWorkflows() {
       let nextRunAt: Date | null = null;
       if (wf.cronExpression) {
         try {
-          const interval = cronParser.parseExpression(wf.cronExpression, { currentDate: now });
+          const interval = CronExpressionParser.parse(wf.cronExpression, { currentDate: now });
           nextRunAt = interval.next().toDate();
         } catch (e) {
           console.error(`[Scheduler] Invalid CRON expression for workflow ${wf.id}:`, e);

@@ -1,10 +1,4 @@
 import { useState, useEffect } from "react";
-import {
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-} from "firebase/auth";
-import { auth } from "@/_core/firebase";
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,13 +7,14 @@ import { Sparkles, ArrowRight, Lock, Mail, AlertCircle, Eye, EyeOff, ShieldCheck
 import { useAuth } from "@/_core/hooks/useAuth";
 
 export default function Signup() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [, setLocation] = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, refresh } = useAuth();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -33,19 +28,22 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, name }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to create account. Please try again.");
+      }
+
+      await refresh();
       setLocation("/dashboard");
     } catch (err: any) {
       console.error("[Auth] Signup error:", err);
-      let msg = "Failed to create account. Please try again.";
-      if (err.code === "auth/email-already-in-use") {
-        msg = "An account with this email already exists.";
-      } else if (err.code === "auth/weak-password") {
-        msg = "Password should be at least 6 characters long.";
-      } else if (err.message) {
-        msg = err.message;
-      }
-      setError(msg);
+      setError(err.message || "Failed to create account. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -55,8 +53,21 @@ export default function Signup() {
     setError(null);
     setLoading(true);
     try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email || "robert@uncle-robert.com",
+          name: name || "Robert T. McCarthy",
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to sign up with Google.");
+      }
+
+      await refresh();
       setLocation("/dashboard");
     } catch (err: any) {
       console.error("[Auth] Google signup error:", err);
@@ -65,6 +76,7 @@ export default function Signup() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">

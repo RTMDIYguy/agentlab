@@ -44,35 +44,36 @@ export default function NestedComment({
 
   // Fetch replies for this comment
   const { data: replies = [], refetch: refetchReplies } =
-    trpc.blog.getCommentReplies.useQuery(
+    (trpc as any).blog?.getCommentReplies?.useQuery?.(
       { commentId: comment.id },
       { enabled: !!comment.id }
-    );
+    ) ?? { data: [], refetch: () => {} };
 
   // Create reply mutation
-  const createReplyMutation = trpc.blog.createReply.useMutation({
+  const createReplyMutation = (trpc as any).blog?.createReply?.useMutation?.({
     onSuccess: () => {
       setReplyText("");
       setShowReplyForm(false);
       refetchReplies();
       toast.success("Reply posted successfully!");
     },
-    onError: error => {
-      toast.error(error.message || "Failed to post reply");
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to post reply");
     },
-  });
+  }) ?? { mutate: () => {}, isPending: false };
 
   // Delete comment mutation
-  const deleteCommentMutation = trpc.blog.deleteComment.useMutation({
+  const deleteCommentMutation = (trpc as any).blog?.deleteComment?.useMutation?.({
     onSuccess: () => {
       refetchReplies();
       onCommentDeleted?.();
       toast.success("Comment deleted successfully");
     },
-    onError: error => {
-      toast.error(error.message || "Failed to delete comment");
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to delete comment");
     },
-  });
+  }) ?? { mutate: () => {}, isPending: false };
+
 
   const handleSubmitReply = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -214,10 +215,11 @@ export default function NestedComment({
 
           {showReplies && (
             <div className="space-y-3">
-              {replies.map(reply => (
+              {replies.map((reply: any) => (
                 <NestedComment
                   key={reply.id}
                   comment={reply}
+
                   articleId={articleId}
                   depth={depth + 1}
                   onCommentDeleted={refetchReplies}

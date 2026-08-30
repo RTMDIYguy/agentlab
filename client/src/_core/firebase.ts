@@ -1,11 +1,4 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+// Firebase is deprecated in favor of native Google AI Studio endpoints and server-side JWT session auth.
+export const app = null;
+export const auth = null;
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "dummy",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "dummy",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "dummy",
-};
-
-export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
