@@ -36,10 +36,9 @@ import AdminEvents from "@/pages/AdminEvents";
 import Book from "@/pages/Book";
 import Bootcamp from "@/pages/Bootcamp";
 import Marketplace from "@/pages/Marketplace";
-// import CommandCenter from "@/pages/CommandCenter";
+import CommandCenter from "@/pages/CommandCenter";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
-// import Support from "@/pages/Support";
 import Security from "@/pages/Security";
 import Careers from "@/pages/Careers";
 import Documentation from "@/pages/Documentation";
@@ -87,7 +86,7 @@ function Router() {
       <Route path={"/article/:slug"} component={ArticleEditor} />
       <Route path={"/blog-manager"} component={BlogManager} />
       <Route path={"/dashboard"} component={Dashboard} />
-      {/* <Route path={"/billing"} component={Billing} /> */}
+      <Route path={"/billing"} component={Settings} />
       <Route path={"/agents"} component={Agents} />
       <Route path={"/auditing"} component={Auditing} />
       <Route path={"/ops-agent"} component={OpsCleanupAgent} />
@@ -96,7 +95,7 @@ function Router() {
         component={AssessmentQuestionGenerator}
       />
       <Route path={"/marketplace"} component={Marketplace} />
-      {/* <Route path={"/command-center"} component={CommandCenter} /> */}
+      <Route path={"/command-center"} component={CommandCenter} />
       <Route path={"/dashboard/settings"} component={Settings} />
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/privacy"} component={Privacy} />
@@ -106,6 +105,7 @@ function Router() {
       <Route path={"/careers"} component={Careers} />
       <Route path={"/docs"} component={Documentation} />
       <Route path="/help" component={HelpCenter} />
+      <Route path="/support" component={HelpCenter} />
       <Route path="/status" component={Status} />
       <Route path="/newsletter/verify" component={NewsletterVerify} />
       <Route path="/newsletter/unsubscribe" component={NewsletterUnsubscribe} />
@@ -115,7 +115,6 @@ function Router() {
       <Route path="/admin/events" component={AdminEvents} />
       <Route path="/book" component={Book} />
       <Route path="/bootcamp" component={Bootcamp} />
-      {/* <Route path="/support" component={Support} /> */}
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
