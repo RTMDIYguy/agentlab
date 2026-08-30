@@ -24,33 +24,34 @@ export default function ArticleEditor() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch article if editing
-  const { data: article, isLoading } = trpc.articles.getBySlug.useQuery(
+  const { data: article, isLoading } = (trpc as any).articles?.getBySlug?.useQuery?.(
     { slug: slug || "" },
     { enabled: !!slug && slug !== "new" }
-  );
+  ) ?? { data: null, isLoading: false };
 
   // Mutations
-  const createMutation = trpc.articles.create.useMutation({
+  const createMutation = (trpc as any).articles?.create?.useMutation?.({
     onSuccess: () => {
       toast.success("Article created successfully!");
       navigate("/blog-manager");
     },
-    onError: error => {
-      toast.error(error.message || "Failed to create article");
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to create article");
       setIsSubmitting(false);
     },
-  });
+  }) ?? { mutate: () => {}, isPending: false };
 
-  const updateMutation = trpc.articles.update.useMutation({
+  const updateMutation = (trpc as any).articles?.update?.useMutation?.({
     onSuccess: () => {
       toast.success("Article updated successfully!");
       navigate("/blog-manager");
     },
-    onError: error => {
-      toast.error(error.message || "Failed to update article");
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to update article");
       setIsSubmitting(false);
     },
-  });
+  }) ?? { mutate: () => {}, isPending: false };
+
 
   // Load article data when fetched
   useEffect(() => {

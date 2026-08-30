@@ -4,7 +4,9 @@ import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
+import { registerNativeAuthRoutes } from "./authRoutes";
 import { registerAutonomaSdkRoutes } from "./autonomaSdk";
+
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -85,8 +87,11 @@ async function startServer() {
 
   // AI Coaches webhook endpoint (expects JSON; optional token via AICOACHES_WEBHOOK_TOKEN)
   registerAICoachesWebhookRoutes(app);
+  // Native email & AI Studio auth routes under /api/auth
+  registerNativeAuthRoutes(app);
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+
   // tRPC API
   app.use(
     "/api/trpc",

@@ -71,3 +71,54 @@ documents:
     owner: "Robert T. McCarthy / MKT"
     canonical_sources: ["governance/registry/products.yaml", "governance/registry/claims.yaml"]
     last_reviewed: "2026-08-28"
+
+  - document_id: DOC-AGENT-TASK-QUEUE
+    title: "Agent Task Queue (Execution Companion)"
+    path: "Agent Task Queue.md"
+    document_type: task_queue
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    canonical_sources: ["Agent Consolidation Blueprint.md", "governance/registry/"]
+    last_reviewed: "2026-08-29"
+
+  - document_id: DOC-AGENT-CONSOLIDATION-BLUEPRINT
+    title: "Agent Consolidation Blueprint"
+    path: "Agent Consolidation Blueprint.md"
+    document_type: operating_blueprint
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    canonical_sources: ["governance/registry/"]
+    last_reviewed: "2026-08-29"
+
+  - document_id: DOC-MASTER-WORKFLOW-INDEX
+    title: "Master Workflow Index"
+    path: "Master Workflow Index.md"
+    document_type: workflow_catalog
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    canonical_sources: ["governance/registry/workflows.yaml"]
+    last_reviewed: "2026-08-29"
+
+  - document_id: DOC-JOURNEY-KIT-SPEC
+    title: "kit.md Specification v1.0"
+    path: "Journey_kit.md"
+    document_type: technical_specification
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / TECH"
+    canonical_sources: ["governance/registry/"]
+    last_reviewed: "2026-08-29"
+
+  - document_id: DOC-HISTORICAL-AGENCY-OPERATING-MANUAL
+    title: "URC Agency Operating Manual (v0 Spine)"
+    path: "docs/operations/agency-operating-manual.md"
+    document_type: operating_manual
+    authority_level: historical
+    status: historical
+    owner: "Robert T. McCarthy / OPS"
+    canonical_sources: ["governance/registry/"]
+    last_reviewed: "2026-08-29"
+

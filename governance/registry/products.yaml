@@ -35,7 +35,7 @@ products:
   - id: PROD-FOUNDER-SIGNAL-SYSTEM
     name: "Founder Signal System"
     product_type: starter_sprint
-    status: active
+    status: beta
     owner: "Robert T. McCarthy"
     target_customer: "Solo founders and boutique agency owners (1-10 people) needing messaging & outreach clarity"
     price: 1000.00
@@ -43,12 +43,12 @@ products:
     currency: USD
     channel: "Direct consulting / Diagnostic call"
     public_description: "A 3-5 day starter marketing system providing a signal brief, first content batch, outreach sequence, and proof capture loop."
-    internal_description: "Thin-slice wedge package across MKT-01, MKT-03, MKT-06, MKT-05, MKT-02, and MKT-04."
-    last_verified: "2026-08-28"
-    version: "1.0.0"
+    internal_description: "Thin-slice wedge package across MKT-01, MKT-03, MKT-06, MKT-05, MKT-02, and MKT-04. Requires workflow audit to integrate Pulse Social."
+    last_verified: "2026-08-29"
+    version: "1.0.0-beta"
 
   - id: PROD-OWNABLE-OS
-    name: "Ownable OS"
+    name: "Ownable OS (Agentic OS)"
     product_type: recurring_membership
     status: active
     owner: "Robert T. McCarthy"
@@ -58,9 +58,10 @@ products:
     currency: USD
     channel: "Agent Lab SaaS / Bootstrapper Capital"
     public_description: "Turnkey agency operations platform with pre-packaged workflows and monthly accountability."
-    internal_description: "Commercial wrapper delivering Agent Lab workspaces + unlocked knowledge packages."
-    last_verified: "2026-08-28"
+    internal_description: "Commercial wrapper delivering Agent Lab workspaces + unlocked knowledge packages. Requires legacy component modernization."
+    last_verified: "2026-08-29"
     version: "1.0.0"
+
 
   - id: PROD-AGENTLAB-SAAS
     name: "Agent Lab SaaS Platform"

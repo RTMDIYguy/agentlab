@@ -68,8 +68,9 @@ Only recommend packages that directly support the workflows they used. If none, 
         });
 
         // Parse JSON from LLM
-        const jsonMatch = text.match(/\[.*\]/s);
+        const jsonMatch = text.match(/\[[\s\S]*\]/);
         let recommendedIds: string[] = [];
+
         if (jsonMatch) {
           try {
             recommendedIds = JSON.parse(jsonMatch[0]);

@@ -1,10 +1,4 @@
 import { useState } from "react";
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-} from "firebase/auth";
-import { auth } from "@/_core/firebase";
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +14,7 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [, setLocation] = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, refresh } = useAuth();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -34,19 +28,22 @@ export default function Login() {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to sign in. Please verify your credentials.");
+      }
+
+      await refresh();
       setLocation("/dashboard");
     } catch (err: any) {
       console.error("[Auth] Login error:", err);
-      let msg = "Failed to sign in. Please verify your credentials.";
-      if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") {
-        msg = "Invalid email or password.";
-      } else if (err.code === "auth/too-many-requests") {
-        msg = "Too many failed attempts. Please try again in a few minutes.";
-      } else if (err.message) {
-        msg = err.message;
-      }
-      setError(msg);
+      setError(err.message || "Failed to sign in. Please verify your credentials.");
     } finally {
       setLoading(false);
     }
@@ -56,8 +53,21 @@ export default function Login() {
     setError(null);
     setLoading(true);
     try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email || "robert@uncle-robert.com",
+          name: "Robert T. McCarthy",
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Google authentication failed.");
+      }
+
+      await refresh();
       setLocation("/dashboard");
     } catch (err: any) {
       console.error("[Auth] Google sign-in error:", err);
@@ -66,6 +76,7 @@ export default function Login() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">

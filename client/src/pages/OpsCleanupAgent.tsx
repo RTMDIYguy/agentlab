@@ -48,12 +48,11 @@ export default function OpsCleanupAgent() {
     setAgentResponse(null);
 
     try {
-      const token = await user?.getIdToken();
       const res = await fetch("/api/orchestrator/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          "Accept": "application/json"
         },
         body: JSON.stringify({ prompt: task })
       });
@@ -76,15 +75,15 @@ export default function OpsCleanupAgent() {
     setIsDeploying(true);
 
     try {
-      const token = await user?.getIdToken();
       const res = await fetch("/api/workflows/deploy", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          "Accept": "application/json"
         },
         body: JSON.stringify({ proposal: agentResponse.proposal })
       });
+
 
       if (res.ok) {
         const data = await res.json();
@@ -95,7 +94,7 @@ export default function OpsCleanupAgent() {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
+              "Accept": "application/json"
             },
             body: JSON.stringify({ 
               initialContext: { source: "Deploy & Execute", task },
@@ -103,6 +102,7 @@ export default function OpsCleanupAgent() {
             })
           });
         }
+
 
         await queryClient.invalidateQueries({ queryKey: ["workflows"] });
         setLocation("/command-center");

@@ -90,18 +90,33 @@ Below is the structured reconciliation for the 20 fundamental architecture and g
 - **Runtime Evidence:** Multi-tenant workspace isolation using `workspace_id` foreign keys, RLS policies, per-workspace budget limits, and audit retention settings (`server/schema.ts: workspaces`).
 
 ### 17. What is actually live versus merely implemented/tested?
-- **Live / Active:** Agent Lab Web App, PostgreSQL Schema, Founder Signal System one-pager, Book offerings.
-- **Implemented / In Progress:** Marketplace package auto-provisioning, Stripe meter sync.
+- **Live Applications (4):**
+  1. **AgentLab:** Core multi-tenant SaaS platform & workflow execution engine (`PLAT-GCP`, Cloud Run).
+  2. **Market Marksman:** Opportunity discovery, market deal signal briefs, and predictive business opportunity app.
+  3. **Pulse Social:** Social content creation, syndication, and post scheduling engine.
+  4. **LeadPulse:** Lead discovery, prospecting, and enrichment engine.
+- **Offline / Staged Applications (2):**
+  1. **Consulting Assessment Question Generator:** Offline / internal diagnostic tool.
+  2. **48-Hour LinkedIn Authority System:** Offline / legacy campaign package (superseded by Founder Signal System).
+- **Commercial Offerings Status:**
+  - **Founder Signal System ($1,000 Starter Sprint):** Live in **Beta** (Active audit required to integrate the Pulse Social app into the execution loop).
+  - **Agentic OS / Ownable OS ($500/mo Continuity / Advisory):** Candidate / Active for sale (Needs verification against current Agent Lab runtime to modernize legacy components).
+  - **Books (Bootstrapper's Guide / Startup Operational Excellence):** Live / Active digital products.
 
 ### 18. Which current public claims are approved?
-- **Approved:** Pricing for Founder Signal System ($1,000), Ownable OS ($500/mo), Books ($59.99 / $49.99), Agent Lab workspace isolation.
-- **Pending Review:** Exact automated white-label sub-tenancy claims.
+- **Approved Claims:**
+  - Pricing for Founder Signal System ($1,000 starter sprint), Ownable OS ($500/mo continuity), Books ($59.99 / $49.99).
+  - **Isolated Client Workspaces:** Multi-tenant workspace isolation with `workspace_id`, Row-Level Security (RLS), and per-workspace budget limits (`CLAIM-TENANCY-RLS`).
+- **Forbidden / Unapproved Claims:**
+  - Automated white-label reseller sub-tenancy claims (public positioning is strictly isolated client workspaces).
 
 ### 19. Which existing documents are historical?
 - `docs/operations/agency-operating-manual.md` (superseded by `agency-owners-manual.md` v0.3).
-- Early SQLite / tRPC standalone deployment notes.
+- Early SQLite / standalone tRPC deployment notes.
+- Standalone 48-Hour LinkedIn Authority intake files (superseded by Founder Signal System).
 
 ### 20. Which document or system is ultimately authoritative?
 - **Runtime Evidence (Level 0):** Source code, database schema, deployment configs.
 - **System of Record (Level 1):** `governance/registry/*.yaml` files.
 - **Operational Map (Level 2):** `docs/operations/agency-owners-manual.md` (as a human guide, referencing canonical sources).
+

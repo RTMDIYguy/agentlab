@@ -120,3 +120,48 @@ platforms:
       - Excel / Lists
     last_verified: "2026-08-28"
     version: "1.0.0"
+
+  - id: PLAT-IONOS
+    name: "Ionos"
+    category: domain_registrar_and_dns
+    purpose: "Domain registration and DNS hosting for agent-lab.tech and agent-lab.me."
+    environment: production
+    status: active
+    criticality: high
+    owner: "Robert T. McCarthy"
+    data_classification: public
+    integration_points:
+      - agent-lab.tech
+      - agent-lab.me
+    last_verified: "2026-08-29"
+    version: "1.0.0"
+
+  - id: PLAT-B12
+    name: "B12"
+    category: website_builder
+    purpose: "Official marketing website design and CMS engine powering agent-lab.tech."
+    environment: production
+    status: active
+    criticality: medium
+    owner: "Robert T. McCarthy / MKT"
+    data_classification: public
+    integration_points:
+      - agent-lab.tech
+    last_verified: "2026-08-29"
+    version: "1.0.0"
+
+  - id: PLAT-AI-STUDIO
+    name: "Google AI Studio"
+    category: ai_developer_layer
+    purpose: "Developer portal and API key access for Gemini model endpoints (replacing legacy Firebase auth)."
+    environment: production
+    status: active
+    criticality: high
+    owner: "Robert T. McCarthy / TECH"
+    data_classification: confidential
+    integration_points:
+      - Gemini API
+      - Native Server Auth
+    last_verified: "2026-08-29"
+    version: "1.0.0"
+

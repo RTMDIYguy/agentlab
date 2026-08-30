@@ -1,7 +1,15 @@
 import { getLoginUrl } from "@/const";
 import { useCallback, useEffect, useState } from "react";
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
-import { auth } from "../firebase";
+import { trpc } from "@/lib/trpc";
+
+export type AuthUser = {
+  id?: number;
+  openId: string;
+  name?: string | null;
+  email?: string | null;
+  role?: string | null;
+  loginMethod?: string | null;
+};
 
 type UseAuthOptions = {
   redirectOnUnauthenticated?: boolean;
@@ -12,37 +20,55 @@ export function useAuth(options?: UseAuthOptions) {
   const { redirectOnUnauthenticated = false } = options ?? {};
   const redirectPath = options?.redirectPath;
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(
-      auth,
-      async (firebaseUser) => {
-        if (firebaseUser) {
-          const token = await firebaseUser.getIdToken();
-          localStorage.setItem("manus-runtime-token", token);
-          setUser(firebaseUser);
+  const checkAuth = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/auth/me", {
+        headers: { "Accept": "application/json" },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.user) {
+          setUser(data.user);
+          localStorage.setItem("agentlab_user", JSON.stringify(data.user));
         } else {
-          localStorage.removeItem("manus-runtime-token");
+          setUser(null);
+          localStorage.removeItem("agentlab_user");
+        }
+      } else {
+        setUser(null);
+      }
+    } catch (err: any) {
+      console.warn("[Auth] Check auth warning:", err);
+      // Check localStorage fallback
+      const cached = localStorage.getItem("agentlab_user");
+      if (cached) {
+        try {
+          setUser(JSON.parse(cached));
+        } catch {
           setUser(null);
         }
-        setLoading(false);
-      },
-      (err) => {
-        setError(err);
-        setLoading(false);
+      } else {
+        setUser(null);
       }
-    );
-
-    return () => unsubscribe();
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const logout = useCallback(async () => {
     try {
-      await signOut(auth);
+      await fetch("/api/auth/logout", { method: "POST" });
       setUser(null);
+      localStorage.removeItem("agentlab_user");
       localStorage.removeItem("manus-runtime-token");
     } catch (err: any) {
       setError(err);
@@ -66,13 +92,12 @@ export function useAuth(options?: UseAuthOptions) {
   return {
     user,
     loading,
+    isLoading: loading,
     error,
     isAuthenticated,
-    refresh: async () => {
-      if (auth.currentUser) {
-        await auth.currentUser.getIdToken(true);
-      }
-    },
+    refresh: checkAuth,
     logout,
   };
+
 }
+

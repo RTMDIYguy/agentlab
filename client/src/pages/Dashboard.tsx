@@ -12,11 +12,10 @@ export default function Dashboard() {
 
   // We can fetch existing data
   const { data: workflowsData, isLoading: isLoadingWorkflows } = useQuery<{ workflows: any[] }>({
-    queryKey: ["workflows", user?.uid],
+    queryKey: ["workflows", user?.openId],
     queryFn: async () => {
-      const token = await user?.getIdToken();
       const res = await fetch("/api/workflows", {
-        headers: { "Authorization": `Bearer ${token}` }
+        headers: { "Accept": "application/json" }
       });
       if (!res.ok) throw new Error("Failed to fetch");
       return res.json();
@@ -25,17 +24,17 @@ export default function Dashboard() {
   });
 
   const { data: runsData, isLoading: isLoadingRuns } = useQuery<{ runs: any[] }>({
-    queryKey: ["runs", user?.uid],
+    queryKey: ["runs", user?.openId],
     queryFn: async () => {
-      const token = await user?.getIdToken();
       const res = await fetch("/api/runs", {
-        headers: { "Authorization": `Bearer ${token}` }
+        headers: { "Accept": "application/json" }
       });
       if (!res.ok) throw new Error("Failed to fetch");
       return res.json();
     },
     enabled: !!user,
   });
+
 
   const activeRuns = runsData?.runs?.filter((r: any) => r.status === "running" || r.status === "paused_for_approval")?.length || 0;
   const totalRuns = runsData?.runs?.length || 0;

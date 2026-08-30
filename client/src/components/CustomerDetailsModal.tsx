@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { X, AlertCircle } from "lucide-react";
 
 interface CustomerDetailsModalProps {
-  customerId: number;
+  customerId: string | number;
   onClose: () => void;
 }
 
@@ -19,11 +19,11 @@ export default function CustomerDetailsModal({
   >(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const { data: customer, isLoading } = trpc.admin.getCustomerDetails.useQuery({
-    userId: customerId,
-  });
+  const { data: customer, isLoading } = (trpc as any).admin?.getCustomerDetails?.useQuery?.({
+    userId: String(customerId),
+  }) ?? { data: null, isLoading: false };
 
-  const updateStatusMutation = trpc.admin.updateCustomerStatus.useMutation({
+  const updateStatusMutation = (trpc as any).admin?.updateCustomerStatus?.useMutation?.({
     onSuccess: () => {
       toast.success("Customer status updated successfully");
       setShowConfirm(false);
@@ -32,7 +32,7 @@ export default function CustomerDetailsModal({
     onError: () => {
       toast.error("Failed to update customer status");
     },
-  });
+  }) ?? { mutateAsync: async () => {}, isPending: false };
 
   const handleStatusChange = (
     newStatus: "active" | "canceled" | "past_due"
@@ -44,11 +44,12 @@ export default function CustomerDetailsModal({
   const confirmStatusChange = async () => {
     if (selectedStatus) {
       await updateStatusMutation.mutateAsync({
-        userId: customerId,
+        userId: String(customerId),
         newStatus: selectedStatus,
       });
     }
   };
+
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

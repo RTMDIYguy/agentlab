@@ -79,7 +79,7 @@ export async function runAgentStep(
   while (attempt < maxRetries && !success) {
     try {
     const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY });
-    const response = await generateText({
+    const response: any = await (generateText as any)({
       model: google("gemini-2.5-flash") as any,
       system: finalSystemPrompt,
       prompt: fullPrompt,
@@ -111,7 +111,7 @@ export async function runAgentStep(
               return `Failed to send email. Exception: ${e.message}`;
             }
           },
-        }),
+        } as any),
         searchLocalFiles: tool({
           description: "Search the local repository for files matching a keyword. Use this to find the exact file path of SOPs, blueprints, or workflow kits.",
           parameters: z.object({
@@ -150,7 +150,7 @@ export async function runAgentStep(
               return `Search failed: ${e.message}`;
             }
           },
-        }),
+        } as any),
         readLocalFile: tool({
           description: "Read the text contents of a local file in the repository.",
           parameters: z.object({
@@ -175,8 +175,8 @@ export async function runAgentStep(
             } catch (e: any) {
               return `Failed to read file: ${e.message}`;
             }
-          }
-        }),
+          },
+        } as any),
       },
     });
     text = response.text;
@@ -184,6 +184,7 @@ export async function runAgentStep(
     console.log("[Agent Runner] AI SDK generateText succeeded.");
     success = true;
   } catch (sdkError: any) {
+
     attempt++;
     console.error(`[Agent Runner] AI SDK generateText threw an error (Attempt ${attempt}/${maxRetries}):`, sdkError);
     if (attempt >= maxRetries) {

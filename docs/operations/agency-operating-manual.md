@@ -1,7 +1,26 @@
+---
+document_id: DOC-HISTORICAL-AGENCY-OPERATING-MANUAL
+title: "URC Agency Operating Manual (v0 Spine)"
+document_type: operating_manual
+authority_level: historical
+status: historical
+superseded_by: DOC-AGENCY-OWNERS-MANUAL
+owner: "Robert T. McCarthy / OPS"
+canonical_sources:
+  - governance/registry/
+last_reviewed: 2026-08-29
+next_review: 2026-12-31
+version: "0.1.0"
+---
+
 # URC Agency Operating Manual
 
+> [!WARNING]
+> **HISTORICAL DOCUMENT**: This manual has been superseded by [`agency-owners-manual.md`](file:///e:/OneDrive%20-%20Uncle%20Robert%20Consulting%20LLC/Working%20Docs/AI%20Native%20Agency%20Deepened/AgentLab/docs/operations/agency-owners-manual.md) (v0.3) and the canonical system registry under `governance/registry/`. Retained for historical audit and lineage.
+
 Date created: 2026-05-31
-Status: v0 operating spine
+Status: Historical / Superseded
+
 
 ## Purpose
 
