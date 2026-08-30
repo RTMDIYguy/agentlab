@@ -23,6 +23,7 @@ import {
   RefreshCw,
   Zap,
   Smartphone,
+  Flame,
 } from "lucide-react";
 import { toast } from "sonner";
 
