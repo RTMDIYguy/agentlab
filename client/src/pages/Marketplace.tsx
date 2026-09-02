@@ -125,12 +125,13 @@ export default function Marketplace() {
       category: "books",
       name: "Startup Operational Excellence",
       author: "Robert T. McCarthy",
-      price: "$49.99",
+      price: "$19.99",
       rating: 5.0,
       format: "Digital Book & SOP Templates",
       description: "The definitive operating manual for eliminating informational drift, structuring teams, and scaling lean.",
       icon: BookOpen,
       tags: ["Operations", "Governance", "Lean Scale"],
+      link: "https://gumroad.com",
     },
   ];
 
@@ -264,7 +265,30 @@ export default function Marketplace() {
                   <span className="text-sm font-semibold text-foreground">
                     {"price" in item ? item.price : "Included"}
                   </span>
-                  <Button size="sm" className="bg-primary hover:bg-primary/90 text-xs font-medium">
+                  <Button
+                    size="sm"
+                    className="bg-primary hover:bg-primary/90 text-xs font-medium"
+                    onClick={() => {
+                      if (item.category === "books") {
+                        if (item.id === "book-bgw") {
+                          setLocation("/book");
+                        } else {
+                          toast.success(`Opening ${item.name} Gumroad checkout ($19.99)...`);
+                          window.open("https://gumroad.com", "_blank");
+                        }
+                      } else if (item.category === "apps") {
+                        if (item.id === "pulse-social") {
+                          window.open("https://pulse-social-agentlab-projects.vercel.app", "_blank");
+                        } else {
+                          toast.success(`${item.name} mounted into workspace.`);
+                          setLocation("/command-center");
+                        }
+                      } else if (item.category === "playbooks") {
+                        toast.success(`${item.name} activated! Workflows ready in Command Center.`);
+                        setLocation("/command-center");
+                      }
+                    }}
+                  >
                     {item.category === "books" ? "Get Book" : item.category === "apps" ? "Launch / Mount" : "Unlock Playbook"}
                   </Button>
                 </CardFooter>

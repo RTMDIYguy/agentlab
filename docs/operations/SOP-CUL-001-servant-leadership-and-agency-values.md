@@ -1,9 +1,20 @@
+---
+document_id: DOC-SOP-CUL-001
+title: "SOP-CUL-001: Servant Leadership And Agency Values"
+document_type: operating_procedure
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources: ["governance/registry/policies.yaml"]
+last_reviewed: 2026-08-28
+---
+
 # SOP-CUL-001: Servant Leadership And Agency Values
 
 Owner: Culture / Operations
 Last updated: 2026-05-30
 Version: v0.1
-Status: Draft
+Status: Active
 Scope: Internal and public-facing
 
 ## Purpose

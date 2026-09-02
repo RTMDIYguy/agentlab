@@ -1,3 +1,14 @@
+---
+document_id: DOC-SECRET-HANDLING-STANDARD
+title: "URC Secret Handling Standard"
+document_type: security_standard
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / SECURITY"
+canonical_sources: ["governance/registry/policies.yaml"]
+last_reviewed: 2026-08-28
+---
+
 # URC Secret Handling Standard
 
 Date created: 2026-06-03

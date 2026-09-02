@@ -1,3 +1,14 @@
+---
+document_id: DOC-SOP-OPS-006
+title: "SOP-OPS-006: Google Drive Sync on Repo Update"
+document_type: operating_procedure
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources: ["governance/registry/policies.yaml"]
+last_reviewed: 2026-08-28
+---
+
 # SOP-OPS-006: Google Drive Sync on Repo Update
 
 Version: 1.0

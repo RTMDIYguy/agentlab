@@ -1,9 +1,20 @@
+---
+document_id: DOC-SOP-OPS-005
+title: "SOP-OPS-005: Naming Conventions And Identifier Control"
+document_type: operating_procedure
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources: ["governance/terminology.yaml"]
+last_reviewed: 2026-08-28
+---
+
 # SOP-OPS-005: Naming Conventions And Identifier Control
 
 Owner: Operations
 Last updated: 2026-06-03
 Version: v0.2
-Status: Draft
+Status: Active
 Scope: Internal
 
 ## Purpose

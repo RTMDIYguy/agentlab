@@ -1,3 +1,14 @@
+---
+document_id: DOC-WORKFLOW-RELATIONSHIP-MAP
+title: "URC Workflow Relationship Map"
+document_type: workflow_relationship_map
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources: ["governance/registry/workflows.yaml"]
+last_reviewed: 2026-08-28
+---
+
 # URC Workflow Relationship Map
 
 Date created: 2026-06-03

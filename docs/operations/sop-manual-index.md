@@ -1,3 +1,14 @@
+---
+document_id: DOC-SOP-MANUAL-INDEX
+title: "URC SOP Manual Index"
+document_type: sop_index
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources: ["governance/registry/"]
+last_reviewed: 2026-08-28
+---
+
 # URC SOP Manual Index
 
 Date created: 2026-05-18

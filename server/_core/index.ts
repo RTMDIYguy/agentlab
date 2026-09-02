@@ -17,6 +17,38 @@ import {
 import { registerAICoachesWebhookRoutes } from "../aicoaches/webhook";
 import { apiRouter } from "../routes/api";
 import { tenantMiddleware } from "../middleware/tenant";
+import { triggerFullEcosystemSync } from "../controllers/aiStudioSync";
+
+function startDailyEcosystemScheduler() {
+  const calculateNext5AmCt = () => {
+    const now = new Date();
+    const ctString = now.toLocaleString("en-US", { timeZone: "America/Chicago" });
+    const ctDate = new Date(ctString);
+    const targetCt = new Date(ctString);
+    targetCt.setHours(5, 0, 0, 0);
+    if (ctDate.getTime() >= targetCt.getTime()) {
+      targetCt.setDate(targetCt.getDate() + 1);
+    }
+    const diffMs = targetCt.getTime() - ctDate.getTime();
+    return Math.max(diffMs, 1000);
+  };
+
+  const scheduleNext = () => {
+    const delay = calculateNext5AmCt();
+    console.log(`[Scheduler] Next automated ecosystem sync scheduled in ${Math.round(delay / 60000)} minutes.`);
+    setTimeout(async () => {
+      try {
+        console.log("[Scheduler] Executing automated 5:00 AM Central Time daily ecosystem sync...");
+        await triggerFullEcosystemSync();
+      } catch (err: any) {
+        console.warn("[Scheduler] Automated daily sync failed:", err.message);
+      }
+      scheduleNext();
+    }, delay);
+  };
+
+  scheduleNext();
+}
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -121,6 +153,7 @@ async function startServer() {
 
   server.listen(port, "0.0.0.0", () => {
     console.log(`Server running on http://0.0.0.0:${port}/`);
+    startDailyEcosystemScheduler();
   });
 }
 

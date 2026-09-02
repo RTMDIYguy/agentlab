@@ -39,6 +39,7 @@ postman/**/*.local.json
 # IDE and editor files
 .vscode/
 .idea/
+.sixth/
 *.swp
 *.swo
 *~

@@ -1,3 +1,14 @@
+---
+document_id: DOC-AGENCY-COMMAND-CENTER
+title: "Agency Command Center"
+document_type: human_navigation_layer
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources: ["governance/registry/"]
+last_reviewed: 2026-08-28
+---
+
 # Agency Command Center
 
 Status: V1 human navigation layer

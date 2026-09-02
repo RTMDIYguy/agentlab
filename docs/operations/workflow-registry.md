@@ -1,3 +1,14 @@
+---
+document_id: DOC-WORKFLOW-REGISTRY
+title: "URC Workflow Registry"
+document_type: workflow_catalog
+authority_level: operational
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources: ["governance/registry/workflows.yaml"]
+last_reviewed: 2026-08-28
+---
+
 # URC Workflow Registry
 
 Date created: 2026-05-15

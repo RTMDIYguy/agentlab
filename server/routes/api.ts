@@ -15,6 +15,7 @@ import {
   ingestRoamingData,
   executeRemoteAction,
   registerMobileWebhook,
+  handleManualSync,
 } from "../controllers/aiStudioSync";
 
 export const apiRouter = Router();
@@ -114,4 +115,9 @@ apiRouter.post("/sync/action", executeRemoteAction);
 
 // 4. Register Mobile Push Webhooks -> AI Studio
 apiRouter.post("/aistudio/webhook/register", registerMobileWebhook);
+
+// 5. 1-Click Ecosystem Sync (Desktop HTML + Repo Markdown + OS State)
+apiRouter.post("/aistudio/sync-all", handleManualSync);
+apiRouter.post("/sync/all", handleManualSync);
+
 

@@ -23,14 +23,14 @@ products:
     status: active
     owner: "Robert T. McCarthy"
     target_customer: "Early-stage founders, startup operators"
-    price: 49.99
+    price: 19.99
     billing_model: one_time
     currency: USD
     channel: "Gumroad / Sales Department landing page"
     public_description: "Operational playbook for eliminating informational drift and scaling lean operations."
     internal_description: "Core doctrine for URC and Agent Lab governance."
-    last_verified: "2026-08-28"
-    version: "1.0.0"
+    last_verified: "2026-09-02"
+    version: "1.1.0"
 
   - id: PROD-FOUNDER-SIGNAL-SYSTEM
     name: "Founder Signal System"

@@ -1,8 +1,19 @@
+---
+document_id: DOC-CURRENT-STATE-RECONCILIATION
+title: "Current-State Truth Reconciliation & Conflict Assessment"
+document_type: reconciliation_report
+authority_level: canonical
+status: active
+owner: "Robert T. McCarthy / OPS"
+canonical_sources: ["governance/registry/"]
+last_reviewed: 2026-08-28
+---
+
 # Current-State Truth Reconciliation & Conflict Assessment
 **Task:** AGENTLAB-GOVERNANCE-001  
 **Date:** 2026-08-28  
 **Evaluator:** Antigravity Desktop  
-**Status:** Review Required / Canonical Baseline Established  
+**Status:** Canonical Baseline Established  
 
 ---
 
@@ -105,7 +116,7 @@ Below is the structured reconciliation for the 20 fundamental architecture and g
 
 ### 18. Which current public claims are approved?
 - **Approved Claims:**
-  - Pricing for Founder Signal System ($1,000 starter sprint), Ownable OS ($500/mo continuity), Books ($59.99 / $49.99).
+  - Pricing for Founder Signal System ($1,000 starter sprint), Ownable OS ($500/mo continuity), Books ($59.99 / $19.99).
   - **Isolated Client Workspaces:** Multi-tenant workspace isolation with `workspace_id`, Row-Level Security (RLS), and per-workspace budget limits (`CLAIM-TENANCY-RLS`).
 - **Forbidden / Unapproved Claims:**
   - Automated white-label reseller sub-tenancy claims (public positioning is strictly isolated client workspaces).

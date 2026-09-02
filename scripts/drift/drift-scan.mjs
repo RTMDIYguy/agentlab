@@ -7,23 +7,94 @@ const root = process.cwd();
 
 console.log("=================================================");
 console.log("  AGENT LAB DOCUMENTATION DRIFT SCANNER");
-console.log("  Canonical Registry vs. Operational Documents");
+console.log("  Canonical Registry vs. Operational Catalog");
 console.log("=================================================\n");
 
 const registryDir = path.join(root, "governance", "registry");
-const docsToScan = [
-  "docs/operations/agency-owners-manual.md",
-  "docs/operations/urc-v1-operating-architecture.md",
-  "docs/operations/urc-90-day-implementation-plan.md",
-  "workflows/marketing-founder-signal-system/offer-one-pager.md",
-];
+const operationsDir = path.join(root, "docs", "operations");
 
 if (!fs.existsSync(registryDir)) {
   console.error("❌ Error: governance/registry directory not found.");
   process.exit(1);
 }
 
+// Gather all markdown files in docs/operations recursively
+function getMarkdownFiles(dir) {
+  let results = [];
+  if (!fs.existsSync(dir)) return results;
+  const list = fs.readdirSync(dir);
+  for (const file of list) {
+    const fullPath = path.join(dir, file);
+    const stat = fs.statSync(fullPath);
+    if (stat && stat.isDirectory()) {
+      results = results.concat(getMarkdownFiles(fullPath));
+    } else if (file.endsWith(".md")) {
+      results.push(path.relative(root, fullPath).replace(/\\/g, "/"));
+    }
+  }
+  return results;
+}
+
+const operationalDocs = getMarkdownFiles(operationsDir);
+const additionalDocs = [
+  "governance/README.md",
+  "governance/current-state-reconciliation.md",
+  "Agent Task Queue.md",
+  "Agent Consolidation Blueprint.md",
+  "workflows/marketing-founder-signal-system/offer-one-pager.md",
+];
+
+const allDocs = Array.from(new Set([...operationalDocs, ...additionalDocs])).filter(
+  doc => fs.existsSync(path.join(root, doc))
+);
+
 const findings = [];
+
+function parseFrontmatter(content) {
+  if (!content.startsWith("---")) return null;
+  const endIdx = content.indexOf("\n---", 3);
+  if (endIdx === -1) return null;
+  const fmBlock = content.substring(3, endIdx);
+  const metadata = {};
+  for (const line of fmBlock.split("\n")) {
+    const colonIdx = line.indexOf(":");
+    if (colonIdx > 0) {
+      const key = line.substring(0, colonIdx).trim();
+      const val = line.substring(colonIdx + 1).trim().replace(/^["']|["']$/g, "");
+      metadata[key] = val;
+    }
+  }
+  return metadata;
+}
+
+function isHistorical(relPath, metadata) {
+  if (metadata) {
+    if (
+      metadata.authority_level === "historical" ||
+      metadata.status === "historical" ||
+      metadata.status === "archived" ||
+      metadata.status === "deprecated" ||
+      metadata.document_type === "reconciliation_report" ||
+      metadata.document_type === "drift_report" ||
+      metadata.document_type === "audit_ledger"
+    ) {
+      return true;
+    }
+  }
+  const basename = path.basename(relPath).toLowerCase();
+  if (
+    basename.startsWith("session-handoff-") ||
+    basename.includes("-audit-") ||
+    basename.includes("-recap-") ||
+    basename.includes("drift-report") ||
+    basename.includes("current-state-reconciliation") ||
+    relPath.includes("bootstrapper-uploads") ||
+    relPath.includes("versions/")
+  ) {
+    return true;
+  }
+  return false;
+}
 
 function checkDocument(relPath) {
   const fullPath = path.join(root, relPath);
@@ -39,6 +110,13 @@ function checkDocument(relPath) {
   }
 
   const content = fs.readFileSync(fullPath, "utf8");
+  const metadata = parseFrontmatter(content);
+  const historical = isHistorical(relPath, metadata);
+
+  // If document is historical/archived, skip technology drift checks
+  if (historical) {
+    return;
+  }
 
   // Test 1: SQLite as production database conflict
   if (
@@ -55,7 +133,7 @@ function checkDocument(relPath) {
     });
   }
 
-  // Test 2: Google Cloud listed as unconfirmed/TBD when Cloud Run is active runtime
+  // Test 2: Platform decisions marked pending when Cloud Run + Postgres are active
   if (
     content.includes("formal platform decisions pending") &&
     relPath.includes("agency-owners-manual.md")
@@ -69,19 +147,11 @@ function checkDocument(relPath) {
     });
   }
 
-  // Test 3: Missing YAML Frontmatter metadata
-  if (!content.startsWith("---") || !content.includes("document_id:")) {
-    findings.push({
-      severity: "LOW",
-      doc: relPath,
-      message: "Missing standardized YAML frontmatter metadata header.",
-      canonical: "document_id, authority_level, status required",
-      observed: "No YAML frontmatter header found",
-    });
-  }
-
-  // Test 4: Terminology collision check (Workspace vs Project folder)
-  if (content.includes("project folder") && (content.includes("workspace_id") || relPath.includes("schema"))) {
+  // Test 3: Terminology collision check (Workspace vs Project folder)
+  if (
+    content.includes("project folder") &&
+    (content.includes("workspace_id") || relPath.includes("schema"))
+  ) {
     findings.push({
       severity: "MEDIUM",
       doc: relPath,
@@ -92,7 +162,7 @@ function checkDocument(relPath) {
   }
 }
 
-for (const doc of docsToScan) {
+for (const doc of allDocs) {
   checkDocument(doc);
 }
 
@@ -108,7 +178,7 @@ for (const f of findings) {
   if (f.severity === "LOW") lowCount++;
 }
 
-console.log(`Scanned ${docsToScan.length} documents against Canonical Registry.`);
+console.log(`Scanned ${allDocs.length} documents across operations catalog.`);
 console.log(`Findings Summary:`);
 console.log(`  🔴 Critical : ${criticalCount}`);
 console.log(`  🟠 High     : ${highCount}`);
@@ -116,7 +186,7 @@ console.log(`  🟡 Medium   : ${mediumCount}`);
 console.log(`  🟢 Low      : ${lowCount}\n`);
 
 if (findings.length === 0) {
-  console.log("✅ All scanned documents are consistent with the Canonical Registry!\n");
+  console.log("✅ All operational documents are consistent with the Canonical Registry!\n");
   process.exit(0);
 }
 

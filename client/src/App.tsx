@@ -106,6 +106,8 @@ function Router() {
       <Route path={"/docs"} component={Documentation} />
       <Route path="/help" component={HelpCenter} />
       <Route path="/support" component={HelpCenter} />
+      <Route path="/contact" component={HelpCenter} />
+      <Route path="/demo" component={CommandCenter} />
       <Route path="/status" component={Status} />
       <Route path="/newsletter/verify" component={NewsletterVerify} />
       <Route path="/newsletter/unsubscribe" component={NewsletterUnsubscribe} />

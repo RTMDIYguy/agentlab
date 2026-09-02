@@ -132,6 +132,27 @@ export default function CommandCenter() {
     },
   });
 
+  // 7. 1-Click Ecosystem Sync Mutation
+  const syncEcosystemMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch("/api/sync/all", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!res.ok) throw new Error("Failed to sync ecosystem");
+      return res.json();
+    },
+    onSuccess: (data: any) => {
+      toast.success(data.message || "Ecosystem synchronized: Desktop HTML, Repo Markdown & OS State aligned!");
+      queryClient.invalidateQueries({ queryKey: ["runs"] });
+      queryClient.invalidateQueries({ queryKey: ["workflows"] });
+      queryClient.invalidateQueries({ queryKey: ["agents"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Ecosystem sync failed");
+    },
+  });
+
   const handleSendChat = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!orchestratorPrompt.trim() || isSendingPrompt) return;
@@ -221,6 +242,16 @@ export default function CommandCenter() {
             >
               <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
               Refresh
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium shadow-sm"
+              disabled={syncEcosystemMutation.isPending}
+              onClick={() => syncEcosystemMutation.mutate()}
+            >
+              <Zap className={`w-3.5 h-3.5 mr-1.5 ${syncEcosystemMutation.isPending ? "animate-spin" : ""}`} />
+              {syncEcosystemMutation.isPending ? "Syncing Ecosystem..." : "1-Click Sync All"}
             </Button>
           </div>
         </div>

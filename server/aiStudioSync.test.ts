@@ -107,4 +107,36 @@ describe("AI Studio Mobile Sync & Roaming Ingestion Bridge", () => {
     expect(responseData.success).toBe(true);
     expect(responseData.subscriberId).toMatch(/^sub_/);
   });
+
+  it(
+    "executes 1-click full ecosystem sync across Desktop HTML, Repo Brief, and OS",
+    async () => {
+      let statusCode = 200;
+    let responseData: any = null;
+
+    const req = {
+      workspaceId: "00000000-0000-0000-0000-000000000001",
+      headers: {},
+    } as any;
+
+    const res = {
+      status(code: number) {
+        statusCode = code;
+        return this;
+      },
+      json(data: any) {
+        responseData = data;
+        return this;
+      },
+    } as any;
+
+    const { handleManualSync } = await import("./controllers/aiStudioSync");
+    await handleManualSync(req, res);
+
+    expect(statusCode).toBe(200);
+    expect(responseData.success).toBe(true);
+    expect(responseData.syncedAt).toBeDefined();
+    expect(responseData.message).toContain("Full ecosystem sync complete");
+  }, 15000);
 });
+
