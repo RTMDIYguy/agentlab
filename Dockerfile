@@ -6,8 +6,8 @@ RUN npm install -g pnpm@latest
 
 # Builder Stage
 FROM base AS builder
-# Copy package.json and lockfile
-COPY package.json pnpm-lock.yaml ./
+# Copy package manifests and npm configuration
+COPY package.json pnpm-lock.yaml* .npmrc* ./
 COPY patches ./patches
 # Install all dependencies (including devDependencies)
 RUN pnpm install --frozen-lockfile=false
@@ -29,8 +29,8 @@ RUN pnpm run build
 FROM base AS runner
 ENV NODE_ENV=production
 
-# Copy package.json and lockfile
-COPY package.json pnpm-lock.yaml ./
+# Copy package manifests and npm configuration
+COPY package.json pnpm-lock.yaml* .npmrc* ./
 COPY patches ./patches
 # Install only production dependencies
 RUN pnpm install --prod --frozen-lockfile=false

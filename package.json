@@ -126,5 +126,14 @@
     "vite-plugin-manus-runtime": "^0.0.57",
     "vitest": "^4.1.8"
   },
-  "packageManager": "pnpm@11.25.0"
+  "packageManager": "pnpm@11.25.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@firebase/util",
+      "@google/genai",
+      "bufferutil",
+      "esbuild",
+      "protobufjs"
+    ]
+  }
 }
