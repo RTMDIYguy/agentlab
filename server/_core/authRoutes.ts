@@ -140,6 +140,7 @@ export function registerNativeAuthRoutes(app: Express) {
 
       res.status(200).json({
         success: true,
+        token: sessionToken,
         user: {
           id: createdUser.id,
           openId: createdUser.openId,
@@ -274,6 +275,7 @@ export function registerNativeAuthRoutes(app: Express) {
 
       res.status(200).json({
         success: true,
+        token: sessionToken,
         user: {
           id: userRecord.id,
           openId: userRecord.openId,
@@ -395,6 +397,7 @@ export function registerNativeAuthRoutes(app: Express) {
 
       res.status(200).json({
         success: true,
+        token: sessionToken,
         user: {
           id: userRecord.id,
           openId: userRecord.openId,

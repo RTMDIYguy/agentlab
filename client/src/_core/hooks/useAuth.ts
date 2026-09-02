@@ -27,8 +27,15 @@ export function useAuth(options?: UseAuthOptions) {
   const checkAuth = useCallback(async () => {
     try {
       setLoading(true);
+      const token = localStorage.getItem("manus-runtime-token");
+      const headers: Record<string, string> = { Accept: "application/json" };
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const res = await fetch("/api/auth/me", {
-        headers: { "Accept": "application/json" },
+        credentials: "include",
+        headers,
       });
       if (res.ok) {
         const data = await res.json();

@@ -39,6 +39,13 @@ export default function Signup() {
         throw new Error(data.error || "Failed to create account. Please try again.");
       }
 
+      if (data.token) {
+        localStorage.setItem("manus-runtime-token", data.token);
+      }
+      if (data.user) {
+        localStorage.setItem("agentlab_user", JSON.stringify(data.user));
+      }
+
       await refresh();
       setLocation("/dashboard");
     } catch (err: any) {
@@ -65,6 +72,13 @@ export default function Signup() {
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || "Failed to sign up with Google.");
+      }
+
+      if (data.token) {
+        localStorage.setItem("manus-runtime-token", data.token);
+      }
+      if (data.user) {
+        localStorage.setItem("agentlab_user", JSON.stringify(data.user));
       }
 
       await refresh();

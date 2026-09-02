@@ -39,6 +39,13 @@ export default function Login() {
         throw new Error(data.error || "Failed to sign in. Please verify your credentials.");
       }
 
+      if (data.token) {
+        localStorage.setItem("manus-runtime-token", data.token);
+      }
+      if (data.user) {
+        localStorage.setItem("agentlab_user", JSON.stringify(data.user));
+      }
+
       await refresh();
       setLocation("/dashboard");
     } catch (err: any) {
@@ -65,6 +72,13 @@ export default function Login() {
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || "Google authentication failed.");
+      }
+
+      if (data.token) {
+        localStorage.setItem("manus-runtime-token", data.token);
+      }
+      if (data.user) {
+        localStorage.setItem("agentlab_user", JSON.stringify(data.user));
       }
 
       await refresh();
