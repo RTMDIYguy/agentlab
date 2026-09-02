@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { handleOrchestratorChat } from "../controllers/orchestrator";
-import { getAgents } from "../controllers/agents";
+import { getAgents, deployAgent, toggleAgentStatus } from "../controllers/agents";
 import { getWorkflows, deployWorkflow, createCustomWorkflow, updateWorkflowSchedule } from "../controllers/workflows";
 import {
   triggerRun,
@@ -77,6 +77,8 @@ apiRouter.post("/orchestrator/chat", handleOrchestratorChat);
 
 // Autonomous Swarm Agents
 apiRouter.get("/agents", getAgents);
+apiRouter.post("/agents/deploy", deployAgent);
+apiRouter.post("/agents/:id/toggle", toggleAgentStatus);
 
 // Workflows & Autonomic DAG Deployments
 apiRouter.get("/workflows", getWorkflows);

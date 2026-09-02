@@ -61,7 +61,6 @@ const DEFAULT_WORKSPACE_AGENTS: AgentDto[] = [
 export async function getAgents(req: Request, res: Response): Promise<void> {
   try {
     const workspaceId = req.workspaceId;
-    // In production, query Cloud SQL with eq(agents.workspaceId, workspaceId)
     res.status(200).json({
       workspaceId,
       agents: DEFAULT_WORKSPACE_AGENTS,
@@ -70,5 +69,48 @@ export async function getAgents(req: Request, res: Response): Promise<void> {
   } catch (error) {
     console.error("[Agents Controller Error]:", error);
     res.status(500).json({ error: "Failed to fetch agents." });
+  }
+}
+
+export async function toggleAgentStatus(req: Request, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const agent = DEFAULT_WORKSPACE_AGENTS.find((a) => a.id === id);
+    if (!agent) {
+      res.status(404).json({ error: `Agent with id ${id} not found.` });
+      return;
+    }
+
+    agent.status = agent.status === "active" ? "paused" : "active";
+    res.status(200).json({ success: true, agent });
+  } catch (error) {
+    console.error("[Toggle Agent Error]:", error);
+    res.status(500).json({ error: "Failed to toggle agent status." });
+  }
+}
+
+export async function deployAgent(req: Request, res: Response): Promise<void> {
+  try {
+    const { name, role, baseModel } = req.body;
+    if (!name || !role) {
+      res.status(400).json({ error: "Agent name and role are required." });
+      return;
+    }
+
+    const newAgent: AgentDto = {
+      id: `agt_${Date.now().toString(36)}`,
+      name,
+      role,
+      status: "active",
+      tasksCompleted: 0,
+      uptime: "100%",
+      baseModel: baseModel || "gemini-2.5-flash",
+    };
+
+    DEFAULT_WORKSPACE_AGENTS.unshift(newAgent);
+    res.status(201).json({ success: true, agent: newAgent });
+  } catch (error) {
+    console.error("[Deploy Agent Error]:", error);
+    res.status(500).json({ error: "Failed to deploy agent." });
   }
 }
