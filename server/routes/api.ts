@@ -17,6 +17,13 @@ import {
   registerMobileWebhook,
   handleManualSync,
 } from "../controllers/aiStudioSync";
+import {
+  getAuditLogs,
+  getAuditStats,
+  exportAuditLogs,
+  approveAuditAction,
+  rejectAuditAction,
+} from "../controllers/audit";
 
 export const apiRouter = Router();
 
@@ -121,5 +128,15 @@ apiRouter.post("/aistudio/webhook/register", registerMobileWebhook);
 // 5. 1-Click Ecosystem Sync (Desktop HTML + Repo Markdown + OS State)
 apiRouter.post("/aistudio/sync-all", handleManualSync);
 apiRouter.post("/sync/all", handleManualSync);
+
+// ==============================================================================
+// System Auditing, Compliance & Governance Telemetry
+// ==============================================================================
+apiRouter.get("/audit-logs", getAuditLogs);
+apiRouter.get("/audit-logs/stats", getAuditStats);
+apiRouter.get("/audit-logs/export", exportAuditLogs);
+apiRouter.post("/audit-logs/:id/approve", approveAuditAction);
+apiRouter.post("/audit-logs/:id/reject", rejectAuditAction);
+
 
 
