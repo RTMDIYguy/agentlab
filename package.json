@@ -113,7 +113,7 @@
     "drizzle-kit": "^0.31.10",
     "esbuild": "^0.25.10",
     "jszip": "^3.10.1",
-    "pnpm": "^10.33.0",
+    "pnpm": "^11.25.0",
     "postcss": "^8.5.15",
     "prettier": "^3.6.2",
     "swagger-autogen": "^2.23.7",
