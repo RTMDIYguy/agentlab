@@ -1,8 +1,8 @@
 # Base Stage
 FROM node:20-alpine AS base
 WORKDIR /app
-# Enable corepack for pnpm if needed, or install pnpm globally
-RUN npm install -g pnpm@10.33.0
+# Enable corepack and install latest pnpm
+RUN npm install -g pnpm@latest
 
 # Builder Stage
 FROM base AS builder
@@ -10,7 +10,7 @@ FROM base AS builder
 COPY package.json pnpm-lock.yaml ./
 COPY patches ./patches
 # Install all dependencies (including devDependencies)
-RUN pnpm install
+RUN pnpm install --frozen-lockfile=false
 
 # Copy the rest of the source code
 COPY . .
@@ -33,7 +33,7 @@ ENV NODE_ENV=production
 COPY package.json pnpm-lock.yaml ./
 COPY patches ./patches
 # Install only production dependencies
-RUN pnpm install --prod
+RUN pnpm install --prod --frozen-lockfile=false
 
 # Copy the built assets from the builder stage
 # dist/public contains the built Vite frontend

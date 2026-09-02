@@ -1,0 +1,16 @@
+node_modules
+dist
+.git
+.env*
+*.log
+postgres.zip
+postgres.tgz
+postgres_bin
+pgsql
+gdrive-staging
+.vscode
+.agents
+.autonoma
+_tmp_*
+build_logs.json
+audit.json
