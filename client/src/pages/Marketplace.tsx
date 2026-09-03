@@ -355,12 +355,9 @@ export default function Marketplace() {
                         }`}
                         onClick={() => {
                           if (item.category === "books") {
-                            if (item.id === "book-bgw") {
-                              setLocation("/book");
-                            } else {
-                              toast.success(`Opening ${item.name} Gumroad checkout ($19.99)...`);
-                              window.open("https://gumroad.com", "_blank");
-                            }
+                            const targetUrl = (item as any).gumroadUrl || "https://bossrob.gumroad.com";
+                            toast.success(`Opening ${item.name} ($${item.price?.replace(/[^0-9.]/g, "") || "19.99"})...`);
+                            window.open(targetUrl, "_blank");
                           } else if (item.category === "apps") {
                             if (item.launchUrl?.startsWith("http")) {
                               window.open(item.launchUrl, "_blank");
