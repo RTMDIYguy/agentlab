@@ -4,6 +4,18 @@ All notable changes to the AI Native Agency Deepened/agentlab repo are documente
 
 ---
 
+## [Unreleased] - 2026-09-02
+
+### Added
+
+- **Full-Stack System Auditing & Governance Hub (`client/src/pages/Auditing.tsx`, `server/controllers/audit.ts`)**: Built live governance telemetry engine featuring real-time 24h event counters, SAIF compliance metrics (PII detection, RLS checks), Human-in-the-Loop approval/rejection endpoints (`POST /api/audit-logs/:id/approve` / `reject`), model trace latency and token counters, status filter tabs, search indexing, and 1-click compliance CSV export (`GET /api/audit-logs/export`).
+- **Live Autonomous Swarm Agents Hub (`client/src/pages/Agents.tsx`, `server/controllers/agents.ts`)**: Upgraded `/agents` from static prototype to live React Query integration. Connected to active swarm nodes (`Alpha-Node-01`, `Coder-Agent-07`, `SDR-Writer-02`, `Auditor-Bot-9`, `Workflow-Planner-04`) with interactive pause/resume mutations (`POST /api/agents/:id/toggle`) and dynamic agent deployment modal dialog (`POST /api/agents/deploy`).
+- **Dual-Layer Bearer Token & Resilient Cookie Auth (`server/_core/cookies.ts`, `server/_core/authRoutes.ts`, `client/src/_core/hooks/useAuth.ts`)**: Hardened session cookie configuration to use `SameSite=Lax` on plain HTTP (`localhost`) and `SameSite=None` with `Secure` on production HTTPS, resolving browser cookie-dropping errors. Implemented dual-layer fallback with JWT session tokens stored in `localStorage` and sent via `Authorization: Bearer` headers.
+- **Docker & Cloud Build Hardening (`Dockerfile`, `.dockerignore`, `pnpm-workspace.yaml`, `.npmrc`)**: Added `.dockerignore` to exclude `node_modules`, `postgres.zip`, and logs from build context. Upgraded container base image to `node:22-alpine` for native `node:sqlite` module support in `pnpm v11`. Configured `onlyBuiltDependencies` and `allowBuilds: true` in `pnpm-workspace.yaml` and `.npmrc` for approved native compiler dependencies (`esbuild`, `@firebase/util`, `protobufjs`), achieving 100% green builds on Google Cloud Build.
+- **Commercial Alignment & Pricing Updates (`governance/registry/products.yaml`, `client/src/pages/Marketplace.tsx`, `client/src/pages/Home.tsx`, `client/src/pages/Features.tsx`)**: Reduced *Startup Operational Excellence* book price to $19.99 across product registry and marketplace. Harmonized public pricing cards to match the canonical Offer Ladder ($149/mo Playbook, $500/mo Ownable OS, $1,000 Founder Signal System). Added `/contact` and `/demo` route aliases and populated `/features` with 7-department DAG workflow cards.
+
+---
+
 ## [Unreleased] - 2026-08-24
 
 ### Added

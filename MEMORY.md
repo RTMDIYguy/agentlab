@@ -44,6 +44,12 @@ This is the working-memory layer. It is intentionally short. For rules, see
 
 ## Recent Decisions
 
+- 2026-09-02: Full-stack System Auditing & Governance hub (`/auditing`) live on backend with SAIF telemetry, Human-in-the-Loop gates, and compliance CSV export (CC-2026-09-02-004).
+- 2026-09-02: Full-stack Swarm Agents hub (`/agents`) live on Express API with pause/resume mutations and dynamic node deployment modal (CC-2026-09-02-003).
+- 2026-09-02: Authentication hardened with dual-layer cookie options (`SameSite=Lax` on plain HTTP, `SameSite=None; Secure` on HTTPS) plus persistent Bearer token storage.
+- 2026-09-02: Google Cloud Build Docker pipeline upgraded to `node:22-alpine` with `.dockerignore` and `pnpm-workspace.yaml` approved native builds, achieving 100% green Cloud Run builds.
+- 2026-09-02: Commercial alignment: *Startup Operational Excellence* digital book reduced to $19.99 across registry and marketplace; Offer Ladder synchronized ($149/mo, $500/mo, $1k).
+- 2026-09-02: Hostinger architecture clarified and isolated: `unclerobertconsulting.com` restored with Xperio theme, `prodirectory.unclerobertconsulting.com` isolated in `/public_html/directory` with dedicated database for OneListing + Directorist.
 - 2026-08-21: Established revenue-sharing cross-promotional partnership with Dheerendar (HAMARASHOPS.ai).
 - 2026-08-21: Added `Lead / Campaign Source` custom property to Deals to enable single-pipeline tracking for multiple campaigns, bypassing free tier limits.
 - 2026-06-04: Daily Command Center moves to morning restart block (CC-2026-06-04-013).
