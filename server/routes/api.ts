@@ -15,7 +15,11 @@ import {
   subscribeToPackage,
   mountPlaybook,
   unmountPlaybook,
-} from "../controllers/marketplace";
+  getBetaStatus,
+  enrollBeta,
+  getTrialStatus,
+  extendTrial,
+} from "../controllers/marketplace.js";
 import {
   getSyncState,
   ingestRoamingData,
@@ -115,6 +119,12 @@ apiRouter.post(
 );
 apiRouter.post("/marketplace/mount/:id", mountPlaybook);
 apiRouter.post("/marketplace/unmount/:id", unmountPlaybook);
+
+// Gamified Beta Program & Trial Management
+apiRouter.get("/beta/status", getBetaStatus);
+apiRouter.post("/beta/enroll/:appId", enrollBeta);
+apiRouter.get("/trials/status", getTrialStatus);
+apiRouter.post("/trials/extend", extendTrial);
 
 // ==============================================================================
 // AI Studio Mobile Dashboard & Roaming Data Bridge (Bidirectional)

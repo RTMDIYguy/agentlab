@@ -39,13 +39,13 @@ import {
   ShieldCheck,
   Check,
   RefreshCw,
-  Cpu,
   Clock,
-  ArrowRight,
   Sliders,
-  DollarSign,
+  Award,
+  Lock,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 interface MarketplaceItem {
   id: string;
@@ -73,15 +73,24 @@ interface MarketplaceItem {
   actionUrl?: string;
   actionLabel?: string;
   isExternal?: boolean;
+  isBetaOnly?: boolean;
+  betaTierRequired?: string;
+  betaDescription?: string;
+  gumroadUrl?: string;
 }
 
 export default function Marketplace() {
   const [, setLocation] = useLocation();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const [selectedPlaybook, setSelectedPlaybook] = useState<MarketplaceItem | null>(null);
   const [showEntitlementsModal, setShowEntitlementsModal] = useState(false);
+  const [showBetaOverviewModal, setShowBetaOverviewModal] = useState(false);
+  const [betaEnrollApp, setBetaEnrollApp] = useState<MarketplaceItem | null>(null);
+
+  const isGodmode = user?.role === "admin" || (user as any)?.name === "Thebossrob" || (user as any)?.username === "bossrob";
 
   // 1. Fetch live marketplace items
   const { data: marketplaceData, isLoading, refetch, isRefetching } = useQuery<{
@@ -101,7 +110,59 @@ export default function Marketplace() {
     refetchInterval: 15000,
   });
 
-  // 2. Mount Playbook Mutation
+  // 2. Fetch user's beta status & gamification data
+  const { data: betaData } = useQuery<{
+    isGodmode: boolean;
+    currentTier: string;
+    tierLevel: number;
+    betaPoints: number;
+    enrolledApps: string[];
+    availablePrograms: Array<{
+      id: string;
+      name: string;
+      tierRequired: string;
+      reward: string;
+      status: string;
+    }>;
+  }>({
+    queryKey: ["beta-status"],
+    queryFn: async () => {
+      const res = await fetch("/api/beta/status");
+      if (!res.ok) throw new Error("Failed to fetch beta status");
+      return res.json();
+    },
+  });
+
+  // 3. Beta Enrollment Mutation
+  const enrollBetaMutation = useMutation({
+    mutationFn: async (appId: string) => {
+      const res = await fetch(`/api/beta/enroll/${appId}`, { method: "POST" });
+      if (!res.ok) throw new Error("Failed to enroll in beta");
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast.success("Enrolled in Beta Program! 🎉", {
+        description: data.message || "You have been granted early access.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["beta-status"] });
+      queryClient.invalidateQueries({ queryKey: ["marketplace-items"] });
+      
+      const appToLaunch = betaEnrollApp;
+      setBetaEnrollApp(null);
+      if (appToLaunch?.launchUrl) {
+        if (appToLaunch.launchUrl.startsWith("http")) {
+          window.open(appToLaunch.launchUrl, "_blank");
+        } else {
+          setLocation(appToLaunch.launchUrl);
+        }
+      }
+    },
+    onError: () => {
+      toast.error("Failed to enroll in beta program");
+    }
+  });
+
+  // 4. Mount Playbook Mutation
   const mountMutation = useMutation({
     mutationFn: async (playbookId: string) => {
       const res = await fetch(`/api/marketplace/mount/${playbookId}`, {
@@ -123,7 +184,7 @@ export default function Marketplace() {
     },
   });
 
-  // 3. Unmount Playbook Mutation
+  // 5. Unmount Playbook Mutation
   const unmountMutation = useMutation({
     mutationFn: async (playbookId: string) => {
       const res = await fetch(`/api/marketplace/unmount/${playbookId}`, {
@@ -172,6 +233,30 @@ export default function Marketplace() {
     return <ShoppingBag className="w-5 h-5" />;
   };
 
+  const handleAppLaunch = (item: MarketplaceItem) => {
+    // 1. Founder Signal System always routes to dedicated showcase
+    if (item.id === "pkg-founder-signal") {
+      setLocation("/founder-signal-system");
+      return;
+    }
+
+    // 2. Check Beta Entitlement for beta-only apps
+    const isEnrolled = betaData?.enrolledApps?.includes(item.id);
+    if (item.isBetaOnly && !isGodmode && !isEnrolled) {
+      setBetaEnrollApp(item);
+      return;
+    }
+
+    // 3. Launch App directly
+    if (item.launchUrl?.startsWith("http")) {
+      window.open(item.launchUrl, "_blank");
+    } else if (item.launchUrl) {
+      setLocation(item.launchUrl);
+    } else {
+      setLocation("/command-center");
+    }
+  };
+
   return (
     <DashboardLayout>
       <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-8">
@@ -183,9 +268,16 @@ export default function Marketplace() {
                 <ShoppingBag className="w-7 h-7" />
               </div>
               <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
-                  Ecosystem Marketplace
-                </h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+                    Ecosystem Marketplace
+                  </h1>
+                  {isGodmode && (
+                    <Badge variant="outline" className="text-amber-500 border-amber-500/30 text-[10px]">
+                      Godmode Active
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-sm text-muted-foreground mt-0.5">
                   Deploy live applications, authority books, and 7-department autonomous workflow playbooks.
                 </p>
@@ -193,25 +285,50 @@ export default function Marketplace() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto">
+          {/* Action Hub Pills */}
+          <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowBetaOverviewModal(true)}
+              className="gap-1.5 border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10 text-amber-500 text-xs shadow-sm"
+            >
+              <Award className="w-3.5 h-3.5" />
+              <span>{betaData?.currentTier || "Contributor (Tier 2)"}</span>
+              <span className="ml-1 px-1.5 py-0.2 rounded bg-amber-500/20 text-[10px] font-mono">
+                {betaData?.betaPoints || 350} pts
+              </span>
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setLocation("/dashboard")}
+              className="gap-1.5 border-primary/30 text-primary text-xs hover:bg-primary/5"
+            >
+              <Clock className="w-3.5 h-3.5" />
+              <span>30-Day Pro Trial</span>
+            </Button>
+
             <Button
               variant="outline"
               size="sm"
               onClick={() => refetch()}
               disabled={isRefetching}
-              className="gap-2 border-border/60 hover:bg-muted/60"
+              className="gap-1.5 border-border/60 hover:bg-muted/60 text-xs"
             >
-              <RefreshCw className={`w-4 h-4 ${isRefetching ? "animate-spin text-primary" : ""}`} />
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefetching ? "animate-spin text-primary" : ""}`} />
               Refresh
             </Button>
-            <div className="relative w-full md:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+
+            <div className="relative w-full sm:w-60">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
               <Input
                 type="text"
                 placeholder="Search apps, books, playbooks..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-card/40 border-border/60 text-xs h-9 focus-visible:ring-primary/40"
+                className="pl-8 bg-card/40 border-border/60 text-xs h-8 focus-visible:ring-primary/40"
               />
             </div>
           </div>
@@ -242,6 +359,9 @@ export default function Marketplace() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredItems.map((item) => {
+              const isEnrolled = betaData?.enrolledApps?.includes(item.id);
+              const isLockedBeta = item.isBetaOnly && !isGodmode && !isEnrolled;
+
               return (
                 <Card
                   key={item.id}
@@ -272,6 +392,18 @@ export default function Marketplace() {
                             Available
                           </Badge>
                         )
+                      ) : item.isBetaOnly ? (
+                        <Badge 
+                          variant="secondary" 
+                          className={`text-[11px] gap-1 ${
+                            isEnrolled || isGodmode 
+                              ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30" 
+                              : "bg-amber-500/15 text-amber-400 border border-amber-500/30"
+                          }`}
+                        >
+                          {isEnrolled || isGodmode ? <Sparkles className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+                          {isEnrolled || isGodmode ? "Beta Active" : "Beta Access"}
+                        </Badge>
                       ) : "status" in item && item.status ? (
                         <Badge variant={item.statusVariant || "secondary"} className="text-xs">
                           {item.status}
@@ -351,21 +483,17 @@ export default function Marketplace() {
                         className={`h-8 text-xs font-medium gap-1.5 shadow-sm ${
                           item.isMounted
                             ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                            : isLockedBeta
+                            ? "bg-amber-600 hover:bg-amber-700 text-white"
                             : "bg-primary hover:bg-primary/90 text-primary-foreground"
                         }`}
                         onClick={() => {
                           if (item.category === "books") {
-                            const targetUrl = (item as any).gumroadUrl || "https://bossrob.gumroad.com";
+                            const targetUrl = item.gumroadUrl || "https://bossrob.gumroad.com";
                             toast.success(`Opening ${item.name} ($${item.price?.replace(/[^0-9.]/g, "") || "19.99"})...`);
                             window.open(targetUrl, "_blank");
                           } else if (item.category === "apps") {
-                            if (item.launchUrl?.startsWith("http")) {
-                              window.open(item.launchUrl, "_blank");
-                            } else if (item.launchUrl) {
-                              setLocation(item.launchUrl);
-                            } else {
-                              setLocation("/command-center");
-                            }
+                            handleAppLaunch(item);
                           } else if (item.category === "playbooks") {
                             if (item.isMounted) {
                               toast.info(`${item.name} is active`, {
@@ -384,10 +512,17 @@ export default function Marketplace() {
                             {item.actionLabel || "Get Book"}
                           </>
                         ) : item.category === "apps" ? (
-                          <>
-                            {item.isExternal ? <ExternalLink className="w-3.5 h-3.5" /> : <Zap className="w-3.5 h-3.5" />}
-                            Launch App
-                          </>
+                          isLockedBeta ? (
+                            <>
+                              <Lock className="w-3.5 h-3.5" />
+                              Join Beta Access
+                            </>
+                          ) : (
+                            <>
+                              {item.isExternal ? <ExternalLink className="w-3.5 h-3.5" /> : <Zap className="w-3.5 h-3.5" />}
+                              {item.actionLabel || "Launch App"}
+                            </>
+                          )
                         ) : item.isMounted ? (
                           <>
                             <Check className="w-3.5 h-3.5" />
@@ -438,6 +573,142 @@ export default function Marketplace() {
             </Button>
           </div>
         </div>
+
+        {/* Gamified Beta Overview Modal */}
+        <Dialog open={showBetaOverviewModal} onOpenChange={setShowBetaOverviewModal}>
+          <DialogContent className="max-w-2xl bg-card border-border/80">
+            <DialogHeader>
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-500">
+                  <Award className="w-5 h-5" />
+                </div>
+                <div>
+                  <DialogTitle className="text-lg font-bold flex items-center gap-2">
+                    AgentLab Beta Programs & Badges
+                  </DialogTitle>
+                  <DialogDescription className="text-xs">
+                    Participate in our gamified testing programs to earn extra Pro Trial days, unlock departmental blueprints, and boost LLM rate limits.
+                  </DialogDescription>
+                </div>
+              </div>
+            </DialogHeader>
+
+            <div className="space-y-4 pt-2 text-xs">
+              {/* Current Tier Box */}
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-amber-500/80 block">Your Current Status</span>
+                  <div className="text-base font-black text-amber-500">{betaData?.currentTier || "Contributor (Tier 2)"}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">
+                    {isGodmode ? "Full unfiltered access across all experimental apps and raw Python SDK nodes." : "You have access to Tier 1 and Tier 2 beta applications."}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-2xl font-black text-foreground">{betaData?.betaPoints || 350}</span>
+                  <span className="text-[10px] text-muted-foreground block">Beta XP</span>
+                </div>
+              </div>
+
+              {/* Tiers Explanation */}
+              <div className="space-y-2">
+                <span className="font-bold text-foreground block">Beta Progression Tiers:</span>
+                <div className="grid grid-cols-3 gap-2 font-mono text-[11px]">
+                  <div className="p-2.5 rounded-lg bg-card/60 border border-border/60">
+                    <span className="text-primary font-bold block">1. Explorer</span>
+                    <span className="text-[10px] text-muted-foreground">Public beta tools (LeadPulse, Pulse Social)</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-card/60 border border-amber-500/30">
+                    <span className="text-amber-500 font-bold block">2. Contributor</span>
+                    <span className="text-[10px] text-muted-foreground">Market Marksman, +14 Trial days on 5 tests</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-card/60 border border-purple-500/30">
+                    <span className="text-purple-400 font-bold block">3. Alpha Insider</span>
+                    <span className="text-[10px] text-muted-foreground">Multi-Agent SDK, autonomous browser nodes</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Active Programs List */}
+              <div className="space-y-2">
+                <span className="font-bold text-foreground block">Available Programs:</span>
+                <div className="divide-y divide-border/40 border border-border/60 rounded-lg overflow-hidden bg-card/40">
+                  {betaData?.availablePrograms?.map((prog) => (
+                    <div key={prog.id} className="p-3 flex items-center justify-between">
+                      <div>
+                        <div className="font-semibold text-foreground text-xs">{prog.name}</div>
+                        <div className="text-[11px] text-muted-foreground">
+                          Requires: <span className="text-primary">{prog.tierRequired}</span> • Reward: <span className="text-emerald-400">{prog.reward}</span>
+                        </div>
+                      </div>
+                      <Badge variant={prog.status === "Active" ? "default" : "outline"} className="text-[10px]">
+                        {prog.status}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button size="sm" onClick={() => setShowBetaOverviewModal(false)} className="text-xs">
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* 1-Click App Beta Enrollment Modal */}
+        <Dialog open={Boolean(betaEnrollApp)} onOpenChange={(open) => !open && setBetaEnrollApp(null)}>
+          <DialogContent className="max-w-md bg-card border-border/80">
+            <DialogHeader>
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-500">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div>
+                  <DialogTitle className="text-base font-bold">
+                    Join {betaEnrollApp?.name} Beta
+                  </DialogTitle>
+                  <DialogDescription className="text-xs">
+                    {betaEnrollApp?.betaTierRequired || "Explorer Tier"} Early Access Program
+                  </DialogDescription>
+                </div>
+              </div>
+            </DialogHeader>
+
+            <div className="space-y-3 pt-2 text-xs">
+              <div className="p-3 rounded-lg bg-muted/40 border border-border/60 space-y-1">
+                <span className="font-semibold text-foreground">Program Scope:</span>
+                <p className="text-muted-foreground">{betaEnrollApp?.description}</p>
+              </div>
+
+              <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 space-y-1">
+                <span className="font-semibold text-amber-500 flex items-center gap-1.5">
+                  <Award className="w-3.5 h-3.5" />
+                  Beta Rewards & XP
+                </span>
+                <p className="text-muted-foreground text-[11px]">
+                  Testing this app and providing feedback automatically awards <strong>+50 Beta XP</strong> and unlocks <strong>+14 Days Pro Trial Extension</strong>!
+                </p>
+              </div>
+            </div>
+
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button variant="ghost" size="sm" onClick={() => setBetaEnrollApp(null)} className="text-xs">
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                disabled={enrollBetaMutation.isPending}
+                onClick={() => betaEnrollApp && enrollBetaMutation.mutate(betaEnrollApp.id)}
+                className="text-xs bg-amber-600 hover:bg-amber-700 text-white font-semibold gap-1.5 shadow"
+              >
+                <Check className="w-3.5 h-3.5" />
+                {enrollBetaMutation.isPending ? "Enrolling..." : "Enroll & Launch App"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Blueprint Details Modal */}
         <Dialog open={Boolean(selectedPlaybook)} onOpenChange={(open) => !open && setSelectedPlaybook(null)}>

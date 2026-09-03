@@ -98,7 +98,7 @@ export const CANONICAL_ECOSYSTEM_APPS = [
     name: "Market Marksman",
     provider: "URC Ecosystem Apps",
     type: "Predictive Opportunity App",
-    status: "Live on Cloud Run",
+    status: "Live (Beta)",
     statusVariant: "default",
     price: "Included in OS",
     description: "Opportunity discovery and predictive deal signal briefs for identifying high-margin market wedges.",
@@ -106,6 +106,9 @@ export const CANONICAL_ECOSYSTEM_APPS = [
     tags: ["Opportunities", "Deal Signals", "Sales Intelligence"],
     launchUrl: "https://market-marksman-718497644379.us-central1.run.app/",
     isExternal: true,
+    isBetaOnly: true,
+    betaTierRequired: "Contributor (Tier 2)",
+    betaDescription: "Predictive deal sourcing engine. Requires active beta enrollment or Contributor badge.",
   },
   {
     id: "app-pulse-social",
@@ -113,7 +116,7 @@ export const CANONICAL_ECOSYSTEM_APPS = [
     name: "Pulse Social",
     provider: "URC Ecosystem Apps",
     type: "Content Syndication Engine",
-    status: "Live",
+    status: "Live (Beta)",
     statusVariant: "default",
     price: "Included in OS",
     description: "Automated social content generation, multi-channel syndication, and post scheduling engine.",
@@ -121,6 +124,9 @@ export const CANONICAL_ECOSYSTEM_APPS = [
     tags: ["Social Media", "LinkedIn", "Content Scheduling"],
     launchUrl: "https://pulse-social-agentlab-projects.vercel.app",
     isExternal: true,
+    isBetaOnly: true,
+    betaTierRequired: "Explorer (Tier 1)",
+    betaDescription: "Multi-channel content scheduling & syndication engine.",
   },
   {
     id: "app-leadpulse",
@@ -128,7 +134,7 @@ export const CANONICAL_ECOSYSTEM_APPS = [
     name: "LeadPulse",
     provider: "URC Ecosystem Apps",
     type: "Lead Discovery & Enrichment",
-    status: "Live on AI Studio",
+    status: "Live (Beta)",
     statusVariant: "default",
     price: "Included in OS",
     description: "Automated B2B lead discovery, contact scraping, and enrichment engine for founder-led outreach.",
@@ -136,6 +142,9 @@ export const CANONICAL_ECOSYSTEM_APPS = [
     tags: ["Lead Gen", "Enrichment", "B2B Prospecting"],
     launchUrl: "https://leadpulse-ai-lead-accuracy-enrichment-engine.ai.studio/",
     isExternal: true,
+    isBetaOnly: true,
+    betaTierRequired: "Explorer (Tier 1)",
+    betaDescription: "Autonomous lead enrichment & verification matrix.",
   },
   {
     id: "pkg-founder-signal",
@@ -143,14 +152,16 @@ export const CANONICAL_ECOSYSTEM_APPS = [
     name: "Founder Signal System",
     provider: "Uncle Robert Consulting",
     type: "Starter Marketing Sprint",
-    status: "Live (Beta Sprint)",
+    status: "Live Sprint",
     statusVariant: "secondary",
     price: "$1,000 one-time",
     description: "3–5 day turnkey starter marketing sprint: signal brief, message map, first content batch, and proof-capture loop.",
     iconName: "Zap",
     tags: ["Founder Marketing", "Starter Sprint", "Beta"],
-    launchUrl: "/contact",
-    actionLabel: "Book Diagnostic",
+    launchUrl: "/founder-signal-system",
+    actionLabel: "View Sprint & Diagnostic",
+    isBetaOnly: false,
+    betaTierRequired: "Public Sprint Access",
   },
   {
     id: "app-consulting-gen",
@@ -165,6 +176,8 @@ export const CANONICAL_ECOSYSTEM_APPS = [
     iconName: "FileText",
     tags: ["Consulting", "Diagnostic", "Assessment"],
     launchUrl: "/assessment-generator",
+    isBetaOnly: false,
+    betaTierRequired: "Public Access",
   },
   {
     id: "pkg-48hr-linkedin",
@@ -180,6 +193,8 @@ export const CANONICAL_ECOSYSTEM_APPS = [
     tags: ["LinkedIn", "Authority", "Campaign", "n8n Tracker"],
     launchUrl: "https://docs.google.com/spreadsheets/d/1al0EOoZwFMJHIW4wCjMvZTAZgFxo9s7Nfq4dCMHXjYY/edit",
     isExternal: true,
+    isBetaOnly: false,
+    betaTierRequired: "Public Access",
   },
 ];
 
@@ -413,3 +428,138 @@ export async function getPackages(req: Request, res: Response): Promise<void> {
 export async function subscribeToPackage(req: Request, res: Response): Promise<void> {
   return mountPlaybook(req, res);
 }
+
+// In-memory store for beta enrollments & trial extensions
+const inMemoryBetaEnrollments = new Map<string, Set<string>>();
+const inMemoryTrialExtensions = new Map<string, number>();
+
+export async function getBetaStatus(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
+    const userRole = (req as any).user?.role || "admin";
+    const isGodmode = userRole === "admin" || (req as any).user?.name === "Thebossrob";
+
+    const enrolled = Array.from(inMemoryBetaEnrollments.get(workspaceId) || ["app-leadpulse", "app-pulse-social"]);
+
+    res.status(200).json({
+      success: true,
+      isGodmode,
+      currentTier: isGodmode ? "Alpha Insider (Tier 3 - Godmode)" : "Contributor (Tier 2)",
+      tierLevel: isGodmode ? 3 : 2,
+      betaPoints: isGodmode ? 9999 : 350,
+      enrolledApps: isGodmode ? CANONICAL_ECOSYSTEM_APPS.map(a => a.id) : enrolled,
+      availablePrograms: [
+        {
+          id: "app-market-marksman",
+          name: "Market Marksman Beta",
+          tierRequired: "Contributor (Tier 2)",
+          reward: "+14 Pro Trial Days on 5 Signal Tests",
+          status: isGodmode || enrolled.includes("app-market-marksman") ? "Active" : "Available",
+        },
+        {
+          id: "app-leadpulse",
+          name: "LeadPulse Beta",
+          tierRequired: "Explorer (Tier 1)",
+          reward: "+7 Pro Trial Days on Feedback",
+          status: isGodmode || enrolled.includes("app-leadpulse") ? "Active" : "Available",
+        },
+        {
+          id: "app-pulse-social",
+          name: "Pulse Social Beta",
+          tierRequired: "Explorer (Tier 1)",
+          reward: "Priority Generation Rate Limits",
+          status: isGodmode || enrolled.includes("app-pulse-social") ? "Active" : "Available",
+        },
+        {
+          id: "agentic-os-v2",
+          name: "Agentic OS v2 (Autonomous Swarms)",
+          tierRequired: "Alpha Insider (Tier 3)",
+          reward: "Direct Access to Multi-Agent Python SDK",
+          status: isGodmode ? "Active" : "Locked",
+        }
+      ]
+    });
+  } catch (error: any) {
+    console.error("[Beta Status Error]:", error);
+    res.status(500).json({ error: "Failed to fetch beta status" });
+  }
+}
+
+export async function enrollBeta(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
+    const { appId } = req.params;
+
+    if (!inMemoryBetaEnrollments.has(workspaceId)) {
+      inMemoryBetaEnrollments.set(workspaceId, new Set<string>(["app-leadpulse", "app-pulse-social"]));
+    }
+    inMemoryBetaEnrollments.get(workspaceId)!.add(appId);
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully enrolled in ${appId} Beta Program!`,
+      appId,
+      workspaceId,
+    });
+  } catch (error: any) {
+    console.error("[Beta Enroll Error]:", error);
+    res.status(500).json({ error: "Failed to enroll in beta program" });
+  }
+}
+
+export async function getTrialStatus(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
+    const extraDays = inMemoryTrialExtensions.get(workspaceId) || 0;
+    const baseDaysRemaining = 18;
+    const totalDaysRemaining = baseDaysRemaining + extraDays;
+
+    res.status(200).json({
+      success: true,
+      plan: "Ownable OS (Agentic OS Pro Trial)",
+      totalTrialDays: 30 + extraDays,
+      daysRemaining: totalDaysRemaining,
+      trialEndDate: new Date(Date.now() + totalDaysRemaining * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      canExtend: extraDays < 28,
+      downgradePolicy: {
+        retained: [
+          "1 Active Swarm Agent (Alpha-Node-01)",
+          "5 Daily Autonomous DAG Runs",
+          "Full Access to Workspace Knowledge Base & Saved SOPs",
+          "Exportable Audit Logs & Compliance Reports",
+        ],
+        paused: [
+          "Multi-Agent Swarm Concurrency (>1 agent)",
+          "Real-Time Automated Background Schedulers",
+          "Beta Ecosystem App Integration Hub",
+        ]
+      }
+    });
+  } catch (error: any) {
+    console.error("[Trial Status Error]:", error);
+    res.status(500).json({ error: "Failed to fetch trial status" });
+  }
+}
+
+export async function extendTrial(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
+    const { reason } = req.body || {};
+    const currentExtra = inMemoryTrialExtensions.get(workspaceId) || 0;
+    const newExtra = currentExtra + 14;
+    inMemoryTrialExtensions.set(workspaceId, newExtra);
+
+    res.status(200).json({
+      success: true,
+      message: "Trial successfully extended by 14 days!",
+      addedDays: 14,
+      totalExtensionDays: newExtra,
+      daysRemaining: 18 + newExtra,
+      reason: reason || "Founder Beta Extension",
+    });
+  } catch (error: any) {
+    console.error("[Extend Trial Error]:", error);
+    res.status(500).json({ error: "Failed to extend trial" });
+  }
+}
+
