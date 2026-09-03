@@ -4,19 +4,19 @@
 @custom-variant dark (&:is(.dark *));
 
 /* 
-  Phase 1: Global CSS Variables
-  Design System: Modern Tech-Forward Minimalism
+  Global Design System: Modern Luminous High-Tech Agency OS
+  Refined Obsidian & Jewel Contrast with Ambient Lighting
 */
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 6px);
 
   /* Fonts */
-  --font-sans: "Inter", sans-serif;
-  --font-heading: "Poppins", sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: "Poppins", "Inter", sans-serif;
 
   /* Colors */
   --color-background: hsl(var(--background));
@@ -42,121 +42,106 @@
   /* Animations */
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
-  --animate-spotlight: spotlight 5s ease-in-out infinite alternate;
+  --animate-spotlight: spotlight 6s ease-in-out infinite alternate;
   --animate-pulse-glow: pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-soundwave: soundwave 1s ease-in-out infinite alternate;
-  --animate-typing: typing 1.5s steps(40, end) infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.5s linear infinite;
   
   @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-    to {
-      height: var(--radix-accordion-content-height);
-    }
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
   }
   @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-    to {
-      height: 0;
-    }
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
   }
   @keyframes spotlight {
-    0% { transform: scale(1) translate(-20%, -20%) rotate(0deg); opacity: 0.4; }
-    50% { opacity: 0.7; }
-    100% { transform: scale(1.5) translate(20%, 20%) rotate(15deg); opacity: 0.4; }
+    0% { transform: scale(1) translate(-15%, -15%) rotate(0deg); opacity: 0.35; }
+    50% { opacity: 0.65; transform: scale(1.3) translate(10%, 10%) rotate(10deg); }
+    100% { transform: scale(1.6) translate(25%, 25%) rotate(20deg); opacity: 0.35; }
   }
   @keyframes pulse-glow {
     0%, 100% { opacity: 1; transform: scale(1); filter: brightness(1); }
-    50% { opacity: 0.8; transform: scale(1.05); filter: brightness(1.2); }
+    50% { opacity: 0.85; transform: scale(1.03); filter: brightness(1.2); }
   }
   @keyframes float {
     0% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(5deg); }
+    50% { transform: translateY(-12px) rotate(2deg); }
     100% { transform: translateY(0px) rotate(0deg); }
   }
-  @keyframes soundwave {
-    0% { height: 10%; opacity: 0.5; }
-    100% { height: 100%; opacity: 1; }
-  }
-  @keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
 }
 
 @layer base {
   :root {
-    /* Base Background: Deep Navy/Charcoal (#1a1f3a) */
-    --background: 231 38% 16%;
-    --foreground: 210 40% 98%;
+    /* Luminous Dark Obsidian Palette (Replaces flat dark blue) */
+    --background: 224 45% 6%;      /* #090d16 Deep Obsidian */
+    --foreground: 210 40% 98%;      /* Crisp Off-White */
 
-    /* Cards & Popovers: Slightly lighter navy for depth */
-    --card: 231 30% 20%;
+    /* Cards & Panels: Layered Glassmorphic Slate */
+    --card: 224 35% 10%;           /* #0e1524 Layered Slate */
     --card-foreground: 210 40% 98%;
-    --popover: 231 30% 20%;
+    --popover: 224 35% 10%;
     --popover-foreground: 210 40% 98%;
 
-    /* Primary: Electric Blue (#0066ff) */
-    --primary: 216 100% 50%;
-    --primary-foreground: 210 40% 98%;
+    /* Radiant Jewel Primary: Vivid Cobalt/Electric Indigo */
+    --primary: 217 91% 60%;         /* #3b82f6 Radiant Blue */
+    --primary-foreground: 0 0% 100%;
 
-    /* Secondary/Accent: Vibrant Cyan (#00d9ff) */
-    --secondary: 189 100% 50%;
-    --secondary-foreground: 231 38% 16%;
+    /* Vivid Secondary: Cyber Cyan */
+    --secondary: 187 92% 53%;       /* #14f1d9 Cyber Cyan */
+    --secondary-foreground: 224 45% 6%;
 
-    --accent: 189 100% 50%;
-    --accent-foreground: 231 38% 16%;
+    /* Accent: Royal Neon Violet */
+    --accent: 263 70% 58%;          /* #8b5cf6 Luminous Violet */
+    --accent-foreground: 0 0% 100%;
 
-    /* Muted elements: Muted navy/gray for borders and secondary text */
-    --muted: 231 25% 25%;
-    --muted-foreground: 215 20% 65%;
+    /* Muted & Borders: Refined Charcoal Neutral */
+    --muted: 224 25% 15%;           /* #1a2233 */
+    --muted-foreground: 215 20% 68%;
 
-    /* Destructive/Error states */
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* Destructive/Alert states */
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 100%;
 
     /* UI Structural elements */
-    --border: 231 25% 25%;
-    --input: 231 25% 25%;
-    --ring: 216 100% 50%;
+    --border: 224 25% 18%;          /* #1f293d */
+    --input: 224 25% 16%;
+    --ring: 217 91% 60%;
 
-    /* Sharp, modern corner radius */
-    --radius: 0.3rem;
+    --radius: 0.5rem;
   }
 
   .dark {
-    /* In this design system, dark mode is the default/native mode. 
-       Keeping values identical or slightly adjusted for dark context */
-    --background: 231 38% 12%; /* Even deeper navy */
+    --background: 224 50% 5%;      /* #070a12 Ultra Deep */
     --foreground: 210 40% 98%;
 
-    --card: 231 30% 16%;
+    --card: 224 35% 9%;
     --card-foreground: 210 40% 98%;
-    --popover: 231 30% 16%;
+    --popover: 224 35% 9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 216 100% 50%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 189 100% 50%;
-    --secondary-foreground: 231 38% 16%;
+    --secondary: 187 92% 53%;
+    --secondary-foreground: 224 50% 5%;
 
-    --accent: 189 100% 50%;
-    --accent-foreground: 231 38% 16%;
+    --accent: 263 70% 58%;
+    --accent-foreground: 0 0% 100%;
 
-    --muted: 231 25% 20%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 224 25% 14%;
+    --muted-foreground: 215 20% 68%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 231 25% 20%;
-    --input: 231 25% 20%;
-    --ring: 216 100% 50%;
+    --border: 224 25% 16%;
+    --input: 224 25% 14%;
+    --ring: 217 91% 60%;
   }
 
   * {
@@ -164,15 +149,14 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased selection:bg-primary selection:text-primary-foreground;
+    @apply bg-background text-foreground font-sans antialiased selection:bg-primary selection:text-primary-foreground min-h-screen relative overflow-x-hidden;
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
+      radial-gradient(circle at 100% 40%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 0% 70%, rgba(20, 241, 217, 0.07) 0%, transparent 40%);
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     @apply font-heading tracking-tight text-foreground;
   }
 
@@ -198,11 +182,6 @@
     padding-right: 1rem;
   }
 
-  .flex {
-    min-height: 0;
-    min-width: 0;
-  }
-
   @media (min-width: 640px) {
     .container {
       padding-left: 1.5rem;
@@ -218,43 +197,74 @@
     }
   }
 
-  /* Custom components for AgentLab design */
-  .section-title {
-    @apply text-4xl md:text-5xl font-bold text-foreground font-heading tracking-tight;
+  /* Technical Mesh & Dot Matrix Texture */
+  .bg-grid-mesh {
+    background-size: 32px 32px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   }
 
-  .section-subtitle {
-    @apply text-lg text-muted-foreground mt-4;
+  .bg-dot-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 
-  .gradient-text {
-    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  /* Radiant Multi-Stop Gradient Headlines */
+  .gradient-heading {
+    @apply bg-gradient-to-r from-white via-slate-100 to-primary/90 bg-clip-text text-transparent;
   }
 
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:scale-[1.02] border border-border/50;
+  .gradient-gold {
+    @apply bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 bg-clip-text text-transparent;
+  }
+
+  .gradient-cyan {
+    @apply bg-gradient-to-r from-cyan-300 via-teal-300 to-emerald-400 bg-clip-text text-transparent;
+  }
+
+  /* Premium Glassmorphic Card */
+  .glass-card {
+    @apply bg-card/70 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.3)] transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    @apply border-primary/40 shadow-[0_12px_40px_rgba(59,130,246,0.18)] -translate-y-0.5;
+  }
+
+  /* Ambient Glowing Orbs */
+  .ambient-orb-blue {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%);
+    filter: blur(50px);
+    pointer-events: none;
+  }
+
+  .ambient-orb-purple {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.22) 0%, transparent 70%);
+    filter: blur(50px);
+    pointer-events: none;
+  }
+
+  .ambient-orb-emerald {
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.20) 0%, transparent 70%);
+    filter: blur(50px);
+    pointer-events: none;
   }
 
   .button-glow {
-    @apply relative overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(0,102,255,0.3)] hover:shadow-[0_0_25px_rgba(0,102,255,0.5)];
-  }
-
-  .button-glow::before {
-    content: "";
-    @apply absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300;
+    @apply relative overflow-hidden transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.35)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)];
   }
 
   .neon-border {
-    @apply relative rounded-xl border border-primary/50 shadow-[0_0_15px_rgba(0,102,255,0.3)] bg-background/50 backdrop-blur-md overflow-hidden;
-  }
-  
-  .neon-border::before {
-    content: "";
-    @apply absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 pointer-events-none;
-  }
-  
-  .text-neon {
-    @apply text-white text-shadow-[0_0_10px_rgba(0,102,255,0.8),_0_0_20px_rgba(0,102,255,0.8)] font-bold;
+    @apply relative rounded-xl border border-primary/40 shadow-[0_0_20px_rgba(59,130,246,0.2)] bg-card/60 backdrop-blur-xl overflow-hidden;
   }
 }
-

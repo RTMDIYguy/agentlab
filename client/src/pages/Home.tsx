@@ -1,6 +1,9 @@
+import React, { useState } from "react";
+import { Link, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   ArrowRight,
   Zap,
@@ -9,546 +12,461 @@ import {
   Clock,
   Shield,
   Cpu,
+  Sparkles,
+  Layers,
+  ShoppingBag,
+  TrendingUp,
+  DollarSign,
+  ShieldCheck,
+  CheckCircle2,
+  Activity,
+  Compass,
+  Play,
+  Check,
+  Building2,
+  Users,
+  Repeat,
+  HelpCircle,
+  BarChart3,
+  Flame,
+  Globe
 } from "lucide-react";
-import { useState } from "react";
-
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { PageLayout } from "@/components/PageLayout";
-import { Link } from "wouter";
 
 export default function Home() {
-  const { user, isAuthenticated, logout } = useAuth();
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
-    "monthly"
-  );
+  const { user, isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
+  const [activeDagStep, setActiveDagStep] = useState(2);
+  const [simulatedRunStatus, setSimulatedRunStatus] = useState<"idle" | "running" | "complete">("idle");
+
+  const runSimulation = () => {
+    setSimulatedRunStatus("running");
+    toast.info("Simulating Multi-Agent Swarm DAG Execution...");
+    let step = 0;
+    const interval = setInterval(() => {
+      step++;
+      setActiveDagStep(step);
+      if (step >= 4) {
+        clearInterval(interval);
+        setSimulatedRunStatus("complete");
+        toast.success("DAG Execution Complete: 0 Drift, SAIF Verified (14ms, $0.02)");
+      }
+    }, 800);
+  };
 
   const capabilities = [
     {
-      icon: Zap,
-      title: "Instant Tenant Provisioning",
+      icon: Network,
+      color: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+      title: "Multi-Agent DAG Swarms",
       description:
-        "Create an account and immediately receive a secure, isolated workspace. No complex infrastructure setup required.",
+        "Orchestrate autonomous agent nodes across Marketing, Sales, Operations, Finance, and Fulfillment with sub-second latency.",
+      badge: "Real-time Swarms",
+    },
+    {
+      icon: ShieldCheck,
+      color: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+      title: "SAIF Guardrails & RLS",
+      description:
+        "Enterprise-grade Row Level Security and SAIF auditing guarantee zero data leakage between client workspaces.",
+      badge: "Zero Leakage",
+    },
+    {
+      icon: Compass,
+      color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
+      title: "Ownable OS & Equity Model",
+      description:
+        "Transform messy services into verifiable, transferable business equity and an exit-ready Ownable OS on Bootstrapper.ai.",
+      badge: "Equity Independence",
+    },
+    {
+      icon: DollarSign,
+      color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+      title: "Bank & Stripe Reconciliation",
+      description:
+        "Automated cash runway modeling, expense categorization, and zero-leakage bookkeeping built on your M365 backbone.",
+      badge: "Cashflow Control",
     },
     {
       icon: Brain,
-      title: "App Store Modular Workflows",
+      color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+      title: "7 Modular Playbooks",
       description:
-        "Browse the Marketplace and unlock highly-specialized workflows like 'Daily LinkedIn Outreach' tailored for your business.",
-    },
-    {
-      icon: Network,
-      title: "Multi-Agent Orchestration",
-      description:
-        "Watch as the Orchestrator LLM automatically delegates tasks to specialized AI agents within your secure boundaries.",
-    },
-    {
-      icon: Clock,
-      title: "Scheduled CRON Execution",
-      description:
-        "Put your business on autopilot. Agents run in the background on precise schedules without manual intervention.",
-    },
-    {
-      icon: Shield,
-      title: "Row Level Security (RLS)",
-      description:
-        "Your data is strictly isolated. Our Multi-Tenant Postgres architecture ensures your workflows and secrets never leak.",
+        "Mount 45+ pre-certified operational workflows across all 7 agency departments in 1 click from the Marketplace.",
+      badge: "Turnkey SOPs",
     },
     {
       icon: Cpu,
-      title: "Hard Budget Caps",
+      color: "text-rose-400 bg-rose-500/10 border-rose-500/20",
+      title: "Hard Token Budget Caps",
       description:
-        "Never get surprised by LLM API bills. Set strict token budgets and our Billing Engine will auto-pause agents that exceed limits.",
+        "Never get surprised by LLM bills. Direct API secrets pass-through lets you pay wholesale token costs with automatic budget caps.",
+      badge: "Cost Governed",
     },
   ];
-
-  const features = [
-    {
-      title: "Zero-Setup SaaS Delivery",
-      description: "Log in and start running agents instantly.",
-    },
-    {
-      title: "The 'Done-With-You' Tier",
-      description: "Enterprise self-hosted repo access available.",
-    },
-    {
-      title: "Stripe Billing Engine",
-      description: "Secure, automated module unlocking.",
-    },
-    { title: "Vertex AI Integration", description: "Powered by Gemini 1.5 Pro." },
-    {
-      title: "Audit Telemetry",
-      description: "Every token and action is logged.",
-    },
-    { title: "PII Redaction", description: "Sensitive data is scrubbed before LLM processing." },
-  ];
-
-  const testimonials = [
-    {
-      quote:
-        "The Founder Signal System gave us messaging clarity and outreach automation in 48 hours. We closed 2 enterprise pilots in the first month.",
-      author: "Marcus T.",
-      role: "B2B SaaS Founder",
-      company: "Bootstrapper Capital Member",
-    },
-    {
-      quote:
-        "Row Level Security and hard monthly token budget caps gave us total peace of mind to run multi-agent workflows autonomously in production.",
-      author: "Lena M.",
-      role: "Operations Lead",
-      company: "Tactix Delivery Pod",
-    },
-    {
-      quote:
-        "Migrating onto Ownable OS cut our tool bloat by $1,800/mo. Having DAG workflows and live command telemetry in one place is unmatched.",
-      author: "Deon W.",
-      role: "Agency Principal",
-      company: "URC Workflow Client",
-    },
-  ];
-
-  const pricingPlans = [
-    {
-      name: "Modular Playbook",
-      monthlyPrice: 149,
-      yearlyPrice: 1490,
-      description: "Department-specific automation pack (Marketing, Sales, or Ops)",
-      features: [
-        "1 Isolated Client Workspace",
-        "Full DAG Automation for Chosen Department",
-        "Pre-configured Specialized AI Agents",
-        "SAIF Guardrails & PII Redaction",
-        "Standard Email & Community Support",
-      ],
-      highlighted: false,
-      stripeId: "playbook_tier",
-    },
-    {
-      name: "Ownable OS Continuity",
-      monthlyPrice: 500,
-      yearlyPrice: 5000,
-      description: "Flagship Turnkey AI Operating System & Advisory",
-      features: [
-        "All 7 Department Playbooks Unlocked",
-        "Dedicated Multi-Tenant Workspace & RLS",
-        "AI Studio Mobile Roving Ingestion Bridge",
-        "Agency Command Center Cockpit",
-        "Monthly Advisory & Custom Workflow Calibration",
-        "Hard Token Budget Caps & SAIF Enforcer",
-      ],
-      highlighted: true,
-      stripeId: "ownable_os",
-    },
-    {
-      name: "Founder Signal System",
-      monthlyPrice: 1000,
-      yearlyPrice: 1000,
-      description: "48-Hour Bespoke Starter Marketing & Outreach Sprint",
-      features: [
-        "Custom Signal Brief & Market Positioning",
-        "First 30-Day Content Generation Batch",
-        "3-Touch Multi-Channel Outreach Sequence",
-        "Pulse Social & LeadPulse Pre-Configuration",
-        "Direct Strategy Sprint with Robert",
-      ],
-      highlighted: false,
-      stripeId: "founder_signal_system",
-    },
-  ];
-
-  const blogPosts = [
-    {
-      category: "Technology",
-      title: "The Future of Autonomous AI Systems",
-      excerpt:
-        "Explore how AI agents are revolutionizing business automation and decision-making processes.",
-      author: "Alex Johnson",
-      role: "AI Research Lead",
-      date: "Mar 2025",
-    },
-    {
-      category: "Business",
-      title: "Reducing Operational Costs with AI Automation",
-      excerpt:
-        "Learn how enterprises are cutting costs by 40% through intelligent automation with AgentLab.",
-      author: "Lisa Wang",
-      role: "Business Strategist",
-      date: "Feb 2025",
-    },
-    {
-      category: "Case Study",
-      title: "How Fortune 500 Companies Deploy AI Agents",
-      excerpt:
-        "Real-world examples of successful AI agent implementations in enterprise environments.",
-      author: "David Park",
-      role: "Solutions Architect",
-      date: "Jan 2025",
-    },
-  ];
-
-  const createCheckoutMutation =
-    trpc.stripe.createCheckoutSession.useMutation();
-
-  const handlePricingClick = (planId: string) => {
-    if (!isAuthenticated) {
-      window.location.href = "/login";
-      return;
-    }
-
-    toast.loading("Redirecting to checkout...");
-    createCheckoutMutation.mutate(
-      {
-        plan: planId as "starter" | "professional" | "enterprise",
-        billingCycle,
-      },
-      {
-        onSuccess: data => {
-          toast.dismiss();
-          window.open(data.checkoutUrl, "_blank");
-        },
-        onError: error => {
-          toast.dismiss();
-          toast.error("Failed to create checkout session. Please try again.");
-          console.error("Checkout error:", error);
-        },
-      }
-    );
-  };
 
   return (
     <PageLayout>
-      <div className="min-h-screen bg-background text-foreground">
-        {/* Concert Hero Section */}
-        {/* <ConcertHero isAuthenticated={isAuthenticated} /> */}
-        <section className="py-20 text-center">
-          <h1 className="text-4xl font-bold">Welcome to AgentLab</h1>
-        </section>
+      <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
+        {/* Ambient Glow Lighting Orbs */}
+        <div className="ambient-orb-blue top-[-100px] left-[15%]" />
+        <div className="ambient-orb-purple top-[30%] right-[5%]" />
+        <div className="ambient-orb-emerald bottom-[20%] left-[5%]" />
 
-        {/* Capabilities Section */}
-        <section id="capabilities" className="py-20 bg-card">
-          <div className="container">
-            <div className="text-center mb-16">
-              <h2 className="section-title">AI Agent Capabilities</h2>
-              <p className="section-subtitle max-w-2xl mx-auto">
-                Our advanced AI agents are equipped with cutting-edge
-                capabilities that transform how businesses operate, making
-                intelligent decisions and automating complex workflows.
+        {/* Hero Section */}
+        <section className="relative pt-16 pb-20 border-b border-border/80 bg-grid-mesh">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+            {/* Top Badge & Brand Pillar */}
+            <div className="text-center space-y-4">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary/15 border border-primary/30 text-primary text-xs font-semibold shadow-sm backdrop-blur-md">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>The Sovereign Business Operating Backbone</span>
+              </div>
+
+              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight max-w-4xl mx-auto leading-[1.1]">
+                An Autonomous Agency OS.
+                <span className="block gradient-heading mt-2">Zero Chaos. Total Equity.</span>
+              </h1>
+
+              <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                Connect your 7 departments into a unified multi-agent swarm. Automate routine grind, eliminate SaaS shelfware, and graduate into the <strong className="text-foreground">Ownable OS</strong> on Bootstrapper.ai.
               </p>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {capabilities.map((capability, index) => {
-                const Icon = capability.icon;
-                return (
-                  <Card
-                    key={index}
-                    className="p-8 border border-border hover:border-primary/50 transition-colors card-hover"
-                  >
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg flex items-center justify-center mb-6">
-                      <Icon className="w-6 h-6 text-primary" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-foreground mb-3">
-                      {capability.title}
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {capability.description}
-                    </p>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-20 bg-background">
-          <div className="container">
-            <div className="text-center mb-16">
-              <h2 className="section-title">
-                Revolutionizing Business with AI Agents
-              </h2>
-              <p className="section-subtitle max-w-2xl mx-auto">
-                AgentLab specializes in developing cutting-edge AI agents that
-                automate complex business processes, enhance decision-making,
-                and drive innovation across industries.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
-                <div
-                  key={index}
-                  className="p-6 bg-card rounded-lg border border-border hover:border-primary/50 transition-colors"
+              {/* CTAs */}
+              <div className="pt-2 flex flex-wrap items-center justify-center gap-4">
+                <Button 
+                  size="lg" 
+                  onClick={() => setLocation("/pricing")} 
+                  className="font-bold text-xs gap-2 shadow-lg shadow-primary/25 button-glow"
                 >
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg mb-4 flex items-center justify-center">
-                    <span className="text-white font-bold">{index + 1}</span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Testimonials Section */}
-        <section className="py-20 bg-card">
-          <div className="container">
-            <div className="text-center mb-16">
-              <h2 className="section-title">What Our Users Say</h2>
-              <p className="section-subtitle max-w-2xl mx-auto">
-                Discover how leading organizations are transforming their
-                operations with AgentLab's intelligent AI agents.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {testimonials.map((testimonial, index) => (
-                <Card key={index} className="p-8 border border-border">
-                  <div className="mb-6">
-                    <p className="text-foreground text-lg leading-relaxed italic">
-                      "{testimonial.quote}"
-                    </p>
-                  </div>
-                  <div className="border-t border-border pt-6">
-                    <p className="font-semibold text-foreground">
-                      {testimonial.author}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {testimonial.role}
-                    </p>
-                    <p className="text-sm text-primary font-medium">
-                      {testimonial.company}
-                    </p>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Pricing Section */}
-        <section className="py-20 bg-background">
-          <div className="container">
-            <div className="text-center mb-16">
-              <h2 className="section-title">Simple and Affordable Pricing</h2>
-              <p className="section-subtitle max-w-2xl mx-auto">
-                Choose the perfect plan for your business needs. All plans
-                include core features with flexible scaling.
-              </p>
-            </div>
-
-            <div className="flex justify-center gap-4 mb-12">
-              <button
-                onClick={() => setBillingCycle("monthly")}
-                className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                  billingCycle === "monthly"
-                    ? "bg-primary text-white"
-                    : "bg-card text-foreground border border-border hover:border-primary"
-                }`}
-              >
-                Monthly
-              </button>
-              <button
-                onClick={() => setBillingCycle("yearly")}
-                className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                  billingCycle === "yearly"
-                    ? "bg-primary text-white"
-                    : "bg-card text-foreground border border-border hover:border-primary"
-                }`}
-              >
-                Yearly
-                <span className="ml-2 text-xs bg-accent text-accent-foreground px-2 py-1 rounded">
-                  Save 20%
-                </span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {pricingPlans.map((plan, index) => (
-                <Card
-                  key={index}
-                  className={`p-8 border transition-all ${
-                    plan.highlighted
-                      ? "border-primary bg-gradient-to-br from-primary/5 to-accent/5 ring-2 ring-primary/20 scale-105 md:scale-110"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                >
-                  <h3 className="text-2xl font-bold text-foreground mb-2">
-                    {plan.name}
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    {plan.description}
-                  </p>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold text-foreground">
-                      $
-                      {billingCycle === "monthly"
-                        ? plan.monthlyPrice
-                        : plan.yearlyPrice}
-                    </span>
-                    <span className="text-muted-foreground ml-2">
-                      /{billingCycle === "monthly" ? "mo" : "yr"}
-                    </span>
-                  </div>
-                  <Button
-                    className={`w-full mb-8 ${plan.highlighted ? "bg-primary hover:bg-primary/90" : ""}`}
-                    onClick={() => handlePricingClick(plan.stripeId)}
-                  >
-                    Start Free Trial
-                  </Button>
-                  <ul className="space-y-4">
-                    {plan.features.map((feature, fIndex) => (
-                      <li key={fIndex} className="flex items-start gap-3">
-                        <span className="text-primary font-bold mt-1">✓</span>
-                        <span className="text-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Blog Section */}
-        <section id="blog" className="py-20 bg-card">
-          <div className="container">
-            <div className="text-center mb-16">
-              <h2 className="section-title">Our Latest Blogs</h2>
-              <p className="section-subtitle max-w-2xl mx-auto">
-                Stay updated with the latest insights on AI agents, automation,
-                and business transformation.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {blogPosts.map((post, index) => (
-                <Card
-                  key={index}
-                  className="p-6 border border-border hover:border-primary/50 transition-all hover:shadow-lg cursor-pointer"
-                >
-                  <div className="mb-4">
-                    <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full">
-                      {post.category}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground mb-3">
-                    {post.title}
-                  </h3>
-                  <p className="text-muted-foreground mb-6">{post.excerpt}</p>
-                  <div className="border-t border-border pt-4 flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">
-                        {post.author}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {post.role}
-                      </p>
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      {post.date}
-                    </span>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Contact Section */}
-        <section id="contact" className="py-20 bg-background">
-          <div className="container max-w-2xl">
-            <div className="text-center mb-12">
-              <h2 className="section-title">Need Help? Open a Ticket</h2>
-              <p className="section-subtitle">
-                Our support team will get back to you ASAP via email.
-              </p>
-            </div>
-
-            <Card className="p-8 border border-border">
-              <form className="space-y-6" onSubmit={async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.currentTarget);
-                const contactName = formData.get("name") as string;
-                const email = formData.get("email") as string;
-                const notes = formData.get("message") as string;
-                
-                try {
-                  const res = await fetch("/api/intake", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      contactName,
-                      email,
-                      notes,
-                      source: "AgentLab Website - Home Page",
-                      serviceLine: "General Inquiry"
-                    })
-                  });
-                  if (!res.ok) throw new Error("Failed to send");
-                  toast.success("Message sent successfully! We will be in touch.");
-                  (e.target as HTMLFormElement).reset();
-                } catch (err) {
-                  toast.error("Failed to send message. Please try again later.");
-                }
-              }}>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Your Name
-                  </label>
-                  <input
-                    name="name"
-                    type="text"
-                    required
-                    placeholder="John Doe"
-                    className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Your Email
-                  </label>
-                  <input
-                    name="email"
-                    type="email"
-                    required
-                    placeholder="john@example.com"
-                    className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Your Message
-                  </label>
-                  <textarea
-                    name="message"
-                    required
-                    placeholder="Tell us how we can help..."
-                    rows={5}
-                    className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-                <Button type="submit" size="lg" className="w-full">
-                  Send Message
+                  <ShoppingBag className="w-4 h-4" />
+                  View Pricing & Showroom
                 </Button>
-              </form>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  onClick={() => setLocation("/founder-signal-system")} 
+                  className="text-xs font-bold gap-2 glass-card"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-400" />
+                  Explore $1k Starter Sprint
+                </Button>
+                <Button 
+                  size="lg" 
+                  variant="ghost" 
+                  onClick={() => setLocation("/features")} 
+                  className="text-xs font-bold gap-1 text-muted-foreground hover:text-foreground"
+                >
+                  See 7 Departments <ArrowRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Interactive Multi-Agent DAG Visualizer Widget */}
+            <div className="p-6 sm:p-8 rounded-3xl glass-card border border-white/10 relative overflow-hidden space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border/60">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-primary/20 border border-primary/40 flex items-center justify-center text-primary">
+                    <Activity className="w-5 h-5 animate-pulse" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-foreground flex items-center gap-2">
+                      Live Multi-Agent DAG Orchestration
+                      <Badge className="bg-emerald-500/20 text-emerald-400 text-[10px] font-mono border-emerald-500/30">
+                        Active Swarm
+                      </Badge>
+                    </h3>
+                    <p className="text-xs text-muted-foreground">Deterministic task routing with SAIF compliance guardrails</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="px-3 py-1.5 rounded-lg bg-card border border-border text-[11px] font-mono text-muted-foreground">
+                    Avg Latency: <span className="text-emerald-400 font-bold">14ms</span> | Cost: <span className="text-primary font-bold">$0.02</span>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    onClick={runSimulation}
+                    disabled={simulatedRunStatus === "running"}
+                    className="text-xs font-bold gap-1.5 shadow"
+                  >
+                    <Play className="w-3.5 h-3.5" />
+                    {simulatedRunStatus === "running" ? "Running..." : "Test DAG Execution"}
+                  </Button>
+                </div>
+              </div>
+
+              {/* DAG Nodes Flow Diagram */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2 relative">
+                {[
+                  { step: 0, title: "1. Trigger Ingestion", type: "Event / Webhook", detail: "Scrapes lead signals & parses webhook payload.", color: "border-blue-500/40 text-blue-400" },
+                  { step: 1, title: "2. Master Orchestrator", type: "Gemini 2.5 Flash", detail: "Synthesizes multi-agent execution plan & task DAG.", color: "border-purple-500/40 text-purple-400" },
+                  { step: 2, title: "3. Specialist Swarm", type: "MKT / SAL / OPS", detail: "Enriches CRM dossier, drafts proposal & SOP doc.", color: "border-cyan-500/40 text-cyan-400" },
+                  { step: 3, title: "4. SAIF Guardrail Gate", type: "Security & PII Check", detail: "Verifies tenant boundaries & human approval token.", color: "border-amber-500/40 text-amber-400" },
+                  { step: 4, title: "5. Sovereign Commit", type: "M365 & Audit Ledger", detail: "Writes to Microsoft 365 and logs audit trail.", color: "border-emerald-500/40 text-emerald-400" },
+                ].map((node) => {
+                  const isActive = activeDagStep === node.step;
+                  return (
+                    <div
+                      key={node.step}
+                      onClick={() => setActiveDagStep(node.step)}
+                      className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
+                        isActive
+                          ? "bg-primary/15 border-primary shadow-[0_0_20px_rgba(59,130,246,0.3)] scale-[1.02]"
+                          : "bg-background/60 border-border/70 hover:border-primary/40"
+                      }`}
+                    >
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] font-mono font-bold text-muted-foreground">{node.title}</span>
+                        {isActive && <span className="w-2 h-2 rounded-full bg-primary animate-ping" />}
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-foreground">{node.type}</div>
+                        <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{node.detail}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* The 4 Engines of Ownable OS & Independence Model */}
+        <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center space-y-2">
+            <Badge variant="outline" className="text-xs">The Strategic North Star</Badge>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground">
+              Prepping Founders for Ownable OS & Equity Independence
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+              We connect your business operations into the 4 foundational engines of <a href="https://bootstrapper.ai/@agentlab" target="_blank" rel="noopener noreferrer" className="text-primary underline font-semibold">Bootstrapper.ai</a>, transforming your daily hustle into transferable enterprise value.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Engine 1: Financial */}
+            <Card className="glass-card p-6 flex flex-col justify-between space-y-4 border-amber-500/20 hover:border-amber-500/40">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                  <DollarSign className="w-5 h-5" />
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold">Engine 01</span>
+                  <h3 className="text-lg font-bold text-foreground">Financial Engine</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Bank-connected ledger intelligence, automated cash runway forecasting, and lean CPA-ready bookkeeping.
+                  </p>
+                </div>
+              </div>
+              <div className="pt-3 border-t border-border/40 text-[11px] font-mono text-muted-foreground space-y-1">
+                <div className="flex justify-between"><span>Runway:</span><strong className="text-foreground">14.2 mo</strong></div>
+                <div className="flex justify-between"><span>Ledger Match:</span><strong className="text-emerald-400">100%</strong></div>
+              </div>
+            </Card>
+
+            {/* Engine 2: Profit */}
+            <Card className="glass-card p-6 flex flex-col justify-between space-y-4 border-cyan-500/20 hover:border-cyan-500/40">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                  <TrendingUp className="w-5 h-5" />
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">Engine 02</span>
+                  <h3 className="text-lg font-bold text-foreground">Profit Engine</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    CRM-driven sales pipeline velocity, automated SOW proposals, and inbound prospect discovery.
+                  </p>
+                </div>
+              </div>
+              <div className="pt-3 border-t border-border/40 text-[11px] font-mono text-muted-foreground space-y-1">
+                <div className="flex justify-between"><span>Pipeline Auto:</span><strong className="text-foreground">92%</strong></div>
+                <div className="flex justify-between"><span>Close Velocity:</span><strong className="text-cyan-400">3.5x Faster</strong></div>
+              </div>
+            </Card>
+
+            {/* Engine 3: Value */}
+            <Card className="glass-card p-6 flex flex-col justify-between space-y-4 border-purple-500/20 hover:border-purple-500/40">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+                  <Layers className="w-5 h-5" />
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-purple-400 font-bold">Engine 03</span>
+                  <h3 className="text-lg font-bold text-foreground">Value Engine</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Standardized SOP protocol library, autonomous DAG workers, and multi-tenant delivery pipelines.
+                  </p>
+                </div>
+              </div>
+              <div className="pt-3 border-t border-border/40 text-[11px] font-mono text-muted-foreground space-y-1">
+                <div className="flex justify-between"><span>Protocols:</span><strong className="text-foreground">45 Standardized</strong></div>
+                <div className="flex justify-between"><span>SOP Drift:</span><strong className="text-purple-400">0% Verified</strong></div>
+              </div>
+            </Card>
+
+            {/* Engine 4: People */}
+            <Card className="glass-card p-6 flex flex-col justify-between space-y-4 border-rose-500/20 hover:border-rose-500/40">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+                  <Users className="w-5 h-5" />
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-rose-400 font-bold">Engine 04</span>
+                  <h3 className="text-lg font-bold text-foreground">People Engine</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Servant leadership cadence, async unblocking, quarterly growth reviews, and client retention QBRs.
+                  </p>
+                </div>
+              </div>
+              <div className="pt-3 border-t border-border/40 text-[11px] font-mono text-muted-foreground space-y-1">
+                <div className="flex justify-between"><span>Code of Conduct:</span><strong className="text-foreground">Servant 100%</strong></div>
+                <div className="flex justify-between"><span>LTV Expansion:</span><strong className="text-rose-400">+45%</strong></div>
+              </div>
             </Card>
           </div>
+
+          {/* Direct Link to Bootstrapper.ai Build Equity */}
+          <div className="p-6 rounded-2xl border border-primary/30 bg-primary/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="space-y-1 text-center sm:text-left">
+              <h4 className="text-base font-bold text-foreground flex items-center gap-2">
+                <Compass className="w-4 h-4 text-primary" />
+                Graduating into the Independence Model on Bootstrapper.ai
+              </h4>
+              <p className="text-xs text-muted-foreground">
+                Measure your Ownable Score, compress discount rates, and explore equity pathways.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button 
+                size="sm" 
+                variant="outline"
+                className="text-xs font-bold gap-1 bg-background"
+                onClick={() => window.open("https://bootstrapper.ai/@agentlab", "_blank")}
+              >
+                <Globe className="w-3.5 h-3.5" />
+                View @agentlab Hub
+              </Button>
+              <Button 
+                size="sm" 
+                className="text-xs font-bold gap-1 shadow"
+                onClick={() => window.open("https://bootstrapper.ai/build-equity?p_grain=LW", "_blank")}
+              >
+                Explore Build Equity <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+          </div>
         </section>
 
-        {/* Newsletter Section */}
-        <section className="py-16 bg-gradient-to-r from-primary/10 to-accent/10 border-t border-border">
-          <div className="container max-w-2xl">
-            <NewsletterSignup
-              variant="card"
-              title="Stay Updated with AgentLab"
-              description="Get the latest insights on AI agents, automation trends, and exclusive updates delivered to your inbox."
-              showIcon={true}
-            />
+        {/* Agency Brand Hierarchy Section */}
+        <section className="py-16 bg-card/40 border-y border-border backdrop-blur">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div className="text-center space-y-2">
+              <Badge variant="outline" className="text-xs">Integrated Ecosystem</Badge>
+              <h2 className="text-3xl font-extrabold text-foreground">The Uncle Robert Consulting Ecosystem</h2>
+              <p className="text-xs text-muted-foreground max-w-xl mx-auto">
+                How our advisory, audience, fulfillment, and operating systems interconnect.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="glass-card p-6 space-y-3">
+                <div className="flex items-center gap-2 font-bold text-foreground">
+                  <Building2 className="w-5 h-5 text-blue-400" />
+                  <span>Uncle Robert Consulting (URC)</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  The primary business brand. High-touch servant leadership advisory guiding founders from operational grind into ownable operating independence.
+                </p>
+              </Card>
+
+              <Card className="glass-card p-6 space-y-3">
+                <div className="flex items-center gap-2 font-bold text-foreground">
+                  <Compass className="w-5 h-5 text-cyan-400" />
+                  <span>Bootstrapper Capital</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  The audience, founder roundtables, and community funnel hosting the Independence Chapter and Ownable OS cockpits.
+                </p>
+              </Card>
+
+              <Card className="glass-card p-6 space-y-3">
+                <div className="flex items-center gap-2 font-bold text-foreground">
+                  <Cpu className="w-5 h-5 text-purple-400" />
+                  <span>Tactix</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  The fulfillment and delivery execution arm. Dispatches vetted contractor pods to implement and maintain client swarms.
+                </p>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Capabilities Grid */}
+        <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center space-y-2">
+            <Badge variant="outline" className="text-xs">Operating Superpowers</Badge>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground">
+              Built for Sovereign Business Scale
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+              Everything required to run an autonomous, high-margin agency without adding headcount or expensive software subscriptions.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {capabilities.map((cap, index) => {
+              const Icon = cap.icon;
+              return (
+                <Card key={index} className="glass-card p-6 flex flex-col justify-between space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${cap.color}`}>
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <Badge variant="secondary" className="text-[10px] font-mono">{cap.badge}</Badge>
+                    </div>
+                    <h3 className="text-lg font-bold text-foreground">{cap.title}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{cap.description}</p>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Bottom CTA Banner */}
+        <section className="py-16 bg-gradient-to-b from-card/30 to-background border-t border-border">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-primary via-indigo-600 to-accent text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
+              <div className="space-y-2 text-center sm:text-left">
+                <h3 className="text-2xl font-black">Ready to Take Operational Control?</h3>
+                <p className="text-xs sm:text-sm text-white/80 max-w-md">
+                  Start your 30-day Pro Trial, book your $1k Founder Signal Sprint, or launch a Bootstrapper.ai diagnostic.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+                <Button 
+                  size="sm" 
+                  variant="secondary" 
+                  onClick={() => setLocation("/founder-signal-system")}
+                  className="font-bold text-xs shadow text-primary w-full sm:w-auto"
+                >
+                  Book $1k Sprint
+                </Button>
+                <Button 
+                  size="sm" 
+                  onClick={() => setLocation("/pricing")}
+                  className="bg-black/80 hover:bg-black text-white text-xs font-bold shadow w-full sm:w-auto"
+                >
+                  View Pricing Showroom
+                </Button>
+              </div>
+            </div>
           </div>
         </section>
       </div>
