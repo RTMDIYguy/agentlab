@@ -343,30 +343,110 @@ export default function Services() {
         </div>
       </section>
 
+      {/* Official Bootstrapper.ai Partner Diagnostic & Intake Gateways */}
+      <section className="py-16 bg-muted/40 border-t border-border">
+        <div className="container max-w-6xl mx-auto space-y-10">
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/30 text-primary text-xs font-semibold">
+              <Zap className="w-3.5 h-3.5" />
+              <span>Official Bootstrapper.ai Partner Diagnostics</span>
+            </div>
+            <h2 className="text-3xl font-extrabold text-foreground">
+              Direct Diagnostic & Intake Pathways
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+              Select your primary operational bottleneck below to start your specialized diagnostic intake on Bootstrapper.ai.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {[
+              {
+                title: "Workflow Automation",
+                desc: "Autonomous multi-agent DAGs, SOP standardization, and delivery pipelines.",
+                url: "https://bootstrapper.ai/@agentlab/leads/workflow_automation",
+                tag: "Operations & FUL",
+              },
+              {
+                title: "CRM & Revenue",
+                desc: "CRM architecture, sales pipeline velocity, and deal scorecards.",
+                url: "https://bootstrapper.ai/@agentlab/leads/crm",
+                tag: "Sales (SAL)",
+              },
+              {
+                title: "Lead Generation",
+                desc: "Founder Signal System, inbound authority, and verified B2B prospecting.",
+                url: "https://bootstrapper.ai/@agentlab/leads/lead_generation",
+                tag: "Marketing (MKT)",
+              },
+              {
+                title: "Valuation & Exit",
+                desc: "Ownable Score calculation, discount rate compression, and exit readiness.",
+                url: "https://bootstrapper.ai/@agentlab/leads/business_valuation_exit",
+                tag: "Independence Model",
+              },
+              {
+                title: "Business Financing",
+                desc: "Bank-connected ledger intelligence, runway modeling, and capital growth.",
+                url: "https://bootstrapper.ai/@agentlab/leads/business_financing",
+                tag: "Financial Engine",
+              },
+            ].map((pathway, idx) => (
+              <Card
+                key={idx}
+                className="p-5 border border-border/80 bg-card/80 backdrop-blur flex flex-col justify-between hover:border-primary/50 transition-all shadow-sm group"
+              >
+                <div className="space-y-2">
+                  <span className="text-[10px] font-mono font-bold text-primary px-2 py-0.5 rounded bg-primary/10 inline-block">
+                    {pathway.tag}
+                  </span>
+                  <h3 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">
+                    {pathway.title}
+                  </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {pathway.desc}
+                  </p>
+                </div>
+                <div className="pt-4">
+                  <Button
+                    size="sm"
+                    className="w-full text-xs font-bold gap-1 shadow"
+                    onClick={() => window.open(pathway.url, "_blank")}
+                  >
+                    Start Intake <ArrowRight className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-primary/80 text-white">
+      <section className="py-16 bg-gradient-to-r from-primary to-primary/80 text-white">
         <div className="container text-center space-y-6">
-          <h2 className="text-4xl font-bold">
-            Ready to Transform Your Marketing?
+          <h2 className="text-3xl sm:text-4xl font-black">
+            Ready to Build Your Ownable OS?
           </h2>
-          <p className="text-lg text-white/90 max-w-2xl mx-auto">
-            Start with a free trial today and see how our AI agents can automate
-            your marketing operations.
+          <p className="text-sm sm:text-base text-white/90 max-w-2xl mx-auto">
+            Get started with our 30-day Pro Trial, book your 3–5 day Founder Signal Sprint, or launch a direct Bootstrapper.ai diagnostic.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
             <Button
               size="lg"
               variant="outline"
-              className="border-white text-white hover:bg-white/10"
+              className="border-white text-white hover:bg-white/10 font-bold text-xs"
+              onClick={() => (window.location.href = "/pricing")}
             >
-              Start Free Trial
+              View Pricing & Plans
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="border-white text-white hover:bg-white/10"
+              className="border-white text-white hover:bg-white/10 font-bold text-xs"
+              onClick={() => (window.location.href = "/founder-signal-system")}
             >
-              Schedule a Demo
+              Explore $1k Sprint
             </Button>
           </div>
         </div>
