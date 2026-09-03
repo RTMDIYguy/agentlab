@@ -19,13 +19,51 @@ export function Navigation() {
 
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-      <div className="container flex items-center justify-between py-4">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">AL</span>
-          </div>
-          <span className="font-bold text-lg text-foreground">AgentLab</span>
-        </div>
+      <div className="container flex items-center justify-between py-3">
+        <Link href="/">
+          <a className="flex items-center gap-3 cursor-pointer group">
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-card/60 border border-border/80 shadow-sm backdrop-blur">
+              <img
+                src="/logos/urc-logo-old.webp"
+                alt="Uncle Robert Consulting (Heritage)"
+                title="Uncle Robert Consulting (Heritage Green)"
+                className="h-7 w-7 object-contain rounded transition-transform group-hover:scale-105"
+              />
+              <img
+                src="/logos/urc-logo-new.png"
+                alt="Uncle Robert Consulting LLC"
+                title="Uncle Robert Consulting LLC (Blue & Gold)"
+                className="h-7 w-7 object-contain rounded transition-transform group-hover:scale-105"
+              />
+              <img
+                src="/logos/fundable-consulting-logo.png"
+                alt="Fundable Consulting"
+                title="Fundable Consulting"
+                className="h-7 w-7 object-contain rounded transition-transform group-hover:scale-105"
+              />
+              <img
+                src="/logos/tactix-logo.jpg"
+                alt="Tactix"
+                title="Tactix Fulfillment & Delivery"
+                className="h-7 w-7 object-contain rounded transition-transform group-hover:scale-105"
+              />
+              <img
+                src="/logos/agentlab-avatar.png"
+                alt="AgentLab"
+                title="AgentLab Operating System"
+                className="h-7 w-7 object-contain rounded-lg border border-primary/40 shadow-sm transition-transform group-hover:scale-105"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-bold text-base text-foreground leading-tight group-hover:text-primary transition-colors">
+                AgentLab
+              </span>
+              <span className="text-[10px] text-muted-foreground font-mono leading-none">
+                URC Operating Backbone
+              </span>
+            </div>
+          </a>
+        </Link>
 
         <div className="hidden md:flex items-center gap-1">
           {/* Home with nested menu */}
