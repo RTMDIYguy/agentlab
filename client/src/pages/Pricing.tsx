@@ -511,12 +511,12 @@ export default function Pricing() {
             </div>
             <h2 className="text-3xl font-extrabold text-foreground">Live Ecosystem Applications</h2>
             <p className="mt-2 text-sm text-muted-foreground max-w-xl mx-auto">
-              Included free inside the Ownable OS membership or available as standalone specialized tools.
+              Included free inside the Ownable OS membership, available to Beta participants, or as standalone specialized tools.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* App 1: Market Marksman */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* App 1: Market Marksman Standard */}
             <Card className="border border-border/80 bg-card/60 backdrop-blur flex flex-col justify-between hover:border-primary/40 transition-all">
               <CardHeader className="pb-3">
                 <div className="flex justify-between items-start mb-2">
@@ -524,14 +524,14 @@ export default function Pricing() {
                     <Target className="w-5 h-5" />
                   </div>
                   <Badge variant="outline" className="text-emerald-400 border-emerald-500/30 text-[10px]">
-                    Live on Cloud Run
+                    Universal Beta
                   </Badge>
                 </div>
-                <CardTitle className="text-lg font-bold">Market Marksman</CardTitle>
-                <CardDescription className="text-xs">Predictive Opportunity Discovery</CardDescription>
+                <CardTitle className="text-base font-bold">Market Marksman</CardTitle>
+                <CardDescription className="text-xs">Standard Edition (Universal Radar)</CardDescription>
               </CardHeader>
               <CardContent className="text-xs text-muted-foreground pb-4 space-y-2">
-                <p>Pinpoints high-margin deal wedges, tracks competitor movement, and generates automated executive market briefs.</p>
+                <p>Universal B2B opportunity discovery, high-margin deal wedges, and executive market briefs.</p>
                 <div className="pt-2 text-xs font-mono text-primary font-bold">Included in OS • $49/mo Standalone</div>
               </CardContent>
               <CardFooter className="pt-3 border-t border-border/40">
@@ -542,12 +542,43 @@ export default function Pricing() {
                   onClick={() => window.open("https://market-marksman-718497644379.us-central1.run.app/", "_blank")}
                 >
                   <Target className="w-3.5 h-3.5 text-primary" />
-                  Launch Market Marksman
+                  Launch Standard Edition
                 </Button>
               </CardFooter>
             </Card>
 
-            {/* App 2: Pulse Social */}
+            {/* App 2: Market Marksman Nevada */}
+            <Card className="border border-border/80 bg-card/60 backdrop-blur flex flex-col justify-between hover:border-primary/40 transition-all">
+              <CardHeader className="pb-3">
+                <div className="flex justify-between items-start mb-2">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500">
+                    <Target className="w-5 h-5" />
+                  </div>
+                  <Badge variant="outline" className="text-amber-400 border-amber-500/30 text-[10px]">
+                    Live on Cloud Run
+                  </Badge>
+                </div>
+                <CardTitle className="text-base font-bold">Market Marksman</CardTitle>
+                <CardDescription className="text-xs">Nevada Edition (State Radar)</CardDescription>
+              </CardHeader>
+              <CardContent className="text-xs text-muted-foreground pb-4 space-y-2">
+                <p>Nevada state filings, regulatory business signals, commercial registry radar, and local deal flow.</p>
+                <div className="pt-2 text-xs font-mono text-amber-500 font-bold">Included in OS • Nevada Cloud Run</div>
+              </CardContent>
+              <CardFooter className="pt-3 border-t border-border/40">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="w-full text-xs gap-1.5"
+                  onClick={() => window.open("https://market-marksman-718497644379.us-central1.run.app/", "_blank")}
+                >
+                  <Target className="w-3.5 h-3.5 text-amber-500" />
+                  Launch Nevada Edition
+                </Button>
+              </CardFooter>
+            </Card>
+
+            {/* App 3: Pulse Social */}
             <Card className="border border-border/80 bg-card/60 backdrop-blur flex flex-col justify-between hover:border-primary/40 transition-all">
               <CardHeader className="pb-3">
                 <div className="flex justify-between items-start mb-2">
@@ -558,7 +589,7 @@ export default function Pricing() {
                     Play Store & Web
                   </Badge>
                 </div>
-                <CardTitle className="text-lg font-bold">Pulse Social</CardTitle>
+                <CardTitle className="text-base font-bold">Pulse Social</CardTitle>
                 <CardDescription className="text-xs">Content Syndication Engine</CardDescription>
               </CardHeader>
               <CardContent className="text-xs text-muted-foreground pb-4 space-y-2">
@@ -578,7 +609,7 @@ export default function Pricing() {
               </CardFooter>
             </Card>
 
-            {/* App 3: LeadPulse */}
+            {/* App 4: LeadPulse */}
             <Card className="border border-border/80 bg-card/60 backdrop-blur flex flex-col justify-between hover:border-primary/40 transition-all">
               <CardHeader className="pb-3">
                 <div className="flex justify-between items-start mb-2">
@@ -589,7 +620,7 @@ export default function Pricing() {
                     AI Studio Engine
                   </Badge>
                 </div>
-                <CardTitle className="text-lg font-bold">LeadPulse</CardTitle>
+                <CardTitle className="text-base font-bold">LeadPulse</CardTitle>
                 <CardDescription className="text-xs">Lead Accuracy & Verification</CardDescription>
               </CardHeader>
               <CardContent className="text-xs text-muted-foreground pb-4 space-y-2">
@@ -608,6 +639,50 @@ export default function Pricing() {
                 </Button>
               </CardFooter>
             </Card>
+          </div>
+
+          {/* Upcoming Editions Roadmap Pill */}
+          <div className="mt-8 p-4 rounded-xl bg-muted/40 border border-border/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+            <div className="flex items-center gap-2.5">
+              <Badge variant="outline" className="text-primary border-primary/30 text-[10px]">
+                Roadmap Editions
+              </Badge>
+              <span className="text-muted-foreground">
+                Coming Soon: <strong>Investor's Edition</strong> (Deal Flow), <strong>Insurance Edition</strong> (Risk Radar), and <strong>Legal Edition</strong> (Statutory Filings).
+              </span>
+            </div>
+            <span className="text-primary font-mono text-[11px] font-bold">Included in Ownable OS Rollouts</span>
+          </div>
+        </section>
+
+        {/* Complimentary Book Perk Banner */}
+        <section className="py-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-500/15 via-card/80 to-primary/10 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                <BookOpen className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-amber-500 text-black font-bold text-[10px]">Free $19.99 Value</Badge>
+                  <span className="text-xs font-bold text-foreground">Complimentary Operational Doctrine</span>
+                </div>
+                <h3 className="text-lg font-black text-foreground">
+                  Free Copy of <em>Startup Operational Excellence</em> for All Clients & Betas
+                </h3>
+                <p className="text-xs text-muted-foreground max-w-2xl leading-relaxed">
+                  Every active Beta participant and Pro subscriber receives an instant complimentary digital copy of Robert McCarthy's operating book so you have a proven roadmap for your business endeavors.
+                </p>
+              </div>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => window.open("https://bossrob.gumroad.com/l/soe", "_blank")}
+              className="bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs shrink-0 gap-1.5 shadow"
+            >
+              <BookOpen className="w-4 h-4" />
+              Claim / View Book ($0 with Code)
+            </Button>
           </div>
         </section>
 

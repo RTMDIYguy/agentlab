@@ -24,7 +24,8 @@ import {
   Calendar,
   HelpCircle,
   ArrowRight,
-  Info
+  Info,
+  BookOpen
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -191,6 +192,35 @@ export default function Dashboard() {
                 Extend Trial (+14 Days)
               </Button>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Complimentary Book Perk Banner */}
+        <Card className="border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-card/70 to-card/90 shadow-sm backdrop-blur-md">
+          <CardContent className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-amber-500 text-black text-[10px] font-bold px-1.5 py-0">Complimentary $19.99 Value</Badge>
+                  <span className="text-xs font-bold text-foreground">Operational Doctrine Included</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  <em>Startup Operational Excellence</em> by Robert McCarthy is unlocked for your workspace.
+                </p>
+              </div>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => window.open("https://bossrob.gumroad.com/l/soe", "_blank")}
+              className="text-xs border-amber-500/40 hover:bg-amber-500/10 text-amber-300 font-semibold gap-1.5 shrink-0"
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              Read / Download Book
+            </Button>
           </CardContent>
         </Card>
 
