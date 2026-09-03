@@ -1,5 +1,4 @@
-import { Router } from "express";
-import { handleOrchestratorChat } from "../controllers/orchestrator";
+import { handleOrchestratorChat, executeOrchestratorWorkflow } from "../controllers/orchestrator";
 import { getAgents, deployAgent, toggleAgentStatus } from "../controllers/agents";
 import { getWorkflows, deployWorkflow, createCustomWorkflow, updateWorkflowSchedule } from "../controllers/workflows";
 import {
@@ -91,6 +90,7 @@ apiRouter.get("/debug/llm", async (req, res) => {
 
 // Orchestrator Synthesis Engine
 apiRouter.post("/orchestrator/chat", handleOrchestratorChat);
+apiRouter.post("/orchestrator/execute", executeOrchestratorWorkflow);
 
 // Autonomous Swarm Agents
 apiRouter.get("/agents", getAgents);

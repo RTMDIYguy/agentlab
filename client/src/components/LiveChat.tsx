@@ -38,6 +38,41 @@ export function LiveChat() {
   };
 
 
+  const handleQuickSelect = async (option: string) => {
+    if (respondMutation.isPending) return;
+    const nextMessages: ChatMessage[] = [
+      ...messages,
+      { role: "user", content: `I'm interested in the ${option}.` },
+    ];
+    setMessages(nextMessages);
+    setLead(current => ({ ...current, interest: option, painPoint: current.painPoint || option }));
+
+    try {
+      const response = await respondMutation.mutateAsync({
+        messages: nextMessages,
+        lead: { ...lead, interest: option, painPoint: lead.painPoint || option },
+      });
+
+      setLead(current => ({
+        ...current,
+        painPoint: current.painPoint || response.collected.painPoint || option,
+        interest: response.collected.interest || option,
+      }));
+
+      setMessages(current => [
+        ...current,
+        { role: "assistant", content: response.reply },
+      ]);
+
+      if (response.shouldCaptureLead || !lead.name || !lead.email) {
+        setShowLeadForm(true);
+      }
+    } catch (error) {
+      console.error("[Founder Intake Chat] Failed to get response", error);
+      setShowLeadForm(true);
+    }
+  };
+
   const sendMessage = async () => {
     const content = draft.trim();
     if (!content || respondMutation.isPending) return;
@@ -229,11 +264,8 @@ export function LiveChat() {
                 <button
                   key={option}
                   type="button"
-                  onClick={() => {
-                    setDraft(option);
-                    setLead(current => ({ ...current, interest: option }));
-                  }}
-                  className="rounded-full border border-stone-300 px-3 py-1 text-xs text-stone-700 transition hover:border-stone-950 hover:text-stone-950"
+                  onClick={() => handleQuickSelect(option)}
+                  className="rounded-full border border-stone-300 px-3 py-1 text-xs text-stone-700 transition hover:border-stone-950 hover:text-stone-950 hover:bg-stone-100"
                 >
                   {option}
                 </button>
