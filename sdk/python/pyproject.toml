@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentlab-sdk"
+version = "1.0.0"
+authors = [
+  { name="Uncle Robert Consulting LLC", email="robert@unclerobertconsulting.com" },
+]
+description = "Official Python SDK for AgentLab Agentic OS - Autonomous Swarms, DAG Workflows, and Browser-Use Sessions."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.28.0",
+    "urllib3>=1.26.0",
+    "typing-extensions>=4.0.0",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+"Homepage" = "https://agent-lab.tech"
+"Documentation" = "https://agent-lab.tech/docs"
+"Repository" = "https://github.com/RTMDIYguy/agentlab"
