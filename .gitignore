@@ -2,6 +2,10 @@
 node_modules/
 **/node_modules
 .pnpm-store/
+__pycache__/
+*.pyc
+.air/
+agentlab/
 
 # Builds and Outputs
 dist/
