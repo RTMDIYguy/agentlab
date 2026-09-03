@@ -402,6 +402,81 @@ export default function Features() {
           </div>
         </section>
 
+        {/* The Strategic North Star: Ownable OS & Equity Independence */}
+        <section className="py-16 bg-gradient-to-b from-card/30 via-primary/5 to-background border-t border-border">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+            <div className="text-center space-y-2">
+              <Badge className="bg-primary text-primary-foreground text-xs font-bold">
+                The Ultimate Destination
+              </Badge>
+              <h2 className="text-3xl font-extrabold text-foreground">Prepping Founders for Ownable OS & Equity Independence</h2>
+              <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+                Everything we build—from the 5-day Founder Signal sprint to the 7-department swarms—is designed with one primary goal: preparing your agency for the <a href="https://bootstrapper.ai/chapters/independence-mo" target="_blank" rel="noopener noreferrer" className="text-primary underline font-semibold">Independence Model</a> and <a href="https://bootstrapper.ai/build-equity?p_grain=LW" target="_blank" rel="noopener noreferrer" className="text-primary underline font-semibold">Building Transferable Business Equity</a> on <a href="https://bootstrapper.ai" target="_blank" rel="noopener noreferrer" className="text-primary underline font-semibold">Bootstrapper.ai</a>.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="p-5 rounded-2xl bg-card/80 border border-border/80 shadow-sm space-y-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-xs">
+                  01
+                </div>
+                <h4 className="text-sm font-bold text-foreground">Financial Engine</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Bank-connected ledger intelligence, automated cash runway forecasting, and clean categorized revenue (FIN-01 through FIN-07).
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-card/80 border border-border/80 shadow-sm space-y-3">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-xs">
+                  02
+                </div>
+                <h4 className="text-sm font-bold text-foreground">Profit Engine</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  CRM-driven pipeline velocity, automated SOW proposals, and predictable inbound lead generation (SAL & MKT swarms).
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-card/80 border border-border/80 shadow-sm space-y-3">
+                <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-xs">
+                  03
+                </div>
+                <h4 className="text-sm font-bold text-foreground">Value Engine</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Standardized SOP protocols, autonomous DAG workers, and multi-tenant delivery pipelines (OPS & FUL workflows).
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-card/80 border border-border/80 shadow-sm space-y-3">
+                <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 font-bold text-xs">
+                  04
+                </div>
+                <h4 className="text-sm font-bold text-foreground">People Engine</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Servant leadership cadence, async unblocking, quarterly growth reviews, and client retention QBR loops (CUL & AFT).
+                </p>
+              </div>
+            </div>
+
+            <div className="p-6 rounded-2xl border border-primary/30 bg-primary/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="space-y-1 text-center sm:text-left">
+                <h4 className="text-sm font-bold text-foreground">The Outcome: Higher Ownable Score & Transferable Enterprise Value</h4>
+                <p className="text-xs text-muted-foreground">
+                  Elevate your Ownable Score, compress valuation discount rates, and turn your daily hustle into an exit-ready asset.
+                </p>
+              </div>
+              <Button 
+                size="sm" 
+                variant="outline"
+                className="text-xs font-bold gap-1.5 shrink-0 bg-background"
+                onClick={() => window.open("https://bootstrapper.ai/build-equity?p_grain=LW", "_blank")}
+              >
+                <Compass className="w-3.5 h-3.5 text-primary" />
+                Explore Build Equity on Bootstrapper.ai
+              </Button>
+            </div>
+          </div>
+        </section>
+
         {/* Bottom CTA Banner */}
         <section className="py-12 bg-muted/20 border-t border-border">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
