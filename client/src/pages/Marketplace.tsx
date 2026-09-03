@@ -1,9 +1,28 @@
+import { useState } from "react";
+import { useLocation } from "wouter";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Footer } from "@/components/Footer";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import {
   Search,
   ShoppingBag,
@@ -16,302 +35,555 @@ import {
   Share2,
   Target,
   FileText,
+  ExternalLink,
+  ShieldCheck,
+  Check,
+  RefreshCw,
+  Cpu,
+  Clock,
+  ArrowRight,
+  Sliders,
+  DollarSign,
 } from "lucide-react";
-import { useState } from "react";
-import { useLocation } from "wouter";
 import { toast } from "sonner";
+
+interface MarketplaceItem {
+  id: string;
+  category: "apps" | "books" | "playbooks";
+  name: string;
+  description: string;
+  price: string;
+  monthlyPrice?: string;
+  provider?: string;
+  author?: string;
+  department?: string;
+  departmentCode?: string;
+  type?: string;
+  status?: string;
+  statusVariant?: "default" | "secondary" | "outline" | "destructive";
+  isMounted?: boolean;
+  workflowsCount?: number;
+  automationRate?: string;
+  cycleTimeReduction?: string;
+  rating?: number;
+  format?: string;
+  iconName?: string;
+  tags: string[];
+  launchUrl?: string;
+  actionUrl?: string;
+  actionLabel?: string;
+  isExternal?: boolean;
+}
 
 export default function Marketplace() {
   const [, setLocation] = useLocation();
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
+  const [selectedPlaybook, setSelectedPlaybook] = useState<MarketplaceItem | null>(null);
+  const [showEntitlementsModal, setShowEntitlementsModal] = useState(false);
 
-  const apps = [
-    {
-      id: "app-market-marksman",
-      category: "apps",
-      name: "Market Marksman",
-      provider: "URC Ecosystem Apps",
-      type: "Predictive Opportunity App",
-      status: "Live",
-      statusVariant: "default" as const,
-      price: "Included in OS",
-      description: "Opportunity discovery and predictive deal signal briefs for identifying high-margin market wedges.",
-      icon: Target,
-      tags: ["Opportunities", "Deal Signals", "Sales Intelligence"],
+  // 1. Fetch live marketplace items
+  const { data: marketplaceData, isLoading, refetch, isRefetching } = useQuery<{
+    workspaceId: string;
+    playbooks: MarketplaceItem[];
+    apps: MarketplaceItem[];
+    books: MarketplaceItem[];
+    totalCount: number;
+    mountedCount: number;
+  }>({
+    queryKey: ["marketplace-items"],
+    queryFn: async () => {
+      const res = await fetch("/api/marketplace/items");
+      if (!res.ok) throw new Error("Failed to fetch marketplace items");
+      return res.json();
     },
-    {
-      id: "app-pulse-social",
-      category: "apps",
-      name: "Pulse Social",
-      provider: "URC Ecosystem Apps",
-      type: "Content Syndication Engine",
-      status: "Live",
-      statusVariant: "default" as const,
-      price: "Included in OS",
-      description: "Automated social content generation, multi-channel syndication, and post scheduling engine.",
-      icon: Share2,
-      tags: ["Social Media", "LinkedIn", "Content Scheduling"],
-    },
-    {
-      id: "app-leadpulse",
-      category: "apps",
-      name: "LeadPulse",
-      provider: "URC Ecosystem Apps",
-      type: "Lead Discovery & Enrichment",
-      status: "Live",
-      statusVariant: "default" as const,
-      price: "Included in OS",
-      description: "Automated B2B lead discovery, contact scraping, and enrichment engine for founder-led outreach.",
-      icon: TrendingUp,
-      tags: ["Lead Gen", "Enrichment", "B2B Prospecting"],
-    },
-    {
-      id: "pkg-founder-signal",
-      category: "apps",
-      name: "Founder Signal System",
-      provider: "Uncle Robert Consulting",
-      type: "Starter Marketing Sprint",
-      status: "Live (Beta)",
-      statusVariant: "secondary" as const,
-      price: "$1,000 one-time",
-      description: "3–5 day turnkey starter marketing sprint: signal brief, message map, first content batch, and proof-capture loop.",
-      icon: Zap,
-      tags: ["Founder Marketing", "Starter Sprint", "Beta"],
-    },
-    {
-      id: "app-consulting-gen",
-      category: "apps",
-      name: "Consulting Assessment Generator",
-      provider: "URC Internal Tools",
-      type: "Diagnostic Tool",
-      status: "Offline / Staged",
-      statusVariant: "outline" as const,
-      price: "Advisory Tool",
-      description: "Automated diagnostic questionnaire generator for client maturity assessment and gap analysis.",
-      icon: FileText,
-      tags: ["Consulting", "Diagnostic", "Internal"],
-    },
-    {
-      id: "pkg-48hr-linkedin",
-      category: "apps",
-      name: "48-Hour LinkedIn Authority",
-      provider: "URC Campaign Systems",
-      type: "Campaign Package",
-      status: "Offline / Legacy",
-      statusVariant: "outline" as const,
-      price: "Legacy Asset",
-      description: "Rapid authority-building sprint playbook with email nurture and content frameworks.",
-      icon: Sparkles,
-      tags: ["LinkedIn", "Authority", "Campaign"],
-    },
-  ];
+    refetchInterval: 15000,
+  });
 
-  const books = [
-    {
-      id: "book-bgw",
-      category: "books",
-      name: "Bootstrapper's Guide to the World",
-      author: "Robert T. McCarthy",
-      price: "$59.99",
-      rating: 5.0,
-      format: "Digital Compendium / PDF & Notion",
-      description: "The complete playbook of 28 bootstrapped business models, unit economics, and operational blueprints.",
-      icon: BookOpen,
-      tags: ["Bootstrapping", "Business Models", "Funnel Core"],
+  // 2. Mount Playbook Mutation
+  const mountMutation = useMutation({
+    mutationFn: async (playbookId: string) => {
+      const res = await fetch(`/api/marketplace/mount/${playbookId}`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error("Failed to mount playbook");
+      return res.json();
     },
-    {
-      id: "book-soe",
-      category: "books",
-      name: "Startup Operational Excellence",
-      author: "Robert T. McCarthy",
-      price: "$19.99",
-      rating: 5.0,
-      format: "Digital Book & SOP Templates",
-      description: "The definitive operating manual for eliminating informational drift, structuring teams, and scaling lean.",
-      icon: BookOpen,
-      tags: ["Operations", "Governance", "Lean Scale"],
-      link: "https://gumroad.com",
+    onSuccess: (_, playbookId) => {
+      toast.success("Playbook Mounted Successfully", {
+        description: `DAG workflows for ${playbookId} are now unlocked and active in Command Center.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["marketplace-items"] });
     },
-  ];
+    onError: (err: any) => {
+      toast.error("Failed to mount playbook", {
+        description: err.message,
+      });
+    },
+  });
 
-  const playbooks = [
-    {
-      id: "pb-mkt",
-      category: "playbooks",
-      name: "Marketing (MKT) Playbook",
-      department: "MKT-01 to MKT-09",
-      price: "$99/mo",
-      description: "Unlock all automated DAG workflows for lead generation, content syndication, email nurture, and polls.",
-      icon: Layers,
-      tags: ["Lead Gen", "Content", "Nurture"],
+  // 3. Unmount Playbook Mutation
+  const unmountMutation = useMutation({
+    mutationFn: async (playbookId: string) => {
+      const res = await fetch(`/api/marketplace/unmount/${playbookId}`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error("Failed to unmount playbook");
+      return res.json();
     },
-    {
-      id: "pb-sal",
-      category: "playbooks",
-      name: "Sales (SAL) Playbook",
-      department: "SAL-01 to SAL-06",
-      price: "$149/mo",
-      description: "Automated proposal generation, contract onboarding, deal discount controls, and negotiation playbooks.",
-      icon: Layers,
-      tags: ["Proposals", "Contracts", "Closing"],
+    onSuccess: (_, playbookId) => {
+      toast.warning("Playbook Unmounted", {
+        description: `Playbook ${playbookId} removed from active workspace entitlements.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["marketplace-items"] });
     },
-    {
-      id: "pb-ops",
-      category: "playbooks",
-      name: "Operations (OPS) Playbook",
-      department: "OPS-01 to OPS-08",
-      price: "$199/mo",
-      description: "Enterprise system governance, automated drift scanning, SOP version control, and infrastructure monitoring.",
-      icon: Layers,
-      tags: ["Governance", "Drift Control", "SOPs"],
+    onError: (err: any) => {
+      toast.error("Failed to unmount playbook", {
+        description: err.message,
+      });
     },
-  ];
+  });
 
-  const allItems = [...apps, ...books, ...playbooks];
+  const playbooks = marketplaceData?.playbooks || [];
+  const apps = marketplaceData?.apps || [];
+  const books = marketplaceData?.books || [];
+
+  const allItems: MarketplaceItem[] = [...playbooks, ...apps, ...books];
 
   const filteredItems = allItems.filter((item) => {
     const matchesTab = activeTab === "all" || item.category === activeTab;
     const matchesSearch =
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+      (item.tags && item.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase())));
     return matchesTab && matchesSearch;
   });
 
+  const getCategoryIcon = (category: string, iconName?: string) => {
+    if (iconName === "Target") return <Target className="w-5 h-5" />;
+    if (iconName === "Share2") return <Share2 className="w-5 h-5" />;
+    if (iconName === "TrendingUp") return <TrendingUp className="w-5 h-5" />;
+    if (iconName === "Zap") return <Zap className="w-5 h-5" />;
+    if (iconName === "FileText") return <FileText className="w-5 h-5" />;
+    if (iconName === "Sparkles") return <Sparkles className="w-5 h-5" />;
+    if (category === "books") return <BookOpen className="w-5 h-5" />;
+    if (category === "playbooks") return <Layers className="w-5 h-5" />;
+    return <ShoppingBag className="w-5 h-5" />;
+  };
+
   return (
     <DashboardLayout>
-      <div className="p-6 md:p-8 max-w-7xl mx-auto">
+      <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
-              <ShoppingBag className="w-8 h-8 text-primary" />
-              Ecosystem Marketplace
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Deploy live applications, authority books, and automated workflow playbooks.
-            </p>
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 text-primary">
+                <ShoppingBag className="w-7 h-7" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+                  Ecosystem Marketplace
+                </h1>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Deploy live applications, authority books, and 7-department autonomous workflow playbooks.
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="relative w-full md:w-80">
-            <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search apps, books, playbooks..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary text-sm shadow-sm"
-            />
+
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => refetch()}
+              disabled={isRefetching}
+              className="gap-2 border-border/60 hover:bg-muted/60"
+            >
+              <RefreshCw className={`w-4 h-4 ${isRefetching ? "animate-spin text-primary" : ""}`} />
+              Refresh
+            </Button>
+            <div className="relative w-full md:w-72">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search apps, books, playbooks..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 bg-card/40 border-border/60 text-xs h-9 focus-visible:ring-primary/40"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Tabs Filter */}
-        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="grid grid-cols-4 max-w-lg">
-            <TabsTrigger value="all">All Items</TabsTrigger>
-            <TabsTrigger value="apps">Live Apps</TabsTrigger>
-            <TabsTrigger value="books">Books</TabsTrigger>
-            <TabsTrigger value="playbooks">Playbooks</TabsTrigger>
+        {/* Category Tabs */}
+        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid grid-cols-4 max-w-md bg-muted/40 border border-border/40 p-1">
+            <TabsTrigger value="all" className="text-xs">All Items ({allItems.length})</TabsTrigger>
+            <TabsTrigger value="playbooks" className="text-xs">Playbooks ({playbooks.length})</TabsTrigger>
+            <TabsTrigger value="apps" className="text-xs">Live Apps ({apps.length})</TabsTrigger>
+            <TabsTrigger value="books" className="text-xs">Books ({books.length})</TabsTrigger>
           </TabsList>
         </Tabs>
 
         {/* Grid of Items */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {filteredItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Card
-                key={item.id}
-                className="flex flex-col border border-border/80 bg-card hover:border-primary/50 hover:shadow-lg transition-all duration-200"
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex justify-between items-start gap-2 mb-2">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
-                      <Icon className="w-5 h-5" />
+        {isLoading ? (
+          <div className="py-20 flex flex-col items-center justify-center gap-3 text-muted-foreground">
+            <RefreshCw className="w-8 h-8 animate-spin text-primary" />
+            <p className="text-sm font-medium">Loading ecosystem catalog & workspace entitlements...</p>
+          </div>
+        ) : filteredItems.length === 0 ? (
+          <div className="py-20 text-center border border-dashed border-border/60 rounded-2xl bg-card/20">
+            <ShoppingBag className="w-10 h-10 mx-auto text-muted-foreground/60 mb-2" />
+            <h3 className="text-base font-semibold text-foreground">No items match your search</h3>
+            <p className="text-xs text-muted-foreground mt-1">Try clearing your filters or search keywords.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredItems.map((item) => {
+              return (
+                <Card
+                  key={item.id}
+                  className={`flex flex-col bg-card/40 backdrop-blur-md border transition-all duration-200 hover:shadow-lg ${
+                    item.isMounted
+                      ? "border-primary/50 shadow-sm shadow-primary/5 ring-1 ring-primary/20"
+                      : "border-border/70 hover:border-primary/40"
+                  }`}
+                >
+                  <CardHeader className="pb-3">
+                    <div className="flex justify-between items-start gap-2 mb-2">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${
+                        item.isMounted
+                          ? "bg-primary/20 border-primary/40 text-primary"
+                          : "bg-muted/60 border-border/60 text-muted-foreground"
+                      }`}>
+                        {getCategoryIcon(item.category, item.iconName)}
+                      </div>
+
+                      {item.category === "playbooks" ? (
+                        item.isMounted ? (
+                          <Badge className="bg-primary/20 text-primary border-primary/30 text-xs font-semibold gap-1">
+                            <Check className="w-3 h-3" />
+                            Mounted
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="text-xs text-muted-foreground border-border/70">
+                            Available
+                          </Badge>
+                        )
+                      ) : "status" in item && item.status ? (
+                        <Badge variant={item.statusVariant || "secondary"} className="text-xs">
+                          {item.status}
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="font-semibold text-primary text-xs">
+                          {item.price}
+                        </Badge>
+                      )}
                     </div>
-                    {"status" in item && (
-                      <Badge variant={item.statusVariant}>{item.status}</Badge>
-                    )}
-                    {"price" in item && !("status" in item) && (
-                      <Badge variant="outline" className="font-semibold text-primary">
-                        {item.price}
-                      </Badge>
-                    )}
-                  </div>
-                  <CardTitle className="text-xl font-bold">{item.name}</CardTitle>
-                  <CardDescription className="text-xs font-medium text-muted-foreground">
-                    {"provider" in item ? item.provider : "author" in item ? `By ${item.author}` : item.department}
-                  </CardDescription>
-                </CardHeader>
 
-                <CardContent className="flex-1 pb-4">
-                  <p className="text-sm text-muted-foreground mb-4">
-                    {item.description}
-                  </p>
+                    <CardTitle className="text-lg font-bold text-foreground line-clamp-1">{item.name}</CardTitle>
+                    <CardDescription className="text-xs font-medium text-muted-foreground">
+                      {"provider" in item && item.provider
+                        ? item.provider
+                        : "author" in item && item.author
+                        ? `By ${item.author}`
+                        : item.department}
+                    </CardDescription>
+                  </CardHeader>
 
-                  <div className="flex flex-wrap gap-1.5 mt-auto">
-                    {item.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 bg-muted text-muted-foreground text-xs rounded-md font-medium"
-                      >
-                        {tag}
+                  <CardContent className="flex-1 pb-4 space-y-3">
+                    <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
+                      {item.description}
+                    </p>
+
+                    {item.category === "playbooks" && (
+                      <div className="grid grid-cols-2 gap-2 p-2 rounded-lg bg-muted/40 border border-border/40 text-[11px] font-mono">
+                        <div>
+                          <span className="text-muted-foreground block text-[10px]">Automation</span>
+                          <span className="font-semibold text-emerald-400">{item.automationRate || "90%"}</span>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground block text-[10px]">Time Saved</span>
+                          <span className="font-semibold text-foreground">{item.cycleTimeReduction || "5.0 hrs/wk"}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {item.tags && item.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2 py-0.5 bg-muted/60 text-muted-foreground text-[10px] rounded-md font-medium border border-border/40"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </CardContent>
+
+                  <CardFooter className="pt-3 border-t border-border/60 flex items-center justify-between gap-2">
+                    <div>
+                      <span className="text-xs font-bold text-foreground block">
+                        {item.price || "Included in OS"}
                       </span>
-                    ))}
-                  </div>
-                </CardContent>
+                      {item.category === "playbooks" && (
+                        <span className="text-[10px] text-muted-foreground">Monthly entitlement</span>
+                      )}
+                    </div>
 
-                <CardFooter className="pt-3 border-t border-border flex items-center justify-between">
-                  <span className="text-sm font-semibold text-foreground">
-                    {"price" in item ? item.price : "Included"}
-                  </span>
-                  <Button
-                    size="sm"
-                    className="bg-primary hover:bg-primary/90 text-xs font-medium"
-                    onClick={() => {
-                      if (item.category === "books") {
-                        if (item.id === "book-bgw") {
-                          setLocation("/book");
-                        } else {
-                          toast.success(`Opening ${item.name} Gumroad checkout ($19.99)...`);
-                          window.open("https://gumroad.com", "_blank");
-                        }
-                      } else if (item.category === "apps") {
-                        if (item.id === "pulse-social") {
-                          window.open("https://pulse-social-agentlab-projects.vercel.app", "_blank");
-                        } else {
-                          toast.success(`${item.name} mounted into workspace.`);
-                          setLocation("/command-center");
-                        }
-                      } else if (item.category === "playbooks") {
-                        toast.success(`${item.name} activated! Workflows ready in Command Center.`);
-                        setLocation("/command-center");
-                      }
-                    }}
-                  >
-                    {item.category === "books" ? "Get Book" : item.category === "apps" ? "Launch / Mount" : "Unlock Playbook"}
-                  </Button>
-                </CardFooter>
-              </Card>
-            );
-          })}
-        </div>
+                    <div className="flex items-center gap-1.5">
+                      {item.category === "playbooks" && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 text-xs text-muted-foreground hover:text-foreground px-2"
+                          onClick={() => setSelectedPlaybook(item)}
+                        >
+                          Blueprint
+                        </Button>
+                      )}
+
+                      <Button
+                        size="sm"
+                        disabled={mountMutation.isPending || unmountMutation.isPending}
+                        className={`h-8 text-xs font-medium gap-1.5 shadow-sm ${
+                          item.isMounted
+                            ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                            : "bg-primary hover:bg-primary/90 text-primary-foreground"
+                        }`}
+                        onClick={() => {
+                          if (item.category === "books") {
+                            if (item.id === "book-bgw") {
+                              setLocation("/book");
+                            } else {
+                              toast.success(`Opening ${item.name} Gumroad checkout ($19.99)...`);
+                              window.open("https://gumroad.com", "_blank");
+                            }
+                          } else if (item.category === "apps") {
+                            if (item.launchUrl?.startsWith("http")) {
+                              window.open(item.launchUrl, "_blank");
+                            } else if (item.launchUrl) {
+                              setLocation(item.launchUrl);
+                            } else {
+                              setLocation("/command-center");
+                            }
+                          } else if (item.category === "playbooks") {
+                            if (item.isMounted) {
+                              toast.info(`${item.name} is active`, {
+                                description: "Navigating to Command Center to dispatch workflows...",
+                              });
+                              setLocation("/command-center");
+                            } else {
+                              mountMutation.mutate(item.id);
+                            }
+                          }
+                        }}
+                      >
+                        {item.category === "books" ? (
+                          <>
+                            <BookOpen className="w-3.5 h-3.5" />
+                            {item.actionLabel || "Get Book"}
+                          </>
+                        ) : item.category === "apps" ? (
+                          <>
+                            {item.isExternal ? <ExternalLink className="w-3.5 h-3.5" /> : <Zap className="w-3.5 h-3.5" />}
+                            Launch App
+                          </>
+                        ) : item.isMounted ? (
+                          <>
+                            <Check className="w-3.5 h-3.5" />
+                            Active in OS
+                          </>
+                        ) : (
+                          <>
+                            <Layers className="w-3.5 h-3.5" />
+                            Mount to Workspace
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </CardFooter>
+                </Card>
+              );
+            })}
+          </div>
+        )}
 
         {/* Value Proposition Box */}
-        <div className="p-6 rounded-xl border border-primary/20 bg-primary/5 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-1">
-            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+        <div className="p-6 md:p-8 rounded-2xl border border-primary/20 bg-primary/5 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-md shadow-sm">
+          <div className="space-y-1.5">
+            <h3 className="text-base font-bold text-foreground flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-primary" />
-              Ownable OS Continuity Guarantee
+              Ownable OS Continuity & Workspace Tenancy
             </h3>
-            <p className="text-sm text-muted-foreground max-w-2xl">
+            <p className="text-xs text-muted-foreground max-w-2xl leading-relaxed">
               All live applications and modular knowledge playbooks mount directly into your isolated client workspace (`workspace_id` tenancy).
+              Mounted DAG workflows immediately surface in the Command Center for automated dispatch and swarm execution.
             </p>
           </div>
-          <Button variant="outline" className="shrink-0 border-primary/40 hover:bg-primary/10">
-            View Workspace Entitlements
-          </Button>
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="text-right hidden sm:block">
+              <span className="text-xs text-muted-foreground block">Active Entitlements</span>
+              <span className="text-sm font-bold text-primary">
+                {marketplaceData?.mountedCount || 2} of {playbooks.length} Playbooks
+              </span>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowEntitlementsModal(true)}
+              className="border-primary/40 hover:bg-primary/10 text-xs gap-1.5"
+            >
+              <Sliders className="w-3.5 h-3.5 text-primary" />
+              View Workspace Entitlements
+            </Button>
+          </div>
         </div>
+
+        {/* Blueprint Details Modal */}
+        <Dialog open={Boolean(selectedPlaybook)} onOpenChange={(open) => !open && setSelectedPlaybook(null)}>
+          <DialogContent className="max-w-xl bg-card border-border/80">
+            <DialogHeader>
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                  <Layers className="w-4 h-4" />
+                </div>
+                <div>
+                  <DialogTitle className="text-lg font-bold">
+                    {selectedPlaybook?.name}
+                  </DialogTitle>
+                  <DialogDescription className="text-xs">
+                    {selectedPlaybook?.department} • Price: {selectedPlaybook?.price}
+                  </DialogDescription>
+                </div>
+              </div>
+            </DialogHeader>
+
+            {selectedPlaybook && (
+              <div className="space-y-4 text-xs pt-2">
+                <div className="p-3 rounded-lg bg-muted/40 border border-border/60">
+                  <span className="font-semibold text-foreground">Playbook Scope: </span>
+                  <span className="text-muted-foreground">{selectedPlaybook.description}</span>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3 p-3 rounded-lg bg-card/60 border border-border/60 font-mono text-[11px]">
+                  <div>
+                    <span className="text-muted-foreground block">DAG Workflows</span>
+                    <span className="font-bold text-foreground">{selectedPlaybook.workflowsCount || 8} Workflows</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block">Automation</span>
+                    <span className="font-bold text-emerald-400">{selectedPlaybook.automationRate || "90%"}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block">Time Saved</span>
+                    <span className="font-bold text-foreground">{selectedPlaybook.cycleTimeReduction || "5.0 hrs/wk"}</span>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-lg bg-primary/5 border border-primary/20 space-y-1.5">
+                  <div className="flex items-center gap-2 font-semibold text-primary">
+                    <ShieldCheck className="w-4 h-4" />
+                    Command Center Integration
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    Mounting this playbook provisions all associated DAG steps, human-in-the-loop review triggers, and model prompts directly into your workspace.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <DialogFooter className="gap-2 sm:gap-0">
+              {selectedPlaybook?.isMounted ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    if (selectedPlaybook) unmountMutation.mutate(selectedPlaybook.id);
+                    setSelectedPlaybook(null);
+                  }}
+                  className="text-xs border-rose-500/30 text-rose-400 hover:bg-rose-500/10"
+                >
+                  Unmount Playbook
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    if (selectedPlaybook) mountMutation.mutate(selectedPlaybook.id);
+                    setSelectedPlaybook(null);
+                  }}
+                  className="text-xs bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+                >
+                  Mount to Workspace
+                </Button>
+              )}
+              <Button variant="ghost" size="sm" onClick={() => setSelectedPlaybook(null)} className="text-xs">
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Workspace Entitlements Modal */}
+        <Dialog open={showEntitlementsModal} onOpenChange={setShowEntitlementsModal}>
+          <DialogContent className="max-w-lg bg-card border-border/80">
+            <DialogHeader>
+              <div className="flex items-center gap-2">
+                <Sliders className="w-5 h-5 text-primary" />
+                <DialogTitle className="text-lg font-bold">
+                  Active Workspace Entitlements
+                </DialogTitle>
+              </div>
+              <DialogDescription className="text-xs">
+                Workspace ID: <span className="font-mono text-primary">{marketplaceData?.workspaceId}</span>
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-3 text-xs pt-2">
+              <div className="p-3 rounded-lg bg-muted/40 border border-border/60">
+                <span className="font-semibold text-foreground">Current Status: </span>
+                <span className="text-emerald-400 font-medium">
+                  {marketplaceData?.mountedCount} of {playbooks.length} Knowledge Playbooks Mounted
+                </span>
+              </div>
+
+              <div className="divide-y divide-border/40 border border-border/60 rounded-lg overflow-hidden">
+                {playbooks.map((p) => (
+                  <div key={p.id} className="p-3 flex items-center justify-between bg-card/40">
+                    <div>
+                      <div className="font-semibold text-foreground text-xs">{p.name}</div>
+                      <div className="text-[11px] text-muted-foreground">{p.department}</div>
+                    </div>
+                    {p.isMounted ? (
+                      <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30 text-[10px] gap-1">
+                        <Check className="w-3 h-3" />
+                        Active
+                      </Badge>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => mountMutation.mutate(p.id)}
+                        className="h-6 text-[10px] px-2 border-primary/40 text-primary hover:bg-primary/10"
+                      >
+                        Mount
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button size="sm" onClick={() => setShowEntitlementsModal(false)} className="text-xs">
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
       <Footer />
     </DashboardLayout>

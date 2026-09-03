@@ -9,7 +9,13 @@ import {
   approveRun,
   rejectRun,
 } from "../controllers/runs";
-import { getPackages, subscribeToPackage } from "../controllers/marketplace";
+import {
+  getMarketplaceItems,
+  getPackages,
+  subscribeToPackage,
+  mountPlaybook,
+  unmountPlaybook,
+} from "../controllers/marketplace";
 import {
   getSyncState,
   ingestRoamingData,
@@ -100,12 +106,15 @@ apiRouter.get("/runs/:runId", getRunDetails);
 apiRouter.post("/runs/:runId/approve", approveRun);
 apiRouter.post("/runs/:runId/reject", rejectRun);
 
-// Marketplace Storefront
+// Marketplace Storefront & Workspace Mounting
+apiRouter.get("/marketplace/items", getMarketplaceItems);
 apiRouter.get("/marketplace/packages", getPackages);
 apiRouter.post(
   "/marketplace/packages/:packageId/subscribe",
   subscribeToPackage
 );
+apiRouter.post("/marketplace/mount/:id", mountPlaybook);
+apiRouter.post("/marketplace/unmount/:id", unmountPlaybook);
 
 // ==============================================================================
 // AI Studio Mobile Dashboard & Roaming Data Bridge (Bidirectional)
