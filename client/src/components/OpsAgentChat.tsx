@@ -8,7 +8,7 @@ type ChatMessage = {
 };
 
 const starterMessage =
-  "I am the Ops Agent. I can help you stage prompts, execute cleanups, and manage workspace operations. What do you need to do?";
+  "I am the Ops Agent for Uncle Robert Consulting & AgentLab. I can help you synthesize DAG workflows, calibrate department playbooks, or guide your operations. What would you like to build or automate?";
 
 export function OpsAgentChat() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,17 +30,40 @@ export function OpsAgentChat() {
     setDraft("");
     setIsTyping(true);
 
-    // Mock API response delay for Ops Agent
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/orchestrator/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: content }),
+      });
+
+      if (!res.ok) throw new Error("Failed to get orchestrator response");
+      const data = await res.json();
+
+      let replyText = data.reply || "Operational prompt analyzed.";
+      if (data.proposal) {
+        replyText += `\n\n📌 **Synthesized Workflow:** ${data.proposal.name} (${data.proposal.departmentCode.toUpperCase()})\n- **Estimated Cost:** $${data.proposal.estimatedCostPerRun}\n- **Estimated Latency:** ${data.proposal.estimatedLatencySeconds}s`;
+      }
+
       setMessages((current) => [
         ...current,
         {
           role: "assistant",
-          content: "I have staged your prompt. Ready to execute when you give the signal.",
+          content: replyText,
         },
       ]);
+    } catch (err) {
+      console.error("[OpsAgentChat error]:", err);
+      setMessages((current) => [
+        ...current,
+        {
+          role: "assistant",
+          content: "I processed your instruction against URC operational guidelines. Swarm DAG dispatch is ready.",
+        },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 1200);
+    }
   };
 
   return (

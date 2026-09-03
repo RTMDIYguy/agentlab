@@ -411,6 +411,56 @@ export default function Pricing() {
               </CardFooter>
             </Card>
           </div>
+
+          {/* Pricing Matrix & Savings Math Explainer */}
+          <div className="mt-12 p-6 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 via-card to-accent/10 shadow-sm backdrop-blur">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-border/60">
+              <div>
+                <Badge className="bg-primary text-primary-foreground text-[10px] font-bold mb-1">
+                  Value & Savings Matrix
+                </Badge>
+                <h3 className="text-xl font-bold text-foreground">Understanding the Math: Sprint vs. Monthly OS vs. À La Carte</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Clear, transparent breakdown of how our pricing structure saves you thousands compared to buying separate software licenses.
+                </p>
+              </div>
+              <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold shrink-0">
+                Ownable OS Saves $5,316/Year
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 text-xs">
+              <div className="space-y-1.5 p-4 rounded-xl bg-background/60 border border-border/60">
+                <span className="font-bold text-foreground text-sm flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-amber-500" />
+                  1. Founder Signal System ($1,000 One-Time)
+                </span>
+                <p className="text-muted-foreground leading-relaxed">
+                  This is a <strong>hands-on, done-with-you strategic sprint</strong> over 3–5 days. We nail your ICP, craft your Message Map, write your first 3 high-signal posts, and build your human outreach matrix. It is a <em>one-time service setup</em>, not a recurring subscription.
+                </p>
+              </div>
+
+              <div className="space-y-1.5 p-4 rounded-xl bg-background/60 border border-border/60">
+                <span className="font-bold text-foreground text-sm flex items-center gap-1.5">
+                  <Layers className="w-4 h-4 text-primary" />
+                  2. À La Carte Playbooks ($99–$199/mo Each)
+                </span>
+                <p className="text-muted-foreground leading-relaxed">
+                  If a founder only needs 1 or 2 specific department brains (e.g. Marketing at $99/mo or Operations at $199/mo), they can subscribe individually. Buying all 7 separately totals <strong>$943/month</strong>.
+                </p>
+              </div>
+
+              <div className="space-y-1.5 p-4 rounded-xl bg-primary/10 border border-primary/30">
+                <span className="font-bold text-primary text-sm flex items-center gap-1.5">
+                  <Zap className="w-4 h-4" />
+                  3. Ownable OS Pro ($500/mo All-Inclusive)
+                </span>
+                <p className="text-muted-foreground leading-relaxed">
+                  The ultimate operating backbone. Includes <strong>all 7 department playbooks</strong> (a $943/mo value), multi-agent swarm concurrency, Python SDK, and free book—saving you <strong>$443/month ($5,316 every year)</strong> compared to à la carte!
+                </p>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* The 7-Department Interactive Showroom */}
