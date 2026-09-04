@@ -194,6 +194,7 @@ In accordance with repository governance, only registered collaborators and cert
 | **Lorenzo** | NWN Advisory / Strategic Partner | `lorenzo@nwnadvisory.com` | Registered Collaborator | Active |
 | **Chris** | Bootstrapper Capital / Community Director | `chris@bootstrappercapital.com` | Registered Collaborator | Active |
 | **Mahmudul Haison** | AgentLab & Tactix / Remote Tech Specialist | `mahmudhaisan@gmail.com` | Technical Collaborator | Active |
+| **Eileen Prudhont** | Strategic Collaborator & Partner | `eileenprudhont@gmail.com` | Registered Collaborator | Active |
 
 ---
 
