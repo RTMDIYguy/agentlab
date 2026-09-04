@@ -47,17 +47,139 @@ AgentLab doesn't just run agents; it audits them.
 - **Audit Logging**: Every agent step, token count, and data mutation is securely logged to the `audit_logs` table for compliance review.
 - **PII Redaction**: Built-in scrubbing ensures sensitive data never hits the AI models blindly.
 
-## 🛠️ Development (For Contributors)
+## 🏁 Quickstart & Installation Guide
 
-If you are an authorized collaborator accessing this repo, here is how to run AgentLab locally:
+Whether you are a co-founder, strategic partner, client, or technical contributor, follow the path below that matches how you plan to use AgentLab.
+
+---
+
+### 🌐 Option A: Zero-Install Cloud Access (Fastest & Recommended)
+
+If you are a co-founder (e.g. Sheena), executive, or non-technical user who simply needs to access the dashboard, view analytics, or run marketing and CRM agent workflows:
+
+1. **No local installation or terminal required!**
+2. Visit the live platform at [agent-lab.tech](https://agent-lab.tech) (or [agent-lab.me](https://agent-lab.me)).
+3. Click **Sign In** and use your authorized Google / Email login matching the collaborator table below.
+4. If you need account activation, contact **Robert** (`robert@unclerobertconsulting.com`) or **Mahmudul** (`mahmudhaisan@gmail.com`).
+
+---
+
+### 💻 Option B: Running AgentLab Locally on Your Machine
+
+If you are an authorized collaborator running the full stack locally for testing, development, or private deployment, follow this step-by-step guide.
+
+#### 1. Prerequisites (Install Once)
+
+Before typing any commands, make sure your computer has the following free tools installed:
+
+1. **Node.js (v20+ LTS)**:
+   - *What it is:* The engine that executes JavaScript and runs AgentLab.
+   - *Download:* [nodejs.org](https://nodejs.org) (Choose the **LTS** version).
+   - *Verify:* After installing, open a terminal/PowerShell and type `node -v`. It should print `v20.x.x` or higher.
+2. **Git or GitHub Desktop**:
+   - *What it is:* Downloads and syncs code with GitHub.
+   - *For Beginners (GUI):* Download **[GitHub Desktop](https://desktop.github.com/)** — no command line required.
+   - *For Developers (CLI):* Download **[Git for Windows/Mac](https://git-scm.com/)**.
+3. **Visual Studio Code (Recommended Code Editor)**:
+   - *Download:* [code.visualstudio.com](https://code.visualstudio.com).
+
+---
+
+#### 2. Download / Clone the Repository
+
+**Using GitHub Desktop (Easiest for Beginners):**
+1. Open GitHub Desktop and log in with your authorized GitHub account.
+2. Go to **File** > **Clone Repository...**
+3. Select `RTMDIYguy/agentlab` from your list, choose a local folder (e.g. `C:\Projects\agentlab` or `~/Projects/agentlab`), and click **Clone**.
+4. Once cloned, click **Open in Visual Studio Code**.
+
+**Using Command Line / Terminal:**
+```bash
+git clone https://github.com/RTMDIYguy/agentlab.git
+cd agentlab
+```
+
+---
+
+#### 3. Set Up Your Environment (`.env` Configuration)
+
+AgentLab requires configuration keys to communicate with secure services (database, AI APIs, billing).
+
+1. In the root directory of the project, check for the `.env` file.
+2. If you are a newly onboarded collaborator, request the pre-configured staging `.env` file from **Robert** or **Mahmudul**.
+3. Place your `.env` file directly in the root `agentlab` project folder.
+
+---
+
+#### 4. Install Project Dependencies
+
+Open the integrated terminal in VS Code (**Terminal** > **New Terminal** or press `Ctrl + \`` / `Cmd + \``) and run:
 
 ```bash
-# Install dependencies
 npm install
+```
 
-# Start the full stack (Frontend on Vite, Backend on Express)
+> **What to expect:** You will see a progress bar as npm downloads the required frontend (React/Vite) and backend (Express/tRPC/AI SDK) packages. This typically takes 30–60 seconds.
+
+---
+
+#### 5. Start the Application
+
+Once `npm install` finishes successfully, launch the full system:
+
+```bash
 npm run dev
 ```
+
+> **What to expect in the terminal:**
+> - You will see Vite starting up the client and Express loading backend controllers.
+> - Look for the confirmation line: `[Server] AgentLab listening on http://localhost:3000` (or similar port).
+
+---
+
+#### 6. Open the Dashboard in Your Browser
+
+1. Open your web browser (Chrome, Edge, Brave, Safari).
+2. Navigate to: **[http://localhost:3000](http://localhost:3000)**
+3. You will see the dark-mode AgentLab Command Center with real-time agent monitors, workflow catalogs, and execution pipelines!
+
+---
+
+### ❓ Beginner Troubleshooting & FAQ
+
+<details>
+<summary><strong>Q: I get "'npm' is not recognized as an internal or external command"</strong></summary>
+
+**Fix:** Node.js was not installed, or your terminal was opened before installation finished. 
+1. Download and install Node.js from [nodejs.org](https://nodejs.org).
+2. Close all terminal windows and VS Code, then reopen them.
+</details>
+
+<details>
+<summary><strong>Q: I get "Permission denied (publickey)" or "Repository not found" when cloning</strong></summary>
+
+**Fix:** AgentLab is a private repository. Make sure you are signed into GitHub using the exact email listed in the [Authorized Collaborators table](#-authorized-repository-collaborators) below and that you have accepted the GitHub invitation.
+</details>
+
+<details>
+<summary><strong>Q: The terminal says "Port 3000 already in use"</strong></summary>
+
+**Fix:** AgentLab has built-in auto-port discovery. It will automatically detect if port 3000 is occupied and bind to `3001`, `3002`, etc. Check the exact URL printed in your terminal and open that in your browser.
+</details>
+
+<details>
+<summary><strong>Q: How do I stop the app when I'm done?</strong></summary>
+
+**Fix:** Click inside the terminal where `npm run dev` is running and press `Ctrl + C` (on Windows or Mac), then type `y` if prompted.
+</details>
+
+<details>
+<summary><strong>Q: How do I get the latest updates from the team?</strong></summary>
+
+**Fix:** In GitHub Desktop, click **Fetch origin** / **Pull origin**. In the terminal, run `git pull origin main` followed by `npm install` if new dependencies were added.
+</details>
+
+---
 
 ## 👥 Authorized Repository Collaborators
 
