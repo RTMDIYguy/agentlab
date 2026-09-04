@@ -8,6 +8,16 @@ Status: generated
 - [ ] MKT-05 Outreach & Engagement: Outreach batch setup, tracking, and reply handling
 - [ ] MKT-02 Email/SMS Nurture: Nurture sequence rules, stop conditions, handoff rules
 
+## Bootstrapper.ai & Ownable OS Daily Operating Routine
+
+- [ ] 🌟 Independence Chapter Home: Check 90-day plan card, chapter context, sponsor updates, and current activation step.
+- [ ] 🧭 Ownable OS Command Center: Review Ownable Score, business valuation, wedge equity, discount rate, and active Simple Bets.
+- [ ] 📈 Profit Engine & CRM Workspace: Check CRM Inbox, triage replies, advance deal pipeline (Lead -> Qualified -> Proposal -> Negotiation -> Won), and review Scorecard.
+- [ ] 💳 Financial Engine (Mercury): Review real-time cash balance, burn/runway projection, verify account classifications, and scan recent transactions.
+- [ ] ⚙️ Value Engine & Protocols: Select ProfitFlow targets, review diagnostics, and assess packaged workflow protocol readiness.
+- [ ] 👥 People Engine & Hours: Check owner focused work allocation vs. delegation targets, contractor capacity, and seat assignments.
+- [ ] 🔄 Control Layer Bridge & Sync: Mirror any serious business/revenue commitments into local control sheet/repo without manual duplicate drift.
+
 ## Marketing And Sales Moves
 
 - [ ] MKT-05 Outreach & Engagement (Manual / Reach-assisted): Live Reach testing is producing real data and must stay controlled
@@ -65,11 +75,11 @@ Status: generated
 
 ## Recent Source Notes
 
-- CC-2026-08-30-003 UI / Command Center / Fullstack: Built and deployed full-featured Agency Command Center (/command-center) featuring: Operating Priorities / SOP Directives, Deployable SOP Workflows / DAG execution dispatch (/api/workflows/:id/run), Swarm Agents monitor (/api/agents), Human-in-the-Loop pending approval queue (/api/runs/:id/approve / reject), and Ops Orchestrator natural language terminal (/api/orchestrator/chat). Mounted /command-center in App.tsx and resolved 404 route gap.
-- CC-2026-09-02-001 Governance / Drift Scanner / Catalog Standardization: Enhanced automated documentation drift scanner (scripts/drift/drift-scan.mjs) to recursively inspect the entire 74-document operations catalog with lifecycle-aware historical exemptions; standardized YAML frontmatter headers across core SOPs and navigation documents; verified zero drift findings and passed change-control checks.
-- CC-2026-09-02-002 UI / Commercial Alignment / Pricing / Routing: Reduced Startup Operational Excellence digital book price from $49.99 to $19.99 across product registry, reconciliation doc, and marketplace; added /contact and /demo route aliases in App.tsx; harmonized public homepage pricing with canonical Offer Ladder (Founder Signal System $1k, Ownable OS $500/mo, Playbooks $149/mo); enriched /features with 7-department granular workflow breakdowns; wired interactive action handlers on Marketplace cards.
-- CC-2026-09-02-003 Fullstack / Swarms / Agents Hub: Replaced legacy static mock in client/src/pages/Agents.tsx with live TanStack React Query integration communicating with /api/agents; mounted POST /api/agents/:id/toggle and POST /api/agents/deploy endpoints in Express; added interactive modal for deploying new agent swarm nodes, live pause/resume mutation controls, telemetry metrics, and direct links to Command Center activity.
-- CC-2026-09-02-004 Fullstack / Auditing / SAIF Governance: Built and wired fullstack System Auditing & Governance engine (GET /api/audit-logs, GET /api/audit-logs/stats, GET /api/audit-logs/export, POST /api/audit-logs/:id/approve, POST /api/audit-logs/:id/reject). Rebuilt client/src/pages/Auditing.tsx with live React Query hooks, 24h event telemetry counters, SAIF compliance metrics, status filter tabs, search filtering, 1-click CSV audit export, and interactive model trace inspection modal.
+- CC-2026-09-03-007 Fullstack / Strategic North Star / Ownable OS & Equity Independence Integration: Ingested the foundational Ownable OS and Equity Independence doctrine into the Ops Agent and Features showroom. Explicitly grounded all 7 departments (Financial, Profit, Value, People engines) in preparing founders for the Bootstrapper.ai Independence Model (https://bootstrapper.ai/chapters/independence-mo) and Building Transferable Equity (https://bootstrapper.ai/build-equity?p_grain=LW).
+- CC-2026-09-03-008 Fullstack / Lead Generation / Official Bootstrapper.ai Partner Diagnostic Gateways: Integrated official Bootstrapper.ai AgentLab partner profile (https://bootstrapper.ai/@agentlab) and 5 dedicated lead diagnostic pathways (workflow_automation, crm, lead_generation, business_valuation_exit, business_financing) across Ops Agent prompt and Services showroom.
+- CC-2026-09-03-009 Fullstack / Branding / Agency Multi-Logo Header Integration: Replaced the generic placeholder AL box in the top banner navigation with the authentic 5-brand agency cluster copied from desktop assets in exact sequential order: (1) URC Heritage Green logo (urc-logo-old.webp), (2) URC Blue & Gold logo (urc-logo-new.png), (3) Fundable Consulting logo (fundable-consulting-logo.png), (4) Tactix logo (tactix-logo.jpg), and (5) AgentLab avatar (agentlab-avatar.png). Cleanly sized at 28x28px with hover scaling and tooltip indicators.
+- CC-2026-09-03-010 Fullstack / UI-UX / Modern Luminous Obsidian Palette & Interactive Swarm Visualizer: Overhauled design system from flat dark blue into a modern luminous dark obsidian canvas with ambient gradient orbs (indigo, purple, cyan, emerald), grid mesh textures, and glassmorphic panels; rebuilt Home page with an interactive Multi-Agent DAG Orchestration visualizer widget, 4-engine Ownable OS cockpit cards, and URC brand ecosystem showcase.
+- CC-2026-09-03-011 Fullstack / Orchestration & Lead Capture / Live Ops Agent OS Execution & Founder Intake Wiring: Connected the ubiquitous Ops Agent modal directly to live OS execution with structured Multi-Agent DAG Action Cards, step-by-step node checklists, real-time "Approve & Execute DAG in OS" dispatch, and /api/orchestrator/execute runtime handler; mounted founderIntakeRouter onto main TRPC app router in server/routers.ts and enabled instant qualification and auto-lead capture in LiveChat.tsx.
 
 ## Source Boundary
 

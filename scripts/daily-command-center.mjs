@@ -168,6 +168,18 @@ function renderList(
   return items.map(item => `${prefix}${item}`).join("\n");
 }
 
+function getBootstrapperTasks() {
+  return [
+    { title: "🌟 Independence Chapter Home", desc: "Check 90-day plan card, chapter context, sponsor updates, and current activation step." },
+    { title: "🧭 Ownable OS Command Center", desc: "Review Ownable Score, business valuation, wedge equity, discount rate, and active Simple Bets." },
+    { title: "📈 Profit Engine & CRM Workspace", desc: "Check CRM Inbox, triage replies, advance deal pipeline (Lead -> Qualified -> Proposal -> Negotiation -> Won), and review Scorecard." },
+    { title: "💳 Financial Engine (Mercury)", desc: "Review real-time cash balance, burn/runway projection, verify account classifications, and scan recent transactions." },
+    { title: "⚙️ Value Engine & Protocols", desc: "Select ProfitFlow targets, review diagnostics, and assess packaged workflow protocol readiness." },
+    { title: "👥 People Engine & Hours", desc: "Check owner focused work allocation vs. delegation targets, contractor capacity, and seat assignments." },
+    { title: "🔄 Control Layer Bridge & Sync", desc: "Mirror any serious business/revenue commitments into local control sheet/repo without manual duplicate drift." }
+  ];
+}
+
 function renderBrief({
   activeQueue,
   openBuildItems,
@@ -178,6 +190,7 @@ function renderBrief({
   const actions = topActions(activeQueue, openBuildItems);
   const marketingSales = marketingAndSalesMoves(activeQueue);
   const handoffs = followUpsAndHandoffs(activeQueue);
+  const bootstrapperTasks = getBootstrapperTasks().map(t => `${t.title}: ${t.desc}`);
   const openNeeded = openBuildItems
     .filter(item => /Needed|Pending|Deferred/i.test(item.status))
     .slice(0, 8)
@@ -193,6 +206,10 @@ Status: generated
 ## Top 3 Actions
 
 ${renderList(actions, "No items found in current source scan.", true)}
+
+## Bootstrapper.ai & Ownable OS Daily Operating Routine
+
+${renderList(bootstrapperTasks, "No items found in current source scan.", true)}
 
 ## Marketing And Sales Moves
 
@@ -285,6 +302,7 @@ async function main() {
 
     // Generate dynamic tasks HTML
     const actions = topActions(activeQueue, openBuildItems);
+    const bootstrapperTasks = getBootstrapperTasks();
     const marketingSales = marketingAndSalesMoves(activeQueue);
     const handoffs = followUpsAndHandoffs(activeQueue);
     const openNeeded = openBuildItems
@@ -298,6 +316,15 @@ async function main() {
     let tasksHtml = `<!-- DYNAMIC TASKS START -->\n`;
     tasksHtml += `  <div class="ctx"><strong>Today's context:</strong> Generated from active agency operating manual on ${new Date().toLocaleString()}.</div>\n\n`;
 
+    // Quick Launch Bar
+    tasksHtml += `  <div style="display:grid; gap:10px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin-bottom:24px;">\n`;
+    tasksHtml += `    <a href="https://bootstrapper.ai/app/crm" target="_blank" style="text-decoration:none; background:#01a9a9; color:#fff; font-weight:700; font-size:.82rem; padding:10px 14px; border-radius:8px; text-align:center; box-shadow:0 2px 6px rgba(1,169,169,.25);">🚀 Bootstrapper CRM</a>\n`;
+    tasksHtml += `    <a href="https://bootstrapper.ai" target="_blank" style="text-decoration:none; background:#0b2440; color:#fff; font-weight:700; font-size:.82rem; padding:10px 14px; border-radius:8px; text-align:center; box-shadow:0 2px 6px rgba(11,36,64,.2);">🧭 Ownable OS Cockpit</a>\n`;
+    tasksHtml += `    <a href="http://localhost:5000/command-center" target="_blank" style="text-decoration:none; background:#fff; color:#0b2440; border:1px solid #e4e9ef; font-weight:700; font-size:.82rem; padding:10px 14px; border-radius:8px; text-align:center;">⚡ Agency Command Hub</a>\n`;
+    tasksHtml += `    <a href="https://mercury.com" target="_blank" style="text-decoration:none; background:#fff; color:#0b2440; border:1px solid #e4e9ef; font-weight:700; font-size:.82rem; padding:10px 14px; border-radius:8px; text-align:center;">💳 Mercury Banking</a>\n`;
+    tasksHtml += `    <a href="https://bossrob.gumroad.com" target="_blank" style="text-decoration:none; background:#fff; color:#0b2440; border:1px solid #e4e9ef; font-weight:700; font-size:.82rem; padding:10px 14px; border-radius:8px; text-align:center;">📚 Gumroad Store</a>\n`;
+    tasksHtml += `  </div>\n\n`;
+
     // Top 3
     tasksHtml += `  <h2>⭐ Top 3 Actions <span class="progress" data-progress-for="top3">0/${actions.length} done</span></h2>\n`;
     tasksHtml += `  <div class="top3"><ol id="top3">\n`;
@@ -308,6 +335,20 @@ async function main() {
       tasksHtml += `    </li>\n`;
     });
     tasksHtml += `  </ol></div>\n\n`;
+
+    // Bootstrapper & Ownable Daily Cadence
+    tasksHtml += `  <h2>🚀 Bootstrapper.ai &amp; Ownable OS Daily Routine <span class="progress" data-progress-for="bootstrapper">0/${bootstrapperTasks.length} done</span></h2>\n`;
+    tasksHtml += `  <div style="background:#f0fdfa; border:1px solid #ccfbf1; border-left:4px solid #01a9a9; border-radius:12px; padding:12px 18px 16px; margin-bottom:20px;">\n`;
+    tasksHtml += `    <p style="font-size:.84rem; color:#0f766e; margin:0 0 10px 0;"><strong>10-Minute Founder Cockpit:</strong> Spend ten minutes in Bootstrapper.ai / Ownable before scattered tools. Mirror key commitments to local control layer.</p>\n`;
+    tasksHtml += `    <ul id="bootstrapper">\n`;
+    bootstrapperTasks.forEach((task, i) => {
+      tasksHtml += `      <li class="task-item" data-key="bootstrapper-${i}">\n`;
+      tasksHtml += `        <label class="task"><input type="checkbox" class="chk"><span class="txt"><strong>${task.title}</strong>: ${task.desc}</span></label>\n`;
+      tasksHtml += `        <div class="note-wrap"><textarea class="note" placeholder="Observations, updates, or local mirrors..."></textarea></div>\n`;
+      tasksHtml += `      </li>\n`;
+    });
+    tasksHtml += `    </ul>\n`;
+    tasksHtml += `  </div>\n\n`;
 
     // Marketing & Sales
     tasksHtml += `  <h2>📣 Marketing &amp; Sales Moves <span class="progress" data-progress-for="mkt">0/${marketingSales.length} done</span></h2>\n`;
@@ -330,6 +371,17 @@ async function main() {
       tasksHtml += `    </li>\n`;
     });
     tasksHtml += `  </ul>\n\n`;
+
+    // Active Offer Ladder Quick Reference
+    tasksHtml += `  <h2>🎯 Active Offer Ladder &amp; Commercial Tiers</h2>\n`;
+    tasksHtml += `  <div style="background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-bottom:20px; box-shadow:0 1px 3px rgba(11,36,64,.05);">\n`;
+    tasksHtml += `    <div style="display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); font-size:.85rem;">\n`;
+    tasksHtml += `      <div style="border-left:3px solid #01a9a9; padding-left:10px;"><strong>Front-End Diagnostic:</strong> Founder Signal System ($1,000 one-time)</div>\n`;
+    tasksHtml += `      <div style="border-left:3px solid #0b2440; padding-left:10px;"><strong>Core Continuity:</strong> Ownable OS / Advisory ($500/month)</div>\n`;
+    tasksHtml += `      <div style="border-left:3px solid #f5a623; padding-left:10px;"><strong>Self-Serve Playbooks:</strong> Workflow Kits ($149/month)</div>\n`;
+    tasksHtml += `      <div style="border-left:3px solid #10b981; padding-left:10px;"><strong>Authority Asset:</strong> Operational Books ($19.99 on Gumroad)</div>\n`;
+    tasksHtml += `    </div>\n`;
+    tasksHtml += `  </div>\n\n`;
 
     // Parking Lot
     tasksHtml += `  <h2>🅿️ Parking Lot <span class="progress" data-progress-for="pk">0/${openNeeded.length} done</span></h2>\n`;

@@ -4,6 +4,20 @@ All notable changes to the AI Native Agency Deepened/agentlab repo are documente
 
 ---
 
+## [Unreleased] - 2026-09-03
+
+### Added
+
+- **Bootstrapper.ai & Ownable OS Daily Routine Integration (`scripts/daily-command-center.mjs`, `Desktop/command-center-html.html`, `docs/operations/daily-command-center/2026-09-03-command-brief.md`)**: Integrated the 10-minute founder pulse checklist (Independence Chapter Home, Ownable OS Command Center, Profit Engine CRM, Financial Engine Mercury, Value Engine Protocols, People Engine Hours, and Control Layer Sync) into the Desktop Command Center and dated daily brief automation. Added quick-launch launcher tiles (Bootstrapper CRM, Ownable OS, Agency Command Hub, Mercury, Gumroad) and Offer Ladder tier reference widget.
+- **Fullstack Dynamic Marketplace & 7-Department Knowledge Playbooks (`server/controllers/marketplace.ts`, `client/src/pages/Marketplace.tsx`)**: Rebuilt the Marketplace with live TanStack React Query hooks, blueprint inspection modals, dynamic mounting/unmounting mutations, and 7-department knowledge bundles (MKT, SAL, OPS, FIN, FUL, CUL, AFT).
+- **Official Python SDK (`sdk/python/`)**: Packaged the official `agentlab-sdk` Python library with Colab Agent Sessions API support, browser-use automation, SSE event streaming, and DAG workflow execution harness.
+- **Founder Signal System & Gamified Beta Programs (`client/src/pages/FounderSignalSystem.tsx`, `client/src/pages/Dashboard.tsx`)**: Built dedicated `/founder-signal-system` sprint showcase, 30-day trial countdown with +14-day extensions, and gamified beta badge progression (Explorer, Contributor, Alpha Insider).
+- **Comprehensive Sales Showroom & Commercial Offer Ladder (`client/src/pages/Pricing.tsx`)**: Rebuilt `/pricing` into an authentic Uncle Robert servant leadership showroom with $1k Founder Signal System, $500/mo Ownable OS, $149/mo Workflow Kits, $19.99 Startup Operational Excellence book perk, and Play Store ecosystem app showcases.
+- **Luminous Obsidian Design System & Interactive Home Visualizer (`client/src/index.css`, `client/src/pages/Home.tsx`, `client/src/components/Navigation.tsx`)**: Overhauled UI with dark obsidian gradients, ambient glowing lighting, authentic 5-brand agency logo cluster header, and interactive multi-agent DAG orchestration visualizer.
+- **Live Ops Agent OS Execution & Instant Founder Intake Router (`server/routers.ts`, `server/controllers/orchestrator.ts`, `client/src/components/OpsAgentChat.tsx`, `client/src/components/LiveChat.tsx`)**: Connected ubiquitous Ops Agent modal directly to live OS DAG execution and wired tRPC founder qualification and auto-lead capture in LiveChat.
+
+---
+
 ## [Unreleased] - 2026-09-02
 
 ### Added
