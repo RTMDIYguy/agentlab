@@ -531,6 +531,8 @@ each piece does and its current status. Does not contain access credentials.
 | CRM                    | HubSpot Free                   | Contact capture and 2-way deal pipeline                 | Active     | PLAT-HUBSPOT               |
 | Office suite           | Microsoft 365                  | Preferred document backbone                             | Active     | PLAT-M365                  |
 | Documentation Surface  | Mintlify                       | Public developer & client documentation portal          | Active     | PLAT-MINTLIFY              |
+| Domain Registrar & DNS | Ionos                          | DNS for `agent-lab.tech` (marketing) & `agent-lab.me` (podcast studio) | Active | PLAT-IONOS         |
+| Marketing Website CMS  | B12                            | Marketing website design and content engine (`agent-lab.tech`) | Active | PLAT-B12              |
 | Analytics sandbox      | KNIME                          | Data exploration — isolated; no production dependency   | Evaluation | PLAT-KNIME                 |
 
 ### Sandbox Rules

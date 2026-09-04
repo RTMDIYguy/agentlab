@@ -11,8 +11,9 @@ AgentLab is an advanced AI workflow orchestration platform built to automate bus
 
 ## 🚀 How It Works (Domains & Delivery Models)
 
-- **Live Production OS & SaaS Dashboard**: Deployed on Google Cloud Run at **[https://agentlab-718497644379.us-central1.run.app/dashboard](https://agentlab-718497644379.us-central1.run.app/dashboard)** (Base: `https://agentlab-718497644379.us-central1.run.app`). This is the live operating system where team members and clients access swarms, CRM, workflow execution, and real-time dashboards.
-- **Official Public Marketing Website**: Hosted at [agent-lab.tech](https://agent-lab.tech) (Built via B12, hosted on Ionos) with companion domain [agent-lab.me](https://agent-lab.me) (Ionos) for prospective clients and public overviews.
+- **Live Production OS & SaaS Dashboard**: Deployed on Google Cloud Run at **[https://agentlab-718497644379.us-central1.run.app/dashboard](https://agentlab-718497644379.us-central1.run.app/dashboard)** (Base: `https://agentlab-718497644379.us-central1.run.app`). This is the live multi-tenant operating system where team members and clients access autonomous swarms, CRM, workflow execution, and real-time dashboards.
+- **Official Public Marketing Website**: Hosted at [agent-lab.tech](https://agent-lab.tech) (Built via B12, hosted on Ionos) for prospective clients, enterprise inquiry, and public overviews.
+- **Podcast Studio & Media Hub (Upcoming)**: Designated domain `agent-lab.me` (Hosted on Ionos) reserved for the upcoming AgentLab Podcast Studio, founder interview series, and multimedia content feeds.
 
 We offer two distinct ways to access and deploy AgentLab based on your technical requirements and data sovereignty needs:
 

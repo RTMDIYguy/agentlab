@@ -124,7 +124,7 @@ platforms:
   - id: PLAT-IONOS
     name: "Ionos"
     category: domain_registrar_and_dns
-    purpose: "Domain registration and DNS hosting for agent-lab.tech and agent-lab.me."
+    purpose: "Domain registration and DNS hosting for agent-lab.tech (active B12 marketing site) and agent-lab.me (designated for upcoming AgentLab Podcast Studio & Media Hub)."
     environment: production
     status: active
     criticality: high
