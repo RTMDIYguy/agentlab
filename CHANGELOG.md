@@ -15,6 +15,7 @@ All notable changes to the AI Native Agency Deepened/agentlab repo are documente
 - **Comprehensive Sales Showroom & Commercial Offer Ladder (`client/src/pages/Pricing.tsx`)**: Rebuilt `/pricing` into an authentic Uncle Robert servant leadership showroom with $1k Founder Signal System, $500/mo Ownable OS, $149/mo Workflow Kits, $19.99 Startup Operational Excellence book perk, and Play Store ecosystem app showcases.
 - **Luminous Obsidian Design System & Interactive Home Visualizer (`client/src/index.css`, `client/src/pages/Home.tsx`, `client/src/components/Navigation.tsx`)**: Overhauled UI with dark obsidian gradients, ambient glowing lighting, authentic 5-brand agency logo cluster header, and interactive multi-agent DAG orchestration visualizer.
 - **Live Ops Agent OS Execution & Instant Founder Intake Router (`server/routers.ts`, `server/controllers/orchestrator.ts`, `client/src/components/OpsAgentChat.tsx`, `client/src/components/LiveChat.tsx`)**: Connected ubiquitous Ops Agent modal directly to live OS DAG execution and wired tRPC founder qualification and auto-lead capture in LiveChat.
+- **Canonical Repo-Native Owner's Manual & Collaborator Access Registry (`docs/operations/agency-owners-manual.md`, `README.md`)**: Promoted the Agency Owner's Manual to v1.0 canonical status, documenting fullstack SaaS architecture, autonomous swarm nodes, 7-department playbooks, and registered collaborator access control (Robert T. McCarthy, Lorenzo at `lorenzo@nwnadvisory.com`, and Chris at `chris@bootstrappercapital.com`). Marked build item as Done.
 
 ---
 

@@ -7,17 +7,17 @@ status: active
 owner: "Robert T. McCarthy / OPS"
 canonical_sources:
   - governance/registry/
-last_reviewed: 2026-08-28
-next_review: 2026-09-28
-version: "v0.3"
+last_reviewed: 2026-09-03
+next_review: 2026-10-03
+version: "v1.0"
 ---
 
 # Agency Owner's Manual
 
 **Owner:** Robert T. McCarthy / Uncle Robert Consulting LLC
 **Date Created:** 2026-06-09
-**Last Structural Update:** 2026-08-28
-**Version:** v0.3 — updated with August 2026 automations, UI overhaul, Postman sync, Gumroad, Resend, and Virtusa walkthrough
+**Last Structural Update:** 2026-09-03
+**Version:** v1.0 — Canonical repo-native Owner's Manual featuring fullstack SaaS architecture, autonomous swarm agents, Colab sessions Python SDK, Bootstrapper.ai & Ownable OS daily routine, and registered collaborator access control
 **Purpose:** Operational reference for running the URC family of businesses. Covers business orientation, workflows, tools, SOPs, finance controls, secret handling, products, infrastructure, and change control in one navigable document.
 
 > **SECURITY CONSTRAINT (permanent):** This document must never contain secret values,
@@ -31,7 +31,7 @@ version: "v0.3"
 
 This is the owner's manual — not the architecture deck, not the SOP library, not the
 strategy doc. Read it when you want to know where the controls are, why a decision was
-made, or how to orient a new agent or operator.
+made, or how to orient a new agent, collaborator, or operator.
 
 - **New to the business?** Start at [Section 1](#1-start-here), then read [Section 2](#2-business-map).
 - **Running a workflow?** Go to [Section 4](#4-workflow-map), then [Section 5](#5-sop-library).
@@ -53,9 +53,10 @@ made, or how to orient a new agent or operator.
 - `docs/operations/urc-agent-execution-checklist.md` — rules every agent must follow before acting
 - `docs/operations/urc-v1-operating-architecture.md` — business structure and platform decisions
 - `docs/operations/urc-90-day-implementation-plan.md` — current execution horizon
+- `docs/operations/bootstrapper-ai-operating-field-guide.md` — daily & weekly operating rhythm
 
 **Owner:** Robert T. McCarthy / OPS
-**Last reviewed:** 2026-06-10
+**Last reviewed:** 2026-09-03
 **Status:** Active
 **Classification:** Public-facing (no sensitive content in this section)
 
@@ -63,18 +64,28 @@ made, or how to orient a new agent or operator.
 
 The agency should be built so a capable operator can get in and drive it. That means one obvious starting point, named business lanes, visible source-of-truth locations, clear workflow ownership, a small number of live offers, documented manual fallbacks, and SOPs written from real work, not theory.
 
+### Authorized Repository Collaborators
+
+In accordance with repository governance, only registered and authorized collaborators may clone, download, or execute this codebase:
+
+| Name | Organization & Role | Email / Access Identity | Role / Permissions | Status |
+|---|---|---|---|---|
+| **Robert T. McCarthy** | Uncle Robert Consulting LLC / Principal | `robert@unclerobertconsulting.com` | Owner & Admin | Active |
+| **Lorenzo** | NWN Advisory / Strategic Partner | `lorenzo@nwnadvisory.com` | Registered Collaborator | Active |
+| **Chris** | Bootstrapper Capital / Community Director | `chris@bootstrappercapital.com` | Registered Collaborator | Active |
+
 ### AI Session Lessons
 
 #### The 90% Context Rule
 
 **Date logged:** 2026-06-09
 
-Do not close a Claude session at 90% of context capacity assuming you can pick back up cleanly. Claude sessions are stateless across context boundaries. The next session opens cold with no memory of what was done unless you explicitly pass a handoff prompt.
+Do not close an AI session at 90% of context capacity assuming you can pick back up cleanly. AI sessions are stateless across context boundaries. The next session opens cold with no memory of what was done unless you explicitly pass a handoff prompt.
 
 **What to do instead:**
 
 1. Before the session runs out, write a handoff prompt describing what was accomplished, what is in progress, which files were created or changed, and what the next action is.
-2. Save that handoff prompt somewhere retrievable (notes file, draft message, anywhere).
+2. Save that handoff prompt in `docs/operations/session-handoff-YYYY-MM-DD.md` or git commit logs.
 3. Use the remaining session to reach a clean stopping point.
 4. Open the next session with the handoff prompt as the first message.
 
@@ -90,40 +101,48 @@ to each other, and what each one owns. The source of truth for "which entity doe
 **Source of truth:** `docs/operations/urc-v1-operating-architecture.md`
 
 **Owner:** Robert T. McCarthy / OPS
-**Last reviewed:** 2026-06-10
+**Last reviewed:** 2026-09-03
 **Status:** Active — v1.0 canonical architecture registered in `governance/registry/`
 **Classification:** Public-safe summary; full architecture doc is internal
 
 ### Entities
 
-| Entity                                       | Role                                                                                      | Notes                                                                                                                                                                                                                                 |
-| -------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Uncle Robert Consulting LLC (URC)**        | Main operating entity. Consulting, advisory, IP ownership, client invoicing.              | All client contracts run through URC.                                                                                                                                                                                                 |
-| **Tactix**                                   | Execution pod. Upwork-facing delivery arm.                                                | Handles billable project work; keeps client-facing delivery separate from URC brand.                                                                                                                                                  |
-| **Bootstrapper Capital**                     | Audience, community, and funnel. Roundtables, bootcamps, continuity programs.             | Independence Chapter on Bootstrapper.ai. Feeds URC pipeline.                                                                                                                                                                          |
-| **Agent Lab**                                | Core SaaS platform & DAG orchestrator. Powers multi-agent execution & client workspaces.  | Live at https://agent-lab.tech. Canonical specifications in `governance/registry/`.                                                                                                                                                  |
-| **Bootstrapper's Guide to the World (book)** | Authority and conversion asset. 28 bootstrapped business models, $59.99.                  | Listed in Agent Lab & Gumroad. Feeds Bootstrapper Capital funnel.                                                                                                                                                                     |
-| **Startup Operational Excellence**           | Authority and conversion asset. Book rewrite & custom Gumroad sales page live.            | Custom landing page live in `Sales Department/landing_soe.html`.                                                                                                                                                                      |
-| **Pulse Social**                             | Multi-platform social media scheduling and real-time engagement analytics web app.        | Live at https://pulse-social-agentlab-projects.vercel.app (React frontend + Cloud Run FastAPI backend + MongoDB Atlas).                                                                                                               |
+| Entity | Role | Notes |
+|---|---|---|
+| **Uncle Robert Consulting LLC (URC)** | Main operating entity. Consulting, advisory, IP ownership, client invoicing. | All client contracts run through URC. |
+| **Tactix** | Execution pod. Upwork-facing delivery arm. | Handles billable project work; keeps client-facing delivery separate from URC brand. |
+| **Bootstrapper Capital** | Audience, community, and funnel. Roundtables, bootcamps, continuity programs. | Independence Chapter on Bootstrapper.ai. Feeds URC pipeline. |
+| **Agent Lab** | Core SaaS platform & DAG orchestrator. Powers multi-agent execution & client workspaces. | Live at https://agent-lab.tech. Canonical specifications in `governance/registry/`. |
+| **Bootstrapper's Guide to the World (book)** | Authority and conversion asset. 28 bootstrapped business models, $59.99. | Listed in Agent Lab & Gumroad. Feeds Bootstrapper Capital funnel. |
+| **Startup Operational Excellence (book)** | Authority and conversion asset. Practical operational doctrine, $19.99. | Digital book perk included in beta and pro tiers. Listed on Gumroad. |
+| **Pulse Social** | Multi-platform social media scheduling and real-time engagement analytics web app. | Live at https://pulse-social-agentlab-projects.vercel.app. |
+| **Market Marksman** | Opportunity radar (Standard Edition + Nevada Filings Edition). | Live at https://marketmarksman.ai.studio. |
+| **LeadPulse** | Lead accuracy and data enrichment engine. | Live at https://leadpulse-ai-lead-accuracy-enrichment-engine.ai.studio. |
 
-### Offer Ladder (Phase 1 LOCKED v1.0)
+### Canonical Offer Ladder (v1.0 LOCKED)
 
-Book ($59.99) → Roundtable (free/invite) → Founder Signal System ($1,000) → $500/mo Ownable OS → URC Workflow engagement
+1. **Authority Assets:** *Startup Operational Excellence* ($19.99) & *Bootstrapper's Guide to the World* ($59.99)
+2. **Community & Events:** Founder Roundtables & Independence Chapter Meetups (Free / Invite)
+3. **Front-End Diagnostic Sprint:** Founder Signal System ($1,000 one-time 5-day sprint)
+4. **Core Operating Continuity:** Ownable OS Advisory / Pro Membership ($500/month)
+5. **Self-Serve Knowledge Playbooks:** 7-Department Workflow Kits ($149/month)
 
-### Canonical Platform Decisions (as of 2026-08-28)
+### Canonical Platform Decisions (as of 2026-09-03)
 
 - **Office backbone:** Microsoft 365 (preferred when available; local/repo files as bootstrap bridge)
 - **Project/dashboard layer:** Notion (lightweight dashboard only; canonical truth in `governance/registry/`)
 - **Core SaaS Backend & Orchestrator:** Google Cloud Run containerized Node/Express API (PLAT-GCP, SVC-SERVER-API)
-- **Production Database:** PostgreSQL with Drizzle ORM (PLAT-POSTGRES; SQLite is historical/local dev prototype)
+- **Production Database:** PostgreSQL with Drizzle ORM (PLAT-POSTGRES; Neon Serverless Postgres)
 - **Frontend & Edge Hosting:** Vercel (React 19 / Vite SPA) & Cloud Run
 - **Payments & Subscriptions:** Stripe (PLAT-STRIPE) + Gumroad
 - **Email Delivery:** Resend SMTP (`unclerobertconsulting.com` verified domain)
 - **Automation:** Native Agent Lab DAG Engine + self-hosted n8n workflows
-- **CRM:** HubSpot Free Sales CRM (live 2-way sync with CRM-Lite via Google Sheets ADC & n8n)
+- **CRM:** Bootstrapper.ai CRM & HubSpot Free Sales CRM (live 2-way sync with CRM-Lite via Google Sheets ADC & n8n)
 - **Testing Engine:** Autonoma (`@autonoma-ai/sdk` for automated E2E synthetic testing)
 - **Application Security:** Aikido Security (continuous code, CVE, and secret scanning)
 - **Documentation Surface:** Mintlify (`docs/`) generated/derived from canonical registry
+- **Mobile & Roaming Bridge:** AI Studio ingestion bridge (`/api/aistudio`)
+- **Python Developer SDK:** Official `agentlab-sdk` (`sdk/python/`)
 
 ---
 

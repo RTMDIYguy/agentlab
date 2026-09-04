@@ -49,7 +49,7 @@ AgentLab doesn't just run agents; it audits them.
 
 ## 🛠️ Development (For Contributors)
 
-If you are a certified partner accessing this repo, here is how to run AgentLab locally:
+If you are an authorized collaborator accessing this repo, here is how to run AgentLab locally:
 
 ```bash
 # Install dependencies
@@ -59,7 +59,18 @@ npm install
 npm run dev
 ```
 
+## 👥 Authorized Repository Collaborators
+
+In accordance with repository governance, only registered collaborators and certified partners are authorized to clone, download, and deploy from this source repository:
+
+| Name | Organization & Role | Email / Access Identity | Role / Permissions | Status |
+|---|---|---|---|---|
+| **Robert T. McCarthy** | Uncle Robert Consulting LLC / Principal | `robert@unclerobertconsulting.com` | Owner & Admin | Active |
+| **Lorenzo** | NWN Advisory / Strategic Partner | `lorenzo@nwnadvisory.com` | Registered Collaborator | Active |
+| **Chris** | Bootstrapper Capital / Community Director | `chris@bootstrappercapital.com` | Registered Collaborator | Active |
+
 ---
 
-*AgentLab, a Uncle Robert Consulting LLC project. All rights reserved.*
+*AgentLab, an Uncle Robert Consulting LLC project. All rights reserved.*
 *Servant leadership, honest communication, and radical transparency.*
+

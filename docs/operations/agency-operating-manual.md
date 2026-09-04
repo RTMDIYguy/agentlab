@@ -341,7 +341,7 @@ These lessons should drive SOPs and automation design:
 | Draft SOP for Google Drive client-folder packet population                                                               | Agent          | Done (notes: Finished the SOP!) |
 | Decide Independence Chapter CRM-lite bridge location and required CRM-compatible columns                                 | Robert + agent | Needed                          |
 | Reconcile Independence Chapter messaging against MVP beta messaging                                                      | Robert + agent | Needed                          |
-| Build first repo-native Owner's Manual from the blueprint                                                                | Robert + agent | Needed                          |
+| Build first repo-native Owner's Manual from the blueprint                                                                | Robert + agent | Done                            |
 | Run weekly workflow audit bank for process completeness, stack stability, dependencies, responsibilities, and efficiency | Robert + agent | Needed                          |
 | Define safe sandbox use plan for VPS and KNIME                                                                           | Robert + agent | Needed                          |
 | Park Docker / OpenClaw infrastructure repair until money tasks are stable                                                | Robert + agent | Deferred                        |
