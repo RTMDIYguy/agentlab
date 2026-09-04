@@ -155,6 +155,22 @@ export async function processPendingRuns() {
               unlockedDepartments
             );
 
+            // Refusal & Inability Verification Guardrail:
+            // If the model responded with a text refusal without executing tools, do not mark as false positive completed.
+            const resultText = (typeof result.outputPayload?.result === "string" ? result.outputPayload.result : "").toLowerCase();
+            const refusalMarkers = [
+              "cannot directly access",
+              "do not have access to",
+              "my current capabilities do not include",
+              "i do not have direct access",
+              "unable to access external",
+              "i do not have the ability to access"
+            ];
+            const hasRefusal = refusalMarkers.some(marker => resultText.includes(marker));
+            if (hasRefusal) {
+              throw new Error(`Agent execution failed capability check: ${result.outputPayload.result}`);
+            }
+
             // 8. Save output and update context
             currentContext = { ...currentContext, ...result.outputPayload };
 
