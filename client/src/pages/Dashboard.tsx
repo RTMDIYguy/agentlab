@@ -57,15 +57,17 @@ export default function Dashboard() {
       if (!res.ok) throw new Error("Failed to fetch workflows");
       return res.json();
     },
+    refetchInterval: 5000,
   });
 
-  const { data: agentsData } = useQuery<{ agents: any[] }>({
+  const { data: agentsData, isLoading: isLoadingAgents } = useQuery<{ agents: any[] }>({
     queryKey: ["agents"],
     queryFn: async () => {
       const res = await fetch("/api/agents");
       if (!res.ok) throw new Error("Failed to fetch agents");
       return res.json();
     },
+    refetchInterval: 5000,
   });
 
   // Fetch 30-day Trial Status
