@@ -272,13 +272,23 @@ export async function handleOrchestratorChat(
   res: Response
 ): Promise<void> {
   const startTime = Date.now();
-  const { prompt } = req.body as OrchestratorChatRequest;
+  const rawPrompt = req.body.prompt || req.body.message;
+  const requestedModel = req.body.model || "gemini-2.5-flash";
+  const attachments = req.body.attachments as Array<{ name: string; content: string }> | undefined;
 
-  if (!prompt || typeof prompt !== "string") {
+  if (!rawPrompt || typeof rawPrompt !== "string") {
     res
       .status(400)
-      .json({ error: 'Field "prompt" is required and must be a string.' });
+      .json({ error: 'Field "prompt" or "message" is required and must be a string.' });
     return;
+  }
+
+  let prompt = rawPrompt;
+  if (attachments && attachments.length > 0) {
+    const attachmentText = attachments
+      .map(a => `[Attached Document: ${a.name}]\n${a.content}`)
+      .join("\n\n");
+    prompt = `${rawPrompt}\n\n--- Context Documents ---\n${attachmentText}`;
   }
 
   let unlockedDepartments: string[] = [];

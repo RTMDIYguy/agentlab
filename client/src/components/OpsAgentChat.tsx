@@ -18,7 +18,25 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import type { WorkflowProposal } from "@server/domain/schemas";
+
+export type WorkflowProposalStep = {
+  stepNumber: number;
+  title: string;
+  type: string;
+  detail: string;
+  agentId?: string;
+};
+
+export type WorkflowProposal = {
+  id: string;
+  name: string;
+  description: string;
+  departmentCode: string;
+  steps: WorkflowProposalStep[];
+  reply?: string;
+  estimatedCostPerRun?: number | string;
+  estimatedLatencySeconds?: number | string;
+};
 
 type ChatMessage = {
   id: string;

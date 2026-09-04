@@ -52,7 +52,7 @@ const DEFAULT_WORKSPACE_WORKFLOWS: WorkflowSummaryDto[] = [
 
 import { getDb } from "../db";
 import { workflows, workflowSteps } from "../schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, asc } from "drizzle-orm";
 
 export async function getWorkflows(req: Request, res: Response): Promise<void> {
   try {
@@ -73,10 +73,31 @@ export async function getWorkflows(req: Request, res: Response): Promise<void> {
       .from(workflows)
       .where(eq(workflows.workspaceId, workspaceId));
 
+    const allSteps = await db
+      .select()
+      .from(workflowSteps)
+      .where(eq(workflowSteps.workspaceId, workspaceId))
+      .orderBy(asc(workflowSteps.orderIndex));
+
+    const stepsByWorkflow = allSteps.reduce<Record<string, any[]>>((acc, step) => {
+      if (!acc[step.workflowId]) acc[step.workflowId] = [];
+      acc[step.workflowId].push(step);
+      return acc;
+    }, {});
+
+    const enrichedWorkflows = workspaceWorkflows.map((wf) => {
+      const steps = stepsByWorkflow[wf.id] || [];
+      return {
+        ...wf,
+        steps,
+        stepsCount: steps.length,
+      };
+    });
+
     res.status(200).json({
       workspaceId,
-      workflows: workspaceWorkflows,
-      totalCount: workspaceWorkflows.length,
+      workflows: enrichedWorkflows,
+      totalCount: enrichedWorkflows.length,
     });
   } catch (error) {
     console.error("[Workflows Controller Error]:", error);
@@ -288,4 +309,125 @@ export async function updateWorkflowSchedule(req: Request, res: Response): Promi
     res.status(500).json({ error: "Failed to update schedule." });
   }
 }
+
+export async function updateWorkflow(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId;
+    if (!workspaceId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { workflowId } = req.params;
+    const { name, description, triggerType, cronExpression, status } = req.body;
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
+    const updatePayload: Record<string, any> = {};
+    if (name !== undefined) updatePayload.name = name;
+    if (description !== undefined) updatePayload.description = description;
+    if (triggerType !== undefined) updatePayload.triggerType = triggerType;
+    if (cronExpression !== undefined) updatePayload.cronExpression = cronExpression;
+    if (status !== undefined) updatePayload.status = status;
+    updatePayload.updatedAt = new Date();
+
+    const [updated] = await db
+      .update(workflows)
+      .set(updatePayload)
+      .where(and(eq(workflows.id, workflowId), eq(workflows.workspaceId, workspaceId)))
+      .returning();
+
+    if (!updated) {
+      res.status(404).json({ error: "Workflow not found" });
+      return;
+    }
+
+    res.status(200).json({ workflow: updated });
+  } catch (error) {
+    console.error("[updateWorkflow Error]:", error);
+    res.status(500).json({ error: "Failed to update workflow." });
+  }
+}
+
+export async function updateWorkflowSteps(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId;
+    if (!workspaceId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { workflowId } = req.params;
+    const { steps: newSteps } = req.body as {
+      steps: Array<{
+        id?: string;
+        orderIndex?: number;
+        stepType?: string;
+        title: string;
+        actionPrompt: string;
+        agentId?: string | null;
+      }>;
+    };
+
+    if (!Array.isArray(newSteps)) {
+      res.status(400).json({ error: "Field 'steps' must be an array." });
+      return;
+    }
+
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
+    // Verify workflow belongs to workspace
+    const [wf] = await db
+      .select()
+      .from(workflows)
+      .where(and(eq(workflows.id, workflowId), eq(workflows.workspaceId, workspaceId)));
+
+    if (!wf) {
+      res.status(404).json({ error: "Workflow not found" });
+      return;
+    }
+
+    // Replace steps transactionally (delete existing steps and re-insert new sequence)
+    await db
+      .delete(workflowSteps)
+      .where(and(eq(workflowSteps.workflowId, workflowId), eq(workflowSteps.workspaceId, workspaceId)));
+
+    if (newSteps.length > 0) {
+      const stepRows = newSteps.map((step, index) => ({
+        workspaceId,
+        workflowId,
+        orderIndex: typeof step.orderIndex === "number" ? step.orderIndex : index,
+        stepType: step.stepType || "agent",
+        title: (step.title || `Step ${index + 1}`).substring(0, 128),
+        actionPrompt: step.actionPrompt || step.title || "",
+        agentId: step.agentId || null,
+      }));
+
+      await db.insert(workflowSteps).values(stepRows);
+    }
+
+    // Return updated step list
+    const updatedSteps = await db
+      .select()
+      .from(workflowSteps)
+      .where(and(eq(workflowSteps.workflowId, workflowId), eq(workflowSteps.workspaceId, workspaceId)))
+      .orderBy(asc(workflowSteps.orderIndex));
+
+    res.status(200).json({
+      message: `Workflow steps updated successfully (${updatedSteps.length} steps configured).`,
+      steps: updatedSteps,
+    });
+  } catch (error) {
+    console.error("[updateWorkflowSteps Error]:", error);
+    res.status(500).json({ error: "Failed to update workflow steps." });
+  }
+}
+
 

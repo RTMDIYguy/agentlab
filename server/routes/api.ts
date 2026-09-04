@@ -1,7 +1,14 @@
 import { Router } from "express";
 import { handleOrchestratorChat, executeOrchestratorWorkflow } from "../controllers/orchestrator";
 import { getAgents, deployAgent, toggleAgentStatus } from "../controllers/agents";
-import { getWorkflows, deployWorkflow, createCustomWorkflow, updateWorkflowSchedule } from "../controllers/workflows";
+import {
+  getWorkflows,
+  deployWorkflow,
+  createCustomWorkflow,
+  updateWorkflowSchedule,
+  updateWorkflow,
+  updateWorkflowSteps,
+} from "../controllers/workflows";
 import {
   triggerRun,
   listRuns,
@@ -102,6 +109,8 @@ apiRouter.post("/agents/:id/toggle", toggleAgentStatus);
 apiRouter.get("/workflows", getWorkflows);
 apiRouter.post("/workflows", createCustomWorkflow);
 apiRouter.post("/workflows/deploy", deployWorkflow);
+apiRouter.patch("/workflows/:workflowId", updateWorkflow);
+apiRouter.put("/workflows/:workflowId/steps", updateWorkflowSteps);
 apiRouter.post("/workflows/:workflowId/run", triggerRun);
 apiRouter.patch("/workflows/:workflowId/schedule", updateWorkflowSchedule);
 
