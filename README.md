@@ -11,15 +11,15 @@ AgentLab is an advanced AI workflow orchestration platform built to automate bus
 
 ## 🚀 How It Works (Domains & Delivery Models)
 
-- **Official Marketing Website**: Hosted at [agent-lab.tech](https://agent-lab.tech) (Built via B12, hosted on Ionos) with companion domain [agent-lab.me](https://agent-lab.me) (Ionos).
-- **Application Platform & SaaS Engine**: Multi-tenant operating system deployed on **Google Cloud Run** and **Vercel** edge.
+- **Live Production OS & SaaS Dashboard**: Deployed on Google Cloud Run at **[https://agentlab-718497644379.us-central1.run.app/dashboard](https://agentlab-718497644379.us-central1.run.app/dashboard)** (Base: `https://agentlab-718497644379.us-central1.run.app`). This is the live operating system where team members and clients access swarms, CRM, workflow execution, and real-time dashboards.
+- **Official Public Marketing Website**: Hosted at [agent-lab.tech](https://agent-lab.tech) (Built via B12, hosted on Ionos) with companion domain [agent-lab.me](https://agent-lab.me) (Ionos) for prospective clients and public overviews.
 
 We offer two distinct ways to access and deploy AgentLab based on your technical requirements and data sovereignty needs:
 
 ### 1. SaaS Cloud-Hosted (Recommended for most)
 AgentLab is delivered primarily as a **Software as a Service (SaaS)** platform.
-- **Delivery:** Immediate access upon registration / onboarding.
-- **Process:** Create an account, browse the marketplace, subscribe to workflow playbooks, and execute them directly from our secure cloud infrastructure.
+- **Delivery:** Immediate access upon registration / onboarding via our live cloud instance.
+- **Process:** Open the **[Live Cloud Dashboard](https://agentlab-718497644379.us-central1.run.app/dashboard)**, log in with your authorized email, browse the marketplace, subscribe to workflow playbooks, and execute them directly from our secure cloud infrastructure.
 - **Benefits:** No servers to manage, automatic updates, and zero maintenance.
 
 
@@ -58,9 +58,10 @@ Whether you are a co-founder, strategic partner, client, or technical contributo
 If you are a co-founder (e.g. Sheena), executive, or non-technical user who simply needs to access the dashboard, view analytics, or run marketing and CRM agent workflows:
 
 1. **No local installation or terminal required!**
-2. Visit the live platform at [agent-lab.tech](https://agent-lab.tech) (or [agent-lab.me](https://agent-lab.me)).
-3. Click **Sign In** and use your authorized Google / Email login matching the collaborator table below.
+2. Open the **Live AgentLab OS Dashboard** directly: **[https://agentlab-718497644379.us-central1.run.app/dashboard](https://agentlab-718497644379.us-central1.run.app/dashboard)**.
+3. Click **Sign In** and use your authorized Google / Email login matching the [Collaborator Table](#-authorized-repository-collaborators) below.
 4. If you need account activation, contact **Robert** (`robert@unclerobertconsulting.com`) or **Mahmudul** (`mahmudhaisan@gmail.com`).
+5. *(Note: The public marketing website is located separately at [agent-lab.tech](https://agent-lab.tech) for external visitors).*
 
 ---
 

@@ -521,7 +521,7 @@ each piece does and its current status. Does not contain access credentials.
 | ---------------------- | ------------------------------ | ------------------------------------------------------- | ---------- | -------------------------- |
 | Source control         | GitHub                         | Agent Lab codebase; ops docs                            | Active     | PLAT-GITHUB                |
 | Frontend Edge          | Vercel                         | React 19 / Vite frontend delivery                       | Active     | PLAT-VERCEL                |
-| Cloud Compute Backend  | Google Cloud Run               | Node/Express API & DAG Orchestrator container           | Active     | PLAT-GCP                   |
+| Cloud Compute Backend  | Google Cloud Run               | Node/Express API & DAG Orchestrator (`https://agentlab-718497644379.us-central1.run.app/dashboard`) | Active     | PLAT-GCP                   |
 | Production Database    | PostgreSQL (Drizzle ORM)       | Multi-tenant workspaces, RLS, audit logs                | Active     | PLAT-POSTGRES              |
 | Email Sending          | Resend SMTP                    | Automated MKT-02 nurture sends                          | Active     | PLAT-RESEND                |
 | Payments & Metering    | Stripe & Gumroad               | Subscriptions, marketplace packages, landing checkouts  | Active     | PLAT-STRIPE                |
