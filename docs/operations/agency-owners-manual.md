@@ -7,18 +7,19 @@ status: active
 owner: "Robert T. McCarthy / OPS"
 canonical_sources:
   - governance/registry/
-last_reviewed: 2026-09-03
-next_review: 2026-10-03
-version: "v1.0"
+last_reviewed: 2026-09-04
+next_review: 2026-10-04
+version: "v1.1"
 ---
 
 # Agency Owner's Manual
 
 **Owner:** Robert T. McCarthy / Uncle Robert Consulting LLC
 **Date Created:** 2026-06-09
-**Last Structural Update:** 2026-09-03
-**Version:** v1.0 — Canonical repo-native Owner's Manual featuring fullstack SaaS architecture, autonomous swarm agents, Colab sessions Python SDK, Bootstrapper.ai & Ownable OS daily routine, and registered collaborator access control
+**Last Structural Update:** 2026-09-04
+**Version:** v1.1 — Milestone: Fully Autonomous AI Native Agency Operating System (10 Canonical Workflows, 6 Swarm Compute Nodes with Dynamic Spin-Up/Down, PostgreSQL State Machine, Command Flight Deck with 4 Horizon Viewports, and HubSpot CRM Tool Suite)
 **Purpose:** Operational reference for running the URC family of businesses. Covers business orientation, workflows, tools, SOPs, finance controls, secret handling, products, infrastructure, and change control in one navigable document.
+
 
 > **SECURITY CONSTRAINT (permanent):** This document must never contain secret values,
 > credential strings, backup codes, OAuth tokens, service-account JSON, client PII, or
@@ -207,17 +208,23 @@ by department. The source of truth for "which workflow handles which function."
 | HR   | Human Resources        |
 | DEL  | Delivery / Client Work |
 
-### Registry Summary
+### 10 Canonical Active Workflows (Autonomous Swarm Suite)
 
-The full registry is in `workflow-registry.md`. Current counts as of last import:
+The runtime operating system seeds and orchestrates **10 core autonomous workflows** spanning all agency departments:
 
-- **OPS:** OPS-01 through OPS-08 (8 workflows)
-- **CUL:** CUL-01 through CUL-08 (8 workflows)
-- **FIN:** FIN-01 through FIN-05 (5 workflows)
-- **SAL:** SAL-01 and beyond
-- **MKT, HR, DEL:** Imported — counts pending review
+1. **Inbound Lead Enrichment & Verification** (`SAL-01 / wf-lead-enrichment`): Webhook intake -> Hunter.io/Clearbit firmographic enrichment -> ICP quality guardrail -> HubSpot & M365 lead sync.
+2. **M365 Daily Financial Reconciliation** (`FIN-01 / wf-fin-recon`): Daily Stripe & Mercury settlement fetch -> expense categorization against M365 ledger -> variance anomaly alerts.
+3. **Automated CI/CD Test & Refactor Suite** (`DEV-01 / wf-cicd-suite`): GitHub PR webhook -> TypeScript & Vitest compilation -> AST dependency security audit -> Slack/GitHub status publishing.
+4. **Founder Signal Content Dissemination** (`MKT-06 / wf-mkt-06-dissemination`): Operational brief extraction -> 5-post LinkedIn syndication drafting -> operator approval guardrail -> Content-Queue staging.
+5. **HubSpot Deal Stage & Pipeline Sync** (`CRM-01 / wf-hubspot-sync`): Hourly CRM deal query -> deal health & stalled probability scoring -> automated task assignment in pipeline.
+6. **Bootstrapper Founder Roundtable Intake** (`MKT-09 / wf-roundtable-intake`): Event webhook parsing -> 4-Engine diagnostic scorecard generation -> personalized pre-session brief.
+7. **Compliance Audit & Change Ledger Verification** (`OPS-01 / wf-compliance-audit`): Daily repository drift scanner -> manifest validation vs Change Control Ledger -> signed audit log evidence creation.
+8. **Client Onboarding & Journey Kit Provisioning** (`FUL-01 / wf-client-onboarding`): Client workspace partition -> standardized Journey Kit deployment -> automated self-test & welcome packet.
+9. **Weekly Operational Scorecard & Metrics Rollup** (`OPS-02 / wf-weekly-scorecard`): 7-day swarm throughput aggregation -> quantified founder ROI calculation -> weekly executive brief generation.
+10. **Automated Backup & State Machine Checkpoint** (`INFRA-01 / wf-backup-checkpoint`): Daily PostgreSQL database state snapshot -> schema integrity validation -> compliance audit log hash entry.
 
 ### Two-Track Model
+
 
 All workflows belong to one of two tracks:
 
