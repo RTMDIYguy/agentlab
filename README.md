@@ -192,7 +192,7 @@ In accordance with repository governance, only registered collaborators and cert
 | **Robert T. McCarthy** | Uncle Robert Consulting LLC / Principal | `robert@unclerobertconsulting.com` | Owner & Admin | Active |
 | **Sheena Burns** | Uncle Robert Consulting LLC / Co-Founder | `burnssheena335@gmail.com` | Co-Founder & Admin | Active |
 | **Lorenzo** | NWN Advisory / Strategic Partner | `lorenzo@nwnadvisory.com` | Registered Collaborator | Active |
-| **Chris** | Bootstrapper Capital / Community Director | `chris@bootstrappercapital.com` | Registered Collaborator | Active |
+| **Chris** | Bootstrapper Capital / Community Director | `c@bootstrappercapital.com` | Registered Collaborator | Active |
 | **Mahmudul Haison** | AgentLab & Tactix / Remote Tech Specialist | `mahmudhaisan@gmail.com` | Technical Collaborator | Active |
 | **Eileen Prudhont** | Strategic Collaborator & Partner | `eileenprudhont@gmail.com` | Registered Collaborator | Active |
 
