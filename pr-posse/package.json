@@ -1,0 +1,21 @@
+{
+  "name": "pr-posse",
+  "version": "0.1.0",
+  "description": "A swarm of specialized agents reviews your GitHub PR in parallel, then synthesizes one human-readable verdict. Built on agentic-flow.",
+  "type": "module",
+  "bin": {
+    "pr-posse": "bin/pr-posse"
+  },
+  "scripts": {
+    "demo": "node bin/pr-posse --demo",
+    "start": "node bin/pr-posse"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "agentic-flow": "^2.0.0"
+  },
+  "license": "MIT",
+  "keywords": ["github", "pr-review", "code-review", "swarm", "agentic-flow", "claude"]
+}
