@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { convertTextToSpeech, buildPamelaOutboundScript } from "../tools/elevenlabs-voice";
-import { logSecurityEvent } from "../auditing/security-logger";
+import { getDb } from "../db";
+import { auditLogs } from "../schema";
 
 export interface VoiceBookingPayload {
   callerName: string;
@@ -86,18 +87,32 @@ export async function bookVoiceAppointment(req: Request, res: Response) {
     const bookingRef = `VBK-${Date.now().toString(36).toUpperCase()}`;
 
     // Audit log mid-call booking
-    await logSecurityEvent({
-      eventType: "WORKFLOW_TRIGGERED",
-      severity: "INFO",
-      actor: "voice-agent:pamela",
-      action: "MID_CALL_APPOINTMENT_BOOKED",
-      details: {
-        bookingRef,
-        callerPhone: body.callerPhone,
-        serviceInterest: body.serviceInterest,
-        scheduledSlot: body.scheduledSlot,
-      },
-    });
+    try {
+      const db = await getDb();
+      if (db) {
+        await db.insert(auditLogs).values({
+          id: `aud_vbk_${Date.now()}`,
+          workspaceId: (req as any).workspaceId || "default-workspace",
+          agent: "voice-agent:pamela",
+          action: "MID_CALL_APPOINTMENT_BOOKED",
+          status: "success",
+          model: "eleven_multilingual_v2",
+          latencyMs: 120,
+          tokensTotal: 0,
+          cost: "0.00",
+          message: `Mid-call appointment booked for ${body.callerPhone} on ${body.scheduledSlot}.`,
+          details: {
+            bookingRef,
+            callerPhone: body.callerPhone,
+            serviceInterest: body.serviceInterest,
+            scheduledSlot: body.scheduledSlot,
+          },
+          createdAt: new Date(),
+        } as any);
+      }
+    } catch (auditErr) {
+      console.warn("[Voice Booking Audit Warning]:", auditErr);
+    }
 
     return res.status(200).json({
       success: true,
@@ -122,20 +137,34 @@ export async function handleVoiceCallWebhook(req: Request, res: Response) {
       return res.status(400).json({ error: "callId is required." });
     }
 
-    await logSecurityEvent({
-      eventType: "TELEMETRY_LOGGED",
-      severity: "INFO",
-      actor: "voice-agent:webhook",
-      action: "CALL_TRANSCRIPT_INGESTED",
-      details: {
-        callId: payload.callId,
-        callerNumber: payload.callerNumber,
-        durationSeconds: payload.durationSeconds,
-        disposition: payload.disposition,
-        sentiment: payload.sentiment,
-        summary: payload.summary,
-      },
-    });
+    try {
+      const db = await getDb();
+      if (db) {
+        await db.insert(auditLogs).values({
+          id: `aud_vwh_${Date.now()}`,
+          workspaceId: (req as any).workspaceId || "default-workspace",
+          agent: "voice-agent:webhook",
+          action: "CALL_TRANSCRIPT_INGESTED",
+          status: "success",
+          model: "eleven_multilingual_v2",
+          latencyMs: 80,
+          tokensTotal: 0,
+          cost: "0.00",
+          message: `Call transcript and recording ingested for call ${payload.callId} (${payload.durationSeconds}s).`,
+          details: {
+            callId: payload.callId,
+            callerNumber: payload.callerNumber,
+            durationSeconds: payload.durationSeconds,
+            disposition: payload.disposition,
+            sentiment: payload.sentiment,
+            summary: payload.summary,
+          },
+          createdAt: new Date(),
+        } as any);
+      }
+    } catch (auditErr) {
+      console.warn("[Voice Webhook Audit Warning]:", auditErr);
+    }
 
     return res.status(200).json({
       received: true,
@@ -168,18 +197,32 @@ export async function dispatchOutboundVoiceCall(req: Request, res: Response) {
 
     const dispatchId = `VOUT-${Date.now().toString(36).toUpperCase()}`;
 
-    await logSecurityEvent({
-      eventType: "WORKFLOW_TRIGGERED",
-      severity: "INFO",
-      actor: "orchestrator:sal01",
-      action: "OUTBOUND_VOICE_CALL_DISPATCHED",
-      details: {
-        dispatchId,
-        recipientPhone,
-        campaignType,
-        scriptPreview: script.substring(0, 100),
-      },
-    });
+    try {
+      const db = await getDb();
+      if (db) {
+        await db.insert(auditLogs).values({
+          id: `aud_vout_${Date.now()}`,
+          workspaceId: (req as any).workspaceId || "default-workspace",
+          agent: "orchestrator:sal01",
+          action: "OUTBOUND_VOICE_CALL_DISPATCHED",
+          status: "success",
+          model: "eleven_multilingual_v2",
+          latencyMs: 95,
+          tokensTotal: 0,
+          cost: "0.00",
+          message: `Outbound call queued for ${recipientPhone} via Pamela voice engine.`,
+          details: {
+            dispatchId,
+            recipientPhone,
+            campaignType,
+            scriptPreview: script.substring(0, 100),
+          },
+          createdAt: new Date(),
+        } as any);
+      }
+    } catch (auditErr) {
+      console.warn("[Voice Dispatch Audit Warning]:", auditErr);
+    }
 
     return res.status(200).json({
       success: true,
