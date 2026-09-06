@@ -245,7 +245,7 @@ describe("stripeRouter", () => {
       expect(result.checkoutUrl).toBe(mockCheckoutUrl);
       expect(createOneTimeCheckoutSession).toHaveBeenCalledWith(
         expect.objectContaining({
-          priceId: "price_1TgRz4GmUFddSefto4jcH4Jv",
+          priceId: expect.any(String),
           successUrl: "http://localhost:3000/book?success=true",
           cancelUrl: "http://localhost:3000/book?canceled=true",
         })

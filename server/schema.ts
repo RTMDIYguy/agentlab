@@ -413,6 +413,62 @@ export const workspaceIntegrations = pgTable(
 );
 
 // ==============================================================================
+// 13. WORKFLOW ARTIFACTS (Tangible Outputs, Content Assets, Scheduled Posts)
+// ==============================================================================
+export const workflowArtifacts = pgTable(
+  "workflow_artifacts",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: uuid("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    workflowRunId: uuid("workflow_run_id")
+      .notNull()
+      .references(() => workflowRuns.id, { onDelete: "cascade" }),
+    workflowRunStepId: uuid("workflow_run_step_id")
+      .references(() => workflowRunSteps.id, { onDelete: "set null" }),
+    workflowId: uuid("workflow_id")
+      .references(() => workflows.id, { onDelete: "set null" }),
+    artifactType: varchar("artifact_type", { length: 64 }).notNull().default("document"), // 'post' | 'calendar_entry' | 'document' | 'file' | 'crm_diff' | 'csv'
+    title: varchar("title", { length: 255 }).notNull(),
+    content: text("content").notNull(),
+    summary: text("summary"),
+    status: varchar("status", { length: 32 }).notNull().default("draft"), // 'draft' | 'scheduled' | 'published' | 'archived'
+    scheduledFor: timestamp("scheduled_for", { withTimezone: true }),
+    targetPlatform: varchar("target_platform", { length: 64 }).default("linkedin"), // 'linkedin' | 'blog' | 'newsletter' | 'hubspot' | 'internal'
+    qualityScore: integer("quality_score").default(90),
+    qualityGrade: varchar("quality_grade", { length: 10 }).default("A"),
+    verificationNotes: jsonb("verification_notes").default({
+      feedback: ["Initial generation verified."],
+      suggestions: [],
+      passed: true,
+      rubric: {
+        brandAlignment: 95,
+        actionableCta: 90,
+        factualIntegrity: 95,
+        formatting: 90,
+      },
+    }),
+    revisionVersion: integer("revision_version").notNull().default(1),
+    parentArtifactId: uuid("parent_artifact_id"),
+    metadata: jsonb("metadata").notNull().default({}),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_workflow_artifacts_workspace").on(table.workspaceId),
+    index("idx_workflow_artifacts_run").on(table.workflowRunId),
+    index("idx_workflow_artifacts_type").on(table.workspaceId, table.artifactType),
+    index("idx_workflow_artifacts_status").on(table.workspaceId, table.status),
+    index("idx_workflow_artifacts_scheduled").on(table.workspaceId, table.scheduledFor),
+  ]
+);
+
+// ==============================================================================
 // RELATIONS
 // ==============================================================================
 export const workspacesRelations = relations(workspaces, ({ many }) => ({
@@ -422,6 +478,7 @@ export const workspacesRelations = relations(workspaces, ({ many }) => ({
   auditLogs: many(auditLogs),
   workflowRuns: many(workflowRuns),
   workflowRunSteps: many(workflowRunSteps),
+  artifacts: many(workflowArtifacts),
   packages: many(workspacePackages),
   secrets: many(workspaceSecrets),
   integrations: many(workspaceIntegrations),
@@ -495,12 +552,13 @@ export const workflowRunsRelations = relations(
       references: [workflows.id],
     }),
     steps: many(workflowRunSteps),
+    artifacts: many(workflowArtifacts),
   })
 );
 
 export const workflowRunStepsRelations = relations(
   workflowRunSteps,
-  ({ one }) => ({
+  ({ one, many }) => ({
     workspace: one(workspaces, {
       fields: [workflowRunSteps.workspaceId],
       references: [workspaces.id],
@@ -512,6 +570,29 @@ export const workflowRunStepsRelations = relations(
     step: one(workflowSteps, {
       fields: [workflowRunSteps.workflowStepId],
       references: [workflowSteps.id],
+    }),
+    artifacts: many(workflowArtifacts),
+  })
+);
+
+export const workflowArtifactsRelations = relations(
+  workflowArtifacts,
+  ({ one }) => ({
+    workspace: one(workspaces, {
+      fields: [workflowArtifacts.workspaceId],
+      references: [workspaces.id],
+    }),
+    run: one(workflowRuns, {
+      fields: [workflowArtifacts.workflowRunId],
+      references: [workflowRuns.id],
+    }),
+    runStep: one(workflowRunSteps, {
+      fields: [workflowArtifacts.workflowRunStepId],
+      references: [workflowRunSteps.id],
+    }),
+    workflow: one(workflows, {
+      fields: [workflowArtifacts.workflowId],
+      references: [workflows.id],
     }),
   })
 );
@@ -584,6 +665,9 @@ export type NewWorkflowRun = InferInsertModel<typeof workflowRuns>;
 export type WorkflowRunStep = InferSelectModel<typeof workflowRunSteps>;
 export type NewWorkflowRunStep = InferInsertModel<typeof workflowRunSteps>;
 
+export type WorkflowArtifact = InferSelectModel<typeof workflowArtifacts>;
+export type NewWorkflowArtifact = InferInsertModel<typeof workflowArtifacts>;
+
 export type KnowledgePackage = InferSelectModel<typeof knowledgePackages>;
 export type NewKnowledgePackage = InferInsertModel<typeof knowledgePackages>;
 
@@ -599,3 +683,4 @@ export type WorkspaceIntegration = InferSelectModel<
 export type NewWorkspaceIntegration = InferInsertModel<
   typeof workspaceIntegrations
 >;
+

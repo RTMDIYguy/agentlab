@@ -41,6 +41,15 @@ import {
   approveAuditAction,
   rejectAuditAction,
 } from "../controllers/audit";
+import {
+  listArtifacts,
+  getContentCalendar,
+  getRunArtifacts,
+  updateArtifactStatus,
+  downloadArtifact,
+  evaluateArtifact,
+  refineArtifact,
+} from "../controllers/artifacts";
 
 export const apiRouter = Router();
 
@@ -166,6 +175,18 @@ apiRouter.get("/audit-logs/stats", getAuditStats);
 apiRouter.get("/audit-logs/export", exportAuditLogs);
 apiRouter.post("/audit-logs/:id/approve", approveAuditAction);
 apiRouter.post("/audit-logs/:id/reject", rejectAuditAction);
+
+// ==============================================================================
+// Workflow Artifacts, Output Assets & Content Calendar
+// ==============================================================================
+apiRouter.get("/artifacts", listArtifacts);
+apiRouter.get("/artifacts/content-calendar", getContentCalendar);
+apiRouter.get("/artifacts/:id/download", downloadArtifact);
+apiRouter.post("/artifacts/:id/evaluate", evaluateArtifact);
+apiRouter.post("/artifacts/:id/refine", refineArtifact);
+apiRouter.get("/runs/:runId/artifacts", getRunArtifacts);
+apiRouter.patch("/artifacts/:id", updateArtifactStatus);
+
 
 
 

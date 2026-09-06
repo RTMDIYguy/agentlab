@@ -37,13 +37,22 @@ import {
   ChevronUp,
   SlidersHorizontal,
   Plus,
-  Trash2,
+  Calendar,
+  FileText,
+  Copy,
+  Check,
+  Share2,
+  FileSpreadsheet,
+  BookOpen,
+  Terminal,
+  Eye,
   ArrowUp,
   ArrowDown,
-  ExternalLink,
+  Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
+import { RunInspectorModal } from "@/components/RunInspectorModal";
 
 interface WorkflowStepItem {
   id?: string;
@@ -99,6 +108,7 @@ export default function CommandCenter() {
   const [editTriggerType, setEditTriggerType] = useState("manual");
   const [editSteps, setEditSteps] = useState<WorkflowStepItem[]>([]);
   const [isSavingWorkflow, setIsSavingWorkflow] = useState(false);
+  const [inspectingRunId, setInspectingRunId] = useState<string | null>(null);
 
   // 1. Fetch Workflows
   const {
@@ -144,6 +154,133 @@ export default function CommandCenter() {
     },
     enabled: !!user,
     refetchInterval: 5000,
+  });
+
+  // 4. Fetch Content Calendar & Scheduled Posts
+  const {
+    data: calendarData,
+    isLoading: isLoadingCalendar,
+    refetch: refetchCalendar,
+  } = useQuery<{
+    calendarItems: any[];
+    totalScheduled: number;
+    totalDrafts: number;
+    totalPublished: number;
+    localContentQueueExcerpt?: string;
+  }>({
+    queryKey: ["content-calendar", user?.openId],
+    queryFn: async () => {
+      const res = await fetch("/api/artifacts/content-calendar", { headers: { Accept: "application/json" } });
+      if (!res.ok) throw new Error("Failed to fetch content calendar");
+      return res.json();
+    },
+    enabled: !!user,
+    refetchInterval: 10000,
+  });
+
+  // 5. Fetch Output Artifacts & Files
+  const {
+    data: artifactsData,
+    isLoading: isLoadingArtifacts,
+    refetch: refetchArtifacts,
+  } = useQuery<{ artifacts: any[]; totalCount: number }>({
+    queryKey: ["workflow-artifacts", user?.openId],
+    queryFn: async () => {
+      const res = await fetch("/api/artifacts?limit=30", { headers: { Accept: "application/json" } });
+      if (!res.ok) throw new Error("Failed to fetch artifacts");
+      return res.json();
+    },
+    enabled: !!user,
+    refetchInterval: 10000,
+  });
+
+  const [selectedArtifact, setSelectedArtifact] = useState<any | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [refinementInstructions, setRefinementInstructions] = useState("");
+  const [isRefining, setIsRefining] = useState(false);
+
+  const updateArtifactMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      const res = await fetch(`/api/artifacts/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      if (!res.ok) throw new Error("Failed to update artifact status");
+      return res.json();
+    },
+    onSuccess: () => {
+      toast.success("Content status updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["content-calendar"] });
+      queryClient.invalidateQueries({ queryKey: ["workflow-artifacts"] });
+    },
+  });
+
+  const evaluateArtifactMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/artifacts/${id}/evaluate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!res.ok) throw new Error("Failed to evaluate artifact");
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast.success(`Quality Evaluation: Grade ${data.evaluation.grade} (${data.evaluation.score}%)`);
+      queryClient.invalidateQueries({ queryKey: ["content-calendar"] });
+      queryClient.invalidateQueries({ queryKey: ["workflow-artifacts"] });
+      if (selectedArtifact) {
+        setSelectedArtifact((prev: any) => ({
+          ...prev,
+          qualityScore: data.evaluation.score,
+          qualityGrade: data.evaluation.grade,
+          verificationNotes: {
+            feedback: data.evaluation.feedback,
+            suggestions: data.evaluation.suggestions,
+            passed: data.evaluation.passed,
+            rubric: data.evaluation.rubric,
+          },
+        }));
+      }
+    },
+  });
+
+  const refineArtifactMutation = useMutation({
+    mutationFn: async ({ id, instructions }: { id: string; instructions: string }) => {
+      setIsRefining(true);
+      const res = await fetch(`/api/artifacts/${id}/refine`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ instructions }),
+      });
+      if (!res.ok) throw new Error("Failed to refine artifact");
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setIsRefining(false);
+      toast.success(`Generated Revision v${data.revisionVersion} (Grade ${data.evaluation.grade} • ${data.evaluation.score}%)! 🎉`);
+      queryClient.invalidateQueries({ queryKey: ["content-calendar"] });
+      queryClient.invalidateQueries({ queryKey: ["workflow-artifacts"] });
+      setSelectedArtifact((prev: any) => ({
+        ...prev,
+        id: data.refinedArtifactId,
+        content: data.refinedContent,
+        revisionVersion: data.revisionVersion,
+        qualityScore: data.evaluation.score,
+        qualityGrade: data.evaluation.grade,
+        verificationNotes: {
+          feedback: data.evaluation.feedback,
+          suggestions: data.evaluation.suggestions,
+          passed: data.evaluation.passed,
+          rubric: data.evaluation.rubric,
+        },
+      }));
+      setRefinementInstructions("");
+    },
+    onError: (err: any) => {
+      setIsRefining(false);
+      toast.error(err.message || "Failed to refine artifact");
+    },
   });
 
   // 4. Trigger Run Mutation
@@ -567,7 +704,16 @@ export default function CommandCenter() {
                         </Badge>
                       </div>
                       <p className="text-muted-foreground text-[11px]">Run ID: {run.id.slice(0, 8)}...</p>
-                      <div className="flex gap-2 pt-1">
+                      <div className="flex items-center gap-1.5 pt-1">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="w-full h-7 text-xs border-cyan-500/40 hover:bg-cyan-500/10 text-cyan-400 font-mono gap-1"
+                          onClick={() => setInspectingRunId(run.id)}
+                        >
+                          <Terminal className="w-3 h-3" />
+                          Inspect
+                        </Button>
                         <Button
                           size="sm"
                           className="w-full bg-green-600 hover:bg-green-700 h-7 text-xs"
@@ -884,7 +1030,288 @@ export default function CommandCenter() {
             </form>
           </CardContent>
         </Card>
+
+        {/* Row 4: Verifiable Results Vault - Content Calendar & Output Assets */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content Calendar & Scheduled Posts */}
+          <Card className="lg:col-span-2 border-primary/30 bg-card">
+            <CardHeader className="pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary border border-primary/20">
+                    <Calendar className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Content Calendar & Scheduled Posts</CardTitle>
+                    <CardDescription className="text-xs">
+                      Live queue of generated syndication drafts, scheduled publish slots, and social posts.
+                    </CardDescription>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-xs">
+                    {calendarData?.totalScheduled ?? 0} Scheduled
+                  </Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 text-amber-400 border-amber-500/30 text-xs">
+                    {calendarData?.totalDrafts ?? 0} Drafts
+                  </Badge>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-xs gap-1"
+                    onClick={() => {
+                      refetchCalendar();
+                      refetchArtifacts();
+                    }}
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    Refresh
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {isLoadingCalendar ? (
+                <div className="py-8 text-center text-xs text-muted-foreground animate-pulse">
+                  Loading content calendar and active drafts...
+                </div>
+              ) : (calendarData?.calendarItems || []).length === 0 ? (
+                <div className="p-8 text-center rounded-xl border border-dashed border-border/80 bg-muted/10 space-y-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
+                    <Calendar className="w-5 h-5" />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-semibold">No Content Scheduled in Queue</h4>
+                    <p className="text-xs text-muted-foreground max-w-md mx-auto">
+                      Run the <span className="font-semibold text-foreground">Founder Signal Content Dissemination</span> or{" "}
+                      <span className="font-semibold text-foreground">LinkedIn Syndication</span> workflow to generate 5-post syndication drafts with scheduled dates.
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    className="h-8 text-xs bg-primary text-primary-foreground font-semibold gap-1.5"
+                    onClick={() => {
+                      // Trigger first content workflow if available
+                      const contentWf = workflows.find((w: any) => w.name.toLowerCase().includes("content") || w.name.toLowerCase().includes("signal"));
+                      if (contentWf) {
+                        triggerRunMutation.mutate(contentWf.id);
+                      } else {
+                        toast.info("Please select a workflow from the list above to run content generation.");
+                      }
+                    }}
+                  >
+                    <Play className="w-3.5 h-3.5" />
+                    Generate Content Batch
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
+                  {(calendarData?.calendarItems || []).map((item: any) => {
+                    const isCopied = copiedId === item.id;
+                    const scheduledDate = item.scheduledFor
+                      ? new Date(item.scheduledFor).toLocaleDateString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
+                      : "Unscheduled Draft";
+
+                    return (
+                      <div
+                        key={item.id}
+                        className="p-3.5 rounded-xl border border-border bg-card/60 hover:border-primary/40 transition-all space-y-2.5"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] uppercase font-mono font-bold bg-blue-500/10 text-blue-400 border-blue-500/30"
+                            >
+                              {item.targetPlatform || "linkedin"}
+                            </Badge>
+                            <h4 className="font-semibold text-xs text-foreground truncate max-w-sm">
+                              {item.title}
+                            </h4>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            {item.qualityGrade && (
+                              <Badge
+                                variant="outline"
+                                className={`text-[10px] font-mono font-bold ${
+                                  item.qualityGrade === "A"
+                                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                                    : item.qualityGrade === "B"
+                                    ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/30"
+                                    : item.qualityGrade === "C"
+                                    ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                                    : "bg-rose-500/10 text-rose-400 border-rose-500/30"
+                                }`}
+                              >
+                                Grade {item.qualityGrade} • {item.qualityScore ?? 90}%
+                              </Badge>
+                            )}
+                            <span className="text-[11px] font-mono text-muted-foreground flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-primary" />
+                              {scheduledDate}
+                            </span>
+                            <Badge
+                              variant="outline"
+                              className={`text-[10px] capitalize ${
+                                item.status === "published"
+                                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                                  : item.status === "scheduled"
+                                  ? "bg-blue-500/10 text-blue-400 border-blue-500/30"
+                                  : "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                              }`}
+                            >
+                              {item.status}
+                            </Badge>
+                          </div>
+                        </div>
+
+                        {/* Post Content Excerpt */}
+                        <p className="text-xs text-muted-foreground line-clamp-3 bg-muted/30 p-2.5 rounded-lg font-sans leading-relaxed border border-border/40">
+                          {item.content}
+                        </p>
+
+                        {/* Card Footer Actions */}
+                        <div className="flex items-center justify-between pt-1">
+                          <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                            {item.metadata?.hashtags && (
+                              <span className="font-mono text-primary/80">
+                                {Array.isArray(item.metadata.hashtags) ? item.metadata.hashtags.join(" ") : item.metadata.hashtags}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-7 text-xs px-2.5 gap-1 hover:bg-primary/10 hover:text-primary"
+                              onClick={() => {
+                                navigator.clipboard.writeText(item.content);
+                                setCopiedId(item.id);
+                                toast.success("Post copy copied to clipboard!");
+                                setTimeout(() => setCopiedId(null), 2000);
+                              }}
+                            >
+                              {isCopied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+                              {isCopied ? "Copied" : "Copy Copy"}
+                            </Button>
+
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-7 text-xs px-2.5 gap-1 border-border/60"
+                              onClick={() => setSelectedArtifact(item)}
+                            >
+                              <FileText className="w-3.5 h-3.5" />
+                              View & Refine
+                            </Button>
+
+                            {item.status !== "published" && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-7 text-xs px-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                                onClick={() => updateArtifactMutation.mutate({ id: item.id, status: "published" })}
+                              >
+                                Mark Published
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Right Column: Output Documents & Files Vault */}
+          <Card className="border-border bg-card">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                    <FileSpreadsheet className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Generated Assets Vault</CardTitle>
+                    <CardDescription className="text-xs">
+                      Verifiable documents, briefs, and files.
+                    </CardDescription>
+                  </div>
+                </div>
+                <Badge variant="secondary" className="text-xs font-mono">
+                  {artifactsData?.totalCount ?? 0} Assets
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {isLoadingArtifacts ? (
+                <div className="py-6 text-center text-xs text-muted-foreground">Loading assets...</div>
+              ) : (artifactsData?.artifacts || []).filter((a: any) => a.artifactType !== "post").length === 0 ? (
+                <div className="p-6 text-center rounded-xl border border-dashed text-xs text-muted-foreground space-y-1">
+                  <p className="font-semibold text-foreground">No document files generated yet</p>
+                  <p>Triggering SOP workflows will produce analysis reports and operational briefs here.</p>
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                  {(artifactsData?.artifacts || [])
+                    .filter((a: any) => a.artifactType !== "post")
+                    .map((asset: any) => (
+                      <div
+                        key={asset.id}
+                        className="p-3 rounded-lg border border-border/80 bg-muted/20 hover:border-primary/40 cursor-pointer transition-all space-y-1"
+                        onClick={() => setSelectedArtifact(asset)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-xs text-foreground truncate max-w-[180px]">
+                            {asset.title}
+                          </span>
+                          <div className="flex items-center gap-1.5">
+                            {asset.qualityGrade && (
+                              <Badge
+                                variant="outline"
+                                className="text-[9px] font-mono px-1.5 py-0 bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                              >
+                                {asset.qualityGrade} ({asset.qualityScore ?? 90}%)
+                              </Badge>
+                            )}
+                            <Badge variant="outline" className="text-[10px] uppercase font-mono">
+                              {asset.artifactType}
+                            </Badge>
+                          </div>
+                        </div>
+                        <p className="text-[11px] text-muted-foreground line-clamp-1">
+                          {asset.summary || asset.content.slice(0, 80)}
+                        </p>
+                      </div>
+                    ))}
+                </div>
+              )}
+
+              {/* Local Content Queue Connection Note */}
+              <div className="p-3 rounded-xl bg-muted/40 border border-border/60 text-xs space-y-1.5 font-sans">
+                <div className="flex items-center justify-between font-semibold text-foreground">
+                  <span className="flex items-center gap-1.5">
+                    <BookOpen className="w-4 h-4 text-primary" />
+                    Agent Lab LinkedIn Repo Queue
+                  </span>
+                  <Badge variant="outline" className="text-[10px] text-emerald-400 bg-emerald-500/10 border-emerald-500/30">
+                    Linked
+                  </Badge>
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  Artifacts synced with <code className="text-primary font-mono text-[10px]">Agent Lab LinkedIn/Content-Queue.md</code> and verified evidence logs.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
+
 
       {/* Step Adjuster & Maintenance Dialog */}
       <Dialog open={!!editingWorkflow} onOpenChange={(open) => !open && setEditingWorkflow(null)}>
@@ -1083,6 +1510,187 @@ export default function CommandCenter() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Artifact & Scheduled Content Inspector Modal */}
+      <Dialog open={Boolean(selectedArtifact)} onOpenChange={(open) => !open && setSelectedArtifact(null)}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto bg-card border-border">
+          <DialogHeader>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-xs uppercase font-mono bg-primary/10 text-primary border-primary/30">
+                {selectedArtifact?.artifactType}
+              </Badge>
+              <DialogTitle className="text-base font-bold text-foreground">
+                {selectedArtifact?.title}
+              </DialogTitle>
+            </div>
+            <DialogDescription className="text-xs flex items-center gap-2 pt-1">
+              <span>Platform: <strong className="text-foreground capitalize">{selectedArtifact?.targetPlatform || "linkedin"}</strong></span>
+              {selectedArtifact?.scheduledFor && (
+                <span>• Scheduled: <strong className="text-foreground">{new Date(selectedArtifact.scheduledFor).toLocaleString()}</strong></span>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedArtifact && (
+            <div className="space-y-4 py-2 text-xs">
+              {/* Quality Evaluation & Flywheel Banner */}
+              <div className="p-3.5 rounded-xl bg-muted/40 border border-border space-y-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <Badge
+                      variant="outline"
+                      className={`text-xs font-mono font-bold ${
+                        (selectedArtifact.qualityGrade || "A") === "A"
+                          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                          : (selectedArtifact.qualityGrade || "A") === "B"
+                          ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/30"
+                          : (selectedArtifact.qualityGrade || "A") === "C"
+                          ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                          : "bg-rose-500/10 text-rose-400 border-rose-500/30"
+                      }`}
+                    >
+                      Grade {selectedArtifact.qualityGrade || "A"} • {selectedArtifact.qualityScore ?? 90}% Quality
+                    </Badge>
+                    <span className="text-[11px] text-muted-foreground font-medium">
+                      {selectedArtifact.verificationNotes?.passed !== false ? "✓ Passed Brand & Fact Checks" : "⚠ Quality Review Suggested"}
+                    </span>
+                    {selectedArtifact.revisionVersion > 1 && (
+                      <Badge variant="secondary" className="text-[10px] font-mono">
+                        v{selectedArtifact.revisionVersion}
+                      </Badge>
+                    )}
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-6 text-[11px] font-mono gap-1 text-primary hover:bg-primary/10"
+                    disabled={evaluateArtifactMutation.isPending}
+                    onClick={() => evaluateArtifactMutation.mutate(selectedArtifact.id)}
+                  >
+                    <RefreshCw className={`w-3 h-3 ${evaluateArtifactMutation.isPending ? "animate-spin" : ""}`} />
+                    Re-evaluate
+                  </Button>
+                </div>
+
+                {/* Feedback points */}
+                {selectedArtifact.verificationNotes?.feedback?.length > 0 && (
+                  <div className="space-y-1 text-[11px] text-muted-foreground pt-1 border-t border-border/40">
+                    {selectedArtifact.verificationNotes.feedback.map((fb: string, i: number) => (
+                      <p key={i} className="flex items-center gap-1.5">
+                        <span className="text-primary font-bold">•</span> {fb}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Summary */}
+              {selectedArtifact.summary && (
+                <div className="p-3 rounded-lg bg-card border border-border/60">
+                  <span className="font-semibold text-foreground">Hook / Summary: </span>
+                  <span className="text-muted-foreground">{selectedArtifact.summary}</span>
+                </div>
+              )}
+
+              {/* Main Content Body */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="font-semibold text-foreground">Draft Copy & Body</label>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 text-xs gap-1"
+                    onClick={() => {
+                      navigator.clipboard.writeText(selectedArtifact.content);
+                      toast.success("Draft copied to clipboard!");
+                    }}
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                    Copy All
+                  </Button>
+                </div>
+                <div className="p-4 rounded-xl bg-background border border-border font-sans leading-relaxed whitespace-pre-wrap select-text text-foreground">
+                  {selectedArtifact.content}
+                </div>
+              </div>
+
+              {/* Agent Self-Correction & Refinement Flywheel */}
+              <div className="p-3.5 rounded-xl bg-gradient-to-br from-card to-primary/5 border border-primary/20 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-xs text-foreground flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-primary" />
+                    Agent Self-Correction & Refinement
+                  </span>
+                  <span className="text-[10px] font-mono text-muted-foreground">Quality Flywheel</span>
+                </div>
+
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Provide refinement instructions (e.g. 'Make hook punchier, add SOE framework metrics')..."
+                    value={refinementInstructions}
+                    onChange={(e) => setRefinementInstructions(e.target.value)}
+                    className="text-xs h-8 bg-background"
+                  />
+                  <Button
+                    size="sm"
+                    className="h-8 text-xs bg-primary text-primary-foreground font-semibold shrink-0 gap-1.5 shadow"
+                    disabled={isRefining || refineArtifactMutation.isPending}
+                    onClick={() =>
+                      refineArtifactMutation.mutate({
+                        id: selectedArtifact.id,
+                        instructions: refinementInstructions,
+                      })
+                    }
+                  >
+                    <Sparkles className={`w-3.5 h-3.5 ${isRefining ? "animate-spin" : ""}`} />
+                    {isRefining ? "Refining..." : "Refine with Agent"}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Metadata & Hashtags */}
+              {selectedArtifact.metadata?.hashtags && (
+                <div className="p-2.5 rounded-lg bg-primary/5 border border-primary/20 flex items-center gap-2">
+                  <span className="font-semibold text-primary">Hashtags:</span>
+                  <span className="font-mono text-muted-foreground">
+                    {Array.isArray(selectedArtifact.metadata.hashtags)
+                      ? selectedArtifact.metadata.hashtags.join(" ")
+                      : selectedArtifact.metadata.hashtags}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+
+          <DialogFooter className="pt-3 border-t border-border flex items-center justify-between">
+            <Button variant="outline" size="sm" onClick={() => setSelectedArtifact(null)}>
+              Close
+            </Button>
+            {selectedArtifact?.status !== "published" && (
+              <Button
+                size="sm"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold gap-1.5"
+                onClick={() => {
+                  updateArtifactMutation.mutate({ id: selectedArtifact.id, status: "published" });
+                  setSelectedArtifact(null);
+                }}
+              >
+                <Check className="w-4 h-4" />
+                Mark as Published
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Live Run & Telemetry Inspector Modal */}
+      <RunInspectorModal
+        runId={inspectingRunId}
+        open={Boolean(inspectingRunId)}
+        onOpenChange={(open) => !open && setInspectingRunId(null)}
+      />
     </DashboardLayout>
   );
 }
+

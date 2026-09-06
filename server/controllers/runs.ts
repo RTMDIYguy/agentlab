@@ -1,7 +1,15 @@
 import type { Request, Response } from "express";
 import { eq, desc, and, asc } from "drizzle-orm";
 import { getDb } from "../db";
-import { workflowRuns, workflowRunSteps, workflows, auditLogs } from "../schema";
+import {
+  workflowRuns,
+  workflowRunSteps,
+  workflows,
+  workflowSteps,
+  workflowArtifacts,
+  agents,
+  auditLogs,
+} from "../schema";
 import { processPendingRuns } from "../execution/queue-processor";
 
 export async function triggerRun(req: Request, res: Response): Promise<void> {
@@ -125,7 +133,23 @@ export async function getRunDetails(
       return;
     }
 
-    const stepsData = await db
+    const currentRun = runData[0];
+
+    // 1. Fetch workflow metadata
+    let workflowInfo: any = null;
+    if (currentRun.workflowId) {
+      const wfRes = await db
+        .select()
+        .from(workflows)
+        .where(eq(workflows.id, currentRun.workflowId))
+        .limit(1);
+      if (wfRes.length > 0) {
+        workflowInfo = wfRes[0];
+      }
+    }
+
+    // 2. Fetch run steps
+    const rawRunSteps = await db
       .select()
       .from(workflowRunSteps)
       .where(
@@ -136,9 +160,75 @@ export async function getRunDetails(
       )
       .orderBy(asc(workflowRunSteps.createdAt));
 
+    // 3. Fetch step definitions and agent assignments for enrichment
+    const stepDefinitions = currentRun.workflowId
+      ? await db
+          .select()
+          .from(workflowSteps)
+          .where(eq(workflowSteps.workflowId, currentRun.workflowId))
+      : [];
+
+    const stepDefMap = new Map(stepDefinitions.map((s: any) => [s.id, s]));
+
+    // Fetch agents
+    const agentsList = await db
+      .select()
+      .from(agents)
+      .where(eq(agents.workspaceId, workspaceId));
+    const agentMap = new Map(agentsList.map((a: any) => [a.id, a]));
+
+    const enrichedSteps = rawRunSteps.map((rs: any, idx: number) => {
+      const stepDef = stepDefMap.get(rs.workflowStepId);
+      const agentInfo = stepDef?.agentId ? agentMap.get(stepDef.agentId) : null;
+      const outputPayload = rs.outputPayload as any;
+      const toolsExecuted = outputPayload?._telemetry?.toolsExecuted || [];
+
+      return {
+        ...rs,
+        stepTitle: stepDef?.title || `Step ${idx + 1}`,
+        stepType: stepDef?.stepType || "agent",
+        actionPrompt: stepDef?.actionPrompt || "",
+        agentName: agentInfo?.name || stepDef?.agentId || "Ops Agent",
+        agentRole: agentInfo?.role || "Execution Node",
+        toolsExecuted,
+        artifactsCreatedCount: outputPayload?._telemetry?.artifactsCreated || 0,
+      };
+    });
+
+    // 4. Fetch artifacts produced by this run
+    const artifacts = await db
+      .select()
+      .from(workflowArtifacts)
+      .where(
+        and(
+          eq(workflowArtifacts.workspaceId, workspaceId),
+          eq(workflowArtifacts.workflowRunId, runId)
+        )
+      )
+      .orderBy(asc(workflowArtifacts.createdAt));
+
+    // 5. Aggregate metrics
+    const totalToolsCount = enrichedSteps.reduce(
+      (sum: number, s: any) => sum + (s.toolsExecuted?.length || 0),
+      0
+    );
+    const totalCost = enrichedSteps.reduce(
+      (sum: number, s: any) => sum + (parseFloat(s.cost || "0") || 0),
+      0
+    );
+    const totalLatencyMs = enrichedSteps.reduce(
+      (sum: number, s: any) => sum + (s.latencyMs || 0),
+      0
+    );
+
     res.status(200).json({
-      run: runData[0],
-      steps: stepsData,
+      run: currentRun,
+      workflow: workflowInfo,
+      steps: enrichedSteps,
+      artifacts,
+      totalToolsCount,
+      totalCost: totalCost.toFixed(6),
+      totalLatencyMs,
     });
   } catch (error) {
     console.error("[Runs Controller Error]:", error);

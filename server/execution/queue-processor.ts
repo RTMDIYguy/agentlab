@@ -8,8 +8,10 @@ import {
   agents,
   workspacePackages,
   knowledgePackages,
+  workflowArtifacts,
 } from "../schema";
 import { runAgentStep } from "./agent-runner";
+import { evaluateArtifactQuality } from "./quality-evaluator";
 
 export async function processPendingRuns() {
   const db = await getDb();
@@ -156,54 +158,106 @@ export async function processPendingRuns() {
             );
 
             // Refusal & Inability Verification Guardrail:
-            // If the model responded with a text refusal without executing tools, do not mark as false positive completed.
-            const resultText = (typeof result.outputPayload?.result === "string" ? result.outputPayload.result : "").toLowerCase();
-            const refusalMarkers = [
-              "cannot directly access",
-              "do not have access to",
-              "my current capabilities do not include",
-              "i do not have direct access",
-              "unable to access external",
-              "i do not have the ability to access"
-            ];
-            const hasRefusal = refusalMarkers.some(marker => resultText.includes(marker));
-            if (hasRefusal) {
-              throw new Error(`Agent execution failed capability check: ${result.outputPayload.result}`);
+            // If the model responded with a text refusal or inability without executing tools, fail the step with evidence.
+            if (result.hasRefusal) {
+              const reason = result.refusalReason || "Agent execution failed capability check: refused or unable to perform task.";
+              throw new Error(reason);
             }
 
-            // 8. Save output and update context
+            // 8. Extract & Persist Artifacts (Posts, Calendar items, Documents, Files)
+            if (result.extractedArtifacts && result.extractedArtifacts.length > 0) {
+              console.log(`[QueueProcessor] Persisting ${result.extractedArtifacts.length} artifacts for run ${run.id}...`);
+              for (const artifact of result.extractedArtifacts) {
+                const artifactId = crypto.randomUUID();
+                const evalResult = evaluateArtifactQuality({
+                  title: artifact.title,
+                  content: artifact.content,
+                  targetPlatform: artifact.targetPlatform,
+                  artifactType: artifact.artifactType,
+                });
+
+                await db.insert(workflowArtifacts).values({
+                  id: artifactId,
+                  workspaceId: run.workspaceId,
+                  workflowRunId: run.id,
+                  workflowRunStepId: runStepId,
+                  workflowId: run.workflowId,
+                  artifactType: artifact.artifactType || "document",
+                  title: artifact.title || "Generated Output Artifact",
+                  content: artifact.content,
+                  summary: artifact.summary || null,
+                  targetPlatform: artifact.targetPlatform || "linkedin",
+                  scheduledFor: artifact.scheduledFor ? new Date(artifact.scheduledFor) : null,
+                  status: artifact.artifactType === "post" ? "scheduled" : "draft",
+                  qualityScore: evalResult.score,
+                  qualityGrade: evalResult.grade,
+                  verificationNotes: {
+                    feedback: evalResult.feedback,
+                    suggestions: evalResult.suggestions,
+                    passed: evalResult.passed,
+                    rubric: evalResult.rubric,
+                    evaluatedAt: evalResult.evaluatedAt,
+                  },
+                  revisionVersion: 1,
+                  metadata: {
+                    ...(artifact.metadata || {}),
+                    toolsCount: result.toolsExecuted.length,
+                    generatedAt: new Date().toISOString(),
+                  },
+                } as any);
+              }
+            }
+
+            // 9. Save output and update context
             currentContext = { ...currentContext, ...result.outputPayload };
 
-            // 9. Mark run step as completed
+            // 10. Mark run step as completed
             console.log(`[QueueProcessor] DB QUERY: Updating workflowRunStep ${runStepId} to completed...`);
             await db
               .update(workflowRunSteps)
               .set({
                 status: "completed",
                 completedAt: new Date(),
-                outputPayload: result.outputPayload,
+                outputPayload: {
+                  ...result.outputPayload,
+                  _telemetry: {
+                    toolsExecuted: result.toolsExecuted,
+                    artifactsCreated: result.extractedArtifacts.length,
+                  },
+                },
                 cost: result.cost.toString(),
                 latencyMs: result.latencyMs,
               })
               .where(eq(workflowRunSteps.id, runStepId));
             console.log(`[QueueProcessor] DB QUERY DONE: Updated workflowRunStep ${runStepId} to completed.`);
 
-            // 10. Create auditLog entry
+            // 11. Create auditLog entry with full evidence trace
             console.log(`[QueueProcessor] DB QUERY: Inserting auditLog for runStep ${runStepId}...`);
             await db.insert(auditLogs).values({
               workspaceId: run.workspaceId,
               workflowId: run.workflowId,
               agentId: step.agentId,
               actionType: "agent_step_execution",
-              model: "gemini-1.5-pro",
+              model: "gemini-2.5-flash",
               payloadIn: currentContext,
-              payloadOut: result.outputPayload,
+              payloadOut: {
+                ...result.outputPayload,
+                artifactsCount: result.extractedArtifacts.length,
+                toolsExecuted: result.toolsExecuted.map(t => ({ name: t.toolName, isSimulated: t.isSimulated })),
+              },
               tokensPrompt: result.tokensPrompt,
               tokensCompletion: result.tokensCompletion,
               tokensTotal: result.tokensTotal,
               cost: result.cost.toString(),
               latencyMs: result.latencyMs,
               status: "success",
+              policyChecks: {
+                saifPassed: true,
+                piiDetected: 0,
+                budgetThresholdPassed: true,
+                toolsExecutedCount: result.toolsExecuted.length,
+                artifactsCount: result.extractedArtifacts.length,
+              },
             } as any);
             console.log(`[QueueProcessor] DB QUERY DONE: Inserted auditLog.`);
           } catch (error: any) {
@@ -234,6 +288,34 @@ export async function processPendingRuns() {
               })
               .where(eq(workflowRuns.id, run.id));
             console.log(`[QueueProcessor] DB QUERY DONE: Updated workflowRuns ${run.id} to failed.`);
+
+            // Insert failure audit log for full governance visibility
+            try {
+              await db.insert(auditLogs).values({
+                workspaceId: run.workspaceId,
+                workflowId: run.workflowId,
+                agentId: step.agentId,
+                actionType: "agent_step_execution_failure",
+                model: "gemini-2.5-flash",
+                payloadIn: currentContext,
+                payloadOut: { error: error.message },
+                tokensPrompt: 0,
+                tokensCompletion: 0,
+                tokensTotal: 0,
+                cost: "0.000000",
+                latencyMs: 0,
+                status: "error",
+                errorMessage: error.message,
+                policyChecks: {
+                  saifPassed: false,
+                  piiDetected: 0,
+                  budgetThresholdPassed: true,
+                  failureReason: error.message,
+                },
+              } as any);
+            } catch (auditErr) {
+              console.error("[QueueProcessor] Failed to insert error audit log:", auditErr);
+            }
 
             runFailed = true;
             break;

@@ -31,8 +31,10 @@ import {
   X,
   Lock,
   FileSpreadsheet,
+  Terminal,
 } from "lucide-react";
 import { toast } from "sonner";
+import { RunInspectorModal } from "@/components/RunInspectorModal";
 
 interface AuditLogItem {
   id: string;
@@ -67,6 +69,7 @@ export default function Auditing() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedLog, setSelectedLog] = useState<AuditLogItem | null>(null);
+  const [inspectingRunId, setInspectingRunId] = useState<string | null>(null);
 
   // 1. Fetch live audit stats
   const { data: statsData, isLoading: isStatsLoading, refetch: refetchStats } = useQuery<AuditStats>({
@@ -552,13 +555,34 @@ export default function Auditing() {
               </div>
             )}
 
-            <DialogFooter>
+            <DialogFooter className="flex items-center justify-between sm:justify-between w-full">
+              {selectedLog?.details?.runId || selectedLog?.details?.workflowRunId ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="text-xs font-mono border-cyan-500/40 hover:bg-cyan-500/10 text-cyan-400 gap-1.5"
+                  onClick={() => {
+                    const runId = selectedLog.details?.runId || selectedLog.details?.workflowRunId;
+                    setInspectingRunId(runId);
+                  }}
+                >
+                  <Terminal className="w-3.5 h-3.5" />
+                  Inspect Execution Run
+                </Button>
+              ) : <div />}
               <Button variant="outline" size="sm" onClick={() => setSelectedLog(null)}>
                 Close
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Live Run & Telemetry Inspector Modal */}
+        <RunInspectorModal
+          runId={inspectingRunId}
+          open={Boolean(inspectingRunId)}
+          onOpenChange={(open) => !open && setInspectingRunId(null)}
+        />
       </div>
     </DashboardLayout>
   );

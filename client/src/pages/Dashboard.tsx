@@ -41,6 +41,7 @@ import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { RunInspectorModal } from "@/components/RunInspectorModal";
 
 type ViewportTheme = "cyber" | "tropical" | "space" | "tron";
 
@@ -51,6 +52,7 @@ export default function Dashboard() {
   const [showExtensionModal, setShowExtensionModal] = useState(false);
   const [showDowngradePolicy, setShowDowngradePolicy] = useState(false);
   const [extensionReason, setExtensionReason] = useState("Testing autonomous swarm DAGs & Beta Apps");
+  const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
   
   // Cockpit Viewport Theme (persisted in localStorage)
   const [viewport, setViewport] = useState<ViewportTheme>(() => {
@@ -601,7 +603,101 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+
+          {/* Recent Live Pipeline Execution Runs (Tangible Verifiable Results) */}
+          <div className="hud-panel p-5 hud-scanline space-y-4">
+            <div className="hud-corner-bracket hud-corner-tl" />
+            <div className="hud-corner-bracket hud-corner-tr" />
+            <div className="hud-corner-bracket hud-corner-bl" />
+            <div className="hud-corner-bracket hud-corner-br" />
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-border/40">
+              <div>
+                <h3 className="text-sm font-bold uppercase tracking-wider text-foreground font-mono flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-cyan-400" />
+                  LIVE PIPELINE EXECUTION RUNS & EVIDENCE
+                </h3>
+                <p className="text-xs text-muted-foreground font-mono mt-0.5">
+                  Inspect step traces, tool call telemetry, artifacts, and failure root causes for every run
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 text-xs font-mono border-cyan-500/30 hover:bg-cyan-500/10 text-cyan-300 gap-1.5"
+                onClick={() => navigate("/command-center")}
+              >
+                <PlayCircle className="w-3.5 h-3.5" />
+                Open Full Command Center
+              </Button>
+            </div>
+
+            {isLoadingRuns ? (
+              <div className="py-8 text-center text-xs text-muted-foreground font-mono">
+                Querying execution run state...
+              </div>
+            ) : (runsData?.runs || []).length === 0 ? (
+              <div className="py-8 text-center rounded-xl border border-dashed border-border/80 text-xs text-muted-foreground">
+                No workflow runs recorded yet. Dispatch a DAG from the Command Center to see live execution telemetry.
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {(runsData?.runs || []).slice(0, 5).map((run: any) => {
+                  const statusColors: Record<string, string> = {
+                    completed: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+                    running: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30 animate-pulse",
+                    failed: "bg-rose-500/10 text-rose-400 border-rose-500/30",
+                    paused_for_approval: "bg-amber-500/10 text-amber-400 border-amber-500/30",
+                    pending: "bg-muted text-muted-foreground",
+                  };
+
+                  return (
+                    <div
+                      key={run.id}
+                      className="p-3.5 rounded-xl bg-card/60 border border-white/10 hover:border-cyan-400/50 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Badge
+                          variant="outline"
+                          className={`text-[10px] uppercase font-mono font-bold ${statusColors[run.status] || "bg-muted text-muted-foreground"}`}
+                        >
+                          {run.status.replace("_", " ")}
+                        </Badge>
+                        <div>
+                          <div className="font-semibold text-xs text-foreground group-hover:text-cyan-300 transition-colors">
+                            {run.workflow?.name || run.workflowId || `Workflow Run ${run.id.slice(0, 8)}`}
+                          </div>
+                          <div className="text-[11px] text-muted-foreground font-mono mt-0.5">
+                            Run ID: {run.id.slice(0, 12)}... • Started: {new Date(run.startedAt || run.createdAt || Date.now()).toLocaleTimeString()}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 text-xs font-mono border-cyan-500/40 hover:bg-cyan-500/20 text-cyan-300 gap-1.5"
+                          onClick={() => setSelectedRunId(run.id)}
+                        >
+                          <Terminal className="w-3.5 h-3.5" />
+                          Inspect Run & Tools
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Live Run Inspector Modal */}
+        <RunInspectorModal
+          runId={selectedRunId}
+          open={Boolean(selectedRunId)}
+          onOpenChange={(open) => !open && setSelectedRunId(null)}
+        />
 
         {/* Trial Extension Modal */}
         <Dialog open={showExtensionModal} onOpenChange={setShowExtensionModal}>
