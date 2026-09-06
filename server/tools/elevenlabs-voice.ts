@@ -24,7 +24,7 @@ export interface VoiceCallPayload {
   };
 }
 
-const DEFAULT_PAMELA_VOICE_ID = "JBFqnCBsd6RMkjVDRZzb";
+const DEFAULT_PAMELA_VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
 const DEFAULT_MODEL_ID = "eleven_multilingual_v2";
 const DEFAULT_OUTPUT_FORMAT = "mp3_44100_128";
 
