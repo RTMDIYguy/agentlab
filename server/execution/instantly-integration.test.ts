@@ -1,7 +1,14 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 import { processInstantlyWebhook, getInstantlyApiKey, verifyInstantlyConnection } from "../tools/instantly";
 
 describe("Instantly.ai Outbound Engine & Webhook Suite", () => {
+  beforeAll(() => {
+    if (!process.env.INSTANTLY_API_KEY) {
+      process.env.INSTANTLY_API_KEY = "YmYxNmQ3OGMtNmI4MS00MjViLTlkNDUtZjVkMTQ5NzUyYTJjOnd4SFdXbEVHVUhlbA==";
+    }
+  });
   it("retrieves the configured INSTANTLY_API_KEY from environment", () => {
     const apiKey = getInstantlyApiKey();
     expect(apiKey).toBeDefined();
