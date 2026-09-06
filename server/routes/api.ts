@@ -50,6 +50,11 @@ import {
   evaluateArtifact,
   refineArtifact,
 } from "../controllers/artifacts";
+import {
+  dispatchCreBrief,
+  dispatchMedSpaDiagnostic,
+  bookFounderSprint,
+} from "../controllers/campaigns";
 
 export const apiRouter = Router();
 
@@ -187,6 +192,9 @@ apiRouter.post("/artifacts/:id/refine", refineArtifact);
 apiRouter.get("/runs/:runId/artifacts", getRunArtifacts);
 apiRouter.patch("/artifacts/:id", updateArtifactStatus);
 
-
-
-
+// ==============================================================================
+// Campaign Outreach Sequences & Landing Page Handlers (SAL-01)
+// ==============================================================================
+apiRouter.post("/campaigns/outreach/cre", dispatchCreBrief);
+apiRouter.post("/campaigns/outreach/medspa", dispatchMedSpaDiagnostic);
+apiRouter.post("/campaigns/founder-sprint/book", bookFounderSprint);

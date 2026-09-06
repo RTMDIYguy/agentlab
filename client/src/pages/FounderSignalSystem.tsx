@@ -41,16 +41,30 @@ export default function FounderSignalSystem() {
 
   const isGodmode = user?.role === "admin" || (user as any)?.name === "Thebossrob" || (user as any)?.username === "bossrob";
 
-  const handleBookingSubmit = (e: React.FormEvent) => {
+  const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsBookingOpen(false);
-      toast.success("Diagnostic Call Requested!", {
-        description: "Robert will review your signal profile and reach out within 24 hours."
+    try {
+      const res = await fetch("/api/campaigns/founder-sprint/book", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
-    }, 900);
+
+      if (!res.ok) {
+        throw new Error("Failed to book sprint diagnostic");
+      }
+
+      const data = await res.json();
+      setIsBookingOpen(false);
+      toast.success("Diagnostic Call & Sprint Booked!", {
+        description: `Profile and 5-Day Sprint dossier logged under SAL-01. Review scheduled ${data.scheduledReview || "within 24 hours"}.`,
+      });
+    } catch {
+      toast.error("Failed to submit diagnostic request. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const sprintDays = [

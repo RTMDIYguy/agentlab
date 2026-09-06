@@ -1,4 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+vi.mock("../db", () => ({
+  getDb: vi.fn().mockResolvedValue(null),
+}));
+
 import { detectAgentRefusal, extractArtifactsFromOutput } from "./agent-runner";
 
 describe("AgentLab Phase 1 Verification - Refusal & Evidence Gate", () => {

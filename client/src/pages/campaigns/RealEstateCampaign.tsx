@@ -35,16 +35,27 @@ export default function RealEstateCampaign() {
     territory: "Southern Nevada (Henderson / Apex / North Las Vegas)"
   });
 
+  const [deliveredBrief, setDeliveredBrief] = useState<any>(null);
+
   const handleBriefRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      // Simulate live CRM contact sync
-      await new Promise(r => setTimeout(r, 800));
-      toast.success("Intelligence Brief Dispatched!", {
-        description: `We've sent the Off-Market Expansion Signal PDF to ${formState.email}.`
+      const res = await fetch("/api/campaigns/outreach/cre", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formState),
       });
-      setIsBriefModalOpen(false);
+
+      if (!res.ok) {
+        throw new Error("Failed to dispatch brief");
+      }
+
+      const data = await res.json();
+      setDeliveredBrief(data);
+      toast.success("Intelligence Brief Dispatched!", {
+        description: `Verified Nevada Expansion Signal generated (Checksum: ${data.checksum?.slice(0, 8)}...).`,
+      });
     } catch {
       toast.error("Failed to dispatch brief. Please try again.");
     } finally {
@@ -207,53 +218,79 @@ export default function RealEstateCampaign() {
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={handleBriefRequest} className="space-y-4 py-2">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-xs font-medium text-slate-300">Your Full Name</Label>
-              <Input 
-                id="name" 
-                required 
-                placeholder="e.g. David Miller" 
-                className="bg-slate-950 border-slate-800 focus:border-cyan-500 text-white"
-                value={formState.name}
-                onChange={e => setFormState({...formState, name: e.target.value})}
-              />
+          {deliveredBrief ? (
+            <div className="space-y-4 py-2">
+              <div className="p-3 bg-cyan-950/40 border border-cyan-500/30 rounded-lg space-y-2">
+                <div className="flex items-center justify-between">
+                  <Badge className="bg-cyan-500/20 text-cyan-300 font-mono text-[10px]">SAL-01 Dispatched</Badge>
+                  <span className="text-[10px] text-slate-400 font-mono">SHA256: {deliveredBrief.checksum?.slice(0, 12)}...</span>
+                </div>
+                <h4 className="text-sm font-semibold text-white">{deliveredBrief.title}</h4>
+                <p className="text-xs text-slate-300 font-mono whitespace-pre-line bg-black/40 p-2.5 rounded border border-slate-800">
+                  {deliveredBrief.preview}
+                </p>
+              </div>
+              <DialogFooter>
+                <Button 
+                  onClick={() => {
+                    setIsBriefModalOpen(false);
+                    setDeliveredBrief(null);
+                  }}
+                  className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-semibold"
+                >
+                  Done
+                </Button>
+              </DialogFooter>
             </div>
+          ) : (
+            <form onSubmit={handleBriefRequest} className="space-y-4 py-2">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-xs font-medium text-slate-300">Your Full Name</Label>
+                <Input 
+                  id="name" 
+                  required 
+                  placeholder="e.g. David Miller" 
+                  className="bg-slate-950 border-slate-800 focus:border-cyan-500 text-white"
+                  value={formState.name}
+                  onChange={e => setFormState({...formState, name: e.target.value})}
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-xs font-medium text-slate-300">Work Email Address</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                required 
-                placeholder="david@heritage-realty.com" 
-                className="bg-slate-950 border-slate-800 focus:border-cyan-500 text-white"
-                value={formState.email}
-                onChange={e => setFormState({...formState, email: e.target.value})}
-              />
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-xs font-medium text-slate-300">Work Email Address</Label>
+                <Input 
+                  id="email" 
+                  type="email" 
+                  required 
+                  placeholder="david@heritage-realty.com" 
+                  className="bg-slate-950 border-slate-800 focus:border-cyan-500 text-white"
+                  value={formState.email}
+                  onChange={e => setFormState({...formState, email: e.target.value})}
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="firm" className="text-xs font-medium text-slate-300">Brokerage / Development Firm</Label>
-              <Input 
-                id="firm" 
-                placeholder="e.g. Heritage Realty / CBRE" 
-                className="bg-slate-950 border-slate-800 focus:border-cyan-500 text-white"
-                value={formState.firm}
-                onChange={e => setFormState({...formState, firm: e.target.value})}
-              />
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="firm" className="text-xs font-medium text-slate-300">Brokerage / Development Firm</Label>
+                <Input 
+                  id="firm" 
+                  placeholder="e.g. Heritage Realty / CBRE" 
+                  className="bg-slate-950 border-slate-800 focus:border-cyan-500 text-white"
+                  value={formState.firm}
+                  onChange={e => setFormState({...formState, firm: e.target.value})}
+                />
+              </div>
 
-            <DialogFooter className="pt-4">
-              <Button 
-                type="submit" 
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-black font-semibold"
-              >
-                {isSubmitting ? "Dispatching Brief..." : "Send Free 1-Page PDF Brief"}
-              </Button>
-            </DialogFooter>
-          </form>
+              <DialogFooter className="pt-4">
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-black font-semibold"
+                >
+                  {isSubmitting ? "Dispatching Brief..." : "Send Free 1-Page PDF Brief"}
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
         </DialogContent>
       </Dialog>
     </div>

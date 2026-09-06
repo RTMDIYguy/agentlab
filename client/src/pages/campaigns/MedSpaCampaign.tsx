@@ -34,15 +34,27 @@ export default function MedSpaCampaign() {
     monthlyInquiries: "50–150 leads/mo"
   });
 
+  const [deliveredDiagnostic, setDeliveredDiagnostic] = useState<any>(null);
+
   const handleDiagnosticSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await new Promise(r => setTimeout(r, 800));
-      toast.success("Practice Diagnostic Scheduled!", {
-        description: `Our team will review ${formState.practiceName || "your practice"} and prepare your custom Patient Flow Blueprint.`
+      const res = await fetch("/api/campaigns/outreach/medspa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formState),
       });
-      setIsDiagnosticOpen(false);
+
+      if (!res.ok) {
+        throw new Error("Failed to generate diagnostic");
+      }
+
+      const data = await res.json();
+      setDeliveredDiagnostic(data);
+      toast.success("Practice Diagnostic Generated!", {
+        description: `Patient Flow Audit created for ${formState.practiceName || "your practice"} (Est. Recovery: ${data.recoveredRevenueEst}).`,
+      });
     } catch {
       toast.error("Failed to request diagnostic. Please try again.");
     } finally {
@@ -200,53 +212,79 @@ export default function MedSpaCampaign() {
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={handleDiagnosticSubmit} className="space-y-4 py-2">
-            <div className="space-y-2">
-              <Label htmlFor="medspa-name" className="text-xs font-medium text-slate-300">Your Full Name</Label>
-              <Input 
-                id="medspa-name" 
-                required 
-                placeholder="e.g. Dr. Shannon Pearson" 
-                className="bg-slate-950 border-slate-800 focus:border-rose-500 text-white"
-                value={formState.name}
-                onChange={e => setFormState({...formState, name: e.target.value})}
-              />
+          {deliveredDiagnostic ? (
+            <div className="space-y-4 py-2">
+              <div className="p-3 bg-rose-950/40 border border-rose-500/30 rounded-lg space-y-2">
+                <div className="flex items-center justify-between">
+                  <Badge className="bg-rose-500/20 text-rose-300 font-mono text-[10px]">SAL-01 Generated</Badge>
+                  <span className="text-[10px] text-slate-400 font-mono">Recovery Est: {deliveredDiagnostic.recoveredRevenueEst}</span>
+                </div>
+                <h4 className="text-sm font-semibold text-white">{deliveredDiagnostic.title}</h4>
+                <p className="text-xs text-slate-300 font-mono whitespace-pre-line bg-black/40 p-2.5 rounded border border-slate-800">
+                  {deliveredDiagnostic.preview}
+                </p>
+              </div>
+              <DialogFooter>
+                <Button 
+                  onClick={() => {
+                    setIsDiagnosticOpen(false);
+                    setDeliveredDiagnostic(null);
+                  }}
+                  className="w-full bg-rose-500 hover:bg-rose-400 text-white font-semibold"
+                >
+                  Done
+                </Button>
+              </DialogFooter>
             </div>
+          ) : (
+            <form onSubmit={handleDiagnosticSubmit} className="space-y-4 py-2">
+              <div className="space-y-2">
+                <Label htmlFor="medspa-name" className="text-xs font-medium text-slate-300">Your Full Name</Label>
+                <Input 
+                  id="medspa-name" 
+                  required 
+                  placeholder="e.g. Dr. Shannon Pearson" 
+                  className="bg-slate-950 border-slate-800 focus:border-rose-500 text-white"
+                  value={formState.name}
+                  onChange={e => setFormState({...formState, name: e.target.value})}
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="medspa-email" className="text-xs font-medium text-slate-300">Work Email Address</Label>
-              <Input 
-                id="medspa-email" 
-                type="email" 
-                required 
-                placeholder="shannon@pearsonmedspa.com" 
-                className="bg-slate-950 border-slate-800 focus:border-rose-500 text-white"
-                value={formState.email}
-                onChange={e => setFormState({...formState, email: e.target.value})}
-              />
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="medspa-email" className="text-xs font-medium text-slate-300">Work Email Address</Label>
+                <Input 
+                  id="medspa-email" 
+                  type="email" 
+                  required 
+                  placeholder="shannon@pearsonmedspa.com" 
+                  className="bg-slate-950 border-slate-800 focus:border-rose-500 text-white"
+                  value={formState.email}
+                  onChange={e => setFormState({...formState, email: e.target.value})}
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="practice" className="text-xs font-medium text-slate-300">Practice / Clinic Name</Label>
-              <Input 
-                id="practice" 
-                placeholder="e.g. Pearson Aesthetics & MedSpa" 
-                className="bg-slate-950 border-slate-800 focus:border-rose-500 text-white"
-                value={formState.practiceName}
-                onChange={e => setFormState({...formState, practiceName: e.target.value})}
-              />
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="practice" className="text-xs font-medium text-slate-300">Practice / Clinic Name</Label>
+                <Input 
+                  id="practice" 
+                  placeholder="e.g. Pearson Aesthetics & MedSpa" 
+                  className="bg-slate-950 border-slate-800 focus:border-rose-500 text-white"
+                  value={formState.practiceName}
+                  onChange={e => setFormState({...formState, practiceName: e.target.value})}
+                />
+              </div>
 
-            <DialogFooter className="pt-4">
-              <Button 
-                type="submit" 
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white font-semibold"
-              >
-                {isSubmitting ? "Generating Blueprint..." : "Get Free Patient Flow Audit"}
-              </Button>
-            </DialogFooter>
-          </form>
+              <DialogFooter className="pt-4">
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white font-semibold"
+                >
+                  {isSubmitting ? "Generating Blueprint..." : "Get Free Patient Flow Audit"}
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
         </DialogContent>
       </Dialog>
     </div>
