@@ -1,0 +1,42 @@
+/*
+ Theme Name:   OneListing Child
+ Theme URI:    https://prodirectory.unclerobertconsulting.com
+ Description:  Custom child theme for OneListing Directory by Uncle Robert Consulting (URC).
+ Author:       Uncle Robert Consulting
+ Author URI:   https://unclerobertconsulting.com
+ Template:     onelisting
+ Version:      1.0.0
+ Text Domain:  onelisting-child
+ License:      GNU General Public License v2 or later
+ License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+/* ==========================================================================
+   URC Pro Directory Custom Styles
+   ========================================================================== */
+
+/* Root design variables */
+:root {
+  --urc-primary: #1e3a8a;
+  --urc-primary-hover: #1d4ed8;
+  --urc-accent: #0ea5e9;
+  --urc-bg-light: #f8fafc;
+  --urc-text-dark: #0f172a;
+  --urc-border-radius: 8px;
+}
+
+/* Custom enhancements for Directorist listing cards & search */
+.directorist-wrapper .directorist-search-box {
+  border-radius: var(--urc-border-radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.directorist-wrapper .directorist-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: var(--urc-border-radius);
+}
+
+.directorist-wrapper .directorist-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}

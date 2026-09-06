@@ -1,0 +1,7 @@
+{
+  "uid": "agentlabhs_page",
+  "type": "page",
+  "config": {
+    "entrypoint": "/app/pages/Pages.tsx"
+  }
+}

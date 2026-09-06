@@ -1,0 +1,7 @@
+{
+  "uid": "agentlabhs_settings",
+  "type": "settings",
+  "config": {
+    "entrypoint": "/app/settings/SettingsPage.tsx"
+  }
+}
