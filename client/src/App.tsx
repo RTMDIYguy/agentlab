@@ -43,6 +43,8 @@ import Security from "@/pages/Security";
 import Careers from "@/pages/Careers";
 import Documentation from "@/pages/Documentation";
 import FounderSignalSystem from "@/pages/FounderSignalSystem";
+import RealEstateCampaign from "@/pages/campaigns/RealEstateCampaign";
+import MedSpaCampaign from "@/pages/campaigns/MedSpaCampaign";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useEffect } from "react";
 // import { AgenticTour } from "./components/AgenticTour";
@@ -97,6 +99,8 @@ function Router() {
       />
       <Route path={"/marketplace"} component={Marketplace} />
       <Route path={"/founder-signal-system"} component={FounderSignalSystem} />
+      <Route path={"/campaigns/real-estate"} component={RealEstateCampaign} />
+      <Route path={"/campaigns/medspa"} component={MedSpaCampaign} />
       <Route path={"/command-center"} component={CommandCenter} />
       <Route path={"/dashboard/settings"} component={Settings} />
       <Route path={"/admin"} component={AdminDashboard} />
