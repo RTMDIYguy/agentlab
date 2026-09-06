@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Navigation } from "./Navigation";
 import { Footer } from "./Footer";
+import { PamelaVoiceWidget } from "./PamelaVoiceWidget";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -9,10 +10,12 @@ interface PageLayoutProps {
 
 export function PageLayout({ children, className = "" }: PageLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background relative">
       <Navigation />
       <main className={`flex-1 ${className}`}>{children}</main>
       <Footer />
+      <PamelaVoiceWidget />
     </div>
   );
 }
+
