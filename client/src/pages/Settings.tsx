@@ -312,6 +312,17 @@ export default function Settings() {
       details: "MKT-02 Nurture & SDR-Agent Sync live",
     },
     {
+      id: "builtin-instantly",
+      name: "Instantly.ai Outbound Engine",
+      type: "Cold Outbound & Warmup (SAL-01)",
+      description: "High-deliverability cold email sequences, multi-inbox warmup, and AI reply classification.",
+      status: "active",
+      protocol: "Instantly REST API v1 / Webhook",
+      icon: Zap,
+      color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+      details: "YmYxNmQ3... (OwnableOS Master Key)",
+    },
+    {
       id: "builtin-pulse",
       name: "Pulse Social Scheduler",
       type: "Social Media Distribution",
@@ -1098,7 +1109,7 @@ export default function Settings() {
                     <div className="flex items-center justify-between">
                       <h3 className="font-bold text-sm text-foreground flex items-center gap-2">
                         <span>Core Agency Operating System Integrations</span>
-                        <Badge variant="secondary" className="text-[10px] font-mono">8 Mounted</Badge>
+                        <Badge variant="secondary" className="text-[10px] font-mono">9 Mounted</Badge>
                       </h3>
                     </div>
 

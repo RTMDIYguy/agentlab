@@ -63,6 +63,12 @@ import {
   dispatchOutboundVoiceCall,
 } from "../controllers/voice";
 import { ingestCustomerPurchase } from "../controllers/fulfillment";
+import {
+  handleInstantlyVerify,
+  handleInstantlyListCampaigns,
+  handleInstantlyEnrollLead,
+  handleInstantlyWebhook,
+} from "../controllers/instantly";
 
 export const apiRouter = Router();
 
@@ -220,3 +226,11 @@ apiRouter.post("/voice/dispatch", dispatchOutboundVoiceCall);
 // Autonomous Customer Onboarding & Retention Swarm (FUL-01 / SAL-03)
 // ==============================================================================
 apiRouter.post("/fulfillment/onboarding/ingest", ingestCustomerPurchase);
+
+// ==============================================================================
+// Instantly.ai Outbound Engine & Webhook Receiver (SAL-01)
+// ==============================================================================
+apiRouter.get("/outbound/instantly/verify", handleInstantlyVerify);
+apiRouter.get("/outbound/instantly/campaigns", handleInstantlyListCampaigns);
+apiRouter.post("/outbound/instantly/enroll", handleInstantlyEnrollLead);
+apiRouter.post("/webhooks/instantly", handleInstantlyWebhook);
