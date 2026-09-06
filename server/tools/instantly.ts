@@ -27,7 +27,7 @@ export interface InstantlyWebhookEvent {
   timestamp?: string;
 }
 
-const INSTANTLY_BASE_URL = "https://api.instantly.ai/api/v1";
+const INSTANTLY_BASE_URL = "https://api.instantly.ai/api/v2";
 
 /**
  * Get the configured Instantly API key
@@ -46,10 +46,10 @@ export function getInstantlyApiKey(): string {
 export async function verifyInstantlyConnection(): Promise<{ success: boolean; message: string; campaignCount?: number }> {
   try {
     const apiKey = getInstantlyApiKey();
-    // Instantly v1 /authenticate or /campaign/list check
-    const response = await fetch(`${INSTANTLY_BASE_URL}/campaign/list?api_key=${encodeURIComponent(apiKey)}&limit=1`, {
+    const response = await fetch(`${INSTANTLY_BASE_URL}/campaigns?limit=1`, {
       method: "GET",
       headers: {
+        Authorization: `Bearer ${apiKey}`,
         Accept: "application/json",
       },
     });
@@ -63,10 +63,10 @@ export async function verifyInstantlyConnection(): Promise<{ success: boolean; m
     }
 
     const data = await response.json();
-    const count = Array.isArray(data) ? data.length : (data.campaigns ? data.campaigns.length : 0);
+    const count = data.items ? data.items.length : (Array.isArray(data) ? data.length : 0);
     return {
       success: true,
-      message: "Instantly.ai connected successfully. Authentication and permissions verified.",
+      message: "Instantly.ai connected successfully via v2 API. Authentication verified.",
       campaignCount: count,
     };
   } catch (err: any) {
@@ -83,10 +83,11 @@ export async function verifyInstantlyConnection(): Promise<{ success: boolean; m
 export async function listInstantlyCampaigns(limit = 10, skip = 0): Promise<any[]> {
   const apiKey = getInstantlyApiKey();
   const response = await fetch(
-    `${INSTANTLY_BASE_URL}/campaign/list?api_key=${encodeURIComponent(apiKey)}&limit=${limit}&skip=${skip}`,
+    `${INSTANTLY_BASE_URL}/campaigns?limit=${limit}&skip=${skip}`,
     {
       method: "GET",
       headers: {
+        Authorization: `Bearer ${apiKey}`,
         Accept: "application/json",
       },
     }
@@ -97,7 +98,7 @@ export async function listInstantlyCampaigns(limit = 10, skip = 0): Promise<any[
   }
 
   const data = await response.json();
-  return Array.isArray(data) ? data : data.campaigns || [];
+  return data.items || (Array.isArray(data) ? data : []);
 }
 
 /**
