@@ -55,6 +55,13 @@ import {
   dispatchMedSpaDiagnostic,
   bookFounderSprint,
 } from "../controllers/campaigns";
+import {
+  handleTextToSpeech,
+  getAvailableVoiceSlots,
+  bookVoiceAppointment,
+  handleVoiceCallWebhook,
+  dispatchOutboundVoiceCall,
+} from "../controllers/voice";
 
 export const apiRouter = Router();
 
@@ -198,3 +205,12 @@ apiRouter.patch("/artifacts/:id", updateArtifactStatus);
 apiRouter.post("/campaigns/outreach/cre", dispatchCreBrief);
 apiRouter.post("/campaigns/outreach/medspa", dispatchMedSpaDiagnostic);
 apiRouter.post("/campaigns/founder-sprint/book", bookFounderSprint);
+
+// ==============================================================================
+// Conversational Voice Agents (Pamela & ElevenLabs)
+// ==============================================================================
+apiRouter.post("/voice/tts", handleTextToSpeech);
+apiRouter.get("/voice/slots", getAvailableVoiceSlots);
+apiRouter.post("/voice/book", bookVoiceAppointment);
+apiRouter.post("/voice/webhook", handleVoiceCallWebhook);
+apiRouter.post("/voice/dispatch", dispatchOutboundVoiceCall);

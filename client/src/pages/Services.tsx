@@ -422,6 +422,45 @@ export default function Services() {
         </div>
       </section>
 
+      {/* Sovereign Infrastructure & Cloud Hosting Architecture */}
+      <section className="py-14 bg-card/60 border-t border-border">
+        <div className="container max-w-6xl mx-auto">
+          <div className="p-8 rounded-2xl border border-border bg-gradient-to-br from-card via-card to-muted/30 flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm">
+            <div className="space-y-3 max-w-2xl">
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20">
+                  Infrastructure & Cloud Partner
+                </span>
+                <span className="text-xs text-muted-foreground">&bull; agent-lab.tech</span>
+              </div>
+              <h3 className="text-2xl font-black text-foreground">
+                Enterprise Cloud, Domains & Sovereign Infrastructure Powered by IONOS
+              </h3>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                Every AgentLab client deployment runs on enterprise-grade, high-availability European & US data centers. We partner directly with IONOS to provision sovereign cloud instances, domain clusters, SSL certificates, and isolated client backbones.
+              </p>
+            </div>
+            <div className="flex flex-col items-center gap-3 shrink-0">
+              <a 
+                href="https://partnernetwork.ionos.com/partner/agent.lab?origin=PartnerBadge" 
+                target="_blank" 
+                rel="nofollow noopener noreferrer"
+                className="transition-transform hover:scale-105"
+              >
+                <img 
+                  src="https://images-1.partnerportal.ionos.com/items/6484dc88-fd70-4523-b919-2b70b2ecc722/profiles/a41b3bdd-0f5c-4f01-8de7-b38bdaa13974/badges/normal_blue_eco" 
+                  alt="IONOS - Official Partner" 
+                  className="h-12 w-auto rounded shadow-sm"
+                />
+              </a>
+              <span className="text-[11px] font-mono text-muted-foreground">
+                Certified Partner Network
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-primary to-primary/80 text-white">
         <div className="container text-center space-y-6">

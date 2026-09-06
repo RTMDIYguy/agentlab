@@ -403,6 +403,30 @@ export default function Home() {
                 </p>
               </Card>
             </div>
+
+            {/* Official Infrastructure & Technology Partners Badge Row */}
+            <div className="pt-6 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-4 bg-muted/20 p-4 rounded-2xl">
+              <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+                <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[10px] uppercase font-bold">
+                  Official Infrastructure Partner
+                </Badge>
+                <span className="text-xs text-muted-foreground">
+                  Powering enterprise cloud hosting, domains, SSL & sovereign client architectures at <strong className="text-foreground">agent-lab.tech</strong>
+                </span>
+              </div>
+              <a 
+                href="https://partnernetwork.ionos.com/partner/agent.lab?origin=PartnerBadge" 
+                target="_blank" 
+                rel="nofollow noopener noreferrer"
+                className="transition-transform hover:scale-105 shrink-0"
+              >
+                <img 
+                  src="https://images-1.partnerportal.ionos.com/items/6484dc88-fd70-4523-b919-2b70b2ecc722/profiles/a41b3bdd-0f5c-4f01-8de7-b38bdaa13974/badges/normal_blue_eco" 
+                  alt="IONOS - Official Partner" 
+                  className="h-9 w-auto rounded shadow-sm"
+                />
+              </a>
+            </div>
           </div>
         </section>
 
