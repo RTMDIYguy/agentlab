@@ -195,6 +195,7 @@ In accordance with repository governance, only registered collaborators and cert
 | **Chris** | Bootstrapper Capital / Community Director | `c@bootstrappercapital.com` | Registered Collaborator | Active |
 | **Mahmudul Haison** | AgentLab & Tactix / Remote Tech Specialist | `mahmudhaisan@gmail.com` | Technical Collaborator | Active |
 | **Eileen Prudhont** | Strategic Collaborator & Partner | `eileenprudhont@gmail.com` | Registered Collaborator | Active |
+| **JoBeth McCarthy-Jean** | Sister | `jmccarthyjean@gmail.com` | Registered Collaborator | Active |
 
 ---
 
