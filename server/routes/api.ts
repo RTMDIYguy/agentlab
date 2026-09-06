@@ -62,6 +62,7 @@ import {
   handleVoiceCallWebhook,
   dispatchOutboundVoiceCall,
 } from "../controllers/voice";
+import { ingestCustomerPurchase } from "../controllers/fulfillment";
 
 export const apiRouter = Router();
 
@@ -214,3 +215,8 @@ apiRouter.get("/voice/slots", getAvailableVoiceSlots);
 apiRouter.post("/voice/book", bookVoiceAppointment);
 apiRouter.post("/voice/webhook", handleVoiceCallWebhook);
 apiRouter.post("/voice/dispatch", dispatchOutboundVoiceCall);
+
+// ==============================================================================
+// Autonomous Customer Onboarding & Retention Swarm (FUL-01 / SAL-03)
+// ==============================================================================
+apiRouter.post("/fulfillment/onboarding/ingest", ingestCustomerPurchase);

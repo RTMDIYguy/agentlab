@@ -200,7 +200,7 @@ export default function Settings() {
   // Synchronize with database settings when loaded
   useEffect(() => {
     if (workspaceSettings) {
-      setLlmForm(prev => ({
+      setLlmForm((prev: any) => ({
         ...prev,
         orchestratorName: workspaceSettings.orchestratorName || prev.orchestratorName,
         defaultModel: workspaceSettings.defaultModel || prev.defaultModel,
