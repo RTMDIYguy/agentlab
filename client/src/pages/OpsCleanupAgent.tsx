@@ -212,13 +212,27 @@ export default function OpsCleanupAgent() {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
+      const isImage = file.type.startsWith("image/");
       const reader = new FileReader();
+
       reader.onload = (event) => {
         const content = event.target?.result as string;
-        setAttachedDocs((prev) => [...prev, { name: file.name, content: content.slice(0, 5000) }]);
-        toast.success(`Attached document: ${file.name}`);
+        setAttachedDocs((prev) => [
+          ...prev,
+          {
+            name: file.name,
+            content: isImage ? content : content.slice(0, 50000),
+            type: file.type || (isImage ? "image/png" : "text/plain"),
+          },
+        ]);
+        toast.success(`Attached ${isImage ? "image snapshot" : "document"}: ${file.name}`);
       };
-      reader.readAsText(file);
+
+      if (isImage) {
+        reader.readAsDataURL(file);
+      } else {
+        reader.readAsText(file);
+      }
     }
     if (fileInputRef.current) fileInputRef.current.value = "";
   };

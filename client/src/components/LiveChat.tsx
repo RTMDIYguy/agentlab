@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { MessageCircle, Send, X } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { useLocation } from "wouter";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -11,6 +13,13 @@ const starterMessage =
   "Hi, I’m the Founder Intake Agent. I can help you find the right next step, usually a Founder Roundtable or a Business Systems Diagnostic. What’s the biggest thing slowing your business down right now?";
 
 export function LiveChat() {
+  const { isAuthenticated } = useAuth();
+  const [location] = useLocation();
+
+  // Restrict Founder Intake chat modal exclusively to the outside landing page ("/") for unauthenticated guests
+  if (isAuthenticated || (location !== "/" && location !== "")) {
+    return null;
+  }
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: starterMessage },
