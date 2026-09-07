@@ -1472,7 +1472,7 @@ export default function CommandCenter() {
                         <div className="space-y-1">
                           <label className="text-[11px] text-muted-foreground">Assigned Swarm Node</label>
                           <select
-                            value={step.agentId || "Alpha-Node-01"}
+                            value={step.agentId || ""}
                             onChange={(e) => {
                               const updated = [...editSteps];
                               updated[index].agentId = e.target.value;
@@ -1480,11 +1480,22 @@ export default function CommandCenter() {
                             }}
                             className="w-full h-9 rounded-md border border-border bg-background px-2 text-xs font-mono"
                           >
-                            <option value="Alpha-Node-01">Alpha-Node-01 (Lead Enrichment)</option>
-                            <option value="Coder-Agent-07">Coder-Agent-07 (SWE)</option>
-                            <option value="SDR-Writer-02">SDR-Writer-02 (Copywriter)</option>
-                            <option value="Auditor-Bot-9">Auditor-Bot-9 (Reconciliation)</option>
-                            <option value="Workflow-Planner-04">Workflow-Planner-04 (Task Router)</option>
+                            <option value="">-- No Assigned Agent --</option>
+                            {agentsData?.agents && agentsData.agents.length > 0 ? (
+                              agentsData.agents.map((ag: any) => (
+                                <option key={ag.id} value={ag.id}>
+                                  {ag.name} ({ag.role})
+                                </option>
+                              ))
+                            ) : (
+                              <>
+                                <option value="Alpha-Node-01">Alpha-Node-01 (Lead Enrichment)</option>
+                                <option value="Coder-Agent-07">Coder-Agent-07 (SWE)</option>
+                                <option value="SDR-Writer-02">SDR-Writer-02 (Copywriter)</option>
+                                <option value="Auditor-Bot-9">Auditor-Bot-9 (Reconciliation)</option>
+                                <option value="Workflow-Planner-04">Workflow-Planner-04 (Task Router)</option>
+                              </>
+                            )}
                           </select>
                         </div>
                       </div>

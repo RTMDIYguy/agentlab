@@ -547,7 +547,7 @@ export default function Auditing() {
                 {selectedLog.details && (
                   <div className="space-y-1">
                     <span className="font-semibold text-foreground">Payload Context:</span>
-                    <pre className="p-3 rounded-lg bg-muted/60 border border-border/60 overflow-x-auto text-[11px] font-mono text-muted-foreground">
+                    <pre className="p-3 rounded-lg bg-muted/60 border border-border/60 overflow-y-auto max-h-96 text-[11px] font-mono text-muted-foreground whitespace-pre-wrap break-words break-all">
                       {JSON.stringify(selectedLog.details, null, 2)}
                     </pre>
                   </div>

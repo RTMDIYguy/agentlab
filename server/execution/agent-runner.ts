@@ -4,9 +4,12 @@ import { z } from "zod";
 import { AgentMailClient } from "../tools/agentmail";
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 import { getDb } from "../db";
 import { auditLogs, workflowRunSteps, workflowArtifacts } from "../schema";
 import { desc, eq } from "drizzle-orm";
+import { listInstantlyCampaigns, addLeadToCampaign, verifyInstantlyConnection } from "../tools/instantly";
+import { convertTextToSpeech } from "../tools/elevenlabs-voice";
 
 export interface CapturedToolCall {
   toolName: string;
@@ -415,56 +418,126 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
           } as any),
 
           auditFileInventory: tool({
-            description: "Scan the workspace or Google Drive files to identify file counts, categorization, age, duplicates, and sensitive assets.",
+            description: "Scan the workspace or filesystem to identify genuine file counts, directory hierarchy, extension breakdown, file age, duplicates, and sensitive files.",
             parameters: z.object({
-              targetDirectory: z.string().optional().describe("Directory or Drive root to audit (defaults to workspace root)"),
+              targetDirectory: z.string().optional().describe("Directory or root to audit (defaults to current workspace directory)"),
               detectDuplicates: z.boolean().optional().default(true).describe("Whether to scan for duplicate or redundant files"),
               checkPermissions: z.boolean().optional().default(true).describe("Whether to check least-privilege sharing permissions"),
             }),
             execute: async ({ targetDirectory, detectDuplicates, checkPermissions }: any) => {
-              console.log("[TOOL EXECUTED] Auditing File Inventory:", targetDirectory || "workspace root");
-              const simulatedAudit = {
+              const rootDir = targetDirectory ? path.resolve(process.cwd(), targetDirectory) : process.cwd();
+              console.log("[TOOL EXECUTED] Auditing File Inventory at:", rootDir);
+              
+              const scannedFiles: { relativePath: string; size: number; mtime: Date; ext: string }[] = [];
+              const extensionCounts: Record<string, number> = {};
+              const now = Date.now();
+              let under30Days = 0;
+              let under90Days = 0;
+              let over90Days = 0;
+              const sensitiveFiles: { path: string; risk: string; note: string }[] = [];
+
+              const traverse = (dir: string, depth = 0) => {
+                if (depth > 8) return;
+                let entries: fs.Dirent[] = [];
+                try {
+                  entries = fs.readdirSync(dir, { withFileTypes: true });
+                } catch {
+                  return;
+                }
+                for (const entry of entries) {
+                  if (entry.name === "node_modules" || entry.name === ".git" || entry.name === "dist" || entry.name === ".next") continue;
+                  const full = path.join(dir, entry.name);
+                  if (entry.isDirectory()) {
+                    traverse(full, depth + 1);
+                  } else if (entry.isFile()) {
+                    try {
+                      const stat = fs.statSync(full);
+                      const rel = path.relative(rootDir, full).replace(/\\/g, "/");
+                      const ext = path.extname(entry.name).toLowerCase() || "no_extension";
+                      scannedFiles.push({ relativePath: rel, size: stat.size, mtime: stat.mtime, ext });
+                      extensionCounts[ext] = (extensionCounts[ext] || 0) + 1;
+
+                      const ageDays = (now - stat.mtime.getTime()) / (1000 * 60 * 60 * 24);
+                      if (ageDays <= 30) under30Days++;
+                      else if (ageDays <= 90) under90Days++;
+                      else over90Days++;
+
+                      if (entry.name === ".env" || entry.name.endsWith(".pem") || entry.name.endsWith(".key")) {
+                        sensitiveFiles.push({ path: rel, risk: "high", note: "Active secret file detected on filesystem" });
+                      } else if (entry.name === ".env.example") {
+                        sensitiveFiles.push({ path: rel, risk: "low", note: "Sanitized template confirmed." });
+                      }
+                    } catch {
+                      // Skip unreadable files
+                    }
+                  }
+                }
+              };
+
+              traverse(rootDir);
+
+              // Duplicate detection
+              const duplicates: { original: string; duplicate: string; savingsKb: number }[] = [];
+              if (detectDuplicates) {
+                const sizeMap = new Map<number, string>();
+                for (const f of scannedFiles) {
+                  if (f.size > 200) {
+                    const existing = sizeMap.get(f.size);
+                    if (existing && path.basename(existing) === path.basename(f.relativePath)) {
+                      duplicates.push({
+                        original: existing,
+                        duplicate: f.relativePath,
+                        savingsKb: Math.round(f.size / 1024),
+                      });
+                    } else if (!existing) {
+                      sizeMap.set(f.size, f.relativePath);
+                    }
+                  }
+                }
+              }
+
+              const realAudit = {
                 status: "success",
-                scannedFilesCount: 142,
-                duplicateFilesFound: [
-                  { original: "docs/operations/agency-operating-manual.md", duplicate: "docs/operations/versions/agency-operating-manual-v0.9.md", savingsKb: 25 },
-                  { original: "workflows/mkt-01-daily-linkedin.json", duplicate: "workflows/drafts/mkt-01-copy.json", savingsKb: 8 }
-                ],
-                ageBreakdown: { under30Days: 45, under90Days: 62, over90DaysArchiveCandidate: 35 },
-                sensitiveFilesFlagged: [
-                  { path: ".env.example", risk: "low", note: "Sanitized template confirmed." }
-                ],
+                rootDirectory: rootDir,
+                scannedFilesCount: scannedFiles.length,
+                extensionBreakdown: extensionCounts,
+                duplicateFilesFound: duplicates.slice(0, 10),
+                ageBreakdown: { under30Days, under90Days, over90DaysArchiveCandidate: over90Days },
+                sensitiveFilesFlagged: sensitiveFiles,
                 recommendedActions: [
-                  "Archive 35 files older than 90 days to docs/archive/",
-                  "Consolidate duplicate workflow definitions into canonical registry.",
-                  "Apply standard SOP-OPS-005 naming convention to 12 un-prefixed documents."
+                  over90Days > 0 ? `Review and archive ${over90Days} files older than 90 days.` : "All files active within 90 days.",
+                  duplicates.length > 0 ? `Consolidate ${duplicates.length} duplicate file candidates.` : "No duplicate candidates detected.",
+                  "Apply standard SOP-OPS-005 naming convention to newly created operating playbooks."
                 ]
               };
 
-              const auditReport = `# Information Architecture & Drive File Audit Report\n\n` +
-                `**Total Files Scanned**: ${simulatedAudit.scannedFilesCount}\n` +
-                `**Duplicate Files Detected**: ${simulatedAudit.duplicateFilesFound.length}\n` +
-                `**Archive Candidates (>90d)**: ${simulatedAudit.ageBreakdown.over90DaysArchiveCandidate}\n\n` +
-                `### Recommended Operations Consolidation:\n` +
-                simulatedAudit.recommendedActions.map(a => `- ${a}`).join("\n");
+              const auditReport = `# Workspace File Inventory & Storage Audit Report\n\n` +
+                `**Root Scanned**: \`${rootDir}\`\n` +
+                `**Total Files Scanned**: ${realAudit.scannedFilesCount}\n` +
+                `**Duplicate Candidates Detected**: ${realAudit.duplicateFilesFound.length}\n` +
+                `**Archive Candidates (>90d)**: ${realAudit.ageBreakdown.over90DaysArchiveCandidate}\n\n` +
+                `### File Types Breakdown:\n` +
+                Object.entries(realAudit.extensionBreakdown).slice(0, 8).map(([ext, count]) => `- \`${ext}\`: ${count} files`).join("\n") +
+                `\n\n### Recommended Actions:\n` +
+                realAudit.recommendedActions.map(a => `- ${a}`).join("\n");
 
               capturedArtifacts.push({
                 title: "File Inventory & Drive Organization Audit",
                 artifactType: "document",
                 content: auditReport,
-                summary: "Automated scan of file inventory, duplicate detection, and archive consolidation plan.",
-                metadata: simulatedAudit,
+                summary: `Real automated scan of ${realAudit.scannedFilesCount} files across ${rootDir}.`,
+                metadata: realAudit,
               });
 
               capturedToolCalls.push({
                 toolName: "auditFileInventory",
                 args: { targetDirectory, detectDuplicates, checkPermissions },
-                result: simulatedAudit,
+                result: realAudit,
                 isSimulated: false,
                 timestamp: new Date().toISOString(),
               });
 
-              return JSON.stringify(simulatedAudit);
+              return JSON.stringify(realAudit);
             },
           } as any),
 
@@ -534,11 +607,12 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
               const mapped = fileNames.map(f => {
                 const lower = f.toLowerCase();
                 let dept = "OPS";
-                if (lower.includes("post") || lower.includes("linkedin") || lower.includes("mkt") || lower.includes("newsletter")) dept = "MKT";
-                else if (lower.includes("deal") || lower.includes("crm") || lower.includes("sales") || lower.includes("lead")) dept = "SAL";
-                else if (lower.includes("price") || lower.includes("invoice") || lower.includes("expense") || lower.includes("fin")) dept = "FIN";
-                else if (lower.includes("client") || lower.includes("delivery") || lower.includes("ful")) dept = "FUL";
-                else if (lower.includes("value") || lower.includes("servant") || lower.includes("culture")) dept = "CUL";
+                if (lower.includes("post") || lower.includes("linkedin") || lower.includes("mkt") || lower.includes("newsletter") || lower.includes("social")) dept = "MKT";
+                else if (lower.includes("deal") || lower.includes("crm") || lower.includes("sales") || lower.includes("lead") || lower.includes("instantly") || lower.includes("prospect")) dept = "SAL";
+                else if (lower.includes("price") || lower.includes("invoice") || lower.includes("expense") || lower.includes("fin") || lower.includes("stripe") || lower.includes("tax")) dept = "FIN";
+                else if (lower.includes("client") || lower.includes("delivery") || lower.includes("ful") || lower.includes("onboard")) dept = "FUL";
+                else if (lower.includes("value") || lower.includes("servant") || lower.includes("culture") || lower.includes("team")) dept = "CUL";
+                else if (lower.includes("continuity") || lower.includes("retention") || lower.includes("renewal") || lower.includes("aft")) dept = "AFT";
                 return { fileName: f, targetDepartment: dept, targetPath: `${dept}-Playbook/03-Artifacts-and-Deliverables/${f}` };
               });
 
@@ -555,44 +629,105 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
           } as any),
 
           scrapeUrlContent: tool({
-            description: "Scrape and extract webpage content, headings, metadata, and key snippet text from a target URL (emulating Playwright/web ingestion).",
+            description: "Scrape and extract webpage content, headings, title, metadata, and key text snippets from a target URL.",
             parameters: z.object({
               url: z.string().describe("Target URL to scrape or extract"),
-              extractSelectors: z.array(z.string()).optional().describe("Optional CSS selectors or sections to extract"),
+              extractSelectors: z.array(z.string()).optional().describe("Optional CSS selectors or section keywords to filter"),
             }),
             execute: async ({ url, extractSelectors }: { url: string; extractSelectors?: string[] }) => {
               console.log("[TOOL EXECUTED] Scraping URL Content:", url);
-              const isInternal = url.includes("localhost") || url.includes("agentlab") || url.startsWith("/");
-              const simulatedData = {
-                status: "success",
-                url,
-                title: isInternal ? "AgentLab OS System Intelligence & Operational Blueprint" : "Target Market & Competitive Landscape Intel",
-                scrapedAt: new Date().toISOString(),
-                metadata: {
-                  author: "Uncle Robert Consulting",
-                  domain: url.replace(/^https?:\/\//, '').split('/')[0],
-                  canonicalUrl: url,
-                },
-                headings: [
-                  "Executive Overview & Signal Detection",
-                  "Playbook Alignment: MKT & SAL Sequence Integration",
-                  "Automated Fulfillment Metrics"
-                ],
-                snippets: [
-                  "SaaS founders operating with autonomous workflows reduce customer acquisition OpEx by 65%.",
-                  "The 7 Department Playbook provides structural authority, preventing context collapse in multi-agent swarms."
-                ]
-              };
+              try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 12000);
+                const res = await fetch(url, {
+                  signal: controller.signal,
+                  headers: {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 AgentLab/1.0",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                  }
+                });
+                clearTimeout(timeoutId);
 
-              capturedToolCalls.push({
-                toolName: "scrapeUrlContent",
-                args: { url, extractSelectors },
-                result: simulatedData,
-                isSimulated: false,
-                timestamp: new Date().toISOString(),
-              });
+                if (!res.ok) {
+                  const errorResult = {
+                    status: "error",
+                    statusCode: res.status,
+                    url,
+                    message: `Target URL returned HTTP status ${res.status} ${res.statusText}`,
+                  };
+                  capturedToolCalls.push({
+                    toolName: "scrapeUrlContent",
+                    args: { url, extractSelectors },
+                    result: errorResult,
+                    isSimulated: false,
+                    timestamp: new Date().toISOString(),
+                  });
+                  return JSON.stringify(errorResult);
+                }
 
-              return JSON.stringify(simulatedData);
+                const html = await res.text();
+                
+                // Extract Title
+                const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+                const title = titleMatch ? titleMatch[1].trim() : url;
+
+                // Extract Meta Description
+                const metaDescMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i) ||
+                  html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*name=["']description["']/i);
+                const description = metaDescMatch ? metaDescMatch[1].trim() : "";
+
+                // Extract Headings
+                const headingMatches = Array.from(html.matchAll(/<h[1-3][^>]*>([^<]+)<\/h[1-3]>/gi)).map(m => m[1].trim()).filter(h => h.length > 3).slice(0, 8);
+
+                // Strip HTML tags for clean body snippets
+                const cleanText = html
+                  .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, " ")
+                  .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, " ")
+                  .replace(/<[^>]+>/g, " ")
+                  .replace(/\s+/g, " ")
+                  .trim();
+
+                const paragraphs = cleanText
+                  .split(/\.\s+/)
+                  .filter(p => p.length > 40 && p.length < 300)
+                  .slice(0, 5);
+
+                const scrapedData = {
+                  status: "success",
+                  url,
+                  title,
+                  description,
+                  scrapedAt: new Date().toISOString(),
+                  headings: headingMatches,
+                  snippets: paragraphs,
+                  contentLengthBytes: html.length,
+                };
+
+                capturedToolCalls.push({
+                  toolName: "scrapeUrlContent",
+                  args: { url, extractSelectors },
+                  result: scrapedData,
+                  isSimulated: false,
+                  timestamp: new Date().toISOString(),
+                });
+
+                return JSON.stringify(scrapedData);
+              } catch (err: any) {
+                const errorResult = {
+                  status: "fetch_failed",
+                  url,
+                  error: err.message,
+                  timestamp: new Date().toISOString(),
+                };
+                capturedToolCalls.push({
+                  toolName: "scrapeUrlContent",
+                  args: { url, extractSelectors },
+                  result: errorResult,
+                  isSimulated: false,
+                  timestamp: new Date().toISOString(),
+                });
+                return JSON.stringify(errorResult);
+              }
             }
           } as any),
 
@@ -625,7 +760,7 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
           } as any),
 
           inspectExecutionLogs: tool({
-            description: "Inspect AgentLab execution logs, telemetry, and recent audit traces to diagnose failure points or verify workflow runs.",
+            description: "Inspect live AgentLab execution logs, telemetry, and recent audit traces from the database.",
             parameters: z.object({
               workflowRunId: z.string().optional().describe("Workflow Run ID to query"),
               limit: z.number().optional().default(10).describe("Maximum number of log entries to retrieve"),
@@ -635,100 +770,162 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
               console.log("[TOOL EXECUTED] Inspecting Execution Logs, workflowRunId:", workflowRunId || "latest");
               try {
                 const db = await getDb();
-                if (db) {
-                  const logs = await db
-                    .select()
-                    .from(auditLogs)
-                    .orderBy(desc(auditLogs.createdAt))
-                    .limit(limit || 10);
-                  
-                  const sanitized = logs.map(l => ({
-                    id: l.id,
-                    actionType: l.actionType,
-                    status: l.status,
-                    latencyMs: l.latencyMs,
-                    timestamp: l.createdAt,
-                    policyChecks: l.policyChecks
-                  }));
-
-                  capturedToolCalls.push({
-                    toolName: "inspectExecutionLogs",
-                    args: { workflowRunId, limit },
-                    result: { totalFound: logs.length, logs: sanitized },
-                    isSimulated: false,
-                    timestamp: new Date().toISOString(),
-                  });
-
-                  return JSON.stringify({ success: true, count: logs.length, logs: sanitized });
+                if (!db) {
+                  return JSON.stringify({ success: false, error: "Database connection not available", logs: [] });
                 }
+
+                const logs = await db
+                  .select()
+                  .from(auditLogs)
+                  .orderBy(desc(auditLogs.createdAt))
+                  .limit(limit || 10);
+                
+                const sanitized = logs.map(l => ({
+                  id: l.id,
+                  actionType: l.actionType,
+                  status: l.status,
+                  latencyMs: l.latencyMs,
+                  timestamp: l.createdAt,
+                  policyChecks: l.policyChecks,
+                  payloadIn: l.payloadIn,
+                  payloadOut: l.payloadOut,
+                }));
+
+                capturedToolCalls.push({
+                  toolName: "inspectExecutionLogs",
+                  args: { workflowRunId, limit, filterAction },
+                  result: { totalFound: logs.length, logs: sanitized },
+                  isSimulated: false,
+                  timestamp: new Date().toISOString(),
+                });
+
+                return JSON.stringify({ success: true, count: logs.length, logs: sanitized });
               } catch (dbErr: any) {
-                console.warn("[Agent Runner] Direct log query fallback:", dbErr.message);
+                const errRes = { success: false, error: dbErr.message, logs: [] };
+                capturedToolCalls.push({
+                  toolName: "inspectExecutionLogs",
+                  args: { workflowRunId, limit },
+                  result: errRes,
+                  isSimulated: false,
+                  timestamp: new Date().toISOString(),
+                });
+                return JSON.stringify(errRes);
               }
-
-              const simulatedLogs = {
-                success: true,
-                count: 3,
-                logs: [
-                  { id: "log_001", actionType: "agent_step_execution", status: "success", latencyMs: 1420, timestamp: new Date().toISOString() },
-                  { id: "log_002", actionType: "agent_step_execution", status: "success", latencyMs: 1850, timestamp: new Date(Date.now() - 30000).toISOString() }
-                ]
-              };
-
-              capturedToolCalls.push({
-                toolName: "inspectExecutionLogs",
-                args: { workflowRunId, limit },
-                result: simulatedLogs,
-                isSimulated: true,
-                timestamp: new Date().toISOString(),
-              });
-
-              return JSON.stringify(simulatedLogs);
             }
           } as any),
 
           verifyReportDelivery: tool({
-            description: "Verify whether generated reports, briefs, or payloads were successfully stored in the Artifact Vault, cached, and dispatched.",
+            description: "Verify whether generated reports, briefs, or payloads were successfully stored on disk, registered in Artifact Vault, and delivered.",
             parameters: z.object({
-              reportTitle: z.string().describe("Title or subject of the report"),
+              reportTitle: z.string().describe("Title or subject of the report (e.g. '2026-09-07-command-brief.md' or 'File Inventory')"),
               channel: z.enum(["artifact_vault", "email", "hubspot", "filesystem"]).default("artifact_vault").describe("Destination channel"),
             }),
             execute: async ({ reportTitle, channel }: { reportTitle: string; channel: string }) => {
               console.log("[TOOL EXECUTED] Verifying Report Delivery:", reportTitle, `(${channel})`);
-              const deliveryVerification = {
+              
+              // 1. Check disk paths
+              const candidatePaths = [
+                path.join(process.cwd(), "docs", "operations", "daily-command-center", reportTitle),
+                path.join(process.cwd(), "docs", "operations", "daily-command-center", `${reportTitle}.md`),
+                path.join(process.cwd(), "docs", "operations", reportTitle),
+                path.join(process.cwd(), "workspace", "artifacts", reportTitle),
+                path.resolve(process.cwd(), reportTitle),
+              ];
+
+              let diskFound: { path: string; sizeBytes: number; sha256: string; mtime: string } | null = null;
+              for (const p of candidatePaths) {
+                if (fs.existsSync(p) && fs.statSync(p).isFile()) {
+                  const content = fs.readFileSync(p);
+                  const hash = crypto.createHash("sha256").update(content).digest("hex");
+                  const stat = fs.statSync(p);
+                  diskFound = {
+                    path: path.relative(process.cwd(), p).replace(/\\/g, "/"),
+                    sizeBytes: stat.size,
+                    sha256: hash,
+                    mtime: stat.mtime.toISOString(),
+                  };
+                  break;
+                }
+              }
+
+              // 2. Check Database Artifacts
+              let dbRecord: any = null;
+              try {
+                const db = await getDb();
+                if (db) {
+                  const artifacts = await db
+                    .select()
+                    .from(workflowArtifacts)
+                    .orderBy(desc(workflowArtifacts.createdAt))
+                    .limit(20);
+                  
+                  dbRecord = artifacts.find(a => 
+                    a.title.toLowerCase().includes(reportTitle.toLowerCase()) ||
+                    reportTitle.toLowerCase().includes(a.title.toLowerCase())
+                  );
+                }
+              } catch (dbErr) {
+                console.warn("[verifyReportDelivery] DB check error:", dbErr);
+              }
+
+              const isDelivered = Boolean(diskFound || dbRecord);
+              const verification = {
                 reportTitle,
                 channel,
-                verified: true,
-                destinationStatus: "DELIVERED_AND_INDEXED",
+                verified: isDelivered,
+                destinationStatus: isDelivered ? "DELIVERED_AND_VERIFIED" : "NOT_FOUND",
                 timestamp: new Date().toISOString(),
-                checksum: "sha256_" + Math.random().toString(36).substring(2, 10),
-                vaultLocation: `workspace/artifacts/${reportTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.md`
+                diskLocation: diskFound?.path || null,
+                sizeBytes: diskFound?.sizeBytes || dbRecord?.content?.length || 0,
+                checksum: diskFound?.sha256 ? `sha256_${diskFound.sha256.substring(0, 16)}` : null,
+                dbArtifactId: dbRecord?.id || null,
               };
 
               capturedToolCalls.push({
                 toolName: "verifyReportDelivery",
                 args: { reportTitle, channel },
-                result: deliveryVerification,
+                result: verification,
                 isSimulated: false,
                 timestamp: new Date().toISOString(),
               });
 
-              return JSON.stringify(deliveryVerification);
+              return JSON.stringify(verification);
             }
           } as any),
 
           checkCompletionCache: tool({
-            description: "Inspect AgentLab completion cache and temporary storage to verify generation results and eliminate duplicate runs.",
+            description: "Inspect AgentLab completion cache, workflow run steps, and temporary storage to verify generation results.",
             parameters: z.object({
-              cacheKey: z.string().describe("Cache key or step identifier to look up"),
+              cacheKey: z.string().describe("Cache key, step name, or workflow run ID to look up"),
             }),
             execute: async ({ cacheKey }: { cacheKey: string }) => {
               console.log("[TOOL EXECUTED] Checking Completion Cache for:", cacheKey);
+              let foundStep: any = null;
+              try {
+                const db = await getDb();
+                if (db) {
+                  const steps = await db
+                    .select()
+                    .from(workflowRunSteps)
+                    .orderBy(desc(workflowRunSteps.createdAt))
+                    .limit(25);
+                  
+                  foundStep = steps.find(s => 
+                    s.workflowStepId.toLowerCase().includes(cacheKey.toLowerCase()) ||
+                    s.id === cacheKey ||
+                    s.workflowRunId === cacheKey
+                  );
+                }
+              } catch (dbErr) {
+                console.warn("[checkCompletionCache] DB step check error:", dbErr);
+              }
+
               const cacheStatus = {
                 cacheKey,
-                found: true,
-                cachedAt: new Date().toISOString(),
-                status: "READY",
-                sizeBytes: 4096
+                found: Boolean(foundStep),
+                status: foundStep?.status || "NOT_FOUND",
+                cachedAt: foundStep?.createdAt || null,
+                outputSnippet: foundStep?.outputPayload ? JSON.stringify(foundStep.outputPayload).substring(0, 150) : null,
               };
 
               capturedToolCalls.push({
@@ -743,6 +940,121 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
             }
           } as any),
 
+          listInstantlyCampaigns: tool({
+            description: "List active and scheduled cold email campaigns from Instantly.ai with lead counts and status.",
+            parameters: z.object({
+              limit: z.number().optional().default(10).describe("Number of campaigns to retrieve"),
+            }),
+            execute: async ({ limit }: { limit?: number }) => {
+              console.log("[TOOL EXECUTED] Listing Instantly Campaigns...");
+              try {
+                const campaigns = await listInstantlyCampaigns(limit || 10);
+                capturedToolCalls.push({
+                  toolName: "listInstantlyCampaigns",
+                  args: { limit },
+                  result: { count: campaigns.length, campaigns },
+                  isSimulated: false,
+                  timestamp: new Date().toISOString(),
+                });
+                return JSON.stringify({ success: true, count: campaigns.length, campaigns });
+              } catch (err: any) {
+                const errRes = { success: false, error: err.message };
+                capturedToolCalls.push({
+                  toolName: "listInstantlyCampaigns",
+                  args: { limit },
+                  result: errRes,
+                  isSimulated: false,
+                  timestamp: new Date().toISOString(),
+                });
+                return JSON.stringify(errRes);
+              }
+            }
+          } as any),
+
+          addLeadToInstantlyCampaign: tool({
+            description: "Enroll a prospect/lead into a specific Instantly.ai cold email campaign.",
+            parameters: z.object({
+              campaignId: z.string().describe("Instantly Campaign UUID"),
+              email: z.string().email().describe("Lead email address"),
+              firstName: z.string().optional().describe("Lead first name"),
+              lastName: z.string().optional().describe("Lead last name"),
+              companyName: z.string().optional().describe("Lead company name"),
+              phone: z.string().optional().describe("Lead phone number"),
+              website: z.string().optional().describe("Lead company website"),
+            }),
+            execute: async (lead: any) => {
+              console.log("[TOOL EXECUTED] Enrolling Lead in Instantly Campaign:", lead.email, lead.campaignId);
+              try {
+                const result = await addLeadToCampaign(lead.campaignId, {
+                  email: lead.email,
+                  firstName: lead.firstName,
+                  lastName: lead.lastName,
+                  companyName: lead.companyName,
+                  phone: lead.phone,
+                  website: lead.website,
+                });
+                capturedToolCalls.push({
+                  toolName: "addLeadToInstantlyCampaign",
+                  args: lead,
+                  result,
+                  isSimulated: false,
+                  timestamp: new Date().toISOString(),
+                });
+                return JSON.stringify({ success: true, message: `Successfully enrolled ${lead.email} in Instantly campaign ${lead.campaignId}`, data: result });
+              } catch (err: any) {
+                const errRes = { success: false, error: err.message };
+                capturedToolCalls.push({
+                  toolName: "addLeadToInstantlyCampaign",
+                  args: lead,
+                  result: errRes,
+                  isSimulated: false,
+                  timestamp: new Date().toISOString(),
+                });
+                return JSON.stringify(errRes);
+              }
+            }
+          } as any),
+
+          synthesizeVoiceAudio: tool({
+            description: "Synthesize high-fidelity voice audio from text using ElevenLabs Voice AI and return audio metadata.",
+            parameters: z.object({
+              text: z.string().describe("The script or text to speak"),
+              voiceId: z.string().optional().describe("ElevenLabs Voice ID (defaults to Pamela voice)"),
+            }),
+            execute: async ({ text, voiceId }: { text: string; voiceId?: string }) => {
+              console.log("[TOOL EXECUTED] Synthesizing Voice Audio with ElevenLabs...");
+              try {
+                const result = await convertTextToSpeech({ text, voiceId });
+                const audioSizeKb = Math.round(result.audioBuffer.length / 1024);
+                const toolRes = {
+                  success: true,
+                  voiceId: result.voiceId,
+                  contentType: result.contentType,
+                  sizeKb: audioSizeKb,
+                  message: `Successfully synthesized ${audioSizeKb}KB audio using voice ${result.voiceId}.`,
+                };
+                capturedToolCalls.push({
+                  toolName: "synthesizeVoiceAudio",
+                  args: { textLength: text.length, voiceId },
+                  result: toolRes,
+                  isSimulated: false,
+                  timestamp: new Date().toISOString(),
+                });
+                return JSON.stringify(toolRes);
+              } catch (err: any) {
+                const errRes = { success: false, error: err.message };
+                capturedToolCalls.push({
+                  toolName: "synthesizeVoiceAudio",
+                  args: { textLength: text.length, voiceId },
+                  result: errRes,
+                  isSimulated: false,
+                  timestamp: new Date().toISOString(),
+                });
+                return JSON.stringify(errRes);
+              }
+            }
+          } as any),
+
           getHubSpotDeals: tool({
             description: "Query and extract deals, deal stages, amounts, pipelines, and recent movements from HubSpot CRM.",
             parameters: z.object({
@@ -752,24 +1064,19 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
             execute: async ({ limit, pipeline }: { limit?: number; pipeline?: string }) => {
               console.log("[TOOL EXECUTED] Fetching HubSpot Deals, limit:", limit);
               if (!hubspotToken) {
-                const simulated = {
-                  status: "simulated_success",
-                  message: "No HUBSPOT_PAT token found in environment. Returning verified local pipeline state.",
-                  deals: [
-                    { id: "deal_001", dealname: "Hamarashops MedLM Enterprise Integration", dealstage: "decisionmakerboughtin", amount: "45000", pipeline: "default", createdate: "2026-08-15T12:00:00Z" },
-                    { id: "deal_002", dealname: "Kansas City Founder Signal System Sprint", dealstage: "qualifiedtobuy", amount: "1000", pipeline: "default", createdate: "2026-08-28T14:30:00Z" },
-                    { id: "deal_003", dealname: "Bootstrapper Capital Ownable OS Pro Annual", dealstage: "closedwon", amount: "6000", pipeline: "default", createdate: "2026-09-01T09:15:00Z" }
-                  ],
-                  totalCount: 3
+                const unconfigured = {
+                  success: false,
+                  error: "HUBSPOT_PAT_NOT_CONFIGURED",
+                  message: "HUBSPOT_PAT token is not configured in environment. Add HUBSPOT_PAT in Settings -> Integrations to query live HubSpot CRM data."
                 };
                 capturedToolCalls.push({
                   toolName: "getHubSpotDeals",
                   args: { limit, pipeline },
-                  result: simulated,
-                  isSimulated: true,
+                  result: unconfigured,
+                  isSimulated: false,
                   timestamp: new Date().toISOString(),
                 });
-                return JSON.stringify(simulated);
+                return JSON.stringify(unconfigured);
               }
 
               try {
@@ -810,23 +1117,19 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
             execute: async ({ limit, searchQuery }: { limit?: number; searchQuery?: string }) => {
               console.log("[TOOL EXECUTED] Fetching HubSpot Contacts, limit:", limit);
               if (!hubspotToken) {
-                const simulated = {
-                  status: "simulated_success",
-                  message: "No HUBSPOT_PAT token found in environment. Returning verified local contacts state.",
-                  contacts: [
-                    { id: "cnt_01", email: "dr.miller@hamarashops-med.com", firstname: "David", lastname: "Miller", company: "Hamarashops Health", lifecyclestage: "opportunity", lead_source: "Partner - Hamarashops" },
-                    { id: "cnt_02", email: "sarah.jenkins@kcfintech.io", firstname: "Sarah", lastname: "Jenkins", company: "KC Fintech Labs", lifecyclestage: "lead", lead_source: "Founder Signal System" }
-                  ],
-                  totalCount: 2
+                const unconfigured = {
+                  success: false,
+                  error: "HUBSPOT_PAT_NOT_CONFIGURED",
+                  message: "HUBSPOT_PAT token is not configured in environment. Add HUBSPOT_PAT in Settings -> Integrations to query live HubSpot CRM contacts."
                 };
                 capturedToolCalls.push({
                   toolName: "getHubSpotContacts",
                   args: { limit, searchQuery },
-                  result: simulated,
-                  isSimulated: true,
+                  result: unconfigured,
+                  isSimulated: false,
                   timestamp: new Date().toISOString(),
                 });
-                return JSON.stringify(simulated);
+                return JSON.stringify(unconfigured);
               }
 
               try {
@@ -874,19 +1177,19 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
               if (dealname) properties.dealname = dealname;
 
               if (!hubspotToken) {
-                const simulated = {
-                  success: true,
-                  message: `[Simulated] Successfully updated HubSpot deal ${dealId} with stage '${dealstage || "unchanged"}'`,
-                  updatedProperties: properties
+                const unconfigured = {
+                  success: false,
+                  error: "HUBSPOT_PAT_NOT_CONFIGURED",
+                  message: "HUBSPOT_PAT token is not configured in environment. Deal update skipped."
                 };
                 capturedToolCalls.push({
                   toolName: "updateHubSpotDeal",
                   args: { dealId, dealstage, amount, dealname },
-                  result: simulated,
-                  isSimulated: true,
+                  result: unconfigured,
+                  isSimulated: false,
                   timestamp: new Date().toISOString(),
                 });
-                return JSON.stringify(simulated);
+                return JSON.stringify(unconfigured);
               }
 
               try {
@@ -937,19 +1240,19 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
               };
 
               if (!hubspotToken) {
-                const simulated = {
-                  success: true,
-                  dealId: `deal_${Date.now().toString().slice(-6)}`,
-                  message: `[Simulated] Created HubSpot deal "${dealname}" ($${amount}) at stage "${dealstage || "appointmentscheduled"}"`
+                const unconfigured = {
+                  success: false,
+                  error: "HUBSPOT_PAT_NOT_CONFIGURED",
+                  message: "HUBSPOT_PAT token is not configured in environment. Deal creation skipped."
                 };
                 capturedToolCalls.push({
                   toolName: "createHubSpotDeal",
                   args: { dealname, amount, dealstage, pipeline },
-                  result: simulated,
-                  isSimulated: true,
+                  result: unconfigured,
+                  isSimulated: false,
                   timestamp: new Date().toISOString(),
                 });
-                return JSON.stringify(simulated);
+                return JSON.stringify(unconfigured);
               }
 
               try {
@@ -1001,18 +1304,19 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
               if (params.lifecyclestage) properties.lifecyclestage = params.lifecyclestage;
 
               if (!hubspotToken) {
-                const simulated = {
-                  success: true,
-                  message: `[Simulated] Upserted contact ${params.email} (${params.company || "No Company"}) into HubSpot CRM.`
+                const unconfigured = {
+                  success: false,
+                  error: "HUBSPOT_PAT_NOT_CONFIGURED",
+                  message: "HUBSPOT_PAT token is not configured in environment. Contact upsert skipped."
                 };
                 capturedToolCalls.push({
                   toolName: "upsertHubSpotContact",
                   args: params,
-                  result: simulated,
-                  isSimulated: true,
+                  result: unconfigured,
+                  isSimulated: false,
                   timestamp: new Date().toISOString(),
                 });
-                return JSON.stringify(simulated);
+                return JSON.stringify(unconfigured);
               }
 
               try {
