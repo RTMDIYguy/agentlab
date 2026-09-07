@@ -9,7 +9,8 @@ import {
   ShieldAlert, 
   CreditCard, 
   Settings,
-  ShoppingBag
+  ShoppingBag,
+  BookOpen
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -27,6 +28,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { href: "/billing", label: "Billing", icon: CreditCard },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
     { href: "/marketplace", label: "Marketplace", icon: ShoppingBag },
+    { href: "/docs", label: "Owner's Manual", icon: BookOpen },
   ];
 
   return (

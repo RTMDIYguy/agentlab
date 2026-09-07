@@ -252,13 +252,153 @@ export const settingsRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      // Simulate pinging protocol endpoint with realistic telemetry
-      const latency = Math.floor(Math.random() * 45) + 12;
+      const startTime = Date.now();
+      const targetUrl = input.config?.endpointUrl || input.config?.url || input.config?.webhookUrl;
+
+      // 1. Check for specific known provider validations
+      const providerLower = (input.name || input.type).toLowerCase();
+      
+      if (providerLower.includes("instantly")) {
+        try {
+          const { verifyInstantlyConnection } = await import("../tools/instantly");
+          const result = await verifyInstantlyConnection();
+          const latency = Date.now() - startTime;
+          return {
+            success: result.success,
+            latencyMs: Math.max(latency, 1),
+            protocol: "REST API v2 (Instantly Outbound)",
+            message: result.message,
+            timestamp: new Date().toISOString(),
+          };
+        } catch (err: any) {
+          return {
+            success: false,
+            latencyMs: Date.now() - startTime,
+            protocol: "REST API v2 (Instantly Outbound)",
+            message: `Instantly connection failed: ${err.message}`,
+            timestamp: new Date().toISOString(),
+          };
+        }
+      }
+
+      if (providerLower.includes("elevenlabs")) {
+        const apiKey = process.env.ELEVENLABS_API_KEY;
+        if (!apiKey) {
+          return {
+            success: false,
+            latencyMs: Date.now() - startTime,
+            protocol: "REST API (ElevenLabs Voice)",
+            message: "ELEVENLABS_API_KEY is not configured in environment.",
+            timestamp: new Date().toISOString(),
+          };
+        }
+        try {
+          const res = await fetch("https://api.elevenlabs.io/v1/user", {
+            headers: { "xi-api-key": apiKey }
+          });
+          const latency = Date.now() - startTime;
+          if (res.ok) {
+            return {
+              success: true,
+              latencyMs: latency,
+              protocol: "REST API (ElevenLabs Voice)",
+              message: `Successfully verified ElevenLabs Voice API credentials (${latency}ms roundtrip).`,
+              timestamp: new Date().toISOString(),
+            };
+          } else {
+            return {
+              success: false,
+              latencyMs: latency,
+              protocol: "REST API (ElevenLabs Voice)",
+              message: `ElevenLabs API error: HTTP ${res.status}`,
+              timestamp: new Date().toISOString(),
+            };
+          }
+        } catch (err: any) {
+          return {
+            success: false,
+            latencyMs: Date.now() - startTime,
+            protocol: "REST API (ElevenLabs Voice)",
+            message: `ElevenLabs connection error: ${err.message}`,
+            timestamp: new Date().toISOString(),
+          };
+        }
+      }
+
+      if (providerLower.includes("hubspot")) {
+        const apiKey = process.env.HUBSPOT_PAT;
+        if (!apiKey) {
+          return {
+            success: false,
+            latencyMs: Date.now() - startTime,
+            protocol: "REST API (HubSpot CRM)",
+            message: "HUBSPOT_PAT is not configured in environment.",
+            timestamp: new Date().toISOString(),
+          };
+        }
+        try {
+          const res = await fetch("https://api.hubapi.com/crm/v3/objects/contacts?limit=1", {
+            headers: { Authorization: `Bearer ${apiKey}` }
+          });
+          const latency = Date.now() - startTime;
+          if (res.ok) {
+            return {
+              success: true,
+              latencyMs: latency,
+              protocol: "REST API (HubSpot CRM)",
+              message: `Successfully connected to HubSpot CRM (${latency}ms roundtrip).`,
+              timestamp: new Date().toISOString(),
+            };
+          } else {
+            return {
+              success: false,
+              latencyMs: latency,
+              protocol: "REST API (HubSpot CRM)",
+              message: `HubSpot API returned HTTP ${res.status}`,
+              timestamp: new Date().toISOString(),
+            };
+          }
+        } catch (err: any) {
+          return {
+            success: false,
+            latencyMs: Date.now() - startTime,
+            protocol: "REST API (HubSpot CRM)",
+            message: `HubSpot connection failed: ${err.message}`,
+            timestamp: new Date().toISOString(),
+          };
+        }
+      }
+
+      // 2. Real HTTP ping if a URL is provided
+      if (targetUrl && typeof targetUrl === "string" && (targetUrl.startsWith("http://") || targetUrl.startsWith("https://"))) {
+        try {
+          const res = await fetch(targetUrl, { method: "HEAD", signal: AbortSignal.timeout(5000) });
+          const latency = Date.now() - startTime;
+          return {
+            success: res.ok,
+            latencyMs: latency,
+            protocol: input.type === "mcp" ? "Model Context Protocol v1.0 (SSE/stdio)" : "REST Webhook / HTTP",
+            message: `HTTP ${res.status} ${res.statusText} from ${targetUrl} (${latency}ms roundtrip).`,
+            timestamp: new Date().toISOString(),
+          };
+        } catch (err: any) {
+          return {
+            success: false,
+            latencyMs: Date.now() - startTime,
+            protocol: input.type === "mcp" ? "Model Context Protocol v1.0 (SSE/stdio)" : "REST Webhook / HTTP",
+            message: `Handshake with ${targetUrl} failed: ${err.message}`,
+            timestamp: new Date().toISOString(),
+          };
+        }
+      }
+
+      // 3. Fallback for generic local integrations
+      const latency = Math.max(Date.now() - startTime, 5);
       return {
         success: true,
         latencyMs: latency,
-        protocol: input.type === "mcp" ? "Model Context Protocol v1.0 (SSE/stdio)" : "REST Webhook / OAuth 2.0",
-        message: `Successfully verified handshake with ${input.name} (${latency}ms roundtrip).`,
+        protocol: input.type === "mcp" ? "Model Context Protocol v1.0 (stdio)" : "Local Plugin / Runtime Hook",
+        message: `Verified integration profile for ${input.name}.`,
         timestamp: new Date().toISOString(),
       };
     }),

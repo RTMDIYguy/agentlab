@@ -51,7 +51,7 @@ const DEFAULT_WORKSPACE_WORKFLOWS: WorkflowSummaryDto[] = [
 ];
 
 import { getDb } from "../db";
-import { workflows, workflowSteps } from "../schema";
+import { workflows, workflowSteps, agents } from "../schema";
 import { eq, and, asc } from "drizzle-orm";
 
 const CANONICAL_10_WORKFLOWS = [
@@ -544,6 +544,31 @@ export async function updateWorkflowSteps(req: Request, res: Response): Promise<
       .where(and(eq(workflowSteps.workflowId, workflowId), eq(workflowSteps.workspaceId, workspaceId)));
 
     if (newSteps.length > 0) {
+      // Lookup existing agents to map string names/slugs to UUIDs safely
+      const workspaceAgents = await db
+        .select()
+        .from(agents)
+        .where(eq(agents.workspaceId, workspaceId));
+
+      const agentMapByName = new Map<string, string>();
+      const agentMapById = new Set<string>();
+      for (const a of workspaceAgents) {
+        agentMapByName.set(a.name.toLowerCase().trim(), a.id);
+        agentMapById.add(a.id);
+      }
+
+      const isUuid = (val?: string | null): boolean =>
+        Boolean(val && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val));
+
+      const resolveAgentId = (input?: string | null): string | null => {
+        if (!input) return null;
+        if (agentMapById.has(input)) return input;
+        const lower = input.toLowerCase().trim();
+        if (agentMapByName.has(lower)) return agentMapByName.get(lower)!;
+        if (isUuid(input)) return input;
+        return null;
+      };
+
       const stepRows = newSteps.map((step, index) => ({
         workspaceId,
         workflowId,
@@ -551,7 +576,7 @@ export async function updateWorkflowSteps(req: Request, res: Response): Promise<
         stepType: step.stepType || "agent",
         title: (step.title || `Step ${index + 1}`).substring(0, 128),
         actionPrompt: step.actionPrompt || step.title || "",
-        agentId: step.agentId || null,
+        agentId: resolveAgentId(step.agentId),
       }));
 
       await db.insert(workflowSteps).values(stepRows);

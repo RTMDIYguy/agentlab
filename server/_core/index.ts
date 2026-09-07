@@ -18,6 +18,7 @@ import { registerAICoachesWebhookRoutes } from "../aicoaches/webhook";
 import { apiRouter } from "../routes/api";
 import { tenantMiddleware } from "../middleware/tenant";
 import { triggerFullEcosystemSync } from "../controllers/aiStudioSync";
+import { ensureDatabaseSchema } from "../db";
 
 function startDailyEcosystemScheduler() {
   const calculateNext5AmCt = () => {
@@ -70,6 +71,9 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function startServer() {
+  // Ensure database schema and required tables are self-healed and active
+  await ensureDatabaseSchema();
+
   const app = express();
   const server = createServer(app);
   // Autonoma SDK endpoint (discover/up/down) under /api/autonoma. MUST be

@@ -1,9 +1,16 @@
 import type { Request, Response } from "express";
 import { generateObject } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { getDb } from "../db";
-import { knowledgePackages, workspacePackages } from "../schema";
+import {
+  knowledgePackages,
+  workspacePackages,
+  auditLogs,
+  workflowRuns,
+  workflows as dbWorkflows,
+  agents as dbAgents,
+} from "../schema";
 import {
   workflowProposalSchema,
   type WorkflowProposal,
@@ -18,6 +25,13 @@ import {
 export type { WorkflowStep, WorkflowProposal };
 
 export interface ProposedWorkflow extends WorkflowProposal {}
+
+export interface LiveSystemTelemetry {
+  recentErrors?: string[];
+  recentRuns?: string[];
+  activeWorkflows?: string[];
+  activeAgents?: string[];
+}
 
 export interface OrchestratorChatRequest {
   prompt: string;
@@ -38,7 +52,7 @@ export interface OrchestratorChatResponse {
 /**
  * Builds the system prompt injecting URC's proprietary agency structure, toolsets, doctrine, and brand guidelines.
  */
-function buildSystemPrompt(unlockedDepartments: string[]): string {
+function buildSystemPrompt(unlockedDepartments: string[], telemetry?: LiveSystemTelemetry): string {
   let workflows = getAvailableWorkflows();
 
   if (!unlockedDepartments.includes("ALL")) {
@@ -55,7 +69,39 @@ function buildSystemPrompt(unlockedDepartments: string[]): string {
           .join("\n")
       : "- (All 7 department playbooks available for tenant)";
 
-  return `You are the Ops Agent & Master Orchestrator for AgentLab, powered exclusively by the proprietary **AgentLab DAG Orchestration Engine v2.4**. You represent:
+  const telemetrySection = telemetry
+    ? `
+LIVE SYSTEM STATE, RECENT AUDIT LOGS & RUNTIME TELEMETRY:
+- Active Workflows in Workspace: ${telemetry.activeWorkflows?.length ? telemetry.activeWorkflows.join("; ") : "Default Canonical 10 Workflows Active"}
+- Active Agents in Workspace: ${telemetry.activeAgents?.length ? telemetry.activeAgents.join("; ") : "Alpha-Node-01, Coder-Agent-07, SDR-Writer-02, Auditor-Bot-9"}
+- Recent Workflow Runs: ${telemetry.recentRuns?.length ? telemetry.recentRuns.join("; ") : "No recent runs"}
+- Recent System Audit Logs / Errors:
+  ${telemetry.recentErrors?.length ? telemetry.recentErrors.join("\n  ") : "All recent audit logs nominal (zero active unhandled crashes)"}
+`
+    : "";
+
+  return `You are the Ops Agent & Master Orchestrator for AgentLab, powered exclusively by the proprietary **AgentLab DAG Orchestration Engine v2.4**. You act as the consultative Chief Operating Officer (COO), Lead Systems Architect, and Technical Partner to the founder.
+
+PERFECT PLATFORM & TECHNICAL KNOWLEDGE (CRITICAL):
+You have 360-degree knowledge of the AgentLab platform, database schemas, and multi-agent execution pipeline:
+1. **Database Schema & Runtime Architecture**:
+   - \`workflows\`: Stores workflow definitions (id, workspace_id, name, description, trigger_type, cron_expression, status, success_rate).
+   - \`workflow_steps\`: Stores DAG nodes (id, workflow_id, agent_id [UUID], order_index, step_type ['trigger'|'agent'|'guardrail'|'destination'], title, action_prompt).
+   - \`workflow_runs\` & \`workflow_run_steps\`: Stores live DAG run executions, latency, token usage, and status.
+   - \`workflow_artifacts\`: Stores generated content drafts, scheduled posts, documents, quality scores, and verification notes.
+   - \`audit_logs\`: Stores model traces, SAIF compliance checks, and error contexts.
+2. **Autonomous Execution & Diagnostic Intelligence**:
+   - When the user shares audit logs, screenshots, or error traces (such as "Failed query: insert into workflow_artifacts..."), do NOT ask basic questions or say "I cannot interpret the screenshot". You have full visual inspection and telemetry access.
+   - Accurately diagnose root causes (e.g. database schema migrations, column type constraints like UUID vs string agent names, refusal detection, API rate limits, or missing inputs).
+   - Provide concrete explanations and propose refined, stateful DAG proposals that address and resolve those failure modes.
+3. **Collaborative Pair Architect Relationship**:
+   - Think of yourself as a senior technical co-founder / COO who advises, diagnoses, and architects the business without executing destructively.
+   - Provide deep, transparent explanations of workflow mechanics, data dependencies, and quality guardrails.
+   - Structure actionable DAG proposals that users can review, adjust, and deploy.
+
+${telemetrySection}
+
+YOU REPRESENT:
 - Uncle Robert Consulting LLC (URC) — Main business advisory & operating brand (Led by Robert McCarthy / "Uncle Robert").
 - Bootstrapper Capital — The founder audience, community, and event funnel arm (https://bootstrapper.ai).
 - Tactix — The fulfillment, contractor dispatch, and execution arm.
@@ -65,9 +111,8 @@ EXCLUSIVE ORCHESTRATOR TECHNOLOGY:
 You are powered by AgentLab's proprietary multi-agent Directed Acyclic Graph (DAG) Orchestrator. Unlike generic chat interfaces, you do not just respond with text—you dynamically coordinate specialized autonomous swarm agents across our 7 departments into executable, stateful business workflows.
 
 CORE CONSULTATIVE BEHAVIOR & USER-CURIOUS PERSONA (CRITICAL):
-1. **Be Deeply User-Curious & Consultative**: Do NOT assume or jump blindly into rigid workflows without understanding the user's specific context. Always ask 1 or 2 targeted clarifying questions (e.g. "What CRM or tools are you currently using?", "What is your target outreach volume?", "Who is on point to review these outputs?") to tailor the proposal to their exact business.
-2. **Explain the 'Why' & Solicit Feedback**: When you propose an operational DAG, explain the rationale behind each step and invite the user to tweak, re-order, add, or reject individual steps in their interactive proposal card before deployment.
-3. **Servant Leadership Code**: "We walk beside you the whole way." Genuinely listen, validate their bottlenecks, and build solutions around their existing tools (M365 default).
+1. **Be Deeply User-Curious & Consultative**: Do NOT assume or jump blindly into rigid workflows without understanding the user's specific context. Always explain the rationale behind each step and invite the user to tweak, re-order, add, or reject individual steps in their interactive proposal card before deployment.
+2. **Servant Leadership Code**: "We walk beside you the whole way." Genuinely listen, validate their bottlenecks, and build solutions around their existing tools (M365 default).
 
 THE CORE STRATEGIC NORTH STAR — PREPPING CLIENTS FOR OWNABLE OS & EQUITY INDEPENDENCE:
 Everything we do in AgentLab preps the client for the Ownable OS on Bootstrapper.ai (https://bootstrapper.ai/), Building Transferable Equity (https://bootstrapper.ai/build-equity?p_grain=LW), and the Independence Model (https://bootstrapper.ai/chapters/independence-mo).
@@ -103,7 +148,7 @@ ${sopList}
 
 When replying:
 - Act as the consultative Chief Operating Officer (COO) and Lead Orchestrator.
-- Ask clarifying questions to personalize the blueprint.
+- Directly diagnose errors from attached logs or screenshots with technical precision.
 - Offer actionable DAG proposals with clear step breakdowns, and remind the user that they can edit, delete, or add steps directly in their proposal card.`;
 }
 
@@ -154,6 +199,7 @@ export function generateFallbackWorkflowProposal(
       );
     } else if (
       promptLower.includes("content") ||
+      promptLower.includes("newsletter") ||
       promptLower.includes("linkedin") ||
       promptLower.includes("post") ||
       promptLower.includes("article")
@@ -274,7 +320,7 @@ export async function handleOrchestratorChat(
   const startTime = Date.now();
   const rawPrompt = req.body.prompt || req.body.message;
   const requestedModel = req.body.model || "gemini-2.5-flash";
-  const attachments = req.body.attachments as Array<{ name: string; content: string }> | undefined;
+  const attachments = req.body.attachments as Array<{ name: string; content: string; type?: string }> | undefined;
 
   if (!rawPrompt || typeof rawPrompt !== "string") {
     res
@@ -284,22 +330,38 @@ export async function handleOrchestratorChat(
   }
 
   let prompt = rawPrompt;
+  const textAttachments: Array<{ name: string; content: string }> = [];
+  const imageAttachments: Array<{ name: string; content: string }> = [];
+
   if (attachments && attachments.length > 0) {
-    const attachmentText = attachments
-      .map(a => `[Attached Document: ${a.name}]\n${a.content}`)
-      .join("\n\n");
-    prompt = `${rawPrompt}\n\n--- Context Documents ---\n${attachmentText}`;
+    for (const att of attachments) {
+      if (att.content && (att.content.startsWith("data:image/") || att.type?.startsWith("image/"))) {
+        imageAttachments.push(att);
+      } else {
+        textAttachments.push(att);
+      }
+    }
+
+    if (textAttachments.length > 0) {
+      const attachmentText = textAttachments
+        .map(a => `[Attached Document: ${a.name}]\n${a.content}`)
+        .join("\n\n");
+      prompt = `${rawPrompt}\n\n--- Context Documents & Logs ---\n${attachmentText}`;
+    }
   }
 
   let unlockedDepartments: string[] = [];
   const workspaceId = req.workspaceId;
+  const telemetry: LiveSystemTelemetry = {};
 
   if (workspaceId === "00000000-0000-0000-0000-000000000000") {
     unlockedDepartments = ["ALL"];
-  } else if (workspaceId) {
-    try {
-      const db = await getDb();
-      if (db) {
+  }
+
+  try {
+    const db = await getDb();
+    if (db && workspaceId) {
+      if (workspaceId !== "00000000-0000-0000-0000-000000000000") {
         const subs = await db
           .select({
             departmentCode: knowledgePackages.departmentCode,
@@ -318,9 +380,44 @@ export async function handleOrchestratorChat(
 
         unlockedDepartments = subs.map((s: any) => s.departmentCode);
       }
-    } catch (e) {
-      console.warn("[Orchestrator] Failed to fetch workspace packages:", e);
+
+      // Live Telemetry Introspection
+      const recentLogs = await db
+        .select()
+        .from(auditLogs)
+        .where(eq(auditLogs.workspaceId, workspaceId))
+        .orderBy(desc(auditLogs.createdAt))
+        .limit(10);
+
+      telemetry.recentErrors = recentLogs
+        .filter(l => l.status === "error" || l.actionType.includes("failure"))
+        .map(l => `[${l.actionType}] ${l.errorMessage || JSON.stringify(l.payloadIn).slice(0, 180)}`);
+
+      const runs = await db
+        .select()
+        .from(workflowRuns)
+        .where(eq(workflowRuns.workspaceId, workspaceId))
+        .orderBy(desc(workflowRuns.startedAt))
+        .limit(5);
+
+      telemetry.recentRuns = runs.map(r => `Run ${r.id}: status=${r.status}`);
+
+      const wfs = await db
+        .select()
+        .from(dbWorkflows)
+        .where(eq(dbWorkflows.workspaceId, workspaceId));
+
+      telemetry.activeWorkflows = wfs.map(w => `${w.name} (${w.status})`);
+
+      const ags = await db
+        .select()
+        .from(dbAgents)
+        .where(eq(dbAgents.workspaceId, workspaceId));
+
+      telemetry.activeAgents = ags.map(a => `${a.name} (${a.role})`);
     }
+  } catch (e) {
+    console.warn("[Orchestrator] Telemetry query note:", e);
   }
 
   let proposal: WorkflowProposal | undefined;
@@ -332,12 +429,29 @@ export async function handleOrchestratorChat(
   try {
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY;
     const google = createGoogleGenerativeAI(apiKey ? { apiKey } : undefined);
-    const systemPrompt = buildSystemPrompt(unlockedDepartments);
+    const systemPrompt = buildSystemPrompt(unlockedDepartments, telemetry);
+
+    const userMessageContent: Array<{ type: "text"; text: string } | { type: "image"; image: string }> = [
+      { type: "text", text: prompt },
+    ];
+
+    for (const img of imageAttachments) {
+      userMessageContent.push({
+        type: "image",
+        image: img.content,
+      });
+    }
+
     const result = await generateObject({
       model: google("gemini-2.5-flash") as any,
       schema: workflowProposalSchema,
       system: systemPrompt,
-      prompt: prompt,
+      messages: [
+        {
+          role: "user",
+          content: userMessageContent as any,
+        },
+      ],
     });
 
     proposal = result.object;

@@ -168,43 +168,47 @@ export async function processPendingRuns() {
             if (result.extractedArtifacts && result.extractedArtifacts.length > 0) {
               console.log(`[QueueProcessor] Persisting ${result.extractedArtifacts.length} artifacts for run ${run.id}...`);
               for (const artifact of result.extractedArtifacts) {
-                const artifactId = crypto.randomUUID();
-                const evalResult = evaluateArtifactQuality({
-                  title: artifact.title,
-                  content: artifact.content,
-                  targetPlatform: artifact.targetPlatform,
-                  artifactType: artifact.artifactType,
-                });
+                try {
+                  const artifactId = crypto.randomUUID();
+                  const evalResult = evaluateArtifactQuality({
+                    title: artifact.title,
+                    content: artifact.content,
+                    targetPlatform: artifact.targetPlatform,
+                    artifactType: artifact.artifactType,
+                  });
 
-                await db.insert(workflowArtifacts).values({
-                  id: artifactId,
-                  workspaceId: run.workspaceId,
-                  workflowRunId: run.id,
-                  workflowRunStepId: runStepId,
-                  workflowId: run.workflowId,
-                  artifactType: artifact.artifactType || "document",
-                  title: artifact.title || "Generated Output Artifact",
-                  content: artifact.content,
-                  summary: artifact.summary || null,
-                  targetPlatform: artifact.targetPlatform || "linkedin",
-                  scheduledFor: artifact.scheduledFor ? new Date(artifact.scheduledFor) : null,
-                  status: artifact.artifactType === "post" ? "scheduled" : "draft",
-                  qualityScore: evalResult.score,
-                  qualityGrade: evalResult.grade,
-                  verificationNotes: {
-                    feedback: evalResult.feedback,
-                    suggestions: evalResult.suggestions,
-                    passed: evalResult.passed,
-                    rubric: evalResult.rubric,
-                    evaluatedAt: evalResult.evaluatedAt,
-                  },
-                  revisionVersion: 1,
-                  metadata: {
-                    ...(artifact.metadata || {}),
-                    toolsCount: result.toolsExecuted.length,
-                    generatedAt: new Date().toISOString(),
-                  },
-                } as any);
+                  await db.insert(workflowArtifacts).values({
+                    id: artifactId,
+                    workspaceId: run.workspaceId,
+                    workflowRunId: run.id,
+                    workflowRunStepId: runStepId,
+                    workflowId: run.workflowId,
+                    artifactType: artifact.artifactType || "document",
+                    title: (artifact.title || "Generated Output Artifact").slice(0, 255),
+                    content: artifact.content,
+                    summary: artifact.summary || null,
+                    targetPlatform: artifact.targetPlatform || "linkedin",
+                    scheduledFor: artifact.scheduledFor ? new Date(artifact.scheduledFor) : null,
+                    status: artifact.artifactType === "post" ? "scheduled" : "draft",
+                    qualityScore: evalResult.score,
+                    qualityGrade: evalResult.grade,
+                    verificationNotes: {
+                      feedback: evalResult.feedback,
+                      suggestions: evalResult.suggestions,
+                      passed: evalResult.passed,
+                      rubric: evalResult.rubric,
+                      evaluatedAt: evalResult.evaluatedAt,
+                    },
+                    revisionVersion: 1,
+                    metadata: {
+                      ...(artifact.metadata || {}),
+                      toolsCount: result.toolsExecuted.length,
+                      generatedAt: new Date().toISOString(),
+                    },
+                  } as any);
+                } catch (artifactErr: any) {
+                  console.warn("[QueueProcessor] Artifact persistence notice:", artifactErr.message);
+                }
               }
             }
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, BookOpen } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
 export function Navigation() {
@@ -162,6 +162,15 @@ export function Navigation() {
             Pricing
           </a>
 
+          {/* Owner's Manual / Docs link */}
+          <a
+            href="/docs"
+            className="px-3 py-2 text-foreground hover:text-primary transition-colors flex items-center gap-1 font-medium text-primary/90"
+          >
+            <BookOpen className="w-4 h-4 text-primary" />
+            Manual
+          </a>
+
           {/* Support link */}
           <a
             href="/support"
@@ -171,15 +180,27 @@ export function Navigation() {
           </a>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          {/* Always Present Owner's Manual Quick-Access Button */}
+          <Link href="/docs">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex items-center gap-1.5 border-primary/30 text-foreground hover:text-primary hover:border-primary bg-primary/5 hover:bg-primary/10 transition-all font-medium"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-primary" />
+              <span className="hidden sm:inline">Owner's</span> Manual
+            </Button>
+          </Link>
+
           {isAuthenticated ? (
             <>
-              <span className="text-sm text-muted-foreground hidden sm:inline">
+              <span className="text-sm text-muted-foreground hidden lg:inline">
                 {user?.name}
               </span>
               <Link href="/dashboard">
-                <Button variant="outline" className="hidden sm:inline-flex">
-                  Go to Dashboard
+                <Button variant="outline" size="sm" className="hidden sm:inline-flex">
+                  Dashboard
                 </Button>
               </Link>
               <Button variant="ghost" size="sm" onClick={logout}>
@@ -189,12 +210,12 @@ export function Navigation() {
           ) : (
             <>
               <Link href="/login">
-                <Button variant="outline" className="hidden sm:inline-flex">
+                <Button variant="outline" size="sm" className="hidden sm:inline-flex">
                   Sign In
                 </Button>
               </Link>
               <Link href="/signup">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground">
                   Get Started
                 </Button>
               </Link>
