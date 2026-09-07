@@ -1,8 +1,7 @@
 # Base Stage
 FROM node:22-slim AS base
 WORKDIR /app
-# Enable corepack and install latest pnpm
-RUN npm install -g pnpm@latest
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Builder Stage
 FROM base AS builder
