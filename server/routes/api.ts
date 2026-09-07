@@ -232,5 +232,22 @@ apiRouter.post("/fulfillment/onboarding/ingest", ingestCustomerPurchase);
 // ==============================================================================
 apiRouter.get("/outbound/instantly/verify", handleInstantlyVerify);
 apiRouter.get("/outbound/instantly/campaigns", handleInstantlyListCampaigns);
-apiRouter.post("/outbound/instantly/enroll", handleInstantlyEnrollLead);
 apiRouter.post("/webhooks/instantly", handleInstantlyWebhook);
+
+// ==============================================================================
+// Workspace Snapshots, Multi-Office & Franchise Replication (OPS-01)
+// ==============================================================================
+import {
+  listSnapshots,
+  saveSnapshot,
+  cloneSnapshot,
+  restoreSnapshot,
+  deleteSnapshot,
+} from "../controllers/snapshots";
+
+apiRouter.get("/snapshots", listSnapshots);
+apiRouter.post("/snapshots/save", saveSnapshot);
+apiRouter.post("/snapshots/:id/clone", cloneSnapshot);
+apiRouter.post("/snapshots/:id/restore", restoreSnapshot);
+apiRouter.delete("/snapshots/:id", deleteSnapshot);
+

@@ -40,7 +40,13 @@ import {
   RefreshCw,
   Eye,
   ExternalLink,
-  Code
+  Code,
+  Copy,
+  Building,
+  Archive,
+  FolderDown,
+  FolderUp,
+  Boxes
 } from "lucide-react";
 
 export default function Settings() {
@@ -54,6 +60,7 @@ export default function Settings() {
     | "llm"
     | "secrets"
     | "integrations"
+    | "snapshots"
   >("llm");
 
   const utils = trpc.useContext();
@@ -549,7 +556,21 @@ export default function Settings() {
                     <Plug className="w-4 h-4 text-blue-400" />
                     <div className="flex-1 flex justify-between items-center">
                       <span>Integrations & MCP</span>
-                      <Badge className="text-[9px] bg-blue-500/20 text-blue-300 border-none px-1.5 py-0">8 Active</Badge>
+                      <Badge className="text-[9px] bg-blue-500/20 text-blue-300 border-none px-1.5 py-0">9 Nodes</Badge>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("snapshots")}
+                    className={`w-full text-left px-3.5 py-2.5 rounded-lg font-medium transition-colors flex items-center gap-2.5 ${
+                      activeTab === "snapshots"
+                        ? "bg-primary text-primary-foreground font-bold shadow"
+                        : "text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    <Archive className="w-4 h-4 text-emerald-400" />
+                    <div className="flex-1 flex justify-between items-center">
+                      <span>Snapshots & Franchises</span>
+                      <Badge className="text-[9px] bg-emerald-500/20 text-emerald-300 border-none px-1.5 py-0">Clone</Badge>
                     </div>
                   </button>
                 </div>
@@ -1382,6 +1403,241 @@ export default function Settings() {
                     </Card>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Snapshots & Multi-Office Franchise Replication Tab */}
+            {activeTab === "snapshots" && (
+              <div className="space-y-6">
+                <Card className="p-6 border border-border bg-card/80 backdrop-blur space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-xl font-bold text-foreground">Snapshots & Multi-Office Cloning</h2>
+                        <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-[10px]">
+                          Proprietary Replication Engine
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Save complete operational configurations—including LLM hyperparameters, 9-node integrations, active swarms, and playbook DAGs—and replicate them seamlessly across duplicate offices, franchises, or branches.
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="sm"
+                        onClick={async () => {
+                          const office = prompt("Enter Office / Branch Name (e.g. 'St. Louis Advisory Office', 'Austin Franchise 01'):");
+                          if (!office) return;
+                          const name = prompt("Enter Snapshot Name:", `${office} Master Setup`) || `${office} Master Setup`;
+                          const desc = prompt("Enter Brief Description:", `Full operational configuration for ${office}`) || "";
+
+                          try {
+                            const res = await fetch("/api/snapshots/save", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                name,
+                                officeName: office,
+                                description: desc,
+                                tags: ["branch", "custom", "replicated"],
+                              }),
+                            });
+                            if (!res.ok) throw new Error("Failed to save snapshot");
+                            const data = await res.json();
+                            toast.success(data.message || "Snapshot saved successfully!");
+                            window.location.reload();
+                          } catch (err: any) {
+                            toast.error(err.message || "Failed to save snapshot");
+                          }
+                        }}
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs gap-1.5 shadow"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        Create Snapshot
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-xs">
+                    <div className="p-3 rounded-lg bg-background/60 border border-border flex items-start gap-2.5">
+                      <Building className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                      <div>
+                        <div className="font-semibold text-foreground">Franchise Multi-Tenant Ready</div>
+                        <div className="text-[11px] text-muted-foreground mt-0.5">Spin up identical agency stacks for new partners without rebuilding workflows.</div>
+                      </div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-background/60 border border-border flex items-start gap-2.5">
+                      <Sliders className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="font-semibold text-foreground">Hyperparameter Lock</div>
+                        <div className="text-[11px] text-muted-foreground mt-0.5">Freezes temperature, token caps, and zero-refusal safeguards across deployments.</div>
+                      </div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-background/60 border border-border flex items-start gap-2.5">
+                      <Plug className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="font-semibold text-foreground">1-Click Integration Portability</div>
+                        <div className="text-[11px] text-muted-foreground mt-0.5">Instantly maps Instantly.ai, ElevenLabs, and M365 configs to satellite locations.</div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Pre-Seeded & Saved Snapshots Grid */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between px-1">
+                    <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                      <Archive className="w-4 h-4 text-primary" />
+                      <span>Available Workspace Snapshots</span>
+                    </h3>
+                    <span className="text-xs text-muted-foreground">2 Canonical Templates + User Snapshots</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4">
+                    {/* Kansas City Flagship Master */}
+                    <Card className="p-5 border border-primary/40 bg-card/90 backdrop-blur shadow-sm hover:border-primary/60 transition">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm text-foreground">Kansas City HQ Master Configuration</span>
+                            <Badge className="bg-primary/20 text-primary text-[10px] font-mono border-primary/30">v1.1.0 Flagship</Badge>
+                            <Badge variant="outline" className="text-[10px] text-emerald-400 border-emerald-500/30">Active Default</Badge>
+                          </div>
+                          <div className="text-xs text-muted-foreground font-medium flex items-center gap-1.5">
+                            <Building2 className="w-3.5 h-3.5 text-primary" />
+                            <span>Uncle Robert Consulting — KC Flagship</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground pt-1 leading-relaxed">
+                            Full production configuration with 10 autonomous workflows, Instantly.ai Batch 01 outbound engine, Pamela ElevenLabs telephony greeting, and M365 financial control layer.
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={async () => {
+                              const newOffice = prompt("Enter Target Franchise / Office Name to Clone into:", "St. Louis Branch Office");
+                              if (!newOffice) return;
+                              try {
+                                const res = await fetch("/api/snapshots/snap_kc_hq_primary/clone", {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ targetOfficeName: newOffice }),
+                                });
+                                const data = await res.json();
+                                toast.success(data.message || `Cloned KC Flagship to ${newOffice}!`);
+                              } catch (err) {
+                                toast.error("Failed to clone snapshot.");
+                              }
+                            }}
+                            className="text-xs font-semibold gap-1.5 border-border hover:border-primary"
+                          >
+                            <Copy className="w-3.5 h-3.5 text-primary" />
+                            Clone to Branch
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              toast.success("Active workspace already running Kansas City HQ Master Configuration.");
+                            }}
+                            className="text-xs font-bold gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground"
+                          >
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            Active in Workspace
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="pt-3 mt-3 border-t border-border/60 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <span className="text-[10px] uppercase font-mono font-bold text-foreground">Scope:</span>
+                          <Badge variant="secondary" className="text-[10px]">9 Integrations</Badge>
+                          <Badge variant="secondary" className="text-[10px]">5 Swarm Nodes</Badge>
+                          <Badge variant="secondary" className="text-[10px]">4 Active DAGs</Badge>
+                          <Badge variant="secondary" className="text-[10px]">Pamela Voice</Badge>
+                          <Badge variant="secondary" className="text-[10px]">M365 Ledger</Badge>
+                        </div>
+                        <span className="text-[10px] font-mono text-muted-foreground">ID: snap_kc_hq_primary</span>
+                      </div>
+                    </Card>
+
+                    {/* Franchise Starter Template */}
+                    <Card className="p-5 border border-border bg-card/70 backdrop-blur shadow-sm hover:border-border/80 transition">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm text-foreground">Franchise & Branch Office Zero-Waste Starter</span>
+                            <Badge variant="outline" className="text-[10px] font-mono text-muted-foreground">v1.0.0 Template</Badge>
+                          </div>
+                          <div className="text-xs text-muted-foreground font-medium flex items-center gap-1.5">
+                            <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
+                            <span>Standard Partner Franchise Template</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground pt-1 leading-relaxed">
+                            Lightweight zero-cost starter kit optimized for new advisory branches, boutique agencies, and satellite locations. Includes M365 sync and regional founder outreach DAG.
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={async () => {
+                              const newOffice = prompt("Enter Branch Office Name for this Clone:", "Denver Satellite Office");
+                              if (!newOffice) return;
+                              try {
+                                const res = await fetch("/api/snapshots/snap_franchise_starter/clone", {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ targetOfficeName: newOffice }),
+                                });
+                                const data = await res.json();
+                                toast.success(data.message || `Cloned Franchise Starter to ${newOffice}!`);
+                              } catch (err) {
+                                toast.error("Failed to clone snapshot.");
+                              }
+                            }}
+                            className="text-xs font-semibold gap-1.5 border-border hover:border-primary"
+                          >
+                            <Copy className="w-3.5 h-3.5 text-primary" />
+                            Clone to Branch
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={async () => {
+                              try {
+                                const res = await fetch("/api/snapshots/snap_franchise_starter/restore", {
+                                  method: "POST",
+                                });
+                                const data = await res.json();
+                                toast.success(data.message || "Applied Franchise Starter snapshot to workspace!");
+                              } catch (err) {
+                                toast.error("Failed to restore snapshot.");
+                              }
+                            }}
+                            className="text-xs font-bold gap-1.5 border-border hover:bg-muted"
+                          >
+                            Apply to Workspace
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="pt-3 mt-3 border-t border-border/60 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <span className="text-[10px] uppercase font-mono font-bold text-foreground">Scope:</span>
+                          <Badge variant="secondary" className="text-[10px]">Zero-Waste Stack</Badge>
+                          <Badge variant="secondary" className="text-[10px]">2 Swarm Nodes</Badge>
+                          <Badge variant="secondary" className="text-[10px]">2 Workflows</Badge>
+                          <Badge variant="secondary" className="text-[10px]">M365 Default</Badge>
+                        </div>
+                        <span className="text-[10px] font-mono text-muted-foreground">ID: snap_franchise_starter</span>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
               </div>
             )}
 

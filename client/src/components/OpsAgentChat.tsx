@@ -224,7 +224,7 @@ export function OpsAgentChat() {
                   >
                     <div>{msg.content}</div>
 
-                    {/* Actionable Multi-Agent DAG Plan Card */}
+                    {/* Actionable Multi-Agent DAG Plan Card with Step Customization */}
                     {msg.proposal && (
                       <div className="p-3.5 rounded-xl bg-background/80 border border-primary/30 space-y-2.5 text-left">
                         <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-2">
@@ -237,21 +237,135 @@ export function OpsAgentChat() {
                           </Badge>
                         </div>
 
-                        {/* DAG Execution Steps Checklist */}
-                        <div className="space-y-1.5 pt-1">
-                          <div className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-wider">
-                            Synthesized Execution Steps ({msg.proposal.steps?.length || 4} Nodes)
+                        {/* DAG Execution Steps with Inline Edit & Reject Controls */}
+                        <div className="space-y-2 pt-1">
+                          <div className="flex items-center justify-between">
+                            <div className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-wider">
+                              Interactive Nodes ({msg.proposal.steps?.length || 0})
+                            </div>
+                            <span className="text-[9px] text-primary/80">Click edit/delete to customize</span>
                           </div>
-                          {msg.proposal.steps?.map((step) => (
-                            <div key={step.stepNumber} className="flex items-start gap-2 text-[11px] text-muted-foreground">
+
+                          {msg.proposal.steps?.map((step, sIdx) => (
+                            <div
+                              key={step.stepNumber}
+                              className="p-2 rounded-lg bg-card/60 border border-border/60 hover:border-primary/40 transition flex items-start gap-2 text-[11px]"
+                            >
                               <span className="w-4 h-4 rounded-full bg-primary/10 border border-primary/30 text-primary font-bold text-[9px] flex items-center justify-center shrink-0 mt-0.5">
-                                {step.stepNumber}
+                                {sIdx + 1}
                               </span>
-                              <div className="flex-1">
-                                <strong className="text-foreground">{step.title}</strong>: {step.detail}
+
+                              <div className="flex-1 space-y-0.5">
+                                <input
+                                  type="text"
+                                  value={step.title}
+                                  onChange={(e) => {
+                                    const updatedTitle = e.target.value;
+                                    setMessages((curr) =>
+                                      curr.map((m) =>
+                                        m.id === msg.id && m.proposal
+                                          ? {
+                                              ...m,
+                                              proposal: {
+                                                ...m.proposal,
+                                                steps: m.proposal.steps.map((st, idx) =>
+                                                  idx === sIdx ? { ...st, title: updatedTitle } : st
+                                                ),
+                                              },
+                                            }
+                                          : m
+                                      )
+                                    );
+                                  }}
+                                  className="font-bold text-foreground bg-transparent border-b border-transparent hover:border-border focus:border-primary focus:outline-none w-full text-[11px]"
+                                />
+                                <input
+                                  type="text"
+                                  value={step.detail}
+                                  onChange={(e) => {
+                                    const updatedDetail = e.target.value;
+                                    setMessages((curr) =>
+                                      curr.map((m) =>
+                                        m.id === msg.id && m.proposal
+                                          ? {
+                                              ...m,
+                                              proposal: {
+                                                ...m.proposal,
+                                                steps: m.proposal.steps.map((st, idx) =>
+                                                  idx === sIdx ? { ...st, detail: updatedDetail } : st
+                                                ),
+                                              },
+                                            }
+                                          : m
+                                      )
+                                    );
+                                  }}
+                                  className="text-[10px] text-muted-foreground bg-transparent border-b border-transparent hover:border-border focus:border-primary focus:outline-none w-full"
+                                />
                               </div>
+
+                              {/* Remove/Reject Step Button */}
+                              <button
+                                type="button"
+                                title="Reject / Remove this step"
+                                onClick={() => {
+                                  setMessages((curr) =>
+                                    curr.map((m) =>
+                                      m.id === msg.id && m.proposal
+                                        ? {
+                                            ...m,
+                                            proposal: {
+                                              ...m.proposal,
+                                              steps: m.proposal.steps
+                                                .filter((_, idx) => idx !== sIdx)
+                                                .map((st, idx) => ({ ...st, stepNumber: idx + 1 })),
+                                            },
+                                          }
+                                        : m
+                                    )
+                                  );
+                                  toast.info(`Removed node "${step.title}" from proposal.`);
+                                }}
+                                className="p-1 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded transition"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
                             </div>
                           ))}
+
+                          {/* Add Custom Node Button */}
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              const newStepNum = (msg.proposal?.steps.length || 0) + 1;
+                              const customNode: WorkflowProposalStep = {
+                                stepNumber: newStepNum,
+                                title: `Custom Node ${newStepNum}`,
+                                type: "ACTION",
+                                detail: "Custom human-defined operational step",
+                                agentId: "agent_ops_lead",
+                              };
+                              setMessages((curr) =>
+                                curr.map((m) =>
+                                  m.id === msg.id && m.proposal
+                                    ? {
+                                        ...m,
+                                        proposal: {
+                                          ...m.proposal,
+                                          steps: [...m.proposal.steps, customNode],
+                                        },
+                                      }
+                                    : m
+                                )
+                              );
+                              toast.success("Added custom step to workflow proposal.");
+                            }}
+                            className="w-full text-[10px] h-7 border border-dashed border-border/80 hover:border-primary text-muted-foreground hover:text-foreground font-mono"
+                          >
+                            + Add Custom Execution Step
+                          </Button>
                         </div>
 
                         {/* Cost & Latency Metrics */}
@@ -260,10 +374,10 @@ export function OpsAgentChat() {
                           <span>Est. Latency: <strong className="text-primary font-bold">{msg.proposal.estimatedLatencySeconds || 12}s</strong></span>
                         </div>
 
-                        {/* Execution Trigger Button & Status */}
-                        <div className="pt-2">
+                        {/* Execution & Rejection Actions */}
+                        <div className="pt-2 flex items-center gap-2">
                           {msg.executionStatus === "completed" ? (
-                            <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] flex items-center justify-between">
+                            <div className="p-2 w-full rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] flex items-center justify-between">
                               <div className="flex items-center gap-1.5 font-bold">
                                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                                 <span>Executed in OS ({msg.runResult?.runId})</span>
@@ -271,24 +385,42 @@ export function OpsAgentChat() {
                               <span className="font-mono text-[10px]">{msg.runResult?.latencyMs}ms</span>
                             </div>
                           ) : (
-                            <Button
-                              size="sm"
-                              disabled={msg.executionStatus === "running"}
-                              onClick={() => executeProposal(msg.id, msg.proposal!)}
-                              className="w-full text-xs font-bold gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow"
-                            >
-                              {msg.executionStatus === "running" ? (
-                                <>
-                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                  <span>Executing DAG Swarm...</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Play className="w-3.5 h-3.5" />
-                                  <span>Approve & Execute DAG in OS</span>
-                                </>
-                              )}
-                            </Button>
+                            <>
+                              <Button
+                                size="sm"
+                                disabled={msg.executionStatus === "running" || (msg.proposal.steps?.length || 0) === 0}
+                                onClick={() => executeProposal(msg.id, msg.proposal!)}
+                                className="flex-1 text-xs font-bold gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow"
+                              >
+                                {msg.executionStatus === "running" ? (
+                                  <>
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                    <span>Executing DAG...</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Play className="w-3.5 h-3.5" />
+                                    <span>Approve & Execute DAG</span>
+                                  </>
+                                )}
+                              </Button>
+
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                disabled={msg.executionStatus === "running"}
+                                onClick={() => {
+                                  const reason = prompt("What would you like the Ops Agent to change about this proposal?") || "";
+                                  if (reason) {
+                                    setDraft(`Please revise the "${msg.proposal?.name}" workflow proposal with this feedback: ${reason}`);
+                                    toast.info("Feedback staged in prompt bar. Press Send to revise!");
+                                  }
+                                }}
+                                className="text-xs font-bold text-muted-foreground hover:text-destructive hover:bg-destructive/10 border-border"
+                              >
+                                Reject / Revise
+                              </Button>
+                            </>
                           )}
                         </div>
                       </div>
