@@ -20,13 +20,53 @@ function getDimensionsForRatio(ratio: string = "16:9"): { width: number; height:
     case "1:1":
       return { width: 1024, height: 1024, imagenRatio: "1:1" };
     case "4:5":
-      return { width: 1024, height: 1280, imagenRatio: "3:4" };
+      return { width: 896, height: 1120, imagenRatio: "3:4" };
     case "9:16":
       return { width: 720, height: 1280, imagenRatio: "9:16" };
     case "16:9":
     default:
       return { width: 1280, height: 720, imagenRatio: "16:9" };
   }
+}
+
+/**
+ * Cleans and converts raw prompt text / markdown into a clean visual prompt for AI image generation.
+ */
+function cleanPromptForDiffusion(rawPrompt: string, stylePreset?: string, styleNotes?: string): string {
+  let cleaned = rawPrompt
+    // Strip markdown code blocks, headers, bullet points
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/#+\s+/g, "")
+    .replace(/\*\*/g, "")
+    .replace(/Prompt Template:?/gi, "")
+    .replace(/Target Platform:?/gi, "")
+    .replace(/Aspect Ratio:?/gi, "")
+    .replace(/Art Direction Notes:?/gi, "")
+    .replace(/Brand Palette:?/gi, "")
+    .replace(/#0F172A/gi, "deep navy blue")
+    .replace(/#3B82F6/gi, "electric sapphire blue")
+    .replace(/#10B981/gi, "vibrant emerald green")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  // If prompt is too abstract (e.g. "SOP adherence, OKR progress"), ground it with concrete visual subjects
+  if (cleaned.length < 20 || cleaned.toLowerCase().includes("undefined")) {
+    cleaned = "Futuristic holographic agency operations command center, founder looking at glowing 3D data streams, deep navy background with sapphire and emerald lighting.";
+  }
+
+  // Append aesthetic enhancements
+  const presetEnhancements: Record<string, string> = {
+    "Modern B2B Isometric": "3D isometric illustration, sleek UI cards, volumetric lighting, high contrast B2B SaaS aesthetic, octane render 8k",
+    "Dark Glassmorphism": "Dark glassmorphic dashboard interface, glowing translucent widgets, neon reflections, high-tech corporate aesthetic, 8k resolution",
+    "Founder / Executive": "Professional executive portrait in modern architectural tech office, warm cinematic rim lighting, 35mm photography, shallow depth of field",
+    "Minimalist Vector": "Clean high-contrast vector editorial illustration, modern Swiss typography layout, bold shapes, minimal corporate aesthetic",
+  };
+
+  const extraStyle = stylePreset && presetEnhancements[stylePreset] 
+    ? presetEnhancements[stylePreset] 
+    : "Modern 3D isometric tech illustration, clean corporate B2B aesthetic, navy background, sapphire blue and emerald lighting, highly detailed 8k";
+
+  return `${cleaned}, ${extraStyle}`;
 }
 
 /**
@@ -42,11 +82,15 @@ async function generateWithImagen3(
     const cleanKey = apiKey.trim().replace(/^["']|["']$/g, "");
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${cleanKey}`;
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+
     const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      signal: controller.signal,
       body: JSON.stringify({
-        instances: [{ prompt }],
+        instances: [{ prompt: prompt.slice(0, 480) }],
         parameters: {
           sampleCount: 1,
           aspectRatio: imagenRatio,
@@ -54,6 +98,7 @@ async function generateWithImagen3(
         },
       }),
     });
+    clearTimeout(timeout);
 
     if (!res.ok) {
       const errText = await res.text();
@@ -76,20 +121,47 @@ async function generateWithImagen3(
 }
 
 /**
- * Resilient multi-engine fallback (Flux Schnell)
+ * Resilient multi-engine fallback with server-side buffer verification and base64 conversion
  */
-async function generateWithFluxFallback(
+async function generateWithServerSideFlux(
   prompt: string,
   aspectRatio: string
 ): Promise<{ imageUrl: string; engine: string }> {
   const { width, height } = getDimensionsForRatio(aspectRatio);
   const seed = Math.floor(Math.random() * 1000000);
-  const encodedPrompt = encodeURIComponent(prompt.trim());
-  const fallbackUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true&model=flux`;
+  const encodedPrompt = encodeURIComponent(prompt.slice(0, 300));
+  const directUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true&model=flux`;
 
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const imgRes = await fetch(directUrl, {
+      headers: { "User-Agent": "AgentLab/1.0" },
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+
+    if (imgRes.ok) {
+      const arrayBuffer = await imgRes.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      if (buffer.length > 5000) {
+        const base64 = buffer.toString("base64");
+        const contentType = imgRes.headers.get("content-type") || "image/jpeg";
+        return {
+          imageUrl: `data:${contentType};base64,${base64}`,
+          engine: "Flux Schnell (Verified Neural Render)",
+        };
+      }
+    }
+  } catch (err: any) {
+    console.warn("[Server-Side Flux Buffer Note]:", err.message);
+  }
+
+  // Fallback directly to direct URL if buffer fetch timed out
   return {
-    imageUrl: fallbackUrl,
-    engine: "Flux Schnell (High-Fidelity Neural Render)",
+    imageUrl: directUrl,
+    engine: "Flux Schnell (Neural Render)",
   };
 }
 
@@ -118,33 +190,20 @@ export async function handleGenerateImage(req: Request, res: Response): Promise<
       return;
     }
 
-    // Compose enhanced prompt incorporating brand guidelines & style notes
-    let enhancedPrompt = prompt.trim();
-    if (stylePreset) {
-      enhancedPrompt = `[Style: ${stylePreset}] ${enhancedPrompt}`;
-    }
-    if (styleNotes) {
-      enhancedPrompt += `. Art Direction: ${styleNotes}`;
-    }
-
-    // Add subtle brand consistency guidelines if not specified
-    if (!enhancedPrompt.includes("#0F172A") && !enhancedPrompt.includes("navy")) {
-      enhancedPrompt += ". Professional high-contrast B2B aesthetic, navy (#0F172A), sapphire blue, and emerald accents.";
-    }
-
-    console.log(`[IMAGE GENERATOR] Generating (${aspectRatio}): "${enhancedPrompt.slice(0, 80)}..."`);
+    const cleanedPrompt = cleanPromptForDiffusion(prompt, stylePreset, styleNotes);
+    console.log(`[IMAGE GENERATOR] Generating (${aspectRatio}): "${cleanedPrompt.slice(0, 100)}..."`);
 
     let result: { imageUrl: string; engine: string } | null = null;
     const geminiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
     // 1. Try Google Imagen 3 if key is configured
     if (geminiKey) {
-      result = await generateWithImagen3(enhancedPrompt, aspectRatio, geminiKey);
+      result = await generateWithImagen3(cleanedPrompt, aspectRatio, geminiKey);
     }
 
-    // 2. Fall back to Flux Schnell if Imagen 3 is unavailable
+    // 2. Fall back to Server-Side Verified Flux render
     if (!result) {
-      result = await generateWithFluxFallback(enhancedPrompt, aspectRatio);
+      result = await generateWithServerSideFlux(cleanedPrompt, aspectRatio);
     }
 
     // 3. Persist image metadata to artifact if artifactId was provided
@@ -184,7 +243,7 @@ export async function handleGenerateImage(req: Request, res: Response): Promise<
       imageUrl: result.imageUrl,
       engine: result.engine,
       aspectRatio,
-      prompt: enhancedPrompt,
+      prompt: cleanedPrompt,
       generatedAt: new Date().toISOString(),
     });
   } catch (error: any) {

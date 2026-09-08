@@ -1814,8 +1814,12 @@ export default function CommandCenter() {
                     onClick={() => {
                       let visualPrompt = selectedArtifact.metadata?.visualPrompt;
                       if (!visualPrompt) {
-                        const match = selectedArtifact.content.match(/Prompt Template\*\*:\s*```(?:\w+)?\n([\s\S]*?)```/i);
-                        visualPrompt = match ? match[1].trim() : selectedArtifact.content.slice(0, 300);
+                        const bodyMatch = selectedArtifact.content.match(/\*\*Prompt Template\*\*:\s*(?:```(?:\w+)?\n)?([\s\S]*?)(?:```|\*\*Art Direction|\*\*Brand Palette|$)/i);
+                        if (bodyMatch && bodyMatch[1].trim().length > 10) {
+                          visualPrompt = bodyMatch[1].replace(/```/g, "").replace(/\.\.\./g, "").trim();
+                        } else {
+                          visualPrompt = selectedArtifact.summary || selectedArtifact.title;
+                        }
                       }
                       generateImageMutation.mutate({
                         prompt: visualPrompt,
