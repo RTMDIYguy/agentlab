@@ -6,6 +6,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LiveChat } from "./components/LiveChat";
 import { OpsAgentChat } from "./components/OpsAgentChat";
+import { PamelaVoiceWidget } from "./components/PamelaVoiceWidget";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
@@ -140,6 +141,7 @@ function App() {
           <Toaster />
           <LiveChat />
           <OpsAgentChat />
+          <PamelaVoiceWidget />
           <AuthenticatedTour />
           <Router />
         </TooltipProvider>

@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { Navigation } from "./Navigation";
 import { Footer } from "./Footer";
-import { PamelaVoiceWidget } from "./PamelaVoiceWidget";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -14,7 +13,6 @@ export function PageLayout({ children, className = "" }: PageLayoutProps) {
       <Navigation />
       <main className={`flex-1 ${className}`}>{children}</main>
       <Footer />
-      <PamelaVoiceWidget />
     </div>
   );
 }

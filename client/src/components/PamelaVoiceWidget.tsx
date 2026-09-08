@@ -125,23 +125,23 @@ export function PamelaVoiceWidget() {
 
   return (
     <>
-      {/* Floating Action Button */}
-      <div className="fixed bottom-6 right-6 z-40">
+      {/* Floating Action Button - Positioned alongside Ops Agent */}
+      <div className="fixed bottom-6 right-24 z-40">
         {!isOpen && (
           <Button
             onClick={() => setIsOpen(true)}
-            className="h-14 px-5 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white shadow-2xl border border-purple-400/40 flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 group"
+            className="h-13 px-4 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white shadow-2xl border border-purple-400/40 flex items-center gap-2.5 transition-transform hover:scale-105 active:scale-95 group"
           >
-            <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-white/20">
-              <Sparkles className="w-4 h-4 text-purple-200 animate-pulse" />
-              <span className="absolute -top-1 -right-1 flex h-3 w-3">
+            <div className="relative flex items-center justify-center w-7 h-7 rounded-full bg-white/20">
+              <Sparkles className="w-3.5 h-3.5 text-purple-200 animate-pulse" />
+              <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </span>
             </div>
-            <div className="text-left">
-              <div className="text-xs font-bold leading-tight">Talk to Pamela</div>
-              <div className="text-[10px] text-purple-200/80 font-mono">AI Voice Concierge (Free)</div>
+            <div className="text-left hidden sm:block">
+              <div className="text-xs font-bold leading-tight">Pamela</div>
+              <div className="text-[9px] text-purple-200/80 font-mono">Voice Concierge</div>
             </div>
           </Button>
         )}
@@ -149,7 +149,7 @@ export function PamelaVoiceWidget() {
 
       {/* Expanded Interactive Voice Modal */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-[92vw] max-w-sm sm:max-w-md animate-in fade-in slide-in-from-bottom-5">
+        <div className="fixed bottom-22 right-6 z-50 w-[92vw] max-w-sm sm:max-w-md animate-in fade-in slide-in-from-bottom-5">
           <Card className="border border-purple-500/30 bg-card/95 backdrop-blur-xl shadow-2xl p-5 sm:p-6 space-y-4 rounded-2xl">
             {/* Header */}
             <div className="flex justify-between items-start border-b border-border/80 pb-3">
