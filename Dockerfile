@@ -1,7 +1,7 @@
 # Base Stage
 FROM node:22-slim AS base
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@11.25.0 --activate
 
 # Builder Stage
 FROM base AS builder
