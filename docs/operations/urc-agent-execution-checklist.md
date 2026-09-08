@@ -126,6 +126,23 @@ Output:
 - one workflow audit summary with pass/review-needed status and next three
   fixes
 
+### 6B. Verify Playbook Layer & Cross-Department Handoffs
+
+- open `docs/operations/playbook-layer.md`
+- verify whether the operational task spans multiple departments (e.g., Marketing -> Sales, Sales -> Delivery, Delivery -> Retention, Finance, or Proof/Referral)
+- map multi-department execution to one of the 5 canonical playbooks:
+  1. `revenue-lead-to-sale`
+  2. `sale-to-delivery`
+  3. `delivery-to-retention`
+  4. `finance-control-loop`
+  5. `proof-and-referral-loop`
+- check that handoff contracts (required inputs, expected outputs, fallback protocols, evidence logs) are explicitly defined before execution
+- ensure fallback protocol is established if any automated endpoint or tool is unavailable
+
+Output:
+
+- one playbook alignment confirmation note identifying the active journey and fallback owner
+
 ### 7. Define Phase 1 Actions
 
 Focus on days 1-30:

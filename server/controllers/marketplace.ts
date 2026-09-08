@@ -557,11 +557,6 @@ export async function mountPlaybook(req: Request, res: Response): Promise<void> 
       packageId: id,
       workspaceId,
     });
-      success: true,
-      message: `Playbook ${id} successfully mounted to workspace.`,
-      packageId: id,
-      workspaceId,
-    });
   } catch (error: any) {
     console.error("[Marketplace Mount Error]:", error);
     res.status(500).json({ error: "Failed to mount playbook" });

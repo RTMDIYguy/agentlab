@@ -26,6 +26,7 @@ Start here:
 1. `docs/operations/urc-agent-execution-checklist.md`
 2. `docs/operations/urc-v1-operating-architecture.md`
 3. `docs/operations/urc-90-day-implementation-plan.md`
+4. `docs/operations/playbook-layer.md`
 
 Opening routine:
 
@@ -45,6 +46,7 @@ If the task relates to the broader business archive and recovered files, also re
 - Do not redesign the business from zero.
 - Prefer implementation over brainstorming.
 - Preserve existing business data.
+- Treat individual workflows (`MKT-01`, `SAL-01`, `FUL-02`) as department procedures, and Playbooks (`revenue-lead-to-sale`, `sale-to-delivery`, `delivery-to-retention`, `finance-control-loop`, `proof-and-referral-loop`) as the governed cross-department journeys with required inputs, handoff contracts, and fallback protocols.
 - Use `Microsoft 365` as the default operating backbone.
 - Use the current Microsoft 365 finance tracker as the finance control layer while revenue is small; do not assume paid finance tools are worth keeping.
 - Use `Notion` sparingly as a lightweight dashboard layer only.
