@@ -109,7 +109,7 @@ export default function Settings() {
       setShowAddMcpModal(false);
       setShowAddIntegrationModal(false);
       setNewMcpForm({ name: "", transport: "sse", endpoint: "", apiKey: "", capabilities: "tools,resources" });
-      setNewIntegrationForm({ name: "", type: "webhook", endpoint: "", apiKey: "" });
+      setNewIntegrationForm({ name: "", type: "webhook", endpoint: "", portalUrl: "", apiKey: "" });
     },
     onError: () => toast.error("Failed to save integration."),
   });

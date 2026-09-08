@@ -206,16 +206,16 @@ export default function ScreenRecorder() {
 
 **Executive Overview**:
 - Visual walkthrough analyzing client SaaS bottlenecks, manual data entry handoffs, and customer churn vulnerabilities.
-- Highlighted 3 specific high-ROI automation insertion points (`MKT-01` lead enrichment, `SAL-01` CRM sync, and `FUL-01` automated onboarding).
+- Highlighted 3 specific high-ROI automation insertion points (MKT-01 lead enrichment, SAL-01 CRM sync, and FUL-01 automated onboarding).
 
 **Key Milestones & Timestamps**:
-- \`00:15\` — Current state architecture breakdown & friction points.
-- \`01:10\` — Demonstration of AgentLab Autonomous Swarm executing intake in 4.2 seconds.
-- \`02:00\` — Proposed 5-day starter sprint roadmap and deliverables.
+- 00:15 — Current state architecture breakdown & friction points.
+- 01:10 — Demonstration of AgentLab Autonomous Swarm executing intake in 4.2 seconds.
+- 02:00 — Proposed 5-day starter sprint roadmap and deliverables.
 
 **Automated Next Actions**:
 1. Dispatch verified video link + briefing packet to client email.
-2. Seed diagnostic scorecard in Results Vault under \`SAL-01\`.`;
+2. Seed diagnostic scorecard in Results Vault under SAL-01.`;
       setAiBrief(brief);
       toast.success("AI Teardown Brief synthesized! ⚡");
     } catch (e) {
