@@ -32,6 +32,8 @@ import {
   Rocket,
   Layers,
   Zap,
+  Radio,
+  Sliders,
   Terminal,
   Gauge,
   Target,
