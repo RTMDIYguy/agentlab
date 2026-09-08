@@ -51,6 +51,7 @@ Clean stopping point reached. All changes have been committed, change control re
 ---
 
 ## Key Context Files
+
 - [`docs/operations/agency-owners-manual.md`](file:///e:/OneDrive%20-%20Uncle%20Robert%20Consulting%20LLC/Working%20Docs/AI%20Native%20Agency%20Deepened/AgentLab/docs/operations/agency-owners-manual.md)
 - [`docs/operations/agentlab-os-features-benefits-one-pager.md`](file:///e:/OneDrive%20-%20Uncle%20Robert%20Consulting%20LLC/Working%20Docs/AI%20Native%20Agency%20Deepened/AgentLab/docs/operations/agentlab-os-features-benefits-one-pager.md)
 - [`docs/operations/agentlab-os-investor-pitch-deck.md`](file:///e:/OneDrive%20-%20Uncle%20Robert%20Consulting%20LLC/Working%20Docs/AI%20Native%20Agency%20Deepened/AgentLab/docs/operations/agentlab-os-investor-pitch-deck.md)

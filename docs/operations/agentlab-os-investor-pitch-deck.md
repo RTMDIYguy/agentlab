@@ -1,4 +1,5 @@
 # AgentLab OS: The Autonomous AI-Native Agency Operating System
+
 ## Investor Pitch Deck & Strategic Memorandum
 
 **Entity:** Uncle Robert Consulting LLC / Bootstrapper Capital  
@@ -9,7 +10,7 @@
 
 ---
 
-```
+```text
   █████╗  ██████╗ ███████╗███╗   ██╗████████╗██╗      █████╗ ██████╗      ██████╗ ███████╗
  ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝██║     ██╔══██╗██╔══██╗    ██╔═══██╗██╔════╝
  ███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║   ██║     ███████║██████╔╝    ██║   ██║███████╗
@@ -23,7 +24,8 @@
 
 ## SLIDE 1: Title & Vision
 
-### AgentLab OS: The Autonomous AI-Native Agency Operating System
+### Core Vision & Thesis
+
 **Replacing Disconnected SaaS Shelfware with an Ownable, Autonomous Agency Engine**
 
 - **The Vision:** Transforming 2.5 million boutique professional service agencies and digital consultancies into autonomous, exit-ready, high-margin operating enterprises.
@@ -37,7 +39,7 @@
 
 Modern agencies and boutique consultancies operate on a crumbling foundation of fragmented cloud tools:
 
-```
+```text
 ┌───────────────────────────────────────────────────────────────────────────────┐
 │                      THE FRAGMENTED AGENCY REALITY                            │
 ├─────────────────┬─────────────────┬─────────────────┬─────────────────────────┤
@@ -66,7 +68,7 @@ Modern agencies and boutique consultancies operate on a crumbling foundation of 
 
 AgentLab OS replaces disjointed SaaS point solutions with an integrated, self-healing operating system running on ultra-lean, serverless cloud compute (<$50/mo per tenant).
 
-```
+```text
 ┌───────────────────────────────────────────────────────────────────────────────┐
 │                           AGENTLAB OS ARCHITECTURE                            │
 ├───────────────────────────────────────────────────────────────────────────────┤
@@ -94,7 +96,7 @@ AgentLab OS replaces disjointed SaaS point solutions with an integrated, self-he
 
 ### A Massive, Underserved $45B+ Addressable Market
 
-```
+```text
    ┌───────────────────────────────────────────────────────────────────┐
    │ TOTAL ADDRESSABLE MARKET (TAM)                                    │
    │ $45.8B Global Agency & Professional Services Operations Software   │
@@ -141,14 +143,15 @@ AgentLab OS replaces disjointed SaaS point solutions with an integrated, self-he
 
 ### High-Margin Land-and-Expand Offer Ladder
 
-```
+```text
 [ WEDGE ] ────► [ CONTINUITY ] ────► [ EXPANSION ] ────► [ ENTERPRISE ]
   $1,000           $500/Month           $2,500/Mo           $25,000+
 One-Time Sprint   AgentLab OS ARR     Multi-Department    Custom Swarm
 5-Day Setup CAC: $0  92% Gross Margin  Agency Scaling     Private Cloud
 ```
 
-### Unmatched Unit Economics:
+### Unmatched Unit Economics
+
 - **Customer Acquisition Cost (CAC):** Paid back on Day 1 via the $1,000 Founder Signal System starter sprint.
 - **Monthly Infrastructure Cost Per Tenant:** **$12 – $38 / month** (Serverless Google Cloud Run, Supabase/PostgreSQL, Gemini 2.5 Flash with prompt caching).
 - **Gross Margins:** **92.4%** on software subscriptions; **85%+** on blended sprint deployments.
@@ -171,14 +174,14 @@ Unlike theoretical AI startups, AgentLab OS runs the entire day-to-day operation
 
 ## SLIDE 8: Competitive Landscape
 
-| Feature / Capability | Fragmented SaaS Stack (Slack/Zoom/Zapier/HubSpot) | Generic AI Wrappers (Jasper/Copy.ai) | Raw No-Code Tools (n8n/Make/Zapier) | **AgentLab OS** |
-|---|:---:|:---:|:---:|:---:|
+| Feature / Capability | Fragmented SaaS Stack (Slack/Zoom/Zapier/HubSpot) | Generic AI Wrappers (Jasper/Copy.ai) | Raw No-Code Tools (n8n/Make/Zapier) | AgentLab OS |
+| --- | :---: | :---: | :---: | :---: |
 | **All-in-One Virtual Office (Video/Chat/Screen)** | ❌ Fragmented ($400+/mo) | ❌ No Comms | ❌ No Comms | **✅ Native WebRTC & Messenger** |
 | **Autonomous Multi-Agent DAG Swarms** | ❌ None | ❌ Single Prompt Only | ⚠️ Manual Building Required | **✅ 10 Pre-Built Department DAGs** |
 | **Verifiable Proof & SHA-256 Vault** | ❌ None | ❌ None | ❌ None | **✅ Immutable Cryptographic Vault** |
 | **Built-in GTM Discovery (ICP/Assessments)** | ❌ Third-party addons | ⚠️ Generic templates | ❌ None | **✅ Precision High-Signal Generators** |
 | **Monthly Operating Overhead** | 🔴 $1,500 – $2,500/mo | 🔴 $100 – $500/mo | 🟡 $200 – $600/mo | **🟢 < $50/mo Total Cloud** |
-| **Transferable Business Equity (Ownable Score)**| ❌ 0% Equity | ❌ 0% Equity | ❌ 0% Equity | **✅ Certified Independence Model** |
+| **Transferable Business Equity (Ownable Score)** | ❌ 0% Equity | ❌ 0% Equity | ❌ 0% Equity | **✅ Certified Independence Model** |
 
 ---
 
@@ -186,7 +189,7 @@ Unlike theoretical AI startups, AgentLab OS runs the entire day-to-day operation
 
 ### The Servant-Leadership Growth Engine
 
-```
+```text
        ┌────────────────────────────────────────────────────────┐
        │             CONTENT & AUTHORITY FLYWHEEL               │
        │  LinkedIn Build Logs • YouTube Teardowns • Podcasts     │
@@ -219,7 +222,7 @@ Unlike theoretical AI startups, AgentLab OS runs the entire day-to-day operation
 
 ## SLIDE 10: 3-Year Financial Projections
 
-```
+```text
   $25M ┌─────────────────────────────────────────────────────────────────────────┐
        │                                                                   $21.4M│
   $20M │                                                                         │
@@ -235,7 +238,7 @@ Unlike theoretical AI startups, AgentLab OS runs the entire day-to-day operation
 ```
 
 | Financial Metric | Year 1 | Year 2 | Year 3 |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **Active OS Tenants (Subscribers)** | 250 | 1,000 | 3,500 |
 | **Starter Sprint Customers ($1k one-time)** | 350 | 1,200 | 3,800 |
 | **Annual Recurring Revenue (ARR)** | **$1,500,000** | **$6,000,000** | **$21,000,000** |
@@ -261,7 +264,8 @@ Unlike theoretical AI startups, AgentLab OS runs the entire day-to-day operation
 
 We are seeking strategic capital / seed acceleration to scale platform distribution and enterprise swarm capabilities:
 
-### Use of Funds Allocation:
+### Use of Funds Allocation
+
 - **40% — Engineering & Platform Scaling:** Expand pre-built DAG workflow library across additional vertical playbooks (Legal, Healthcare, Nevada Real Estate, Financial Advisory); deepen native integrations.
 - **35% — Go-To-Market & Ecosystem Acceleration:** Scale Bootstrapper Capital founder roundtables, partner channel onboarding, and autonomous Social Adept listening engines.
 - **15% — Enterprise Hardening & Compliance:** SOC2 Type II compliance, advanced multi-tenant VPC isolation, and expanded enterprise security governance.
@@ -269,7 +273,7 @@ We are seeking strategic capital / seed acceleration to scale platform distribut
 
 ---
 
-### Join Us in Redefining the Future of Agency Operations.
+### Join Us in Redefining the Future of Agency Operations
 
 - **Investor Contact:** `robert@unclerobertconsulting.com`
 - **Schedule a Private War Room Demo:** [agent-lab.tech/meeting](https://agent-lab.tech/meeting)
