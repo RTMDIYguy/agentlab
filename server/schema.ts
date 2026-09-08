@@ -558,6 +558,97 @@ export const workflowArtifacts = pgTable(
 );
 
 // ==============================================================================
+// 16. ASSESSMENT QUESTIONS (Consulting Assessment Question Pool)
+// ==============================================================================
+export const assessmentQuestions = pgTable(
+  "assessment_questions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: uuid("workspace_id").references(() => workspaces.id, {
+      onDelete: "cascade",
+    }),
+    domain: varchar("domain", { length: 64 }).notNull(), // 'Operations' | 'Sales' | 'Marketing' | 'Finance' | 'Technology' | 'Leadership'
+    depth: varchar("depth", { length: 32 }).notNull().default("exploratory"), // 'exploratory' | 'diagnostic' | 'executive'
+    text: text("text").notNull(),
+    skill: varchar("skill", { length: 128 }).notNull(),
+    evaluation: text("evaluation").notNull(),
+    signals: jsonb("signals").notNull().default([]), // Array of trigger words/signals
+    isCustom: boolean("is_custom").notNull().default(false),
+    source: varchar("source", { length: 64 }).notNull().default("system"), // 'system' | 'manual' | 'ai_synthesized'
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_assessment_questions_domain").on(table.domain),
+    index("idx_assessment_questions_depth").on(table.depth),
+    index("idx_assessment_questions_workspace").on(table.workspaceId),
+  ]
+);
+
+// ==============================================================================
+// 17. ASSESSMENT SESSIONS (Recorded Discovery & Diagnostic Runs)
+// ==============================================================================
+export const assessmentSessions = pgTable(
+  "assessment_sessions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: uuid("workspace_id").references(() => workspaces.id, {
+      onDelete: "cascade",
+    }),
+    clientName: varchar("client_name", { length: 128 }).notNull().default("Client"),
+    domain: varchar("domain", { length: 64 }).notNull().default("All"),
+    callNotes: text("call_notes").notNull(),
+    detectedSignals: jsonb("detected_signals").notNull().default([]),
+    findings: jsonb("findings").notNull().default([]),
+    selectedQuestionIds: jsonb("selected_question_ids").notNull().default([]),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_assessment_sessions_workspace").on(table.workspaceId),
+  ]
+);
+
+// ==============================================================================
+// 18. ICP PROFILES (Ideal Customer Profile Library & Generator)
+// ==============================================================================
+export const icpProfiles = pgTable(
+  "icp_profiles",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: uuid("workspace_id").references(() => workspaces.id, {
+      onDelete: "cascade",
+    }),
+    name: varchar("name", { length: 128 }).notNull(),
+    industry: varchar("industry", { length: 128 }).notNull(),
+    targetRole: varchar("target_role", { length: 128 }).notNull(),
+    companySize: varchar("company_size", { length: 64 }).notNull(),
+    revenueRange: varchar("revenue_range", { length: 64 }).notNull(),
+    acutePainTriggers: jsonb("acute_pain_triggers").notNull().default([]),
+    buyingSignals: jsonb("buying_signals").notNull().default([]),
+    disqualifiers: jsonb("disqualifiers").notNull().default([]),
+    valueProposition: text("value_proposition").notNull(),
+    outreachAngles: jsonb("outreach_angles").notNull().default([]),
+    source: varchar("source", { length: 64 }).notNull().default("ai_synthesized"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_icp_profiles_workspace").on(table.workspaceId),
+    index("idx_icp_profiles_industry").on(table.industry),
+  ]
+);
+
+// ==============================================================================
 // RELATIONS
 // ==============================================================================
 export const workspacesRelations = relations(workspaces, ({ many }) => ({
@@ -573,6 +664,9 @@ export const workspacesRelations = relations(workspaces, ({ many }) => ({
   playbookHandoffs: many(playbookHandoffs),
   secrets: many(workspaceSecrets),
   integrations: many(workspaceIntegrations),
+  assessmentQuestions: many(assessmentQuestions),
+  assessmentSessions: many(assessmentSessions),
+  icpProfiles: many(icpProfiles),
 }));
 
 export const usersRelations = relations(users, ({ one }) => ({
@@ -743,6 +837,36 @@ export const workspaceIntegrationsRelations = relations(
   })
 );
 
+export const assessmentQuestionsRelations = relations(
+  assessmentQuestions,
+  ({ one }) => ({
+    workspace: one(workspaces, {
+      fields: [assessmentQuestions.workspaceId],
+      references: [workspaces.id],
+    }),
+  })
+);
+
+export const assessmentSessionsRelations = relations(
+  assessmentSessions,
+  ({ one }) => ({
+    workspace: one(workspaces, {
+      fields: [assessmentSessions.workspaceId],
+      references: [workspaces.id],
+    }),
+  })
+);
+
+export const icpProfilesRelations = relations(
+  icpProfiles,
+  ({ one }) => ({
+    workspace: one(workspaces, {
+      fields: [icpProfiles.workspaceId],
+      references: [workspaces.id],
+    }),
+  })
+);
+
 // ==============================================================================
 // INFERRED TYPES
 // ==============================================================================
@@ -794,3 +918,12 @@ export type WorkspaceIntegration = InferSelectModel<
 export type NewWorkspaceIntegration = InferInsertModel<
   typeof workspaceIntegrations
 >;
+
+export type AssessmentQuestion = InferSelectModel<typeof assessmentQuestions>;
+export type NewAssessmentQuestion = InferInsertModel<typeof assessmentQuestions>;
+
+export type AssessmentSession = InferSelectModel<typeof assessmentSessions>;
+export type NewAssessmentSession = InferInsertModel<typeof assessmentSessions>;
+
+export type IcpProfile = InferSelectModel<typeof icpProfiles>;
+export type NewIcpProfile = InferInsertModel<typeof icpProfiles>;

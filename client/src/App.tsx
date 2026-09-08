@@ -32,6 +32,7 @@ import Agents from "./pages/Agents";
 import Auditing from "./pages/Auditing";
 import OpsCleanupAgent from "./pages/OpsCleanupAgent";
 import AssessmentQuestionGenerator from "./pages/AssessmentQuestionGenerator";
+import IcpGenerator from "./pages/IcpGenerator";
 import Community from "@/pages/Community";
 import AdminEvents from "@/pages/AdminEvents";
 import Book from "@/pages/Book";
@@ -99,6 +100,7 @@ function Router() {
         path={"/assessment-generator"}
         component={AssessmentQuestionGenerator}
       />
+      <Route path={"/icp-generator"} component={IcpGenerator} />
       <Route path={"/marketplace"} component={Marketplace} />
       <Route path={"/playbooks"} component={Playbooks} />
       <Route path={"/founder-signal-system"} component={FounderSignalSystem} />

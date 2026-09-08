@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Clipboard,
   Copy,
@@ -9,8 +10,26 @@ import {
   Sparkles,
   Download,
   PlusCircle,
+  Database,
+  Trash2,
+  CheckCircle2,
+  BrainCircuit,
+  Loader2,
 } from "lucide-react";
 import { PageLayout } from "@/components/PageLayout";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 type Depth = "exploratory" | "diagnostic" | "executive";
 
@@ -22,6 +41,8 @@ type Question = {
   skill: string;
   evaluation: string;
   signals: string[];
+  isCustom?: boolean;
+  source?: string;
 };
 
 type Finding = {
@@ -109,7 +130,7 @@ const diagnosticRules: Record<string, { gap: string; nextStep: string }> = {
   },
 };
 
-const questionBank: Question[] = [
+const defaultSeedBank: Question[] = [
   {
     id: "ops-1",
     domain: "Operations",
@@ -303,10 +324,6 @@ const questionBank: Question[] = [
   },
 ];
 
-const domains = [
-  "Auto",
-  ...Array.from(new Set(questionBank.map(q => q.domain))),
-];
 const callObjectives = [
   "Initial onboarding",
   "Systems audit",
@@ -356,7 +373,7 @@ function scoreQuestion(
   depth: Depth
 ) {
   const normalized = notes.toLowerCase();
-  const signalHits = question.signals.filter(signal =>
+  const signalHits = (question.signals || []).filter(signal =>
     normalized.includes(signal)
   ).length;
   const domainScore = domain === "Auto" || question.domain === domain ? 6 : 0;
@@ -364,50 +381,10 @@ function scoreQuestion(
   return domainScore + depthScore + signalHits * 3;
 }
 
-function inferSignals(notes: string) {
-  const normalized = notes.toLowerCase();
-  const hits = questionBank
-    .flatMap(q => q.signals.map(sig => ({ signal: sig, domain: q.domain })))
-    .filter(item => normalized.includes(item.signal));
-
-  const unique = new Map<string, string>();
-  hits.forEach(item => unique.set(item.signal, item.domain));
-  return Array.from(unique.entries()).map(([signal, domain]) => ({
-    signal,
-    domain,
-  }));
-}
-
-function buildFindings(notes: string): Finding[] {
-  const normalized = notes.toLowerCase();
-  const findings = Object.entries(domainProfiles)
-    .map(([domain, profile]) => {
-      const questions = questionBank.filter(
-        question => question.domain === domain
-      );
-      const evidence = Array.from(
-        new Set(
-          questions.flatMap(question =>
-            question.signals.filter(signal => normalized.includes(signal))
-          )
-        )
-      );
-
-      return {
-        domain,
-        score: evidence.length,
-        gap: profile.gap,
-        recommendation: profile.recommendation,
-        evidence,
-      };
-    })
-    .filter(finding => finding.score > 0)
-    .sort((a, b) => b.score - a.score || a.domain.localeCompare(b.domain));
-
-  return findings.slice(0, 4);
-}
-
 export default function AssessmentQuestionGenerator() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
   const [clientName, setClientName] = useState("");
   const [objective, setObjective] = useState(callObjectives[0]);
   const [domain, setDomain] = useState("Auto");
@@ -417,7 +394,160 @@ export default function AssessmentQuestionGenerator() {
   const [refreshSeed, setRefreshSeed] = useState(0);
   const [copied, setCopied] = useState(false);
 
-  const signals = useMemo(() => inferSignals(notes), [notes]);
+  // Modal States
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+
+  // New Question Form State
+  const [newQuestion, setNewQuestion] = useState({
+    domain: "Operations",
+    depth: "diagnostic" as Depth,
+    text: "",
+    skill: "",
+    evaluation: "",
+    signals: "",
+  });
+
+  // AI Generator Form State
+  const [aiGenDomain, setAiGenDomain] = useState("Operations");
+  const [aiGenFocus, setAiGenFocus] = useState("Bottlenecks & Hand-offs");
+  const [aiGenIndustry, setAiGenIndustry] = useState("B2B Professional Services");
+
+  // Fetch Questions from PostgreSQL Database via API
+  const { data: qData, isLoading: isLoadingQuestions } = useQuery({
+    queryKey: ["assessment-questions"],
+    queryFn: async () => {
+      const res = await fetch("/api/assessment-questions");
+      if (!res.ok) throw new Error("Failed to load questions from database");
+      return res.json();
+    },
+  });
+
+  const questionBank: Question[] = useMemo(() => {
+    if (qData?.questions && Array.isArray(qData.questions) && qData.questions.length > 0) {
+      return qData.questions;
+    }
+    return defaultSeedBank;
+  }, [qData]);
+
+  const domains = useMemo(() => {
+    return ["Auto", ...Array.from(new Set(questionBank.map(q => q.domain)))];
+  }, [questionBank]);
+
+  // Mutations
+  const addQuestionMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      const res = await fetch("/api/assessment-questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("Failed to save custom question");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["assessment-questions"] });
+      setIsAddModalOpen(false);
+      setNewQuestion({
+        domain: "Operations",
+        depth: "diagnostic",
+        text: "",
+        skill: "",
+        evaluation: "",
+        signals: "",
+      });
+      toast({
+        title: "Question Saved",
+        description: "New diagnostic question added to the PostgreSQL question pool.",
+      });
+    },
+    onError: (err: any) => {
+      toast({
+        title: "Save Failed",
+        description: err.message || "Could not add question",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const aiExpandMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch("/api/assessment-questions/generate-ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          domain: aiGenDomain,
+          focusArea: aiGenFocus,
+          industry: aiGenIndustry,
+          count: 3,
+        }),
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || "Failed to generate AI questions");
+      }
+      return res.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["assessment-questions"] });
+      setIsAiModalOpen(false);
+      toast({
+        title: "Question Pool Expanded!",
+        description: `Successfully synthesized and persisted ${data.questions?.length || 3} new diagnostic questions into PostgreSQL.`,
+      });
+    },
+    onError: (err: any) => {
+      toast({
+        title: "AI Synthesis Error",
+        description: err.message || "Failed to generate AI questions",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteQuestionMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/assessment-questions/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete question");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["assessment-questions"] });
+      toast({ title: "Question Removed" });
+    },
+  });
+
+  const saveSessionMutation = useMutation({
+    mutationFn: async (sessionPayload: any) => {
+      const res = await fetch("/api/assessment-sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(sessionPayload),
+      });
+      if (!res.ok) throw new Error("Failed to save session");
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Session Saved to Database",
+        description: "Discovery call notes and gap findings have been recorded.",
+      });
+    },
+  });
+
+  const signals = useMemo(() => {
+    const normalized = notes.toLowerCase();
+    const hits = questionBank
+      .flatMap(q => (q.signals || []).map(sig => ({ signal: sig, domain: q.domain })))
+      .filter(item => normalized.includes(item.signal));
+
+    const unique = new Map<string, string>();
+    hits.forEach(item => unique.set(item.signal, item.domain));
+    return Array.from(unique.entries()).map(([signal, domain]) => ({
+      signal,
+      domain,
+    }));
+  }, [notes, questionBank]);
 
   const activeInsights = useMemo(() => {
     return signals
@@ -429,7 +559,31 @@ export default function AssessmentQuestionGenerator() {
       }));
   }, [signals]);
 
-  const findings = useMemo(() => buildFindings(notes), [notes]);
+  const findings = useMemo(() => {
+    const normalized = notes.toLowerCase();
+    return Object.entries(domainProfiles)
+      .map(([d, profile]) => {
+        const questions = questionBank.filter(q => q.domain === d);
+        const evidence = Array.from(
+          new Set(
+            questions.flatMap(q =>
+              (q.signals || []).filter(signal => normalized.includes(signal))
+            )
+          )
+        );
+
+        return {
+          domain: d,
+          score: evidence.length,
+          gap: profile.gap,
+          recommendation: profile.recommendation,
+          evidence,
+        };
+      })
+      .filter(finding => finding.score > 0)
+      .sort((a, b) => b.score - a.score || a.domain.localeCompare(b.domain))
+      .slice(0, 4);
+  }, [notes, questionBank]);
 
   const selectedQuestions = useMemo(() => {
     return [...questionBank]
@@ -445,7 +599,7 @@ export default function AssessmentQuestionGenerator() {
       })
       .slice(0, count || 3)
       .map(item => item.question);
-  }, [count, depth, domain, notes, refreshSeed]);
+  }, [count, depth, domain, notes, questionBank, refreshSeed]);
 
   const masterReportText = useMemo(() => {
     const title = clientName.trim() || "Client";
@@ -478,405 +632,569 @@ export default function AssessmentQuestionGenerator() {
       `==================================================`,
       `Objective Focus : ${objective}`,
       `Evaluation Depth: ${depthLabels[depth]}`,
-      `Primary Domain  : ${domain}`,
-      `--------------------------------------------------`,
+      `Domain Filter   : ${domain}`,
+      `Generated Date  : ${new Date().toLocaleDateString()}`,
       "",
-      `### RAW CONSULTING CALL NOTES & OBSERVATIONS`,
       `--------------------------------------------------`,
-      notes.trim() || "No live consultation session text recorded yet.",
-      "",
-      `### SYSTEMIC GAPS & NEXT STEPS SYNTHESIS`,
+      `I. RECOMMENDED DIAGNOSTIC QUESTIONS (${selectedQuestions.length} Selected)`,
       `--------------------------------------------------`,
-      ...diagnosticSection,
-      `### DOMAIN GAP FINDINGS`,
-      `--------------------------------------------------`,
-      ...findingsSection,
-      `### UTILIZED EVALUATION ASSESSMENT QUESTIONS`,
-      `--------------------------------------------------`,
-      ...selectedQuestions.flatMap((q, idx) => [
-        `${idx + 1}. ${q.text}`,
-        `   Targeted Metric: ${q.skill}`,
-        `   Evaluation Gate: ${q.evaluation}`,
+      ...selectedQuestions.flatMap((q, index) => [
+        `Q${index + 1} [${q.domain} • ${depthLabels[q.depth]} • Skill: ${q.skill}]`,
+        `"${q.text}"`,
+        `Evaluation Guide: ${q.evaluation}`,
+        `Detected Signal Triggers: ${(q.signals || []).join(", ")}`,
         "",
       ]),
+      `--------------------------------------------------`,
+      `II. REAL-TIME DIAGNOSTIC GAPS & ACTION STEPS`,
+      `--------------------------------------------------`,
+      ...diagnosticSection,
+      `--------------------------------------------------`,
+      `III. DOMAIN MATURITY & SYSTEMIC FINDINGS`,
+      `--------------------------------------------------`,
+      ...findingsSection,
+      `--------------------------------------------------`,
+      `IV. DISCOVERY NOTES ARCHIVE`,
+      `--------------------------------------------------`,
+      notes.trim() || "No notes entered for this session.",
     ].join("\n");
   }, [
+    activeInsights,
     clientName,
-    objective,
     depth,
     domain,
-    notes,
-    activeInsights,
     findings,
+    notes,
+    objective,
     selectedQuestions,
   ]);
 
-  const copyQuestions = async () => {
-    await navigator.clipboard.writeText(masterReportText);
+  const handleCopyReport = () => {
+    navigator.clipboard.writeText(masterReportText);
     setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const appendInsightsToNotes = () => {
-    if (!activeInsights.length) return;
-    const reportAppend = [
-      "\n\n--- AUTO-SYNTHESIZED METRICS DISCOVERED ---",
-      ...activeInsights.map(
-        ins => `• [${ins.domain}] Gap: ${ins.gap} -> Next Step: ${ins.nextStep}`
-      ),
-    ].join("\n");
-    setNotes(prev => prev + reportAppend);
+  const handleDownloadReport = () => {
+    const filename = `${(clientName || "discovery-session").toLowerCase().replace(/[^a-z0-9]/g, "-")}-assessment-report.txt`;
+    const element = document.createElement("a");
+    const file = new Blob([masterReportText], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = filename;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
   };
 
-  const exportClientPacketFile = () => {
-    const blob = new Blob([masterReportText], {
-      type: "text/plain;charset=utf-8",
+  const handleSaveSession = () => {
+    saveSessionMutation.mutate({
+      clientName: clientName || "Client Discovery",
+      domain,
+      callNotes: notes || "Discovery session completed.",
+      detectedSignals: signals.map(s => s.signal),
+      findings,
+      selectedQuestionIds: selectedQuestions.map(q => q.id),
     });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${clientName.trim().toLowerCase().replace(/\s+/g, "-") || "client"}-discovery-packet.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+  };
+
+  const handleAddQuestionSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newQuestion.text || !newQuestion.skill || !newQuestion.evaluation) {
+      toast({ title: "Please fill in all required fields", variant: "destructive" });
+      return;
+    }
+    const sigArray = newQuestion.signals
+      .split(",")
+      .map(s => s.trim().toLowerCase())
+      .filter(Boolean);
+
+    addQuestionMutation.mutate({
+      domain: newQuestion.domain,
+      depth: newQuestion.depth,
+      text: newQuestion.text,
+      skill: newQuestion.skill,
+      evaluation: newQuestion.evaluation,
+      signals: sigArray,
+    });
   };
 
   return (
-    <PageLayout className="bg-slate-50">
-      <div className="container py-6 lg:py-8">
-        <div className="mb-5 flex flex-col gap-3 border-b border-slate-200 pb-5 lg:flex-row lg:items-end lg:justify-between">
+    <PageLayout>
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Header with DB Pool Badge & Actions */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-border/50">
           <div>
-            <div className="mb-2 inline-flex items-center gap-2 text-xs font-semibold uppercase text-blue-700">
-              <Sparkles className="h-4 w-4" />
-              Internal Discovery Hub
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <Database className="w-3.5 h-3.5" />
+                Postgres Database Connected
+              </span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
+                {questionBank.length} Questions in Pool
+              </span>
             </div>
-            <h1 className="text-3xl font-semibold text-slate-950">
+            <h1 className="text-3xl font-bold tracking-tight">
               Consulting Assessment Question Generator
             </h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Live diagnostic question engine wired to the AgentLab PostgreSQL pool. Expands continuously with custom inputs and AI synthesis.
+            </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={copyQuestions}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-slate-800 px-4 text-sm font-semibold text-white transition hover:bg-slate-900"
+
+          <div className="flex items-center gap-2.5">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAddModalOpen(true)}
+              className="gap-1.5"
             >
-              <Copy className="h-4 w-4" />
-              {copied ? "Copied Packet!" : "Copy Full Report"}
-            </button>
-            <button
-              type="button"
-              onClick={exportClientPacketFile}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-blue-700 px-4 text-sm font-semibold text-white transition hover:bg-blue-800"
+              <PlusCircle className="w-4 h-4 text-primary" />
+              Add Question
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => setIsAiModalOpen(true)}
+              className="gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white"
             >
-              <Download className="h-4 w-4" />
-              Export Client Packet
-            </button>
+              <BrainCircuit className="w-4 h-4" />
+              AI Expand Pool
+            </Button>
           </div>
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[0.92fr_1.08fr]">
-          <section className="space-y-4">
-            {/* Call Setup Container */}
-            <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-900">
-                <Clipboard className="h-4 w-4 text-blue-700" />
-                Call Setup
+        {/* Main Grid: Discovery Inputs & Live Question Feed */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column: Context & Controls */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="bg-card border border-border/60 rounded-xl p-6 shadow-sm space-y-4">
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <Gauge className="w-5 h-5 text-primary" />
+                Session Parameters
+              </h2>
+
+              <div>
+                <Label htmlFor="client-name" className="text-xs font-medium">
+                  Client / Company Name
+                </Label>
+                <Input
+                  id="client-name"
+                  placeholder="e.g. Apex Industrial Logistics"
+                  value={clientName}
+                  onChange={e => setClientName(e.target.value)}
+                  className="mt-1"
+                />
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="text-sm font-medium text-slate-700">
-                  Client Name
-                  <input
-                    value={clientName}
-                    onChange={event => setClientName(event.target.value)}
-                    className="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-blue-700"
-                    placeholder="Client or company name"
-                  />
-                </label>
-
-                <label className="text-sm font-medium text-slate-700">
-                  Objective
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-xs font-medium">Objective Focus</Label>
                   <select
+                    className="w-full mt-1 bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                     value={objective}
-                    onChange={event => setObjective(event.target.value)}
-                    className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none focus:border-blue-700"
+                    onChange={e => setObjective(e.target.value)}
                   >
-                    {callObjectives.map(item => (
-                      <option key={item}>{item}</option>
+                    {callObjectives.map(obj => (
+                      <option key={obj} value={obj}>
+                        {obj}
+                      </option>
                     ))}
                   </select>
-                </label>
+                </div>
 
-                <label className="text-sm font-medium text-slate-700">
-                  Focus
+                <div>
+                  <Label className="text-xs font-medium">Domain Filter</Label>
                   <select
+                    className="w-full mt-1 bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                     value={domain}
-                    onChange={event => setDomain(event.target.value)}
-                    className="mt-1 h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none focus:border-blue-700"
+                    onChange={e => setDomain(e.target.value)}
                   >
-                    {domains.map(item => (
-                      <option key={item}>{item}</option>
+                    {domains.map(d => (
+                      <option key={d} value={d}>
+                        {d}
+                      </option>
                     ))}
                   </select>
-                </label>
-
-                <label className="text-sm font-medium text-slate-700">
-                  Question Count
-                  <input
-                    type="number"
-                    min={3}
-                    max={8}
-                    value={count || ""}
-                    onChange={event => {
-                      const val =
-                        event.target.value === ""
-                          ? 0
-                          : Number(event.target.value);
-                      setCount(Math.min(8, Math.max(0, val)));
-                    }}
-                    onBlur={() => {
-                      if (count < 3) setCount(3);
-                    }}
-                    className="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-blue-700"
-                  />
-                </label>
+                </div>
               </div>
 
-              <div className="mt-4">
-                <div className="mb-2 text-sm font-medium text-slate-700">
-                  Depth
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-xs font-medium">Probing Depth</Label>
+                  <select
+                    className="w-full mt-1 bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                    value={depth}
+                    onChange={e => setDepth(e.target.value as Depth)}
+                  >
+                    <option value="exploratory">Exploratory</option>
+                    <option value="diagnostic">Diagnostic</option>
+                    <option value="executive">Executive</option>
+                  </select>
                 </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {(Object.keys(depthLabels) as Depth[]).map(item => (
-                    <button
-                      key={item}
-                      type="button"
-                      onClick={() => setDepth(item)}
-                      className={`h-10 rounded-md border px-2 text-sm font-medium transition ${
-                        depth === item
-                          ? "border-blue-700 bg-blue-700 text-white"
-                          : "border-slate-300 bg-white text-slate-700 hover:border-blue-700"
-                      }`}
+
+                <div>
+                  <Label className="text-xs font-medium">Questions to Surface</Label>
+                  <select
+                    className="w-full mt-1 bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                    value={count}
+                    onChange={e => setCount(Number(e.target.value))}
+                  >
+                    <option value={3}>3 Questions</option>
+                    <option value={5}>5 Questions</option>
+                    <option value={8}>8 Questions</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="call-notes" className="text-xs font-medium flex justify-between">
+                  <span>Live Call Notes & Discovery Signals</span>
+                  <span className="text-muted-foreground">{signals.length} signals detected</span>
+                </Label>
+                <Textarea
+                  id="call-notes"
+                  rows={6}
+                  placeholder="Paste raw call transcript or rough notes here. The engine detects pain tags like 'handoff', 'delay', 'crm', 'manual'..."
+                  value={notes}
+                  onChange={e => setNotes(e.target.value)}
+                  className="mt-1 font-mono text-xs"
+                />
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setRefreshSeed(prev => prev + 1)}
+                  className="gap-1 text-xs"
+                >
+                  <RefreshCcw className="w-3.5 h-3.5" />
+                  Shuffle Order
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleSaveSession}
+                  disabled={saveSessionMutation.isPending}
+                  className="gap-1 text-xs"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                  Save Session
+                </Button>
+              </div>
+            </div>
+
+            {/* Detected Diagnostic Gaps */}
+            {activeInsights.length > 0 && (
+              <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-5 space-y-3">
+                <h3 className="text-sm font-semibold text-amber-400 flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4" />
+                  Detected Structural Gaps ({activeInsights.length})
+                </h3>
+                <div className="space-y-2.5">
+                  {activeInsights.map((ins, i) => (
+                    <div
+                      key={i}
+                      className="text-xs p-2.5 rounded-lg bg-card/60 border border-border/40"
                     >
-                      {depthLabels[item]}
-                    </button>
+                      <div className="font-medium text-foreground">
+                        [{ins.domain}] {ins.gap}
+                      </div>
+                      <div className="text-muted-foreground mt-1">
+                        → Action: {ins.nextStep}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
-            </div>
-
-            {/* Live Consultation Note Workspace */}
-            <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="mb-3 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <MessageSquareText className="h-4 w-4 text-blue-700" />
-                  Live Consultation Notes
-                </div>
-                <div className="flex gap-2">
-                  {activeInsights.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={appendInsightsToNotes}
-                      className="inline-flex h-8 items-center gap-1.5 rounded-md bg-emerald-50 border border-emerald-200 px-3 text-xs font-semibold text-emerald-700 hover:bg-emerald-100"
-                    >
-                      <PlusCircle className="h-3.5 w-3.5" />
-                      Append to Notes
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setRefreshSeed(seed => seed + 1)}
-                    className="inline-flex h-8 items-center gap-2 rounded-md border border-slate-300 px-3 text-xs font-medium text-slate-700 hover:border-blue-700 hover:text-blue-700"
-                  >
-                    <RefreshCcw className="h-3.5 w-3.5" />
-                    Refresh
-                  </button>
-                </div>
-              </div>
-              <textarea
-                value={notes}
-                onChange={event => setNotes(event.target.value)}
-                rows={12}
-                className="w-full resize-none rounded-md border border-slate-300 px-3 py-3 text-sm leading-6 text-slate-900 outline-none focus:border-blue-700"
-                placeholder="Type short notes as the client talks: missed follow-ups, manual copying, onboarding delays, tool costs, unclear ownership..."
-              />
-
-              <div className="mt-3 min-h-12 text-xs text-slate-600">
-                {signals.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {signals.slice(0, 10).map(item => (
-                      <span
-                        key={`${item.domain}-${item.signal}`}
-                        className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1"
-                      >
-                        {item.domain}: {item.signal}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <span>
-                    Signal tags appear here as notes mention workflow, leads,
-                    tools, costs, automation, ownership, or follow-up.
-                  </span>
-                )}
-              </div>
-            </div>
-          </section>
-
-          {/* RIGHT SIDEBAR: Output Results Workspace */}
-          <section className="space-y-4">
-            {/* Live Diagnostic Report Synthesis Section */}
-            <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="mb-3 text-sm font-semibold text-slate-900">
-                Live Diagnostic Report Synthesis
-              </div>
-              <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
-                {activeInsights.length ? (
-                  activeInsights.map((ins, i) => (
-                    <div
-                      key={i}
-                      className="rounded border border-slate-100 bg-slate-50 p-2.5 text-xs"
-                    >
-                      <div className="font-bold text-blue-700 uppercase tracking-wide mb-1">
-                        [{ins.domain}] Detected Signal: "{ins.signal}"
-                      </div>
-                      <div className="text-slate-900 mb-1">
-                        <span className="font-semibold text-slate-700">
-                          Systemic Gap:
-                        </span>{" "}
-                        {ins.gap}
-                      </div>
-                      <div className="text-slate-600">
-                        <span className="font-semibold text-slate-700">
-                          Immediate Action:
-                        </span>{" "}
-                        {ins.nextStep}
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-xs text-slate-500 py-4 text-center border border-dashed border-slate-200 rounded">
-                    Operational gap detections and strategic actionable next
-                    steps will generate automatically here as you capture live
-                    keywords.
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Suggested Question Sequence */}
-            <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <Gauge className="h-4 w-4 text-blue-700" />
-                  Suggested Assessment Matrix
-                </div>
-                <div className="text-xs font-medium text-slate-500">
-                  Focus: {domain} · Depth: {depthLabels[depth]}
-                </div>
-              </div>
-
-              <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
-                {selectedQuestions.map((question, index) => (
-                  <article
-                    key={question.id}
-                    className="rounded-md border border-slate-200 bg-slate-50 p-4 text-xs"
-                  >
-                    <div className="mb-2 flex flex-wrap items-center gap-2 font-semibold uppercase text-slate-500">
-                      <span className="bg-slate-200 px-1.5 py-0.5 rounded text-slate-700">
-                        {index + 1}
-                      </span>
-                      <span>{question.domain}</span>
-                      <span>{depthLabels[question.depth]}</span>
-                    </div>
-                    <p className="text-base font-semibold leading-7 text-slate-950 my-1.5">
-                      {question.text}
-                    </p>
-                    <div className="grid gap-2 border-t border-slate-200 pt-3 mt-3 text-sm leading-6 md:grid-cols-2">
-                      <div>
-                        <div className="font-semibold text-slate-800">
-                          Skill Evaluation Metric
-                        </div>
-                        <div className="text-slate-600">{question.skill}</div>
-                      </div>
-                      <div>
-                        <div className="font-semibold text-slate-800">
-                          Target Indicator Gate
-                        </div>
-                        <div className="text-slate-600">
-                          {question.evaluation}
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        </div>
-
-        {/* Domain Gap Findings — aggregated per-domain view */}
-        <section className="mt-5 rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-              <FileText className="h-4 w-4 text-blue-700" />
-              Domain Gap Findings
-            </div>
-            <div className="text-xs text-slate-500">
-              Aggregated from current notes and detected signals across all
-              domains
-            </div>
+            )}
           </div>
 
-          {findings.length ? (
-            <div className="grid gap-3 lg:grid-cols-2">
-              {findings.map(finding => (
-                <article
-                  key={finding.domain}
-                  className="rounded-md border border-slate-200 bg-slate-50 p-4"
-                >
-                  <div className="mb-2 flex items-center justify-between gap-3">
-                    <h2 className="text-base font-semibold text-slate-950">
-                      {finding.domain}
-                    </h2>
-                    <span className="rounded-md bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
-                      {finding.score} signals
-                    </span>
-                  </div>
-                  <div className="space-y-3 text-sm leading-6">
-                    <div>
-                      <div className="font-semibold text-slate-800">
-                        Likely gap
+          {/* Right Column: Surfaced Questions & Report */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="bg-card border border-border/60 rounded-xl p-6 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold flex items-center gap-2">
+                  <MessageSquareText className="w-5 h-5 text-primary" />
+                  Surfaced Diagnostic Questions
+                </h2>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCopyReport}
+                    className="gap-1.5 text-xs"
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                    {copied ? "Copied!" : "Copy Packet"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDownloadReport}
+                    className="gap-1.5 text-xs"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    Export
+                  </Button>
+                </div>
+              </div>
+
+              {isLoadingQuestions ? (
+                <div className="py-12 flex flex-col items-center justify-center text-muted-foreground gap-2">
+                  <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                  <p className="text-xs">Connecting to Postgres Question Pool...</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {selectedQuestions.map((q, idx) => (
+                    <div
+                      key={q.id || idx}
+                      className="p-4 rounded-lg bg-background border border-border/60 hover:border-primary/40 transition-colors relative group"
+                    >
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary">
+                            {q.domain}
+                          </span>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-secondary text-secondary-foreground">
+                            {depthLabels[q.depth]}
+                          </span>
+                          <span className="text-xs text-muted-foreground font-medium">
+                            Skill: {q.skill}
+                          </span>
+                        </div>
+
+                        {q.isCustom && (
+                          <button
+                            onClick={() => deleteQuestionMutation.mutate(q.id)}
+                            className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity p-1"
+                            title="Delete custom question"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
                       </div>
-                      <p className="text-slate-600">{finding.gap}</p>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-slate-800">
-                        Suggested next step
-                      </div>
-                      <p className="text-slate-600">{finding.recommendation}</p>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-slate-800">
-                        Evidence signals
-                      </div>
-                      <p className="text-slate-600">
-                        {finding.evidence.join(", ")}
+
+                      <p className="text-sm font-semibold text-foreground mb-2">
+                        "{q.text}"
                       </p>
+
+                      <div className="text-xs text-muted-foreground bg-muted/40 p-2.5 rounded-md border border-border/30">
+                        <strong className="text-foreground">What to listen for: </strong>
+                        {q.evaluation}
+                      </div>
+
+                      {q.signals && q.signals.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {q.signals.map((sig, sIdx) => (
+                            <span
+                              key={sIdx}
+                              className="text-[10px] px-1.5 py-0.5 rounded bg-secondary/60 text-muted-foreground font-mono"
+                            >
+                              #{sig}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </article>
-              ))}
+                  ))}
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="rounded-md border border-dashed border-slate-300 bg-slate-50 p-5 text-sm leading-6 text-slate-600">
-              Add notes from the call and this section will draft likely gaps,
-              evidence signals, and practical next steps per domain. Stays
-              conservative until enough signals appear.
+
+            {/* Assessment Packet Output Preview */}
+            <div className="bg-card border border-border/60 rounded-xl p-6 shadow-sm">
+              <h3 className="text-sm font-semibold flex items-center gap-2 mb-3">
+                <FileText className="w-4 h-4 text-primary" />
+                Live Generated Assessment Packet
+              </h3>
+              <pre className="text-xs font-mono bg-muted/30 p-4 rounded-lg border border-border/40 overflow-x-auto max-h-72 whitespace-pre-wrap text-muted-foreground">
+                {masterReportText}
+              </pre>
             </div>
-          )}
-        </section>
+          </div>
+        </div>
+
+        {/* Dialog: Add Custom Question */}
+        <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Database className="w-5 h-5 text-primary" />
+                Add Question to Database
+              </DialogTitle>
+              <DialogDescription>
+                Persist a new high-signal question into the PostgreSQL pool so it is available across all sessions and agents.
+              </DialogDescription>
+            </DialogHeader>
+
+            <form onSubmit={handleAddQuestionSubmit} className="space-y-3.5 mt-2">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-xs">Domain</Label>
+                  <select
+                    className="w-full mt-1 bg-background border border-input rounded-md px-3 py-1.5 text-sm"
+                    value={newQuestion.domain}
+                    onChange={e => setNewQuestion({ ...newQuestion, domain: e.target.value })}
+                  >
+                    <option value="Operations">Operations</option>
+                    <option value="Sales">Sales</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Leadership">Leadership</option>
+                  </select>
+                </div>
+
+                <div>
+                  <Label className="text-xs">Probing Depth</Label>
+                  <select
+                    className="w-full mt-1 bg-background border border-input rounded-md px-3 py-1.5 text-sm"
+                    value={newQuestion.depth}
+                    onChange={e => setNewQuestion({ ...newQuestion, depth: e.target.value as Depth })}
+                  >
+                    <option value="exploratory">Exploratory</option>
+                    <option value="diagnostic">Diagnostic</option>
+                    <option value="executive">Executive</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-xs">Consulting Skill / Archetype</Label>
+                <Input
+                  placeholder="e.g. Latency Audit, Revenue Attribution"
+                  value={newQuestion.skill}
+                  onChange={e => setNewQuestion({ ...newQuestion, skill: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label className="text-xs">Verbatim Question</Label>
+                <Textarea
+                  placeholder="The exact question to ask the founder..."
+                  value={newQuestion.text}
+                  onChange={e => setNewQuestion({ ...newQuestion, text: e.target.value })}
+                  rows={3}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label className="text-xs">Evaluation Criteria (What to listen for)</Label>
+                <Textarea
+                  placeholder="Red flags, indicators of maturity, or hidden bottlenecks..."
+                  value={newQuestion.evaluation}
+                  onChange={e => setNewQuestion({ ...newQuestion, evaluation: e.target.value })}
+                  rows={2}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label className="text-xs">Signal Keywords (comma-separated)</Label>
+                <Input
+                  placeholder="e.g. handoff, delay, crm, rework"
+                  value={newQuestion.signals}
+                  onChange={e => setNewQuestion({ ...newQuestion, signals: e.target.value })}
+                />
+              </div>
+
+              <DialogFooter className="pt-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsAddModalOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={addQuestionMutation.isPending}>
+                  {addQuestionMutation.isPending ? "Saving..." : "Save to Database"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Dialog: AI Expand Pool */}
+        <Dialog open={isAiModalOpen} onOpenChange={setIsAiModalOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <BrainCircuit className="w-5 h-5 text-primary" />
+                AI Question Pool Expansion
+              </DialogTitle>
+              <DialogDescription>
+                Use Gemini to synthesize new probing diagnostic questions tailored to a specific domain or industry and save them to PostgreSQL.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4 mt-2">
+              <div>
+                <Label className="text-xs">Target Domain</Label>
+                <select
+                  className="w-full mt-1 bg-background border border-input rounded-md px-3 py-2 text-sm"
+                  value={aiGenDomain}
+                  onChange={e => setAiGenDomain(e.target.value)}
+                >
+                  <option value="Operations">Operations (Fulfillment & Delivery)</option>
+                  <option value="Sales">Sales (Pipeline & Conversion Velocity)</option>
+                  <option value="Marketing">Marketing (ICP & Signal Ingestion)</option>
+                  <option value="Finance">Finance (Control Layer & Ledger Visibility)</option>
+                  <option value="Technology">Technology (Automations & Tool Sprawl)</option>
+                  <option value="Leadership">Leadership (Culture & Decision Rights)</option>
+                </select>
+              </div>
+
+              <div>
+                <Label className="text-xs">Diagnostic Focus Area</Label>
+                <Input
+                  value={aiGenFocus}
+                  onChange={e => setAiGenFocus(e.target.value)}
+                  placeholder="e.g. Scope Creep, Commission Structure, Churn"
+                />
+              </div>
+
+              <div>
+                <Label className="text-xs">Client Industry / Archetype</Label>
+                <Input
+                  value={aiGenIndustry}
+                  onChange={e => setAiGenIndustry(e.target.value)}
+                  placeholder="e.g. Commercial Real Estate, MedSpas, IT Consulting"
+                />
+              </div>
+            </div>
+
+            <DialogFooter className="pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsAiModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => aiExpandMutation.mutate()}
+                disabled={aiExpandMutation.isPending}
+                className="bg-primary text-primary-foreground gap-1.5"
+              >
+                {aiExpandMutation.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Synthesizing...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4" />
+                    Generate & Save 3 Questions
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </PageLayout>
   );

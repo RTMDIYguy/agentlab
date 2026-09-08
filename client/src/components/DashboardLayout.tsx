@@ -10,7 +10,9 @@ import {
   CreditCard, 
   Settings,
   ShoppingBag,
-  BookOpen
+  BookOpen,
+  Target,
+  FileText
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -32,28 +34,53 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { href: "/docs", label: "Owner's Manual", icon: BookOpen },
   ];
 
+  const toolLinks = [
+    { href: "/icp-generator", label: "ICP Generator", icon: Target },
+    { href: "/assessment-generator", label: "Assessment Generator", icon: FileText },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navigation />
       <div className="flex flex-1 overflow-hidden h-[calc(100vh-65px)]">
         {/* Sidebar */}
         <aside className="w-64 border-r border-border bg-card hidden md:flex flex-col overflow-y-auto">
-          <div className="p-4 py-6">
-            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 px-2">Operations</h2>
-            <nav className="space-y-1">
-              {sidebarLinks.map((link) => {
-                const Icon = link.icon;
-                const isActive = location === link.href;
-                return (
-                  <Link key={link.href} href={link.href}>
-                    <a className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${isActive ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}>
-                      <Icon className="w-4 h-4" />
-                      {link.label}
-                    </a>
-                  </Link>
-                );
-              })}
-            </nav>
+          <div className="p-4 py-6 space-y-6">
+            <div>
+              <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 px-2">Operations</h2>
+              <nav className="space-y-1">
+                {sidebarLinks.map((link) => {
+                  const Icon = link.icon;
+                  const isActive = location === link.href;
+                  return (
+                    <Link key={link.href} href={link.href}>
+                      <a className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${isActive ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}>
+                        <Icon className="w-4 h-4" />
+                        {link.label}
+                      </a>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+
+            <div>
+              <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-2">GTM & Diagnostics</h2>
+              <nav className="space-y-1">
+                {toolLinks.map((link) => {
+                  const Icon = link.icon;
+                  const isActive = location === link.href;
+                  return (
+                    <Link key={link.href} href={link.href}>
+                      <a className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${isActive ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}>
+                        <Icon className="w-4 h-4" />
+                        {link.label}
+                      </a>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
           </div>
         </aside>
         {/* Main Content */}

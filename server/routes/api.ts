@@ -267,3 +267,36 @@ apiRouter.post("/snapshots/save", saveSnapshot);
 apiRouter.post("/snapshots/:id/clone", cloneSnapshot);
 apiRouter.post("/snapshots/:id/restore", restoreSnapshot);
 apiRouter.delete("/snapshots/:id", deleteSnapshot);
+
+// ==============================================================================
+// Consulting Assessment Question Generator & Diagnostic Sessions (MKT-03 / OPS)
+// ==============================================================================
+import {
+  listAssessmentQuestions,
+  createAssessmentQuestion,
+  deleteAssessmentQuestion,
+  generateAIAssessmentQuestions,
+  saveAssessmentSession,
+} from "../controllers/assessment-questions";
+
+apiRouter.get("/assessment-questions", listAssessmentQuestions);
+apiRouter.post("/assessment-questions", createAssessmentQuestion);
+apiRouter.delete("/assessment-questions/:id", deleteAssessmentQuestion);
+apiRouter.post("/assessment-questions/generate-ai", generateAIAssessmentQuestions);
+apiRouter.post("/assessment-sessions", saveAssessmentSession);
+
+// ==============================================================================
+// Ideal Customer Profile (ICP) Generator & Intelligence Vault (MKT-01 / SAL-01)
+// ==============================================================================
+import {
+  listIcpProfiles,
+  generateIcpProfile,
+  createIcpProfile,
+  deleteIcpProfile,
+} from "../controllers/icp";
+
+apiRouter.get("/icp/profiles", listIcpProfiles);
+apiRouter.post("/icp/generate", generateIcpProfile);
+apiRouter.post("/icp/profiles", createIcpProfile);
+apiRouter.delete("/icp/profiles/:id", deleteIcpProfile);
+
