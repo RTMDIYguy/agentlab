@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -52,6 +52,11 @@ import {
   Image as ImageIcon,
   Download,
   Wand2,
+  CheckSquare,
+  Square,
+  RotateCcw,
+  ListTodo,
+  History,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
@@ -78,10 +83,204 @@ interface WorkflowItem {
   cronExpression?: string;
 }
 
+export interface FocusActionItem {
+  id: string;
+  title: string;
+  description: string;
+  tag?: string;
+  category: "Partnership" | "Marketing" | "Sales" | "Fulfillment" | "Operations" | "Finance" | "Custom";
+  completed?: boolean;
+  completedAt?: string;
+}
+
+const CANONICAL_PRIORITY_POOL: FocusActionItem[] = [
+  {
+    id: "act-1",
+    title: "Hamarashops Partnership Execution",
+    description: "Targeted outreach campaigns to CMIOs and Clinical Directors for MedLM solutions. Auto-tag HubSpot deals with Partner - Hamarashops.",
+    tag: "Partner - Hamarashops",
+    category: "Partnership",
+  },
+  {
+    id: "act-2",
+    title: "MKT-02 Automated Lead Nurture Engine",
+    description: "Synced intake contacts activated through multi-touch email sequences with strict 3-touch limits and canary verification logs.",
+    tag: "MKT-02",
+    category: "Marketing",
+  },
+  {
+    id: "act-3",
+    title: "Founder RoundTable Canary Monitoring (MKT-09)",
+    description: "Continuous pipeline validation, response path tracking, and automated follow-ups via Bootstrapper Capital funnel.",
+    tag: "MKT-09",
+    category: "Marketing",
+  },
+  {
+    id: "act-4",
+    title: "SAL-01 Inbound Lead Scoring & CRM Enrichment",
+    description: "Auto-enrich new discovery intake leads with firmographic intelligence and qualification scores before sales handoff.",
+    tag: "SAL-01",
+    category: "Sales",
+  },
+  {
+    id: "act-5",
+    title: "FUL-01 Customer Onboarding & Retention Swarm",
+    description: "Generate SHA-256 scorecard, provision workspace tenant, and seed 7-department knowledge playbook.",
+    tag: "FUL-01",
+    category: "Fulfillment",
+  },
+  {
+    id: "act-6",
+    title: "OPS-05 Standardized Audit Trail & Drift Verification",
+    description: "Run continuous schema and documentation consistency check against canonical registry with zero drift tolerance.",
+    tag: "OPS-05",
+    category: "Operations",
+  },
+  {
+    id: "act-7",
+    title: "FIN-01 M365 Cash-Flow & P&L Reconcilement",
+    description: "Verify operating expenses, merchant receipts, and subscription burn against monthly budget caps.",
+    tag: "FIN-01",
+    category: "Finance",
+  },
+  {
+    id: "act-8",
+    title: "CUL-01 Servant Leadership & Team Operating Rhythm",
+    description: "Execute weekly alignment review, acknowledge contributor milestones, and log progress notes in operations manual.",
+    tag: "CUL-01",
+    category: "Operations",
+  },
+  {
+    id: "act-9",
+    title: "MKT-06 Founder Signal Radar & Social Listening",
+    description: "Scan Reddit/HN/RSS for pain triggers and feed high-intent leads into Content Queue.",
+    tag: "MKT-06",
+    category: "Marketing",
+  },
+  {
+    id: "act-10",
+    title: "AFT-01 Client Milestone Review & Case Study Capture",
+    description: "Generate verified performance artifact and request strategic referral or video testimonial.",
+    tag: "AFT-01",
+    category: "Fulfillment",
+  },
+];
+
 export default function CommandCenter() {
   const { user } = useAuth({ redirectOnUnauthenticated: true });
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
+
+  // Operating Focus Dynamic Priority Action Queue State
+  const [focusActionsState, setFocusActionsState] = useState<{
+    active: FocusActionItem[];
+    backlog: FocusActionItem[];
+    completed: FocusActionItem[];
+  }>(() => {
+    const saved = localStorage.getItem("agentlab_command_center_priorities_v1");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.active && parsed.backlog && parsed.completed) {
+          return parsed;
+        }
+      } catch (e) {}
+    }
+    return {
+      active: CANONICAL_PRIORITY_POOL.slice(0, 3),
+      backlog: CANONICAL_PRIORITY_POOL.slice(3),
+      completed: [],
+    };
+  });
+
+  const [newActionTitle, setNewActionTitle] = useState("");
+  const [newActionDesc, setNewActionDesc] = useState("");
+  const [showAddActionForm, setShowAddActionForm] = useState(false);
+  const [focusTab, setFocusTab] = useState<"active" | "completed" | "backlog">("active");
+
+  useEffect(() => {
+    localStorage.setItem("agentlab_command_center_priorities_v1", JSON.stringify(focusActionsState));
+  }, [focusActionsState]);
+
+  const handleToggleFocusAction = (id: string) => {
+    setFocusActionsState((prev) => {
+      const itemToComplete = prev.active.find((a) => a.id === id);
+      if (!itemToComplete) return prev;
+
+      const completedItem: FocusActionItem = {
+        ...itemToComplete,
+        completed: true,
+        completedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+
+      const remainingActive = prev.active.filter((a) => a.id !== id);
+      const nextBacklog = [...prev.backlog];
+      const nextActive = [...remainingActive];
+
+      if (nextBacklog.length > 0) {
+        const nextItem = nextBacklog.shift()!;
+        nextActive.push(nextItem);
+        toast.success(`Directive completed! Next priority auto-populated: "${nextItem.title}" ⚡`);
+      } else {
+        toast.success(`Directive completed! (${nextActive.length} active remaining) 🎉`);
+      }
+
+      return {
+        active: nextActive,
+        backlog: nextBacklog,
+        completed: [completedItem, ...prev.completed],
+      };
+    });
+  };
+
+  const handleAddCustomFocusAction = () => {
+    if (!newActionTitle.trim()) return;
+
+    const newItem: FocusActionItem = {
+      id: `custom-${Date.now()}`,
+      title: newActionTitle.trim(),
+      description: newActionDesc.trim() || "Custom founder high-priority operational directive.",
+      category: "Custom",
+      tag: "Custom",
+    };
+
+    setFocusActionsState((prev) => {
+      if (prev.active.length < 3) {
+        return {
+          ...prev,
+          active: [...prev.active, newItem],
+        };
+      } else {
+        return {
+          ...prev,
+          backlog: [newItem, ...prev.backlog],
+        };
+      }
+    });
+
+    setNewActionTitle("");
+    setNewActionDesc("");
+    setShowAddActionForm(false);
+    toast.success("Custom priority directive added to operating queue! 🎯");
+  };
+
+  const handleRestoreDefaultFocusActions = () => {
+    const defaults = {
+      active: CANONICAL_PRIORITY_POOL.slice(0, 3),
+      backlog: CANONICAL_PRIORITY_POOL.slice(3),
+      completed: [],
+    };
+    setFocusActionsState(defaults);
+    toast.info("Canonical SOP priority queue restored. 🔄");
+  };
+
+  const handleClearCompletedFocusActions = () => {
+    setFocusActionsState((prev) => ({
+      ...prev,
+      completed: [],
+    }));
+    toast.info("Completed directives archived.");
+  };
 
   // Natural Language Terminal State
   const [orchestratorPrompt, setOrchestratorPrompt] = useState("");
@@ -674,59 +873,296 @@ export default function CommandCenter() {
       <div className="p-8 max-w-7xl mx-auto space-y-8">
         {/* Row 1: Priorities & Human-in-the-Loop Approvals */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Today's Priorities */}
-          <Card className="lg:col-span-2 border-primary/20 bg-gradient-to-br from-card to-primary/5">
+          {/* Today's Priorities & Interactive Operational Queue */}
+          <Card className="lg:col-span-2 border-primary/20 bg-gradient-to-br from-card to-primary/5 shadow-md">
             <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <Flame className="w-5 h-5 text-amber-500" />
-                  <CardTitle className="text-lg">Operating Focus & Today's Top Actions</CardTitle>
+                  <Flame className="w-5 h-5 text-amber-500 animate-pulse" />
+                  <div>
+                    <CardTitle className="text-lg">Operating Focus & Today's Top Actions</CardTitle>
+                    <CardDescription className="text-xs mt-0.5">
+                      Interactive operational directives from the URC Operating Manual with auto-refilling priority queue
+                    </CardDescription>
+                  </div>
                 </div>
-                <Badge variant="secondary" className="text-xs font-mono">
-                  SOP-ACTIVE
-                </Badge>
+
+                {/* View Controls & Action Triggers */}
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <div className="flex items-center p-0.5 bg-muted/60 rounded-lg border border-border text-[11px] font-medium">
+                    <button
+                      onClick={() => setFocusTab("active")}
+                      className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 ${
+                        focusTab === "active"
+                          ? "bg-card text-foreground font-semibold shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <ListTodo className="w-3 h-3 text-amber-500" />
+                      Active ({focusActionsState.active.length})
+                    </button>
+                    <button
+                      onClick={() => setFocusTab("completed")}
+                      className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 ${
+                        focusTab === "completed"
+                          ? "bg-card text-foreground font-semibold shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <History className="w-3 h-3 text-emerald-500" />
+                      Completed ({focusActionsState.completed.length})
+                    </button>
+                    <button
+                      onClick={() => setFocusTab("backlog")}
+                      className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1 ${
+                        focusTab === "backlog"
+                          ? "bg-card text-foreground font-semibold shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <Layers className="w-3 h-3 text-blue-500" />
+                      Pool ({focusActionsState.backlog.length})
+                    </button>
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowAddActionForm(!showAddActionForm)}
+                    className="h-7 px-2 text-xs border-primary/30 hover:bg-primary/10 text-primary font-mono"
+                    title="Add Custom Action"
+                  >
+                    <Plus className="w-3 h-3 mr-1" />
+                    Directive
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleRestoreDefaultFocusActions}
+                    className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                    title="Restore Default SOP Priorities"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
               </div>
-              <CardDescription>
-                Live operational directives derived from the URC Agency Operating Manual
-              </CardDescription>
+
+              {/* Inline Custom Directive Input Form */}
+              {showAddActionForm && (
+                <div className="mt-3 p-3.5 rounded-xl bg-card border border-primary/30 shadow-inner space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                      <Plus className="w-3.5 h-3.5 text-primary" />
+                      Add High-Priority Directive
+                    </span>
+                    <span className="text-[10px] text-muted-foreground">Will auto-insert into operating queue</span>
+                  </div>
+                  <Input
+                    placeholder="Directive title (e.g. Schedule Hamarashops MedLM follow-up call)"
+                    value={newActionTitle}
+                    onChange={(e) => setNewActionTitle(e.target.value)}
+                    className="text-xs bg-background h-8"
+                  />
+                  <Input
+                    placeholder="Action description / SOP instructions (optional)"
+                    value={newActionDesc}
+                    onChange={(e) => setNewActionDesc(e.target.value)}
+                    className="text-xs bg-background h-8"
+                    onKeyDown={(e) => e.key === "Enter" && handleAddCustomFocusAction()}
+                  />
+                  <div className="flex justify-end gap-2 pt-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowAddActionForm(false)}
+                      className="h-7 text-xs"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleAddCustomFocusAction}
+                      disabled={!newActionTitle.trim()}
+                      className="h-7 text-xs bg-primary text-primary-foreground font-semibold shadow-sm"
+                    >
+                      Add to Queue
+                    </Button>
+                  </div>
+                </div>
+              )}
             </CardHeader>
+
             <CardContent className="space-y-3">
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-background/80 border border-border">
-                <div className="w-6 h-6 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-                  1
-                </div>
-                <div>
-                  <h4 className="font-semibold text-sm">Hamarashops Partnership Execution</h4>
-                  <p className="text-xs text-muted-foreground">
-                    Targeted outreach campaigns to CMIOs and Clinical Directors for MedLM solutions. Auto-tag HubSpot deals with{" "}
-                    <code className="text-primary">Partner - Hamarashops</code>.
-                  </p>
-                </div>
-              </div>
+              {/* TAB 1: ACTIVE FOCUS (TOP 3) */}
+              {focusTab === "active" && (
+                <>
+                  {focusActionsState.active.length === 0 ? (
+                    <div className="py-8 text-center rounded-xl border border-dashed border-border/80 p-6 space-y-2">
+                      <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto animate-bounce" />
+                      <h4 className="text-sm font-semibold text-foreground">All Top Directives Completed!</h4>
+                      <p className="text-xs text-muted-foreground">
+                        You have cleared all active priority actions. Click below to reload canonical SOP priorities.
+                      </p>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleRestoreDefaultFocusActions}
+                        className="text-xs font-mono border-primary/30 text-primary mt-2"
+                      >
+                        <RotateCcw className="w-3 h-3 mr-1.5" />
+                        Reload SOP Priorities
+                      </Button>
+                    </div>
+                  ) : (
+                    focusActionsState.active.map((item, idx) => (
+                      <div
+                        key={item.id}
+                        className="flex items-start gap-3.5 p-3.5 rounded-xl bg-background/90 border border-border hover:border-primary/40 hover:bg-background transition-all group shadow-sm"
+                      >
+                        {/* Interactive Checkbox */}
+                        <button
+                          onClick={() => handleToggleFocusAction(item.id)}
+                          className="w-5 h-5 rounded-md border border-border/80 hover:border-emerald-500 hover:bg-emerald-500/10 flex items-center justify-center text-muted-foreground hover:text-emerald-400 transition-all shrink-0 mt-0.5 group-hover:scale-105"
+                          title="Mark action completed"
+                        >
+                          <Square className="w-4 h-4 opacity-70 group-hover:opacity-100" />
+                        </button>
 
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-background/80 border border-border">
-                <div className="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-                  2
-                </div>
-                <div>
-                  <h4 className="font-semibold text-sm">MKT-02 Automated Lead Nurture Engine</h4>
-                  <p className="text-xs text-muted-foreground">
-                    Synced intake contacts activated through multi-touch email sequences with strict 3-touch limits and canary verification logs.
-                  </p>
-                </div>
-              </div>
+                        {/* Number Badge */}
+                        <div
+                          className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 font-mono ${
+                            idx === 0
+                              ? "bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-[0_0_8px_rgba(245,158,11,0.2)]"
+                              : idx === 1
+                              ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30"
+                              : "bg-purple-500/15 text-purple-400 border border-purple-500/30"
+                          }`}
+                        >
+                          {idx + 1}
+                        </div>
 
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-background/80 border border-border">
-                <div className="w-6 h-6 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-                  3
+                        {/* Text & Content */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h4 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">
+                              {item.title}
+                            </h4>
+                            {item.tag && (
+                              <Badge variant="outline" className="text-[10px] font-mono px-1.5 py-0 border-border bg-card">
+                                {item.tag}
+                              </Badge>
+                            )}
+                            {item.category && (
+                              <span className="text-[10px] text-muted-foreground font-mono">
+                                • {item.category}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                            {item.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  )}
+
+                  {/* Queue Indicator Footer */}
+                  {focusActionsState.backlog.length > 0 && (
+                    <div className="flex items-center justify-between text-[11px] text-muted-foreground px-2 pt-1 border-t border-border/40 font-mono">
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        Next Up in Queue: <strong>"{focusActionsState.backlog[0].title}"</strong>
+                      </span>
+                      <span>{focusActionsState.backlog.length} more in pool</span>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* TAB 2: COMPLETED DIRECTIVES */}
+              {focusTab === "completed" && (
+                <div className="space-y-2">
+                  {focusActionsState.completed.length === 0 ? (
+                    <div className="py-6 text-center text-xs text-muted-foreground font-mono">
+                      No actions completed yet today. Check off an active item to log completed actions.
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex justify-end pb-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleClearCompletedFocusActions}
+                          className="h-6 text-[11px] text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash2 className="w-3 h-3 mr-1" />
+                          Clear History
+                        </Button>
+                      </div>
+                      {focusActionsState.completed.map((item) => (
+                        <div
+                          key={item.id}
+                          className="flex items-start gap-3 p-3 rounded-lg bg-emerald-950/20 border border-emerald-500/20 text-emerald-300"
+                        >
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between">
+                              <h4 className="font-semibold text-xs text-emerald-200 line-through">
+                                {item.title}
+                              </h4>
+                              {item.completedAt && (
+                                <span className="text-[10px] text-emerald-400/70 font-mono">
+                                  {item.completedAt}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-[11px] text-emerald-400/60 mt-0.5 line-through">
+                              {item.description}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </div>
-                <div>
-                  <h4 className="font-semibold text-sm">Founder RoundTable Canary Monitoring (MKT-09)</h4>
-                  <p className="text-xs text-muted-foreground">
-                    Continuous pipeline validation, response path tracking, and automated follow-ups via Bootstrapper Capital funnel.
-                  </p>
+              )}
+
+              {/* TAB 3: BACKLOG PRIORITY POOL */}
+              {focusTab === "backlog" && (
+                <div className="space-y-2">
+                  <div className="text-[11px] text-muted-foreground px-1 pb-1">
+                    Directives waiting to auto-populate into the active top 3 list as tasks are checked off:
+                  </div>
+                  {focusActionsState.backlog.length === 0 ? (
+                    <div className="py-6 text-center text-xs text-muted-foreground font-mono">
+                      Backlog queue is empty. Click "+ Directive" to add more upcoming actions.
+                    </div>
+                  ) : (
+                    focusActionsState.backlog.map((item, idx) => (
+                      <div
+                        key={item.id}
+                        className="flex items-start gap-3 p-3 rounded-lg bg-background/60 border border-border/80"
+                      >
+                        <div className="w-5 h-5 rounded-full bg-muted text-muted-foreground flex items-center justify-center font-bold text-[10px] shrink-0 font-mono mt-0.5">
+                          #{idx + 4}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-semibold text-xs text-foreground">{item.title}</h4>
+                            {item.tag && (
+                              <Badge variant="outline" className="text-[9px] font-mono px-1 py-0">
+                                {item.tag}
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-muted-foreground mt-0.5">{item.description}</p>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
-              </div>
+              )}
             </CardContent>
           </Card>
 
