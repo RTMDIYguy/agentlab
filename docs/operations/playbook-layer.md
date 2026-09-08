@@ -60,7 +60,7 @@ Authorization: Bearer <Firebase_or_OAuth_JWT_Token>
 
 When authenticated, the tenant middleware (`server/middleware/tenant.ts`) automatically extracts the caller's workspace context and role. If an unauthenticated or public request is received, the API returns the read-only canonical playbook registry fallback.
 
-#### Exposed Endpoints:
+#### Exposed Endpoints
 
 - `GET /api/playbooks` — Returns all active playbooks with their ordered handoff chains.
 - `GET /api/playbooks/:id` — Returns full details for a specific playbook (e.g. `revenue-lead-to-sale`).
