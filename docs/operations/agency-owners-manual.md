@@ -7,17 +7,17 @@ status: active
 owner: "Robert T. McCarthy / OPS"
 canonical_sources:
   - governance/registry/
-last_reviewed: 2026-09-04
-next_review: 2026-10-04
-version: "v1.1"
+last_reviewed: 2026-09-08
+next_review: 2026-10-08
+version: "v1.2"
 ---
 
 # Agency Owner's Manual
 
 **Owner:** Robert T. McCarthy / Uncle Robert Consulting LLC
 **Date Created:** 2026-06-09
-**Last Structural Update:** 2026-09-04
-**Version:** v1.1 — Milestone: Fully Autonomous AI Native Agency Operating System (10 Canonical Workflows, 6 Swarm Compute Nodes with Dynamic Spin-Up/Down, PostgreSQL State Machine, Command Flight Deck with 4 Horizon Viewports, and HubSpot CRM Tool Suite)
+**Last Structural Update:** 2026-09-08
+**Version:** v1.2 — Milestone: Virtual Office Communication Suite (WebRTC Video War Room, Client Messenger, Async Screen Recorder), GTM Discovery Tools (ICP & Consulting Assessment Generators), Interactive Priority Replenishment Queue, and Beta Partner Multi-Tier Access Layer
 **Purpose:** Operational reference for running the URC family of businesses. Covers business orientation, workflows, tools, SOPs, finance controls, secret handling, products, infrastructure, and change control in one navigable document.
 
 
@@ -541,6 +541,11 @@ each piece does and its current status. Does not contain access credentials.
 | Documentation Surface  | Mintlify                       | Public developer & client documentation portal          | Active     | PLAT-MINTLIFY              |
 | Domain Registrar & DNS | Ionos                          | DNS for `agent-lab.tech` (marketing) & `agent-lab.me` (podcast studio) | Active | PLAT-IONOS         |
 | Marketing Website CMS  | B12                            | Marketing website design and content engine (`agent-lab.tech`) | Active | PLAT-B12              |
+| Virtual Office Video   | Embedded WebRTC (Jitsi)        | Zero-install client video war room & AI debriefs (`/meeting`) | Active | SVC-MEETING-ROOM   |
+| Client Messenger       | AgentLab Office Messenger      | Team channels & 1-on-1 client threads with AI co-pilot (`/messages`) | Active | SVC-MESSENGER      |
+| Async Screen Teardown  | HTML5 MediaRecorder Engine     | 1080p Loom-style video recording & AI teardown briefs (`/screen-recorder`) | Active | SVC-SCREEN-RECORDER |
+| GTM Persona Engine     | ICP Dossier Generator          | MKT-01 firmographic & acute pain trigger synthesizer (`/icp-generator`) | Active | SVC-ICP-GEN        |
+| Consulting Diagnostic  | Assessment Question Bank       | SAL-01 high-signal discovery question bank & AI generator (`/assessment-generator`) | Active | SVC-ASSESSMENT-GEN |
 | Analytics sandbox      | KNIME                          | Data exploration — isolated; no production dependency   | Evaluation | PLAT-KNIME                 |
 
 ### Sandbox Rules

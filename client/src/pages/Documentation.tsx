@@ -32,7 +32,12 @@ import {
   AlertTriangle,
   ArrowRight,
   Compass,
-  CheckCircle2
+  CheckCircle2,
+  Video,
+  MessageSquare,
+  Tv,
+  Target,
+  ClipboardList
 } from "lucide-react";
 import { Link, useRoute, useLocation } from "wouter";
 
@@ -46,6 +51,11 @@ const ICON_MAP: Record<string, any> = {
   ShoppingBag,
   BookOpen,
   Compass,
+  Video,
+  MessageSquare,
+  Tv,
+  Target,
+  ClipboardList,
 };
 
 export default function Documentation() {

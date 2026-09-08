@@ -17,7 +17,14 @@ import {
   Cpu,
   Mail,
   Zap,
-  Info
+  Info,
+  Video,
+  MessageSquare,
+  Tv,
+  Target,
+  ClipboardList,
+  Mic,
+  Share2
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -466,6 +473,181 @@ function renderMockContent(type: DocPageEntry["mockLayoutType"]) {
               <div className="flex justify-between p-1.5 bg-muted/40 rounded">
                 <span>ops@heartlandmfg.com (Managing Partner)</span>
                 <span className="text-amber-600">Queued for Tomorrow</span>
+              </div>
+            </div>
+          </div>
+    case "meeting-room":
+      return (
+        <div className="space-y-4 opacity-90 pointer-events-none">
+          <div className="flex items-center justify-between bg-card p-3 rounded-xl border border-border">
+            <div className="flex items-center gap-2">
+              <Video className="w-4 h-4 text-primary animate-pulse" />
+              <span className="text-xs font-bold text-foreground">Room: Executive Client War Room (#live-consultation)</span>
+            </div>
+            <span className="text-[10px] bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded font-mono font-bold">1080P WebRTC LIVE</span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <div className="col-span-2 bg-muted/60 rounded-xl border border-border p-6 flex flex-col items-center justify-center text-center min-h-[160px] relative overflow-hidden">
+              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-2">
+                <Video className="w-6 h-6" />
+              </div>
+              <div className="text-xs font-semibold text-foreground">Client Screen Share & Video Grid</div>
+              <div className="text-[10px] text-muted-foreground">Peer-to-Peer Encryption • Zero-Install WebRTC</div>
+              <div className="absolute bottom-2 left-2 flex gap-1">
+                <span className="p-1 bg-background/80 rounded text-[9px] font-mono">Mic: ON</span>
+                <span className="p-1 bg-background/80 rounded text-[9px] font-mono">Cam: ON</span>
+              </div>
+            </div>
+            <div className="bg-card p-3 rounded-xl border border-border space-y-2 flex flex-col justify-between">
+              <div>
+                <span className="text-xs font-bold text-foreground block mb-1">Live Agenda Scratchpad</span>
+                <div className="p-2 bg-muted/40 rounded text-[10px] font-mono text-muted-foreground space-y-1">
+                  <div>• Review M365 consolidation</div>
+                  <div>• Demo 10-node DAG swarm</div>
+                  <div>• Discuss $1k Sprint proposal</div>
+                </div>
+              </div>
+              <div className="p-2 bg-primary/10 text-primary text-[10px] font-semibold rounded text-center">
+                AI Debrief Generator Ready
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
+    case "client-messenger":
+      return (
+        <div className="space-y-4 opacity-90 pointer-events-none">
+          <div className="flex items-center justify-between bg-card p-3 rounded-xl border border-border">
+            <div className="flex items-center gap-2">
+              <MessageSquare className="w-4 h-4 text-blue-500" />
+              <span className="text-xs font-bold text-foreground">Channel: #sales-and-leads</span>
+            </div>
+            <span className="text-[10px] bg-blue-500/10 text-blue-600 px-2 py-0.5 rounded font-mono font-bold">4 Active Members</span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-card p-2.5 rounded-xl border border-border space-y-1.5 text-[11px]">
+              <div className="font-bold text-[10px] uppercase font-mono text-muted-foreground">Office Channels</div>
+              <div className="p-1 bg-primary/10 text-primary font-semibold rounded">#sales-and-leads</div>
+              <div className="p-1 text-muted-foreground">#general-office</div>
+              <div className="p-1 text-muted-foreground">#fulfillment-briefs</div>
+              <div className="p-1 text-muted-foreground">#client-portal</div>
+            </div>
+            <div className="col-span-2 bg-card p-3 rounded-xl border border-border space-y-2">
+              <div className="space-y-1 text-[11px]">
+                <div className="p-1.5 bg-muted/40 rounded flex justify-between">
+                  <span className="font-semibold text-foreground">Lorenzo M.</span>
+                  <span className="text-[9px] text-muted-foreground">10:14 AM</span>
+                </div>
+                <div className="text-[10px] text-muted-foreground pl-1">
+                  "The diagnostic report looks great. Can we hop on a quick video call to review?"
+                </div>
+              </div>
+              <div className="p-1.5 bg-primary/5 rounded border border-primary/20 text-[10px] text-primary flex items-center justify-between">
+                <span>AI Suggested Reply: "Invite to War Room"</span>
+                <span className="font-mono text-[9px] underline">1-Click Insert</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
+    case "screen-recorder":
+      return (
+        <div className="space-y-4 opacity-90 pointer-events-none">
+          <div className="flex items-center justify-between bg-card p-3 rounded-xl border border-border">
+            <div className="flex items-center gap-2">
+              <Tv className="w-4 h-4 text-purple-500" />
+              <span className="text-xs font-bold text-foreground">Async Screen Teardown Studio</span>
+            </div>
+            <span className="text-[10px] bg-purple-500/10 text-purple-600 px-2 py-0.5 rounded font-mono font-bold">1080P 60FPS RECORDING</span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <div className="col-span-2 bg-muted/50 rounded-xl border border-border p-4 flex flex-col items-center justify-center text-center">
+              <div className="text-sm font-bold text-foreground mb-1">04:18 / 05:00</div>
+              <div className="text-[10px] text-muted-foreground mb-3">Recording: Founder Signal System Walkthrough</div>
+              <div className="flex gap-2">
+                <span className="px-2 py-1 bg-red-500/20 text-red-500 text-[10px] font-bold rounded flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> REC
+                </span>
+                <span className="px-2 py-1 bg-background text-[10px] font-mono rounded border">Mic: Active</span>
+              </div>
+            </div>
+            <div className="bg-card p-3 rounded-xl border border-border space-y-2">
+              <div className="text-xs font-bold text-foreground">AI Teardown Brief</div>
+              <div className="text-[10px] text-muted-foreground space-y-1 font-mono">
+                <div>• Problem: Manual lead triage</div>
+                <div>• Opportunity: 85% DAG auto</div>
+                <div>• Next Step: $1k Sprint booking</div>
+              </div>
+              <div className="text-[9px] bg-muted/40 p-1 rounded text-center text-muted-foreground">
+                Auto-saved to Results Vault
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
+    case "icp-generator":
+      return (
+        <div className="space-y-4 opacity-90 pointer-events-none">
+          <div className="flex items-center justify-between bg-card p-3 rounded-xl border border-border">
+            <div className="flex items-center gap-2">
+              <Target className="w-4 h-4 text-emerald-500" />
+              <span className="text-xs font-bold text-foreground">ICP Dossier: Nevada Commercial Real Estate Brokerages</span>
+            </div>
+            <span className="text-[10px] bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded font-mono font-bold">HIGH-SIGNAL DOSSIER</span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-card p-3 rounded-xl border border-border space-y-2">
+              <div className="text-xs font-bold text-foreground">Acute Operational Pain Triggers</div>
+              <div className="space-y-1 text-[10px] text-muted-foreground">
+                <div className="p-1 bg-muted/40 rounded">• 6-12 hr weekly drag updating CoStar/LoopNet listings</div>
+                <div className="p-1 bg-muted/40 rounded">• Disjointed CRM leads falling through inbox cracks</div>
+                <div className="p-1 bg-muted/40 rounded">• High commission loss from delayed buyer follow-up</div>
+              </div>
+            </div>
+            <div className="bg-card p-3 rounded-xl border border-border space-y-2">
+              <div className="text-xs font-bold text-foreground">High-Converting Message Hooks</div>
+              <div className="space-y-1 text-[10px] font-mono">
+                <div className="p-1 bg-primary/10 text-primary rounded">"How NV CRE brokers cut 15 hrs/wk manual listing admin"</div>
+                <div className="p-1 bg-muted/40 text-muted-foreground rounded">CTA: Free 15-Minute Pipeline Automation Audit</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
+    case "assessment-generator":
+      return (
+        <div className="space-y-4 opacity-90 pointer-events-none">
+          <div className="flex items-center justify-between bg-card p-3 rounded-xl border border-border">
+            <div className="flex items-center gap-2">
+              <ClipboardList className="w-4 h-4 text-cyan-500" />
+              <span className="text-xs font-bold text-foreground">Consulting Diagnostic Question Bank</span>
+            </div>
+            <span className="text-[10px] bg-cyan-500/10 text-cyan-600 px-2 py-0.5 rounded font-mono font-bold">18 CURATED QUESTIONS</span>
+          </div>
+
+          <div className="bg-card p-3 rounded-xl border border-border space-y-2">
+            <div className="flex gap-1.5">
+              <span className="px-2 py-0.5 bg-primary text-primary-foreground text-[9px] font-bold rounded">Strategy (3)</span>
+              <span className="px-2 py-0.5 bg-muted text-muted-foreground text-[9px] rounded">Operations (3)</span>
+              <span className="px-2 py-0.5 bg-muted text-muted-foreground text-[9px] rounded">Sales & Pipeline (3)</span>
+              <span className="px-2 py-0.5 bg-muted text-muted-foreground text-[9px] rounded">Finance (3)</span>
+            </div>
+            <div className="space-y-1 text-[11px] font-mono">
+              <div className="p-1.5 bg-muted/40 rounded flex justify-between items-center">
+                <span>Q: "Which weekly operational task consumes the most non-billable leadership hours?"</span>
+                <span className="text-[9px] text-cyan-600 font-bold">SAL-01</span>
+              </div>
+              <div className="p-1.5 bg-muted/40 rounded flex justify-between items-center">
+                <span>Q: "How many disconnected SaaS applications are required to close one client deal?"</span>
+                <span className="text-[9px] text-cyan-600 font-bold">MKT-03</span>
               </div>
             </div>
           </div>
