@@ -289,6 +289,10 @@ export default function CommandCenter() {
   // AI Graphic Generation State & Mutation
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [selectedRatio, setSelectedRatio] = useState<"16:9" | "1:1" | "4:5" | "9:16">("16:9");
+  const [isStudioModalOpen, setIsStudioModalOpen] = useState(false);
+  const [studioPrompt, setStudioPrompt] = useState("");
+  const [studioPreset, setStudioPreset] = useState("Modern B2B Isometric");
+  const [studioResult, setStudioResult] = useState<{ imageUrl: string; engine: string; title: string; aspectRatio: string } | null>(null);
 
   const generateImageMutation = useMutation({
     mutationFn: async ({
@@ -1297,9 +1301,23 @@ export default function CommandCenter() {
                     </CardDescription>
                   </div>
                 </div>
-                <Badge variant="secondary" className="text-xs font-mono">
-                  {artifactsData?.totalCount ?? 0} Assets
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs gap-1.5 bg-primary/10 hover:bg-primary/20 text-primary border-primary/30"
+                    onClick={() => {
+                      setStudioPrompt("A visionary founder standing confidently amidst a dynamic, abstract representation of a smart, AI-driven operational dashboard. Interconnected data streams, glowing neural networks, navy #0F172A and sapphire blue.");
+                      setIsStudioModalOpen(true);
+                    }}
+                  >
+                    <Wand2 className="w-3.5 h-3.5" />
+                    AI Studio
+                  </Button>
+                  <Badge variant="secondary" className="text-xs font-mono">
+                    {artifactsData?.totalCount ?? 0} Assets
+                  </Badge>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -1325,6 +1343,22 @@ export default function CommandCenter() {
                             {asset.title}
                           </span>
                           <div className="flex items-center gap-1.5">
+                            {asset.metadata?.imageUrl && (
+                              <Badge
+                                variant="outline"
+                                className="text-[9px] font-mono px-1.5 py-0 bg-blue-500/10 text-blue-400 border-blue-500/30"
+                              >
+                                🎨 Graphic Ready
+                              </Badge>
+                            )}
+                            {asset.title?.toLowerCase().includes("visual spec") && !asset.metadata?.imageUrl && (
+                              <Badge
+                                variant="outline"
+                                className="text-[9px] font-mono px-1.5 py-0 bg-purple-500/10 text-purple-400 border-purple-500/30"
+                              >
+                                🎨 Visual Spec
+                              </Badge>
+                            )}
                             {asset.qualityGrade && (
                               <Badge
                                 variant="outline"
@@ -1872,6 +1906,184 @@ export default function CommandCenter() {
         open={Boolean(inspectingRunId)}
         onOpenChange={(open) => !open && setInspectingRunId(null)}
       />
+      {/* Dedicated Standalone AI Graphic Studio Modal */}
+      <Dialog open={isStudioModalOpen} onOpenChange={setIsStudioModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto bg-card border-border">
+          <DialogHeader>
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 bg-primary/10 rounded-lg text-primary">
+                <Wand2 className="w-5 h-5" />
+              </div>
+              <div>
+                <DialogTitle className="text-base font-bold text-foreground">
+                  AI Graphic Studio & Visual Generator
+                </DialogTitle>
+                <DialogDescription className="text-xs">
+                  Generate high-resolution brand visuals, Midjourney/Flux renders, and social graphics powered by Google Imagen 3.
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2 text-xs">
+            {/* Style Presets */}
+            <div className="space-y-1.5">
+              <label className="font-semibold text-foreground">Style Direction Preset</label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { name: "Modern B2B Isometric", desc: "Clean 3D UI & vectors" },
+                  { name: "Dark Glassmorphism", desc: "Glowing tech dashboard" },
+                  { name: "Founder / Executive", desc: "Crisp studio portrait" },
+                  { name: "Minimalist Vector", desc: "High-contrast editorial" },
+                ].map((preset) => (
+                  <button
+                    key={preset.name}
+                    type="button"
+                    onClick={() => setStudioPreset(preset.name)}
+                    className={`p-2.5 rounded-lg border text-left transition ${
+                      studioPreset === preset.name
+                        ? "border-primary bg-primary/10 text-foreground"
+                        : "border-border bg-muted/20 text-muted-foreground hover:bg-muted/40"
+                    }`}
+                  >
+                    <div className="font-bold text-[11px] text-foreground">{preset.name}</div>
+                    <div className="text-[10px] text-muted-foreground">{preset.desc}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Prompt Input */}
+            <div className="space-y-1.5">
+              <label className="font-semibold text-foreground">Visual Prompt & Concept</label>
+              <Textarea
+                rows={3}
+                value={studioPrompt}
+                onChange={(e) => setStudioPrompt(e.target.value)}
+                placeholder="Describe your visual concept (e.g. A futuristic founder workspace overlooking a vibrant city, interconnected data streams, navy and sapphire lighting)..."
+                className="text-xs bg-background resize-none"
+              />
+            </div>
+
+            {/* Aspect Ratio Selector */}
+            <div className="flex items-center justify-between pt-1">
+              <div className="flex items-center gap-1.5">
+                <span className="font-semibold text-foreground">Aspect Ratio:</span>
+                {(["16:9", "1:1", "4:5", "9:16"] as const).map((ratio) => (
+                  <button
+                    key={ratio}
+                    type="button"
+                    onClick={() => setSelectedRatio(ratio)}
+                    className={`px-2.5 py-1 rounded text-xs font-mono font-semibold transition ${
+                      selectedRatio === ratio
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    }`}
+                  >
+                    {ratio}
+                  </button>
+                ))}
+              </div>
+
+              <Button
+                size="sm"
+                className="h-8 text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold gap-1.5 shadow"
+                disabled={isGeneratingImage || !studioPrompt.trim()}
+                onClick={async () => {
+                  setIsGeneratingImage(true);
+                  try {
+                    const res = await fetch("/api/generate-image", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        prompt: studioPrompt,
+                        aspectRatio: selectedRatio,
+                        stylePreset: studioPreset,
+                        title: "AI Studio Graphic",
+                      }),
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || "Generation failed");
+                    setStudioResult({
+                      imageUrl: data.imageUrl,
+                      engine: data.engine,
+                      title: data.title || "Generated Graphic",
+                      aspectRatio: data.aspectRatio || selectedRatio,
+                    });
+                    toast.success(`Graphic generated with ${data.engine}! 🎨`);
+                    queryClient.invalidateQueries({ queryKey: ["workflow-artifacts"] });
+                  } catch (err: any) {
+                    toast.error(err.message || "Failed to generate graphic");
+                  } finally {
+                    setIsGeneratingImage(false);
+                  }
+                }}
+              >
+                <Wand2 className={`w-3.5 h-3.5 ${isGeneratingImage ? "animate-spin" : ""}`} />
+                {isGeneratingImage ? "Rendering Image..." : "Generate Graphic"}
+              </Button>
+            </div>
+
+            {/* Generated Image Result Preview */}
+            {studioResult && (
+              <div className="p-3.5 rounded-xl bg-muted/30 border border-primary/20 space-y-2.5 pt-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <Badge variant="outline" className="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
+                      {studioResult.engine.includes("Imagen") ? "Imagen 3" : "Flux Schnell"}
+                    </Badge>
+                    <span className="text-[11px] text-muted-foreground font-mono">{studioResult.aspectRatio}</span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-xs gap-1"
+                      onClick={() => {
+                        const a = document.createElement("a");
+                        a.href = studioResult.imageUrl;
+                        a.download = "AgentLab_AI_Graphic.png";
+                        a.click();
+                        toast.success("Downloaded graphic!");
+                      }}
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      Download
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-7 text-xs gap-1"
+                      onClick={() => {
+                        navigator.clipboard.writeText(studioResult.imageUrl);
+                        toast.success("Image URL copied!");
+                      }}
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                      Copy URL
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="relative rounded-lg overflow-hidden border border-border bg-black/50">
+                  <img
+                    src={studioResult.imageUrl}
+                    alt="AI Studio Output"
+                    className="w-full h-auto max-h-80 object-contain mx-auto"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="pt-2 border-t border-border">
+            <Button variant="outline" size="sm" onClick={() => setIsStudioModalOpen(false)}>
+              Close Studio
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }
