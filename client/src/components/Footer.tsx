@@ -4,8 +4,24 @@ export function Footer() {
       <div className="container">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Product</h4>
+            <h4 className="font-semibold text-foreground mb-4">Product & Tools</h4>
             <ul className="space-y-2 text-muted-foreground text-sm">
+              <li>
+                <a
+                  href="/icp-generator"
+                  className="hover:text-primary transition-colors text-primary/90 font-medium"
+                >
+                  🎯 ICP Generator
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/assessment-generator"
+                  className="hover:text-primary transition-colors text-emerald-400/90 font-medium"
+                >
+                  📋 Assessment Generator
+                </a>
+              </li>
               <li>
                 <a
                   href="/features"

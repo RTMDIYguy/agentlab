@@ -32,10 +32,10 @@ import {
   Rocket,
   Layers,
   Zap,
-  Radio,
-  Sliders,
   Terminal,
-  Gauge
+  Gauge,
+  Target,
+  FileText
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -599,6 +599,12 @@ export default function Dashboard() {
                 </Button>
                 <Button className="w-full justify-start text-xs h-10 font-mono bg-amber-500/10 border border-amber-500/40 hover:bg-amber-500/20 text-amber-300" variant="outline" onClick={() => navigate("/founder-signal-system")}>
                   <Sparkles className="mr-2 h-4 w-4 text-amber-400" /> Founder Signal System ($1k Sprint)
+                </Button>
+                <Button className="w-full justify-start text-xs h-10 font-mono bg-primary/10 border border-primary/40 hover:bg-primary/20 text-primary font-medium" variant="outline" onClick={() => navigate("/icp-generator")}>
+                  <Target className="mr-2 h-4 w-4 text-primary" /> ICP Generator (GTM Dossiers)
+                </Button>
+                <Button className="w-full justify-start text-xs h-10 font-mono bg-emerald-500/10 border border-emerald-500/40 hover:bg-emerald-500/20 text-emerald-300" variant="outline" onClick={() => navigate("/assessment-generator")}>
+                  <FileText className="mr-2 h-4 w-4 text-emerald-400" /> Assessment Question Generator
                 </Button>
               </div>
             </div>

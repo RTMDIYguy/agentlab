@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, BookOpen } from "lucide-react";
+import { ChevronDown, BookOpen, Target, FileText, Sparkles, ShoppingBag, Layers, GraduationCap } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
 export function Navigation() {
@@ -76,45 +76,58 @@ export function Navigation() {
               Home
               <ChevronDown className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
-            <div className="absolute left-0 mt-0 w-48 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
+            <div className="absolute left-0 mt-0 w-52 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
               {isAuthenticated && (
                 <>
                   <a
                     href="/dashboard"
-                    className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                    className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors text-sm"
                   >
                     Dashboard
                   </a>
                   <a
                     href="/ops-agent"
-                    className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                    className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors text-sm"
                   >
                     Ops Agent
                   </a>
                   <a
                     href="/marketplace"
-                    className="marketplace-link block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                    className="marketplace-link block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors text-sm"
                   >
                     Marketplace
                   </a>
                   <a
                     href="/playbooks"
-                    className="playbooks-link block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                    className="playbooks-link block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors text-sm"
                   >
                     Operating Playbooks
                   </a>
                   <a
                     href="/command-center"
-                    className="command-center-link block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                    className="command-center-link block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors text-sm"
                   >
                     Command Center
+                  </a>
+                  <div className="border-t border-border my-1"></div>
+                  <a
+                    href="/icp-generator"
+                    className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors text-sm font-medium text-primary/90"
+                  >
+                    🎯 ICP Generator
+                  </a>
+                  <a
+                    href="/assessment-generator"
+                    className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors text-sm"
+                  >
+                    📋 Assessment Generator
                   </a>
                   <div className="border-t border-border my-1"></div>
                 </>
               )}
               <a
                 href="/about"
-                className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                className="block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors text-sm"
               >
                 About
               </a>
@@ -128,6 +141,79 @@ export function Navigation() {
           >
             Features
           </a>
+
+          {/* Tools & Resources with nested menu */}
+          <div
+            className="relative group"
+            onMouseEnter={() => handleMouseEnter("tools")}
+            onMouseLeave={handleMouseLeave}
+          >
+            <button className="px-3 py-2 text-foreground hover:text-primary transition-colors flex items-center gap-1 font-medium">
+              Tools & Resources
+              <ChevronDown className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </button>
+            <div className="absolute left-0 mt-0 w-64 bg-card border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2 z-50">
+              <a
+                href="/icp-generator"
+                className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+              >
+                <Target className="w-4 h-4 text-primary shrink-0" />
+                <div>
+                  <div className="text-sm font-semibold">ICP Generator</div>
+                  <div className="text-[11px] text-muted-foreground">Targeting dossiers & buying signals</div>
+                </div>
+              </a>
+              <a
+                href="/assessment-generator"
+                className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+              >
+                <FileText className="w-4 h-4 text-emerald-400 shrink-0" />
+                <div>
+                  <div className="text-sm font-semibold">Assessment Generator</div>
+                  <div className="text-[11px] text-muted-foreground">Discovery call diagnostic pool</div>
+                </div>
+              </a>
+              <a
+                href="/founder-signal-system"
+                className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+              >
+                <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                <div>
+                  <div className="text-sm font-semibold">Founder Signals</div>
+                  <div className="text-[11px] text-muted-foreground">High-leverage trigger workflows</div>
+                </div>
+              </a>
+              <div className="border-t border-border my-1"></div>
+              <a
+                href="/marketplace"
+                className="flex items-center gap-2.5 px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+              >
+                <ShoppingBag className="w-4 h-4 text-blue-400 shrink-0" />
+                <span className="text-sm">Ecosystem Marketplace</span>
+              </a>
+              <a
+                href="/playbooks"
+                className="flex items-center gap-2.5 px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+              >
+                <Layers className="w-4 h-4 text-purple-400 shrink-0" />
+                <span className="text-sm">Operating Playbooks</span>
+              </a>
+              <a
+                href="/book"
+                className="flex items-center gap-2.5 px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+              >
+                <BookOpen className="w-4 h-4 text-cyan-400 shrink-0" />
+                <span className="text-sm">Bootstrapper's Guide</span>
+              </a>
+              <a
+                href="/bootcamp"
+                className="flex items-center gap-2.5 px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+              >
+                <GraduationCap className="w-4 h-4 text-orange-400 shrink-0" />
+                <span className="text-sm">Founder Bootcamp</span>
+              </a>
+            </div>
+          </div>
 
           {/* Blog with nested menu */}
           <div
