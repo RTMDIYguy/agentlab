@@ -12,7 +12,10 @@ import {
   ShoppingBag,
   BookOpen,
   Target,
-  FileText
+  FileText,
+  Video,
+  MessageSquare,
+  Film
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -39,6 +42,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { href: "/assessment-generator", label: "Assessment Generator", icon: FileText },
   ];
 
+  const commsLinks = [
+    { href: "/meeting", label: "Video & Screen Room", icon: Video },
+    { href: "/messages", label: "Client Messenger", icon: MessageSquare },
+    { href: "/screen-recorder", label: "Teardown Studio", icon: Film },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navigation />
@@ -50,6 +59,24 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 px-2">Operations</h2>
               <nav className="space-y-1">
                 {sidebarLinks.map((link) => {
+                  const Icon = link.icon;
+                  const isActive = location === link.href;
+                  return (
+                    <Link key={link.href} href={link.href}>
+                      <a className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${isActive ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}>
+                        <Icon className="w-4 h-4" />
+                        {link.label}
+                      </a>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+
+            <div>
+              <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-2">Virtual Office & Comms</h2>
+              <nav className="space-y-1">
+                {commsLinks.map((link) => {
                   const Icon = link.icon;
                   const isActive = location === link.href;
                   return (

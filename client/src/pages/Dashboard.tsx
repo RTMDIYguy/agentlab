@@ -43,7 +43,10 @@ import {
   Globe,
   Mail,
   Phone,
-  Server
+  Server,
+  Video,
+  MessageSquare,
+  Film
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -707,6 +710,112 @@ export default function Dashboard() {
                 <Button className="w-full justify-start text-xs h-10 font-mono bg-emerald-500/10 border border-emerald-500/40 hover:bg-emerald-500/20 text-emerald-300" variant="outline" onClick={() => navigate("/assessment-generator")}>
                   <FileText className="mr-2 h-4 w-4 text-emerald-400" /> Assessment Question Generator
                 </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Virtual Office & Client Comms Hub */}
+          <div className="hud-panel p-5 hud-scanline space-y-4">
+            <div className="hud-corner-bracket hud-corner-tl" />
+            <div className="hud-corner-bracket hud-corner-tr" />
+            <div className="hud-corner-bracket hud-corner-bl" />
+            <div className="hud-corner-bracket hud-corner-br" />
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-border/40">
+              <div>
+                <h3 className="text-sm font-bold uppercase tracking-wider text-foreground font-mono flex items-center gap-2">
+                  <Video className="w-4 h-4 text-indigo-400" />
+                  VIRTUAL OFFICE & CLIENT COMMS COCKPIT
+                </h3>
+                <p className="text-xs text-muted-foreground font-mono mt-0.5">
+                  Live WebRTC video rooms, screen sharing, encrypted client messaging, and async Loom-style video teardowns
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+              <div
+                onClick={() => navigate("/meeting")}
+                className="p-4 rounded-xl bg-card/70 border border-indigo-500/30 hover:border-indigo-400/60 hover:bg-indigo-500/10 transition-all cursor-pointer group flex flex-col justify-between"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="p-2 rounded-lg bg-indigo-500/15 text-indigo-400 border border-indigo-500/30">
+                      <Video className="w-4 h-4" />
+                    </div>
+                    <Badge className="bg-emerald-500/20 text-emerald-400 text-[9px] font-mono border-emerald-500/30">
+                      ZERO INSTALL
+                    </Badge>
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold font-mono text-foreground group-hover:text-indigo-300 transition-colors">
+                      Live Video & Screen Room
+                    </h4>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      1-Click client discovery calls & screen sharing war rooms.
+                    </p>
+                  </div>
+                </div>
+                <div className="pt-3 flex items-center gap-1 text-xs text-indigo-400 font-semibold font-mono">
+                  <span>Enter War Room</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+
+              <div
+                onClick={() => navigate("/messages")}
+                className="p-4 rounded-xl bg-card/70 border border-cyan-500/30 hover:border-cyan-400/60 hover:bg-cyan-500/10 transition-all cursor-pointer group flex flex-col justify-between"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="p-2 rounded-lg bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
+                      <MessageSquare className="w-4 h-4" />
+                    </div>
+                    <Badge className="bg-cyan-500/20 text-cyan-300 text-[9px] font-mono border-cyan-500/30">
+                      ENCRYPTED
+                    </Badge>
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold font-mono text-foreground group-hover:text-cyan-300 transition-colors">
+                      Client Messenger & Office
+                    </h4>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      Direct client texting, office channels, and AI response assistant.
+                    </p>
+                  </div>
+                </div>
+                <div className="pt-3 flex items-center gap-1 text-xs text-cyan-400 font-semibold font-mono">
+                  <span>Open Messenger</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+
+              <div
+                onClick={() => navigate("/screen-recorder")}
+                className="p-4 rounded-xl bg-card/70 border border-rose-500/30 hover:border-rose-400/60 hover:bg-rose-500/10 transition-all cursor-pointer group flex flex-col justify-between"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="p-2 rounded-lg bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                      <Film className="w-4 h-4" />
+                    </div>
+                    <Badge className="bg-rose-500/20 text-rose-300 text-[9px] font-mono border-rose-500/30">
+                      LOOM-STYLE
+                    </Badge>
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold font-mono text-foreground group-hover:text-rose-300 transition-colors">
+                      Screen Teardown Studio
+                    </h4>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      Record async video audits with AI brief summaries to Results Vault.
+                    </p>
+                  </div>
+                </div>
+                <div className="pt-3 flex items-center gap-1 text-xs text-rose-400 font-semibold font-mono">
+                  <span>Launch Studio</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
             </div>
           </div>
