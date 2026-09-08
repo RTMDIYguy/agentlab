@@ -53,8 +53,9 @@ export const workspaces = pgTable(
     defaultModel: varchar("default_model", { length: 64 })
       .notNull()
       .default("gemini-1.5-pro"),
-    trialEndsAt: timestamp("trial_ends_at", { withTimezone: true })
-      .default(sql`now() + interval '30 days'`),
+    trialEndsAt: timestamp("trial_ends_at", { withTimezone: true }).default(
+      sql`now() + interval '30 days'`
+    ),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -73,8 +74,9 @@ export const users = pgTable(
   {
     id: uuid("id").defaultRandom().primaryKey(),
     openId: varchar("open_id", { length: 64 }).notNull().unique(),
-    workspaceId: uuid("workspace_id")
-      .references(() => workspaces.id, { onDelete: "cascade" }),
+    workspaceId: uuid("workspace_id").references(() => workspaces.id, {
+      onDelete: "cascade",
+    }),
     email: varchar("email", { length: 255 }).notNull(),
     name: varchar("name", { length: 128 }).notNull(),
     loginMethod: varchar("login_method", { length: 64 }),
@@ -358,7 +360,81 @@ export const workspacePackages = pgTable(
 );
 
 // ==============================================================================
-// 11. WORKSPACE SECRETS (Metadata for GSM Vault)
+// 11. PLAYBOOKS (Governed cross-workflow operating journeys)
+// ==============================================================================
+export const playbooks = pgTable(
+  "playbooks",
+  {
+    id: varchar("id", { length: 96 }).primaryKey(),
+    name: varchar("name", { length: 160 }).notNull(),
+    description: text("description").notNull(),
+    status: varchar("status", { length: 32 }).notNull().default("draft"), // 'draft' | 'active' | 'review'
+    ownerDepartmentCode: varchar("owner_department_code", {
+      length: 32,
+    }).notNull(),
+    sourceDocument: varchar("source_document", { length: 255 }),
+    primaryOwner: varchar("primary_owner", { length: 128 }).notNull(),
+    approvalOwner: varchar("approval_owner", { length: 128 }).notNull(),
+    trigger: text("trigger").notNull(),
+    completionCriteria: text("completion_criteria").notNull(),
+    stopConditions: jsonb("stop_conditions").notNull().default([]),
+    requiredInputs: jsonb("required_inputs").notNull().default([]),
+    expectedOutputs: jsonb("expected_outputs").notNull().default([]),
+    evidenceRequirements: jsonb("evidence_requirements").notNull().default([]),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_playbooks_owner_department").on(table.ownerDepartmentCode),
+    index("idx_playbooks_status").on(table.status),
+  ]
+);
+
+// ==============================================================================
+// 12. PLAYBOOK HANDOFFS (Explicit contracts between workflow owners)
+// ==============================================================================
+export const playbookHandoffs = pgTable(
+  "playbook_handoffs",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    playbookId: varchar("playbook_id", { length: 96 })
+      .notNull()
+      .references(() => playbooks.id, { onDelete: "cascade" }),
+    sequence: integer("sequence").notNull(),
+    fromWorkflowCode: varchar("from_workflow_code", { length: 64 }).notNull(),
+    toWorkflowCode: varchar("to_workflow_code", { length: 64 }).notNull(),
+    fromDepartmentCode: varchar("from_department_code", {
+      length: 32,
+    }).notNull(),
+    toDepartmentCode: varchar("to_department_code", { length: 32 }).notNull(),
+    triggerSignal: text("trigger_signal").notNull(),
+    requiredPayload: jsonb("required_payload").notNull().default([]),
+    receivingOwner: varchar("receiving_owner", { length: 128 }).notNull(),
+    approvalRequired: boolean("approval_required").notNull().default(false),
+    fallbackProtocol: text("fallback_protocol").notNull(),
+    stopCondition: text("stop_condition").notNull(),
+    evidenceRequired: jsonb("evidence_required").notNull().default([]),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    uniqueIndex("uq_playbook_handoff_sequence").on(
+      table.playbookId,
+      table.sequence
+    ),
+    index("idx_playbook_handoffs_playbook").on(table.playbookId),
+    index("idx_playbook_handoffs_from").on(table.fromWorkflowCode),
+    index("idx_playbook_handoffs_to").on(table.toWorkflowCode),
+  ]
+);
+
+// ==============================================================================
+// 13. WORKSPACE SECRETS (Metadata for GSM Vault)
 // ==============================================================================
 export const workspaceSecrets = pgTable(
   "workspace_secrets",
@@ -389,7 +465,7 @@ export const workspaceSecrets = pgTable(
 );
 
 // ==============================================================================
-// 12. WORKSPACE INTEGRATIONS (Third-party & MCP connections)
+// 14. WORKSPACE INTEGRATIONS (Third-party & MCP connections)
 // ==============================================================================
 export const workspaceIntegrations = pgTable(
   "workspace_integrations",
@@ -413,7 +489,7 @@ export const workspaceIntegrations = pgTable(
 );
 
 // ==============================================================================
-// 13. WORKFLOW ARTIFACTS (Tangible Outputs, Content Assets, Scheduled Posts)
+// 15. WORKFLOW ARTIFACTS (Tangible Outputs, Content Assets, Scheduled Posts)
 // ==============================================================================
 export const workflowArtifacts = pgTable(
   "workflow_artifacts",
@@ -425,17 +501,24 @@ export const workflowArtifacts = pgTable(
     workflowRunId: uuid("workflow_run_id")
       .notNull()
       .references(() => workflowRuns.id, { onDelete: "cascade" }),
-    workflowRunStepId: uuid("workflow_run_step_id")
-      .references(() => workflowRunSteps.id, { onDelete: "set null" }),
-    workflowId: uuid("workflow_id")
-      .references(() => workflows.id, { onDelete: "set null" }),
-    artifactType: varchar("artifact_type", { length: 64 }).notNull().default("document"), // 'post' | 'calendar_entry' | 'document' | 'file' | 'crm_diff' | 'csv'
+    workflowRunStepId: uuid("workflow_run_step_id").references(
+      () => workflowRunSteps.id,
+      { onDelete: "set null" }
+    ),
+    workflowId: uuid("workflow_id").references(() => workflows.id, {
+      onDelete: "set null",
+    }),
+    artifactType: varchar("artifact_type", { length: 64 })
+      .notNull()
+      .default("document"), // 'post' | 'calendar_entry' | 'document' | 'file' | 'crm_diff' | 'csv'
     title: varchar("title", { length: 255 }).notNull(),
     content: text("content").notNull(),
     summary: text("summary"),
     status: varchar("status", { length: 32 }).notNull().default("draft"), // 'draft' | 'scheduled' | 'published' | 'archived'
     scheduledFor: timestamp("scheduled_for", { withTimezone: true }),
-    targetPlatform: varchar("target_platform", { length: 64 }).default("linkedin"), // 'linkedin' | 'blog' | 'newsletter' | 'hubspot' | 'internal'
+    targetPlatform: varchar("target_platform", { length: 64 }).default(
+      "linkedin"
+    ), // 'linkedin' | 'blog' | 'newsletter' | 'hubspot' | 'internal'
     qualityScore: integer("quality_score").default(90),
     qualityGrade: varchar("quality_grade", { length: 10 }).default("A"),
     verificationNotes: jsonb("verification_notes").default({
@@ -462,9 +545,15 @@ export const workflowArtifacts = pgTable(
   table => [
     index("idx_workflow_artifacts_workspace").on(table.workspaceId),
     index("idx_workflow_artifacts_run").on(table.workflowRunId),
-    index("idx_workflow_artifacts_type").on(table.workspaceId, table.artifactType),
+    index("idx_workflow_artifacts_type").on(
+      table.workspaceId,
+      table.artifactType
+    ),
     index("idx_workflow_artifacts_status").on(table.workspaceId, table.status),
-    index("idx_workflow_artifacts_scheduled").on(table.workspaceId, table.scheduledFor),
+    index("idx_workflow_artifacts_scheduled").on(
+      table.workspaceId,
+      table.scheduledFor
+    ),
   ]
 );
 
@@ -480,6 +569,8 @@ export const workspacesRelations = relations(workspaces, ({ many }) => ({
   workflowRunSteps: many(workflowRunSteps),
   artifacts: many(workflowArtifacts),
   packages: many(workspacePackages),
+  playbooks: many(playbooks),
+  playbookHandoffs: many(playbookHandoffs),
   secrets: many(workspaceSecrets),
   integrations: many(workspaceIntegrations),
 }));
@@ -618,6 +709,20 @@ export const workspacePackagesRelations = relations(
   })
 );
 
+export const playbooksRelations = relations(playbooks, ({ many }) => ({
+  handoffs: many(playbookHandoffs),
+}));
+
+export const playbookHandoffsRelations = relations(
+  playbookHandoffs,
+  ({ one }) => ({
+    playbook: one(playbooks, {
+      fields: [playbookHandoffs.playbookId],
+      references: [playbooks.id],
+    }),
+  })
+);
+
 export const workspaceSecretsRelations = relations(
   workspaceSecrets,
   ({ one }) => ({
@@ -674,6 +779,12 @@ export type NewKnowledgePackage = InferInsertModel<typeof knowledgePackages>;
 export type WorkspacePackage = InferSelectModel<typeof workspacePackages>;
 export type NewWorkspacePackage = InferInsertModel<typeof workspacePackages>;
 
+export type Playbook = InferSelectModel<typeof playbooks>;
+export type NewPlaybook = InferInsertModel<typeof playbooks>;
+
+export type PlaybookHandoff = InferSelectModel<typeof playbookHandoffs>;
+export type NewPlaybookHandoff = InferInsertModel<typeof playbookHandoffs>;
+
 export type WorkspaceSecret = InferSelectModel<typeof workspaceSecrets>;
 export type NewWorkspaceSecret = InferInsertModel<typeof workspaceSecrets>;
 
@@ -683,4 +794,3 @@ export type WorkspaceIntegration = InferSelectModel<
 export type NewWorkspaceIntegration = InferInsertModel<
   typeof workspaceIntegrations
 >;
-

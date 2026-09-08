@@ -98,6 +98,12 @@ export function Navigation() {
                     Marketplace
                   </a>
                   <a
+                    href="/playbooks"
+                    className="playbooks-link block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
+                  >
+                    Operating Playbooks
+                  </a>
+                  <a
                     href="/command-center"
                     className="command-center-link block px-4 py-2 text-foreground hover:bg-accent/10 hover:text-primary transition-colors"
                   >
@@ -183,9 +189,9 @@ export function Navigation() {
         <div className="flex items-center gap-3">
           {/* Always Present Owner's Manual Quick-Access Button */}
           <Link href="/docs">
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="flex items-center gap-1.5 border-primary/30 text-foreground hover:text-primary hover:border-primary bg-primary/5 hover:bg-primary/10 transition-all font-medium"
             >
               <BookOpen className="w-3.5 h-3.5 text-primary" />
@@ -199,7 +205,11 @@ export function Navigation() {
                 {user?.name}
               </span>
               <Link href="/dashboard">
-                <Button variant="outline" size="sm" className="hidden sm:inline-flex">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="hidden sm:inline-flex"
+                >
                   Dashboard
                 </Button>
               </Link>
@@ -210,12 +220,19 @@ export function Navigation() {
           ) : (
             <>
               <Link href="/login">
-                <Button variant="outline" size="sm" className="hidden sm:inline-flex">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="hidden sm:inline-flex"
+                >
                   Sign In
                 </Button>
               </Link>
               <Link href="/signup">
-                <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Button
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
                   Get Started
                 </Button>
               </Link>

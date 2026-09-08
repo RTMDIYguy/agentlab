@@ -36,6 +36,7 @@ import AdminEvents from "@/pages/AdminEvents";
 import Book from "@/pages/Book";
 import Bootcamp from "@/pages/Bootcamp";
 import Marketplace from "@/pages/Marketplace";
+import Playbooks from "@/pages/Playbooks";
 import CommandCenter from "@/pages/CommandCenter";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
@@ -68,7 +69,7 @@ function RootRoute() {
 
   if (isLoading) return null;
   if (isAuthenticated) return null; // Wait for redirect
-  
+
   return <Home />;
 }
 
@@ -98,6 +99,7 @@ function Router() {
         component={AssessmentQuestionGenerator}
       />
       <Route path={"/marketplace"} component={Marketplace} />
+      <Route path={"/playbooks"} component={Playbooks} />
       <Route path={"/founder-signal-system"} component={FounderSignalSystem} />
       <Route path={"/campaigns/real-estate"} component={RealEstateCampaign} />
       <Route path={"/campaigns/medspa"} component={MedSpaCampaign} />
