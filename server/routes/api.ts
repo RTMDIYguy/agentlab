@@ -58,6 +58,7 @@ import {
   evaluateArtifact,
   refineArtifact,
 } from "../controllers/artifacts";
+import { handleGenerateImage } from "../controllers/image-generation";
 import {
   dispatchCreBrief,
   dispatchMedSpaDiagnostic,
@@ -217,6 +218,10 @@ apiRouter.post("/artifacts/:id/evaluate", evaluateArtifact);
 apiRouter.post("/artifacts/:id/refine", refineArtifact);
 apiRouter.get("/runs/:runId/artifacts", getRunArtifacts);
 apiRouter.patch("/artifacts/:id", updateArtifactStatus);
+
+// AI Graphic & Visual Asset Generation (Imagen 3 & Multi-Engine)
+apiRouter.post("/generate-image", handleGenerateImage);
+apiRouter.post("/artifacts/generate-image", handleGenerateImage);
 
 // ==============================================================================
 // Campaign Outreach Sequences & Landing Page Handlers (SAL-01)

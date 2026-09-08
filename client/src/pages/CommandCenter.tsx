@@ -49,6 +49,9 @@ import {
   ArrowUp,
   ArrowDown,
   Trash2,
+  Image as ImageIcon,
+  Download,
+  Wand2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
@@ -280,6 +283,57 @@ export default function CommandCenter() {
     onError: (err: any) => {
       setIsRefining(false);
       toast.error(err.message || "Failed to refine artifact");
+    },
+  });
+
+  // AI Graphic Generation State & Mutation
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [selectedRatio, setSelectedRatio] = useState<"16:9" | "1:1" | "4:5" | "9:16">("16:9");
+
+  const generateImageMutation = useMutation({
+    mutationFn: async ({
+      prompt,
+      aspectRatio,
+      artifactId,
+      title,
+      stylePreset,
+    }: {
+      prompt: string;
+      aspectRatio: string;
+      artifactId?: string;
+      title?: string;
+      stylePreset?: string;
+    }) => {
+      setIsGeneratingImage(true);
+      const res = await fetch("/api/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, aspectRatio, artifactId, title, stylePreset }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to generate visual graphic");
+      }
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setIsGeneratingImage(false);
+      toast.success(`Graphic generated with ${data.engine}! 🎨`);
+      queryClient.invalidateQueries({ queryKey: ["content-calendar"] });
+      queryClient.invalidateQueries({ queryKey: ["workflow-artifacts"] });
+      setSelectedArtifact((prev: any) => ({
+        ...prev,
+        metadata: {
+          ...(prev?.metadata || {}),
+          imageUrl: data.imageUrl,
+          imageEngine: data.engine,
+          aspectRatio: data.aspectRatio,
+        },
+      }));
+    },
+    onError: (err: any) => {
+      setIsGeneratingImage(false);
+      toast.error(err.message || "Failed to generate graphic");
     },
   });
 
@@ -1623,6 +1677,123 @@ export default function CommandCenter() {
                 </div>
                 <div className="p-4 rounded-xl bg-background border border-border font-sans leading-relaxed whitespace-pre-wrap select-text text-foreground">
                   {selectedArtifact.content}
+                </div>
+              </div>
+
+              {/* AI Graphic Generation Studio Card */}
+              <div className="p-4 rounded-xl bg-card border border-primary/20 space-y-3 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 bg-primary/10 rounded-lg text-primary">
+                      <ImageIcon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-xs text-foreground flex items-center gap-1.5">
+                        AI Graphic Studio
+                        {selectedArtifact.metadata?.imageEngine && (
+                          <Badge variant="outline" className="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
+                            {selectedArtifact.metadata.imageEngine.includes("Imagen") ? "Imagen 3" : "Flux Schnell"}
+                          </Badge>
+                        )}
+                      </h4>
+                      <p className="text-[11px] text-muted-foreground">High-resolution brand graphic render (1024px+)</p>
+                    </div>
+                  </div>
+
+                  {selectedArtifact.metadata?.imageUrl && (
+                    <div className="flex items-center gap-1.5">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 text-xs gap-1"
+                        onClick={() => {
+                          const a = document.createElement("a");
+                          a.href = selectedArtifact.metadata.imageUrl;
+                          a.download = `${selectedArtifact.title.replace(/[^a-zA-Z0-9]/g, "_")}.png`;
+                          a.click();
+                          toast.success("Downloading high-resolution graphic!");
+                        }}
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Download
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-7 text-xs gap-1"
+                        onClick={() => {
+                          navigator.clipboard.writeText(selectedArtifact.metadata.imageUrl);
+                          toast.success("Image URL copied!");
+                        }}
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                        Copy URL
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Live Image Render Container */}
+                {selectedArtifact.metadata?.imageUrl ? (
+                  <div className="relative rounded-lg overflow-hidden border border-border bg-black/40 group">
+                    <img
+                      src={selectedArtifact.metadata.imageUrl}
+                      alt={selectedArtifact.title}
+                      className="w-full h-auto max-h-80 object-contain mx-auto transition-transform duration-300 group-hover:scale-[1.01]"
+                    />
+                    <div className="absolute bottom-2 right-2 bg-black/70 backdrop-blur-md px-2 py-1 rounded text-[10px] font-mono text-white flex items-center gap-1.5">
+                      <span>{selectedArtifact.metadata?.aspectRatio || "16:9"}</span>
+                      <span>•</span>
+                      <span>{selectedArtifact.metadata?.imageEngine || "AI Render"}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-3 rounded-lg bg-muted/20 border border-dashed border-border text-center space-y-1">
+                    <p className="text-xs text-muted-foreground">Ready to render visual asset for this specification.</p>
+                  </div>
+                )}
+
+                {/* Controls: Aspect Ratio + Generate Button */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-border/40">
+                  <div className="flex items-center gap-1">
+                    <span className="text-[11px] text-muted-foreground mr-1">Ratio:</span>
+                    {(["16:9", "1:1", "4:5", "9:16"] as const).map((ratio) => (
+                      <button
+                        key={ratio}
+                        type="button"
+                        onClick={() => setSelectedRatio(ratio)}
+                        className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold transition ${
+                          selectedRatio === ratio
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        }`}
+                      >
+                        {ratio}
+                      </button>
+                    ))}
+                  </div>
+
+                  <Button
+                    size="sm"
+                    className="h-8 text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold gap-1.5 shadow"
+                    disabled={isGeneratingImage || generateImageMutation.isPending}
+                    onClick={() => {
+                      let visualPrompt = selectedArtifact.metadata?.visualPrompt;
+                      if (!visualPrompt) {
+                        const match = selectedArtifact.content.match(/Prompt Template\*\*:\s*```(?:\w+)?\n([\s\S]*?)```/i);
+                        visualPrompt = match ? match[1].trim() : selectedArtifact.content.slice(0, 300);
+                      }
+                      generateImageMutation.mutate({
+                        prompt: visualPrompt,
+                        aspectRatio: selectedRatio,
+                        artifactId: selectedArtifact.id,
+                        title: selectedArtifact.title,
+                      });
+                    }}
+                  >
+                    <Wand2 className={`w-3.5 h-3.5 ${isGeneratingImage ? "animate-spin" : ""}`} />
+                    {isGeneratingImage ? "Rendering with AI..." : selectedArtifact.metadata?.imageUrl ? "Re-generate Graphic" : "Generate AI Graphic Now"}
+                  </Button>
                 </div>
               </div>
 

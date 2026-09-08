@@ -1,4 +1,5 @@
-import { eq } from "drizzle-orm";
+import "dotenv/config";
+import { eq, sql } from "drizzle-orm";
 import { getDb } from "../server/db";
 import { playbookHandoffs, playbooks } from "../server/schema";
 import { CANONICAL_PLAYBOOKS } from "../server/domain/playbook-model";
@@ -6,6 +7,46 @@ import { CANONICAL_PLAYBOOKS } from "../server/domain/playbook-model";
 async function seedPlaybookLayer() {
   const db = await getDb();
   if (!db) throw new Error("Database unavailable");
+
+  // Ensure tables exist
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS "playbooks" (
+      "id" varchar(96) PRIMARY KEY,
+      "name" varchar(160) NOT NULL,
+      "description" text NOT NULL,
+      "status" varchar(32) NOT NULL DEFAULT 'draft',
+      "owner_department_code" varchar(32) NOT NULL,
+      "source_document" varchar(255),
+      "primary_owner" varchar(128) NOT NULL,
+      "approval_owner" varchar(128) NOT NULL,
+      "trigger" text NOT NULL,
+      "completion_criteria" text NOT NULL,
+      "stop_conditions" jsonb NOT NULL DEFAULT '[]',
+      "required_inputs" jsonb NOT NULL DEFAULT '[]',
+      "expected_outputs" jsonb NOT NULL DEFAULT '[]',
+      "evidence_requirements" jsonb NOT NULL DEFAULT '[]',
+      "created_at" timestamp with time zone NOT NULL DEFAULT now(),
+      "updated_at" timestamp with time zone NOT NULL DEFAULT now()
+    );
+
+    CREATE TABLE IF NOT EXISTS "playbook_handoffs" (
+      "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      "playbook_id" varchar(96) NOT NULL REFERENCES "playbooks"("id") ON DELETE CASCADE,
+      "sequence" integer NOT NULL,
+      "from_workflow_code" varchar(64) NOT NULL,
+      "to_workflow_code" varchar(64) NOT NULL,
+      "from_department_code" varchar(32) NOT NULL,
+      "to_department_code" varchar(32) NOT NULL,
+      "trigger_signal" text NOT NULL,
+      "required_payload" jsonb NOT NULL DEFAULT '[]',
+      "receiving_owner" varchar(128) NOT NULL,
+      "approval_required" boolean NOT NULL DEFAULT false,
+      "fallback_protocol" text NOT NULL,
+      "stop_condition" text NOT NULL,
+      "evidence_required" jsonb NOT NULL DEFAULT '[]',
+      "created_at" timestamp with time zone NOT NULL DEFAULT now()
+    );
+  `);
 
   for (const playbook of CANONICAL_PLAYBOOKS) {
     await db
