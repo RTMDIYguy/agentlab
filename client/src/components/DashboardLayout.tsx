@@ -27,6 +27,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { href: "/auditing", label: "Auditing", icon: ShieldAlert },
     { href: "/billing", label: "Billing", icon: CreditCard },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
+    { href: "/playbooks", label: "Playbooks", icon: BookOpen },
     { href: "/marketplace", label: "Marketplace", icon: ShoppingBag },
     { href: "/docs", label: "Owner's Manual", icon: BookOpen },
   ];
