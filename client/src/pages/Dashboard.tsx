@@ -37,10 +37,17 @@ import {
   Terminal,
   Gauge,
   Target,
-  FileText
+  FileText,
+  ExternalLink,
+  Plug,
+  Globe,
+  Mail,
+  Phone,
+  Server
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { RunInspectorModal } from "@/components/RunInspectorModal";
@@ -151,6 +158,98 @@ export default function Dashboard() {
   const daysRemaining = trialData?.daysRemaining ?? 18;
   const totalTrialDays = trialData?.totalTrialDays ?? 30;
   const progressPercent = Math.min(100, Math.round((daysRemaining / totalTrialDays) * 100));
+
+  // Query Workspace Integrations from PostgreSQL
+  const { data: dbIntegrations } = trpc.settings.getIntegrations.useQuery(undefined, {
+    staleTime: 30000,
+  });
+
+  const canonicalIntegrationList = [
+    {
+      id: "hubspot",
+      name: "HubSpot CRM",
+      type: "CRM & Sales Pipeline",
+      url: "https://app.hubspot.com",
+      color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+      icon: Layers,
+      category: "CRM",
+    },
+    {
+      id: "instantly",
+      name: "Instantly.ai",
+      type: "Cold Outbound Engine",
+      url: "https://app.instantly.ai",
+      color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+      icon: Zap,
+      category: "Marketing",
+    },
+    {
+      id: "pulse",
+      name: "Pulse Social",
+      type: "LinkedIn Dispatcher",
+      url: "https://www.linkedin.com",
+      color: "text-teal-400 bg-teal-500/10 border-teal-500/20",
+      icon: Sparkles,
+      category: "Marketing",
+    },
+    {
+      id: "elevenlabs",
+      name: "ElevenLabs / Pamela",
+      type: "Telephony Voice Triage",
+      url: "https://elevenlabs.io/app",
+      color: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+      icon: Phone,
+      category: "Telephony",
+    },
+    {
+      id: "agentmail",
+      name: "AgentMail",
+      type: "Inbound Reply Ingest",
+      url: "/command-center",
+      color: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+      icon: Mail,
+      category: "Email",
+    },
+    {
+      id: "n8n",
+      name: "n8n Workflow Engine",
+      type: "Autonomous DAG Loops",
+      url: "https://n8n.io",
+      color: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+      icon: Cpu,
+      category: "Automation",
+    },
+    {
+      id: "m365",
+      name: "Microsoft 365",
+      type: "OneDrive & File Backbone",
+      url: "https://portal.office.com",
+      color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+      icon: Server,
+      category: "Storage",
+    },
+    {
+      id: "ionos",
+      name: "IONOS Cloud",
+      type: "Domains & Infrastructure",
+      url: "https://partnernetwork.ionos.com/partner/agent.lab?origin=PartnerBadge",
+      color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
+      icon: Globe,
+      category: "Infrastructure",
+    },
+  ];
+
+  const customIntegrations = (dbIntegrations || []).map((dbItem: any) => ({
+    id: dbItem.id,
+    name: dbItem.name,
+    type: dbItem.type ? `${dbItem.type.toUpperCase()} Integration` : "Custom Webhook",
+    url: dbItem.config?.portalUrl || dbItem.config?.endpoint || dbItem.config?.url || "/dashboard/settings",
+    color: "text-primary bg-primary/10 border-primary/20",
+    icon: Plug,
+    category: "Custom Tool",
+  }));
+
+  const allDisplayIntegrations = [...canonicalIntegrationList, ...customIntegrations];
 
   // Dynamic Viewport Background Styles
   const getViewportBackground = () => {
@@ -609,6 +708,82 @@ export default function Dashboard() {
                   <FileText className="mr-2 h-4 w-4 text-emerald-400" /> Assessment Question Generator
                 </Button>
               </div>
+            </div>
+          </div>
+
+          {/* Connected Integrations & 1-Click Asset Launcher */}
+          <div className="hud-panel p-5 hud-scanline space-y-4">
+            <div className="hud-corner-bracket hud-corner-tl" />
+            <div className="hud-corner-bracket hud-corner-tr" />
+            <div className="hud-corner-bracket hud-corner-bl" />
+            <div className="hud-corner-bracket hud-corner-br" />
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-border/40">
+              <div>
+                <h3 className="text-sm font-bold uppercase tracking-wider text-foreground font-mono flex items-center gap-2">
+                  <Plug className="w-4 h-4 text-emerald-400" />
+                  CONNECTED INTEGRATIONS & 1-CLICK ASSETS
+                </h3>
+                <p className="text-xs text-muted-foreground font-mono mt-0.5">
+                  Instant one-click direct access to your connected CRM, outbound marketing, telephony, and storage portals
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 text-xs font-mono border-emerald-500/30 hover:bg-emerald-500/10 text-emerald-300 gap-1.5"
+                onClick={() => navigate("/dashboard/settings")}
+              >
+                <Plug className="w-3.5 h-3.5" />
+                Manage All in Settings
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+              {allDisplayIntegrations.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-3.5 rounded-xl bg-card/70 border border-border/80 hover:border-primary/50 transition-all flex flex-col justify-between gap-3 group"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className={`p-2 rounded-lg ${item.color || "bg-primary/10 text-primary border border-primary/20"}`}>
+                        <item.icon className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold font-mono text-foreground leading-tight">{item.name}</p>
+                        <p className="text-[10px] text-muted-foreground font-mono">{item.type}</p>
+                      </div>
+                    </div>
+                    <Badge className="bg-emerald-500/20 text-emerald-400 text-[9px] font-mono border-emerald-500/30 shrink-0">
+                      CONNECTED
+                    </Badge>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-1 border-t border-border/40">
+                    <a
+                      href={item.url}
+                      target={item.url.startsWith("http") ? "_blank" : undefined}
+                      rel={item.url.startsWith("http") ? "noopener noreferrer" : undefined}
+                      className="flex-1"
+                      onClick={(e) => {
+                        if (!item.url.startsWith("http")) {
+                          e.preventDefault();
+                          navigate(item.url);
+                        }
+                      }}
+                    >
+                      <Button
+                        size="sm"
+                        className="w-full h-7 text-[11px] font-mono bg-primary/15 hover:bg-primary text-primary hover:text-primary-foreground border border-primary/30 justify-center gap-1.5"
+                      >
+                        <span>1-Click Launch</span>
+                        <ExternalLink className="w-3 h-3 opacity-80" />
+                      </Button>
+                    </a>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 

@@ -11,6 +11,45 @@ import { parse as parseCookieHeader } from "cookie";
 // In-memory fallback user cache for resilience in case DB is momentarily unavailable
 const inMemoryUsers = new Map<string, any>();
 
+export function computeUserRoleAndTier(
+  email: string,
+  existingRole?: string,
+  existingTier?: string,
+  existingRestricted?: any
+) {
+  const normalized = (email || "").trim().toLowerCase();
+  if (normalized === "lorenzo@nwnadvisory.com") {
+    return {
+      role: "beta_partner",
+      tier: "beta_partner",
+      restrictedPackages: [
+        "financial-package",
+        "finance-control-loop",
+        "fin-department",
+        "fin-playbook",
+      ],
+    };
+  }
+  if (
+    normalized === "robert@uncle-robert.com" ||
+    normalized === "thebossrob" ||
+    normalized === "burnssheena335@gmail.com"
+  ) {
+    return {
+      role: "admin",
+      tier: "enterprise",
+      restrictedPackages: [],
+    };
+  }
+  return {
+    role: existingRole || "owner",
+    tier: existingTier || "standard",
+    restrictedPackages: Array.isArray(existingRestricted)
+      ? existingRestricted
+      : [],
+  };
+}
+
 function getSessionTokenFromRequest(req: Request): string | undefined {
   const cookieHeader = req.headers.cookie;
   if (cookieHeader) {
@@ -91,6 +130,7 @@ export function registerNativeAuthRoutes(app: Express) {
             workspaceId = newWorkspace.id;
           }
 
+          const userTier = computeUserRoleAndTier(normalizedEmail);
           // Create user
           const [newUserRecord] = await database
             .insert(users)
@@ -99,7 +139,9 @@ export function registerNativeAuthRoutes(app: Express) {
               email: normalizedEmail,
               name: displayName,
               workspaceId,
-              role: "owner",
+              role: userTier.role,
+              tier: userTier.tier,
+              restrictedPackages: userTier.restrictedPackages,
               loginMethod: "email",
               lastSignedIn: new Date(),
             })
@@ -112,13 +154,16 @@ export function registerNativeAuthRoutes(app: Express) {
       }
 
       if (!createdUser) {
+        const userTier = computeUserRoleAndTier(normalizedEmail);
         createdUser = {
           id: randomUUID(),
           openId,
           email: normalizedEmail,
           name: displayName,
           workspaceId,
-          role: "owner",
+          role: userTier.role,
+          tier: userTier.tier,
+          restrictedPackages: userTier.restrictedPackages,
           loginMethod: "email",
           lastSignedIn: new Date(),
         };
@@ -138,6 +183,8 @@ export function registerNativeAuthRoutes(app: Express) {
         maxAge: ONE_YEAR_MS,
       });
 
+      const userTier = computeUserRoleAndTier(createdUser.email, createdUser.role, createdUser.tier, createdUser.restrictedPackages);
+
       res.status(200).json({
         success: true,
         token: sessionToken,
@@ -146,7 +193,9 @@ export function registerNativeAuthRoutes(app: Express) {
           openId: createdUser.openId,
           email: createdUser.email,
           name: createdUser.name,
-          role: createdUser.role,
+          role: userTier.role,
+          tier: userTier.tier,
+          restrictedPackages: userTier.restrictedPackages,
           workspaceId: createdUser.workspaceId,
           loginMethod: createdUser.loginMethod,
         },
@@ -217,6 +266,7 @@ export function registerNativeAuthRoutes(app: Express) {
               workspaceId = newWorkspace.id;
             }
 
+            const userTier = computeUserRoleAndTier(normalizedEmail);
             const [newUserRecord] = await database
               .insert(users)
               .values({
@@ -224,7 +274,9 @@ export function registerNativeAuthRoutes(app: Express) {
                 email: normalizedEmail,
                 name: displayName,
                 workspaceId,
-                role: "owner",
+                role: userTier.role,
+                tier: userTier.tier,
+                restrictedPackages: userTier.restrictedPackages,
                 loginMethod: "email",
                 lastSignedIn: new Date(),
               })
@@ -237,13 +289,16 @@ export function registerNativeAuthRoutes(app: Express) {
         }
 
         if (!userRecord) {
+          const userTier = computeUserRoleAndTier(normalizedEmail);
           userRecord = {
             id: randomUUID(),
             openId,
             email: normalizedEmail,
             name: displayName,
             workspaceId,
-            role: "owner",
+            role: userTier.role,
+            tier: userTier.tier,
+            restrictedPackages: userTier.restrictedPackages,
             loginMethod: "email",
             lastSignedIn: new Date(),
           };
@@ -273,6 +328,8 @@ export function registerNativeAuthRoutes(app: Express) {
         maxAge: ONE_YEAR_MS,
       });
 
+      const userTier = computeUserRoleAndTier(userRecord.email, userRecord.role, userRecord.tier, userRecord.restrictedPackages);
+
       res.status(200).json({
         success: true,
         token: sessionToken,
@@ -281,7 +338,9 @@ export function registerNativeAuthRoutes(app: Express) {
           openId: userRecord.openId,
           email: userRecord.email,
           name: userRecord.name,
-          role: userRecord.role,
+          role: userTier.role,
+          tier: userTier.tier,
+          restrictedPackages: userTier.restrictedPackages,
           workspaceId: userRecord.workspaceId,
           loginMethod: userRecord.loginMethod,
         },
@@ -339,6 +398,7 @@ export function registerNativeAuthRoutes(app: Express) {
               workspaceId = newWorkspace.id;
             }
 
+            const userTier = computeUserRoleAndTier(normalizedEmail);
             const [newUserRecord] = await database
               .insert(users)
               .values({
@@ -346,7 +406,9 @@ export function registerNativeAuthRoutes(app: Express) {
                 email: normalizedEmail,
                 name: displayName,
                 workspaceId,
-                role: "owner",
+                role: userTier.role,
+                tier: userTier.tier,
+                restrictedPackages: userTier.restrictedPackages,
                 loginMethod: "google",
                 lastSignedIn: new Date(),
               })
@@ -359,13 +421,16 @@ export function registerNativeAuthRoutes(app: Express) {
         }
 
         if (!userRecord) {
+          const userTier = computeUserRoleAndTier(normalizedEmail);
           userRecord = {
             id: randomUUID(),
             openId,
             email: normalizedEmail,
             name: displayName,
             workspaceId,
-            role: "owner",
+            role: userTier.role,
+            tier: userTier.tier,
+            restrictedPackages: userTier.restrictedPackages,
             loginMethod: "google",
             lastSignedIn: new Date(),
           };
@@ -395,6 +460,8 @@ export function registerNativeAuthRoutes(app: Express) {
         maxAge: ONE_YEAR_MS,
       });
 
+      const userTier = computeUserRoleAndTier(userRecord.email, userRecord.role, userRecord.tier, userRecord.restrictedPackages);
+
       res.status(200).json({
         success: true,
         token: sessionToken,
@@ -403,7 +470,9 @@ export function registerNativeAuthRoutes(app: Express) {
           openId: userRecord.openId,
           email: userRecord.email,
           name: userRecord.name,
-          role: userRecord.role,
+          role: userTier.role,
+          tier: userTier.tier,
+          restrictedPackages: userTier.restrictedPackages,
           workspaceId: userRecord.workspaceId,
           loginMethod: userRecord.loginMethod,
         },
@@ -453,15 +522,20 @@ export function registerNativeAuthRoutes(app: Express) {
 
       if (!userRecord) {
         // Fallback user constructed from session payload
+        const userTier = computeUserRoleAndTier(`${session.openId}@agent-lab.tech`);
         userRecord = {
           openId: session.openId,
           name: session.name || "AgentLab User",
           email: `${session.openId}@agent-lab.tech`,
-          role: "owner",
+          role: userTier.role,
+          tier: userTier.tier,
+          restrictedPackages: userTier.restrictedPackages,
           workspaceId: "00000000-0000-0000-0000-000000000001",
           loginMethod: "native",
         };
       }
+
+      const userTier = computeUserRoleAndTier(userRecord.email, userRecord.role, userRecord.tier, userRecord.restrictedPackages);
 
       res.status(200).json({
         user: {
@@ -469,7 +543,9 @@ export function registerNativeAuthRoutes(app: Express) {
           openId: userRecord.openId,
           email: userRecord.email,
           name: userRecord.name,
-          role: userRecord.role,
+          role: userTier.role,
+          tier: userTier.tier,
+          restrictedPackages: userTier.restrictedPackages,
           workspaceId: userRecord.workspaceId,
           loginMethod: userRecord.loginMethod,
         },

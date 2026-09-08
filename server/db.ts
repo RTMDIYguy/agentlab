@@ -94,6 +94,19 @@ export async function getUserByOpenId(openId: string) {
 // Auto self-healing schema initialization
 export async function ensureDatabaseSchema(): Promise<void> {
   try {
+    // Ensure users table has tier and restricted_packages
+    await client`
+      ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "tier" varchar(64) NOT NULL DEFAULT 'standard';
+      ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "restricted_packages" jsonb NOT NULL DEFAULT '[]'::jsonb;
+    `;
+
+    // Ensure Lorenzo beta entitlement is recorded
+    await client`
+      UPDATE "users" 
+      SET "role" = 'beta_partner', "tier" = 'beta_partner', "restricted_packages" = '["financial-package", "finance-control-loop", "fin-department"]'::jsonb
+      WHERE LOWER("email") = 'lorenzo@nwnadvisory.com';
+    `;
+
     await client`
       CREATE TABLE IF NOT EXISTS "workflow_artifacts" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -123,7 +136,7 @@ export async function ensureDatabaseSchema(): Promise<void> {
     await client`CREATE INDEX IF NOT EXISTS "idx_workflow_artifacts_type" ON "workflow_artifacts" ("workspace_id", "artifact_type");`;
     await client`CREATE INDEX IF NOT EXISTS "idx_workflow_artifacts_status" ON "workflow_artifacts" ("workspace_id", "status");`;
     await client`CREATE INDEX IF NOT EXISTS "idx_workflow_artifacts_scheduled" ON "workflow_artifacts" ("workspace_id", "scheduled_for");`;
-    console.log("[Database] Schema self-healing verified: workflow_artifacts active.");
+    console.log("[Database] Schema self-healing verified: user entitlements & workflow_artifacts active.");
   } catch (err: any) {
     console.warn("[Database] Schema ensure notice:", err.message);
   }

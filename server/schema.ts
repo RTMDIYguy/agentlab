@@ -80,7 +80,9 @@ export const users = pgTable(
     email: varchar("email", { length: 255 }).notNull(),
     name: varchar("name", { length: 128 }).notNull(),
     loginMethod: varchar("login_method", { length: 64 }),
-    role: varchar("role", { length: 32 }).notNull().default("operator"), // 'owner' | 'admin' | 'operator' | 'auditor'
+    role: varchar("role", { length: 32 }).notNull().default("operator"), // 'owner' | 'admin' | 'operator' | 'auditor' | 'beta_partner'
+    tier: varchar("tier", { length: 64 }).notNull().default("standard"), // 'standard' | 'pro' | 'enterprise' | 'beta_partner'
+    restrictedPackages: jsonb("restricted_packages").notNull().default([]), // List of explicitly restricted packages/departments (e.g. ['financial-package'])
     lastSignedIn: timestamp("last_signed_in", { withTimezone: true })
       .notNull()
       .defaultNow(),

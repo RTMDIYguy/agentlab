@@ -236,6 +236,7 @@ export default function Settings() {
     name: "",
     type: "webhook",
     endpoint: "",
+    portalUrl: "",
     apiKey: "",
   });
 
@@ -420,6 +421,7 @@ export default function Settings() {
       name: newIntegrationForm.name,
       config: {
         endpoint: newIntegrationForm.endpoint,
+        portalUrl: newIntegrationForm.portalUrl || newIntegrationForm.endpoint,
         apiKey: newIntegrationForm.apiKey,
       },
       status: "active",
@@ -1372,14 +1374,26 @@ export default function Settings() {
                         </div>
 
                         <div>
-                          <label className="block font-semibold text-foreground mb-1">Webhook Endpoint URL</label>
+                          <label className="block font-semibold text-foreground mb-1">Webhook / API Endpoint URL</label>
                           <input
                             type="text"
-                            placeholder="https://hooks.slack.com/services/..."
+                            placeholder="https://hooks.slack.com/services/... or https://api.service.com"
                             value={newIntegrationForm.endpoint}
                             onChange={e => setNewIntegrationForm({ ...newIntegrationForm, endpoint: e.target.value })}
                             className="w-full px-3 py-2 border border-border rounded-lg bg-input font-mono text-xs"
                           />
+                        </div>
+
+                        <div>
+                          <label className="block font-semibold text-foreground mb-1">Dashboard 1-Click Launch URL (Optional)</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. https://app.hubspot.com, https://slack.com, https://dashboard.stripe.com"
+                            value={newIntegrationForm.portalUrl}
+                            onChange={e => setNewIntegrationForm({ ...newIntegrationForm, portalUrl: e.target.value })}
+                            className="w-full px-3 py-2 border border-border rounded-lg bg-input font-mono text-xs"
+                          />
+                          <p className="text-[10px] text-muted-foreground mt-0.5">Direct 1-click launch link rendered on your main Dashboard.</p>
                         </div>
 
                         <div>
@@ -1397,7 +1411,7 @@ export default function Settings() {
                       <div className="pt-3 border-t border-border flex justify-end gap-2">
                         <Button size="sm" variant="ghost" onClick={() => setShowAddIntegrationModal(false)}>Cancel</Button>
                         <Button size="sm" onClick={handleAddIntegrationSubmit} className="font-bold text-xs">
-                          Save Webhook
+                          Save Integration
                         </Button>
                       </div>
                     </Card>
