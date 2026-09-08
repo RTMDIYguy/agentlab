@@ -83,7 +83,7 @@ async function generateWithImagen3(
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${cleanKey}`;
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 12000);
+    const timeout = setTimeout(() => controller.abort(), 15000);
 
     const res = await fetch(endpoint, {
       method: "POST",
@@ -102,7 +102,7 @@ async function generateWithImagen3(
 
     if (!res.ok) {
       const errText = await res.text();
-      console.warn(`[Imagen 3 Warning] Status ${res.status}: ${errText.slice(0, 200)}`);
+      console.warn(`[Imagen 3 Notice] Status ${res.status}: ${errText.slice(0, 200)}`);
       return null;
     }
 
@@ -115,53 +115,60 @@ async function generateWithImagen3(
       };
     }
   } catch (err: any) {
-    console.warn("[Imagen 3 Error]:", err.message);
+    console.warn("[Imagen 3 Note]:", err.message);
   }
   return null;
 }
 
 /**
- * Resilient multi-engine fallback with server-side buffer verification and base64 conversion
+ * Resilient multi-engine neural generation with server-side buffer verification,
+ * retry failover (Flux -> Turbo -> Standard), and base64 conversion.
  */
-async function generateWithServerSideFlux(
+async function generateWithServerSideNeural(
   prompt: string,
   aspectRatio: string
 ): Promise<{ imageUrl: string; engine: string }> {
   const { width, height } = getDimensionsForRatio(aspectRatio);
-  const seed = Math.floor(Math.random() * 1000000);
-  const encodedPrompt = encodeURIComponent(prompt.slice(0, 300));
-  const directUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true&model=flux`;
+  const models = ["flux", "turbo"];
 
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+  for (const model of models) {
+    const seed = Math.floor(Math.random() * 1000000);
+    const encodedPrompt = encodeURIComponent(prompt.slice(0, 280));
+    const directUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true&model=${model}`;
 
-    const imgRes = await fetch(directUrl, {
-      headers: { "User-Agent": "AgentLab/1.0" },
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 25000); // 25 second generous buffer
 
-    if (imgRes.ok) {
-      const arrayBuffer = await imgRes.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      if (buffer.length > 5000) {
-        const base64 = buffer.toString("base64");
-        const contentType = imgRes.headers.get("content-type") || "image/jpeg";
-        return {
-          imageUrl: `data:${contentType};base64,${base64}`,
-          engine: "Flux Schnell (Verified Neural Render)",
-        };
+      const imgRes = await fetch(directUrl, {
+        headers: { "User-Agent": "AgentLab/1.0" },
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
+
+      if (imgRes.ok) {
+        const arrayBuffer = await imgRes.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        if (buffer.length > 5000) {
+          const base64 = buffer.toString("base64");
+          const contentType = imgRes.headers.get("content-type") || "image/jpeg";
+          return {
+            imageUrl: `data:${contentType};base64,${base64}`,
+            engine: model === "flux" ? "Flux Schnell (Verified Neural Render)" : "Neural Turbo Engine",
+          };
+        }
       }
+    } catch (err: any) {
+      console.warn(`[Neural ${model} fallback note]:`, err.message);
     }
-  } catch (err: any) {
-    console.warn("[Server-Side Flux Buffer Note]:", err.message);
   }
 
-  // Fallback directly to direct URL if buffer fetch timed out
+  // Emergency fallback with direct URL
+  const emergencySeed = Math.floor(Math.random() * 1000000);
+  const encodedEmergency = encodeURIComponent(prompt.slice(0, 250));
   return {
-    imageUrl: directUrl,
-    engine: "Flux Schnell (Neural Render)",
+    imageUrl: `https://image.pollinations.ai/prompt/${encodedEmergency}?width=${width}&height=${height}&seed=${emergencySeed}&nologo=true`,
+    engine: "Neural Fast Render",
   };
 }
 
@@ -201,9 +208,9 @@ export async function handleGenerateImage(req: Request, res: Response): Promise<
       result = await generateWithImagen3(cleanedPrompt, aspectRatio, geminiKey);
     }
 
-    // 2. Fall back to Server-Side Verified Flux render
+    // 2. Fall back to Server-Side Multi-Tier Neural (Flux -> Turbo) with buffer verification
     if (!result) {
-      result = await generateWithServerSideFlux(cleanedPrompt, aspectRatio);
+      result = await generateWithServerSideNeural(cleanedPrompt, aspectRatio);
     }
 
     // 3. Persist image metadata to artifact if artifactId was provided
