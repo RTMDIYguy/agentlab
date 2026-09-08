@@ -12,6 +12,7 @@
     "daily-command:sync": "node scripts/sync-command-center.mjs",
     "daily-command:center": "node scripts/daily-command-center.mjs",
     "public-scan:browserbase": "tsx scripts/public-scan-browserbase.ts",
+    "social-adept:scan": "tsx scripts/social-adept/index.ts",
     "format": "prettier --write .",
     "test": "vitest run",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",

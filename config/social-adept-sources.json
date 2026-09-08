@@ -1,0 +1,50 @@
+{
+  "reddit": {
+    "enabled": true,
+    "subreddits": ["SaaS", "Entrepreneur", "smallbusiness", "agency", "startups"],
+    "queries": [
+      "AI tools Zapier",
+      "SaaS bloat",
+      "agency automation bottleneck",
+      "CRM messy",
+      "manual workflow"
+    ],
+    "limit": 10
+  },
+  "hackerNews": {
+    "enabled": true,
+    "queries": [
+      "AI agents agency",
+      "tool fatigue SaaS",
+      "workflow automation friction",
+      "bootstrapped AI stack"
+    ],
+    "limit": 10
+  },
+  "rss": {
+    "enabled": true,
+    "feeds": [
+      {
+        "name": "Google Alerts - Agency Automation",
+        "url": "",
+        "category": "agency-automation"
+      },
+      {
+        "name": "Google Alerts - AI SDR",
+        "url": "",
+        "category": "ai-sdr"
+      }
+    ]
+  },
+  "filters": {
+    "minScore": 2,
+    "excludeKeywords": [
+      "[hiring]",
+      "[for hire]",
+      "crypto casino",
+      "discount code",
+      "job opening",
+      "resume review"
+    ]
+  }
+}

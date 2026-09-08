@@ -16,10 +16,6 @@ export function LiveChat() {
   const { isAuthenticated } = useAuth();
   const [location] = useLocation();
 
-  // Restrict Founder Intake chat modal exclusively to the outside landing page ("/") for unauthenticated guests
-  if (isAuthenticated || (location !== "/" && location !== "")) {
-    return null;
-  }
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: starterMessage },
@@ -46,6 +42,10 @@ export function LiveChat() {
     isPending: false,
   };
 
+  // Keep hooks unconditional; only the visible chat is route-gated.
+  if (isAuthenticated || (location !== "/" && location !== "")) {
+    return null;
+  }
 
   const handleQuickSelect = async (option: string) => {
     if (respondMutation.isPending) return;
