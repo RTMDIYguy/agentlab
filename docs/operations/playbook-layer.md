@@ -50,12 +50,24 @@ without changing the handoff model.
 the ordered transitions between stable workflow codes such as `MKT-01`,
 `SAL-01`, and `FUL-02`.
 
-The API exposes:
+### Authentication & API Endpoints
 
-- `GET /api/playbooks`
-- `GET /api/playbooks/:id`
+All Playbook Layer endpoints require Bearer Token authentication via the standard Authorization header:
 
-Seed or refresh the canonical layer with:
+```http
+Authorization: Bearer <Firebase_or_OAuth_JWT_Token>
+```
+
+When authenticated, the tenant middleware (`server/middleware/tenant.ts`) automatically extracts the caller's workspace context and role. If an unauthenticated or public request is received, the API returns the read-only canonical playbook registry fallback.
+
+#### Exposed Endpoints:
+
+- `GET /api/playbooks` — Returns all active playbooks with their ordered handoff chains.
+- `GET /api/playbooks/:id` — Returns full details for a specific playbook (e.g. `revenue-lead-to-sale`).
+
+### Database Sync & CLI
+
+Seed or refresh the canonical layer in Neon PostgreSQL with:
 
 ```bash
 pnpm db:push
