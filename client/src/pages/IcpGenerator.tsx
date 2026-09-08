@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 type IcpProfile = {
   id?: string;
@@ -39,7 +39,6 @@ type IcpProfile = {
 
 export default function IcpGenerator() {
   const queryClient = useQueryClient();
-  const { toast } = useToast();
 
   const [businessName, setBusinessName] = useState("Uncle Robert Consulting (URC)");
   const [offering, setOffering] = useState("Agentic OS / Operational Department Playbooks");
@@ -86,16 +85,13 @@ export default function IcpGenerator() {
     onSuccess: (data) => {
       setActiveProfile(data.profile);
       queryClient.invalidateQueries({ queryKey: ["icp-profiles"] });
-      toast({
-        title: "ICP Dossier Synthesized & Saved",
+      toast.success("ICP Dossier Synthesized & Saved", {
         description: `Targeting dossier for ${data.profile.name} generated successfully.`,
       });
     },
     onError: (err: any) => {
-      toast({
-        title: "Generation Failed",
+      toast.error("Generation Failed", {
         description: err.message,
-        variant: "destructive",
       });
     },
   });
@@ -109,7 +105,7 @@ export default function IcpGenerator() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["icp-profiles"] });
-      toast({ title: "ICP Profile Removed" });
+      toast.success("ICP Profile Removed");
     },
   });
 

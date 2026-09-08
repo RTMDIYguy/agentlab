@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 type Depth = "exploratory" | "diagnostic" | "executive";
 
@@ -383,7 +383,6 @@ function scoreQuestion(
 
 export default function AssessmentQuestionGenerator() {
   const queryClient = useQueryClient();
-  const { toast } = useToast();
 
   const [clientName, setClientName] = useState("");
   const [objective, setObjective] = useState(callObjectives[0]);
@@ -456,16 +455,13 @@ export default function AssessmentQuestionGenerator() {
         evaluation: "",
         signals: "",
       });
-      toast({
-        title: "Question Saved",
+      toast.success("Question Saved", {
         description: "New diagnostic question added to the PostgreSQL question pool.",
       });
     },
     onError: (err: any) => {
-      toast({
-        title: "Save Failed",
+      toast.error("Save Failed", {
         description: err.message || "Could not add question",
-        variant: "destructive",
       });
     },
   });
@@ -491,16 +487,13 @@ export default function AssessmentQuestionGenerator() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["assessment-questions"] });
       setIsAiModalOpen(false);
-      toast({
-        title: "Question Pool Expanded!",
+      toast.success("Question Pool Expanded!", {
         description: `Successfully synthesized and persisted ${data.questions?.length || 3} new diagnostic questions into PostgreSQL.`,
       });
     },
     onError: (err: any) => {
-      toast({
-        title: "AI Synthesis Error",
+      toast.error("AI Synthesis Error", {
         description: err.message || "Failed to generate AI questions",
-        variant: "destructive",
       });
     },
   });
@@ -513,7 +506,7 @@ export default function AssessmentQuestionGenerator() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["assessment-questions"] });
-      toast({ title: "Question Removed" });
+      toast.success("Question Removed");
     },
   });
 
@@ -528,8 +521,7 @@ export default function AssessmentQuestionGenerator() {
       return res.json();
     },
     onSuccess: () => {
-      toast({
-        title: "Session Saved to Database",
+      toast.success("Session Saved to Database", {
         description: "Discovery call notes and gap findings have been recorded.",
       });
     },
@@ -700,7 +692,7 @@ export default function AssessmentQuestionGenerator() {
   const handleAddQuestionSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newQuestion.text || !newQuestion.skill || !newQuestion.evaluation) {
-      toast({ title: "Please fill in all required fields", variant: "destructive" });
+      toast.error("Please fill in all required fields");
       return;
     }
     const sigArray = newQuestion.signals
