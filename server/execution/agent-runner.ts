@@ -377,21 +377,29 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
           generateVisualSpec: tool({
             description: "Generate a structured creative visual spec, image generation prompt (Midjourney/Flux/DALL-E), and asset dimensions for social media or marketing campaigns.",
             parameters: z.object({
-              title: z.string().describe("Title or theme of the visual asset"),
-              platform: z.enum(["linkedin", "blog", "newsletter", "twitter", "website"]).default("linkedin").describe("Target distribution channel"),
-              visualPrompt: z.string().describe("High-fidelity prompt for AI image generation (e.g. realistic 3D render, glassmorphism UI, executive color palette)"),
-              aspectRatio: z.enum(["1:1", "16:9", "4:5", "9:16"]).default("16:9").describe("Aspect ratio for the asset"),
+              title: z.string().optional().describe("Title or theme of the visual asset"),
+              platform: z.enum(["linkedin", "blog", "newsletter", "twitter", "website"]).default("linkedin").optional().describe("Target distribution channel"),
+              visualPrompt: z.string().optional().describe("High-fidelity prompt for AI image generation (e.g. realistic 3D render, glassmorphism UI, executive color palette)"),
+              aspectRatio: z.enum(["1:1", "16:9", "4:5", "9:16"]).default("16:9").optional().describe("Aspect ratio for the asset"),
               colorPalette: z.array(z.string()).optional().describe("Key brand colors / hex codes"),
               styleNotes: z.string().optional().describe("Art direction, typography, and mood notes"),
             }),
-            execute: async ({ title, platform, visualPrompt, aspectRatio, colorPalette, styleNotes }: any) => {
+            execute: async (rawArgs: any) => {
+              const args = rawArgs || {};
+              const title = args.title || args.name || args.theme || args.headline || "Content Graphic Asset";
+              const platform = args.platform || "linkedin";
+              const aspectRatio = args.aspectRatio || args.ratio || "16:9";
+              const visualPrompt = args.visualPrompt || args.prompt || args.imagePrompt || args.description || "Clean isometric 3D render representing autonomous agent operations, deep navy background with glowing emerald and sapphire accents, high-contrast B2B aesthetic.";
+              const colorPalette = Array.isArray(args.colorPalette) && args.colorPalette.length > 0 ? args.colorPalette : ["#0F172A", "#3B82F6", "#10B981"];
+              const styleNotes = args.styleNotes || args.notes || args.style || "Clean, high-contrast, modern B2B SaaS aesthetic.";
+
               console.log("[TOOL EXECUTED] Generating Visual Spec:", title, `(${platform})`);
               const content = `# Visual Specification: ${title}\n\n` +
                 `**Target Platform**: ${platform}\n` +
                 `**Aspect Ratio**: ${aspectRatio}\n` +
                 `**Prompt Template**:\n\`\`\`\n${visualPrompt}\n\`\`\`\n\n` +
-                `**Art Direction Notes**: ${styleNotes || "Clean, high-contrast, modern B2B SaaS aesthetic."}\n` +
-                `**Brand Palette**: ${(colorPalette || ["#0F172A", "#3B82F6", "#10B981"]).join(", ")}\n`;
+                `**Art Direction Notes**: ${styleNotes}\n` +
+                `**Brand Palette**: ${colorPalette.join(", ")}\n`;
 
               const artifact: CapturedArtifact = {
                 title: `Visual Spec: ${title}`,
