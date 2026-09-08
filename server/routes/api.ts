@@ -1,6 +1,13 @@
 import { Router } from "express";
-import { handleOrchestratorChat, executeOrchestratorWorkflow } from "../controllers/orchestrator";
-import { getAgents, deployAgent, toggleAgentStatus } from "../controllers/agents";
+import {
+  handleOrchestratorChat,
+  executeOrchestratorWorkflow,
+} from "../controllers/orchestrator";
+import {
+  getAgents,
+  deployAgent,
+  toggleAgentStatus,
+} from "../controllers/agents";
 import {
   getWorkflows,
   deployWorkflow,
@@ -27,6 +34,7 @@ import {
   getTrialStatus,
   extendTrial,
 } from "../controllers/marketplace.js";
+import { getPlaybook, getPlaybooks } from "../controllers/playbooks";
 import {
   getSyncState,
   ingestRoamingData,
@@ -158,6 +166,10 @@ apiRouter.post(
 apiRouter.post("/marketplace/mount/:id", mountPlaybook);
 apiRouter.post("/marketplace/unmount/:id", unmountPlaybook);
 
+// Governed cross-department playbooks and their handoff contracts.
+apiRouter.get("/playbooks", getPlaybooks);
+apiRouter.get("/playbooks/:id", getPlaybook);
+
 // Gamified Beta Program & Trial Management
 apiRouter.get("/beta/status", getBetaStatus);
 apiRouter.post("/beta/enroll/:appId", enrollBeta);
@@ -250,4 +262,3 @@ apiRouter.post("/snapshots/save", saveSnapshot);
 apiRouter.post("/snapshots/:id/clone", cloneSnapshot);
 apiRouter.post("/snapshots/:id/restore", restoreSnapshot);
 apiRouter.delete("/snapshots/:id", deleteSnapshot);
-
