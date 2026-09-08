@@ -476,6 +476,9 @@ function renderMockContent(type: DocPageEntry["mockLayoutType"]) {
               </div>
             </div>
           </div>
+        </div>
+      );
+
     case "meeting-room":
       return (
         <div className="space-y-4 opacity-90 pointer-events-none">
