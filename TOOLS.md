@@ -20,14 +20,13 @@ Skills define _how_ tools work. This file is for _your_ specifics — the stuff 
 - Default speaker: Kitchen HomePod
 ```
 
-## Why Separate?
+## External Tooling & Dashboards
 
-Skills are shared. Your setup is yours. Keeping them apart means you can update skills without losing your notes, and share skills without leaking your infrastructure.
-
----
-
-Add whatever helps you do your job. This is your cheat sheet.
+- **Retool Operational Intelligence Portal:** `https://agentlab.retool.com` — Operational dashboards, data lookups, and administrative tooling.
+- **Live AgentLab Cloud Run Cockpit:** `https://agentlab-718497644379.us-central1.run.app/`
+- **Engagement Assets Location:** `Agent Lab LinkedIn/Engagement Assets/` — Client-facing PDFs, one-pagers, carousel decks, and prospect blueprints.
 
 ## Related
 
 - [Agent workspace](/concepts/agent-workspace)
+- `Agent Lab LinkedIn/Engagement Assets/`

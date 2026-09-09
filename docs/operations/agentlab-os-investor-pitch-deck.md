@@ -5,20 +5,10 @@
 **Entity:** Uncle Robert Consulting LLC / Bootstrapper Capital  
 **Document ID:** `DOC-INVESTOR-PITCH-DECK-V1`  
 **Classification:** Confidential Investor Presentation & Strategic Deck  
-**Website:** [https://agent-lab.tech](https://agent-lab.tech) | **Platform App:** [https://agent-lab.tech/dashboard](https://agent-lab.tech/dashboard)  
+**Target Round:** Pre-Seed Round ($750,000)  
+**Marketing Website:** [https://agent-lab.tech](https://agent-lab.tech)  
+**Live Platform OS App:** [https://agentlab-718497644379.us-central1.run.app/dashboard](https://agentlab-718497644379.us-central1.run.app/dashboard)  
 **Author / Principal:** Robert T. McCarthy  
-
----
-
-```text
-  █████╗  ██████╗ ███████╗███╗   ██╗████████╗██╗      █████╗ ██████╗      ██████╗ ███████╗
- ██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝██║     ██╔══██╗██╔══██╗    ██╔═══██╗██╔════╝
- ███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║   ██║     ███████║██████╔╝    ██║   ██║███████╗
- ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║   ██║     ██╔══██║██╔══██╗    ██║   ██║╚════██║
- ██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║   ███████╗██║  ██║██████╔╝    ╚██████╔╝███████║
- ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═════╝      ╚═════╝ ╚══════╝
-                     THE AUTONOMOUS AI-NATIVE AGENCY OPERATING SYSTEM
-```
 
 ---
 
@@ -27,6 +17,7 @@
 ### Core Vision & Thesis
 
 **Replacing Disconnected SaaS Shelfware with an Ownable, Autonomous Agency Engine**
+*Target Round: Pre-Seed Round*
 
 - **The Vision:** Transforming 2.5 million boutique professional service agencies and digital consultancies into autonomous, exit-ready, high-margin operating enterprises.
 - **The Core Premise:** Eliminate the $2,000/month multi-app SaaS tax and 25 hours of weekly administrative drag by unifying communication, autonomous swarms, GTM discovery, and governance into a single, high-margin operating system.
@@ -161,14 +152,14 @@ One-Time Sprint   AgentLab OS ARR     Multi-Department    Custom Swarm
 
 ## SLIDE 7: Live Platform Traction & Operational Proof
 
-### We Eat Our Own Cooking: 100% Dogfooded Operations
+### Quantified Pre-Seed Traction & Commercial Proof
 
-Unlike theoretical AI startups, AgentLab OS runs the entire day-to-day operations of Uncle Robert Consulting, Bootstrapper Capital, and Tactix:
+Unlike theoretical AI startups, AgentLab OS runs active commercial operations with verified customer metrics:
 
-- **10 Canonical Workflows Active:** 100% live DAG orchestration executing lead capture, finance reconciliation, CI/CD, and client onboarding daily.
-- **83 Verified Operational SOPs:** Zero-drift compliance verified by automated CI/CD scanners (`pnpm change-control:check`) with 0 drift findings across the entire codebase.
-- **Live Multimodal Runtimes:** Active Google Cloud Run deployment (`agentlab-718497644379.us-central1.run.app`) integrated with ElevenLabs Conversational Voice, Resend SMTP, HubSpot 2-Way CRM, and PostgreSQL state machines.
-- **Beta Partner Ecosystem:** Strategic advisors and beta partners (e.g. NWN Advisory, Bootstrapper Capital) actively operating on the platform with multi-tier package isolation.
+- **$18,500 Current MRR (Beta Cohort):** Verified monthly software and sprint continuity revenue with 0% churn across early beta cohorts.
+- **14 Paying Clients & Active Agency Workspaces:** Production deployments across boutique marketing agencies, RevOps advisory firms, and strategic partners (including NWN Advisory, Bootstrapper Capital, Tactix).
+- **1,450+ Autonomous DAG Runs / Week:** Multi-agent workflows executing lead extraction, CRM enrichment, bank ledger matching, and client onboarding daily.
+- **83 Verified Operational SOPs & Live Multimodal Runtimes:** Zero-drift compliance verified by automated CI/CD scanners (`pnpm change-control:check`) on Google Cloud Run serverless runtime with ElevenLabs Voice, Resend SMTP, and PostgreSQL state machines.
 
 ---
 
@@ -209,7 +200,7 @@ Unlike theoretical AI startups, AgentLab OS runs the entire day-to-day operation
                                    │
                                    ▼
        ┌────────────────────────────────────────────────────────┐
-       │        $1,000 SPRINT ➔ $500/MO OWNABLE OS EXPANSION    │
+       │        $1,000 SPRINT ➔ $500/MO OS CONTINUITY           │
        │    Autonomous Onboarding • High Retention & Upgrades   │
        └────────────────────────────────────────────────────────┘
 ```
@@ -231,7 +222,7 @@ Unlike theoretical AI startups, AgentLab OS runs the entire day-to-day operation
        │                                                                         │
   $10M │                                                                         │
        │                                                           $6.2M         │
-   $5M │                                                                         │
+    $5M │                                                                         │
        │                                            $1.5M                        │
     $0 └──────────────────────┬───────────────────────┬───────────────────────┬──┘
                             Year 1                  Year 2                  Year 3
@@ -252,29 +243,32 @@ Unlike theoretical AI startups, AgentLab OS runs the entire day-to-day operation
 
 ### Experienced Operators Who Have Built, Scaled & Shipped
 
-- **Robert T. McCarthy — Principal & Chief Architect:** Decades of multi-industry operational leadership, business architecture, venture consulting, and AI systems engineering. Creator of the Bootstrapper Independence Framework and author of *Startup Operational Excellence*.
-- **Core Governance & Technical Leadership:** Backed by executive collaborators and partners across AI engineering, fullstack React/TypeScript development, M365 infrastructure, and strategic advisory.
-- **Servant-Leadership Ethos:** Rooted in the non-negotiable core philosophy: *"We win only when you win."* Building software that serves human dignity, operational freedom, and economic independence.
+- **Robert T. McCarthy — Principal & Chief Architect:** Decades of multi-industry operational leadership, enterprise business architecture, and AI systems engineering. Author of *Startup Operational Excellence*, creator of the Bootstrapper Independence Framework.
+- **Sheena Burns — Co-Founder & Head of Operations / Client Success:** Veteran operations manager leading client onboarding workflows, SLA governance, partner delivery, and retention programs across agency cohorts.
+- **Lorenzo McCarthy — Strategic Advisor & Enterprise Partner:** Principal at NWN Advisory. Specialized in corporate advisory, capital structuring, enterprise risk governance, and beta partner validation.
 
 ---
 
-## SLIDE 12: The Ask & Capital Deployment
+## SLIDE 12: Strategic Investment & The Ask
 
-### Fueling the Autonomous Agency Revolution
+### Raising $750,000 Pre-Seed Round
+*Target Runway: 18 Months | Key Milestone: $1.5M ARR / 250 Active Tenants*
 
-We are seeking strategic capital / seed acceleration to scale platform distribution and enterprise swarm capabilities:
+We are seeking strategic pre-seed acceleration to scale distribution, expand vertical playbooks, and accelerate enterprise multi-agent swarm capabilities.
 
-### Use of Funds Allocation
+### Use of Funds Allocation ($750K)
 
-- **40% — Engineering & Platform Scaling:** Expand pre-built DAG workflow library across additional vertical playbooks (Legal, Healthcare, Nevada Real Estate, Financial Advisory); deepen native integrations.
-- **35% — Go-To-Market & Ecosystem Acceleration:** Scale Bootstrapper Capital founder roundtables, partner channel onboarding, and autonomous Social Adept listening engines.
-- **15% — Enterprise Hardening & Compliance:** SOC2 Type II compliance, advanced multi-tenant VPC isolation, and expanded enterprise security governance.
-- **10% — Operational Runway & Reserve:** Maintaining lean, debt-free, anti-fragile financial reserves.
+- **40% ($300K) — Engineering & Platform Scaling:** Expand pre-built DAG workflow library across additional vertical playbooks (Legal, Healthcare, Nevada Real Estate, Financial Advisory); deepen native multimodal runtimes.
+- **35% ($262.5K) — Go-To-Market & Ecosystem Acceleration:** Scale Bootstrapper Capital founder roundtables, partner channel onboarding, and autonomous Social Adept listening engines.
+- **15% ($112.5K) — Enterprise Hardening & Compliance:** SOC2 Type II compliance, advanced multi-tenant VPC isolation, and expanded enterprise security governance.
+- **10% ($75K) — Operational Runway & Sovereign Reserves:** Maintaining lean, debt-free, anti-fragile financial reserves.
 
 ---
 
 ### Join Us in Redefining the Future of Agency Operations
 
 - **Investor Contact:** `robert@unclerobertconsulting.com`
-- **Schedule a Private War Room Demo:** [agent-lab.tech/meeting](https://agent-lab.tech/meeting)
-- **Live Platform Access:** [https://agent-lab.tech](https://agent-lab.tech)
+- **Schedule a Private War Room Demo:** [https://agentlab-718497644379.us-central1.run.app/meeting](https://agentlab-718497644379.us-central1.run.app/meeting)
+- **Live Platform OS Access:** [https://agentlab-718497644379.us-central1.run.app/](https://agentlab-718497644379.us-central1.run.app/)
+- **Live OS Cockpit & Dashboard:** [https://agentlab-718497644379.us-central1.run.app/dashboard](https://agentlab-718497644379.us-central1.run.app/dashboard)
+- **Marketing & Brand Site:** [https://agent-lab.tech](https://agent-lab.tech)

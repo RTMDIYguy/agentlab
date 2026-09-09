@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentLab OS — Executive One-Pager Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --card-bg: rgba(18, 24, 38, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent-cyan: #06b6d4;
+      --accent-blue: #3b82f6;
+      --accent-emerald: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-rose: #f43f5e;
+      --text-main: #f8fafc;
+      --text-sub: #cbd5e1;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #0b0f19;
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page-container {
+      width: 960px;
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 56px 64px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ambient background glows */
+    .glow {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      opacity: 0.18;
+      z-index: 0;
+    }
+    .glow-cyan { top: -100px; right: -100px; background: #06b6d4; }
+    .glow-purple { bottom: -100px; left: -100px; background: #8b5cf6; }
+
+    .content-layer {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+
+    .brand-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
+
+    .brand-subtitle {
+      font-size: 15px;
+      color: #38bdf8;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .doc-meta {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(6, 182, 212, 0.12);
+      color: #38bdf8;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      margin: 28px 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2::before {
+      content: "";
+      width: 4px;
+      height: 18px;
+      background: #06b6d4;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    .section-desc {
+      font-size: 14.5px;
+      color: var(--text-sub);
+      margin-bottom: 16px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: rgba(18, 24, 38, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13.5px;
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-sub);
+      font-weight: 700;
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-sub);
+    }
+
+    .highlight-cell {
+      color: #34d399;
+      font-weight: 700;
+    }
+
+    .ladder-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 14px 20px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .ladder-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .ladder-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .ladder-cost {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+
+    .footer-cta {
+      margin-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-links a {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      margin-right: 20px;
+    }
+
+    @media print {
+      body {
+        background: transparent;
+        padding: 0;
+      }
+      .page-container {
+        border: none;
+        box-shadow: none;
+        padding: 40px 48px;
+        width: 100%;
+      }
+      @page {
+        size: letter portrait;
+        margin: 12mm;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-container">
+    <div class="glow glow-cyan"></div>
+    <div class="glow glow-purple"></div>
+
+    <div class="content-layer">
+      <!-- Header -->
+      <div class="header-bar">
+        <div>
+          <div class="badge-pill">Executive Architecture Specification</div>
+          <h1 class="brand-title">AgentLab OS: Autonomous Agency Operating System</h1>
+          <div class="brand-subtitle">Uncle Robert Consulting LLC • Bootstrapper Capital • Tactix</div>
+        </div>
+        <div class="doc-meta">
+          DOC ID: DOC-SALES-ONE-PAGER-V1<br>
+          LIVE COCKPIT: agentlab-718497644379.us-central1.run.app<br>
+          DATE: 2026-09-09
+        </div>
+      </div>
+
+      <!-- Problem & Paradigm -->
+      <h2>1. The Problem: The $2,000/Month SaaS Shelfware Trap</h2>
+      <p class="section-desc">
+        Modern boutique agencies pay <strong>$1,500 – $2,500/month</strong> across 8+ disconnected subscriptions (Zoom, Slack, Loom, Zapier, HubSpot, separate AI wrappers) while leadership burns <strong>20–25 hours/week</strong> manually bridging data gaps.
+      </p>
+
+      <div class="grid-3">
+        <div class="card" style="border-color: rgba(244, 63, 94, 0.3);">
+          <div class="card-title" style="color: #fb7185;">$30,000/Yr Drag</div>
+          <div class="card-desc">Recurring seat invoices for software nobody uses to full capacity.</div>
+        </div>
+        <div class="card" style="border-color: rgba(244, 63, 94, 0.3);">
+          <div class="card-title" style="color: #fb7185;">25 Hrs/Wk Lost</div>
+          <div class="card-desc">Manual copy-pasting, chasing status updates, and fixing broken connectors.</div>
+        </div>
+        <div class="card" style="border-color: rgba(244, 63, 94, 0.3);">
+          <div class="card-title" style="color: #fb7185;">1.0x Multiple</div>
+          <div class="card-desc">An un-ownable business held together by founder duct tape that cannot be sold.</div>
+        </div>
+      </div>
+
+      <!-- 4 Core Modular Engines -->
+      <h2>2. The 4 Core Modular Engines</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">
+            <span>📹 1. Native Virtual Office</span>
+            <span style="font-size: 11px; font-family: 'JetBrains Mono'; color: #38bdf8;">Zero-SaaS</span>
+          </div>
+          <div class="card-desc">
+            Embedded 1080p WebRTC War Rooms (<code>/meeting</code>), Unified Client Messenger (<code>/messages</code>), and In-Browser Async Screen Teardowns (<code>/screen-recorder</code>) with AI debrief synthesis. Replaces Zoom, Slack & Loom.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>⚡ 2. Autonomous Swarms & Vault</span>
+            <span style="font-size: 11px; font-family: 'JetBrains Mono'; color: #34d399;">SHA-256</span>
+          </div>
+          <div class="card-desc">
+            10 Canonical DAG Workflows (Inbound Lead Enrichment, M365 Financial Recon, CI/CD verification, CRM sync, Client Onboarding). Enforces Anti-Passivity gate and stamps every artifact with a cryptographic SHA-256 checksum.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>🎯 3. High-Conversion GTM Discovery</span>
+            <span style="font-size: 11px; font-family: 'JetBrains Mono'; color: #c084fc;">High-Ticket</span>
+          </div>
+          <div class="card-desc">
+            Market Marksman ICP generator, Lead Pulse inbound capture & CRM sync, Pulse Social listening radar, Pamela 24/7 Voice AI telephony, and 18+ high-signal diagnostic consulting questions across 7 departments.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>📈 4. Transferable Equity & Governance</span>
+            <span style="font-size: 11px; font-family: 'JetBrains Mono'; color: #fbbf24;">4.5x+ Asset</span>
+          </div>
+          <div class="card-desc">
+            Serverless pay-per-execution (<$50/mo cloud baseline), zero-drift CI/CD governance scanners (<code>pnpm change-control:check</code>), and transferable equity aligned with the Bootstrapper.ai Independence Model.
+          </div>
+        </div>
+      </div>
+
+      <!-- Quantified Founder ROI -->
+      <h2>3. Quantified Founder ROI Scorecard</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Operating Metric</th>
+            <th>Before AgentLab OS</th>
+            <th>With AgentLab OS</th>
+            <th>Tangible Founder Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Monthly Software Overhead</strong></td>
+            <td>$1,500 – $2,500/mo</td>
+            <td class="highlight-cell">&lt;$25 – $50/mo</td>
+            <td><strong>Saves $18,000 – $30,000+/year</strong> in software drag</td>
+          </tr>
+          <tr>
+            <td><strong>Weekly Admin Time</strong></td>
+            <td>20 – 25 hrs/week</td>
+            <td class="highlight-cell">3 – 5 hrs/week</td>
+            <td><strong>Reclaims 20+ hours/week</strong> for high-leverage client growth</td>
+          </tr>
+          <tr>
+            <td><strong>Discovery Prep Time</strong></td>
+            <td>2 hours per call</td>
+            <td class="highlight-cell">5 minutes</td>
+            <td>Instant ICP dossier & diagnostic script before strategy calls</td>
+          </tr>
+          <tr>
+            <td><strong>Business Exit Valuation</strong></td>
+            <td>1.0x – 1.5x (Labor-tied)</td>
+            <td class="highlight-cell">3.5x – 6.0x (Asset)</td>
+            <td>Transforms owner-dependency into transferable equity</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Offer Ladder -->
+      <h2>4. The Pragmatic Offer Ladder</h2>
+      <div class="ladder-row">
+        <div>
+          <div class="ladder-title">1. Free 15-Minute Pipeline & SaaS Audit</div>
+          <div class="ladder-desc">Identify subscription shelfware leaks + get the <em>Startup Operational Excellence</em> Guide.</div>
+        </div>
+        <div class="ladder-cost" style="color: #34d399;">$0</div>
+      </div>
+
+      <div class="ladder-row">
+        <div>
+          <div class="ladder-title">2. Modular Playbooks & Standalone Apps</div>
+          <div class="ladder-desc">Deploy individual workflows (MKT, SAL, OPS, FIN) à la carte as needed.</div>
+        </div>
+        <div class="ladder-cost">From $49</div>
+      </div>
+
+      <div class="ladder-row" style="border-color: rgba(56, 189, 248, 0.4); background: rgba(56, 189, 248, 0.08);">
+        <div>
+          <div class="ladder-title">3. AgentLab OS Pro Membership</div>
+          <div class="ladder-desc">Modular entry tier up to full 7-department autonomous multi-agent swarm ($943/mo for all playbooks).</div>
+        </div>
+        <div class="ladder-cost">As low as $99/mo</div>
+      </div>
+
+      <div class="ladder-row">
+        <div>
+          <div class="ladder-title">4. $1,000 Starter Sprint (5-Day Done-With-You)</div>
+          <div class="ladder-desc">Deploy 3 certified autonomous workflows into your existing M365 / CRM stack.</div>
+        </div>
+        <div class="ladder-cost">$1,000</div>
+      </div>
+
+      <!-- Footer CTA -->
+      <div class="footer-cta">
+        <div>
+          <div style="font-size: 15px; font-weight: 700; color: #fff;">Experience the Live Cockpit:</div>
+          <div class="footer-links" style="margin-top: 4px;">
+            <a href="https://agentlab-718497644379.us-central1.run.app/dashboard">agentlab-718497644379.us-central1.run.app</a>
+          </div>
+        </div>
+        <div style="text-align: right; font-size: 13px; color: var(--text-muted);">
+          Contact: <strong>robert@unclerobertconsulting.com</strong><br>
+          Brand: <strong>agent-lab.tech</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

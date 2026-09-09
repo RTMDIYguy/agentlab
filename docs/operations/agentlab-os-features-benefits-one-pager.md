@@ -91,10 +91,11 @@ Modern founders, boutique consultancies, and agency operators are crushed under 
 
 *Fill your pipeline with high-margin consulting diagnostics and qualified founder meetings.*
 
-- **Ideal Customer Profile (ICP) Generator (`/icp-generator`):** Synthesizes comprehensive buyer personas, acute operational pain triggers, buying event signals, and battle-tested outreach copy hooks stored in PostgreSQL for immediate campaign deployment.
-- **Consulting Assessment Question Generator (`/assessment-generator`):** Compounding bank of 18+ high-signal diagnostic discovery questions across 7 departments, with 1-click AI question generation tailored to specific vertical niches.
-- **Social Adept Listening Radar (`/social-adept`):** Autonomous social signal scanner monitoring Reddit, Hacker News, and industry feeds to detect acute founder pain points and automatically draft content into the publishing queue.
+- **Market Marksman (`/icp-generator`):** Synthesizes comprehensive buyer personas, acute operational pain triggers, buying event signals, and battle-tested outreach copy hooks stored in PostgreSQL for immediate campaign deployment.
+- **Lead Pulse:** Multi-source inbound lead capture, automated real-time data enrichment, ICP scoring, and bi-directional CRM sync.
+- **Pulse Social:** Autonomous social listening radar monitoring industry feeds, content queue staging, and multi-channel publishing.
 - **Pamela AI Voice Concierge:** Conversational voice AI powered by ElevenLabs for 24/7 phone qualification, Google Voice triage, calendar booking, and interactive web voice engagement.
+- **Consulting Assessment Question Generator (`/assessment-generator`):** Compounding bank of 18+ high-signal diagnostic discovery questions across 7 departments for high-ticket sales calls.
 
 ---
 
@@ -127,13 +128,16 @@ We meet founders exactly where they are—from low-risk wedge sprints to complet
 
 ```text
 [ Free Diagnostic & Authority Content ]
-  └─► Free 15-Minute Pipeline Automation Audit & "Startup Operational Excellence" Guide
+  └─► Free 15-Minute Pipeline & SaaS Audit + "Startup Operational Excellence" Guide ($0)
+        │
+[ Modular Playbooks & Standalone Apps ]
+  └─► Individual department workflows (MKT, SAL, OPS, FIN) à la carte (From $49/module)
+        │
+[ AgentLab OS Pro Membership ]
+  └─► Starting as low as $99/mo (modular tier) up to $943/mo for all 7 department playbooks & swarms
         │
 [ $1,000 One-Time: Founder Signal System Sprint ]
-  └─► 5-Day Implementation: ICP Definition, Outreach Sequence, Diagnostic Intake, Proof Loop
-        │
-[ $500/Month: AgentLab OS Pro Membership ]
-  └─► Full Operating System: 10 Swarm Workflows, Virtual Office Suite, Results Vault, CRM Sync
+  └─► 5-Day Done-With-You Implementation: ICP Definition, Outreach, Diagnostic Intake, Proof Loop
         │
 [ Custom Enterprise: Full Autonomous Agency Migration ]
   └─► Tailored multi-agent architecture, custom ERP integrations, and Transferable Equity transformation
@@ -143,6 +147,9 @@ We meet founders exactly where they are—from low-risk wedge sprints to complet
 
 ### Ready to Experience the Future of Agency Operations?
 
-- **Explore the Live Cockpit:** [https://agent-lab.tech](https://agent-lab.tech)
-- **Schedule a Live War Room Walkthrough:** Reach out to `robert@unclerobertconsulting.com`
-- **Join the Founder Community:** [Bootstrapper Capital](https://bootstrappercapital.com)
+- **Explore the Live OS Cockpit:** [https://agentlab-718497644379.us-central1.run.app/dashboard](https://agentlab-718497644379.us-central1.run.app/dashboard)
+- **Schedule a Live War Room Walkthrough:** [https://agentlab-718497644379.us-central1.run.app/meeting](https://agentlab-718497644379.us-central1.run.app/meeting)
+- **Direct Founder Contact:** `robert@unclerobertconsulting.com`
+- **Marketing & Brand Website:** [https://agent-lab.tech](https://agent-lab.tech)
+
+

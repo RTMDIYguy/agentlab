@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentLab OS — Investor Pitch Deck &amp; Strategic Memorandum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0B132B;
+      --card-bg: #141E33;
+      --card-inner: #0E1726;
+      --border: #24344D;
+      --cyan: #38BDF8;
+      --emerald: #10B981;
+      --amber: #F59E0B;
+      --red: #EF4444;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #060B18;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+      min-height: 100vh;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .toolbar {
+      position: fixed;
+      bottom: 20px;
+      background: rgba(20, 30, 51, 0.95);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      padding: 10px 24px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 1000;
+      box-shadow: 0 20px 30px rgba(0,0,0,0.5);
+    }
+
+    .toolbar button {
+      background: var(--border);
+      color: var(--text-main);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .toolbar button:hover {
+      background: var(--cyan);
+      color: #000;
+    }
+
+    .toolbar .counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--cyan);
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .btn-print {
+      background: var(--emerald) !important;
+      color: #000 !important;
+    }
+
+    .deck-container {
+      width: 1200px;
+      height: 675px; /* 16:9 Aspect Ratio */
+      position: relative;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 40px 50px 30px;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .slide-header {
+      margin-bottom: 20px;
+    }
+
+    .slide-header .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .slide-header h2 {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .card.cyan { border-color: rgba(56, 189, 248, 0.4); }
+    .card.emerald { border-color: rgba(16, 185, 129, 0.4); }
+    .card.amber { border-color: rgba(245, 158, 11, 0.4); }
+    .card.red { border-color: rgba(239, 68, 68, 0.4); }
+
+    .card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card p, .card li {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card ul li::before {
+      content: "•";
+      color: var(--cyan);
+      font-weight: bold;
+      display: inline-block;
+      width: 1em;
+      margin-left: -1em;
+    }
+
+    .badge-price {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 8px 0;
+    }
+
+    /* Typography & Color Utilities */
+    .text-cyan { color: var(--cyan); }
+    .text-emerald { color: var(--emerald); }
+    .text-amber { color: var(--amber); }
+    .text-red { color: var(--red); }
+    .text-white { color: #fff; }
+    .text-muted { color: var(--text-muted); }
+    .text-dim { color: var(--text-dim); }
+
+    .hero-title { font-size: 34px; margin-top: 10px; }
+    .hero-subtitle { color: var(--emerald); font-size: 18px; font-weight: 600; margin-top: 8px; }
+    .market-value { font-size: 16px; font-weight: 700; color: #fff; }
+    .role-title { color: #fff; font-weight: 600; margin-bottom: 8px; }
+
+    .bg-tint-red { background: rgba(239, 68, 68, 0.08); }
+    .bg-tint-emerald { background: rgba(16, 185, 129, 0.08); }
+
+    .card-compact { padding: 12px 16px; }
+    .card-compact h3 { margin-bottom: 4px; font-size: 13px; }
+    .card-compact p { font-size: 12px; }
+
+    .card-fund { padding: 12px 16px; }
+    .card-fund h3 { margin-bottom: 2px; font-size: 13px; }
+    .card-fund p { font-size: 11.5px; }
+
+    .card-contact {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+    .card-contact h3 {
+      color: var(--emerald);
+      font-size: 17px;
+    }
+
+    .font-mono-cyan {
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .link-cyan {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    .link-muted {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .list-padded { margin-left: 20px; }
+    .list-compact { margin-left: 20px; font-size: 12px; }
+    .list-tight { margin-left: 16px; font-size: 12px; }
+
+    .flex-col-10 { display: flex; flex-direction: column; gap: 10px; }
+    .flex-col-12 { display: flex; flex-direction: column; gap: 12px; }
+    .align-self-center { align-self: center; }
+
+    .text-size-11 { font-size: 11px; }
+    .text-size-13 { font-size: 13px; }
+    .text-size-20-bold { font-size: 20px; font-weight: 800; color: #fff; }
+    .text-sub-weight { font-size: 13px; color: var(--text-muted); font-weight: normal; }
+
+    /* Comparison Table */
+    table.matrix {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    table.matrix th, table.matrix td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    table.matrix th {
+      background: #0E1726;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    table.matrix th.highlight {
+      color: var(--cyan);
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    table.matrix td.highlight {
+      font-weight: 700;
+      color: var(--emerald);
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    /* Print styles for saving as PDF */
+    @media print {
+      body {
+        background: transparent;
+        padding: 0;
+      }
+      .toolbar {
+        display: none !important;
+      }
+      .deck-container {
+        width: 100% !important;
+        height: auto !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+      .slide {
+        display: flex !important;
+        opacity: 1 !important;
+        position: relative !important;
+        width: 100vw !important;
+        height: 56.25vw !important; /* 16:9 */
+        page-break-after: always !important;
+        border: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-container">
+    
+    <!-- SLIDE 1: Title & Vision -->
+    <div class="slide active">
+      <div class="slide-header">
+        <div class="tag">STRATEGIC MEMORANDUM &amp; INVESTOR DECK • PRE-SEED ROUND</div>
+        <h2 class="hero-title">AgentLab OS: The Autonomous AI-Native Agency Operating System</h2>
+        <p class="hero-subtitle">Replacing Disconnected SaaS Shelfware with an Ownable, Autonomous Agency Engine</p>
+      </div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card cyan">
+            <h3 class="text-cyan">THE MARKET VISION</h3>
+            <p>Transforming 2.5 million boutique professional service agencies and digital consultancies into autonomous, exit-ready, high-margin operating enterprises.</p>
+          </div>
+          <div class="card emerald">
+            <h3 class="text-emerald">THE CORE PREMISE</h3>
+            <p>Eliminate the $2,000/month multi-app SaaS tax and 25 hours of weekly administrative drag by unifying communication, autonomous swarms, GTM discovery, and governance into a single, high-margin operating system.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Uncle Robert Consulting LLC / Bootstrapper Capital • https://agentlab-718497644379.us-central1.run.app</span>
+        <span>Slide 1 of 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: The Problem -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="tag">THE PROBLEM</div>
+        <h2>The $300B SME &amp; Agency Fragmentation Crisis (The &quot;Shelfware Tax&quot;)</h2>
+      </div>
+      <div class="slide-content">
+        <div class="grid-4">
+          <div class="card red">
+            <h3 class="text-red">COMMUNICATION</h3>
+            <p>Slack ($96/yr)<br>Zoom ($180/yr)<br>Loom ($150/yr)</p>
+          </div>
+          <div class="card amber">
+            <h3 class="text-amber">AUTOMATION</h3>
+            <p>Zapier ($600/yr)<br>Make ($180/yr)<br>Fragile Webhooks</p>
+          </div>
+          <div class="card red">
+            <h3 class="text-red">SALES &amp; CRM</h3>
+            <p>HubSpot ($3,200/yr)<br>Instantly ($1k/yr)<br>Apollo ($1.2k/yr)</p>
+          </div>
+          <div class="card amber">
+            <h3 class="text-amber">DELIVERY / OPS</h3>
+            <p>ClickUp ($120/yr)<br>AI Wrappers ($1.2k/yr)<br>Manual Spreadsheets</p>
+          </div>
+        </div>
+        <div class="card red bg-tint-red">
+          <h3 class="text-red">THE COMPOUNDING DAMAGE TO BOUTIQUE AGENCIES</h3>
+          <ul class="list-padded">
+            <li><strong>Massive Software Sprawl:</strong> 8–12 disconnected SaaS point solutions waste $18,000–$30,000/year per agency.</li>
+            <li><strong>The &quot;Human API&quot; Bottleneck:</strong> Principals waste 20–25 hours/week copy-pasting context across disconnected tools.</li>
+            <li><strong>Zero Transferable Equity:</strong> Businesses reliant on founder heroics trade at depressed 1.0x–1.5x revenue multiples.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Uncle Robert Consulting LLC / Bootstrapper Capital • DOC-INVESTOR-PITCH-DECK-V1</span>
+        <span>Slide 2 of 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: The Solution -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="tag">THE SOLUTION</div>
+        <h2>AgentLab OS: One Unified, Autonomous, Ownable Platform</h2>
+      </div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card cyan">
+            <h3 class="text-cyan">1. NATIVE VIRTUAL OFFICE &amp; COMMS</h3>
+            <p>Embedded 1080p WebRTC Video War Room (<code>/meeting</code>), Unified Client Messenger &amp; Office Channels, and Async Video Teardown Studio (<code>/screen</code>). Eliminates Zoom, Slack, and Loom.</p>
+          </div>
+          <div class="card emerald">
+            <h3 class="text-emerald">2. AUTONOMOUS MULTI-AGENT SWARMS</h3>
+            <p>10 Canonical Departmental DAG Workflows, Live Run Inspector &amp; Tool Trace Debugger, Anti-Passivity Zero-Refusal Gates, and Immutable SHA-256 Results Vault in PostgreSQL.</p>
+          </div>
+          <div class="card amber">
+            <h3 class="text-amber">3. HIGH-CONVERSION GTM DISCOVERY</h3>
+            <p>ICP Precision Dossier Synthesizer, 18+ Operational Assessment SOPs, and Pamela Conversational AI Voice Telephony delivering live client audits in minutes.</p>
+          </div>
+          <div class="card cyan">
+            <h3 class="text-cyan">4. GOVERNANCE &amp; TRANSFERABLE EQUITY</h3>
+            <p>Bootstrapper.ai Independence Model &amp; Scorecard, Interactive Visual Blueprints &amp; Runbooks (<code>/docs</code>), and multi-tier tenant isolation designed for exit valuation.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Uncle Robert Consulting LLC / Bootstrapper Capital • DOC-INVESTOR-PITCH-DECK-V1</span>
+        <span>Slide 3 of 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Market Opportunity -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="tag">MARKET OPPORTUNITY</div>
+        <h2>A Massive, Underserved $45B+ Addressable Market</h2>
+      </div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="flex-col-12">
+            <div class="card cyan">
+              <div class="tag">TOTAL ADDRESSABLE MARKET (TAM)</div>
+              <p class="market-value">$45.8B Global Agency &amp; Professional Services Operations Software</p>
+            </div>
+            <div class="card emerald">
+              <div class="tag text-emerald">SERVICEABLE ADDRESSABLE MARKET (SAM)</div>
+              <p class="market-value">$12.4B Boutique B2B Agencies &amp; Consultancies (1-50 employees, $250k-$10M)</p>
+            </div>
+            <div class="card amber">
+              <div class="tag text-amber">SERVICEABLE OBTAINABLE MARKET (SOM - WEDGE)</div>
+              <p class="market-value">$450M Tech-Forward Marketing, Sales &amp; Ops Consultancies in US &amp; Canada</p>
+            </div>
+          </div>
+          <div class="card">
+            <h3 class="text-cyan">ICP &amp; URGENT MARKET TAILWINDS</h3>
+            <ul class="list-compact">
+              <li><strong>Target ICP:</strong> Boutique digital marketing agencies, RevOps consultancies, commercial brokerages, and solo founders doing $250k–$3M ARR.</li>
+              <li><strong>SaaS Budget Compression:</strong> Economic pressures forcing firms to slash multi-app overhead.</li>
+              <li><strong>From Prompts to Autonomous DAGs:</strong> Transitioning from simple text wrappers to deterministic, verifiable code swarms.</li>
+              <li><strong>Founder Independence:</strong> Massive surge in agency founders seeking ownable equity rather than billing personal hours.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Uncle Robert Consulting LLC / Bootstrapper Capital • DOC-INVESTOR-PITCH-DECK-V1</span>
+        <span>Slide 4 of 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: Proprietary Tech -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="tag">DEFENSIBILITY</div>
+        <h2>Proprietary Technology &amp; Core Defensible Moats</h2>
+      </div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card cyan">
+            <h3 class="text-cyan">1. Verifiable Results Architecture</h3>
+            <p>Eliminates conversational fluff via Anti-Passivity Gates. Agents execute deterministic tools (<code>scrapeUrl</code>, <code>auditFiles</code>, <code>verifyDelivery</code>) stamped with SHA-256 cryptographic hashes.</p>
+          </div>
+          <div class="card emerald">
+            <h3 class="text-emerald">2. Zero-SaaS Virtual Office Engine</h3>
+            <p>Proprietary integration of embedded peer-to-peer WebRTC video rooms and browser MediaRecorder video capture eliminating 100% of Zoom and Loom licensing costs.</p>
+          </div>
+          <div class="card amber">
+            <h3 class="text-amber">3. Autonomous 10-Node Swarm DAGs</h3>
+            <p>Multi-agent orchestration across 7 departments with real-time Quality Flywheels enforcing Brand Voice, Actionable CTAs, Hallucination Gates, and Output Formatting.</p>
+          </div>
+          <div class="card cyan">
+            <h3 class="text-cyan">4. Transferable Equity Framework</h3>
+            <p>Direct integration with the Bootstrapper.ai Independence Model, raising client Ownable Scores and compressing valuation discount rates for future business sale.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Uncle Robert Consulting LLC / Bootstrapper Capital • DOC-INVESTOR-PITCH-DECK-V1</span>
+        <span>Slide 5 of 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: Business Model -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="tag">BUSINESS MODEL</div>
+        <h2>High-Margin Land-and-Expand Offer Ladder &amp; Unit Economics</h2>
+      </div>
+      <div class="slide-content">
+        <div class="grid-4">
+          <div class="card cyan">
+            <div class="tag">1. WEDGE</div>
+            <div class="badge-price">$1,000</div>
+            <p><strong>5-Day Sprint</strong><br>CAC Recovered Day 1<br>Immediate Live ROI</p>
+          </div>
+          <div class="card emerald">
+            <div class="tag text-emerald">2. CONTINUITY</div>
+            <div class="badge-price">$500/mo</div>
+            <p><strong>Core OS ARR</strong><br>Virtual Office + Swarms<br>92.4% Gross Margin</p>
+          </div>
+          <div class="card amber">
+            <div class="tag text-amber">3. EXPANSION</div>
+            <div class="badge-price">$2,500/mo</div>
+            <p><strong>Agency Scale</strong><br>Multi-Dept Swarms<br>Dedicated Pipelines</p>
+          </div>
+          <div class="card cyan">
+            <div class="tag">4. ENTERPRISE</div>
+            <div class="badge-price">$25,000+</div>
+            <p><strong>Custom Swarms</strong><br>Bespoke Integrations<br>Dedicated VPC &amp; SLAs</p>
+          </div>
+        </div>
+        <div class="card emerald bg-tint-emerald">
+          <h3 class="text-emerald">INDUSTRY-LEADING UNIT ECONOMICS</h3>
+          <p class="text-size-13">• <strong>$0 CAC:</strong> Paid on Day 1 via the $1,000 starter sprint. &nbsp;|&nbsp; • <strong>$12–$38/mo Infrastructure Cost:</strong> Serverless Google Cloud Run &amp; PostgreSQL. &nbsp;|&nbsp; • <strong>92.4% Gross Margin:</strong> Software subscriptions with minimal third-party API dependencies. &nbsp;|&nbsp; • <strong>135%+ NRR:</strong> Built-in expansion across 7 departments.</p>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Uncle Robert Consulting LLC / Bootstrapper Capital • DOC-INVESTOR-PITCH-DECK-V1</span>
+        <span>Slide 6 of 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: Traction -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="tag">TRACTION &amp; VALIDATION</div>
+        <h2>Quantified Pre-Seed Customer Metrics &amp; Live Operations</h2>
+      </div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card emerald">
+            <h3 class="text-emerald">$18,500 CURRENT MRR (BETA COHORT)</h3>
+            <p>14 active paying clients &amp; beta workspaces generating recurring subscription &amp; starter sprint revenue across consultancies and boutique agencies.</p>
+          </div>
+          <div class="card cyan">
+            <h3 class="text-cyan">1,450+ AUTONOMOUS DAG RUNS / WK</h3>
+            <p>100% autonomous multi-agent orchestration running live lead capture, financial reconciliation, CI/CD, and client onboarding daily.</p>
+          </div>
+          <div class="card amber">
+            <h3 class="text-amber">83 CERTIFIED OPERATIONAL SOPs</h3>
+            <p>Zero-drift compliance verified by automated CI/CD scanners (<code>pnpm change-control:check</code>) maintaining 0 drift across the entire platform codebase.</p>
+          </div>
+          <div class="card cyan">
+            <h3 class="text-cyan">PROVEN RUNTIME INFRASTRUCTURE</h3>
+            <p>Active Google Cloud Run serverless deployment integrated with ElevenLabs conversational voice telephony, Resend SMTP, HubSpot 2-way CRM, and PostgreSQL state machines.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Uncle Robert Consulting LLC / Bootstrapper Capital • DOC-INVESTOR-PITCH-DECK-V1</span>
+        <span>Slide 7 of 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: Competitive Matrix -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="tag">COMPETITIVE MATRIX</div>
+        <h2>AgentLab OS vs. Fragmented SaaS &amp; Generic AI Wrappers</h2>
+      </div>
+      <div class="slide-content">
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th>Capability / Feature</th>
+              <th>Fragmented SaaS Stack</th>
+              <th>Generic AI Wrappers</th>
+              <th>Raw No-Code (n8n/Make)</th>
+              <th class="highlight">AgentLab OS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>All-in-One Virtual Office</strong></td>
+              <td>❌ Fragmented ($400+/mo)</td>
+              <td>❌ No Comms</td>
+              <td>❌ No Comms</td>
+              <td class="highlight">✅ Native WebRTC &amp; Chat</td>
+            </tr>
+            <tr>
+              <td><strong>Autonomous Multi-Agent DAGs</strong></td>
+              <td>❌ None</td>
+              <td>❌ Single Prompt Only</td>
+              <td>⚠️ Manual Build Required</td>
+              <td class="highlight">✅ 10 Pre-Built DAGs</td>
+            </tr>
+            <tr>
+              <td><strong>Verifiable Proof &amp; SHA-256 Vault</strong></td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td class="highlight">✅ Cryptographic Vault</td>
+            </tr>
+            <tr>
+              <td><strong>Built-in GTM Discovery &amp; Audits</strong></td>
+              <td>❌ 3rd-party addons</td>
+              <td>⚠️ Generic templates</td>
+              <td>❌ None</td>
+              <td class="highlight">✅ Precision High-Signal</td>
+            </tr>
+            <tr>
+              <td><strong>Monthly Operating Overhead</strong></td>
+              <td>🔴 $1,500 – $2,500/mo</td>
+              <td>🔴 $100 – $500/mo</td>
+              <td>🟡 $200 – $600/mo</td>
+              <td class="highlight">🟢 &lt; $50/mo Total Cloud</td>
+            </tr>
+            <tr>
+              <td><strong>Transferable Business Equity Score</strong></td>
+              <td>❌ 0% Equity</td>
+              <td>❌ 0% Equity</td>
+              <td>❌ 0% Equity</td>
+              <td class="highlight">✅ Certified Model</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="slide-footer">
+        <span>Uncle Robert Consulting LLC / Bootstrapper Capital • DOC-INVESTOR-PITCH-DECK-V1</span>
+        <span>Slide 8 of 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: Go-To-Market -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="tag">GO-TO-MARKET</div>
+        <h2>The Servant-Leadership Growth Engine &amp; Distribution Flywheel</h2>
+      </div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="flex-col-10">
+            <div class="card cyan card-compact">
+              <h3 class="text-cyan">1. CONTENT &amp; AUTHORITY RADAR</h3>
+              <p>LinkedIn Build Logs, YouTube System Teardowns &amp; Social Adept AI Listening Engine.</p>
+            </div>
+            <div class="card emerald card-compact">
+              <h3 class="text-emerald">2. FREE HIGH-SIGNAL WEDGE</h3>
+              <p>15-Min Automation Audits, ICP Generators &amp; &quot;Startup Operational Excellence&quot; Book.</p>
+            </div>
+            <div class="card amber card-compact">
+              <h3 class="text-amber">3. FOUNDER ROUNDTABLES</h3>
+              <p>Bootstrapper Capital founder community events &amp; SAL-01 assessment scorecards.</p>
+            </div>
+            <div class="card cyan card-compact">
+              <h3 class="text-cyan">4. $1K SPRINT ➔ $500/MO ARR</h3>
+              <p>Frictionless 5-day onboarding converting into high-retention OS continuity.</p>
+            </div>
+          </div>
+          <div class="card">
+            <h3 class="text-emerald">CORE DISTRIBUTION ADVANTAGES</h3>
+            <ul class="list-compact">
+              <li><strong>Bootstrapper Capital Community:</strong> Built-in pipeline of agency founders looking for operational sovereignty.</li>
+              <li><strong>Social Adept Autonomous Listening:</strong> AI monitors Reddit, HN, and LinkedIn to generate daily high-relevance authority content.</li>
+              <li><strong>Zero-Cost Customer Acquisition:</strong> $1,000 sprint pays back CAC instantly on Day 1.</li>
+              <li><strong>Rapid 10-Minute Tenant Provisioning:</strong> Automated DAG setup deploys client portals with zero friction.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Uncle Robert Consulting LLC / Bootstrapper Capital • DOC-INVESTOR-PITCH-DECK-V1</span>
+        <span>Slide 9 of 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: Financial Model -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="tag">FINANCIAL SCALE</div>
+        <h2>3-Year Financial Model: High-Velocity, High-Margin Scale</h2>
+      </div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="flex-col-10">
+            <div class="card cyan card-compact">
+              <div class="tag">YEAR 1: WEDGE &amp; SCALE</div>
+              <div class="text-size-20-bold">$1.5M ARR <span class="text-sub-weight">($1.85M Total Rev)</span></div>
+              <p class="text-size-11">250 Tenants • 350 Sprints • 38.0% EBITDA</p>
+            </div>
+            <div class="card emerald card-compact">
+              <div class="tag text-emerald">YEAR 2: EXPANSION &amp; NETWORK</div>
+              <div class="text-size-20-bold">$6.0M ARR <span class="text-sub-weight">($7.20M Total Rev)</span></div>
+              <p class="text-size-11">1,000 Tenants • 1,200 Sprints • 48.5% EBITDA</p>
+            </div>
+            <div class="card amber card-compact">
+              <div class="tag text-amber">YEAR 3: CATEGORY DOMINANCE</div>
+              <div class="text-size-20-bold">$21.0M ARR <span class="text-sub-weight">($24.8M Total Rev)</span></div>
+              <p class="text-size-11">3,500 Tenants • 3,800 Sprints • 58.2% EBITDA</p>
+            </div>
+          </div>
+          <table class="matrix align-self-center">
+            <thead>
+              <tr>
+                <th>Financial Metric</th>
+                <th>Year 1</th>
+                <th>Year 2</th>
+                <th class="highlight">Year 3</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Active OS Tenants</strong></td>
+                <td>250</td>
+                <td>1,000</td>
+                <td class="highlight">3,500</td>
+              </tr>
+              <tr>
+                <td><strong>Starter Sprints ($1k)</strong></td>
+                <td>350</td>
+                <td>1,200</td>
+                <td class="highlight">3,800</td>
+              </tr>
+              <tr>
+                <td><strong>ARR</strong></td>
+                <td><strong>$1,500,000</strong></td>
+                <td><strong>$6,000,000</strong></td>
+                <td class="highlight"><strong>$21,000,000</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Total Revenue</strong></td>
+                <td><strong>$1,850,000</strong></td>
+                <td><strong>$7,200,000</strong></td>
+                <td class="highlight"><strong>$24,800,000</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Gross Margin (%)</strong></td>
+                <td>91.5%</td>
+                <td>93.2%</td>
+                <td class="highlight">94.8%</td>
+              </tr>
+              <tr>
+                <td><strong>EBITDA Margin (%)</strong></td>
+                <td>38.0%</td>
+                <td>48.5%</td>
+                <td class="highlight">58.2%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Uncle Robert Consulting LLC / Bootstrapper Capital • DOC-INVESTOR-PITCH-DECK-V1</span>
+        <span>Slide 10 of 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: Leadership -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="tag">LEADERSHIP</div>
+        <h2>Experienced Operators Who Have Built, Scaled &amp; Shipped</h2>
+      </div>
+      <div class="slide-content">
+        <div class="grid-3">
+          <div class="card cyan">
+            <h3 class="text-cyan">ROBERT T. MCCARTHY</h3>
+            <p class="role-title">Principal &amp; Chief Architect</p>
+            <ul class="list-tight">
+              <li>20+ years operational leadership, enterprise business architecture, and AI systems engineering.</li>
+              <li>Creator of the Bootstrapper Independence Framework and Author of <em>Startup Operational Excellence</em>.</li>
+              <li>Architect of AgentLab OS multi-agent swarms and governance protocols.</li>
+            </ul>
+          </div>
+          <div class="card emerald">
+            <h3 class="text-emerald">SHEENA BURNS</h3>
+            <p class="role-title">Co-Founder &amp; Head of Operations</p>
+            <ul class="list-tight">
+              <li>12+ years experience in agency service delivery, client success, and operational workflow orchestration.</li>
+              <li>Leads tenant onboarding, partner customer support, and QA governance.</li>
+              <li>Driving frictionless zero-drift adoption across boutique agency cohorts.</li>
+            </ul>
+          </div>
+          <div class="card amber">
+            <h3 class="text-amber">LORENZO MCCARTHY</h3>
+            <p class="role-title">Strategic Advisor &amp; Enterprise Partner</p>
+            <ul class="list-tight">
+              <li>Principal at NWN Advisory, specialized in enterprise IT transformation and strategic partner networks.</li>
+              <li>Deep advisory expertise in scalable enterprise sales, capital allocation, and channel alliances.</li>
+              <li>Guiding enterprise market penetration and institutional compliance.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Uncle Robert Consulting LLC / Bootstrapper Capital • DOC-INVESTOR-PITCH-DECK-V1</span>
+        <span>Slide 11 of 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: Strategic Investment / Contact -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="tag">STRATEGIC ACCELERATION</div>
+        <h2>The Ask: Raising $750,000 Pre-Seed Round</h2>
+      </div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="flex-col-10">
+            <div class="card cyan card-fund">
+              <h3 class="text-cyan">40% ($300K) — ENGINEERING &amp; SWARM SCALING</h3>
+              <p>Expand pre-built DAG workflow library across Legal, Healthcare, and Real Estate vertical playbooks.</p>
+            </div>
+            <div class="card emerald card-fund">
+              <h3 class="text-emerald">35% ($262.5K) — GTM &amp; ECOSYSTEM ACCELERATION</h3>
+              <p>Scale Bootstrapper Capital founder roundtables, partner channel onboarding, and Social Adept listening.</p>
+            </div>
+            <div class="card amber card-fund">
+              <h3 class="text-amber">15% ($112.5K) — ENTERPRISE HARDENING</h3>
+              <p>SOC2 Type II compliance, multi-tenant VPC isolation, and cryptographic security audits.</p>
+            </div>
+            <div class="card cyan card-fund">
+              <h3 class="text-cyan">10% ($75K) — OPERATIONAL RUNWAY</h3>
+              <p>Maintaining debt-free, anti-fragile financial reserves and sovereign infrastructure.</p>
+            </div>
+          </div>
+          <div class="card emerald card-contact">
+            <h3>JOIN US IN REDEFINING AGENCY OPERATIONS</h3>
+            <p><strong>Direct Investor Contact:</strong><br><span class="font-mono-cyan">robert@unclerobertconsulting.com</span></p>
+            <p><strong>Live Platform OS Access:</strong><br><a href="https://agentlab-718497644379.us-central1.run.app/" target="_blank" rel="noopener noreferrer" class="link-cyan">https://agentlab-718497644379.us-central1.run.app/</a></p>
+            <p><strong>Schedule a Private War Room Demo:</strong><br><a href="https://agentlab-718497644379.us-central1.run.app/meeting" target="_blank" rel="noopener noreferrer" class="link-cyan">https://agentlab-718497644379.us-central1.run.app/meeting</a></p>
+            <p><strong>Live OS Cockpit &amp; Dashboard:</strong><br><a href="https://agentlab-718497644379.us-central1.run.app/dashboard" target="_blank" rel="noopener noreferrer" class="link-cyan">https://agentlab-718497644379.us-central1.run.app/dashboard</a></p>
+            <p class="text-size-11 text-dim"><strong>Marketing &amp; Brand Site:</strong> <a href="https://agent-lab.tech" target="_blank" rel="noopener noreferrer" class="link-muted">https://agent-lab.tech</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Uncle Robert Consulting LLC / Bootstrapper Capital • DOC-INVESTOR-PITCH-DECK-V1</span>
+        <span>Slide 12 of 12</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toolbar">
+    <button onclick="prevSlide()">◀ Previous</button>
+    <div class="counter" id="slideNum">1 / 12</div>
+    <button onclick="nextSlide()">Next ▶</button>
+    <button onclick="window.print()" class="btn-print">🖨 Save / Print PDF</button>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const counter = document.getElementById('slideNum');
+
+    function showSlide(index) {
+      slides.forEach((s, i) => {
+        s.classList.toggle('active', i === index);
+      });
+      counter.innerText = `${index + 1} / ${slides.length}`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        showSlide(currentSlide);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        showSlide(currentSlide);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'Space') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>

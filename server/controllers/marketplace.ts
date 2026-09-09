@@ -366,7 +366,7 @@ const inMemorySubscriptions = new Map<string, Set<string>>();
 
 export async function getMarketplaceItems(req: Request, res: Response): Promise<void> {
   try {
-    const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
+    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
     const db = await getDb();
 
     let unlockedPackageIds = new Set<string>();
@@ -386,7 +386,7 @@ export async function getMarketplaceItems(req: Request, res: Response): Promise<
                 eq(workspacePackages.status, "active")
               )
             );
-          subs.forEach(s => unlockedPackageIds.add(s.packageId));
+          subs.forEach((s: any) => unlockedPackageIds.add(s.packageId));
         } catch (dbErr) {
           console.warn("[Marketplace] DB lookup error, falling back to memory:", dbErr);
         }
@@ -437,7 +437,7 @@ export async function getMarketplaceItems(req: Request, res: Response): Promise<
 
 export async function mountPlaybook(req: Request, res: Response): Promise<void> {
   try {
-    const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
+    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
     const { id } = req.params;
 
     const db = await getDb();
@@ -581,7 +581,7 @@ export async function mountPlaybook(req: Request, res: Response): Promise<void> 
 
 export async function unmountPlaybook(req: Request, res: Response): Promise<void> {
   try {
-    const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
+    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
     const { id } = req.params;
 
     const db = await getDb();
@@ -631,7 +631,7 @@ const inMemoryTrialExtensions = new Map<string, number>();
 
 export async function getBetaStatus(req: Request, res: Response): Promise<void> {
   try {
-    const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
+    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
     const userRole = (req as any).user?.role || "admin";
     const isGodmode = userRole === "admin" || (req as any).user?.name === "Thebossrob";
 
@@ -698,7 +698,7 @@ export async function getBetaStatus(req: Request, res: Response): Promise<void> 
 
 export async function enrollBeta(req: Request, res: Response): Promise<void> {
   try {
-    const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
+    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
     const { appId } = req.params;
 
     if (!inMemoryBetaEnrollments.has(workspaceId)) {
@@ -720,14 +720,14 @@ export async function enrollBeta(req: Request, res: Response): Promise<void> {
 
 export async function getTrialStatus(req: Request, res: Response): Promise<void> {
   try {
-    const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
+    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
     const extraDays = inMemoryTrialExtensions.get(workspaceId) || 0;
     const baseDaysRemaining = 18;
     const totalDaysRemaining = baseDaysRemaining + extraDays;
 
     res.status(200).json({
       success: true,
-      plan: "Ownable OS (Agentic OS Pro Trial)",
+      plan: "AgentLab OS Pro Trial",
       totalTrialDays: 30 + extraDays,
       daysRemaining: totalDaysRemaining,
       trialEndDate: new Date(Date.now() + totalDaysRemaining * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
@@ -762,7 +762,7 @@ export async function getTrialStatus(req: Request, res: Response): Promise<void>
 
 export async function extendTrial(req: Request, res: Response): Promise<void> {
   try {
-    const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
+    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
     const { reason } = req.body || {};
     const currentExtra = inMemoryTrialExtensions.get(workspaceId) || 0;
     const newExtra = currentExtra + 14;
