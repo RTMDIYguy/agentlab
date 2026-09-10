@@ -124,9 +124,13 @@ export default function Settings() {
 
   const testIntegrationMut = trpc.settings.testIntegration.useMutation({
     onSuccess: (data) => {
-      toast.success(data.message);
+      if (data.success) {
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
     },
-    onError: () => toast.error("Handshake failed. Check endpoint and credentials."),
+    onError: (err) => toast.error(err.message || "Handshake failed. Check endpoint and credentials."),
   });
 
   // Persistent Local State (Profile)

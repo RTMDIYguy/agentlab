@@ -25,6 +25,12 @@ export const ENV = {
 
 // 2. Canonicalize & Normalize environment variable aliases
 export function normalizeEnvironmentVariables() {
+  const envLocalPath = path.resolve(process.cwd(), ".env.local");
+  if (fs.existsSync(envLocalPath)) {
+    dotenv.config({ path: envLocalPath, override: true });
+  }
+  dotenv.config();
+
   // HubSpot aliases
   if (!process.env.HUBSPOT_PAT) {
     process.env.HUBSPOT_PAT =
