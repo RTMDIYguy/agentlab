@@ -53,4 +53,33 @@ console.log("   - HUBSPOT_ACCESS_TOKEN:", process.env.HUBSPOT_ACCESS_TOKEN ? `�
 console.log("   - ELEVENLABS_API_KEY:", process.env.ELEVENLABS_API_KEY ? `✅ Present (${generateMaskedPreview(process.env.ELEVENLABS_API_KEY)})` : "❌ Missing");
 console.log("   - AGENTMAIL_API_KEY:", process.env.AGENTMAIL_API_KEY ? `✅ Present (${generateMaskedPreview(process.env.AGENTMAIL_API_KEY)})` : "❌ Missing");
 
-console.log("\n✅ All Secrets Bridge Checks Passed Successfully!");
+console.log("\n2. Live API Handshake Tests:");
+
+try {
+  const instantlyRes = await fetch("https://api.instantly.ai/api/v2/campaigns?limit=1", {
+    headers: { Authorization: `Bearer ${process.env.INSTANTLY_API_KEY}`, Accept: "application/json" }
+  });
+  console.log("   - Instantly API Status:", instantlyRes.ok ? `✅ Connected (${instantlyRes.status})` : `⚠️ HTTP ${instantlyRes.status} (${await instantlyRes.text()})`);
+} catch (e) {
+  console.log("   - Instantly API:", `❌ Error: ${e.message}`);
+}
+
+try {
+  const elevenRes = await fetch("https://api.elevenlabs.io/v1/user", {
+    headers: { "xi-api-key": process.env.ELEVENLABS_API_KEY }
+  });
+  console.log("   - ElevenLabs API Status:", elevenRes.ok ? `✅ Connected (${elevenRes.status})` : `⚠️ HTTP ${elevenRes.status} (${await elevenRes.text()})`);
+} catch (e) {
+  console.log("   - ElevenLabs API:", `❌ Error: ${e.message}`);
+}
+
+try {
+  const hubspotRes = await fetch("https://api.hubapi.com/crm/v3/objects/contacts?limit=1", {
+    headers: { Authorization: `Bearer ${process.env.HUBSPOT_PAT}` }
+  });
+  console.log("   - HubSpot API Status:", hubspotRes.ok ? `✅ Connected (${hubspotRes.status})` : `⚠️ HTTP ${hubspotRes.status} (${await hubspotRes.text()})`);
+} catch (e) {
+  console.log("   - HubSpot API:", `❌ Error: ${e.message}`);
+}
+
+console.log("\n✅ All Secrets Bridge Checks Completed!");

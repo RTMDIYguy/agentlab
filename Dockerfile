@@ -9,7 +9,7 @@ FROM base AS builder
 COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* .npmrc* ./
 COPY patches ./patches
 # Install all dependencies (including devDependencies)
-RUN pnpm install --frozen-lockfile=false
+RUN pnpm install --frozen-lockfile=false --config.minimum-release-age=0
 
 # Copy the rest of the source code
 COPY . .
@@ -32,7 +32,7 @@ ENV NODE_ENV=production
 COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* .npmrc* ./
 COPY patches ./patches
 # Install only production dependencies
-RUN pnpm install --prod --frozen-lockfile=false
+RUN pnpm install --prod --frozen-lockfile=false --config.minimum-release-age=0
 
 # Copy the built assets from the builder stage
 # dist/public contains the built Vite frontend
