@@ -13,6 +13,7 @@ import {
   generateMaskedPreview,
   syncWorkspaceVaultSecrets,
   mapProviderToEnvKey,
+  normalizeEnvironmentVariables,
 } from "../_core/env";
 
 export const settingsRouter = router({
@@ -268,11 +269,14 @@ export const settingsRouter = router({
       const startTime = Date.now();
       const targetUrl = input.config?.endpointUrl || input.config?.url || input.config?.webhookUrl;
 
+      // Ensure latest env aliases and service keys are synced
+      normalizeEnvironmentVariables();
+
       // 1. Check for specific known provider validations
       const providerLower = (input.name || input.type).toLowerCase();
       
       if (providerLower.includes("instantly")) {
-        const apiKey = process.env.INSTANTLY_API_KEY;
+        const apiKey = process.env.INSTANTLY_API_KEY || process.env.INSTANTLY_KEY || process.env.INSTANTLY_TOKEN;
         if (!apiKey) {
           return {
             success: false,
@@ -304,8 +308,8 @@ export const settingsRouter = router({
         }
       }
 
-      if (providerLower.includes("elevenlabs") || providerLower.includes("pamela")) {
-        const apiKey = process.env.ELEVENLABS_API_KEY;
+      if (providerLower.includes("elevenlabs") || providerLower.includes("pamela") || providerLower.includes("voice")) {
+        const apiKey = process.env.ELEVENLABS_API_KEY || process.env.ELEVENLABS_KEY || process.env.XI_API_KEY;
         if (!apiKey) {
           return {
             success: false,
@@ -350,6 +354,7 @@ export const settingsRouter = router({
 
       if (providerLower.includes("hubspot")) {
         const apiKey =
+          process.env.HUBSPOT_SERVICE_KEY ||
           process.env.HUBSPOT_PAT ||
           process.env.HUBSPOT_ACCESS_TOKEN ||
           process.env.HUBSPOT_DEVELOPER_API_KEY ||
@@ -360,7 +365,7 @@ export const settingsRouter = router({
             success: false,
             latencyMs: Date.now() - startTime,
             protocol: "REST API (HubSpot CRM)",
-            message: "HubSpot access token (HUBSPOT_PAT or HUBSPOT_ACCESS_TOKEN) is not configured in environment or vault.",
+            message: "HubSpot access token (HUBSPOT_PAT or HUBSPOT_SERVICE_KEY) is not configured in environment or vault.",
             timestamp: new Date().toISOString(),
           };
         }
@@ -397,8 +402,8 @@ export const settingsRouter = router({
         }
       }
 
-      if (providerLower.includes("agentmail") || providerLower.includes("mail")) {
-        const apiKey = process.env.AGENTMAIL_API_KEY;
+      if (providerLower.includes("agentmail") || providerLower.includes("agent_mail") || providerLower.includes("mail")) {
+        const apiKey = process.env.AGENTMAIL_API_KEY || process.env.AGENT_MAIL_API_KEY;
         if (!apiKey) {
           return {
             success: false,

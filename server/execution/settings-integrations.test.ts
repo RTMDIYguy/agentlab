@@ -86,6 +86,9 @@ describe("Settings & MCP Integrations Suite", () => {
 
   it("normalizes HubSpot, Instantly, and ElevenLabs environment variable aliases", () => {
     delete process.env.HUBSPOT_PAT;
+    delete process.env.HUBSPOT_SERVICE_KEY;
+    delete process.env.HUBSPOT_DEVELOPER_API_KEY;
+    delete process.env.HUBSPOT_API_KEY;
     process.env.HUBSPOT_ACCESS_TOKEN = "test_token_alias";
     normalizeEnvironmentVariables();
     expect(process.env.HUBSPOT_PAT).toBe("test_token_alias");

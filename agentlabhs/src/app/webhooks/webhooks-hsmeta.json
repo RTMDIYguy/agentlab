@@ -3,7 +3,7 @@
   "type": "webhooks",
   "config": {
     "settings": {
-      "targetUrl": "https://example.com/webhook",
+      "targetUrl": "https://agent-lab.tech/api/webhooks/hubspot",
       "maxConcurrentRequests": 10
     },
     "subscriptions": {

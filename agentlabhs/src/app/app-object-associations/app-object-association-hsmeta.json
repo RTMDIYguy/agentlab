@@ -1,8 +1,0 @@
-{
-  "uid": "agentlabhs_app_object_association",
-  "type": "app-object-association",
-  "config": {
-    "firstObjectType": "app_object",
-    "secondObjectType": "CONTACT"
-  }
-}
