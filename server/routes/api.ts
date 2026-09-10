@@ -300,3 +300,11 @@ apiRouter.post("/icp/generate", generateIcpProfile);
 apiRouter.post("/icp/profiles", createIcpProfile);
 apiRouter.delete("/icp/profiles/:id", deleteIcpProfile);
 
+// ==============================================================================
+// Discount Codes & Campaign Promotion Engine (SAL-01 / MKT-01 / Standalone Apps)
+// ==============================================================================
+import { validateDiscountCode, redeemDiscountCode } from "../controllers/discounts";
+
+apiRouter.post("/discounts/validate", validateDiscountCode);
+apiRouter.post("/discounts/redeem", redeemDiscountCode);
+

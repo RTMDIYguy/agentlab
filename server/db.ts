@@ -135,7 +135,53 @@ export async function ensureDatabaseSchema(): Promise<void> {
     await client`CREATE INDEX IF NOT EXISTS "idx_workflow_artifacts_type" ON "workflow_artifacts" ("workspace_id", "artifact_type");`;
     await client`CREATE INDEX IF NOT EXISTS "idx_workflow_artifacts_status" ON "workflow_artifacts" ("workspace_id", "status");`;
     await client`CREATE INDEX IF NOT EXISTS "idx_workflow_artifacts_scheduled" ON "workflow_artifacts" ("workspace_id", "scheduled_for");`;
-    console.log("[Database] Schema self-healing verified: user entitlements & workflow_artifacts active.");
+
+    // Ensure discount_codes and discount_redemptions tables
+    await client`
+      CREATE TABLE IF NOT EXISTS "discount_codes" (
+        "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        "code" varchar(64) NOT NULL UNIQUE,
+        "campaign_name" varchar(128) NOT NULL,
+        "discount_type" varchar(32) NOT NULL DEFAULT 'percent_off',
+        "discount_value" numeric(10, 2) NOT NULL DEFAULT 0.00,
+        "target_app" varchar(64) NOT NULL DEFAULT 'all',
+        "stripe_promo_id" varchar(128),
+        "max_redemptions" integer,
+        "times_redeemed" integer NOT NULL DEFAULT 0,
+        "expires_at" timestamp with time zone,
+        "is_active" boolean NOT NULL DEFAULT true,
+        "created_at" timestamp with time zone NOT NULL DEFAULT now(),
+        "updated_at" timestamp with time zone NOT NULL DEFAULT now()
+      );
+      CREATE INDEX IF NOT EXISTS "idx_discount_codes_app" ON "discount_codes" ("target_app");
+
+      CREATE TABLE IF NOT EXISTS "discount_redemptions" (
+        "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        "discount_code_id" uuid NOT NULL REFERENCES "discount_codes"("id") ON DELETE CASCADE,
+        "user_id" uuid REFERENCES "users"("id") ON DELETE SET NULL,
+        "user_email" varchar(255) NOT NULL,
+        "target_app" varchar(64) NOT NULL,
+        "metadata" jsonb NOT NULL DEFAULT '{}'::jsonb,
+        "redeemed_at" timestamp with time zone NOT NULL DEFAULT now()
+      );
+      CREATE INDEX IF NOT EXISTS "idx_redemptions_code_id" ON "discount_redemptions" ("discount_code_id");
+      CREATE INDEX IF NOT EXISTS "idx_redemptions_email" ON "discount_redemptions" ("user_email");
+    `;
+
+    // Seed default starter promotional & VIP discount codes
+    await client`
+      INSERT INTO "discount_codes" ("code", "campaign_name", "discount_type", "discount_value", "target_app", "max_redemptions")
+      VALUES 
+        ('FOUNDERVIP', 'Founding Member Master Access', 'vip_bypass', 100.00, 'all', 100),
+        ('BOOTSTRAPPER', 'Bootstrapper Capital Founder Pass', 'percent_off', 50.00, 'all', 500),
+        ('BOOKREADER', 'Bootstrappers Guide Authority Offer', 'percent_off', 30.00, 'all', 1000),
+        ('ROUNDTABLE', 'Founder Roundtable 48H Sprint', 'extended_trial', 60.00, 'all', 250),
+        ('MARKSMAN50', 'Market Marksman Launch Offer', 'percent_off', 50.00, 'market_marksman', 200),
+        ('PULSE30', 'Pulse Social 30-Day Pro Pass', 'vip_bypass', 100.00, 'pulse_social', 300)
+      ON CONFLICT ("code") DO NOTHING;
+    `;
+
+    console.log("[Database] Schema self-healing verified: user entitlements, workflow_artifacts & discount_codes active.");
   } catch (err: any) {
     console.warn("[Database] Schema ensure notice:", err.message);
   }

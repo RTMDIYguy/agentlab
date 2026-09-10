@@ -8,6 +8,7 @@ import { hubspotRouter } from "./hubspot/router";
 import { settingsRouter } from "./settings/router";
 import { auditingRouter } from "./auditing/router";
 import { founderIntakeRouter } from "./founder-intake/router";
+import { discountRouter } from "./discounts/router";
 
 export const appRouter = router({
   // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -24,6 +25,7 @@ export const appRouter = router({
   }),
 
   stripe: stripeRouter,
+  discounts: discountRouter,
   admin: adminRouter,
   opsCleanup: opsCleanupRouter,
   hubspot: hubspotRouter,

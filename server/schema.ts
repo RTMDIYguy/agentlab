@@ -870,6 +870,80 @@ export const icpProfilesRelations = relations(
 );
 
 // ==============================================================================
+// 19. DISCOUNT CODES & PROMOTIONS
+// ==============================================================================
+export const discountCodes = pgTable(
+  "discount_codes",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    code: varchar("code", { length: 64 }).notNull().unique(),
+    campaignName: varchar("campaign_name", { length: 128 }).notNull(),
+    discountType: varchar("discount_type", { length: 32 }).notNull().default("percent_off"), // 'percent_off' | 'amount_off' | 'vip_bypass' | 'extended_trial'
+    discountValue: numeric("discount_value", { precision: 10, scale: 2 }).notNull().default("0.00"),
+    targetApp: varchar("target_app", { length: 64 }).notNull().default("all"), // 'all' | 'agentlab_os' | 'market_marksman' | 'pulse_social'
+    stripePromoId: varchar("stripe_promo_id", { length: 128 }),
+    maxRedemptions: integer("max_redemptions"),
+    timesRedeemed: integer("times_redeemed").notNull().default(0),
+    expiresAt: timestamp("expires_at", { withTimezone: true }),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    uniqueIndex("idx_discount_codes_code").on(table.code),
+    index("idx_discount_codes_app").on(table.targetApp),
+  ]
+);
+
+export const discountRedemptions = pgTable(
+  "discount_redemptions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    discountCodeId: uuid("discount_code_id")
+      .notNull()
+      .references(() => discountCodes.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    userEmail: varchar("user_email", { length: 255 }).notNull(),
+    targetApp: varchar("target_app", { length: 64 }).notNull(),
+    metadata: jsonb("metadata").notNull().default({}),
+    redeemedAt: timestamp("redeemed_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_redemptions_code_id").on(table.discountCodeId),
+    index("idx_redemptions_email").on(table.userEmail),
+  ]
+);
+
+export const discountCodesRelations = relations(
+  discountCodes,
+  ({ many }) => ({
+    redemptions: many(discountRedemptions),
+  })
+);
+
+export const discountRedemptionsRelations = relations(
+  discountRedemptions,
+  ({ one }) => ({
+    discountCode: one(discountCodes, {
+      fields: [discountRedemptions.discountCodeId],
+      references: [discountCodes.id],
+    }),
+    user: one(users, {
+      fields: [discountRedemptions.userId],
+      references: [users.id],
+    }),
+  })
+);
+
+// ==============================================================================
 // INFERRED TYPES
 // ==============================================================================
 export type Workspace = InferSelectModel<typeof workspaces>;
@@ -929,3 +1003,9 @@ export type NewAssessmentSession = InferInsertModel<typeof assessmentSessions>;
 
 export type IcpProfile = InferSelectModel<typeof icpProfiles>;
 export type NewIcpProfile = InferInsertModel<typeof icpProfiles>;
+
+export type DiscountCode = InferSelectModel<typeof discountCodes>;
+export type NewDiscountCode = InferInsertModel<typeof discountCodes>;
+
+export type DiscountRedemption = InferSelectModel<typeof discountRedemptions>;
+export type NewDiscountRedemption = InferInsertModel<typeof discountRedemptions>;
