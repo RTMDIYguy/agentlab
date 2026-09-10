@@ -1,0 +1,9 @@
+# Ignore node_modules in subfolders during upload
+node_modules/
+**/node_modules/**
+**/node_modules
+.git/
+**/.git/**
+.DS_Store
+Thumbs.db
+*.log
