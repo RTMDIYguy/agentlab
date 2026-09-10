@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -48,7 +49,6 @@ import {
   MessageSquare,
   Film
 } from "lucide-react";
-import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -59,6 +59,8 @@ type ViewportTheme = "cyber" | "tropical" | "space" | "tron";
 
 export default function Dashboard() {
   const [, navigate] = useLocation();
+  const setLocation = navigate;
+  const [activeTab, setActiveTab] = useState("overview");
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [showExtensionModal, setShowExtensionModal] = useState(false);
@@ -558,11 +560,11 @@ export default function Dashboard() {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => window.open("https://bossrob.gumroad.com/l/soe", "_blank")}
+                onClick={() => setLocation("/book?book=soe&mode=reader")}
                 className="text-xs border-amber-500/40 hover:bg-amber-500/10 text-amber-300 font-semibold gap-1.5 shrink-0"
               >
                 <BookOpen className="w-3.5 h-3.5" />
-                Read / Download Book
+                Open In-App Reader
               </Button>
             </div>
           </div>

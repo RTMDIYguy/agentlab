@@ -1,4 +1,5 @@
-import "dotenv/config";
+import "./env";
+import { syncWorkspaceVaultSecrets } from "./env";
 import express from "express";
 import { createServer } from "http";
 import net from "net";
@@ -17,6 +18,7 @@ import {
 import { registerAICoachesWebhookRoutes } from "../aicoaches/webhook";
 import { apiRouter } from "../routes/api";
 import { tenantMiddleware } from "../middleware/tenant";
+import { securityMiddleware } from "../middleware/security";
 import { triggerFullEcosystemSync } from "../controllers/aiStudioSync";
 import { ensureDatabaseSchema } from "../db";
 
@@ -73,9 +75,15 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   // Ensure database schema and required tables are self-healed and active
   await ensureDatabaseSchema();
+  // Auto-sync workspace vault secrets from environment to database
+  await syncWorkspaceVaultSecrets();
 
   const app = express();
   const server = createServer(app);
+
+  // Security Headers (CSP, X-Content-Type-Options, etc.)
+  app.use(securityMiddleware);
+
   // Autonoma SDK endpoint (discover/up/down) under /api/autonoma. MUST be
   // registered BEFORE express.json() — it verifies an HMAC over the raw
   // request bytes.

@@ -1,9 +1,12 @@
+import "./_core/env";
+import { syncWorkspaceVaultSecrets } from "./_core/env";
 import express from "express";
 import { createServer } from "http";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import { tenantMiddleware } from "./middleware/tenant";
+import { securityMiddleware } from "./middleware/security";
 import { apiRouter } from "./routes/api";
 import { intakeRouter } from "./routes/intake";
 import { processPendingRuns } from "./execution/queue-processor";
@@ -17,6 +20,9 @@ const __dirname = path.dirname(__filename);
 async function startServer() {
   const app = express();
   const server = createServer(app);
+
+  // Security Headers (CSP, X-Content-Type-Options, etc.)
+  app.use(securityMiddleware);
 
   // Security & Body Parsers
   app.use(
@@ -72,6 +78,8 @@ async function startServer() {
 
     // Run Startup Diagnostics
     await runStartupDiagnostics();
+    // Auto-sync workspace vault secrets from environment to database
+    await syncWorkspaceVaultSecrets();
 
     // Start the Execution Engine background poller
     setInterval(async () => {

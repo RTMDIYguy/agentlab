@@ -727,11 +727,11 @@ export default function Pricing() {
             </div>
             <Button
               size="sm"
-              onClick={() => window.open("https://bossrob.gumroad.com/l/soe", "_blank")}
+              onClick={() => setLocation("/book?book=soe&mode=reader")}
               className="bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs shrink-0 gap-1.5 shadow"
             >
               <BookOpen className="w-4 h-4" />
-              Claim / View Book ($0 with Code)
+              Open In Digital Reader ($0 Included)
             </Button>
           </div>
         </section>

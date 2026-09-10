@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Slider } from "@/components/ui/slider";
 import {
   Dialog,
   DialogContent,
@@ -32,6 +33,13 @@ import {
   Lock,
   FileSpreadsheet,
   Terminal,
+  SlidersHorizontal,
+  ChevronLeft,
+  ChevronRight,
+  ArrowRight,
+  ArrowLeft,
+  Copy,
+  WrapText,
 } from "lucide-react";
 import { toast } from "sonner";
 import { RunInspectorModal } from "@/components/RunInspectorModal";
@@ -70,6 +78,12 @@ export default function Auditing() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedLog, setSelectedLog] = useState<AuditLogItem | null>(null);
   const [inspectingRunId, setInspectingRunId] = useState<string | null>(null);
+  const [wrapPayload, setWrapPayload] = useState<boolean>(true);
+
+  // Horizontal Table Scroll State & Synchronizer
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const [scrollPercentage, setScrollPercentage] = useState<number>(0);
+  const [canScrollX, setCanScrollX] = useState<boolean>(false);
 
   // 1. Fetch live audit stats
   const { data: statsData, isLoading: isStatsLoading, refetch: refetchStats } = useQuery<AuditStats>({
@@ -101,6 +115,58 @@ export default function Auditing() {
     },
     refetchInterval: 10000,
   });
+
+  // Synchronize horizontal slider with table container
+  const updateScrollState = () => {
+    if (!tableContainerRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = tableContainerRef.current;
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll > 10) {
+      setCanScrollX(true);
+      setScrollPercentage(Math.min(100, Math.max(0, Math.round((scrollLeft / maxScroll) * 100))));
+    } else {
+      setCanScrollX(false);
+      setScrollPercentage(0);
+    }
+  };
+
+  useEffect(() => {
+    const el = tableContainerRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener("scroll", updateScrollState);
+    window.addEventListener("resize", updateScrollState);
+    return () => {
+      el.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [logsData]);
+
+  const handleSliderChange = (values: number[]) => {
+    const value = values[0] || 0;
+    setScrollPercentage(value);
+    if (!tableContainerRef.current) return;
+    const { scrollWidth, clientWidth } = tableContainerRef.current;
+    const maxScroll = scrollWidth - clientWidth;
+    tableContainerRef.current.scrollLeft = (value / 100) * maxScroll;
+  };
+
+  const panTable = (direction: "left" | "right" | "start" | "end") => {
+    if (!tableContainerRef.current) return;
+    const { scrollWidth, clientWidth } = tableContainerRef.current;
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll <= 0) return;
+
+    if (direction === "start") {
+      tableContainerRef.current.scrollTo({ left: 0, behavior: "smooth" });
+    } else if (direction === "end") {
+      tableContainerRef.current.scrollTo({ left: maxScroll, behavior: "smooth" });
+    } else if (direction === "left") {
+      tableContainerRef.current.scrollBy({ left: -300, behavior: "smooth" });
+    } else if (direction === "right") {
+      tableContainerRef.current.scrollBy({ left: 300, behavior: "smooth" });
+    }
+  };
 
   // 3. Approve Mutation
   const approveMutation = useMutation({
@@ -159,15 +225,15 @@ export default function Auditing() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "success":
-        return <CheckCircle2 className="w-5 h-5 text-emerald-400" />;
+        return <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />;
       case "requires_approval":
-        return <AlertTriangle className="w-5 h-5 text-amber-400 animate-pulse" />;
+        return <AlertTriangle className="w-5 h-5 text-amber-400 animate-pulse shrink-0" />;
       case "warning":
-        return <AlertTriangle className="w-5 h-5 text-amber-400" />;
+        return <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />;
       case "error":
-        return <AlertOctagon className="w-5 h-5 text-rose-500" />;
+        return <AlertOctagon className="w-5 h-5 text-rose-500 shrink-0" />;
       default:
-        return <Activity className="w-5 h-5 text-muted-foreground" />;
+        return <Activity className="w-5 h-5 text-muted-foreground shrink-0" />;
     }
   };
 
@@ -351,18 +417,96 @@ export default function Auditing() {
           </div>
         </div>
 
-        {/* Audit Log Table */}
-        <Card className="bg-card/40 backdrop-blur-md border-border/60 overflow-hidden shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs text-muted-foreground uppercase bg-muted/30 border-b border-border/60">
+        {/* Audit Log Table with Top Horizontal Slider Bar */}
+        <Card className="bg-card/40 backdrop-blur-md border-border/60 overflow-hidden shadow-sm flex flex-col">
+          {/* Top Horizontal Slider Navigation Control */}
+          <div className="px-4 py-3 bg-muted/30 border-b border-border/60 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <div className="p-1 rounded-md bg-primary/10 text-primary">
+                <SlidersHorizontal className="w-3.5 h-3.5" />
+              </div>
+              <span className="text-xs font-semibold text-foreground">Horizontal View Controller</span>
+              <span className="text-[11px] text-muted-foreground font-mono">
+                ({logs.length} records)
+              </span>
+            </div>
+
+            {/* Slider & Pan Shortcut Controls */}
+            <div className="flex items-center gap-3 flex-1 max-w-md min-w-[240px]">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 text-muted-foreground hover:text-foreground shrink-0"
+                onClick={() => panTable("left")}
+                title="Pan Left"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+
+              <div className="flex-1 flex items-center gap-2">
+                <Slider
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={[scrollPercentage]}
+                  onValueChange={handleSliderChange}
+                  className="cursor-pointer"
+                />
+                <span className="text-[10px] font-mono text-muted-foreground w-8 text-right shrink-0">
+                  {scrollPercentage}%
+                </span>
+              </div>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 text-muted-foreground hover:text-foreground shrink-0"
+                onClick={() => panTable("right")}
+                title="Pan Right"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* Quick Jump Buttons */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 px-2.5 text-[11px] font-medium gap-1 text-muted-foreground hover:text-foreground border-border/60"
+                onClick={() => panTable("start")}
+              >
+                <ArrowLeft className="w-3 h-3" />
+                Reset View
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 px-2.5 text-[11px] font-medium gap-1 text-primary border-primary/30 hover:bg-primary/10"
+                onClick={() => panTable("end")}
+              >
+                <ArrowRight className="w-3 h-3" />
+                Jump to Details
+              </Button>
+            </div>
+          </div>
+
+          {/* Scrollable Table Area with Sticky Right Action Column */}
+          <div
+            ref={tableContainerRef}
+            className="overflow-x-auto relative max-h-[700px] overflow-y-auto"
+          >
+            <table className="w-full text-sm text-left border-collapse">
+              <thead className="text-xs text-muted-foreground uppercase bg-muted/70 backdrop-blur sticky top-0 z-20 border-b border-border/60">
                 <tr>
-                  <th className="px-6 py-4 font-semibold">Status</th>
-                  <th className="px-6 py-4 font-semibold">Timestamp</th>
-                  <th className="px-6 py-4 font-semibold">Agent / Source</th>
-                  <th className="px-6 py-4 font-semibold">Action & Model</th>
-                  <th className="px-6 py-4 font-semibold">Message / Impact</th>
-                  <th className="px-6 py-4 font-semibold text-right">Actions</th>
+                  <th className="px-6 py-4 font-semibold whitespace-nowrap">Status</th>
+                  <th className="px-6 py-4 font-semibold whitespace-nowrap">Timestamp</th>
+                  <th className="px-6 py-4 font-semibold whitespace-nowrap">Agent / Source</th>
+                  <th className="px-6 py-4 font-semibold whitespace-nowrap">Action & Model</th>
+                  <th className="px-6 py-4 font-semibold min-w-[320px] max-w-lg">Message / Impact</th>
+                  <th className="px-6 py-4 font-semibold text-right whitespace-nowrap sticky right-0 bg-muted/90 backdrop-blur border-l border-border/40 shadow-[-6px_0_12px_rgba(0,0,0,0.08)] z-30">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/40">
@@ -417,7 +561,7 @@ export default function Auditing() {
                         <span className="font-semibold text-primary/90">{log.agent}</span>
                       </td>
 
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <div className="space-y-0.5">
                           <div className="text-xs font-medium text-foreground">{log.action}</div>
                           <div className="flex items-center gap-2 text-[11px] text-muted-foreground font-mono">
@@ -433,11 +577,13 @@ export default function Auditing() {
                         </div>
                       </td>
 
-                      <td className="px-6 py-4 text-xs text-muted-foreground max-w-xs md:max-w-md truncate">
-                        {log.message}
+                      <td className="px-6 py-4 text-xs text-muted-foreground min-w-[320px] max-w-lg leading-relaxed">
+                        <div className="line-clamp-2" title={log.message}>
+                          {log.message}
+                        </div>
                       </td>
 
-                      <td className="px-6 py-4 text-right whitespace-nowrap">
+                      <td className="px-6 py-4 text-right whitespace-nowrap sticky right-0 bg-card/95 backdrop-blur border-l border-border/40 shadow-[-6px_0_12px_rgba(0,0,0,0.08)] z-10 group-hover:bg-muted/40">
                         {log.status === "requires_approval" ? (
                           <div className="flex items-center justify-end gap-2">
                             <Button
@@ -464,9 +610,9 @@ export default function Auditing() {
                         ) : (
                           <Button
                             size="sm"
-                            variant="ghost"
+                            variant="secondary"
                             onClick={() => setSelectedLog(log)}
-                            className="h-7 text-xs text-muted-foreground hover:text-foreground gap-1.5"
+                            className="h-7 text-xs bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 gap-1.5 font-medium shadow-xs"
                           >
                             <Eye className="w-3.5 h-3.5" />
                             Details
@@ -481,57 +627,66 @@ export default function Auditing() {
           </div>
         </Card>
 
-        {/* Detailed Modal Dialog */}
+        {/* Detailed Modal Dialog with Sticky Header & Scroll Control */}
         <Dialog open={Boolean(selectedLog)} onOpenChange={open => !open && setSelectedLog(null)}>
-          <DialogContent className="max-w-xl bg-card border-border/80">
-            <DialogHeader>
-              <div className="flex items-center gap-2">
-                {selectedLog && getStatusIcon(selectedLog.status)}
-                <DialogTitle className="text-lg font-bold">
-                  {selectedLog?.action}
-                </DialogTitle>
+          <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col bg-card border-border/80 p-0 overflow-hidden shadow-2xl">
+            <DialogHeader className="p-6 pb-4 border-b border-border/60 bg-muted/20 shrink-0">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2.5">
+                  {selectedLog && getStatusIcon(selectedLog.status)}
+                  <div>
+                    <DialogTitle className="text-base font-bold text-foreground">
+                      {selectedLog?.action}
+                    </DialogTitle>
+                    <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+                      Log ID: <span className="font-mono text-primary">{selectedLog?.id}</span> • Agent:{" "}
+                      <span className="font-semibold text-foreground">{selectedLog?.agent}</span>
+                    </DialogDescription>
+                  </div>
+                </div>
+                {selectedLog && getStatusBadge(selectedLog.status)}
               </div>
-              <DialogDescription className="text-xs">
-                Log ID: <span className="font-mono text-primary">{selectedLog?.id}</span> • Timestamp:{" "}
-                {selectedLog?.timestamp}
-              </DialogDescription>
             </DialogHeader>
 
             {selectedLog && (
-              <div className="space-y-4 text-xs">
+              <div className="p-6 overflow-y-auto flex-1 space-y-4 text-xs">
                 {/* Message Banner */}
-                <div className="p-3 rounded-lg bg-muted/40 border border-border/60">
-                  <span className="font-semibold text-foreground">Summary: </span>
-                  <span className="text-muted-foreground">{selectedLog.message}</span>
+                <div className="p-3.5 rounded-xl bg-muted/40 border border-border/60">
+                  <div className="font-bold text-xs uppercase tracking-wider text-foreground mb-1">
+                    Summary & Operational Impact:
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {selectedLog.message}
+                  </p>
                 </div>
 
                 {/* Model & Runtime Execution Metrics */}
-                <div className="grid grid-cols-3 gap-3 p-3 rounded-lg bg-card/60 border border-border/60 font-mono text-[11px]">
+                <div className="grid grid-cols-3 gap-3 p-3.5 rounded-xl bg-card/60 border border-border/60 font-mono text-[11px]">
                   <div>
-                    <span className="text-muted-foreground block">Model Backbone</span>
+                    <span className="text-muted-foreground block text-[10px] uppercase">Model Backbone</span>
                     <span className="font-bold text-foreground">{selectedLog.model}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block">Latency</span>
+                    <span className="text-muted-foreground block text-[10px] uppercase">Latency</span>
                     <span className="font-bold text-foreground">{selectedLog.latencyMs} ms</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block">Total Tokens</span>
+                    <span className="text-muted-foreground block text-[10px] uppercase">Total Tokens</span>
                     <span className="font-bold text-foreground">{selectedLog.tokensTotal}</span>
                   </div>
                 </div>
 
                 {/* SAIF Policy Evaluation */}
-                <div className="p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/20 space-y-1.5">
-                  <div className="flex items-center gap-2 font-semibold text-emerald-400">
+                <div className="p-3.5 rounded-xl bg-emerald-500/5 border border-emerald-500/20 space-y-2">
+                  <div className="flex items-center gap-2 font-semibold text-emerald-400 text-xs">
                     <ShieldCheck className="w-4 h-4" />
-                    SAIF Compliance & Governance
+                    SAIF Compliance & Guardrail Evaluation
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-muted-foreground text-[11px]">
+                  <div className="grid grid-cols-2 gap-3 text-muted-foreground text-[11px]">
                     <div>
                       SAIF Guardrails:{" "}
                       <span className="text-emerald-400 font-bold">
-                        {selectedLog.policyChecks?.saifPassed ? "PASSED" : "FLAGGED"}
+                        {selectedLog.policyChecks?.saifPassed !== false ? "PASSED" : "FLAGGED"}
                       </span>
                     </div>
                     <div>
@@ -543,11 +698,40 @@ export default function Auditing() {
                   </div>
                 </div>
 
-                {/* Details Payload */}
+                {/* Details Payload with Wrap / Copy controls */}
                 {selectedLog.details && (
-                  <div className="space-y-1">
-                    <span className="font-semibold text-foreground">Payload Context:</span>
-                    <pre className="p-3 rounded-lg bg-muted/60 border border-border/60 overflow-y-auto max-h-96 text-[11px] font-mono text-muted-foreground whitespace-pre-wrap break-words break-all">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-foreground text-xs">Payload Context:</span>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-[11px] gap-1 text-muted-foreground hover:text-foreground"
+                          onClick={() => setWrapPayload(prev => !prev)}
+                        >
+                          <WrapText className="w-3 h-3" />
+                          {wrapPayload ? "Unwrap" : "Wrap Text"}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-[11px] gap-1 text-muted-foreground hover:text-foreground"
+                          onClick={() => {
+                            navigator.clipboard.writeText(JSON.stringify(selectedLog.details, null, 2));
+                            toast.success("Payload copied to clipboard");
+                          }}
+                        >
+                          <Copy className="w-3 h-3" />
+                          Copy JSON
+                        </Button>
+                      </div>
+                    </div>
+                    <pre
+                      className={`p-3.5 rounded-xl bg-muted/60 border border-border/60 overflow-auto max-h-60 text-[11px] font-mono text-muted-foreground ${
+                        wrapPayload ? "whitespace-pre-wrap break-words break-all" : "whitespace-pre"
+                      }`}
+                    >
                       {JSON.stringify(selectedLog.details, null, 2)}
                     </pre>
                   </div>
@@ -555,7 +739,7 @@ export default function Auditing() {
               </div>
             )}
 
-            <DialogFooter className="flex items-center justify-between sm:justify-between w-full">
+            <DialogFooter className="p-4 border-t border-border/60 bg-muted/20 shrink-0 flex items-center justify-between sm:justify-between w-full">
               {selectedLog?.details?.runId || selectedLog?.details?.workflowRunId ? (
                 <Button
                   size="sm"

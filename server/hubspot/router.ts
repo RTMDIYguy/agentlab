@@ -1,18 +1,30 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../_core/trpc";
 
-// PAT must be set in environment — see .env.example
-const HUBSPOT_PAT = process.env.HUBSPOT_PAT ?? "";
+function getHubspotToken(): string {
+  return (
+    process.env.HUBSPOT_PAT ||
+    process.env.HUBSPOT_ACCESS_TOKEN ||
+    process.env.HUBSPOT_DEVELOPER_API_KEY ||
+    process.env.HUBSPOT_API_KEY ||
+    ""
+  );
+}
 
 const HUBSPOT_CONTACTS_URL = "https://api.hubapi.com/crm/v3/objects/contacts";
 
 async function upsertContact(properties: Record<string, string>) {
+  const token = getHubspotToken();
+  if (!token) {
+    throw new Error("HubSpot access token (HUBSPOT_PAT or HUBSPOT_ACCESS_TOKEN) is not configured in environment.");
+  }
+
   // 1. Try create
   const createRes = await fetch(HUBSPOT_CONTACTS_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${HUBSPOT_PAT}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ properties }),
   });

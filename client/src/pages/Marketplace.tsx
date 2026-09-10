@@ -477,6 +477,19 @@ export default function Marketplace() {
                         </Button>
                       )}
 
+                      {item.category === "books" && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 text-xs text-muted-foreground hover:text-foreground px-2 gap-1"
+                          onClick={() => window.open(item.gumroadUrl || "https://bossrob.gumroad.com", "_blank")}
+                          title="Open Gumroad Store Page"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          Store
+                        </Button>
+                      )}
+
                       <Button
                         size="sm"
                         disabled={mountMutation.isPending || unmountMutation.isPending}
@@ -489,9 +502,9 @@ export default function Marketplace() {
                         }`}
                         onClick={() => {
                           if (item.category === "books") {
-                            const targetUrl = item.gumroadUrl || "https://bossrob.gumroad.com";
-                            toast.success(`Opening ${item.name} ($${item.price?.replace(/[^0-9.]/g, "") || "19.99"})...`);
-                            window.open(targetUrl, "_blank");
+                            const bookId = item.id === "book-soe" ? "soe" : "bgw";
+                            toast.success(`Opening ${item.name} in Digital Reader...`);
+                            setLocation(`/book?book=${bookId}&mode=reader`);
                           } else if (item.category === "apps") {
                             handleAppLaunch(item);
                           } else if (item.category === "playbooks") {
@@ -509,7 +522,7 @@ export default function Marketplace() {
                         {item.category === "books" ? (
                           <>
                             <BookOpen className="w-3.5 h-3.5" />
-                            {item.actionLabel || "Get Book"}
+                            Read Book
                           </>
                         ) : item.category === "apps" ? (
                           isLockedBeta ? (

@@ -1,9 +1,8 @@
-import "dotenv/config";
+import { ENV } from "./_core/env";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
-import { ENV } from "./_core/env";
 
 const connectionString = process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/agentlab';
 const client = postgres(connectionString);

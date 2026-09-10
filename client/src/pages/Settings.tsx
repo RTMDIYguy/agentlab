@@ -240,6 +240,30 @@ export default function Settings() {
     apiKey: "",
   });
 
+  // Helper to resolve live status and key preview from vault & DB
+  const getSecretForProvider = (providerName: string) => {
+    if (!secrets) return null;
+    return secrets.find(
+      (s: any) =>
+        s.provider.toLowerCase().includes(providerName.toLowerCase()) ||
+        providerName.toLowerCase().includes(s.provider.toLowerCase())
+    );
+  };
+
+  const getIntegrationForName = (name: string) => {
+    if (!dbIntegrations) return null;
+    return dbIntegrations.find(
+      (i: any) =>
+        i.name.toLowerCase().includes(name.toLowerCase()) ||
+        name.toLowerCase().includes(i.name.toLowerCase())
+    );
+  };
+
+  const hubspotSec = getSecretForProvider("hubspot");
+  const instantlySec = getSecretForProvider("instantly");
+  const elevenlabsSec = getSecretForProvider("elevenlabs");
+  const agentmailSec = getSecretForProvider("agentmail");
+
   // Core Operating System Built-in Integrations
   const canonicalIntegrations = [
     {
@@ -247,33 +271,33 @@ export default function Settings() {
       name: "HubSpot CRM",
       type: "CRM & Sales (SAL-01)",
       description: "2-Way lead capture, deal pipeline sync, and contact engagement tracking.",
-      status: "active",
+      status: hubspotSec?.status === "connected" || getIntegrationForName("hubspot")?.status === "active" ? "active" : "configured",
       protocol: "OAuth 2.0 / REST API",
       icon: Layers,
       color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
-      details: "Connected via Developer Token • 9 KC leads active",
+      details: hubspotSec ? `Connected (${hubspotSec.maskedPreview || "Token Active"}) • 2-way sync live` : "Connected via Developer Token • 9 KC leads active",
     },
     {
       id: "builtin-agentmail",
       name: "AgentMail Inbound & Direct SMTP",
       type: "Transactional Email & Dispatch",
       description: "Autonomous cold outreach and verified lead reply ingestion on agent-lab.tech.",
-      status: "active",
+      status: agentmailSec?.status === "connected" || getIntegrationForName("agentmail")?.status === "active" ? "active" : "configured",
       protocol: "Direct REST / Webhook Ingest",
       icon: Mail,
       color: "text-blue-400 bg-blue-500/10 border-blue-500/20",
-      details: "am_us_5ad6... active on agent-lab.tech",
+      details: agentmailSec ? `Connected (${agentmailSec.maskedPreview || "am_us_..."}) active` : "am_us_5ad6... active on agent-lab.tech",
     },
     {
       id: "builtin-elevenlabs",
       name: "ElevenLabs / Pamela Telephony",
       type: "Conversational Voice Agent",
       description: "Inbound triage, diagnostic slot booking, and post-call transcript ingestion.",
-      status: "active",
+      status: elevenlabsSec?.status === "connected" || getIntegrationForName("elevenlabs")?.status === "active" ? "active" : "configured",
       protocol: "REST & Webhook Handshake",
       icon: Phone,
       color: "text-purple-400 bg-purple-500/10 border-purple-500/20",
-      details: "sk_1e0a... • Voice ID JBFqn... (Pamela)",
+      details: elevenlabsSec ? `Connected (${elevenlabsSec.maskedPreview || "sk_1e..."}) • Voice ID Pamela` : "sk_1e0a... • Voice ID JBFqn... (Pamela)",
     },
     {
       id: "builtin-ionos",
@@ -324,11 +348,11 @@ export default function Settings() {
       name: "Instantly.ai Outbound Engine",
       type: "Cold Outbound & Warmup (SAL-01)",
       description: "High-deliverability cold email sequences, multi-inbox warmup, and AI reply classification.",
-      status: "active",
+      status: instantlySec?.status === "connected" || getIntegrationForName("instantly")?.status === "active" ? "active" : "configured",
       protocol: "Instantly REST API v1 / Webhook",
       icon: Zap,
       color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
-      details: "YmYxNmQ3... (OwnableOS Master Key)",
+      details: instantlySec ? `Connected (${instantlySec.maskedPreview || "Key Active"}) • Outbound Live` : "YmYxNmQ3... (OwnableOS Master Key)",
     },
     {
       id: "builtin-pulse",
@@ -1066,25 +1090,60 @@ export default function Settings() {
                   </Button>
 
                   {secrets && secrets.length > 0 && (
-                    <div className="pt-4 border-t border-border space-y-2">
-                      <span className="font-bold text-foreground block">Active Stored Secrets:</span>
+                    <div className="pt-4 border-t border-border space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-foreground block">Active Stored Secrets & Vault Keys:</span>
+                        <Badge variant="outline" className="text-[10px] font-mono text-emerald-400 border-emerald-500/30">
+                          {secrets.length} Active in Vault
+                        </Badge>
+                      </div>
                       <div className="divide-y divide-border/60 border border-border/60 rounded-xl overflow-hidden">
-                        {secrets.map((sec: any) => (
-                          <div key={sec.id} className="p-3 bg-muted/20 flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <Key className="w-4 h-4 text-primary" />
-                              <span className="font-mono font-bold text-foreground">{sec.provider}</span>
+                        {secrets.map((sec: any) => {
+                          const isTesting = testingId === sec.provider;
+                          return (
+                            <div key={sec.id} className="p-3.5 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+                                  <Key className="w-4 h-4 text-primary" />
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-mono font-bold text-foreground text-xs uppercase">{sec.provider}</span>
+                                    <Badge className="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono">
+                                      {sec.status || "CONNECTED"}
+                                    </Badge>
+                                    <Badge variant="outline" className="text-[9px] font-mono text-muted-foreground">
+                                      v{sec.version || "1"}
+                                    </Badge>
+                                  </div>
+                                  <div className="text-[11px] font-mono text-muted-foreground mt-0.5">
+                                    {sec.maskedPreview || "••••••••"}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2 self-end sm:self-auto">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  disabled={isTesting}
+                                  onClick={() => runTestHandshake(sec.provider, "secret")}
+                                  className="h-7 px-2.5 text-[10px] font-bold text-primary hover:bg-primary/10 gap-1"
+                                >
+                                  <RefreshCw className={`w-3 h-3 ${isTesting ? "animate-spin" : ""}`} />
+                                  {isTesting ? "Testing..." : "Test"}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="text-red-400 hover:text-red-300 h-7 px-2"
+                                  onClick={() => deleteSecretMut.mutate({ id: sec.id })}
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </Button>
+                              </div>
                             </div>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="text-red-400 hover:text-red-300 h-7"
-                              onClick={() => deleteSecretMut.mutate({ id: sec.id })}
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </Button>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -1264,6 +1323,38 @@ export default function Settings() {
                         <Button size="sm" variant="ghost" onClick={() => setShowAddMcpModal(false)}>✕</Button>
                       </div>
 
+                      {/* 1-Click Quick Preset Strip */}
+                      <div className="space-y-1.5 bg-muted/20 p-2.5 rounded-lg border border-border/60">
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider block">
+                          ⚡ 1-Click Popular MCP Presets:
+                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[
+                            { name: "PostgreSQL Database MCP", transport: "stdio", endpoint: "npx -y @modelcontextprotocol/server-postgres postgresql://user:pass@localhost:5432/agentlab", capabilities: "tools,resources", badge: "Postgres DB" },
+                            { name: "Filesystem Workspace MCP", transport: "stdio", endpoint: 'npx -y @modelcontextprotocol/server-filesystem "e:\\OneDrive - Uncle Robert Consulting LLC\\Working Docs"', capabilities: "tools,resources", badge: "Local Files" },
+                            { name: "GitHub Repo MCP", transport: "stdio", endpoint: "npx -y @modelcontextprotocol/server-github", capabilities: "tools,resources,prompts", badge: "GitHub" },
+                            { name: "Puppeteer Web Scraping MCP", transport: "stdio", endpoint: "npx -y @modelcontextprotocol/server-puppeteer", capabilities: "tools,resources", badge: "Puppeteer Scraping" },
+                            { name: "Google BigQuery MCP", transport: "stdio", endpoint: "npx -y @modelcontextprotocol/server-bigquery", capabilities: "tools,resources", badge: "BigQuery" },
+                            { name: "Brave Web Search MCP", transport: "stdio", endpoint: "npx -y @modelcontextprotocol/server-brave-search", capabilities: "tools", badge: "Brave Search" },
+                          ].map(preset => (
+                            <button
+                              key={preset.name}
+                              type="button"
+                              onClick={() => setNewMcpForm({
+                                name: preset.name,
+                                transport: preset.transport,
+                                endpoint: preset.endpoint,
+                                apiKey: "",
+                                capabilities: preset.capabilities,
+                              })}
+                              className="px-2 py-1 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 rounded text-[10px] font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+                            >
+                              <span>+</span> {preset.badge}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
                       <div className="space-y-3 text-xs">
                         <div>
                           <label className="block font-semibold text-foreground mb-1">Server Identifier Name</label>
@@ -1284,8 +1375,8 @@ export default function Settings() {
                               onChange={e => setNewMcpForm({ ...newMcpForm, transport: e.target.value })}
                               className="w-full px-3 py-2 border border-border rounded-lg bg-input text-xs"
                             >
-                              <option value="sse">SSE (Server-Sent Events URL)</option>
-                              <option value="stdio">stdio (Local Command)</option>
+                              <option value="stdio">stdio (Local Executable Command - Standard)</option>
+                              <option value="sse">SSE (Server-Sent Events HTTP URL)</option>
                             </select>
                           </div>
 
@@ -1318,7 +1409,7 @@ export default function Settings() {
                           <label className="block font-semibold text-foreground mb-1">Authorization Token / API Key (Optional)</label>
                           <input
                             type="password"
-                            placeholder="Bearer token or API secret"
+                            placeholder="Bearer token or API secret (e.g., GITHUB_PERSONAL_ACCESS_TOKEN)"
                             value={newMcpForm.apiKey}
                             onChange={e => setNewMcpForm({ ...newMcpForm, apiKey: e.target.value })}
                             className="w-full px-3 py-2 border border-border rounded-lg bg-input text-xs"
@@ -1346,6 +1437,37 @@ export default function Settings() {
                           <h3 className="font-bold text-base text-foreground">Add Custom Webhook Integration</h3>
                         </div>
                         <Button size="sm" variant="ghost" onClick={() => setShowAddIntegrationModal(false)}>✕</Button>
+                      </div>
+
+                      {/* 1-Click Popular Webhook Presets */}
+                      <div className="space-y-1.5 bg-muted/20 p-2.5 rounded-lg border border-border/60">
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider block">
+                          ⚡ 1-Click Popular Webhook Presets:
+                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[
+                            { name: "n8n Autonomous Workflow Trigger", type: "webhook", endpoint: "http://localhost:5678/webhook/agentlab-intake", portalUrl: "http://localhost:5678", badge: "n8n Trigger" },
+                            { name: "Slack Operations Channel Alert", type: "webhook", endpoint: "https://example.com/webhook/slack-alerts", portalUrl: "https://app.slack.com", badge: "Slack Alerts" },
+                            { name: "Stripe Payment & Checkout Sync", type: "webhook", endpoint: "https://agent-lab.tech/api/stripe/webhook", portalUrl: "https://dashboard.stripe.com", badge: "Stripe Webhook" },
+                            { name: "Mercury Bank Transaction Ingest", type: "webhook", endpoint: "https://api.mercury.com/v1/webhooks", portalUrl: "https://app.mercury.com", badge: "Mercury Bank" },
+                            { name: "Make.com Lead Dispatch Webhook", type: "zapier", endpoint: "https://example.com/webhook/make-trigger", portalUrl: "https://make.com", badge: "Make / Zapier" },
+                          ].map(preset => (
+                            <button
+                              key={preset.name}
+                              type="button"
+                              onClick={() => setNewIntegrationForm({
+                                name: preset.name,
+                                type: preset.type,
+                                endpoint: preset.endpoint,
+                                portalUrl: preset.portalUrl,
+                                apiKey: "",
+                              })}
+                              className="px-2 py-1 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 rounded text-[10px] font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+                            >
+                              <span>+</span> {preset.badge}
+                            </button>
+                          ))}
+                        </div>
                       </div>
 
                       <div className="space-y-3 text-xs">
