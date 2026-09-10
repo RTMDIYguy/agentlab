@@ -9,13 +9,18 @@ if (fs.existsSync(envLocalPath)) {
 dotenv.config();
 
 function normalizeEnvironmentVariables() {
-  if (!process.env.HUBSPOT_PAT) {
-    process.env.HUBSPOT_PAT =
-      process.env.HUBSPOT_ACCESS_TOKEN ||
-      process.env.HUBSPOT_DEVELOPER_API_KEY ||
-      process.env.HUBSPOT_API_KEY ||
-      "";
-  }
+  const hubspotKeys = [
+    process.env.HUBSPOT_SERVICE_KEY,
+    process.env.HUBSPOT_PAT,
+    process.env.HUBSPOT_ACCESS_TOKEN,
+    process.env.HUBSPOT_DEVELOPER_API_KEY,
+    process.env.HUBSPOT_API_KEY,
+  ].filter(Boolean);
+
+  const resolvedHubspotKey = hubspotKeys.find(k => k.startsWith("pat-")) || hubspotKeys[0] || "";
+  process.env.HUBSPOT_PAT = resolvedHubspotKey;
+  process.env.HUBSPOT_ACCESS_TOKEN = resolvedHubspotKey;
+  process.env.HUBSPOT_SERVICE_KEY = resolvedHubspotKey;
   if (!process.env.INSTANTLY_API_KEY) {
     process.env.INSTANTLY_API_KEY =
       process.env.INSTANTLY_KEY ||

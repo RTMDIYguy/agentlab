@@ -25,14 +25,19 @@ export const ENV = {
 
 // 2. Canonicalize & Normalize environment variable aliases
 export function normalizeEnvironmentVariables() {
-  // HubSpot aliases
-  if (!process.env.HUBSPOT_PAT) {
-    process.env.HUBSPOT_PAT =
-      process.env.HUBSPOT_ACCESS_TOKEN ||
-      process.env.HUBSPOT_DEVELOPER_API_KEY ||
-      process.env.HUBSPOT_API_KEY ||
-      "";
-  }
+  // HubSpot aliases: prioritize valid Service Key / PAT starting with "pat-"
+  const hubspotKeys = [
+    process.env.HUBSPOT_SERVICE_KEY,
+    process.env.HUBSPOT_PAT,
+    process.env.HUBSPOT_ACCESS_TOKEN,
+    process.env.HUBSPOT_DEVELOPER_API_KEY,
+    process.env.HUBSPOT_API_KEY,
+  ].filter(Boolean) as string[];
+
+  const resolvedHubspotKey = hubspotKeys.find(k => k.startsWith("pat-")) || hubspotKeys[0] || "";
+  process.env.HUBSPOT_PAT = resolvedHubspotKey;
+  process.env.HUBSPOT_ACCESS_TOKEN = resolvedHubspotKey;
+  process.env.HUBSPOT_SERVICE_KEY = resolvedHubspotKey;
 
   // Instantly aliases
   if (!process.env.INSTANTLY_API_KEY) {
