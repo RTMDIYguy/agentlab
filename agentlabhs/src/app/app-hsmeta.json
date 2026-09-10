@@ -8,7 +8,9 @@
     "auth": {
       "type": "oauth",
       "redirectUrls": [
-        "http://localhost:3000"
+        "http://localhost:3000",
+        "http://localhost:3000/api/oauth/hubspot/callback",
+        "https://agent-lab.tech/api/oauth/hubspot/callback"
       ],
       "requiredScopes": [
         "oauth",

@@ -54,4 +54,34 @@ export function registerOAuthRoutes(app: Express) {
       res.status(500).json({ error: "OAuth callback failed" });
     }
   });
+
+  // HubSpot App Install / OAuth callback
+  app.get(["/api/oauth/hubspot/callback", "/oauth/hubspot/callback"], async (req: Request, res: Response) => {
+    const code = getQueryParam(req, "code");
+    if (code) {
+      console.log(`[HubSpot OAuth] Received authorization code from test account: ${code.substring(0, 8)}...`);
+      return res.send(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>HubSpot App Installed</title>
+            <style>
+              body { font-family: system-ui, sans-serif; background: #0b0f19; color: #f3f4f6; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+              .card { background: #111827; padding: 2rem; border-radius: 1rem; border: 1px solid #374151; text-align: center; max-width: 420px; }
+              h2 { color: #10b981; margin-top: 0; }
+              p { color: #9ca3af; font-size: 0.9rem; }
+            </style>
+          </head>
+          <body>
+            <div class="card">
+              <h2>✅ HubSpot App Authorized!</h2>
+              <p>Your account has successfully authorized <strong>agentlabhs-App</strong>.</p>
+              <p>You can return to your terminal or HubSpot portal.</p>
+            </div>
+          </body>
+        </html>
+      `);
+    }
+    return res.status(400).send("Authorization code missing.");
+  });
 }
