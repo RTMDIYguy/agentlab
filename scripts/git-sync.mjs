@@ -73,21 +73,25 @@ function errorLog(msg) {
   console.error(`\x1b[31m[git-sync] ❌ ${msg}\x1b[0m`);
 }
 
-async function sync() {
-  console.log("\n\x1b[1m\x1b[36m========================================\x1b[0m");
-  console.log("\x1b[1m\x1b[36m   🔄 AgentLab Automated Git Sync       \x1b[0m");
-  console.log("\x1b[1m\x1b[36m========================================\x1b[0m\n");
-
-  // 0. Clear stale index.lock if present from aborted processes
+function clearIndexLock() {
   const lockFile = path.resolve(process.cwd(), ".git", "index.lock");
   if (fs.existsSync(lockFile)) {
     try {
       fs.unlinkSync(lockFile);
       log("Cleaned up stale .git/index.lock file.", "\x1b[33m");
     } catch (e) {
-      warn(`Could not remove index.lock: ${e.message}`);
+      // Ignore lock removal race conditions
     }
   }
+}
+
+async function sync() {
+  console.log("\n\x1b[1m\x1b[36m========================================\x1b[0m");
+  console.log("\x1b[1m\x1b[36m   🔄 AgentLab Automated Git Sync       \x1b[0m");
+  console.log("\x1b[1m\x1b[36m========================================\x1b[0m\n");
+
+  // 0. Clear stale index.lock if present
+  clearIndexLock();
 
   // 1. Verify we are in a git repository
   try {
@@ -125,6 +129,7 @@ async function sync() {
 
   // 4. Pull latest changes from remote (if enabled)
   if (!noPull) {
+    clearIndexLock();
     log(`Pulling latest changes from \x1b[1m${remote}/${branch}\x1b[0m...`);
     try {
       if (hasChanges) {
@@ -143,6 +148,7 @@ async function sync() {
   }
 
   // 5. Stage and Commit changes (if there are changes)
+  clearIndexLock();
   // Soft reset unpushed commits to remote tracking branch so clean unified commit is created
   try {
     const unpushed = run(`git log ${remote}/${branch}..HEAD --oneline`, { silent: true, ignoreError: true });
@@ -154,8 +160,10 @@ async function sync() {
     // Ignore if tracking branch is not yet established
   }
 
+  clearIndexLock();
   const currentStatus = run("git status --porcelain", { silent: true });
   if (currentStatus.length > 0) {
+    clearIndexLock();
     log("Staging all changes (git add -A)...");
     run("git add -A");
 
@@ -163,6 +171,7 @@ async function sync() {
     const timestamp = now.toISOString().replace("T", " ").substring(0, 19);
     const commitMsg = userMessage || `chore: automated workspace sync [${timestamp}]`;
 
+    clearIndexLock();
     log(`Committing with message: "\x1b[1m${commitMsg}\x1b[0m"`);
     run(`git commit -m "${commitMsg.replace(/"/g, '\\"')}"`);
     log("Changes committed successfully.");
