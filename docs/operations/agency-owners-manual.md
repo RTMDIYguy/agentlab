@@ -7,17 +7,17 @@ status: active
 owner: "Robert T. McCarthy / OPS"
 canonical_sources:
   - governance/registry/
-last_reviewed: 2026-09-08
-next_review: 2026-10-08
-version: "v1.2"
+last_reviewed: 2026-09-10
+next_review: 2026-10-10
+version: "v1.3"
 ---
 
 # Agency Owner's Manual
 
 **Owner:** Robert T. McCarthy / Uncle Robert Consulting LLC
 **Date Created:** 2026-06-09
-**Last Structural Update:** 2026-09-08
-**Version:** v1.2 — Milestone: Virtual Office Communication Suite (WebRTC Video War Room, Client Messenger, Async Screen Recorder), GTM Discovery Tools (ICP & Consulting Assessment Generators), Interactive Priority Replenishment Queue, and Beta Partner Multi-Tier Access Layer
+**Last Structural Update:** 2026-09-10
+**Version:** v1.3 — Milestone: HubSpot Developer App & Live CRM Card Integration, Market Marksman Standard Edition (Multi-Sector National Radar), Pulse Social AI Graphic Generation Studio & Step-1 Onboarding, and Sovereign Cross-App Promotion & VIP Bypass Engine
 **Purpose:** Operational reference for running the URC family of businesses. Covers business orientation, workflows, tools, SOPs, finance controls, secret handling, products, infrastructure, and change control in one navigable document.
 
 
@@ -536,7 +536,7 @@ each piece does and its current status. Does not contain access credentials.
 | Automation Engine      | Native DAG + n8n               | Multi-agent workflow execution; external integrations   | Active     | SVC-ORCHESTRATOR           |
 | Testing Suite          | Autonoma                       | Automated UI test runner & synthetic factory seeding    | Active     | PLAT-AUTONOMA              |
 | Application Security   | Aikido Security                | Continuous CVE, dependency, and secret scanning         | Active     | PLAT-AIKIDO                |
-| CRM                    | HubSpot Free                   | Contact capture and 2-way deal pipeline                 | Active     | PLAT-HUBSPOT               |
+| CRM & Intelligence    | HubSpot CRM + AgentLab Card    | Contact capture, 2-way deal pipeline & in-situ CRM sidebar card (`agentlabhs`) | Active | PLAT-HUBSPOT |
 | Office suite           | Microsoft 365                  | Preferred document backbone                             | Active     | PLAT-M365                  |
 | Documentation Surface  | Mintlify                       | Public developer & client documentation portal          | Active     | PLAT-MINTLIFY              |
 | Domain Registrar & DNS | Ionos                          | DNS for `agent-lab.tech` (marketing) & `agent-lab.me` (podcast studio) | Active | PLAT-IONOS         |
@@ -546,6 +546,9 @@ each piece does and its current status. Does not contain access credentials.
 | Async Screen Teardown  | HTML5 MediaRecorder Engine     | 1080p Loom-style video recording & AI teardown briefs (`/screen-recorder`) | Active | SVC-SCREEN-RECORDER |
 | GTM Persona Engine     | ICP Dossier Generator          | MKT-01 firmographic & acute pain trigger synthesizer (`/icp-generator`) | Active | SVC-ICP-GEN        |
 | Consulting Diagnostic  | Assessment Question Bank       | SAL-01 high-signal discovery question bank & AI generator (`/assessment-generator`) | Active | SVC-ASSESSMENT-GEN |
+| Market Radar (Standard)| Market Marksman Multi-Sector   | EPA ECHO, SEC Form D, US DOT Carrier & SAM.gov national radar (`/scrape/standard`) | Active | SVC-MARKSMAN-STANDARD |
+| Social & Media Studio  | Pulse Social + Graphic Studio  | 8-channel social scheduler & Brutalist AI canvas graphic studio (`/graphic-studio`) | Active | SVC-PULSE-GRAPHICS |
+| Sovereign Monetization | Cross-App Discount Engine      | Universal promotional codes, VIP bypass & redemption audit ledger (`/api/discounts`) | Active | SVC-DISCOUNT-ENGINE |
 | Analytics sandbox      | KNIME                          | Data exploration — isolated; no production dependency   | Evaluation | PLAT-KNIME                 |
 
 ### Sandbox Rules

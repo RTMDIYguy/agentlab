@@ -4,9 +4,10 @@ Status: generated
 
 ## Top 3 Actions
 
-- [ ] Check money/client-trust items before tool experiments.
-- [ ] MKT-05 Outreach & Engagement: Outreach batch setup, tracking, and reply handling
-- [ ] MKT-02 Email/SMS Nurture: Nurture sequence rules, stop conditions, handoff rules
+- [x] Complete HubSpot Developer App (`agentlabhs`) sidebar card deployment & verify live 200 OK REST API handshake.
+- [x] Deploy universal Sovereign Discount & Promotion Engine with cross-app VIP bypass (`FOUNDERVIP`, `BOOTSTRAPPER`, etc.).
+- [x] Generalize Market Marksman to Standard Edition national multi-sector radar & build Pulse Social AI Graphic Studio.
+- [ ] Morning Verification: Check HubSpot CRM contact card sidebar in production UI and execute Cloud Run container deployment.
 
 ## Bootstrapper.ai & Ownable OS Daily Operating Routine
 

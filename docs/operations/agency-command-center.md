@@ -43,25 +43,25 @@ right place fast.
 
 ## Today's Top Actions
 
-Source: latest dated command brief in `docs/operations/daily-command-center/2026-08-21-command-brief.md`
+Source: latest dated command brief in `docs/operations/daily-command-center/2026-09-10-command-brief.md`
 
-1. **Hamarashops Partnership Execution**: Begin targeted cold-outreach campaigns to CMIOs and Clinical Directors for Dheerendar's MedLM healthcare AI solutions. Ensure new HubSpot Deals are tagged with `Lead / Campaign Source = Partner - Hamarashops`.
-2. **Virtusa / Dheerendar Walkthrough Conclusion**: Walkthrough successful. Formalized cross-promotional partnership and routed relevant documents to `Hamarashops_Partnership` folder.
-3. **MKT-02 Automated Nurture Engine**: Leverage synced HubSpot contacts to trigger automated nurture sequences or activate the n8n Resend email-sending loop with a strict 3-touch limit.
-4. **Money And Client-Trust Checks**: Review proposals, active pipeline receivables, and client follow-ups before optional platform experiments.
+1. **HubSpot CRM In-Situ Intelligence Card Verification**: Verify the AgentLab OS Intelligence Card (`agentlabhs`) in the HubSpot CRM contact sidebar (`#52008786`) and monitor 2-way REST sync health.
+2. **Pulse Social & Graphic Studio Engagement**: Leverage the new 8-channel social connect modal and Brutalist AI Graphic Generation Studio (`GraphicStudio.jsx`) to produce outbound social assets and carousel teasers.
+3. **Market Marksman Standard Edition Ingestion**: Run multi-sector national radar scans across Clean Tech (EPA ECHO), Growth Capital (SEC Form D), Commercial Fleet (US DOT), and Federal SAM.gov solicitations.
+4. **Sovereign Campaign Code Distribution**: Deploy seeded discount and VIP bypass codes (`FOUNDERVIP`, `BOOTSTRAPPER`, `ROUNDTABLE`, `MARKSMAN50`, `PULSE30`) across outbound channels and client beta onboarding.
+5. **Google Cloud Run Scale-to-Zero Deployment**: Execute the containerized Cloud Run deployment (`cloudbuild.yaml`) for 24/7 autonomous background execution at $0.00/month.
 
 ## Today's Human Judgment Block
 
 Recommended first decision block:
 
-`Hamarashops Partnership & Campaign Tracking Architecture`
+`HubSpot Live Intelligence Triage & Cloud Run 24/7 Deployment Horizon`
 
 Current next decisions:
 
-- Configure n8n automation to tag incoming deals with the new `Lead / Campaign Source` property.
-- Draft outreach sequences for AgentLab app betas and roundtables.
-- Initiate the first batch of outreach to healthcare CMIOs for the Hamarashops partnership.
-- MKT-09 follow-up: confirm RoundTable Chapter meeting and response tracker location
+- Review the live AgentLab OS contact card inside HubSpot CRM and test 1-click trigger actions.
+- Deploy the production container to Google Cloud Run for permanent 24/7 serverless execution.
+- Review campaign code redemptions across Pulse Social and Market Marksman beta users.
 
 ## Money And Client-Trust Checks
 

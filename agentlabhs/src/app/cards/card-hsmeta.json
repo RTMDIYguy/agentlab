@@ -2,8 +2,8 @@
   "uid": "agentlabhs_card",
   "type": "card",
   "config": {
-    "name": "New Card",
-    "location": "crm.record.tab",
+    "name": "AgentLab OS Intelligence",
+    "location": "crm.record.sidebar",
     "entrypoint": "/app/cards/NewCard.tsx",
     "objectTypes": [
       "contacts"

@@ -85,7 +85,7 @@ export const discountRouter = router({
         code: z.string().min(1).max(64),
         targetApp: z.enum(["all", "agentlab_os", "market_marksman", "pulse_social"]).default("all"),
         userEmail: z.string().email(),
-        metadata: z.record(z.any()).optional().default({}),
+        metadata: z.record(z.string(), z.any()).optional().default({}),
       })
     )
     .mutation(async ({ ctx, input }) => {

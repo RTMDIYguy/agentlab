@@ -265,7 +265,7 @@ export const settingsRouter = router({
         config: z.any().optional(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const startTime = Date.now();
       const targetUrl = input.config?.endpointUrl || input.config?.url || input.config?.webhookUrl;
 
