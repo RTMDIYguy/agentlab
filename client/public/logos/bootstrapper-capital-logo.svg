@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  <rect width="44" height="44" x="2" y="2" rx="10" fill="url(#bc_grad)" stroke="#F59E0B" stroke-width="1.5"/>
+  <path d="M14 14h10c3 0 5 1.5 5 4s-2 3.5-4 4c2.5.5 4.5 2 4.5 5s-2.5 5-5.5 5H14V14zm4 6.5h5.5c1.5 0 2.5-.8 2.5-2s-1-2-2.5-2H18v4zm0 8h6c1.8 0 3-.8 3-2.2s-1.2-2.2-3-2.2H18v4.4z" fill="#FFFFFF"/>
+  <text x="56" y="22" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="800" letter-spacing="-0.02em">BOOTSTRAPPER</text>
+  <text x="56" y="36" fill="#F59E0B" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" letter-spacing="0.08em">CAPITAL</text>
+  <defs>
+    <linearGradient id="bc_grad" x1="2" y1="2" x2="46" y2="46" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D97706"/>
+      <stop offset="1" stop-color="#9A3412"/>
+    </linearGradient>
+  </defs>
+</svg>

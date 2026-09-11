@@ -414,18 +414,47 @@ export default function Home() {
                   Powering enterprise cloud hosting, domains, SSL & sovereign client architectures at <strong className="text-foreground">agent-lab.tech</strong>
                 </span>
               </div>
-              <a 
-                href="https://partnernetwork.ionos.com/partner/agent.lab?origin=PartnerBadge" 
-                target="_blank" 
-                rel="nofollow noopener noreferrer"
-                className="transition-transform hover:scale-105 shrink-0"
-              >
-                <img 
-                  src="https://images-1.partnerportal.ionos.com/items/6484dc88-fd70-4523-b919-2b70b2ecc722/profiles/a41b3bdd-0f5c-4f01-8de7-b38bdaa13974/badges/normal_blue_eco" 
-                  alt="IONOS - Official Partner" 
-                  className="h-9 w-auto rounded shadow-sm"
-                />
-              </a>
+              <div className="flex flex-wrap items-center gap-3 shrink-0">
+                <a 
+                  href="https://partnernetwork.ionos.com/partner/agent.lab?origin=PartnerBadge" 
+                  target="_blank" 
+                  rel="nofollow noopener noreferrer"
+                  className="transition-transform hover:scale-105"
+                  title="IONOS Cloud - Official Partner"
+                >
+                  <img 
+                    src="https://images-1.partnerportal.ionos.com/items/6484dc88-fd70-4523-b919-2b70b2ecc722/profiles/a41b3bdd-0f5c-4f01-8de7-b38bdaa13974/badges/normal_blue_eco" 
+                    alt="IONOS - Official Partner" 
+                    className="h-8 w-auto rounded shadow-sm"
+                  />
+                </a>
+                <a 
+                  href="https://bootstrappercapital.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-105"
+                  title="Bootstrapper Capital - Official Partner"
+                >
+                  <img 
+                    src="/logos/bootstrapper-capital-logo.svg" 
+                    alt="Bootstrapper Capital - Official Partner" 
+                    className="h-8 w-auto"
+                  />
+                </a>
+                <a 
+                  href="https://bootstrapper.ai" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-105"
+                  title="Bootstrapper.ai - AI Operating Partner"
+                >
+                  <img 
+                    src="/logos/bootstrapper-ai-logo.svg" 
+                    alt="Bootstrapper.ai - AI Operating Partner" 
+                    className="h-8 w-auto"
+                  />
+                </a>
+              </div>
             </div>
           </div>
         </section>

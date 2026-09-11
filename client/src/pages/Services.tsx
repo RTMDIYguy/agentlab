@@ -440,22 +440,46 @@ export default function Services() {
                 Every AgentLab client deployment runs on enterprise-grade, high-availability European & US data centers. We partner directly with IONOS to provision sovereign cloud instances, domain clusters, SSL certificates, and isolated client backbones.
               </p>
             </div>
-            <div className="flex flex-col items-center gap-3 shrink-0">
+            <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0">
               <a 
                 href="https://partnernetwork.ionos.com/partner/agent.lab?origin=PartnerBadge" 
                 target="_blank" 
                 rel="nofollow noopener noreferrer"
                 className="transition-transform hover:scale-105"
+                title="IONOS Cloud - Official Partner"
               >
                 <img 
                   src="https://images-1.partnerportal.ionos.com/items/6484dc88-fd70-4523-b919-2b70b2ecc722/profiles/a41b3bdd-0f5c-4f01-8de7-b38bdaa13974/badges/normal_blue_eco" 
                   alt="IONOS - Official Partner" 
-                  className="h-12 w-auto rounded shadow-sm"
+                  className="h-10 w-auto rounded shadow-sm"
                 />
               </a>
-              <span className="text-[11px] font-mono text-muted-foreground">
-                Certified Partner Network
-              </span>
+              <a 
+                href="https://bootstrappercapital.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="transition-transform hover:scale-105"
+                title="Bootstrapper Capital - Official Partner"
+              >
+                <img 
+                  src="/logos/bootstrapper-capital-logo.svg" 
+                  alt="Bootstrapper Capital - Official Partner" 
+                  className="h-9 w-auto"
+                />
+              </a>
+              <a 
+                href="https://bootstrapper.ai" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="transition-transform hover:scale-105"
+                title="Bootstrapper.ai - AI Operating Partner"
+              >
+                <img 
+                  src="/logos/bootstrapper-ai-logo.svg" 
+                  alt="Bootstrapper.ai - AI Operating Partner" 
+                  className="h-9 w-auto"
+                />
+              </a>
             </div>
           </div>
         </div>

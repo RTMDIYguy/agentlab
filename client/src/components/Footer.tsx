@@ -140,25 +140,60 @@ export function Footer() {
         </div>
 
         {/* Official Ecosystem & Infrastructure Partners */}
-        <div className="border-t border-border pt-8 pb-4 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Official Infrastructure Partner:
+        <div className="border-t border-border pt-8 pb-6 flex flex-col lg:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left w-full lg:w-auto">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider shrink-0">
+              Official Partners:
             </span>
-            <a 
-              href="https://partnernetwork.ionos.com/partner/agent.lab?origin=PartnerBadge" 
-              target="_blank" 
-              rel="nofollow noopener noreferrer"
-              className="inline-block transition-transform hover:scale-105"
-            >
-              <img 
-                src="https://images-1.partnerportal.ionos.com/items/6484dc88-fd70-4523-b919-2b70b2ecc722/profiles/a41b3bdd-0f5c-4f01-8de7-b38bdaa13974/badges/normal_blue_eco" 
-                alt="IONOS - Official Partner" 
-                className="h-10 w-auto rounded"
-              />
-            </a>
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
+              {/* IONOS Infrastructure Partner */}
+              <a 
+                href="https://partnernetwork.ionos.com/partner/agent.lab?origin=PartnerBadge" 
+                target="_blank" 
+                rel="nofollow noopener noreferrer"
+                title="IONOS Cloud - Official Infrastructure Partner"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border/70 bg-card/60 hover:bg-card hover:border-primary/40 transition-all hover:scale-105 shadow-sm group"
+              >
+                <img 
+                  src="https://images-1.partnerportal.ionos.com/items/6484dc88-fd70-4523-b919-2b70b2ecc722/profiles/a41b3bdd-0f5c-4f01-8de7-b38bdaa13974/badges/normal_blue_eco" 
+                  alt="IONOS - Official Partner" 
+                  className="h-7 w-auto rounded"
+                />
+                <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground">IONOS Cloud</span>
+              </a>
+
+              {/* Bootstrapper Capital Partner */}
+              <a 
+                href="https://bootstrappercapital.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                title="Bootstrapper Capital - Official Community & Event Partner"
+                className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-lg border border-border/70 bg-card/60 hover:bg-card hover:border-amber-500/40 transition-all hover:scale-105 shadow-sm group"
+              >
+                <img 
+                  src="/logos/bootstrapper-capital-logo.svg" 
+                  alt="Bootstrapper Capital - Official Partner" 
+                  className="h-7 w-auto"
+                />
+              </a>
+
+              {/* Bootstrapper.ai Partner */}
+              <a 
+                href="https://bootstrapper.ai" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                title="Bootstrapper.ai - AI Operating System & Independence Partner"
+                className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-lg border border-border/70 bg-card/60 hover:bg-card hover:border-cyan-500/40 transition-all hover:scale-105 shadow-sm group"
+              >
+                <img 
+                  src="/logos/bootstrapper-ai-logo.svg" 
+                  alt="Bootstrapper.ai - AI Operating Partner" 
+                  className="h-7 w-auto"
+                />
+              </a>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground shrink-0">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>Hosted & Secured via IONOS Cloud &bull; agent-lab.tech</span>
           </div>
