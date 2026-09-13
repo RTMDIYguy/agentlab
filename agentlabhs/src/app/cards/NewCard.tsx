@@ -10,7 +10,6 @@ import {
   StatusTag,
   Tag,
   Divider,
-  Alert,
   Accordion,
   DescriptionList,
   DescriptionListItem,
@@ -21,11 +20,31 @@ import {
   hubspot,
 } from '@hubspot/ui-extensions';
 
-hubspot.extend<'crm.record.sidebar'>(({ context, actions }: any) => (
+interface ExtensionContext {
+  properties?: {
+    firstname?: string;
+    lastname?: string;
+    email?: string;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
+
+interface ExtensionActions {
+  addAlert: (alert: { title: string; message: string; type: 'success' | 'danger' | 'warning' | 'info' }) => void;
+  [key: string]: unknown;
+}
+
+interface CardProps {
+  context: ExtensionContext;
+  actions: ExtensionActions;
+}
+
+hubspot.extend<'crm.record.sidebar'>(({ context, actions }: CardProps) => (
   <AgentLabCrmCard context={context} actions={actions} />
 ));
 
-const AgentLabCrmCard = ({ context, actions }: any) => {
+const AgentLabCrmCard = ({ context, actions }: CardProps) => {
   const contactName = context?.properties?.firstname 
     ? `${context.properties.firstname} ${context.properties.lastname || ''}`.trim()
     : 'Test Consulting';

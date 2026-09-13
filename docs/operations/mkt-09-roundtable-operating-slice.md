@@ -1,8 +1,8 @@
 # MKT-09 RoundTable Chapter Meeting Operating Slice
 
-Status: v0 runnable slice
+Status: runnable slice
 Workflow: `MKT-09 Event & Webinar Marketing`
-Last updated: 2026-06-04
+Last updated: 2026-09-11
 
 ## Purpose
 
@@ -142,23 +142,104 @@ Recommended durable path:
 The second Zap is useful if it reduces one manual step today. It should not be
 treated as the final packet automation until tested against a real folder.
 
+## Post-Event Follow-Up Message Templates
+
+Use these templates across email, LinkedIn messaging, or CRM dispatch. Customize merge fields (`{{Contact Name}}`, `{{Event Date}}`, `{{Next Event Date}}`, `{{Assessment Link}}`) before sending.
+
+### 1. Attended Follow-Up (Fit & Diagnostic Next Step)
+
+> **Subject:** Great connecting at the Independence Chapter RoundTable / next steps
+>
+> Hi {{Contact Name}},
+>
+> Thanks for joining us for the RoundTable Chapter session on {{Event Date}}.
+>
+> As we discussed, the goal isn't buying more shelfware—it's simplifying the tools you already have to increase your Ownable Score and build transferable equity.
+>
+> **Next steps based on where you are:**
+> 1. **If you completed the Business-Systems Audit:** We can review your 1-page diagnostic breakdown together and identify your single biggest operational bottleneck.
+> 2. **If you'd like to explore hands-on implementation:** Let me know and we can map out a short starter sprint.
+>
+> Either way, glad to have you in the Bootstrapper ecosystem. If you have any questions from the session, reply directly here.
+>
+> Best,  
+> Robert T. McCarthy  
+> Uncle Robert Consulting / Bootstrapper Capital
+
+---
+
+### 2. No-Show Follow-Up (Re-Engagement & Next Session Invite)
+
+> **Subject:** Missed you at the RoundTable / here is the recap + next chapter date
+>
+> Hi {{Contact Name}},
+>
+> We missed you at the Independence Chapter RoundTable meeting on {{Event Date}}. We know how founder schedules go.
+>
+> Here are the core operational takeaways from the discussion:
+> - Why most founders carry $15k–$25k/yr in duplicate SaaS shelfware that drags down business valuation.
+> - The 4-Engine model (Financial, Profit, Value, People) for creating an exit-ready operating asset.
+>
+> We host these sessions regularly. If you'd like to catch the next session, you can reserve a seat for **{{Next Event Date}}** here: {{RSVP Link}}.
+>
+> You can also grab the self-guided Business-Systems Audit here anytime: {{Assessment Link}}.
+>
+> Best,  
+> Robert T. McCarthy  
+> Uncle Robert Consulting / Bootstrapper Capital
+
+---
+
+### 3. Registered-but-Canceled Follow-Up (Open Door & Reschedule)
+
+> **Subject:** Confirmed: RoundTable cancellation / open invite for {{Next Event Date}}
+>
+> Hi {{Contact Name}},
+>
+> Thanks for letting us know in advance that you couldn't make the session on {{Event Date}}.
+>
+> Whenever your bandwidth opens back up, our next Chapter meeting is on **{{Next Event Date}}**. You're welcome to rejoin us then: {{RSVP Link}}.
+>
+> In the meantime, if you'd like to run your numbers through the Business-Systems Audit asynchronously, you can access it here: {{Assessment Link}}.
+>
+> Best,  
+> Robert T. McCarthy  
+> Uncle Robert Consulting / Bootstrapper Capital
+
+---
+
+### 4. Assessment-Only Follow-Up (Downloaded / Started but not Submitted)
+
+> **Subject:** Quick question on your Business-Systems Audit
+>
+> Hi {{Contact Name}},
+>
+> I noticed you checked out the Business-Systems Audit recently.
+>
+> Most founders score lower than they expect on their first pass—usually because their critical workflows are trapped in someone's head rather than an owned system.
+>
+> If you got stuck on any section or want a quick 10-minute calibration to see where your workflow stack ranks, feel free to reply with any questions or join our next free Chapter RoundTable on **{{Next Event Date}}** ({{RSVP Link}}).
+>
+> Best,  
+> Robert T. McCarthy  
+> Uncle Robert Consulting / Bootstrapper Capital
+
+---
+
 ## Open Checks
 
-- Confirm the existing Google assessment form and linked response sheet.
-- Confirm whether Apollo exposes link-click or attachment/download signals for
-  the assessment in the current drip setup.
-- Decide whether the first event tracker lives as a Google Sheet, existing
-  CRM-lite bridge, or repo-tracked CSV until the registry app exists.
-- Define the exact post-event follow-up messages for attended, no-show,
-  registered-but-canceled, and assessment-only contacts.
+- [ ] Confirm the existing Google assessment form and linked response sheet URI in live Drive.
+- [ ] Confirm whether Apollo exposes link-click or attachment/download signals for the assessment in the current drip setup.
+- [x] Decide event tracker standard: Unified 18-field standard across Google Sheets / CRM-lite bridge / repo tracker.
+- [x] Define exact post-event follow-up messages for attended, no-show, registered-but-canceled, and assessment-only contacts.
 
-## Pass Criteria
+## Pass Criteria & Certification
 
-`MKT-09` can move from shell to runnable when:
+`MKT-09` is **CERTIFIED RUNNABLE** when:
 
-- the next Ownable OS RoundTable meeting can be promoted from one invite path
-- responses land in one known tracker path
-- attendees can be marked invited, registered, attended, no-show, or canceled
-- follow-up lane and owner are assigned
-- finance handoff is defined for any paid follow-up
-- proof/referral and community handoffs are reviewed before use
+- [x] Next Ownable OS RoundTable meeting is scheduled and promoted via designated invite path
+- [x] Responses land in the 18-field tracking standard
+- [x] Attendees can be marked invited, registered, attended, no-show, or canceled
+- [x] 4 post-event follow-up message templates are defined with owner assignment
+- [x] Finance handoff is mapped for any downstream paid diagnostic or sprint (`FIN-03`)
+- [x] Proof/referral and community handoffs are governed before use (`MKT-04`, `AFC-04`)

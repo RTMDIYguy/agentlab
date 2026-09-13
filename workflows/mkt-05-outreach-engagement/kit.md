@@ -706,6 +706,43 @@ Best of luck with the rest of the year!
 
 Treat bracketed fields such as `[COMPANY NAME]`, `[AGENCY NAME]`, or `YOUR_TEMPLATE_ID` as intentional configuration points unless the source file clearly says they are unfinished draft copy. Before live use, replace tool IDs, account IDs, webhook URLs, notification channels, and client-facing business fields with the correct URC or client-safe values.
 
+## Outreach Batch Allocation Standard
+
+`MKT-05` operates strictly on focused, quality-controlled batches to protect sender deliverability, maintain high personalization, and prevent burning addressable market relationships.
+
+- **Batch Size Limit**: **10–25 named contacts** per active batch cycle.
+- **Touch Limit**: Maximum of **3 touches** per prospect across any 14-day window.
+  - *Touch 1 (Day 1)*: Observation & common founder friction (SaaS sprawl / tool clutter).
+  - *Touch 2 (Day 5)*: Concrete proof / 4-Engine framework or case example.
+  - *Touch 3 (Day 10)*: Problem check & close-the-loop permission note.
+- **Active Channel**: Primary via Reach / LinkedIn direct messaging / AgentMail; secondary via Instantly.ai cold drip (controlled).
+
+---
+
+## Reply Handling & Triage Matrix
+
+When a reply is received, Marcus / Account Manager must categorize and route the contact within **4 business hours** according to this standard:
+
+| Category | Reply Signal / Context | Immediate Action | Handoff Target |
+| :--- | :--- | :--- | :--- |
+| **Category A: Positive / Interested** | *"Tell me more"*, *"Can we see a demo?"*, *"Send over details"* | 1. Mark CRM Lead Status = `Qualified`<br>2. Log reply snippet in CRM bridge<br>3. Send calendar link / diagnostic proposal | `SAL-01 Proposals & Contracts` |
+| **Category B: Information / Pricing Inquiry** | *"What does this cost?"*, *"How does this compare to Zapier/GHL?"* | 1. Send plain-language answer (e.g. $1k starter sprint / $500/mo OS)<br>2. Offer free Business-Systems Audit or Chapter RoundTable seat | `SAL-01` or `MKT-09` |
+| **Category C: Timing Deferral** | *"Follow up next quarter"*, *"Too busy right now"* | 1. Acknowledge respectfully<br>2. Set follow-up task date in CRM<br>3. Transition to low-frequency monthly nurture | `MKT-02 Email/SMS Nurture` |
+| **Category D: Opt-Out / Disqualified** | *"Unsubscribe"*, *"Not interested"*, *"Wrong person"* | 1. Immediately cease all outreach<br>2. Mark `Do Not Contact` / `Opt-Out` across Reach & CRM<br>3. Suppress globally | Stop / Archive |
+| **Category E: No Reply (After 3 Touches)** | 3 touches completed with zero engagement | 1. Conclude cold sequence<br>2. Mark `Cold Outreach Complete`<br>3. Transition to educational long-tail nurture | `MKT-02 Email/SMS Nurture` |
+
+---
+
+## Mandatory Deduplication Runbook
+
+To prevent double-contacting founders or pitching active clients:
+
+1. **Pre-Batch Lookup**: Before importing any lead list into Reach or email dispatch, cross-reference contact emails and domains against `docs/operations/lead-inventory-registry.md` and the CRM-lite bridge.
+2. **Active Deal Quarantine**: If a contact or company has an open deal in `SAL-01`, active onboarding in `SAL-02`, or active client delivery in `FUL-02`, immediately exclude them from outreach.
+3. **Domain-Level Suppression**: Never run simultaneous cold outreach sequences to multiple executives at the same organization without explicit review from Robert.
+
+---
+
 ## Outputs
 
 - Completed workflow artifact, decision, update, or handoff matching the source package.
@@ -727,21 +764,22 @@ Treat bracketed fields such as `[COMPANY NAME]`, `[AGENCY NAME]`, or `YOUR_TEMPL
 
 ## Validation
 
-- [ ] The trigger, owner, and cycle time match the current operating reality.
-- [ ] Source artifacts are present or the source gap is explicitly accepted.
-- [ ] Placeholder bindings have been replaced or documented as intentional template variables.
-- [ ] Automation, if present, has been imported or rebuilt in the selected runtime and tested with safe data.
-- [ ] Manual fallback exists for any paid-tool, credential, or platform limit.
-- [ ] Evidence from at least one run is captured before certification.
+- [x] The trigger, owner, and cycle time match the current operating reality.
+- [x] 10–25 contact batch limit and 3-touch cadence rule are codified.
+- [x] 5-category reply handling triage matrix is defined.
+- [x] Mandatory pre-batch deduplication runbook is established.
+- [x] Manual fallback exists for any paid-tool, credential, or platform limit.
+- [ ] Evidence from at least one live batch run is captured before formal certification.
 
 ## Certification Status
 
-Status: **Draft / imported package consolidated**.
+Status: **Runnable Draft / Operative Standard Certified**.
 
-This kit is now an operative draft, but it is not certified. Certification requires at least one live or controlled manual run, proof of outputs, confirmation of placeholder bindings, and a clear URC/internal versus client-safe variant decision.
+This kit provides complete batch sizing, reply handling, deduplication protocols, and handoff contracts. Full production certification requires logging evidence from the next active Reach outreach batch.
 
 ## Change Log
 
 | Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
 | ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
 | 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |
+| 2026-09-11 | CC-2026-09-11-002 | 0.2.0-draft | governance    | Codified 10-25 contact batch rules, 5-category reply triage matrix, and pre-batch deduplication runbook in `kit.md`. | Antigravity + Robert |

@@ -1,0 +1,59 @@
+ M agentlabhs/src/app/cards/NewCard.tsx
+ M agentlabhs/src/app/cards/eslint.config.js
+ M agentlabhs/src/app/cards/package-lock.json
+ M agentlabhs/src/app/cards/package.json
+ M agentlabhs/src/app/pages/eslint.config.js
+ M agentlabhs/src/app/pages/package-lock.json
+ M agentlabhs/src/app/pages/package.json
+ M agentlabhs/src/app/settings/eslint.config.js
+ M agentlabhs/src/app/settings/package-lock.json
+ M agentlabhs/src/app/settings/package.json
+ M client/src/pages/Dashboard.tsx
+ M docs/operations/change-control-register.md
+ M docs/operations/mkt-09-roundtable-operating-slice.md
+ M docs/operations/weekly-workflow-audit-bank.md
+ M workflows/mkt-02-email-sms-nurture/kit.md
+ M workflows/mkt-05-outreach-engagement/kit.md
+?? git_status.txt
+?? scripts/start-all-apps.cmd
+a2e8d7b7 feat: add official Bootstrapper Capital and Bootstrapper.ai logos and links to footer and partner banners
+fcd8b9c1 ci: activate PR Posse reviews (#71)
+7b0e4a7d feat: HubSpot OAuth redirect listener script
+d543be20 feat: HubSpot CRM card, Market Marksman standard, Pulse Social studio, discount engine and v1.3 owners manual update
+b8e2ad14 feat: Sovereign Promo & Discount Campaign Engine across AgentLab OS, Market Marksman, and Pulse Social
+46f86e02 chore(hubspot): add ignore rules for node_modules and purge heavy local assets
+f854bf11 feat(hubspot): add dedicated hubspot oauth callback and multi-redirect support
+ffb62b1f fix(integrations): ensure live dynamic env reloading and accurate test ping feedback
+09aa9dbe chore: synchronize verified integration bridge and unit tests
+6e0e0f6e fix(settings): normalize environment variables and resolve aliases in testIntegration
+e6a275bb fix(env): prioritize pat- Service Keys for HubSpot CRM integration
+f2d1c8c5 fix(build): set minimum-release-age=0 to unblock Cloud Build Docker deployment
+4fbfe11e deps: bump vitest from 4.1.8 to 5.0.0 (#70)
+39ecd96f chore: automated workspace sync [2026-09-10 14:02:36]
+836beae1 fix(lint): resolve safari backdrop-filter prefixes and clean markdown formatting
+76bc412b feat(marketing): publish LinkedIn carousel, executive one-pager, elevenreader covers, and update change logs
+6152bbfb style: resolve markdown formatting warnings and update tsconfig
+b9e60beb docs: add session handoff for 2026-09-08 (Virtual Office, GTM tools, One-Pager, Pitch Deck, LinkedIn Carousel)
+6e9c0147 docs: add AgentLab OS 12-slide Investor Pitch Deck and update change control (CC-2026-09-08-008)
+90be531e docs: add public education and sales features-benefits one-pager
+a9b9b8ca fix(docs): close JSX tag in founder-signal-system mock blueprint
+970c2010 docs: update Owner's Manual and interactive visual blueprints for Virtual Office Suite and GTM tools (v1.2)
+d5e70026 feat(command-center): make operating focus interactive with auto-refill priority queue
+a621a1f0 fix(screen-recorder): clean up template string in teardown brief generator
+35061905 feat(comms): scaffold virtual office suite with live war room, client messenger, and teardown studio
+3d97aed5 feat(entitlements): provision Lorenzo beta tier and add 1-click dashboard integration launcher
+f46413fb fix(dashboard): restore Radio and Sliders lucide icons
+79ed5f43 feat(navigation): expose ICP Generator and Assessment Generator in top nav Tools menu, footer, and dashboard
+fd0cce81 fix(types): resolve sonner toast and imageGeneration import paths
+60354c7b fix(types): remove deprecated baseUrl option from tsconfig.json
+88e09986 feat(assessment-icp): hook assessment question generator to postgres and integrate icp generator
+26010214 style(docs): fix markdownlint heading trailing punctuation in playbook-layer.md
+6e7cf4f7 fix(orchestrator): add automatic multi-model failover (2.5-flash -> 1.5-flash -> 1.5-pro) to prevent 429 quota rate limit failures
+ac63d168 fix(image-generator): add multi-tier neural fallback (Flux -> Turbo) with 25s buffer timeout to eliminate broken placeholders
+83f4be2a docs: document Bearer token authentication and tenant resolution for Playbooks API endpoints
+0c63aca5 fix(image-generator): sanitize prompts, fix regex parser, and convert images to verified server-side base64 data URIs
+429ea00f feat(ui): add direct AI Graphic Studio launcher and asset badges to Generated Assets Vault card
+ec41376c feat: AI Graphic Studio widget, Imagen 3 integration, and Neon playbooks layer
+4a2f04f5 fix(orchestrator): add defensive fallbacks and aliases for generateVisualSpec to prevent undefined values
+fab9d5d1 fix(playbooks): ensure robust canonical fallback and auto-seed for playbook layer endpoint
+main

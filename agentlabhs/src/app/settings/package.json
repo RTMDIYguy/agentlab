@@ -14,16 +14,17 @@
     "react": "^18.2.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9",
-    "@hubspot/eslint-config-ui-extensions": "^1",
+    "@eslint/js": "^9.0.0",
+    "@hubspot/eslint-config-ui-extensions": "^1.0.0",
     "@types/react": "^18",
-    "eslint": "^9",
-    "eslint-config-prettier": "^10",
-    "eslint-plugin-react": "^7",
-    "eslint-plugin-react-hooks": "^7",
-    "eslint-plugin-unused-imports": "^4",
-    "prettier": "^3",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^10.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "eslint-plugin-unused-imports": "^4.0.0",
+    "jiti": "^2.6.1",
+    "prettier": "^3.0.0",
     "typescript": "^5",
-    "typescript-eslint": "^8"
+    "typescript-eslint": "^8.46.4"
   }
 }

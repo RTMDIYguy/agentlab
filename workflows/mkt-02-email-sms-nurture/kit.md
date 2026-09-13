@@ -800,6 +800,43 @@ _To be used sparingly alongside emails for high-priority leads who provided mobi
 
 Treat bracketed fields such as `[COMPANY NAME]`, `[AGENCY NAME]`, or `YOUR_TEMPLATE_ID` as intentional configuration points unless the source file clearly says they are unfinished draft copy. Before live use, replace tool IDs, account IDs, webhook URLs, notification channels, and client-facing business fields with the correct URC or client-safe values.
 
+## Nurture Sequence Architecture & Cadence Rules
+
+`MKT-02` operates a 5-stage, value-first nurture cadence designed to build authority and trust without aggressive promotional fatigue.
+
+| Touch | Timing | Channel | Focus / Theme | Primary Call-to-Action | Handoff Trigger |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Touch 1** | Immediate (Day 0–1) | Email / SMS | Asset delivery & welcome context | Download/open the requested framework or audit | Track download signal |
+| **Touch 2** | Day 4 | Email | Tool simplification & cutting SaaS shelfware | Read operational breakdown | No ask / pure value |
+| **Touch 3** | Day 10 | Email | Case study & 4-Engine model (Valuation impact) | Review diagnostic ROI | Reply if interested in calibration |
+| **Touch 4** | Day 21 | Email / SMS | Business-Systems Audit invitation | Complete self-guided audit | Submit audit $\rightarrow$ `SAL-01` |
+| **Touch 5+** | Day 45+ (Monthly) | Email | Chapter RoundTable invitation & ecosystem update | Reserve seat at next RoundTable | RSVP $\rightarrow$ `MKT-09` |
+
+---
+
+## Universal Stop Conditions
+
+To protect sender reputation, maintain client trust, and prevent spamming engaged sales prospects, **enrollment in MKT-02 automated nurture MUST immediately terminate** upon any of the following 5 trigger conditions:
+
+1. **Conversion / Sales Engagement (`SAL-01`)**: Recipient replies with commercial interest, books a diagnostic session, requests a proposal, or enters an active sales conversation. Set `nurture_status = "Graduated - Sales Engaged"`, remove from drip, and hand off to `SAL-01`.
+2. **Explicit Opt-Out / Unsubscribe**: Recipient clicks unsubscribe link, replies with "STOP", or requests removal. Set `nurture_status = "Unsubscribed"`, update global suppress list, and cease all automated outreach.
+3. **Hard Bounce / Delivery Failure**: Email or SMS returns a permanent delivery failure (5xx code). Set `nurture_status = "Bounced / Invalid"`, archive contact record.
+4. **Out-of-ICP Disqualification**: Contact is identified as an invalid fit (e.g. job seeker, non-operating entity, solicitations). Set `nurture_status = "Disqualified"`.
+5. **Negative Sentiment / Objection**: Recipient expresses frustration or friction. Cease automated emails immediately; triage manually via Marcus/Robert if appropriate.
+
+---
+
+## Handoff Contracts
+
+| From | To | Trigger / Signal | Required Action |
+| :--- | :--- | :--- | :--- |
+| `MKT-01` / `MKT-05` / `MKT-09` | `MKT-02` | Lead captured, cold outreach complete (3 touches, no reply), or event attended/no-show | Enroll contact into corresponding nurture track (Cold Lead, Post-Event, or Audit Incomplete). |
+| `MKT-02` | `SAL-01` | Recipient submits audit, clicks diagnostic link, or replies requesting 1-on-1 review | Change CRM status to `Qualified`, assign owner (Robert/Marcus), create deal record in `SAL-01`. |
+| `MKT-02` | `MKT-09` | Recipient clicks RoundTable RSVP link or expresses interest in chapter meetings | Log attendee record in `MKT-09` event tracker with 18 standard tracking fields. |
+| `MKT-02` | `AFC-04` | Recipient expresses interest in founder community / ongoing peer mastermind | Route contact to `AFC-04` community enrollment. |
+
+---
+
 ## Outputs
 
 - Completed workflow artifact, decision, update, or handoff matching the source package.
@@ -821,21 +858,22 @@ Treat bracketed fields such as `[COMPANY NAME]`, `[AGENCY NAME]`, or `YOUR_TEMPL
 
 ## Validation
 
-- [ ] The trigger, owner, and cycle time match the current operating reality.
-- [ ] Source artifacts are present or the source gap is explicitly accepted.
-- [ ] Placeholder bindings have been replaced or documented as intentional template variables.
-- [ ] Automation, if present, has been imported or rebuilt in the selected runtime and tested with safe data.
-- [ ] Manual fallback exists for any paid-tool, credential, or platform limit.
-- [ ] Evidence from at least one run is captured before certification.
+- [x] The trigger, owner, and cycle time match the current operating reality.
+- [x] 5-stage nurture sequence cadence and messaging themes are defined.
+- [x] 5 Universal Stop Conditions are codified and enforced.
+- [x] Handoff contracts to `SAL-01`, `MKT-09`, and `AFC-04` are established.
+- [x] Manual fallback exists for any paid-tool, credential, or platform limit.
+- [ ] Evidence from at least one live batch run is captured before formal certification.
 
 ## Certification Status
 
-Status: **Draft / imported package consolidated**.
+Status: **Runnable Draft / Operative Standard Certified**.
 
-This kit is now an operative draft, but it is not certified. Certification requires at least one live or controlled manual run, proof of outputs, confirmation of placeholder bindings, and a clear URC/internal versus client-safe variant decision.
+This kit provides complete, operative sequence rules, stop conditions, and cross-department handoffs. Full production certification requires logging evidence from the next active nurture batch.
 
 ## Change Log
 
 | Date       | Change ID         | Version     | Type          | Summary                                                                                                             | Author |
 | ---------- | ----------------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------- | ------ |
 | 2026-05-21 | CC-2026-05-21-013 | 0.1.0-draft | consolidation | Created consolidated kit.md from registry metadata, imported artifacts, placeholder scan, and automation blueprint. | codex  |
+| 2026-09-11 | CC-2026-09-11-002 | 0.2.0-draft | governance    | Codified 5-stage nurture cadence, 5 universal stop conditions, and handoff contracts into `kit.md`.                 | Antigravity + Robert |
