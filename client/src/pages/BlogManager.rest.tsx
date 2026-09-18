@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import {
   Plus,
@@ -17,32 +16,134 @@ import {
 import { toast } from "sonner";
 import { PageLayout } from "@/components/PageLayout";
 
+type ApiArticle = {
+  id: string;
+  title: string;
+  summary: string | null;
+  content: string;
+  status: string;
+  artifactType: string;
+  metadata: Record<string, unknown>;
+  scheduledFor: string | null;
+  createdAt: string;
+};
+
+type ClientArticle = {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  slug: string;
+  category: string;
+  status: string;
+  scheduledFor: string | null;
+  featuredImage: string;
+  views: number;
+  createdAt: string;
+};
+
+function mapApiToClient(api: ApiArticle): ClientArticle {
+  return {
+    id: api.id,
+    title: api.title,
+    excerpt: api.summary ?? "",
+    content: api.content,
+    slug: (api.metadata?.slug as string) || titleSlug(api.title),
+    category: (api.metadata?.category as string) || "General",
+    status: api.status,
+    scheduledFor: api.scheduledFor ?? null,
+    featuredImage: (api.metadata?.featuredImage as string) || "",
+    views: (api.metadata?.views as number) || 0,
+    createdAt: api.createdAt,
+  };
+}
+
+function titleSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]/g, "");
+}
+
 export default function BlogManager() {
   const [, navigate] = useLocation();
-  const { user, isAuthenticated } = useAuth();
-  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
+  const { isAuthenticated } = useAuth();
+  const [articles, setArticles] = useState<ClientArticle[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const articlesQuery = trpc.articles.getMyArticles.useQuery(
-    { limit: 50 },
-    { enabled: isAuthenticated }
-  );
-  const articles = articlesQuery.data ?? [];
-  const isLoading = articlesQuery.isLoading;
-  const refetch = articlesQuery.refetch;
+  const fetchArticles = useCallback(async () => {
+    if (!isAuthenticated) return;
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem("manus-runtime-token");
+      const headers: Record<string, string> = {
+        Accept: "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      };
+      const res = await fetch("/api/artifacts?type=post&status=all&limit=50", {
+        credentials: "include",
+        headers,
+      });
+      if (!res.ok) {
+        throw new Error("Failed to load articles");
+      }
+      const json = await res.json();
+      const mapped: ClientArticle[] = (json.artifacts ?? [])
+        .filter((a: any) => a.targetPlatform === "blog" || a.artifactType === "post")
+        .map(mapApiToClient);
+      // Merge with already-known metadata for articles we've edited
+      setArticles((prev) => {
+        const map = new Map(prev.map((a) => [a.id, a]));
+        mapped.forEach((m) => map.set(m.id, m));
+        return Array.from(map.values());
+      });
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to load articles");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isAuthenticated]);
 
-  const deleteMutation = trpc.articles.delete.useMutation({
-    onSuccess: () => {
+  useEffect(() => {
+    if (isAuthenticated) fetchArticles();
+  }, [isAuthenticated, fetchArticles]);
+
+  const handleDelete = async (id: string) => {
+    setDeletingId(id);
+    try {
+      const token = localStorage.getItem("manus-runtime-token");
+      const headers: Record<string, string> = {
+        Accept: "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+        "Content-Type": "application/json",
+      };
+      const res = await fetch(`/api/artifacts/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers,
+      });
+      if (!res.ok) {
+        // No DELETE endpoint — mark as archived via PATCH
+        const patchRes = await fetch(`/api/artifacts/${id}`, {
+          method: "PATCH",
+          credentials: "include",
+          headers,
+          body: JSON.stringify({ status: "archived" }),
+        });
+        if (!patchRes.ok) {
+          throw new Error("Failed to delete article");
+        }
+      }
+      setArticles((prev) => prev.filter((a) => a.id !== id));
       toast.success("Article deleted successfully");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to delete article");
+    } finally {
+      setDeletingId(null);
       setDeleteConfirm(null);
-      refetch();
-    },
-    onError: (error: any) => {
-      toast.error(error?.message || "Failed to delete article");
-    },
-  });
-
-  const handleDelete = (articleId: number) => {
-    deleteMutation.mutate({ articleId });
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -128,7 +229,7 @@ export default function BlogManager() {
                 Drafts
               </div>
               <div className="text-3xl font-bold text-blue-900">
-                {articles.filter((a: any) => a.status === "draft").length}
+                {articles.filter((a) => a.status === "draft").length}
               </div>
             </div>
             <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
@@ -136,7 +237,7 @@ export default function BlogManager() {
                 Scheduled
               </div>
               <div className="text-3xl font-bold text-yellow-900">
-                {articles.filter((a: any) => a.status === "scheduled").length}
+                {articles.filter((a) => a.status === "scheduled").length}
               </div>
             </div>
             <div className="p-4 bg-green-50 rounded-lg border border-green-200">
@@ -144,7 +245,7 @@ export default function BlogManager() {
                 Published
               </div>
               <div className="text-3xl font-bold text-green-900">
-                {articles.filter((a: any) => a.status === "published").length}
+                {articles.filter((a) => a.status === "published").length}
               </div>
             </div>
           </div>
@@ -158,7 +259,7 @@ export default function BlogManager() {
             </h2>
           </div>
 
-          {isLoading ? (
+          {isLoading && articles.length === 0 ? (
             <div className="p-8 flex items-center justify-center">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
@@ -200,8 +301,7 @@ export default function BlogManager() {
                   </tr>
                 </thead>
                 <tbody>
-                  {articles.map((article: any) => (
-
+                  {articles.map((article) => (
                     <tr
                       key={article.id}
                       className="border-b border-border hover:bg-muted/50 transition-colors"
@@ -271,16 +371,16 @@ export default function BlogManager() {
                 <Button
                   variant="outline"
                   onClick={() => setDeleteConfirm(null)}
-                  disabled={deleteMutation.isPending}
+                  disabled={deletingId !== null}
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={() => handleDelete(deleteConfirm)}
-                  disabled={deleteMutation.isPending}
+                  disabled={deletingId !== null}
                   className="bg-red-600 hover:bg-red-700 flex items-center gap-2"
                 >
-                  {deleteMutation.isPending ? (
+                  {deletingId ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : null}
                   Delete

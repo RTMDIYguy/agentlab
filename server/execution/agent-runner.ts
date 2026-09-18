@@ -139,7 +139,7 @@ export function extractArtifactsFromOutput(
           content: p.content || p.body || JSON.stringify(p, null, 2),
           summary: p.summary || p.hook,
           targetPlatform: p.platform || p.targetPlatform || "linkedin",
-          scheduledFor: p.scheduledFor || p.publishDate || p.date,
+          scheduledFor: p.scheduledFor || p.publishDate || p.date || new Date().toISOString(),
           metadata: { ...p },
         });
       });
@@ -153,7 +153,7 @@ export function extractArtifactsFromOutput(
           content: d.content || d.body || JSON.stringify(d, null, 2),
           summary: d.summary,
           targetPlatform: d.platform || "linkedin",
-          scheduledFor: d.scheduledFor,
+          scheduledFor: d.scheduledFor || new Date().toISOString(),
           metadata: { ...d },
         });
       });
@@ -196,6 +196,7 @@ export function extractArtifactsFromOutput(
             artifactType: "post",
             content: trimmed,
             targetPlatform: "linkedin",
+            scheduledFor: new Date().toISOString(),
             metadata: { extractedFromMarkdown: true },
           });
         }
@@ -325,7 +326,7 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
                 content,
                 summary: summary || content.slice(0, 100) + "...",
                 targetPlatform: platform || "linkedin",
-                scheduledFor: scheduledFor || new Date(Date.now() + 86400000).toISOString(),
+                scheduledFor: scheduledFor || new Date().toISOString(),
                 metadata: { hashtags, platform, createdViaTool: true },
               };
               capturedArtifacts.push(artifact);

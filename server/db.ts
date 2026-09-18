@@ -181,7 +181,29 @@ export async function ensureDatabaseSchema(): Promise<void> {
       ON CONFLICT ("code") DO NOTHING;
     `;
 
-    console.log("[Database] Schema self-healing verified: user entitlements, workflow_artifacts & discount_codes active.");
+    console.log("[Database] Schema self-healing verified: user entitlements, workflow_artifacts, discount_codes & articles active.");
+    // Blog manager articles table self-heal
+    await client`
+      CREATE TABLE IF NOT EXISTS "articles" (
+        "id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+        "owner_open_id" varchar(64) NOT NULL REFERENCES "users"("open_id") ON DELETE CASCADE,
+        "title" varchar(255) NOT NULL,
+        "excerpt" text,
+        "content" text NOT NULL,
+        "slug" varchar(255) NOT NULL,
+        "category" varchar(64) NOT NULL DEFAULT 'General',
+        "status" varchar(32) NOT NULL DEFAULT 'draft',
+        "scheduled_for" timestamp with time zone,
+        "featured_image" text,
+        "views" integer NOT NULL DEFAULT 0,
+        "created_at" timestamp with time zone NOT NULL DEFAULT now(),
+        "updated_at" timestamp with time zone NOT NULL DEFAULT now()
+      );
+      CREATE UNIQUE INDEX IF NOT EXISTS "uq_owner_slug" ON "articles" ("owner_open_id", "slug");
+      CREATE INDEX IF NOT EXISTS "idx_articles_owner" ON "articles" ("owner_open_id");
+      CREATE INDEX IF NOT EXISTS "idx_articles_status" ON "articles" ("owner_open_id", "status");
+    `;
+    console.log("[Database] Articles table self-healed for blog manager.");
   } catch (err: any) {
     console.warn("[Database] Schema ensure notice:", err.message);
   }

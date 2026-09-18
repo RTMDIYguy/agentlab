@@ -353,9 +353,13 @@ export const settingsRouter = router({
       }
 
       if (providerLower.includes("hubspot")) {
+        // HUBSPOT_PAT is the canonical admin PAT; HUBSPOT_SERVICE_KEY
+        // currently holds a deprecated developer PAT (pat-na1-...) that
+        // HubSpot's legacy API key auth no longer accepts (401), so test
+        // HUBSPOT_PAT first.
         const apiKey =
-          process.env.HUBSPOT_SERVICE_KEY ||
           process.env.HUBSPOT_PAT ||
+          process.env.HUBSPOT_SERVICE_KEY ||
           process.env.HUBSPOT_ACCESS_TOKEN ||
           process.env.HUBSPOT_DEVELOPER_API_KEY ||
           process.env.HUBSPOT_API_KEY;

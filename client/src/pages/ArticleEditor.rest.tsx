@@ -1,78 +1,138 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Loader2, Save, Clock, Send, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
+type ApiArtifact = {
+  id: string;
+  title: string;
+  summary: string | null;
+  content: string;
+  status: string;
+  artifactType: string;
+  targetPlatform: string;
+  metadata: Record<string, unknown>;
+  scheduledFor: string | null;
+  createdAt: string;
+};
+
+type LocalArticle = {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  slug: string;
+  category: string;
+  status: "draft" | "scheduled" | "published";
+  scheduledFor: string | null;
+  featuredImage: string;
+  views: number;
+  createdAt: string;
+};
+
+function mapApiToLocal(api: ApiArtifact): LocalArticle {
+  return {
+    id: api.id,
+    title: api.title,
+    excerpt: api.summary ?? "",
+    content: api.content,
+    slug: (api.metadata?.slug as string) || slugify(api.title),
+    category: (api.metadata?.category as string) || "General",
+    status: api.status as "draft" | "scheduled" | "published",
+    scheduledFor: api.scheduledFor ?? null,
+    featuredImage: (api.metadata?.featuredImage as string) || "",
+    views: (api.metadata?.views as number) ?? 0,
+    createdAt: api.createdAt,
+  };
+}
+
+function slugify(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]/g, "");
+}
+
+function authHeaders(): Record<string, string> {
+  const token = localStorage.getItem("manus-runtime-token");
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  return headers;
+}
+
 export default function ArticleEditor() {
   const { slug } = useParams<{ slug?: string }>();
   const [, navigate] = useLocation();
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("General");
-  const [status, setStatus] = useState<"draft" | "scheduled" | "published">(
-    "draft"
-  );
-  const [scheduledFor, setScheduledFor] = useState<string>("");
+  const [status, setStatus] = useState<"draft" | "scheduled" | "published">("draft");
+  const [scheduledFor, setScheduledFor] = useState("");
   const [featuredImage, setFeaturedImage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch article if editing
-  const { data: article, isLoading } = trpc.articles.getBySlug.useQuery(
-    { slug: slug || "" },
-    { enabled: !!slug && slug !== "new" }
-  );
+  // Local article state (loaded from API when editing)
+  const [localArticle, setLocalArticle] = useState<LocalArticle | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Mutations
-  const createMutation = trpc.articles.create.useMutation({
-    onSuccess: () => {
-      toast.success("Article created successfully!");
-      navigate("/blog-manager");
-    },
-    onError: (error: any) => {
-      toast.error(error?.message || "Failed to create article");
-      setIsSubmitting(false);
-    },
-  });
-
-  const updateMutation = trpc.articles.update.useMutation({
-    onSuccess: () => {
-      toast.success("Article updated successfully!");
-      navigate("/blog-manager");
-    },
-    onError: (error: any) => {
-      toast.error(error?.message || "Failed to update article");
-      setIsSubmitting(false);
-    },
-  });
-
-
-  // Load article data when fetched
-  useEffect(() => {
-    if (article) {
-      setTitle(article.title);
-      setExcerpt(article.excerpt || "");
-      setContent(article.content);
-      setCategory(article.category);
-      setStatus(article.status as "draft" | "scheduled" | "published");
-      setFeaturedImage(article.featuredImage || "");
-      if (article.scheduledFor) {
-        setScheduledFor(
-          new Date(article.scheduledFor).toISOString().slice(0, 16)
-        );
+  // Fetch article by slug when editing
+  const loadArticle = useCallback(async () => {
+    if (!slug || slug === "new" || !isAuthenticated) return;
+    setIsLoading(true);
+    try {
+      const headers = authHeaders();
+      const res = await fetch("/api/artifacts?type=post&limit=50", {
+        credentials: "include",
+        headers,
+      });
+      if (!res.ok) throw new Error("Failed to load article");
+      const json = await res.json();
+      const posts: ApiArtifact[] = json.articles ?? [];
+      const found = posts.find(
+        (a) =>
+          (a.metadata?.slug as string) === slug &&
+          (a.targetPlatform === "blog" || a.artifactType === "post")
+      );
+      if (found) {
+        const local = mapApiToLocal(found);
+        setLocalArticle(local);
+        setTitle(local.title);
+        setExcerpt(local.excerpt);
+        setContent(local.content);
+        setCategory(local.category);
+        setStatus(local.status);
+        setFeaturedImage(local.featuredImage);
+        if (local.scheduledFor) {
+          setScheduledFor(
+            new Date(local.scheduledFor).toISOString().slice(0, 16)
+          );
+        }
+      } else {
+        toast.error(`Article not found: ${slug}`);
+        navigate("/blog-manager");
       }
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to load article");
+    } finally {
+      setIsLoading(false);
     }
-  }, [article]);
+  }, [slug, isAuthenticated, navigate]);
 
-  const handleSubmit = async (e: React.FormEvent, overridingStatus?: "draft" | "scheduled" | "published") => {
+  useEffect(() => {
+    loadArticle();
+  }, [loadArticle]);
+
+  const handleSubmit = async (
+    e: React.FormEvent,
+    overridingStatus?: "draft" | "scheduled" | "published"
+  ) => {
     e.preventDefault();
-
     const finalStatus = overridingStatus || status;
 
     if (!title.trim() || !content.trim()) {
@@ -81,49 +141,76 @@ export default function ArticleEditor() {
     }
 
     setIsSubmitting(true);
-
     try {
-      const articleSlug =
-        slug === "new"
-          ? title
-              .toLowerCase()
-              .replace(/\s+/g, "-")
-              .replace(/[^\w-]/g, "")
-          : slug || "";
+      const headers = authHeaders();
+      headers["Content-Type"] = "application/json";
+
+      const payload = {
+        title,
+        content,
+        summary: excerpt || undefined,
+        artifactType: "post",
+        targetPlatform: "blog",
+        status: finalStatus,
+        metadata: {
+          slug: slug === "new" ? slugify(title) : (slug || slugify(title)),
+          category,
+          featuredImage: featuredImage || undefined,
+          views: 0,
+        },
+        scheduledFor:
+          finalStatus === "scheduled" && scheduledFor
+            ? new Date(scheduledFor).toISOString()
+            : undefined,
+      };
 
       if (slug === "new") {
-        // Create new article
-        await createMutation.mutateAsync({
-          title,
-          excerpt,
-          content,
-          slug: articleSlug,
-          category,
-          status: finalStatus,
-          scheduledFor:
-            finalStatus === "scheduled" && scheduledFor
-              ? new Date(scheduledFor)
-              : undefined,
-          featuredImage: featuredImage || undefined,
+        const res = await fetch("/api/artifacts", {
+          method: "POST",
+          credentials: "include",
+          headers,
+          body: JSON.stringify(payload),
         });
-      } else {
-        // Update existing article
-        await updateMutation.mutateAsync({
-          articleId: article?.id || 0,
-          title,
-          excerpt,
-          content,
-          category,
-          status: finalStatus,
-          scheduledFor:
-            finalStatus === "scheduled" && scheduledFor
-              ? new Date(scheduledFor)
-              : undefined,
-          featuredImage: featuredImage || undefined,
+        if (!res.ok) {
+          const errBody = await res.json().catch(() => ({}));
+          throw new Error(errBody.error || "Failed to create article");
+        }
+        toast.success("Article created successfully!");
+        navigate("/blog-manager");
+      } else if (localArticle) {
+        const res = await fetch(`/api/artifacts/${localArticle.id}`, {
+          method: "PATCH",
+          credentials: "include",
+          headers,
+          body: JSON.stringify({
+            title,
+            content,
+            summary: excerpt || undefined,
+            status: finalStatus,
+            metadata: {
+              ...(localArticle.metadata || {}),
+              slug: slug || slugify(title),
+              category,
+              featuredImage: featuredImage || undefined,
+            },
+            scheduledFor:
+              finalStatus === "scheduled" && scheduledFor
+                ? new Date(scheduledFor).toISOString()
+                : undefined,
+          }),
         });
+        if (!res.ok) {
+          const errBody = await res.json().catch(() => ({}));
+          throw new Error(errBody.error || "Failed to update article");
+        }
+        toast.success("Article updated successfully!");
+        navigate("/blog-manager");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting article:", error);
+      toast.error(error?.message || "Failed to save article");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -198,7 +285,7 @@ export default function ArticleEditor() {
                 <input
                   type="text"
                   value={title}
-                  onChange={e => setTitle(e.target.value)}
+                  onChange={(e) => setTitle(e.target.value)}
                   placeholder="Enter article title"
                   className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                   required
@@ -212,7 +299,7 @@ export default function ArticleEditor() {
                 </label>
                 <textarea
                   value={excerpt}
-                  onChange={e => setExcerpt(e.target.value)}
+                  onChange={(e) => setExcerpt(e.target.value)}
                   placeholder="Brief summary of your article (optional)"
                   rows={2}
                   className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
@@ -226,7 +313,7 @@ export default function ArticleEditor() {
                 </label>
                 <textarea
                   value={content}
-                  onChange={e => setContent(e.target.value)}
+                  onChange={(e) => setContent(e.target.value)}
                   placeholder="Write your article content here (supports Markdown)"
                   rows={12}
                   className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary font-mono text-sm"
@@ -241,7 +328,7 @@ export default function ArticleEditor() {
                 </label>
                 <select
                   value={category}
-                  onChange={e => setCategory(e.target.value)}
+                  onChange={(e) => setCategory(e.target.value)}
                   className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option>General</option>
@@ -260,7 +347,7 @@ export default function ArticleEditor() {
                 <input
                   type="url"
                   value={featuredImage}
-                  onChange={e => setFeaturedImage(e.target.value)}
+                  onChange={(e) => setFeaturedImage(e.target.value)}
                   placeholder="https://example.com/image.jpg"
                   className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                 />
@@ -275,7 +362,7 @@ export default function ArticleEditor() {
                   <input
                     type="datetime-local"
                     value={scheduledFor}
-                    onChange={e => setScheduledFor(e.target.value)}
+                    onChange={(e) => setScheduledFor(e.target.value)}
                     className="w-full px-4 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   />
@@ -314,7 +401,9 @@ export default function ArticleEditor() {
               className="flex items-center gap-2"
             >
               <Clock className="w-4 h-4" />
-              {status === "scheduled" && scheduledFor ? "Confirm Schedule" : "Schedule"}
+              {status === "scheduled" && scheduledFor
+                ? "Confirm Schedule"
+                : "Schedule"}
             </Button>
 
             <Button

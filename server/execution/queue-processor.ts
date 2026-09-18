@@ -12,6 +12,7 @@ import {
 } from "../schema";
 import { runAgentStep } from "./agent-runner";
 import { evaluateArtifactQuality } from "./quality-evaluator";
+import { dispatchScheduledPosts } from "./social-dispatcher";
 
 export async function processPendingRuns() {
   const db = await getDb();
@@ -353,8 +354,22 @@ export async function processPendingRuns() {
           .where(eq(workflowRuns.id, run.id));
         console.log(`[QueueProcessor] DB QUERY DONE: Updated run ${run.id} to completed.`);
       }
+      }
+
+      // Dispatch any newly-scheduled social posts whose time has arrived
+      const dispatchResults = await dispatchScheduledPosts();
+      if (dispatchResults.length > 0) {
+        console.log(`[QueueProcessor] Social dispatcher posted ${dispatchResults.filter(r => r.success).length} post(s), ${dispatchResults.filter(r => !r.success).length} failed.`);
+        for (const r of dispatchResults) {
+          if (r.success) {
+            console.log(`[QueueProcessor] ✓ ${r.platform}: ${r.postId || ''} (artifact ${r.artifactId})`);
+          } else {
+            console.warn(`[QueueProcessor] ✗ ${r.platform}: ${r.error || 'unknown'} (artifact ${r.artifactId})`);
+          }
+        }
     }
-  } catch (err) {
-    console.error("[QueueProcessor] Error processing runs:", err);
   }
+} catch (err) {
+  console.error("[QueueProcessor] Error processing runs:", err);
+}
 }

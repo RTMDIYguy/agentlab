@@ -109,15 +109,89 @@ export function mapProviderToEnvKey(provider: string): string {
 
 /**
  * Apply a newly saved vault secret to the live process.env
+ * and persist it to .env.local so it survives server restarts.
  */
 export function applySecretToEnv(provider: string, value: string): void {
   const envKey = mapProviderToEnvKey(provider);
+  // Persist to .env.local so the real value survives restarts
+  persistSecretToEnvFile(provider, value);
+  // Apply to the live process
   process.env[envKey] = value;
   if (envKey === "HUBSPOT_PAT") {
     process.env.HUBSPOT_ACCESS_TOKEN = value;
     process.env.HUBSPOT_SERVICE_KEY = value;
   }
-  normalizeEnvironmentVariables();
+  // Normalize aliases for the keys we just set (without re-reading .env.local,
+  // which would clobber our in-memory values with the old placeholders)
+  if (envKey === "HUBSPOT_PAT") {
+    if (!process.env.HUBSPOT_ACCESS_TOKEN) process.env.HUBSPOT_ACCESS_TOKEN = process.env.HUBSPOT_PAT;
+    if (!process.env.HUBSPOT_SERVICE_KEY && process.env.HUBSPOT_PAT?.startsWith("pat-")) {
+      process.env.HUBSPOT_SERVICE_KEY = process.env.HUBSPOT_PAT;
+    }
+  }
+  if (envKey === "INSTANTLY_API_KEY" && !process.env.INSTANTLY_KEY && !process.env.INSTANTLY_TOKEN) {
+    // canonical key already set
+  }
+  if (envKey === "ELEVENLABS_API_KEY" && !process.env.ELEVENLABS_KEY && !process.env.XI_API_KEY) {
+    // canonical key already set
+  }
+  if (envKey === "AGENTMAIL_API_KEY" && !process.env.AGENT_MAIL_API_KEY) {
+    // canonical key already set
+  }
+}
+
+const HUBSPOT_ALIAS_KEYS = [
+  "HUBSPOT_PAT",
+  "HUBSPOT_SERVICE_KEY",
+  "HUBSPOT_ACCESS_TOKEN",
+  "HUBSPOT_DEVELOPER_API_KEY",
+  "HUBSPOT_API_KEY",
+];
+
+/**
+ * Persist a secret value into `.env.local` so it survives server restarts.
+ * For hubspot, all alias keys present in the file are updated to the same value
+ * so the file stays self-consistent with the runtime alias logic in
+ * `normalizeEnvironmentVariables()`.
+ */
+export function persistSecretToEnvFile(provider: string, value: string): void {
+  const envLocalPath = path.resolve(process.cwd(), ".env.local");
+  const envKey = mapProviderToEnvKey(provider);
+  const keysToUpdate: string[] = envKey === "HUBSPOT_PAT" ? HUBSPOT_ALIAS_KEYS : [envKey];
+
+  let lines: string[] = [];
+  if (fs.existsSync(envLocalPath)) {
+    lines = fs.readFileSync(envLocalPath, "utf-8").split(/\r?\n/);
+  }
+
+  const formatted = value.includes('"') || value.includes("\\") || value.includes("\n")
+    ? `"${value.replace(/"/g, '\\"').replace(/\\/g, "\\\\")}"`
+    : value;
+
+  let anyUpdated = false;
+  const out: string[] = [];
+  for (const line of lines) {
+    const m = line.trim().match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=/);
+    if (m && keysToUpdate.includes(m[1])) {
+      out.push(`${m[1]}=${formatted}`);
+      anyUpdated = true;
+    } else {
+      out.push(line);
+    }
+  }
+  for (const key of keysToUpdate) {
+    if (!out.some(l => l.trim().startsWith(key + "="))) {
+      out.push(`${key}=${formatted}`);
+    }
+  }
+
+  try {
+    fs.writeFileSync(envLocalPath, out.join("\n"), "utf-8");
+  } catch (err) {
+    console.error(
+      `[Vault] Failed to persist secret to .env.local: ${err instanceof Error ? err.message : String(err)}`
+    );
+  }
 }
 
 /**

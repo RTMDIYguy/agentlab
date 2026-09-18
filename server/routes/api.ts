@@ -57,6 +57,8 @@ import {
   downloadArtifact,
   evaluateArtifact,
   refineArtifact,
+  createArtifact,
+  listBlogArticles,
 } from "../controllers/artifacts";
 import { handleGenerateImage } from "../controllers/image-generation";
 import {
@@ -212,8 +214,10 @@ apiRouter.post("/audit-logs/:id/reject", rejectAuditAction);
 // Workflow Artifacts, Output Assets & Content Calendar
 // ==============================================================================
 apiRouter.get("/artifacts", listArtifacts);
+apiRouter.get("/artifacts/blog", listBlogArticles);
 apiRouter.get("/artifacts/content-calendar", getContentCalendar);
 apiRouter.get("/artifacts/:id/download", downloadArtifact);
+apiRouter.post("/artifacts", createArtifact);
 apiRouter.post("/artifacts/:id/evaluate", evaluateArtifact);
 apiRouter.post("/artifacts/:id/refine", refineArtifact);
 apiRouter.get("/runs/:runId/artifacts", getRunArtifacts);

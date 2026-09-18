@@ -944,6 +944,48 @@ export const discountRedemptionsRelations = relations(
 );
 
 // ==============================================================================
+// 20. ARTICLES (Blog posts, drafts, scheduled & published)
+// ==============================================================================
+export const articles = pgTable(
+  "articles",
+  {
+    id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    ownerOpenId: varchar("owner_open_id", { length: 64 })
+      .notNull()
+      .references(() => users.openId, { onDelete: "cascade" }),
+    title: varchar("title", { length: 255 }).notNull(),
+    excerpt: text("excerpt"),
+    content: text("content").notNull(),
+    slug: varchar("slug", { length: 255 }).notNull(),
+    category: varchar("category", { length: 64 }).notNull().default("General"),
+    status: varchar("status", { length: 32 })
+      .notNull()
+      .default("draft"), // 'draft' | 'scheduled' | 'published'
+    scheduledFor: timestamp("scheduled_for", { withTimezone: true }),
+    featuredImage: text("featured_image"),
+    views: integer("views").notNull().default(0),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    uniqueIndex("uq_owner_slug").on(table.ownerOpenId, table.slug),
+    index("idx_articles_owner").on(table.ownerOpenId),
+    index("idx_articles_status").on(table.ownerOpenId, table.status),
+  ]
+);
+
+export const articlesRelations = relations(articles, ({ one }) => ({
+  owner: one(users, {
+    fields: [articles.ownerOpenId],
+    references: [users.openId],
+  }),
+}));
+
+// ==============================================================================
 // INFERRED TYPES
 // ==============================================================================
 export type Workspace = InferSelectModel<typeof workspaces>;
