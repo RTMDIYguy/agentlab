@@ -1,76 +1,143 @@
+import { param } from "./params";
 import type { Request, Response } from "express";
 import { getDb } from "../db";
-import { agents } from "../schema";
-import { eq, and, desc } from "drizzle-orm";
+import {
+  agents,
+  workflowRunSteps,
+  workflowSteps,
+} from "../schema";
+import { eq, and, desc, sql } from "drizzle-orm";
 
 export interface AgentDto {
   id: string;
   name: string;
   role: string;
   status: "active" | "idle" | "error" | "paused";
-  tasksCompleted: number;
-  uptime: string;
   baseModel: string;
   systemPrompt?: string;
-  createdAt?: Date;
+  // Real per-agent execution stats computed from workflow run history —
+  // no seeded or invented values.
+  tasksCompleted: number;
+  successRate: number | null;
+  lastStepAt: string | null;
 }
 
-const INITIAL_WORKSPACE_AGENTS: Omit<AgentDto, "id">[] = [
+// The default swarm nodes seeded into a fresh workspace. Only real identity
+// and configuration — no fabricated task counts, uptimes, or histories.
+// Stats start at zero and grow from real executions.
+const DEFAULT_WORKSPACE_AGENTS = [
   {
     name: "Alpha-Node-01",
     role: "Lead Enrichment Specialist",
-    status: "active",
-    tasksCompleted: 1420,
-    uptime: "99.9%",
     baseModel: "gemini-1.5-pro",
-    systemPrompt: "Autonomous Lead Enrichment Specialist for URC & Bootstrapper audience discovery.",
+    systemPrompt:
+      "Autonomous Lead Enrichment Specialist for URC & Bootstrapper audience discovery.",
   },
   {
     name: "Coder-Agent-07",
     role: "Full-Stack Software Engineer",
-    status: "active",
-    tasksCompleted: 832,
-    uptime: "99.4%",
     baseModel: "claude-3-7-sonnet",
-    systemPrompt: "Lead Full-Stack Software Engineer for AgentLab architecture, API, and UI components.",
+    systemPrompt:
+      "Lead Full-Stack Software Engineer for AgentLab architecture, API, and UI components.",
   },
   {
     name: "Tech-Node-08",
     role: "Backend & Systems Infrastructure Specialist",
-    status: "active",
-    tasksCompleted: 615,
-    uptime: "99.7%",
     baseModel: "claude-3-7-sonnet",
-    systemPrompt: "Systems Infrastructure and Backend Engineer for database, runtime, and CRM bridge pipelines.",
+    systemPrompt:
+      "Systems Infrastructure and Backend Engineer for database, runtime, and CRM bridge pipelines.",
   },
   {
     name: "SDR-Writer-02",
     role: "Founder Outreach Matrix Copywriter",
-    status: "idle",
-    tasksCompleted: 2190,
-    uptime: "99.8%",
     baseModel: "gpt-4o-mini",
-    systemPrompt: "Founder Outreach Copywriter for personalized ICP messaging, proof loops, and email sequences.",
+    systemPrompt:
+      "Founder Outreach Copywriter for personalized ICP messaging, proof loops, and email sequences.",
   },
   {
     name: "Auditor-Bot-9",
     role: "Financial Reconciliation Auditor",
-    status: "idle",
-    tasksCompleted: 450,
-    uptime: "98.5%",
     baseModel: "gpt-4o",
-    systemPrompt: "Financial Auditor for M365 ledger reconciliation, Stripe settlement tracking, and anomaly checks.",
+    systemPrompt:
+      "Financial Auditor for M365 ledger reconciliation, Stripe settlement tracking, and anomaly checks.",
   },
   {
     name: "Workflow-Planner-04",
     role: "Autonomous Task Router & DAG Synthesizer",
-    status: "active",
-    tasksCompleted: 3102,
-    uptime: "99.9%",
     baseModel: "gemini-1.5-pro",
-    systemPrompt: "Master Task Router and DAG Synthesizer mapping business requests to URC 7-department SOPs.",
+    systemPrompt:
+      "Master Task Router and DAG Synthesizer mapping business requests to URC 7-department SOPs.",
   },
 ];
+
+/** Per-agent real stats, computed by joining run steps to step definitions. */
+interface AgentStats {
+  tasksCompleted: number;
+  totalFinished: number;
+  totalFailed: number;
+  lastStepAt: string | null;
+}
+
+interface AgentStatsView {
+  tasksCompleted: number;
+  successRate: number | null;
+  lastStepAt: string | null;
+}
+
+async function computeAgentStats(
+  db: any,
+  workspaceId: string
+): Promise<Map<string, AgentStatsView>> {
+  const rows = await db
+    .select({
+      agentId: workflowSteps.agentId,
+      status: workflowRunSteps.status,
+      completedAt: workflowRunSteps.completedAt,
+    })
+    .from(workflowRunSteps)
+    .innerJoin(workflowSteps, eq(workflowRunSteps.workflowStepId, workflowSteps.id))
+    .where(eq(workflowRunSteps.workspaceId, workspaceId));
+
+  const stats = new Map<string, AgentStats>();
+  for (const row of rows) {
+    if (!row.agentId) continue;
+    const entry: AgentStats =
+      stats.get(row.agentId) ??
+      { tasksCompleted: 0, totalFinished: 0, totalFailed: 0, lastStepAt: null };
+
+    if (row.status === "completed") {
+      entry.tasksCompleted += 1;
+      entry.totalFinished += 1;
+    } else if (row.status === "failed") {
+      entry.totalFinished += 1;
+      entry.totalFailed += 1;
+    }
+
+    if (row.completedAt) {
+      const iso =
+        row.completedAt instanceof Date
+          ? row.completedAt.toISOString()
+          : String(row.completedAt);
+      if (!entry.lastStepAt || iso > entry.lastStepAt) {
+        entry.lastStepAt = iso;
+      }
+    }
+    stats.set(row.agentId, entry);
+  }
+
+  const result = new Map<string, AgentStatsView>();
+  stats.forEach((entry, agentId) => {
+    result.set(agentId, {
+      tasksCompleted: entry.tasksCompleted,
+      successRate:
+        entry.totalFinished > 0
+          ? Math.round((entry.tasksCompleted / entry.totalFinished) * 100)
+          : null,
+      lastStepAt: entry.lastStepAt,
+    });
+  });
+  return result;
+}
 
 export async function getAgents(req: Request, res: Response): Promise<void> {
   try {
@@ -93,17 +160,17 @@ export async function getAgents(req: Request, res: Response): Promise<void> {
       .where(eq(agents.workspaceId, workspaceId))
       .orderBy(desc(agents.createdAt));
 
-    // If workspace has no agents seeded in the DB yet, seed the default swarm nodes
+    // If workspace has no agents seeded in the DB yet, seed the default
+    // swarm nodes with identity only — stats start at zero and come from
+    // real executions.
     if (dbAgents.length === 0) {
-      const seedValues = INITIAL_WORKSPACE_AGENTS.map((a) => ({
+      const seedValues = DEFAULT_WORKSPACE_AGENTS.map((a) => ({
         workspaceId,
         name: a.name,
         role: a.role,
         baseModel: a.baseModel,
-        systemPrompt: a.systemPrompt || `Autonomous agent persona for ${a.role}`,
-        status: a.status,
-        tasksCompleted: a.tasksCompleted,
-        uptime: a.uptime,
+        systemPrompt: a.systemPrompt,
+        status: "idle",
       }));
 
       await db.insert(agents).values(seedValues);
@@ -115,10 +182,23 @@ export async function getAgents(req: Request, res: Response): Promise<void> {
         .orderBy(desc(agents.createdAt));
     }
 
+    // Real per-agent stats from run history (joined steps → run steps).
+    const statsByAgent = await computeAgentStats(db, workspaceId);
+
+    const agentsWithStats = dbAgents.map((agent: any) => {
+      const stats = statsByAgent.get(agent.id);
+      return {
+        ...agent,
+        tasksCompleted: stats?.tasksCompleted ?? 0,
+        successRate: stats?.successRate ?? null,
+        lastStepAt: stats?.lastStepAt ?? null,
+      };
+    });
+
     res.status(200).json({
       workspaceId,
-      agents: dbAgents,
-      totalCount: dbAgents.length,
+      agents: agentsWithStats,
+      totalCount: agentsWithStats.length,
     });
   } catch (error) {
     console.error("[Agents Controller Error]:", error);
@@ -134,7 +214,7 @@ export async function toggleAgentStatus(req: Request, res: Response): Promise<vo
       return;
     }
 
-    const { id } = req.params;
+    const id = param(req, "id");
     const db = await getDb();
     if (!db) {
       res.status(503).json({ error: "Database unavailable" });
@@ -177,9 +257,10 @@ export async function deployAgent(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const { name, role, baseModel, systemPrompt } = req.body;
-    if (!name || !role) {
-      res.status(400).json({ error: "Agent name and role are required." });
+    const { name, role, baseModel, systemPrompt } = req.body || {};
+
+    if (!name || typeof name !== "string" || !name.trim()) {
+      res.status(400).json({ error: "Agent name is required." });
       return;
     }
 
@@ -193,13 +274,12 @@ export async function deployAgent(req: Request, res: Response): Promise<void> {
       .insert(agents)
       .values({
         workspaceId,
-        name,
-        role,
-        baseModel: baseModel || "gemini-2.5-flash",
-        systemPrompt: systemPrompt || `Autonomous agent persona for ${role}. Operates within URC SOP framework.`,
-        status: "active",
-        tasksCompleted: 0,
-        uptime: "100%",
+        name: name.trim().slice(0, 128),
+        role: (role || "Autonomous Agent").toString().slice(0, 128),
+        baseModel: (baseModel || "gemini-1.5-pro").toString().slice(0, 64),
+        systemPrompt:
+          (systemPrompt || `Autonomous agent persona for ${role || "general operations"}`).toString(),
+        status: "idle",
       })
       .returning();
 

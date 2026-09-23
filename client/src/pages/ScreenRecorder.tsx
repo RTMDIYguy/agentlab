@@ -8,26 +8,45 @@ import {
   Play, 
   Download, 
   Sparkles, 
-  Share2, 
   FileText, 
   Check, 
   Trash2, 
-  Clock, 
   ShieldCheck, 
   Film,
   Layers,
-  ArrowRight
+  Loader2
 } from "lucide-react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
-interface RecordingItem {
+type TeardownSessionRow = {
   id: string;
   title: string;
-  duration: string;
-  date: string;
-  size: string;
-  url: string;
-  summary?: string;
+  durationSeconds: number;
+  sizeBytes: number;
+  hasVideo: boolean;
+  hasBrief: boolean;
+  notes: string | null;
+  aiBrief: string | null;
+  createdAt: string;
+};
+
+function formatTime(seconds: number) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+}
+
+function formatSize(bytes: number) {
+  if (!bytes) return "—";
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function authHeaders(): Record<string, string> {
+  const token = localStorage.getItem("manus-runtime-token");
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  return headers;
 }
 
 export default function ScreenRecorder() {
@@ -37,35 +56,104 @@ export default function ScreenRecorder() {
   const [videoBlobUrl, setVideoBlobUrl] = useState<string | null>(null);
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
   const [recordingTitle, setRecordingTitle] = useState("");
-  const [isGeneratingAiBrief, setIsGeneratingAiBrief] = useState(false);
+  const [teardownNotes, setTeardownNotes] = useState("");
   const [aiBrief, setAiBrief] = useState<string | null>(null);
+  const [aiBriefModel, setAiBriefModel] = useState<string | null>(null);
+  const [loadedSessionId, setLoadedSessionId] = useState<string | null>(null);
+  const [isLoadingVideo, setIsLoadingVideo] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const liveVideoPreviewRef = useRef<HTMLVideoElement | null>(null);
 
-  const [savedRecordings, setSavedRecordings] = useState<RecordingItem[]>(() => {
-    return [
-      {
-        id: "rec-1",
-        title: "Aura MedSpa VIP Patient Flow Teardown",
-        duration: "03:42",
-        date: "2026-09-08",
-        size: "14.2 MB",
-        url: "#",
-        summary: "3-minute audit showing how automated SMS intake recaptures 35% of abandoned weekend patient bookings."
-      },
-      {
-        id: "rec-2",
-        title: "Vance CRE Nevada Opportunity Radar Walkthrough",
-        duration: "02:18",
-        date: "2026-09-07",
-        size: "9.8 MB",
-        url: "#",
-        summary: "Detailed review of county deed filings and zoning anomaly detection for multi-tenant commercial expansion."
+  // Server-persisted library — survives refresh. Video binaries load on
+  // demand from /api/teardown/:id/video; metadata comes from the tRPC list.
+  const savedRecordings = trpc.teardown.list.useQuery({});
+  const utils = trpc.useContext();
+
+  const invalidateList = () => {
+    void utils.teardown.list.invalidate();
+  };
+
+  const summarizeMutation = trpc.teardown.summarizeTeardown.useMutation({
+    onSuccess: (result: any) => {
+      setAiBrief(result.brief);
+      setAiBriefModel(result.model ?? null);
+      toast.success("AI Teardown Brief synthesized! ⚡");
+      // If a persisted session is loaded, keep its brief in the DB too.
+      if (loadedSessionId) {
+        updateBriefMutation.mutate({
+          sessionId: loadedSessionId,
+          brief: result.brief,
+          model: result.model ?? null,
+        });
       }
-    ];
+    },
+    onError: (err: any) =>
+      toast.error(`AI brief unavailable: ${err?.message ?? "unknown error"}`),
+  });
+
+  const updateBriefMutation = trpc.teardown.updateBrief.useMutation({
+    onSuccess: () => invalidateList(),
+  });
+
+  const saveSessionMutation = trpc.teardown.save.useMutation({
+    onSuccess: async (result: any) => {
+      const sessionId = result.id as string;
+      // Upload the video binary through the REST endpoint.
+      if (recordedBlob) {
+        try {
+          const base64 = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const result = String(reader.result || "");
+              resolve(result.slice(result.indexOf(",") + 1));
+            };
+            reader.onerror = () => reject(new Error("Failed to read recording"));
+            reader.readAsDataURL(recordedBlob);
+          });
+
+          const res = await fetch(`/api/teardown/${sessionId}/video`, {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json", ...authHeaders() },
+            body: JSON.stringify({ videoData: base64 }),
+          });
+          if (!res.ok) {
+            const errBody = await res.json().catch(() => ({}));
+            throw new Error(errBody.error || `Upload failed (${res.status})`);
+          }
+          toast.success("Teardown saved to the server — it survives refresh. 📦");
+        } catch (err: any) {
+          toast.error(
+            `Session saved but the video could not be stored: ${err?.message ?? "unknown error"}`
+          );
+        }
+      } else {
+        toast.success("Teardown session saved to the server. 📦");
+      }
+      invalidateList();
+      setRecordingTitle("");
+      setRecordedBlob(null);
+      setVideoBlobUrl(null);
+      setLoadedSessionId(null);
+    },
+    onError: (err: any) =>
+      toast.error(`Could not save session: ${err?.message ?? "unknown error"}`),
+  });
+
+  const deleteSessionMutation = trpc.teardown.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Session deleted.");
+      if (loadedSessionId === deleteSessionMutation.variables?.sessionId) {
+        setLoadedSessionId(null);
+        setVideoBlobUrl(null);
+      }
+      invalidateList();
+    },
+    onError: (err: any) =>
+      toast.error(`Delete failed: ${err?.message ?? "unknown error"}`),
   });
 
   // Recording Timer
@@ -78,12 +166,6 @@ export default function ScreenRecorder() {
     }
     return () => clearInterval(interval);
   }, [isRecording, isPaused]);
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
 
   const startScreenRecording = async () => {
     try {
@@ -142,7 +224,7 @@ export default function ScreenRecorder() {
         if (audioStream) audioStream.getTracks().forEach((t) => t.stop());
         if (liveVideoPreviewRef.current) liveVideoPreviewRef.current.srcObject = null;
 
-        toast.success("Recording captured! Review playback and generate AI brief. 🎬");
+        toast.success("Recording captured! Save it to the vault or generate an AI brief. 🎬");
       };
 
       // Listen for when user clicks "Stop Sharing" from browser native chrome
@@ -155,7 +237,10 @@ export default function ScreenRecorder() {
       setIsPaused(false);
       setRecordDuration(0);
       setVideoBlobUrl(null);
+      setRecordedBlob(null);
       setAiBrief(null);
+      setAiBriefModel(null);
+      setLoadedSessionId(null);
       toast.success("Recording started! Speak into your microphone and navigate. 🔴");
     } catch (err) {
       console.error("Screen recording failed to start:", err);
@@ -196,49 +281,63 @@ export default function ScreenRecorder() {
     toast.success("Video downloaded to your device! 💾");
   };
 
-  const handleSynthesizeAiBrief = async () => {
-    setIsGeneratingAiBrief(true);
-    try {
-      await new Promise((r) => setTimeout(r, 1400));
-      const title = recordingTitle.trim() || "Client Operational Discovery Teardown";
-      const brief = `### 🎬 Loom-Style Video Teardown Brief: ${title}
-**Recorded Duration**: ${formatTime(recordDuration || 145)} | **Timestamp**: ${new Date().toLocaleTimeString()}
-
-**Executive Overview**:
-- Visual walkthrough analyzing client SaaS bottlenecks, manual data entry handoffs, and customer churn vulnerabilities.
-- Highlighted 3 specific high-ROI automation insertion points (MKT-01 lead enrichment, SAL-01 CRM sync, and FUL-01 automated onboarding).
-
-**Key Milestones & Timestamps**:
-- 00:15 — Current state architecture breakdown & friction points.
-- 01:10 — Demonstration of AgentLab Autonomous Swarm executing intake in 4.2 seconds.
-- 02:00 — Proposed 5-day starter sprint roadmap and deliverables.
-
-**Automated Next Actions**:
-1. Dispatch verified video link + briefing packet to client email.
-2. Seed diagnostic scorecard in Results Vault under SAL-01.`;
-      setAiBrief(brief);
-      toast.success("AI Teardown Brief synthesized! ⚡");
-    } catch (e) {
-      toast.error("Failed to synthesize brief.");
-    } finally {
-      setIsGeneratingAiBrief(false);
+  const handleSynthesizeAiBrief = () => {
+    if (!teardownNotes.trim()) {
+      toast.error(
+        "Describe what happens in the recording first — the AI brief is written from your notes (the video never leaves your browser)."
+      );
+      return;
     }
+    summarizeMutation.mutate({
+      title: recordingTitle.trim() || "Client Teardown",
+      durationSeconds: recordDuration,
+      notes: teardownNotes.trim(),
+    });
   };
 
   const handleSaveToVault = () => {
-    if (!videoBlobUrl) return;
-    const newItem: RecordingItem = {
-      id: `rec-${Date.now()}`,
+    if (!videoBlobUrl && !teardownNotes.trim()) {
+      toast.error("Record something or write teardown notes before saving.");
+      return;
+    }
+    saveSessionMutation.mutate({
       title: recordingTitle.trim() || `Client Teardown (${new Date().toLocaleDateString()})`,
-      duration: formatTime(recordDuration || 60),
-      date: new Date().toISOString().slice(0, 10),
-      size: `${((recordedBlob?.size || 1024 * 1024 * 5) / (1024 * 1024)).toFixed(1)} MB`,
-      url: videoBlobUrl,
-      summary: aiBrief || "Screen recording captured and indexed in Results Vault."
-    };
+      durationSeconds: recordDuration,
+      sizeBytes: recordedBlob?.size ?? 0,
+      notes: teardownNotes.trim() || null,
+      aiBrief: aiBrief,
+      aiBriefModel: aiBriefModel,
+    });
+  };
 
-    setSavedRecordings([newItem, ...savedRecordings]);
-    toast.success("Teardown saved to Results Vault! 📦");
+  const loadSessionVideo = async (rec: TeardownSessionRow) => {
+    if (!rec.hasVideo) {
+      toast.info("This session has no stored video (metadata/brief only).");
+      return;
+    }
+    setIsLoadingVideo(true);
+    try {
+      const res = await fetch(`/api/teardown/${rec.id}/video`, {
+        credentials: "include",
+        headers: authHeaders(),
+      });
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.error || `Load failed (${res.status})`);
+      }
+      const blob = await res.blob();
+      setVideoBlobUrl(URL.createObjectURL(blob));
+      setRecordedBlob(blob);
+      setRecordingTitle(rec.title);
+      setTeardownNotes(rec.notes || "");
+      setAiBrief(rec.aiBrief);
+      setLoadedSessionId(rec.id);
+      toast.success(`Loaded "${rec.title}" — playing stored recording.`);
+    } catch (err: any) {
+      toast.error(`Could not load recording: ${err?.message ?? "unknown error"}`);
+    } finally {
+      setIsLoadingVideo(false);
+    }
   };
 
   return (
@@ -259,7 +358,7 @@ export default function ScreenRecorder() {
                 </span>
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Record 2-minute async diagnostic video teardowns, client onboarding walkthroughs, and screen audits with zero paid SaaS subscriptions.
+                Record 2-minute async diagnostic video teardowns, client onboarding walkthroughs, and screen audits — recordings and AI briefs persist server-side.
               </p>
             </div>
           </div>
@@ -311,6 +410,11 @@ export default function ScreenRecorder() {
                   playsInline
                   className="w-full h-full object-contain"
                 />
+              ) : isLoadingVideo ? (
+                <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                  <Loader2 className="w-8 h-8 animate-spin text-rose-400" />
+                  <span className="text-xs">Loading stored recording…</span>
+                </div>
               ) : videoBlobUrl ? (
                 <video
                   src={videoBlobUrl}
@@ -354,45 +458,101 @@ export default function ScreenRecorder() {
                   </button>
                   <button
                     onClick={handleSaveToVault}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors"
+                    disabled={saveSessionMutation.isPending}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors disabled:opacity-50"
                   >
-                    <Check className="w-3.5 h-3.5" />
-                    Save to Vault
+                    {saveSessionMutation.isPending ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Check className="w-3.5 h-3.5" />
+                    )}
+                    {saveSessionMutation.isPending ? "Saving…" : "Save to Vault"}
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Saved Teardown Vault Library */}
+            {/* Persisted Teardown Library */}
             <div className="rounded-xl border border-border/60 bg-card/40 backdrop-blur-sm p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                   <Layers className="w-3.5 h-3.5 text-rose-400" />
-                  Recent Teardown Library
+                  Teardown Library
                 </span>
-                <span className="text-[11px] text-muted-foreground">Stored in Results Vault (SAL-01)</span>
+                <span className="text-[11px] text-muted-foreground">
+                  Saved to the server — recordings and briefs survive refresh
+                </span>
               </div>
 
               <div className="space-y-2">
-                {savedRecordings.map((rec) => (
+                {savedRecordings.isLoading && (
+                  <div className="p-4 text-center text-[11px] text-muted-foreground">
+                    Loading saved sessions…
+                  </div>
+                )}
+                {savedRecordings.isError && (
+                  <div className="p-4 text-center text-[11px] text-red-400">
+                    Could not load saved sessions — check your connection and try again.
+                  </div>
+                )}
+                {!savedRecordings.isLoading && !savedRecordings.isError && savedRecordings.data?.length === 0 && (
+                  <div className="p-4 text-center text-[11px] text-muted-foreground">
+                    No teardown sessions saved yet. Record something, then click
+                    "Save to Vault" — sessions persist server-side, not just in this browser.
+                  </div>
+                )}
+                {savedRecordings.data?.map((rec) => (
                   <div
                     key={rec.id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg border border-border/80 bg-zinc-950/40 hover:bg-zinc-900/60 transition-colors gap-2"
+                    className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg border transition-colors gap-2 ${
+                      loadedSessionId === rec.id
+                        ? "border-rose-500/50 bg-rose-500/5"
+                        : "border-border/80 bg-zinc-950/40 hover:bg-zinc-900/60"
+                    }`}
                   >
-                    <div className="space-y-0.5">
-                      <div className="text-xs font-semibold text-foreground flex items-center gap-2">
+                    <div className="space-y-0.5 flex-1 min-w-0">
+                      <div className="text-xs font-semibold text-foreground flex items-center gap-2 flex-wrap">
                         <Film className="w-3.5 h-3.5 text-rose-400" />
                         {rec.title}
                         <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-muted text-muted-foreground">
-                          {rec.duration}
+                          {formatTime(rec.durationSeconds)}
                         </span>
+                        {rec.hasBrief && (
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-rose-500/10 text-rose-400 border border-rose-500/30">
+                            AI brief
+                          </span>
+                        )}
+                        {!rec.hasVideo && (
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-muted text-muted-foreground">
+                            notes only
+                          </span>
+                        )}
                       </div>
-                      <p className="text-[11px] text-muted-foreground line-clamp-1">{rec.summary}</p>
+                      <p className="text-[11px] text-muted-foreground line-clamp-1">
+                        {rec.aiBrief || rec.notes || "No notes recorded."}
+                      </p>
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span>{rec.size}</span>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground shrink-0">
+                      <span>{formatSize(rec.sizeBytes)}</span>
                       <span>•</span>
-                      <span>{rec.date}</span>
+                      <span>{rec.createdAt.slice(0, 10)}</span>
+                      {rec.hasVideo && (
+                        <button
+                          onClick={() => loadSessionVideo(rec)}
+                          className="flex items-center gap-1 px-2 py-1 rounded-md border border-border bg-card hover:bg-muted text-[11px] text-foreground transition-colors"
+                          title="Load and play this recording"
+                        >
+                          <Play className="w-3 h-3 text-emerald-400" />
+                          Load
+                        </button>
+                      )}
+                      <button
+                        onClick={() => deleteSessionMutation.mutate({ sessionId: rec.id })}
+                        className="p-1.5 rounded-md hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-colors"
+                        title="Delete this session"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -410,13 +570,21 @@ export default function ScreenRecorder() {
                 </h3>
                 <button
                   onClick={handleSynthesizeAiBrief}
-                  disabled={isGeneratingAiBrief}
+                  disabled={summarizeMutation.isPending}
                   className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-gradient-to-r from-rose-500 to-amber-600 hover:from-rose-600 hover:to-amber-700 text-white text-[11px] font-medium shadow transition-all disabled:opacity-50"
                 >
                   <Sparkles className="w-3 h-3" />
-                  {isGeneratingAiBrief ? "Analyzing..." : "Synthesize AI Brief"}
+                  {summarizeMutation.isPending ? "Analyzing..." : "Synthesize AI Brief"}
                 </button>
               </div>
+
+              <textarea
+                placeholder="Describe what happens in the recording — the AI brief is generated from these notes (e.g. 'Walked through their current booking flow; manual data entry between the form and the CRM; they asked about automating confirmations.')"
+                value={teardownNotes}
+                onChange={(e) => setTeardownNotes(e.target.value)}
+                rows={4}
+                className="w-full bg-zinc-950/80 border border-border/60 rounded-lg p-2.5 text-[11px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-rose-500 resize-none"
+              />
 
               <div className="flex-1 overflow-y-auto bg-zinc-950/80 border border-border/60 rounded-lg p-3 text-xs space-y-3">
                 {aiBrief ? (
@@ -441,7 +609,9 @@ export default function ScreenRecorder() {
                   <div className="h-full flex flex-col items-center justify-center text-center p-4 text-muted-foreground space-y-2">
                     <Sparkles className="w-8 h-8 text-rose-400/40" />
                     <p className="text-xs">
-                      Record a video teardown or click "Synthesize AI Brief" to generate a structured discovery summary with timestamps and recommended DAG actions.
+                      Write notes about your recording, then "Synthesize AI Brief"
+                      generates a structured summary grounded in what you describe —
+                      no invented timestamps or findings.
                     </p>
                   </div>
                 )}
@@ -449,7 +619,7 @@ export default function ScreenRecorder() {
 
               <div className="flex items-center gap-2 text-[11px] text-muted-foreground pt-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Zero cloud video storage fees • Local browser recording</span>
+                <span>Recordings stored in your own database — no third-party video hosting</span>
               </div>
             </div>
           </div>

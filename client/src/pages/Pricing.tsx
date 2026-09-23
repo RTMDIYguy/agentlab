@@ -127,7 +127,7 @@ export default function Pricing() {
       automationRate: "90%",
       timeSaved: "6.0 hrs/client",
       badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-      description: "Client onboarding, deliverable staging, and QA assurance. Frictionless handoffs that delight clients and ensure 100% SLA adherence.",
+      description: "Client onboarding, deliverable staging, and QA assurance. Frictionless handoffs with proactive SLA tracking.",
       workflows: [
         { code: "FUL-01", name: "Automated Client Onboarding & Workspace Provisioner", impact: "Zero-lag day 1 setup" },
         { code: "FUL-02", name: "Deliverable Milestone & SLA Tracking Engine", impact: "Proactive status alerts" },

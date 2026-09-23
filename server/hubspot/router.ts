@@ -1,5 +1,13 @@
 import { z } from "zod";
-import { publicProcedure, router } from "../_core/trpc";
+import { desc, eq } from "drizzle-orm";
+import { adminProcedure, publicProcedure, router } from "../_core/trpc";
+import { getDb } from "../db";
+import { contactSubmissions, hubspotSyncLog } from "../schema";
+import { syncContactSubmission } from "./sync";
+import {
+  HUBSPOT_CONTACT_PROPERTIES,
+  extractHubSpotPropertyErrors,
+} from "./schema-map";
 
 function getHubspotToken(): string {
   return (
@@ -38,12 +46,51 @@ async function upsertContact(properties: Record<string, string>) {
     return { success: true, created: false };
   }
 
+  const bodyText = await createRes.text();
+  const propErrors = extractHubSpotPropertyErrors(bodyText);
   throw new Error(
-    `HubSpot create failed (${createRes.status}): ${await createRes.text()}`
+    propErrors.length > 0
+      ? `HubSpot create failed (${createRes.status}): ${propErrors.join("; ")}`
+      : `HubSpot create failed (${createRes.status}): ${bodyText.slice(0, 400)}`
   );
 }
 
 export const hubspotRouter = router({
+  /** Admin: recent lead-handoff sync outcomes (the honest funnel ledger). */
+  listSyncLog: adminProcedure
+    .input(
+      z
+        .object({ limit: z.number().min(1).max(200).default(50) })
+        .default({ limit: 50 })
+    )
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      const rows = await db
+        .select()
+        .from(hubspotSyncLog)
+        .orderBy(desc(hubspotSyncLog.createdAt))
+        .limit(input.limit);
+      return rows.map((row) => ({
+        ...row,
+        createdAt: row.createdAt.toISOString(),
+      }));
+    }),
+
+  /** Admin: retry the HubSpot handoff for a submission that failed or was skipped. */
+  retrySync: adminProcedure
+    .input(z.object({ submissionId: z.string().uuid() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+      const [row] = await db
+        .select()
+        .from(contactSubmissions)
+        .where(eq(contactSubmissions.id, input.submissionId));
+      if (!row) throw new Error("Submission not found");
+      const result = await syncContactSubmission(row);
+      return result;
+    }),
   createContact: publicProcedure
     .input(
       z.object({
@@ -72,4 +119,16 @@ export const hubspotRouter = router({
 
       return upsertContact(properties);
     }),
+
+  /** Admin: the property contract this OS syncs against (for portal setup). */
+  getPropertyContract: adminProcedure.query(async () => {
+    return {
+      properties: HUBSPOT_CONTACT_PROPERTIES,
+      groups: [
+        { name: "agentlab_os", label: "Agent Lab OS" },
+        { name: "agentlab_signup", label: "Agent Lab Signup" },
+      ],
+      source: "Agent Lab OS to HubSpot Lead Handoff Blueprint (Breeze, 2026-09-23)",
+    };
+  }),
 });

@@ -1,0 +1,180 @@
+{
+  "name": "AgentLab Signup to HubSpot",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "agentlab-signup",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-node",
+      "name": "AgentLab Signup Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        260,
+        300
+      ],
+      "webhookId": "agentlab-signup"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "email",
+              "value": "={{$json.body?.email || $json.email || ''}}"
+            },
+            {
+              "name": "signup_date",
+              "value": "={{$json.body?.signup_date || $json.signup_date || $now.toFormat('yyyy-MM-dd')}}"
+            },
+            {
+              "name": "signup_source",
+              "value": "={{$json.body?.signup_source || $json.signup_source || 'direct'}}"
+            },
+            {
+              "name": "signup_page_or_funnel",
+              "value": "={{$json.body?.signup_page_or_funnel || $json.signup_page_or_funnel || 'agentlab_homepage'}}"
+            },
+            {
+              "name": "product_of_interest",
+              "value": "={{$json.body?.product_of_interest || $json.product_of_interest || 'agent_lab_os'}}"
+            },
+            {
+              "name": "offer_of_interest",
+              "value": "={{$json.body?.offer_of_interest || $json.offer_of_interest || ''}}"
+            },
+            {
+              "name": "audience_bucket",
+              "value": "={{$json.body?.audience_bucket || $json.audience_bucket || ''}}"
+            },
+            {
+              "name": "first_intended_use_case",
+              "value": "={{$json.body?.first_intended_use_case || $json.first_intended_use_case || ''}}"
+            },
+            {
+              "name": "first_key_action_completed",
+              "value": "={{$json.body?.first_key_action_completed || $json.first_key_action_completed || ''}}"
+            },
+            {
+              "name": "first_blocker",
+              "value": "={{$json.body?.first_blocker || $json.first_blocker || ''}}"
+            },
+            {
+              "name": "follow_up_status",
+              "value": "={{$json.body?.follow_up_status || $json.follow_up_status || ''}}"
+            },
+            {
+              "name": "follow_up_date",
+              "value": "={{$json.body?.follow_up_date || $json.follow_up_date || ''}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-node",
+      "name": "Map Signup Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/{{$json.email}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.HUBSPOT_PAT || 'REPLACE_WITH_HUBSPOT_TOKEN'}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  properties: [\n    { property: 'email', value: $json.email },\n    { property: 'agentlab_account_created', value: 'true' },\n    { property: 'agentlab_signup_date', value: $json.signup_date },\n    { property: 'signup_counted', value: 'true' },\n    { property: 'signup_source', value: $json.signup_source || 'direct' },\n    { property: 'signup_page_or_funnel', value: $json.signup_page_or_funnel || 'agentlab_homepage' },\n    { property: 'product_of_interest', value: $json.product_of_interest || 'agent_lab_os' },\n    { property: 'offer_of_interest', value: $json.offer_of_interest || '' },\n    { property: 'audience_bucket', value: $json.audience_bucket || '' },\n    { property: 'activation_status', value: 'not_activated' },\n    { property: 'first_intended_use_case', value: $json.first_intended_use_case || '' },\n    { property: 'first_key_action_completed', value: $json.first_key_action_completed || '' },\n    { property: 'feedback_requested', value: 'false' },\n    { property: 'feedback_received', value: 'false' },\n    { property: 'first_blocker', value: $json.first_blocker || '' },\n    { property: 'follow_up_status', value: $json.follow_up_status || '' },\n    { property: 'follow_up_date', value: $json.follow_up_date || '' }\n  ]\n} }}",
+        "options": {}
+      },
+      "id": "hubspot-node",
+      "name": "Create or Update HubSpot Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, email: $json.vid ? undefined : $item(0).$node['Map Signup Fields'].json.email, hubspotResponse: $json } }}",
+        "options": {}
+      },
+      "id": "respond-node",
+      "name": "Return Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1220,
+        300
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AgentLab Signup Webhook": {
+      "main": [
+        [
+          {
+            "node": "Map Signup Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map Signup Fields": {
+      "main": [
+        [
+          {
+            "node": "Create or Update HubSpot Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or Update HubSpot Contact": {
+      "main": [
+        [
+          {
+            "node": "Return Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "agentlab-signup-to-hubspot-template"
+  },
+  "id": "agentlab-signup-to-hubspot"
+}

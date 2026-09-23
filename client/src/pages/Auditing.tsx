@@ -51,8 +51,8 @@ interface AuditLogItem {
   action: string;
   status: "success" | "requires_approval" | "warning" | "error";
   model: string;
-  latencyMs: number;
-  tokensTotal: number;
+  latencyMs: number | null;
+  tokensTotal: number | null;
   cost: string;
   message: string;
   policyChecks?: {
@@ -326,10 +326,10 @@ export default function Auditing() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {isStatsLoading ? "..." : (statsData?.totalEvents24h || 1248).toLocaleString()}
+                {isStatsLoading ? "..." : (statsData?.totalEvents24h ?? 0).toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                <span className="text-emerald-400 font-medium">100%</span> trace fidelity
+                <span className="text-muted-foreground font-medium">events recorded</span>
               </p>
             </CardContent>
           </Card>
@@ -343,7 +343,7 @@ export default function Auditing() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-amber-400">
-                {isStatsLoading ? "..." : statsData?.pendingReviews ?? 1}
+                {isStatsLoading ? "..." : statsData?.pendingReviews ?? 0}
               </div>
               <p className="text-xs text-muted-foreground mt-1">Human-in-the-Loop gates</p>
             </CardContent>
@@ -358,7 +358,11 @@ export default function Auditing() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-emerald-400">
-                {isStatsLoading ? "..." : statsData?.saifComplianceRate || "99.8%"}
+                {isStatsLoading
+                  ? "..."
+                  : statsData?.saifComplianceRate != null
+                    ? statsData.saifComplianceRate
+                    : "not reported"}
               </div>
               <p className="text-xs text-muted-foreground mt-1">PII scrubbed & RLS verified</p>
             </CardContent>
@@ -570,9 +574,13 @@ export default function Auditing() {
                               {log.model}
                             </span>
                             <span>•</span>
-                            <span>{log.latencyMs}ms</span>
+                            <span>
+                              {log.latencyMs != null ? `${log.latencyMs}ms` : "latency n/r"}
+                            </span>
                             <span>•</span>
-                            <span>{log.tokensTotal} tokens</span>
+                            <span>
+                              {log.tokensTotal != null ? `${log.tokensTotal} tokens` : "tokens n/r"}
+                            </span>
                           </div>
                         </div>
                       </td>
@@ -668,11 +676,15 @@ export default function Auditing() {
                   </div>
                   <div>
                     <span className="text-muted-foreground block text-[10px] uppercase">Latency</span>
-                    <span className="font-bold text-foreground">{selectedLog.latencyMs} ms</span>
+                    <span className="font-bold text-foreground">
+                      {selectedLog.latencyMs != null ? `${selectedLog.latencyMs} ms` : "not reported"}
+                    </span>
                   </div>
                   <div>
                     <span className="text-muted-foreground block text-[10px] uppercase">Total Tokens</span>
-                    <span className="font-bold text-foreground">{selectedLog.tokensTotal}</span>
+                    <span className="font-bold text-foreground">
+                      {selectedLog.tokensTotal != null ? selectedLog.tokensTotal : "not reported"}
+                    </span>
                   </div>
                 </div>
 

@@ -31,11 +31,13 @@ export interface CapturedArtifact {
 
 export interface AgentRunnerResult {
   outputPayload: any;
-  tokensPrompt: number;
-  tokensCompletion: number;
-  tokensTotal: number;
-  cost: number;
-  latencyMs: number;
+  // Token/cost/latency values are null when genuinely unknown (e.g. mocked
+  // response without a model call) — never fabricated. See honesty-audit P1-1.
+  tokensPrompt: number | null;
+  tokensCompletion: number | null;
+  tokensTotal: number | null;
+  cost: number | null;
+  latencyMs: number | null;
   toolsExecuted: CapturedToolCall[];
   hasRefusal: boolean;
   refusalReason?: string;
@@ -275,13 +277,15 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
     console.warn("[Agent Runner] Missing GOOGLE_GENERATIVE_AI_API_KEY, returning mock response.");
     const mockOutput = { result: "Mocked success response because GOOGLE_GENERATIVE_AI_API_KEY is missing." };
+    // Honesty rule (honesty-audit P1-1): a mocked response consumed no model
+    // tokens and has no real latency — record nulls, not invented numbers.
     return {
       outputPayload: mockOutput,
-      tokensPrompt: 0,
-      tokensCompletion: 0,
-      tokensTotal: 0,
-      cost: 0,
-      latencyMs: 100,
+      tokensPrompt: null,
+      tokensCompletion: null,
+      tokensTotal: null,
+      cost: null,
+      latencyMs: null,
       toolsExecuted: [],
       hasRefusal: false,
       extractedArtifacts: [],

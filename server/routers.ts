@@ -10,6 +10,13 @@ import { settingsRouter } from "./settings/router";
 import { auditingRouter } from "./auditing/router";
 import { founderIntakeRouter } from "./founder-intake/router";
 import { discountRouter } from "./discounts/router";
+import { newsletterRouter } from "./newsletter/router";
+import { blogRouter } from "./blog/router";
+import { contactRouter } from "./contact/router";
+import { messengerRouter } from "./messenger/router";
+import { meetingRouter } from "./meeting/router";
+import { teardownRouter } from "./teardown/router";
+import { actionsRouter } from "./actions/router";
 
 export const appRouter = router({
   // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -34,6 +41,13 @@ export const appRouter = router({
   settings: settingsRouter,
   auditing: auditingRouter,
   founderIntake: founderIntakeRouter,
+  newsletter: newsletterRouter,
+  blog: blogRouter,
+  contact: contactRouter,
+  messenger: messengerRouter,
+  meeting: meetingRouter,
+  teardown: teardownRouter,
+  actions: actionsRouter,
 });
 
 export type AppRouter = typeof appRouter;

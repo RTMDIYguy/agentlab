@@ -155,7 +155,7 @@ export function DocVisualBlueprint({ doc }: DocVisualBlueprintProps) {
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="text-[10px] font-mono">
-                LIVE BLUEPRINT
+                UI BLUEPRINT — ILLUSTRATIVE
               </Badge>
             </div>
           </div>
@@ -300,8 +300,8 @@ function renderMockContent(type: DocPageEntry["mockLayoutType"]) {
           <div className="flex items-center justify-between bg-card p-3 rounded-xl border border-border">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="text-xs font-bold text-foreground">Cloud Run Fleet: 6/6 Online</span>
-              <span className="text-[10px] bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded font-mono">99.9% Uptime</span>
+              <span className="text-xs font-bold text-foreground">Cloud Run Fleet</span>
+              <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded font-mono">Illustrative</span>
             </div>
             <div className="h-7 px-3 bg-primary/20 text-primary text-xs rounded-lg flex items-center gap-1 font-semibold">
               <RotateCcw className="w-3 h-3" /> Sync All

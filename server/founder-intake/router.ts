@@ -1,19 +1,31 @@
 import { z } from "zod";
+import { eq } from "drizzle-orm";
 import { publicProcedure, router } from "../_core/trpc";
+import { getDb } from "../db";
+import { contactSubmissions } from "../schema";
+import { syncContactSubmission } from "../hubspot/sync";
 
-async function createContactSubmission(data: any) {
-  console.log("[Founder Intake] Submission recorded:", data);
-  return { id: "sub_" + Date.now(), ...data };
-}
+async function relayToN8nIfConfigured(payload: Record<string, unknown>) {
+  const webhookUrl = process.env.N8N_INTAKE_WEBHOOK_URL;
+  if (!webhookUrl) return false;
 
-async function sendContactFormEmail(data: any) {
-  console.log("[Founder Intake] Email sent:", data);
-  return true;
-}
-
-async function sendContactFormReply(...args: any[]) {
-  console.log("[Founder Intake] Reply sent:", args);
-  return true;
+  try {
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      console.error(
+        `[Founder Intake] n8n relay failed with status ${response.status}`
+      );
+      return false;
+    }
+    return true;
+  } catch (err: any) {
+    console.error("[Founder Intake] n8n relay error:", err?.message);
+    return false;
+  }
 }
 
 
@@ -252,49 +264,67 @@ export const founderIntakeRouter = router({
         painPoint: z.string().optional(),
         interest: z.string().optional(),
       })
-    )
-    .mutation(async ({ input }) => {
+    )    .mutation(async ({ input }) => {
+      const db = await getDb();
       const subject = `Founder Intake Lead${input.interest ? ` - ${input.interest}` : ""}`;
-      const message = [
-        `Name: ${input.name}`,
-        `Email: ${input.email}`,
-        `Company: ${input.company || "Not provided"}`,
-        `Pain Point: ${input.painPoint || "Not provided"}`,
-        `Interest: ${input.interest || "General founder intake"}`,
-        "",
-        "This lead was captured through the Founder Intake Agent.",
-      ].join("\n");
 
-      const submission = await createContactSubmission({
-        name: input.name,
-        email: input.email,
-        subject,
-        message,
-        status: "new",
+      // Persist first: a webhook failure must never lose a lead.
+      const [submission] = await db
+        .insert(contactSubmissions)
+        .values({
+          name: input.name,
+          email: input.email.toLowerCase(),
+          company: input.company ?? null,
+          painPoint: input.painPoint ?? null,
+          interest: input.interest ?? null,
+          subject,
+          message: [
+            `Company: ${input.company || "Not provided"}`,
+            `Pain Point: ${input.painPoint || "Not provided"}`,
+            "",
+            "This lead was captured through the Founder Intake Agent.",
+          ].join("\n"),
+          source: "founder-intake-chat",
+          status: "new",
+        })
+        .returning({ id: contactSubmissions.id });
+
+      // Optional CRM relay via the same pipeline as the rest of the site.
+      const relayed = await relayToN8nIfConfigured({
+        "Contact Name": input.name,
+        "Email": input.email.toLowerCase(),
+        "Service Line": input.interest || "Founder Intake",
+        "Source": "AgentLab Founder Intake Chat",
+        "Notes": `Company: ${input.company || "Not provided"}\nPain Point: ${input.painPoint || "Not provided"}`,
+        "Deal Value ($)": "0",
+        "HubSpotSync": "",
       });
 
-      const emailSent = await sendContactFormEmail({
-        name: input.name,
-        email: input.email,
-        subject,
-        message,
-      });
-
-      const replySent = await sendContactFormReply(input.email, input.name);
-
-      if (!emailSent) {
-        console.warn(
-          "[Founder Intake] Failed to send intake notification email"
-        );
+      // HubSpot lead handoff (blueprint Phase 1) — direct sync, independent
+      // of the optional n8n relay. Best-effort and honestly logged; the
+      // submission flips to `synced` only on a real HubSpot confirmation.
+      try {
+        const [full] = await db
+          .select()
+          .from(contactSubmissions)
+          .where(eq(contactSubmissions.id, submission.id));
+        if (full) {
+          await syncContactSubmission(full);
+        }
+      } catch (syncErr: any) {
+        console.error("[FounderIntake] HubSpot sync error:", syncErr?.message);
       }
 
-      if (!replySent) {
-        console.warn("[Founder Intake] Failed to send intake auto-reply");
+      if (relayed) {
+        await db
+          .update(contactSubmissions)
+          .set({ status: "synced", crmSyncedAt: new Date() })
+          .where(eq(contactSubmissions.id, submission.id));
       }
 
       return {
         success: true,
-        submissionId: (submission as any).insertId,
+        submissionId: submission.id,
         message: "Lead captured successfully.",
       };
     }),

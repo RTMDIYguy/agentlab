@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { router, protectedProcedure } from "../_core/trpc";
-import { eq, desc, and, isNull } from "drizzle-orm";
-import { getDb } from "../db";
-import { articles } from "../schema";
+import { router, publicProcedure, protectedProcedure } from "./_core/trpc";
+import { eq, desc, and, isNull, sql } from "drizzle-orm";
+import { getDb } from "./db";
+import { articles, users } from "./schema";
 
 export const articlesRouter = router({
   getMyArticles: protectedProcedure
@@ -132,6 +132,162 @@ export const articlesRouter = router({
         throw new Error("Article not found or not owned by you");
       }
       return rowToArticle(row);
+    }),
+
+  /**
+   * Public: all published articles (blog index). Authors' display names are
+   * pulled from the users table so the blog renders real authors.
+   */
+  getPublished: publicProcedure
+    .input(
+      z
+        .object({ limit: z.number().min(1).max(100).default(50) })
+        .default({ limit: 50 })
+    )
+    .query(async ({ input }) => {
+      const db = await getDb();
+      const rows = await db
+        .select({
+          id: articles.id,
+          title: articles.title,
+          excerpt: articles.excerpt,
+          slug: articles.slug,
+          category: articles.category,
+          status: articles.status,
+          featuredImage: articles.featuredImage,
+          views: articles.views,
+          createdAt: articles.createdAt,
+          publishedAt: articles.scheduledFor,
+          authorName: users.name,
+        })
+        .from(articles)
+        .leftJoin(users, eq(users.openId, articles.ownerOpenId))
+        .where(eq(articles.status, "published"))
+        .orderBy(desc(articles.updatedAt))
+        .limit(input.limit);
+
+      return rows.map(row => ({
+        id: row.id,
+        title: row.title,
+        excerpt: row.excerpt || "",
+        slug: row.slug,
+        category: row.category,
+        featuredImage: row.featuredImage || "",
+        views: row.views ?? 0,
+        authorName: row.authorName || "Uncle Robert Consulting",
+        publishedAt: (row.publishedAt || row.createdAt).toISOString(),
+      }));
+    }),
+
+  /**
+   * Public: single published article by slug (blog detail).
+   */
+  getPublishedBySlug: publicProcedure
+    .input(z.object({ slug: z.string().min(1).max(255) }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      const [row] = await db
+        .select({
+          id: articles.id,
+          title: articles.title,
+          excerpt: articles.excerpt,
+          content: articles.content,
+          slug: articles.slug,
+          category: articles.category,
+          status: articles.status,
+          featuredImage: articles.featuredImage,
+          views: articles.views,
+          createdAt: articles.createdAt,
+          updatedAt: articles.updatedAt,
+          scheduledFor: articles.scheduledFor,
+          authorName: users.name,
+        })
+        .from(articles)
+        .leftJoin(users, eq(users.openId, articles.ownerOpenId))
+        .where(
+          and(
+            eq(articles.slug, input.slug),
+            eq(articles.status, "published")
+          )
+        )
+        .limit(1);
+
+      if (!row) {
+        throw new Error(`Article not found: ${input.slug}`);
+      }
+
+      return {
+        id: row.id,
+        title: row.title,
+        excerpt: row.excerpt || "",
+        content: row.content,
+        slug: row.slug,
+        category: row.category,
+        featuredImage: row.featuredImage || "",
+        views: row.views ?? 0,
+        authorName: row.authorName || "Uncle Robert Consulting",
+        publishedAt: (row.scheduledFor || row.createdAt).toISOString(),
+      };
+    }),
+
+  /** Related published articles (same category, excludes current). */
+  getRelated: publicProcedure
+    .input(
+      z.object({
+        slug: z.string().min(1).max(255),
+        limit: z.number().min(1).max(6).default(3),
+      })
+    )
+    .query(async ({ input }) => {
+      const db = await getDb();
+      const [current] = await db
+        .select({ category: articles.category })
+        .from(articles)
+        .where(eq(articles.slug, input.slug))
+        .limit(1);
+
+      if (!current) return [];
+
+      const rows = await db
+        .select({
+          id: articles.id,
+          title: articles.title,
+          excerpt: articles.excerpt,
+          slug: articles.slug,
+          category: articles.category,
+          createdAt: articles.createdAt,
+        })
+        .from(articles)
+        .where(
+          and(
+            eq(articles.status, "published"),
+            eq(articles.category, current.category),
+            sql`${articles.slug} <> ${input.slug}`
+          )
+        )
+        .orderBy(desc(articles.updatedAt))
+        .limit(input.limit);
+
+      return rows.map(row => ({
+        id: row.id,
+        title: row.title,
+        excerpt: row.excerpt || "",
+        slug: row.slug,
+        category: row.category,
+        publishedAt: row.createdAt.toISOString(),
+      }));
+    }),
+
+  /** Increment view counter when an article is read. */
+  incrementViews: publicProcedure
+    .input(z.object({ slug: z.string().min(1).max(255) }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      await db
+        .update(articles)
+        .set({ views: sql`${articles.views} + 1` })
+      .where(eq(articles.slug, input.slug));
+      return { success: true };
     }),
 
   delete: protectedProcedure

@@ -1,3 +1,4 @@
+import { param } from "./params";
 import type { Request, Response } from "express";
 import { eq, and } from "drizzle-orm";
 import { getDb } from "../db";
@@ -438,7 +439,7 @@ export async function getMarketplaceItems(req: Request, res: Response): Promise<
 export async function mountPlaybook(req: Request, res: Response): Promise<void> {
   try {
     const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
-    const { id } = req.params;
+    const id = param(req, "id");
 
     const db = await getDb();
     if (db) {
@@ -582,7 +583,7 @@ export async function mountPlaybook(req: Request, res: Response): Promise<void> 
 export async function unmountPlaybook(req: Request, res: Response): Promise<void> {
   try {
     const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
-    const { id } = req.params;
+    const id = param(req, "id");
 
     const db = await getDb();
     if (db) {
@@ -699,7 +700,7 @@ export async function getBetaStatus(req: Request, res: Response): Promise<void> 
 export async function enrollBeta(req: Request, res: Response): Promise<void> {
   try {
     const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
-    const { appId } = req.params;
+    const appId = param(req, "appId");
 
     if (!inMemoryBetaEnrollments.has(workspaceId)) {
       inMemoryBetaEnrollments.set(workspaceId, new Set<string>(["app-leadpulse", "app-pulse-social"]));

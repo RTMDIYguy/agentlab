@@ -1,3 +1,4 @@
+import { param } from "./params";
 import { Request, Response } from "express";
 import { db } from "../db";
 import { icpProfiles } from "../schema";
@@ -338,7 +339,7 @@ export async function createIcpProfile(req: Request, res: Response) {
  */
 export async function deleteIcpProfile(req: Request, res: Response) {
   try {
-    const { id } = req.params;
+    const id = param(req, "id");
     if (!id) {
       return res.status(400).json({ success: false, error: "ID required" });
     }

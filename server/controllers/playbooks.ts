@@ -1,3 +1,4 @@
+import { param } from "./params";
 import type { Request, Response } from "express";
 import { asc, eq, sql } from "drizzle-orm";
 import { getDb } from "../db";
@@ -158,7 +159,7 @@ export async function getPlaybooks(
 }
 
 export async function getPlaybook(req: Request, res: Response): Promise<void> {
-  const { id } = req.params;
+  const id = param(req, "id");
   try {
     const db = await getDb();
     if (db) {

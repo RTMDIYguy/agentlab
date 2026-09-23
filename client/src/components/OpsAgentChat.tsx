@@ -43,12 +43,12 @@ type ChatMessage = {
   role: "user" | "assistant";
   content: string;
   proposal?: WorkflowProposal;
-  executionStatus?: "idle" | "running" | "completed" | "failed";
+  executionStatus?: "idle" | "running" | "completed" | "failed" | "paused";
   runResult?: {
     runId: string;
     summary: string;
-    latencyMs: number;
-    tokensUsed: number;
+    latencyMs: number | null;
+    tokensUsed: number | null;
   };
 };
 
@@ -127,23 +127,42 @@ export function OpsAgentChat() {
         body: JSON.stringify({ proposal }),
       });
 
-      if (!res.ok) throw new Error("Execution failed");
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.error || `Execution failed (${res.status})`);
+      }
       const data = await res.json();
 
       toast.dismiss();
-      toast.success(`DAG Swarm Complete: ${proposal.name} (Run ID: ${data.runId})`);
+
+      // Report the run's REAL outcome — completed, paused at a guardrail,
+      // or failed — never a canned success.
+      if (data.status === "failed") {
+        toast.error(`Run failed: ${data.errorMessage || "see run inspector"}`);
+      } else if (data.status === "paused_for_approval") {
+        toast.info(`Run paused for approval at a guardrail — approve it in Command Center.`);
+      } else {
+        toast.success(
+          `Run ${data.status}: ${data.artifactsCount} artifact(s) created (Run ID: ${data.runId})`
+        );
+      }
 
       setMessages((current) =>
         current.map((m) =>
           m.id === msgId
             ? {
                 ...m,
-                executionStatus: "completed",
+                executionStatus:
+                  data.status === "failed"
+                    ? "failed"
+                    : data.status === "paused_for_approval"
+                      ? "paused"
+                      : "completed",
                 runResult: {
                   runId: data.runId,
                   summary: data.summary,
-                  latencyMs: data.executionMetrics?.latencyMs || 24,
-                  tokensUsed: data.executionMetrics?.tokensUsed || 380,
+                  latencyMs: data.executionMetrics?.latencyMs ?? null,
+                  tokensUsed: data.executionMetrics?.tokensUsed ?? null,
                 },
               }
             : m
@@ -152,9 +171,9 @@ export function OpsAgentChat() {
 
       // Dispatch window event so dashboards and command center refresh
       window.dispatchEvent(new CustomEvent("agentlab:workflow-executed", { detail: data }));
-    } catch (err) {
+    } catch (err: any) {
       toast.dismiss();
-      toast.error("Failed to execute workflow in OS.");
+      toast.error(`Failed to execute workflow in OS: ${err?.message ?? "unknown error"}`);
       setMessages((current) =>
         current.map((m) =>
           m.id === msgId ? { ...m, executionStatus: "failed" } : m
@@ -376,13 +395,23 @@ export function OpsAgentChat() {
 
                         {/* Execution & Rejection Actions */}
                         <div className="pt-2 flex items-center gap-2">
-                          {msg.executionStatus === "completed" ? (
+                          {msg.executionStatus === "paused" ? (
+                            <div className="p-2 w-full rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[11px] flex items-center justify-between">
+                              <div className="flex items-center gap-1.5 font-bold">
+                                <CheckCircle2 className="w-4 h-4 text-amber-400" />
+                                <span>Paused for approval ({msg.runResult?.runId})</span>
+                              </div>
+                              <span className="font-[10px] font-mono">guardrail reached</span>
+                            </div>
+                          ) : msg.executionStatus === "completed" ? (
                             <div className="p-2 w-full rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] flex items-center justify-between">
                               <div className="flex items-center gap-1.5 font-bold">
                                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                                 <span>Executed in OS ({msg.runResult?.runId})</span>
                               </div>
-                              <span className="font-mono text-[10px]">{msg.runResult?.latencyMs}ms</span>
+                              <span className="font-mono text-[10px]">
+                                {msg.runResult?.latencyMs != null ? `${msg.runResult.latencyMs}ms` : "latency not reported"}
+                              </span>
                             </div>
                           ) : (
                             <>

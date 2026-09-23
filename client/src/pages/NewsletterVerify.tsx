@@ -14,12 +14,7 @@ export default function NewsletterVerify() {
   );
   const [message, setMessage] = useState("");
 
-  const verifyMutation = (trpc as any).newsletter?.verify?.useMutation?.() ?? {
-    mutateAsync: async () => {},
-    isPending: false,
-  };
-
-
+  const verifyMutation = trpc.newsletter.verify.useMutation();
   useEffect(() => {
     if (!params?.token) {
       setStatus("error");

@@ -1,3 +1,4 @@
+import { param } from "./params";
 import { Request, Response } from "express";
 import { db } from "../db";
 import { assessmentQuestions, assessmentSessions } from "../schema";
@@ -296,7 +297,7 @@ export async function createAssessmentQuestion(req: Request, res: Response) {
  */
 export async function deleteAssessmentQuestion(req: Request, res: Response) {
   try {
-    const { id } = req.params;
+    const id = param(req, "id");
     if (!id) {
       return res.status(400).json({ success: false, error: "Question ID is required" });
     }

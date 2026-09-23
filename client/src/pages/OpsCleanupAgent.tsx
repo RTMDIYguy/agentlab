@@ -4,6 +4,7 @@ import {
   FolderTree,
   Sparkles,
   CheckCircle2,
+  XCircle,
   Mic,
   MicOff,
   Paperclip,
@@ -111,8 +112,8 @@ type OrchestratorChatResponse = {
   };
   executionMetrics?: {
     model: string;
-    latencyMs?: number;
-    tokensUsed?: number;
+    latencyMs?: number | null;
+    tokensUsed?: number | null;
   };
 };
 
@@ -146,6 +147,7 @@ export default function OpsCleanupAgent() {
   // Live execution tracking state
   const [isLiveExecuting, setIsLiveExecuting] = useState(false);
   const [executionSteps, setExecutionSteps] = useState<ExecutionStepState[]>([]);
+  const [runStatus, setRunStatus] = useState<string | null>(null);
   const [executedWorkflowId, setExecutedWorkflowId] = useState<string | null>(null);
   const [executedRunId, setExecutedRunId] = useState<string | null>(null);
 
@@ -263,6 +265,7 @@ export default function OpsCleanupAgent() {
     setAgentResponse(null);
     setIsLiveExecuting(false);
     setExecutionSteps([]);
+    setRunStatus(null);
 
     try {
       const res = await fetch("/api/orchestrator/chat", {
@@ -305,6 +308,53 @@ export default function OpsCleanupAgent() {
       agentId: s.agentId || "Alpha-Node-01",
     }));
     setExecutionSteps(steps);
+    setRunStatus(null);
+
+    // Maps the real /api/runs/:id response onto the step tracker. Every status,
+    // duration, and summary shown comes from the backend run — no simulation.
+    const pollRunSteps = async (runId: string): Promise<string> => {
+      const terminalStatuses = ["completed", "failed", "paused_for_approval"];
+      const maxAttempts = 150; // 150 * 2s = 5 minutes max
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        let data: any;
+        try {
+          const res = await fetch(`/api/runs/${runId}`, {
+            headers: { Accept: "application/json" },
+          });
+          if (!res.ok) continue; // transient: run row may not be visible yet
+          data = await res.json();
+        } catch {
+          continue; // transient network error — keep polling
+        }
+
+        const apiSteps: any[] = Array.isArray(data?.steps) ? data.steps : [];
+        if (apiSteps.length > 0) {
+          setExecutionSteps(
+            apiSteps.map((rs: any, idx: number) => ({
+              stepNumber: rs.stepNumber ?? idx + 1,
+              title: rs.stepTitle || `Step ${idx + 1}`,
+              status: (rs.status ?? "pending") as ExecutionStepState["status"],
+              agentId: rs.agentName || rs.agentId,
+              durationMs: rs.latencyMs ?? undefined,
+              outputSummary:
+                rs.status === "completed"
+                  ? [
+                      rs.toolsExecuted?.length ? `${rs.toolsExecuted.length} tool(s) executed` : null,
+                      rs.artifactsCreatedCount ? `${rs.artifactsCreatedCount} artifact(s) created` : null,
+                    ]
+                      .filter(Boolean)
+                      .join(" • ") || undefined
+                  : undefined,
+            }))
+          );
+        }
+        const status = data?.run?.status;
+        setRunStatus(status ?? null);
+        if (status && terminalStatuses.includes(status)) return status;
+      }
+      return "poll_timeout";
+    };
 
     try {
       // 1. Deploy DAG
@@ -319,48 +369,46 @@ export default function OpsCleanupAgent() {
       const workflowId = deployData.workflow?.id;
       setExecutedWorkflowId(workflowId);
 
-      // Simulate live step execution progression in-situ for verified telemetry
-      for (let i = 0; i < steps.length; i++) {
-        setExecutionSteps((prev) =>
-          prev.map((step, idx) => (idx === i ? { ...step, status: "running" } : step))
-        );
-        await new Promise((resolve) => setTimeout(resolve, 800));
+      // 2. Trigger the real run on the backend — failures here are surfaced,
+      // not papered over with simulated progress.
+      if (!workflowId) throw new Error("Deploy succeeded but no workflow id was returned");
+      const runRes = await fetch(`/api/workflows/${workflowId}/run`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          initialContext: { source: "OpsAgent_Multimodal", task, model: selectedModel },
+          triggerSource: "ops_agent_execute",
+        }),
+      });
+      if (!runRes.ok) throw new Error(`Failed to trigger workflow run (${runRes.status})`);
+      const runData = await runRes.json();
+      const runId = runData.runId || runData.run?.id;
+      setExecutedRunId(runId);
 
-        setExecutionSteps((prev) =>
-          prev.map((step, idx) =>
-            idx === i
-              ? {
-                  ...step,
-                  status: "completed",
-                  durationMs: Math.floor(Math.random() * 200) + 120,
-                  outputSummary: `Verified & executed by ${step.agentId || "Agent Node"}. SAIF cryptographic hash valid.`,
-                }
-              : step
-          )
-        );
+      if (!runId) {
+        setRunStatus("not_started");
+        throw new Error("Run triggered but no run id was returned — check the run inspector");
       }
 
-      // 2. Trigger real run execution on backend
-      if (workflowId) {
-        const runRes = await fetch(`/api/workflows/${workflowId}/run`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({
-            initialContext: { source: "OpsAgent_Multimodal", task, model: selectedModel },
-            triggerSource: "ops_agent_execute",
-          }),
-        });
-        if (runRes.ok) {
-          const runData = await runRes.json();
-          setExecutedRunId(runData.runId || runData.run?.id);
-        }
-      }
+      // 3. Track the REAL run until it reaches a terminal state.
+      toast.info("Run started — tracking real backend execution…");
+      const finalStatus = await pollRunSteps(runId);
 
       await queryClient.invalidateQueries({ queryKey: ["workflows"] });
       await queryClient.invalidateQueries({ queryKey: ["runs"] });
-      toast.success("DAG successfully deployed and verified across swarm nodes!");
+
+      if (finalStatus === "completed") {
+        toast.success("Run completed — step statuses above reflect the real backend run.");
+      } else if (finalStatus === "failed") {
+        toast.error("Run failed — see step statuses above; open Inspect Audit Log for details.");
+      } else if (finalStatus === "paused_for_approval") {
+        toast.info("Run paused for Human-in-the-Loop approval — open the run inspector to approve.");
+      } else {
+        toast.error("Stopped tracking after 5 minutes — the run may still be executing; check the run inspector.");
+      }
     } catch (err: any) {
       console.error(err);
+      setRunStatus("error");
       toast.error(err.message || "Execution error encountered.");
     } finally {
       setIsDeploying(false);
@@ -662,10 +710,23 @@ export default function OpsCleanupAgent() {
                   <div className="flex items-center gap-2">
                     <Zap className="w-5 h-5 text-primary animate-bounce" />
                     <h3 className="font-semibold text-foreground text-sm">
-                      Live In-Situ Swarm Execution & Verification
+                      Live Swarm Execution — Real Backend Run
                     </h3>
                   </div>
                   <div className="flex items-center gap-2">
+                    {runStatus && (
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider ${
+                          runStatus === "completed"
+                            ? "bg-green-500/10 text-green-500"
+                            : runStatus === "failed"
+                              ? "bg-red-500/10 text-red-500"
+                              : "bg-primary/10 text-primary"
+                        }`}
+                      >
+                        run: {runStatus.replace(/_/g, " ")}
+                      </span>
+                    )}
                     <span className="text-xs text-muted-foreground font-mono">
                       {executedWorkflowId ? `WF: ${executedWorkflowId.slice(0, 8)}` : "Deploying..."}
                     </span>
@@ -689,6 +750,8 @@ export default function OpsCleanupAgent() {
                           ? "bg-background/90 border-green-500/30 text-foreground"
                           : step.status === "running"
                           ? "bg-primary/10 border-primary text-foreground ring-1 ring-primary/40 animate-pulse"
+                          : step.status === "failed"
+                          ? "bg-red-500/5 border-red-500/40 text-foreground"
                           : "bg-muted/20 border-border text-muted-foreground"
                       }`}
                     >
@@ -699,11 +762,15 @@ export default function OpsCleanupAgent() {
                               ? "bg-green-500/20 text-green-500"
                               : step.status === "running"
                               ? "bg-primary/20 text-primary"
+                              : step.status === "failed"
+                              ? "bg-red-500/20 text-red-500"
                               : "bg-muted text-muted-foreground"
                           }`}
                         >
                           {step.status === "completed" ? (
                             <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          ) : step.status === "failed" ? (
+                            <XCircle className="w-4 h-4 text-red-500" />
                           ) : (
                             step.stepNumber
                           )}
@@ -724,6 +791,8 @@ export default function OpsCleanupAgent() {
                               ? "bg-green-500/10 text-green-500"
                               : step.status === "running"
                               ? "bg-primary/20 text-primary"
+                              : step.status === "failed"
+                              ? "bg-red-500/10 text-red-500"
                               : "bg-muted text-muted-foreground"
                           }`}
                         >
@@ -750,7 +819,10 @@ export default function OpsCleanupAgent() {
                 </div>
                 {agentResponse?.executionMetrics && (
                   <span className="text-[11px] font-mono text-muted-foreground">
-                    Model: {agentResponse.executionMetrics.model} | {agentResponse.executionMetrics.tokensUsed || 450} tokens
+                    Model: {agentResponse.executionMetrics.model} | {" "}
+                    {agentResponse.executionMetrics.tokensUsed != null
+                      ? `${agentResponse.executionMetrics.tokensUsed} tokens`
+                      : "token usage not reported"}
                   </span>
                 )}
               </div>

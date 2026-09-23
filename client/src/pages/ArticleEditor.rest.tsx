@@ -24,6 +24,7 @@ type LocalArticle = {
   title: string;
   excerpt: string;
   content: string;
+  metadata: Record<string, unknown>;
   slug: string;
   category: string;
   status: "draft" | "scheduled" | "published";
@@ -39,6 +40,7 @@ function mapApiToLocal(api: ApiArtifact): LocalArticle {
     title: api.title,
     excerpt: api.summary ?? "",
     content: api.content,
+    metadata: api.metadata ?? {},
     slug: (api.metadata?.slug as string) || slugify(api.title),
     category: (api.metadata?.category as string) || "General",
     status: api.status as "draft" | "scheduled" | "published",

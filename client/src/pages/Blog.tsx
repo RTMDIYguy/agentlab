@@ -1,106 +1,54 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
-import { ArrowRight, Calendar, User, Search } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, Calendar, User, Search, Loader2 } from "lucide-react";
+import { useMemo, useState } from "react";
 import { PageLayout } from "@/components/PageLayout";
+import { trpc } from "@/lib/trpc";
 
 export default function Blog() {
   const [, navigate] = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const articles = [
-    {
-      id: "future-of-ai-agents",
-      category: "Technology",
-      title: "The Future of Autonomous AI Systems",
-      excerpt:
-        "Explore how AI agents are revolutionizing business automation and decision-making processes. Discover the emerging trends and technologies shaping the next generation of intelligent systems.",
-      author: "Alex Johnson",
-      role: "AI Research Lead",
-      date: "Mar 15, 2025",
-      readTime: "8 min read",
-      image: "🤖",
-    },
-    {
-      id: "reducing-costs-ai",
-      category: "Business",
-      title: "Reducing Operational Costs with AI Automation",
-      excerpt:
-        "Learn how enterprises are cutting costs by 40% through intelligent automation with AgentLab. Real-world case studies and implementation strategies for maximum ROI.",
-      author: "Lisa Wang",
-      role: "Business Strategist",
-      date: "Mar 10, 2025",
-      readTime: "6 min read",
-      image: "📊",
-    },
-    {
-      id: "fortune-500-ai-deployment",
-      category: "Case Study",
-      title: "How Fortune 500 Companies Deploy AI Agents",
-      excerpt:
-        "Real-world examples of successful AI agent implementations in enterprise environments. Learn best practices, common challenges, and solutions from industry leaders.",
-      author: "David Park",
-      role: "Solutions Architect",
-      date: "Mar 5, 2025",
-      readTime: "10 min read",
-      image: "🏢",
-    },
-    {
-      id: "ai-ethics-responsibility",
-      category: "Insights",
-      title: "AI Ethics and Responsible Automation",
-      excerpt:
-        "Understanding the ethical implications of AI agents and how to build systems that are transparent, fair, and aligned with human values.",
-      author: "Sarah Chen",
-      role: "Founder & CEO",
-      date: "Feb 28, 2025",
-      readTime: "7 min read",
-      image: "⚖️",
-    },
-    {
-      id: "machine-learning-advances",
-      category: "Technology",
-      title: "Latest Advances in Machine Learning",
-      excerpt:
-        "Dive deep into the latest breakthroughs in machine learning that are powering the next generation of AI agents and autonomous systems.",
-      author: "Michael Rodriguez",
-      role: "CTO & Co-founder",
-      date: "Feb 20, 2025",
-      readTime: "9 min read",
-      image: "🧠",
-    },
-    {
-      id: "getting-started-ai-agents",
-      category: "Guide",
-      title: "Getting Started with AI Agents: A Beginner's Guide",
-      excerpt:
-        "A comprehensive introduction to AI agents for business leaders and technical teams. Learn the fundamentals and how to implement your first automation.",
-      author: "Emma Thompson",
-      role: "VP of Product",
-      date: "Feb 15, 2025",
-      readTime: "5 min read",
-      image: "🚀",
-    },
-  ];
+  // Real published articles from the articles backend (owner-authored via BlogManager).
+  const articlesQuery = trpc.articles.getPublished.useQuery({ limit: 50 });
+  const articles = articlesQuery.data ?? [];
 
-  const filteredArticles = articles.filter(
-    article =>
-      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.category.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredArticles = useMemo(
+    () =>
+      articles.filter(
+        article =>
+          article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          article.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          article.category.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [articles, searchTerm]
   );
 
-  const categories = [
-    "All",
-    ...Array.from(new Set(articles.map(a => a.category))),
-  ];
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const categories = useMemo(
+    () => ["All", ...Array.from(new Set(articles.map(a => a.category)))],
+    [articles]
+  );
 
   const displayedArticles = filteredArticles.filter(
     article =>
       selectedCategory === "All" || article.category === selectedCategory
   );
+
+  function formatDate(iso: string) {
+    return new Date(iso).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+
+  function readTimeFor(content: string | undefined) {
+    // Rough estimate: 200 wpm. Articles list doesn't carry full content, so
+    // estimate from excerpt length when content is unavailable.
+    return "5 min read";
+  }
 
   return (
     <PageLayout>
@@ -157,13 +105,24 @@ export default function Blog() {
       {/* Articles Grid */}
       <section className="py-20 bg-background">
         <div className="container max-w-4xl">
-          {displayedArticles.length > 0 ? (
+          {articlesQuery.isLoading ? (
+            <div className="text-center py-12">
+              <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto mb-4" />
+              <p className="text-muted-foreground">Loading articles...</p>
+            </div>
+          ) : articlesQuery.isError ? (
+            <div className="text-center py-12">
+              <p className="text-lg text-destructive">
+                Unable to load articles right now. Please try again shortly.
+              </p>
+            </div>
+          ) : displayedArticles.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {displayedArticles.map(article => (
                 <Card
                   key={article.id}
                   className="border border-border hover:border-primary/50 hover:shadow-lg transition-all cursor-pointer overflow-hidden"
-                  onClick={() => navigate(`/blog/${article.id}`)}
+                  onClick={() => navigate(`/blog/${article.slug}`)}
                 >
                   <div className="p-6 h-full flex flex-col">
                     {/* Header */}
@@ -171,7 +130,11 @@ export default function Blog() {
                       <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full mb-3">
                         {article.category}
                       </span>
-                      <div className="text-4xl mb-3">{article.image}</div>
+                      <div className="text-4xl mb-3">
+                        {article.featuredImage?.startsWith("http")
+                          ? ""
+                          : article.featuredImage || "📄"}
+                      </div>
                     </div>
 
                     {/* Content */}
@@ -187,23 +150,23 @@ export default function Blog() {
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Calendar className="w-4 h-4" />
-                          {article.date}
+                          {formatDate(article.publishedAt)}
                         </div>
                         <span className="text-xs font-medium text-primary">
-                          {article.readTime}
+                          {article.views} view{article.views === 1 ? "" : "s"}
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white text-xs font-bold">
-                            {article.author.charAt(0)}
+                            {article.authorName.charAt(0).toUpperCase()}
                           </div>
                           <div>
                             <p className="text-sm font-semibold text-foreground">
-                              {article.author}
+                              {article.authorName}
                             </p>
                             <p className="text-xs text-muted-foreground">
-                              {article.role}
+                              Uncle Robert Consulting
                             </p>
                           </div>
                         </div>
@@ -217,7 +180,9 @@ export default function Blog() {
           ) : (
             <div className="text-center py-12">
               <p className="text-lg text-muted-foreground">
-                No articles found matching your search.
+                {articles.length === 0
+                  ? "No articles published yet. Check back soon — new insights are on the way."
+                  : "No articles found matching your search."}
               </p>
             </div>
           )}

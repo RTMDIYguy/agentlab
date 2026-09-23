@@ -29,6 +29,55 @@
       "when": 1788886120790,
       "tag": "0003_fat_psynapse",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790120690364,
+      "tag": "0004_newsletter-contact-blog-comments",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790210000000,
+      "tag": "0005_messenger-threads-messages",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790296400000,
+      "tag": "0006_teardown-sessions",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1790382800000,
+      "tag": "0007_workflow-success-rate-nullable",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790469200000,
+      "tag": "0008_hubspot-sync-log",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1790555600000,
+      "tag": "0009_action-dispatches",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1790642000000,
+      "tag": "0010-runner-hardening",
+      "breakpoints": true
     }
   ]
 }

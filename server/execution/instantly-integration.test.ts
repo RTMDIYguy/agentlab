@@ -1,18 +1,16 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import dotenv from "dotenv";
-dotenv.config({ path: ".env.local" });
-import { processInstantlyWebhook, getInstantlyApiKey, verifyInstantlyConnection } from "../tools/instantly";
+import { processInstantlyWebhook, getInstantlyApiKey } from "../tools/instantly";
 
 describe("Instantly.ai Outbound Engine & Webhook Suite", () => {
   beforeAll(() => {
-    if (!process.env.INSTANTLY_API_KEY) {
-      process.env.INSTANTLY_API_KEY = "YmYxNmQ3OGMtNmI4MS00MjViLTlkNDUtZjVkMTQ5NzUyYTJjOnd4SFdXbEVHVUhlbA==";
-    }
+    // Hermetic test value. Real keys live in .env.local / the Settings vault
+    // and must never be embedded in test files (they end up in git history).
+    process.env.INSTANTLY_API_KEY = "test-suite-only-instantly-key";
   });
   it("retrieves the configured INSTANTLY_API_KEY from environment", () => {
     const apiKey = getInstantlyApiKey();
     expect(apiKey).toBeDefined();
-    expect(apiKey).toContain("YmYxNmQ3OGMtNmI4MS00MjViLTlkNDUtZjVkMTQ5NzUyYTJj");
+    expect(apiKey).toContain("test-suite-only-instantly-key");
   });
 
   it("classifies positive founder replies as hot leads for immediate diagnostic booking", () => {

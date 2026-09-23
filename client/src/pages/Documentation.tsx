@@ -137,12 +137,35 @@ export default function Documentation() {
                 <IconComponent className="w-7 h-7" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-foreground">
-                  {currentDoc.title}
-                </h1>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h1 className="text-3xl font-bold text-foreground">
+                    {currentDoc.title}
+                  </h1>
+                  {currentDoc.status === "roadmap" && (
+                    <Badge className="bg-amber-500/15 text-amber-600 border-amber-500/40 text-[10px] font-mono uppercase">
+                      Roadmap — not yet built
+                    </Badge>
+                  )}
+                  {currentDoc.status === "partial" && (
+                    <Badge className="bg-sky-500/15 text-sky-600 border-sky-500/40 text-[10px] font-mono uppercase">
+                      Partially shipped
+                    </Badge>
+                  )}
+                  {currentDoc.status === "live" && (
+                    <Badge className="bg-emerald-500/15 text-emerald-600 border-emerald-500/40 text-[10px] font-mono uppercase">
+                      Live in product
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-sm text-muted-foreground mt-1">
                   {currentDoc.summary}
                 </p>
+                {currentDoc.availabilityNote && (
+                  <div className="mt-3 p-3 rounded-lg border border-amber-500/40 bg-amber-500/5 text-xs text-foreground">
+                    <span className="font-bold">What's real today: </span>
+                    {currentDoc.availabilityNote}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -484,24 +507,24 @@ export default function Documentation() {
             </div>
           </div>
           <div className="space-y-1">
-            <span className="text-[11px] text-muted-foreground uppercase font-mono font-semibold">SOP Compliance</span>
+            <span className="text-[11px] text-muted-foreground uppercase font-mono font-semibold">Shipped Now</span>
             <div className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5" />
-              0 Drift
+              {DOCS_REGISTRY.filter(d => d.status === "live").length}/{DOCS_REGISTRY.length} Pages
             </div>
           </div>
           <div className="space-y-1">
             <span className="text-[11px] text-muted-foreground uppercase font-mono font-semibold">Active Cloud Fleet</span>
             <div className="text-2xl font-bold text-foreground flex items-center gap-2">
               <Cpu className="w-5 h-5 text-blue-500" />
-              6/6 Run
+              Docs Layer
             </div>
           </div>
           <div className="space-y-1">
-            <span className="text-[11px] text-muted-foreground uppercase font-mono font-semibold">Simulated Tools</span>
-            <div className="text-2xl font-bold text-emerald-600 flex items-center gap-2">
-              <Sparkles className="w-5 h-5" />
-              0 (100% Live)
+            <span className="text-[11px] text-muted-foreground uppercase font-mono font-semibold">Documentation Status</span>
+            <div className="text-2xl font-bold text-foreground flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-muted-foreground" />
+              Descriptive Only
             </div>
           </div>
         </div>
@@ -524,6 +547,16 @@ export default function Documentation() {
                           {doc.category}
                         </Badge>
                       </div>
+                      {doc.status === "roadmap" && (
+                        <Badge className="bg-amber-500/15 text-amber-600 border-amber-500/40 text-[10px] font-mono uppercase">
+                          Roadmap
+                        </Badge>
+                      )}
+                      {doc.status === "partial" && (
+                        <Badge className="bg-sky-500/15 text-sky-600 border-sky-500/40 text-[10px] font-mono uppercase">
+                          Partial
+                        </Badge>
+                      )}
 
                       {/* Title & Summary */}
                       <div>

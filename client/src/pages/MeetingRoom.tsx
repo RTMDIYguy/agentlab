@@ -14,6 +14,7 @@ import {
   Layers
 } from "lucide-react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
 export default function MeetingRoom() {
   const [roomId, setRoomId] = useState<string>(() => {
@@ -24,7 +25,6 @@ export default function MeetingRoom() {
   const [roomNameInput, setRoomNameInput] = useState("");
   const [copied, setCopied] = useState(false);
   const [meetingNotes, setMeetingNotes] = useState("");
-  const [isSummarizing, setIsSummarizing] = useState(false);
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [callDuration, setCallDuration] = useState(0);
 
@@ -77,34 +77,27 @@ export default function MeetingRoom() {
     setTimeout(() => setCopied(false), 2500);
   };
 
-  const handleAiSummarize = async () => {
+  const summarizeMutation = trpc.meeting.summarizeNotes.useMutation({
+    onSuccess: (result: any) => {
+      setAiSummary(result.summary);
+      toast.success("AI Meeting Summary synthesized! ⚡");
+    },
+    onError: (err: any) =>
+      toast.error(`Summary unavailable: ${err?.message ?? "unknown error"}`),
+  });
+  const isSummarizing = summarizeMutation.isPending;
+
+  const handleAiSummarize = () => {
     if (!meetingNotes.trim()) {
       toast.error("Enter meeting notes first to synthesize an AI summary.");
       return;
     }
-    setIsSummarizing(true);
-    try {
-      // Simulate/call AI summary generator
-      await new Promise((r) => setTimeout(r, 1200));
-      const summary = `### 📋 Meeting Executive Summary & Action Blueprint
-**War Room**: \`${roomId}\` | **Duration**: ${formatDuration(callDuration || 900)}
-
-**Key Findings & Discussion Points**:
-- Core bottleneck identified around client intake velocity and automated lead scoring.
-- Client agreed to proceed with the 5-day starter sprint protocol.
-- Scope includes automated CRM pipeline synchronization and 1-click diagnostic intake.
-
-**Agreed Next Action Items**:
-1. [ ] Send verified SOW & onboarding link by 5:00 PM Central.
-2. [ ] Provision workspace tenant and seed 7-department knowledge playbook.
-3. [ ] Schedule Day 3 milestone review via War Room.`;
-      setAiSummary(summary);
-      toast.success("AI Meeting Summary synthesized! ⚡");
-    } catch (e) {
-      toast.error("Failed to generate summary.");
-    } finally {
-      setIsSummarizing(false);
-    }
+    setAiSummary(null);
+    summarizeMutation.mutate({
+      roomName: roomId,
+      durationSeconds: callDuration,
+      notes: meetingNotes.trim(),
+    });
   };
 
   const jitsiUrl = `https://meet.jit.si/${roomId}#config.prejoinPageEnabled=false&config.startWithAudioMuted=false&config.startWithVideoMuted=false&interfaceConfig.SHOW_JITSI_WATERMARK=false&interfaceConfig.SHOW_BRAND_WATERMARK=false`;

@@ -11,7 +11,6 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
-import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { LiveChat } from "@/components/LiveChat";
 
@@ -23,12 +22,6 @@ function ContactFormComponent() {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const submitMutation = (trpc as any).contact?.submitContact?.useMutation?.() ?? {
-    mutateAsync: async () => {},
-    isPending: false,
-  };
-
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

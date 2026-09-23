@@ -39,14 +39,54 @@ export default function NewsletterManager() {
   const [campaignContent, setCampaignContent] = useState("");
 
   // Queries
-  const campaignsQuery = (trpc as any).newsletter?.getCampaigns?.useQuery?.({ limit: 100 }) ?? { data: [], isLoading: false, refetch: () => {} };
-  const subscribersQuery = (trpc as any).newsletter?.getSubscribers?.useQuery?.({ limit: 100 }) ?? { data: [], isLoading: false, refetch: () => {} };
-  const statsQuery = (trpc as any).newsletter?.getStats?.useQuery?.() ?? { data: null, isLoading: false };
-  const templatesQuery = (trpc as any).newsletter?.getTemplates?.useQuery?.({ limit: 50 }) ?? { data: [], isLoading: false };
+  const campaignsQuery = trpc.newsletter.getCampaigns.useQuery({ limit: 100 });
+  const subscribersQuery = trpc.newsletter.getSubscribers.useQuery({ limit: 100 });
+  const statsQuery = trpc.newsletter.getStats.useQuery();
+  const templatesQuery = trpc.newsletter.getTemplates.useQuery({ limit: 50 });
 
   // Mutations
-  const createCampaignMutation = (trpc as any).newsletter?.createCampaign?.useMutation?.() ?? { mutateAsync: async () => {}, isPending: false };
-  const sendCampaignMutation = (trpc as any).newsletter?.sendCampaign?.useMutation?.() ?? { mutateAsync: async () => {}, isPending: false };
+  const createCampaignMutation = trpc.newsletter.createCampaign.useMutation({
+    onSuccess: () => {
+      campaignsQuery.refetch();
+    },
+  });
+  const sendCampaignMutation = trpc.newsletter.sendCampaign.useMutation({
+    onSuccess: (result: any) => {
+      campaignsQuery.refetch();
+      statsQuery.refetch();
+      if (result?.delivery === "hubspot") {
+        toast.success("Sent via HubSpot Marketing Hub", {
+          description: result.message,
+        });
+      } else if (result?.delivery === "db-only") {
+        toast.warning("Recorded, but not emailed", {
+          description: result.message,
+        });
+      } else {
+        toast.success("Campaign sent successfully!");
+      }
+    },
+  });
+  const syncSubscribersMutation =
+    trpc.newsletter.syncSubscribersToHubspot.useMutation();
+  const syncStatsMutation = trpc.newsletter.syncCampaignStats.useMutation({
+    onSuccess: (result: any) => {
+      campaignsQuery.refetch();
+      statsQuery.refetch();
+      if (result?.synced > 0) {
+        toast.success(
+          `Synced HubSpot stats for ${result.synced} campaign${result.synced === 1 ? "" : "s"}`
+        );
+      } else {
+        toast.info("Nothing to sync yet — no HubSpot-backed campaigns.");
+      }
+      if (result?.errors?.length) {
+        toast.warning(`${result.errors.length} campaign(s) failed to sync`, {
+          description: result.errors.slice(0, 3).join("; "),
+        });
+      }
+    },
+  });
 
 
   // Check authorization
@@ -89,13 +129,32 @@ export default function NewsletterManager() {
     }
   };
 
-  const handleSendCampaign = async (campaignId: number) => {
+  const handleSendCampaign = async (campaignId: string) => {
     try {
+      // Toast detail (HubSpot vs DB-only) is handled in the mutation's
+      // onSuccess handler.
       await sendCampaignMutation.mutateAsync({ id: campaignId });
-      toast.success("Campaign sent successfully!");
       campaignsQuery.refetch();
-    } catch (error) {
-      toast.error("Failed to send campaign");
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to send campaign");
+    }
+  };
+
+  const handleSyncStats = () => {
+    syncStatsMutation.mutate();
+  };
+
+  const handleSyncToHubspot = async () => {
+    try {
+      const result: any = await syncSubscribersMutation.mutateAsync();
+      toast.success(
+        `HubSpot list "${result.listName}" synced`,
+        {
+          description: `${result.upserted} contacts upserted • ${result.added} added • ${result.removed} removed • ${result.totalActive} active subscribers`,
+        }
+      );
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to sync subscribers to HubSpot");
     }
   };
 
@@ -267,7 +326,20 @@ export default function NewsletterManager() {
       {/* Subscribers Tab */}
       {activeTab === "subscribers" && (
         <div className="space-y-6">
-          <h2 className="text-xl font-bold text-foreground">Subscribers</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-foreground">Subscribers</h2>
+            <Button
+              onClick={handleSyncToHubspot}
+              disabled={syncSubscribersMutation.isPending}
+              size="sm"
+              variant="outline"
+            >
+              <Users className="h-4 w-4 mr-2" />
+              {syncSubscribersMutation.isPending
+                ? "Syncing..."
+                : "Sync to HubSpot"}
+            </Button>
+          </div>
 
           {subscribersQuery.isLoading ? (
             <p className="text-muted-foreground">Loading subscribers...</p>
@@ -325,7 +397,20 @@ export default function NewsletterManager() {
       {/* Stats Tab */}
       {activeTab === "stats" && (
         <div className="space-y-6">
-          <h2 className="text-xl font-bold text-foreground">Statistics</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-foreground">Statistics</h2>
+            <Button
+              onClick={handleSyncStats}
+              disabled={syncStatsMutation.isPending}
+              size="sm"
+              variant="outline"
+            >
+              <BarChart3 className="h-4 w-4 mr-2" />
+              {syncStatsMutation.isPending
+                ? "Syncing..."
+                : "Sync HubSpot Stats"}
+            </Button>
+          </div>
 
           {statsQuery.isLoading ? (
             <p className="text-muted-foreground">Loading statistics...</p>

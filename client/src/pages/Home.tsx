@@ -52,7 +52,7 @@ export default function Home() {
       if (step >= 4) {
         clearInterval(interval);
         setSimulatedRunStatus("complete");
-        toast.success("DAG Execution Complete: 0 Drift, SAIF Verified (14ms, $0.02)");
+        toast.success("Demo simulation complete (not a real run — no DAG was executed)");
       }
     }, 800);
   };
@@ -174,19 +174,16 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-                      Live Multi-Agent DAG Orchestration
-                      <Badge className="bg-emerald-500/20 text-emerald-400 text-[10px] font-mono border-emerald-500/30">
-                        Active Swarm
+                      Multi-Agent DAG Orchestration
+                      <Badge className="bg-cyan-500/20 text-cyan-400 text-[10px] font-mono border-cyan-500/30">
+                        Interactive Demo
                       </Badge>
                     </h3>
-                    <p className="text-xs text-muted-foreground">Deterministic task routing with SAIF compliance guardrails</p>
+                    <p className="text-xs text-muted-foreground">Simulated visualization of deterministic task routing — not a live system</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="px-3 py-1.5 rounded-lg bg-card border border-border text-[11px] font-mono text-muted-foreground">
-                    Avg Latency: <span className="text-emerald-400 font-bold">14ms</span> | Cost: <span className="text-primary font-bold">$0.02</span>
-                  </div>
                   <Button 
                     size="sm" 
                     onClick={runSimulation}

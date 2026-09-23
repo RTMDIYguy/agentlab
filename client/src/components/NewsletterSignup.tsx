@@ -20,13 +20,8 @@ export function NewsletterSignup({
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const subscribeMutation =
-    (trpc as any).newsletter?.subscribe?.useMutation?.() ?? {
-      mutateAsync: async () => {},
-      isPending: false,
-    };
-
-
+  const [errorMessage, setErrorMessage] = useState("");
+  const subscribeMutation = trpc.newsletter.subscribe.useMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

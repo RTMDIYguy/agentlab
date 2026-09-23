@@ -1,8 +1,6 @@
 import { Router } from "express";
-import {
-  handleOrchestratorChat,
-  executeOrchestratorWorkflow,
-} from "../controllers/orchestrator";
+import { handleOrchestratorChat } from "../controllers/orchestrator";
+import { executeOrchestratorWorkflow } from "../controllers/orchestrator-execute";
 import {
   getAgents,
   deployAgent,
@@ -22,7 +20,12 @@ import {
   getRunDetails,
   approveRun,
   rejectRun,
+  cancelRun,
 } from "../controllers/runs";
+import {
+  exportRunArtifact,
+  exportRunBundle,
+} from "../controllers/export";
 import {
   getMarketplaceItems,
   getPackages,
@@ -158,6 +161,9 @@ apiRouter.get("/runs", listRuns);
 apiRouter.get("/runs/:runId", getRunDetails);
 apiRouter.post("/runs/:runId/approve", approveRun);
 apiRouter.post("/runs/:runId/reject", rejectRun);
+apiRouter.post("/runs/:runId/cancel", cancelRun);
+apiRouter.get("/runs/:runId/export", exportRunBundle);
+apiRouter.get("/runs/:runId/artifacts/:artifactId/export", exportRunArtifact);
 
 // Marketplace Storefront & Workspace Mounting
 apiRouter.get("/marketplace/items", getMarketplaceItems);
@@ -311,4 +317,28 @@ import { validateDiscountCode, redeemDiscountCode } from "../controllers/discoun
 
 apiRouter.post("/discounts/validate", validateDiscountCode);
 apiRouter.post("/discounts/redeem", redeemDiscountCode);
+
+// ==============================================================================
+// Screen Teardown Studio — video blob endpoints (metadata via tRPC teardown)
+// ==============================================================================
+import {
+  uploadTeardownVideo,
+  downloadTeardownVideo,
+  deleteTeardownVideo,
+} from "../controllers/teardown-video";
+
+apiRouter.post("/teardown/:id/video", uploadTeardownVideo);
+apiRouter.get("/teardown/:id/video", downloadTeardownVideo);
+apiRouter.delete("/teardown/:id/video", deleteTeardownVideo);
+
+// ==============================================================================
+// Dashboard telemetry — real state for the System Telemetry Console
+// ==============================================================================
+import {
+  getDashboardTelemetry,
+  pingLlm,
+} from "../controllers/dashboard-telemetry";
+
+apiRouter.get("/dashboard/telemetry", getDashboardTelemetry);
+apiRouter.get("/dashboard/llm-ping", pingLlm);
 

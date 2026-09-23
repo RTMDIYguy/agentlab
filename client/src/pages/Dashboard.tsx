@@ -158,7 +158,7 @@ export default function Dashboard() {
   const activeRuns = runsData?.runs?.filter(r => r.status === "running" || r.status === "pending_approval")?.length || 0;
   const totalWorkflows = workflowsData?.workflows?.length || 0;
   const agentsList = agentsData?.agents || [];
-  const activeAgents = agentsList.filter(a => a.status === "active")?.length || 6;
+  const activeAgents = agentsList.filter(a => a.status === "active")?.length || 0;
 
   const daysRemaining = trialData?.daysRemaining ?? 18;
   const totalTrialDays = trialData?.totalTrialDays ?? 30;
@@ -167,6 +167,44 @@ export default function Dashboard() {
   // Query Workspace Integrations from PostgreSQL
   const { data: dbIntegrations } = trpc.settings.getIntegrations.useQuery(undefined, {
     staleTime: 30000,
+  });
+
+  // Real-state telemetry for the System Telemetry Console (replaces the
+  // previously hardcoded latency, badge, and spend fiction).
+  const { data: telemetry, isLoading: isLoadingTelemetry } = useQuery<{
+    hubspot: { connected: boolean; toolsConfigured: number | null };
+    llm: { provider: string; configured: boolean; lastStepLatencyMs: number | null };
+    compute: { totalCost: string | null };
+    integrationsError: string | null;
+  }>({
+    queryKey: ["dashboard-telemetry"],
+    queryFn: async () => {
+      const res = await fetch("/api/dashboard/telemetry");
+      if (!res.ok) throw new Error("Failed to fetch telemetry");
+      return res.json();
+    },
+    refetchInterval: 30000,
+  });
+
+  // Verified LLM liveness: a real model round-trip. Deliberately separate
+  // from the 30s telemetry poll (a ping is a real API call) — runs on
+  // dashboard mount and every 5 minutes.
+  const { data: llmPing, isFetching: isPingingLlm } = useQuery<{
+    alive: boolean;
+    latencyMs?: number;
+    model?: string;
+    reason?: string;
+    notConfigured?: boolean;
+    checkedAt: string;
+  }>({
+    queryKey: ["dashboard-llm-ping"],
+    queryFn: async () => {
+      const res = await fetch("/api/dashboard/llm-ping");
+      if (!res.ok) throw new Error("Failed to ping LLM");
+      return res.json();
+    },
+    refetchInterval: 5 * 60 * 1000,
+    staleTime: 4 * 60 * 1000,
   });
 
   const canonicalIntegrationList = [
@@ -337,7 +375,7 @@ export default function Dashboard() {
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground font-mono mt-0.5">
-                  Swarm Core: <span className="text-emerald-400 font-semibold">NOMINAL</span> • Telemetry Latency: <span className="text-cyan-400 font-semibold">450ms</span> • Nodes Online: <span className="text-foreground font-bold">{activeAgents} / 6</span>
+                  Nodes Online: <span className="text-foreground font-bold">{activeAgents}</span> • Last Step Latency: <span className="text-cyan-400 font-semibold">{telemetry?.llm.lastStepLatencyMs != null ? `${telemetry.llm.lastStepLatencyMs}ms` : "not reported"}</span>
                 </p>
               </div>
             </div>
@@ -620,16 +658,22 @@ export default function Dashboard() {
               <p className="text-xs text-muted-foreground mt-1">Autonomous executions completed</p>
             </div>
 
-            {/* Tile 4: Spend & Cycle Velocity */}
+            {/* Tile 4: Real cumulative compute spend (no invented "saved" figure) */}
             <div className="hud-panel-amber p-5 hud-scanline">
               <div className="hud-corner-bracket hud-corner-tl" />
               <div className="hud-corner-bracket hud-corner-tr" />
               <div className="flex items-center justify-between pb-2">
-                <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Compute Budget</span>
+                <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Compute Spend</span>
                 <DollarSign className="h-4 w-4 text-amber-400" />
               </div>
-              <div className="text-3xl font-black text-amber-300 tracking-tight font-mono">$12.50</div>
-              <p className="text-xs text-muted-foreground mt-1">Spend this billing cycle ($443 saved)</p>
+              <div className="text-3xl font-black text-amber-300 tracking-tight font-mono">
+                {isLoadingTelemetry ? "-" : telemetry?.compute.totalCost != null ? `$${Number(telemetry.compute.totalCost).toFixed(2)}` : "—"}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {telemetry?.compute.totalCost != null
+                  ? "Cumulative cost of executed workflow steps"
+                  : "No cost reported yet — appears after the first executed run"}
+              </p>
             </div>
           </div>
 
@@ -655,35 +699,79 @@ export default function Dashboard() {
                 <div className="flex items-center justify-between p-3 rounded-xl bg-card/60 border border-white/5">
                   <div>
                     <p className="text-xs font-bold font-mono text-foreground">Orchestrator LLM (Gemini 2.5 Flash)</p>
-                    <p className="text-[11px] text-muted-foreground">Latency: 450ms • High-Signal Reasoning</p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {llmPing == null && isPingingLlm
+                        ? "Pinging model…"
+                        : llmPing?.alive
+                          ? `LIVE — round-trip ${llmPing.latencyMs}ms • last step ${telemetry?.llm.lastStepLatencyMs != null ? `${telemetry.llm.lastStepLatencyMs}ms` : "not reported"}`
+                          : llmPing?.notConfigured
+                            ? "API key not configured — set OPENAI_API_KEY in Settings → Secrets"
+                            : llmPing?.reason
+                              ? `Ping failed: ${llmPing.reason}`
+                              : "Checking model…"}
+                    </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge className="bg-emerald-500/20 text-emerald-400 text-[10px] font-mono">ONLINE</Badge>
-                    <div className="h-2.5 w-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                    <Badge
+                      className={`text-[10px] font-mono ${
+                        llmPing?.alive
+                          ? "bg-emerald-500/20 text-emerald-400"
+                          : llmPing?.notConfigured
+                            ? "bg-red-500/20 text-red-400"
+                            : "bg-amber-500/20 text-amber-400"
+                      }`}
+                    >
+                      {llmPing?.alive
+                        ? "LIVE"
+                        : llmPing?.notConfigured
+                          ? "NOT CONFIGURED"
+                          : "PING FAILED"}
+                    </Badge>
+                    {llmPing?.alive && (
+                      <div className="h-2.5 w-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                    )}
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between p-3 rounded-xl bg-card/60 border border-white/5">
                   <div>
-                    <p className="text-xs font-bold font-mono text-foreground">HubSpot CRM Pat Bridge</p>
-                    <p className="text-[11px] text-muted-foreground">5 autonomous tools active (Deals, Contacts, Pipelines)</p>
+                    <p className="text-xs font-bold font-mono text-foreground">HubSpot CRM PAT Bridge</p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {isLoadingTelemetry
+                        ? "Checking vault…"
+                        : telemetry?.integrationsError
+                          ? `Vault sync error: ${telemetry.integrationsError}`
+                          : telemetry?.hubspot.connected
+                            ? `${telemetry.hubspot.toolsConfigured ?? 0} configured tool(s) (Deals, Contacts, Pipelines)`
+                            : "Not connected — add a HubSpot PAT in Settings → Secrets"}
+                    </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge className="bg-emerald-500/20 text-emerald-400 text-[10px] font-mono">CONNECTED</Badge>
-                    <div className="h-2.5 w-2.5 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                    <Badge
+                      className={`text-[10px] font-mono ${
+                        telemetry?.hubspot.connected
+                          ? "bg-emerald-500/20 text-emerald-400"
+                          : "bg-zinc-500/20 text-muted-foreground"
+                      }`}
+                    >
+                      {telemetry?.hubspot.connected ? "CONNECTED" : "NOT CONNECTED"}
+                    </Badge>
+                    {telemetry?.hubspot.connected && (
+                      <div className="h-2.5 w-2.5 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                    )}
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between p-3 rounded-xl bg-card/60 border border-white/5">
                   <div>
                     <p className="text-xs font-bold font-mono text-foreground">Active Workflows & DAG Queues</p>
-                    <p className="text-[11px] text-muted-foreground">Available packages: {isLoadingWorkflows ? "-" : totalWorkflows} • 0 stalled jobs</p>
+                    <p className="text-[11px] text-muted-foreground">Available packages: {isLoadingWorkflows ? "-" : totalWorkflows} • Active runs: {activeRuns}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-cyan-500/20 text-cyan-400 text-[10px] font-mono">SYNCED</Badge>
                     <div className="h-2.5 w-2.5 bg-cyan-500 rounded-full shadow-[0_0_8px_rgba(0,243,255,0.8)]" />
                   </div>
-                </div>
+                  </div>
               </div>
             </div>
 

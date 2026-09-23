@@ -118,3 +118,8 @@ n8n-service-account.json
 .manus-logs/
 .postman/
 postgres.zip
+
+# Agent workspace state and pre-change file backups
+.freebuff/
+*.before-*
+*.backup-*

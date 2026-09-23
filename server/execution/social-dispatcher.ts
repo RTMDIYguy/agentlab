@@ -12,7 +12,7 @@
 
 import { getDb } from "../db";
 import { workflowArtifacts } from "../schema";
-import { eq, and, lte, ne } from "drizzle-orm";
+import { eq, and, lte, isNotNull } from "drizzle-orm";
 import crypto from "crypto";
 
 // ─── LinkedIn ────────────────────────────────────────────────────────────────
@@ -299,12 +299,8 @@ export async function dispatchScheduledPosts(): Promise<PostResult[]> {
       .where(
         and(
           eq(workflowArtifacts.status, "scheduled"),
-          ne(workflowArtifacts.scheduledFor, null),
-          lte(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            new Date(workflowArtifacts.scheduledFor as string),
-            now
-          )
+          isNotNull(workflowArtifacts.scheduledFor),
+          lte(workflowArtifacts.scheduledFor, now)
         )
       )
       .limit(50);

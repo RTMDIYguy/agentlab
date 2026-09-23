@@ -19,11 +19,11 @@ export default function CustomerDetailsModal({
   >(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const { data: customer, isLoading } = (trpc as any).admin?.getCustomerDetails?.useQuery?.({
+  const { data: customer, isLoading } = trpc.admin.getCustomerDetails.useQuery({
     userId: String(customerId),
-  }) ?? { data: null, isLoading: false };
+  });
 
-  const updateStatusMutation = (trpc as any).admin?.updateCustomerStatus?.useMutation?.({
+  const updateStatusMutation = trpc.admin.updateCustomerStatus.useMutation({
     onSuccess: () => {
       toast.success("Customer status updated successfully");
       setShowConfirm(false);
@@ -32,7 +32,7 @@ export default function CustomerDetailsModal({
     onError: () => {
       toast.error("Failed to update customer status");
     },
-  }) ?? { mutateAsync: async () => {}, isPending: false };
+  });
 
   const handleStatusChange = (
     newStatus: "active" | "canceled" | "past_due"

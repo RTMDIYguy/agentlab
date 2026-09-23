@@ -102,7 +102,7 @@ export default function ArticleEditor() {
           status: finalStatus,
           scheduledFor:
             finalStatus === "scheduled" && scheduledFor
-              ? new Date(scheduledFor)
+              ? new Date(scheduledFor).toISOString()
               : undefined,
           featuredImage: featuredImage || undefined,
         });
@@ -117,7 +117,7 @@ export default function ArticleEditor() {
           status: finalStatus,
           scheduledFor:
             finalStatus === "scheduled" && scheduledFor
-              ? new Date(scheduledFor)
+              ? new Date(scheduledFor).toISOString()
               : undefined,
           featuredImage: featuredImage || undefined,
         });

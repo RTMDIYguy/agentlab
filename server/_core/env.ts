@@ -5,6 +5,15 @@ import { db } from "../db";
 import { workspaceSecrets, workspaceIntegrations, workspaces } from "../schema";
 import { eq, and } from "drizzle-orm";
 
+/**
+ * True when running inside a test runner (vitest).
+ * Test processes must never write to .env.local or reload it with override —
+ * a prior test run persisted dummy secrets over the real ones on disk.
+ */
+function isTestProcess(): boolean {
+  return process.env.VITEST === "true" || process.env.NODE_ENV === "test";
+}
+
 // 1. Load .env.local first (local secrets override) if present, then fallback to .env
 const envLocalPath = path.resolve(process.cwd(), ".env.local");
 if (fs.existsSync(envLocalPath)) {
@@ -25,11 +34,15 @@ export const ENV = {
 
 // 2. Canonicalize & Normalize environment variable aliases
 export function normalizeEnvironmentVariables() {
-  const envLocalPath = path.resolve(process.cwd(), ".env.local");
-  if (fs.existsSync(envLocalPath)) {
-    dotenv.config({ path: envLocalPath, override: true });
+  // Reload .env.local (local secrets override) — but never inside tests:
+  // test runs must not read potentially stale disk state over live process env.
+  if (!isTestProcess()) {
+    const envLocalPath = path.resolve(process.cwd(), ".env.local");
+    if (fs.existsSync(envLocalPath)) {
+      dotenv.config({ path: envLocalPath, override: true });
+    }
+    dotenv.config();
   }
-  dotenv.config();
 
   // HubSpot aliases
   if (!process.env.HUBSPOT_PAT) {
@@ -155,6 +168,12 @@ const HUBSPOT_ALIAS_KEYS = [
  * `normalizeEnvironmentVariables()`.
  */
 export function persistSecretToEnvFile(provider: string, value: string): void {
+  // Hard guard: tests call applySecretToEnv with dummy values; persisting them
+  // here would overwrite real secrets on disk (this exact bug destroyed the
+  // HubSpot/Instantly/ElevenLabs keys in .env.local once already).
+  if (isTestProcess()) {
+    return;
+  }
   const envLocalPath = path.resolve(process.cwd(), ".env.local");
   const envKey = mapProviderToEnvKey(provider);
   const keysToUpdate: string[] = envKey === "HUBSPOT_PAT" ? HUBSPOT_ALIAS_KEYS : [envKey];
@@ -258,7 +277,32 @@ export async function syncWorkspaceVaultSecrets(targetWorkspaceId?: string): Pro
 
       for (const item of CORE_PROVIDERS_CONFIG) {
         const secretVal = process.env[item.envKey];
-        if (!secretVal) continue;
+        if (!secretVal) {
+          // Key absent/empty (e.g. trial expired and key removed): flip any
+          // stale vault rows to disconnected so the Settings UI stops
+          // claiming the integration is live.
+          await db
+            .update(workspaceSecrets)
+            .set({ status: "disconnected", updatedAt: new Date() })
+            .where(
+              and(
+                eq(workspaceSecrets.workspaceId, workspaceId),
+                eq(workspaceSecrets.provider, item.provider),
+                eq(workspaceSecrets.status, "connected")
+              )
+            );
+          await db
+            .update(workspaceIntegrations)
+            .set({ status: "inactive", updatedAt: new Date() })
+            .where(
+              and(
+                eq(workspaceIntegrations.workspaceId, workspaceId),
+                eq(workspaceIntegrations.name, item.integrationName),
+                eq(workspaceIntegrations.status, "active")
+              )
+            );
+          continue;
+        }
 
         const maskedPreview = generateMaskedPreview(secretVal);
 

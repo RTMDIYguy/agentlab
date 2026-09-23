@@ -1,3 +1,4 @@
+import { param } from "./params";
 import type { Request, Response } from "express";
 import { eq, desc, and, asc } from "drizzle-orm";
 import { getDb } from "../db";
@@ -7,6 +8,82 @@ import path from "path";
 import { evaluateArtifactQuality, buildRefinementPrompt } from "../execution/quality-evaluator";
 import { generateText } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+
+/**
+ * Create a workflow artifact for the active workspace.
+ */
+export async function createArtifact(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId;
+
+    if (!workspaceId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const {
+      workflowRunId,
+      workflowRunStepId,
+      workflowId,
+      artifactType = "document",
+      title,
+      content,
+      summary,
+      status = "draft",
+      scheduledFor,
+      targetPlatform = "linkedin",
+      metadata = {},
+    } = req.body ?? {};
+
+    if (!workflowRunId || typeof workflowRunId !== "string") {
+      res.status(400).json({ error: "workflowRunId is required." });
+      return;
+    }
+
+    if (!title || typeof title !== "string") {
+      res.status(400).json({ error: "title is required." });
+      return;
+    }
+
+    if (!content || typeof content !== "string") {
+      res.status(400).json({ error: "content is required." });
+      return;
+    }
+
+    const db = await getDb();
+
+    if (!db) {
+      res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
+    const [artifact] = await db
+      .insert(workflowArtifacts)
+      .values({
+        workspaceId,
+        workflowRunId,
+        workflowRunStepId: workflowRunStepId ?? null,
+        workflowId: workflowId ?? null,
+        artifactType,
+        title,
+        content,
+        summary: summary ?? null,
+        status,
+        scheduledFor: scheduledFor ? new Date(scheduledFor) : null,
+        targetPlatform,
+        metadata,
+      })
+      .returning();
+
+    res.status(201).json({ artifact });
+  } catch (error) {
+    console.error("[Artifacts Controller Error]: Failed to create artifact", error);
+    res.status(500).json({ error: "Failed to create artifact" });
+  }
+}
 
 /**
  * List all workflow artifacts for the active workspace.
@@ -167,7 +244,7 @@ export async function getRunArtifacts(req: Request, res: Response): Promise<void
       return;
     }
 
-    const { runId } = req.params;
+    const runId = param(req, "runId");
 
     const db = await getDb();
     if (!db) {
@@ -204,7 +281,7 @@ export async function updateArtifactStatus(req: Request, res: Response): Promise
       return;
     }
 
-    const { id } = req.params;
+    const id = param(req, "id");
     const { status, scheduledFor } = req.body;
 
     const db = await getDb();
@@ -253,7 +330,7 @@ export async function downloadArtifact(req: Request, res: Response): Promise<voi
       return;
     }
 
-    const { id } = req.params;
+    const id = param(req, "id");
 
     const db = await getDb();
     if (!db) {
@@ -306,7 +383,7 @@ export async function evaluateArtifact(req: Request, res: Response): Promise<voi
       return;
     }
 
-    const { id } = req.params;
+    const id = param(req, "id");
 
     const db = await getDb();
     if (!db) {
@@ -371,7 +448,7 @@ export async function refineArtifact(req: Request, res: Response): Promise<void>
       return;
     }
 
-    const { id } = req.params;
+    const id = param(req, "id");
     const { instructions } = req.body;
 
     const db = await getDb();

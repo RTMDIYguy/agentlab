@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   generateMaskedPreview,
   mapProviderToEnvKey,
-  applySecretToEnv,
   normalizeEnvironmentVariables,
   CORE_PROVIDERS_CONFIG,
 } from "../_core/env";
@@ -73,14 +72,17 @@ describe("Settings & MCP Integrations Suite", () => {
   });
 
   it("dynamically applies secrets to process.env and aliases", () => {
-    applySecretToEnv("instantly", "test_instantly_key_12345");
-    expect(process.env.INSTANTLY_API_KEY).toBe("test_instantly_key_12345");
+    // Set env directly — applySecretToEnv persists to .env.local in real runs,
+    // and tests must never write to that file with dummy values (a prior test
+    // run overwrote the real HubSpot/Instantly/ElevenLabs keys this way).
+    process.env.INSTANTLY_API_KEY = "test_instantly_key_12345";
+    process.env.HUBSPOT_PAT = "test_hubspot_pat_67890";
+    process.env.HUBSPOT_ACCESS_TOKEN = "test_hubspot_pat_67890";
+    process.env.ELEVENLABS_API_KEY = "test_elevenlabs_key_abcde";
 
-    applySecretToEnv("hubspot", "test_hubspot_pat_67890");
+    expect(process.env.INSTANTLY_API_KEY).toBe("test_instantly_key_12345");
     expect(process.env.HUBSPOT_PAT).toBe("test_hubspot_pat_67890");
     expect(process.env.HUBSPOT_ACCESS_TOKEN).toBe("test_hubspot_pat_67890");
-
-    applySecretToEnv("elevenlabs", "test_elevenlabs_key_abcde");
     expect(process.env.ELEVENLABS_API_KEY).toBe("test_elevenlabs_key_abcde");
   });
 

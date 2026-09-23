@@ -1,3 +1,4 @@
+import { param } from "./params";
 import type { Request, Response } from "express";
 import { eq, desc, and, asc } from "drizzle-orm";
 import { getDb } from "../db";
@@ -20,7 +21,7 @@ export async function triggerRun(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const { workflowId } = req.params;
+    const workflowId = param(req, "workflowId");
     const { initialContext, triggerSource } = req.body;
 
     const db = await getDb();
@@ -109,7 +110,7 @@ export async function getRunDetails(
       return;
     }
 
-    const { runId } = req.params;
+    const runId = param(req, "runId");
 
     const db = await getDb();
     if (!db) {
@@ -244,7 +245,7 @@ export async function approveRun(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const { runId } = req.params;
+    const runId = param(req, "runId");
 
     const db = await getDb();
     if (!db) {
@@ -296,7 +297,7 @@ export async function rejectRun(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const { runId } = req.params;
+    const runId = param(req, "runId");
 
     const db = await getDb();
     if (!db) {
@@ -339,5 +340,71 @@ export async function rejectRun(req: Request, res: Response): Promise<void> {
   } catch (error) {
     console.error("[Runs Controller Error]:", error);
     res.status(500).json({ error: "Failed to reject run" });
+  }
+}
+
+/**
+ * POST /api/runs/:runId/cancel — request cooperative cancellation (Tier 1).
+ *
+ * Sets cancel_requested; the queue processor honors it between steps and
+ * between retry attempts. A run that is mid-flight flips to `cancelled` at
+ * the next checkpoint — the endpoint reports honestly that cancellation is
+ * requested, not that it has already happened.
+ */
+export async function cancelRun(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId;
+    if (!workspaceId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const runId = param(req, "runId");
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
+    const [run] = await db
+      .select()
+      .from(workflowRuns)
+      .where(and(eq(workflowRuns.id, runId), eq(workflowRuns.workspaceId, workspaceId)))
+      .limit(1);
+
+    if (!run) {
+      res.status(404).json({ error: "Run not found" });
+      return;
+    }
+
+    const terminalStates = ["completed", "failed", "cancelled"];
+    if (terminalStates.includes(run.status)) {
+      res.status(400).json({
+        error: `Run is already ${run.status} — nothing to cancel`,
+      });
+      return;
+    }
+
+    // Already-terminal pending cancel or a fresh request: same path.
+    await db
+      .update(workflowRuns)
+      .set({
+        cancelRequested: true,
+        cancelledAt: run.cancelRequested ? run.cancelledAt ?? new Date() : new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(workflowRuns.id, runId));
+
+    res.status(202).json({
+      message:
+        run.status === "pending"
+          ? "Run pending: marked cancelled and will not execute."
+          : "Cancellation requested. The run stops at the next step or retry checkpoint.",
+      runId,
+      previousStatus: run.status,
+    });
+  } catch (error) {
+    console.error("[Runs Controller Error] cancelRun:", error);
+    res.status(500).json({ error: "Failed to request cancellation" });
   }
 }

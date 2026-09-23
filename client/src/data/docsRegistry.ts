@@ -48,6 +48,16 @@ export interface DocPageEntry {
   targetRoute: string;
   version: string;
   estimatedReadTime: string;
+  /**
+   * Honesty status (docs truth pass, CC-2026-09-23-020): does the documented
+   * capability exist in shipped behavior today?
+   *  - "live": demonstrable in the product now
+   *  - "partial": core exists but some documented scope is on the roadmap
+   *  - "roadmap": documented for design purposes; not shipped — must carry an availabilityNote
+   */
+  status: "live" | "partial" | "roadmap";
+  /** Required for "roadmap" (and used for "partial"): what is real today instead. */
+  availabilityNote?: string;
   overview: {
     purpose: string;
     businessValue: string;
@@ -86,6 +96,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     targetRoute: "/command-center",
     version: "v1.4.2",
     estimatedReadTime: "4 min read",
+    status: "live",
     overview: {
       purpose: "The Command Center provides a single pane of glass into the entire agency runtime. It monitors background workers, autonomous agents, trigger queues, and live system health across Google Cloud Run and local runtimes.",
       businessValue: "Eliminates operational blindness by consolidating cloud fleet telemetry, recent agent runs, cost counters, and automated scheduled sync status in real time.",
@@ -122,9 +133,9 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         x: 35,
         y: 42,
         title: "Active Agent Fleet Matrix",
-        description: "Shows individual agent status cards with current task, uptime, total step completions, and memory utilization.",
+        description: "Shows individual agent status cards with current task, success rate, total step completions, and last-step time.",
         actionPrompt: "Click any agent card to filter logs specifically for that agent or trigger an instant diagnostic ping.",
-        outputMeaning: "Each card displays model name (e.g. Gemini 2.5 Flash / Claude 3.7), total runs completed, and error rate.",
+        outputMeaning: "Each card displays model name, real success rate computed from run history (or 'no steps yet'), and last-step time.",
         badgeType: "control",
       },
       {
@@ -254,6 +265,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     targetRoute: "/agents",
     version: "v1.3.0",
     estimatedReadTime: "5 min read",
+    status: "live",
     overview: {
       purpose: "The AI Agents Hub provides granular management of all specialized autonomous agents operating within Uncle Robert Consulting and Bootstrapper Capital.",
       businessValue: "Empowers operators to tune prompt boundaries, bind specific execution tools, adjust temperature, and restrict write permissions with zero code deployments.",
@@ -397,16 +409,19 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     title: "Auditing & Compliance",
     category: "Security & Governance",
     iconName: "ShieldAlert",
-    summary: "Review agent decision traces, verify SHA-256 artifact hashes, approve human-in-the-loop actions, and inspect compliance drift.",
+    summary: "Review agent decision traces, inspect real audit evidence, approve human-in-the-loop actions and dispatches, and run the change-control drift scanner.",
     targetRoute: "/auditing",
     version: "v1.2.1",
     estimatedReadTime: "4 min read",
+    status: "partial",
+    availabilityNote:
+      "Artifact integrity hashing is on the roadmap; today the Auditing page shows the real audit-log trail, run-step evidence, and artifact verification notes. SHA-256 checksums currently apply to campaign briefs and diagnostic dossiers.",
     overview: {
-      purpose: "Auditing & Compliance enforces strict human-in-the-loop governance and mathematical artifact verification across all autonomous actions.",
-      businessValue: "Guarantees that no agent writes to disk, publishes public content, or modifies critical records without verifiable cryptographic trails and operational audit checks.",
+      purpose: "Auditing & Compliance enforces strict human-in-the-loop governance and evidence-based verification across all autonomous actions.",
+      businessValue: "Ensures that outbound agent actions require explicit human approval and that every run leaves a real audit trail — the change-control scanner verifies operational documents against the canonical registry on every build.",
       keyWorkflows: [
-        "Reviewing and approving human-in-the-loop execution gates",
-        "Inspecting SHA-256 integrity hashes for generated business artifacts",
+        "Reviewing and approving human-in-the-loop execution gates and action dispatches",
+        "Inspecting real audit logs, run-step evidence, and artifact verification notes",
         "Running the Change Control & Operational Drift Scanner across all 81 SOP documents",
       ],
     },
@@ -436,10 +451,10 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         id: 3,
         x: 50,
         y: 55,
-        title: "Cryptographic Artifact Hash Ledger",
-        description: "Table of all generated output documents with SHA-256 checksums, byte counts, and creator agent IDs.",
-        actionPrompt: "Click any artifact to verify its tamper-proof hash matches the original generated file on disk.",
-        outputMeaning: "Guarantees file integrity and auditability for client deliverables and financial trackers.",
+        title: "Artifact & Verification Notes Ledger",
+        description: "Table of generated output documents with quality grades, verification notes, and creator agent IDs. Cryptographic checksums are on the roadmap; today they apply to campaign briefs and diagnostic dossiers.",
+        actionPrompt: "Click any artifact to inspect its quality evaluation and the run evidence that produced it.",
+        outputMeaning: "Shows which run and agent produced each deliverable, with the quality rubric it was evaluated against.",
         badgeType: "data",
       },
       {
@@ -490,10 +505,10 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         alertThreshold: "> 0 findings",
       },
       {
-        field: "Artifact Hash Match Rate",
-        interpretation: "Percentage of disk files whose current SHA-256 hash matches the recorded creation hash.",
+        field: "Human Decision Coverage",
+        interpretation: "Percentage of outbound action dispatches that were resolved by an explicit human approval or rejection.",
         normalRange: "100.0%",
-        alertThreshold: "< 100.0%",
+        alertThreshold: "Any undecided dispatch older than 24h",
       },
     ],
     troubleshooting: [
@@ -542,6 +557,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     targetRoute: "/founder-signal-system",
     version: "v1.1.0",
     estimatedReadTime: "4 min read",
+    status: "live",
     overview: {
       purpose: "The Founder Signal System automates the discovery, qualification, and outbound outreach for founders needing Microsoft 365 diagnostics and Agentic OS migrations.",
       businessValue: "Drives predictable pipeline generation through verified Instantly.ai campaigns with automated warm-up, rate-limiting, and lead status tracking.",
@@ -683,6 +699,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     targetRoute: "/dashboard/settings",
     version: "v1.2.0",
     estimatedReadTime: "3 min read",
+    status: "live",
     overview: {
       purpose: "Settings provides centralized secret management, integration diagnostics, and workspace parameter tuning.",
       businessValue: "Enables instant live health checks for third-party APIs without exposing secrets in logs or plaintext files.",
@@ -794,6 +811,9 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     targetRoute: "/marketplace",
     version: "v1.2.0",
     estimatedReadTime: "3 min read",
+    status: "partial",
+    availabilityNote:
+      "Playbook mounting and beta enrollment are live today; the workflow certification and one-click install pipeline is on the roadmap.",
     overview: {
       purpose: "The Marketplace houses certified, reusable agent workflow packages ready for one-click installation into any workspace.",
       businessValue: "Accelerates time-to-value by providing pre-built, tested operating recipes for lead generation, content syndication, and compliance.",
@@ -893,6 +913,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     targetRoute: "/blog-manager",
     version: "v1.3.0",
     estimatedReadTime: "3 min read",
+    status: "live",
     overview: {
       purpose: "The Blog Manager orchestrates autonomous thought leadership, article generation, and newsletter distribution.",
       businessValue: "Maintains consistent market presence and SEO authority without requiring manual daily writing.",
@@ -998,6 +1019,9 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     targetRoute: "/billing",
     version: "v1.1.0",
     estimatedReadTime: "3 min read",
+    status: "roadmap",
+    availabilityNote:
+      "Cloud-infrastructure billing monitoring is not built yet. Real cost visibility today: the Dashboard telemetry console computes actual LLM spend from executed run steps, and Settings shows live vault/integration status.",
     overview: {
       purpose: "Billing provides financial transparency over cloud infrastructure, Compute Engine VMs, Cloud Run containers, and LLM inference spend.",
       businessValue: "Enforces the 'Bootstrap Limit Threshold' to protect agency margins and eliminate runaway cloud spending.",
@@ -1103,6 +1127,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     targetRoute: "/meeting",
     version: "v1.0.0",
     estimatedReadTime: "3 min read",
+    status: "live",
     overview: {
       purpose: "The Live Video War Room turns AgentLab into an all-in-one virtual office where agency operators can jump into high-definition video calls and screen-shares with clients and team members without paying for Zoom or Google Meet seats.",
       businessValue: "Eliminates third-party video conferencing subscriptions ($180+/yr/seat), keeps client consultations inside the brand experience, and automatically transcribes key takeaways into actionable SOP directives.",
@@ -1215,6 +1240,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     targetRoute: "/messages",
     version: "v1.0.0",
     estimatedReadTime: "3 min read",
+    status: "live",
     overview: {
       purpose: "Client Messenger provides an integrated messaging hub inside AgentLab, replacing disparate Slack/Teams tools with direct client message threads, departmental channels, and an AI co-pilot for rapid consultative replies.",
       businessValue: "Keeps client communications and agency internal chatter inside the operating system, cuts Slack subscription expenses ($96+/user/year), and provides instant AI drafting for client inquiries.",
@@ -1327,6 +1353,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     targetRoute: "/screen-recorder",
     version: "v1.0.0",
     estimatedReadTime: "4 min read",
+    status: "live",
     overview: {
       purpose: "The Screen Teardown Studio provides instant video recording directly in the browser using the HTML5 MediaRecorder API. Operators can record high-resolution screen teardowns, technical walkthroughs, and async client proposals without paid Loom or Vidyard accounts.",
       businessValue: "Saves $150+/yr/user on screen recording tools, accelerates sales conversion with personalized video audits, and automatically extracts structured takeaways into the Results Vault.",
@@ -1446,6 +1473,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     targetRoute: "/icp-generator",
     version: "v1.0.0",
     estimatedReadTime: "4 min read",
+    status: "live",
     overview: {
       purpose: "The ICP Generator operationalizes MKT-01 (Ideal Customer Profile definition) into an interactive software tool. Operators enter target market parameters to synthesize deep buyer personas, acute operational pain points, buying triggers, and objection-handling scripts.",
       businessValue: "Eliminates vague prospecting, focuses outbound campaigns on high-margin founder wedges, and feeds validated targeting criteria directly into cold outreach engines (Instantly.ai / LinkedIn).",
@@ -1564,6 +1592,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     targetRoute: "/assessment-generator",
     version: "v1.0.0",
     estimatedReadTime: "4 min read",
+    status: "live",
     overview: {
       purpose: "The Assessment Question Generator powers the agency's discovery and diagnostic consultations (SAL-01). It maintains a compounding database of high-signal interview questions across 7 departments, with 1-click AI generation for vertical-specific inquiries.",
       businessValue: "Transforms discovery calls from awkward interrogations into authoritative strategic diagnostics that uncover high-ticket workflow automation opportunities.",

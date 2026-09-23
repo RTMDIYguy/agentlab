@@ -352,11 +352,11 @@ export default function Settings() {
       name: "Instantly.ai Outbound Engine",
       type: "Cold Outbound & Warmup (SAL-01)",
       description: "High-deliverability cold email sequences, multi-inbox warmup, and AI reply classification.",
-      status: instantlySec?.status === "connected" || getIntegrationForName("instantly")?.status === "active" ? "active" : "configured",
+      status: instantlySec?.status === "connected" && getIntegrationForName("instantly")?.status === "active" ? "active" : "configured",
       protocol: "Instantly REST API v1 / Webhook",
       icon: Zap,
       color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
-      details: instantlySec ? `Connected (${instantlySec.maskedPreview || "Key Active"}) • Outbound Live` : "YmYxNmQ3... (OwnableOS Master Key)",
+      details: instantlySec?.status === "connected" ? `Connected (${instantlySec.maskedPreview}) • Outbound Live` : "Not configured — add an API key in Secrets to activate cold outbound",
     },
     {
       id: "builtin-pulse",
@@ -1098,7 +1098,7 @@ export default function Settings() {
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-foreground block">Active Stored Secrets & Vault Keys:</span>
                         <Badge variant="outline" className="text-[10px] font-mono text-emerald-400 border-emerald-500/30">
-                          {secrets.length} Active in Vault
+                          {secrets.filter((s: any) => s.status === "connected").length} Connected • {secrets.length} Total
                         </Badge>
                       </div>
                       <div className="divide-y divide-border/60 border border-border/60 rounded-xl overflow-hidden">
@@ -1113,8 +1113,14 @@ export default function Settings() {
                                 <div>
                                   <div className="flex items-center gap-2">
                                     <span className="font-mono font-bold text-foreground text-xs uppercase">{sec.provider}</span>
-                                    <Badge className="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono">
-                                      {sec.status || "CONNECTED"}
+                                    <Badge
+                                      className={`text-[9px] font-mono border ${
+                                        sec.status === "connected"
+                                          ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                                          : "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                                      }`}
+                                    >
+                                      {sec.status === "connected" ? "CONNECTED" : (sec.status || "DISCONNECTED").toUpperCase()}
                                     </Badge>
                                     <Badge variant="outline" className="text-[9px] font-mono text-muted-foreground">
                                       v{sec.version || "1"}

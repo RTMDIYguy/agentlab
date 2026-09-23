@@ -1,94 +1,13 @@
 import type { Request, Response } from "express";
 import { desc, eq, and, sql } from "drizzle-orm";
 import { getDb } from "../db";
-import { auditLogs, workflowRuns, agents, workflows } from "../schema";
+import { auditLogs, workflowRuns } from "../schema";
 
-const FALLBACK_AUDIT_LOGS = [
-  {
-    id: "aud_01_triage",
-    timestamp: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
-    agent: "Auditor-Bot-9",
-    action: "System File Triage",
-    status: "requires_approval",
-    model: "gpt-4o",
-    latencyMs: 340,
-    tokensTotal: 1420,
-    cost: "0.007100",
-    message: "Proposed archiving 4 legacy spreadsheets from 2024. Waiting for operator review.",
-    policyChecks: { saifPassed: true, piiDetected: 0, budgetThresholdPassed: true },
-    details: { files: ["Q1_2024_legacy.xlsx", "outdated_roster.csv"], destination: "/archive" },
-  },
-  {
-    id: "aud_02_writer",
-    timestamp: new Date(Date.now() - 12 * 60 * 1000).toISOString(),
-    agent: "Coder-Agent-07",
-    action: "Autonomous Code Commit",
-    status: "success",
-    model: "claude-3-7-sonnet",
-    latencyMs: 1250,
-    tokensTotal: 3850,
-    cost: "0.019250",
-    message: "Verified and deployed swarm node orchestration handlers in Express backend runtime.",
-    policyChecks: { saifPassed: true, piiDetected: 0, budgetThresholdPassed: true },
-    details: { commitHash: "fd5afb2a", filesModified: 6 },
-  },
-  {
-    id: "aud_03_lead",
-    timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
-    agent: "Alpha-Node-01",
-    action: "Lead Enrichment & Scoring",
-    status: "success",
-    model: "gemini-1.5-pro",
-    latencyMs: 410,
-    tokensTotal: 980,
-    cost: "0.001960",
-    message: "Enriched 12 founder signals from LinkedIn queue; verified ICP compliance threshold.",
-    policyChecks: { saifPassed: true, piiDetected: 0, budgetThresholdPassed: true },
-    details: { leadsProcessed: 12, icpScore: 94 },
-  },
-  {
-    id: "aud_04_sdr",
-    timestamp: new Date(Date.now() - 90 * 60 * 1000).toISOString(),
-    agent: "SDR-Writer-02",
-    action: "Founder Matrix Copy Generation",
-    status: "success",
-    model: "gpt-4o-mini",
-    latencyMs: 290,
-    tokensTotal: 1120,
-    cost: "0.000336",
-    message: "Generated 3 personalized outreach variations for Bootstrapper Capital founder roundtable.",
-    policyChecks: { saifPassed: true, piiDetected: 0, budgetThresholdPassed: true },
-    details: { variationsCount: 3, targetEvent: "Founder Roundtable #4" },
-  },
-  {
-    id: "aud_05_saif_alert",
-    timestamp: new Date(Date.now() - 140 * 60 * 1000).toISOString(),
-    agent: "Workflow-Planner-04",
-    action: "PII Sanitization Guardrail",
-    status: "warning",
-    model: "gemini-1.5-pro",
-    latencyMs: 180,
-    tokensTotal: 650,
-    cost: "0.001300",
-    message: "SAIF Guardrail: Redacted sensitive client phone numbers prior to LLM context injection.",
-    policyChecks: { saifPassed: true, piiDetected: 2, budgetThresholdPassed: true },
-    details: { redactions: ["phone_number_us", "ssn_pattern_match"] },
-  },
-  {
-    id: "aud_06_sync",
-    timestamp: new Date(Date.now() - 210 * 60 * 1000).toISOString(),
-    agent: "System Bridge",
-    action: "Bidirectional AI Studio Sync",
-    status: "success",
-    model: "system-router",
-    latencyMs: 95,
-    tokensTotal: 0,
-    cost: "0.000000",
-    message: "Propagated canonical OS state and operational DAGs to AI Studio roving dashboard.",
-    policyChecks: { saifPassed: true, piiDetected: 0, budgetThresholdPassed: true },
-    details: { syncDirection: "bidirectional", payloadBytes: 14280 },
-  },
-];
+// NOTE ON HONESTY (see docs/operations/honesty-audit-2026-09-23.md, P1-1):
+// This controller previously served six fabricated audit records whenever the
+// database was empty, exported them from the CSV endpoint as "compliance
+// evidence", and defaulted stats to invented values (1248 events, 99.8% SAIF,
+// $0.48 cost). All of that is removed: empty means zero, unknown means null.
 
 export async function getAuditLogs(req: Request, res: Response): Promise<void> {
   try {
@@ -130,9 +49,7 @@ export async function getAuditLogs(req: Request, res: Response): Promise<void> {
       }
     }
 
-    if (logs.length === 0) {
-      logs = [...FALLBACK_AUDIT_LOGS];
-    }
+    // No fabricated fallback rows: an empty audit trail is reported as empty.
 
     if (statusFilter && statusFilter !== "all") {
       logs = logs.filter(l => l.status === statusFilter);
@@ -163,11 +80,13 @@ export async function getAuditStats(req: Request, res: Response): Promise<void> 
     const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
     const db = await getDb();
 
-    let totalEvents24h = 1248;
-    let pendingReviews = 1;
-    let securityAlerts = 1;
-    let totalCost24h = "0.4821";
-    let saifComplianceRate = "99.8%";
+    // Honest defaults: zero means zero. No invented events, alerts, cost, or
+    // compliance percentage when the database has nothing to count.
+    let totalEvents24h = 0;
+    let pendingReviews = 0;
+    let securityAlerts = 0;
+    let totalCost24h = "0.000000";
+    let saifComplianceRate: string | null = null;
 
     if (db) {
       try {
@@ -181,7 +100,7 @@ export async function getAuditStats(req: Request, res: Response): Promise<void> 
             )
           );
 
-        if (pendingRunsCount && Number(pendingRunsCount.count) > 0) {
+        if (pendingRunsCount) {
           pendingReviews = Number(pendingRunsCount.count);
         }
 
@@ -190,8 +109,22 @@ export async function getAuditStats(req: Request, res: Response): Promise<void> 
           .from(auditLogs)
           .where(eq(auditLogs.workspaceId, workspaceId));
 
-        if (eventsCount && Number(eventsCount.count) > 0) {
+        if (eventsCount) {
           totalEvents24h = Number(eventsCount.count);
+        }
+
+        // SAIF compliance rate computed from real policy checks; null (rendered
+        // as "not reported") when no audited events exist yet.
+        const [saifRow] = await db
+          .select({
+            total: sql<number>`count(*)`,
+            passed: sql<number>`count(*) filter (where (${auditLogs.policyChecks} -> 'saifPassed')::text = 'true')`,
+          })
+          .from(auditLogs)
+          .where(eq(auditLogs.workspaceId, workspaceId));
+
+        if (saifRow && Number(saifRow.total) > 0) {
+          saifComplianceRate = `${((Number(saifRow.passed) / Number(saifRow.total)) * 100).toFixed(1)}%`;
         }
       } catch (dbErr) {
         console.warn("[Audit Stats] DB count warning:", dbErr);
@@ -214,7 +147,10 @@ export async function getAuditStats(req: Request, res: Response): Promise<void> 
 
 export async function exportAuditLogs(req: Request, res: Response): Promise<void> {
   try {
-    const logs = [...FALLBACK_AUDIT_LOGS];
+    // Compliance export must reflect the REAL audit trail — never fabricated
+    // rows. Unknown metrics export as empty cells.
+    const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
+    const db = await getDb();
 
     const headers = [
       "Log ID",
@@ -228,23 +164,42 @@ export async function exportAuditLogs(req: Request, res: Response): Promise<void
       "Cost ($)",
       "SAIF Passed",
       "PII Redactions",
-      "Summary / Message"
+      "Summary / Message",
     ];
 
-    const rows = logs.map(l => [
-      l.id,
-      l.timestamp,
-      `"${l.agent}"`,
-      `"${l.action}"`,
-      l.model,
-      l.status,
-      l.latencyMs,
-      l.tokensTotal,
-      l.cost,
-      l.policyChecks?.saifPassed ? "TRUE" : "FALSE",
-      l.policyChecks?.piiDetected || 0,
-      `"${l.message.replace(/"/g, '""')}"`
-    ]);
+    let rows: string[][] = [];
+    if (db) {
+      try {
+        const dbLogs = await db
+          .select()
+          .from(auditLogs)
+          .where(eq(auditLogs.workspaceId, workspaceId))
+          .orderBy(desc(auditLogs.createdAt))
+          .limit(1000);
+
+        rows = dbLogs.map(r => [
+          r.id,
+          r.createdAt.toISOString(),
+          `"${r.agentId ? `Agent-${r.agentId.slice(0, 8)}` : "System"}"`,
+          `"${r.actionType}"`,
+          r.model,
+          r.status,
+          r.latencyMs === null || r.latencyMs === undefined ? "" : String(r.latencyMs),
+          r.tokensTotal === null || r.tokensTotal === undefined ? "" : String(r.tokensTotal),
+          r.cost === null || r.cost === undefined ? "" : String(r.cost),
+          (r.policyChecks as any)?.saifPassed === true ? "TRUE" : (r.policyChecks as any)?.saifPassed === false ? "FALSE" : "",
+          String((r.policyChecks as any)?.piiDetected ?? ""),
+          `"${String(r.errorMessage || (r.payloadOut as any)?.message || r.actionType).replace(/"/g, '""')}"`,
+        ]);
+      } catch (dbErr) {
+        console.error("[Audit Export] DB query failed:", dbErr);
+        res.status(500).json({ error: "Failed to read audit logs for export" });
+        return;
+      }
+    } else {
+      res.status(503).json({ error: "Database unavailable — audit export requires the real audit trail" });
+      return;
+    }
 
     const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
 

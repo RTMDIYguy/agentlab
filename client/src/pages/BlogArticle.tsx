@@ -1,131 +1,76 @@
 import { Button } from "@/components/ui/button";
 import { useLocation, useRoute } from "wouter";
-import { ArrowLeft, Calendar, User, Clock, Share2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  User,
+  Clock,
+  Share2,
+  Loader2,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import BlogCommentSection from "@/components/BlogCommentSection";
-
-// Article content data
-const articleContent: Record<string, any> = {
-  "future-of-ai-agents": {
-    title: "The Future of Autonomous AI Systems",
-    category: "Technology",
-    author: "Alex Johnson",
-    role: "AI Research Lead",
-    date: "Mar 15, 2025",
-    readTime: "8 min read",
-    image: "🤖",
-    excerpt:
-      "Explore how AI agents are revolutionizing business automation and decision-making processes. Discover the emerging trends and technologies shaping the next generation of intelligent systems.",
-    content: `
-# The Future of Autonomous AI Systems
-
-The landscape of artificial intelligence is undergoing a profound transformation. As we move deeper into 2025, autonomous AI systems are no longer confined to research labs and academic papers—they're becoming integral to how businesses operate at scale.
-
-## The Evolution of AI Agents
-
-Over the past few years, we've witnessed remarkable progress in AI agent technology. What started as simple rule-based systems has evolved into sophisticated autonomous agents capable of making complex decisions, learning from experience, and adapting to new situations in real-time.
-
-The key breakthrough has been the combination of large language models with reinforcement learning and real-time feedback mechanisms. This convergence has created AI agents that can:
-
-- **Understand context** with unprecedented accuracy
-- **Make decisions** based on complex business logic
-- **Learn continuously** from their interactions
-- **Collaborate** seamlessly with human teams
-
-## Current Applications and Impact
-
-Today's AI agents are delivering measurable value across industries:
-
-### Financial Services
-AI agents are automating complex trading decisions, fraud detection, and customer service interactions. Banks report 40-60% reduction in operational costs when deploying intelligent automation.
-
-### Healthcare
-Autonomous systems are assisting in diagnostics, treatment planning, and patient monitoring. The combination of AI agents with medical expertise has improved patient outcomes while reducing administrative burden.
-
-### Manufacturing
-Predictive maintenance powered by AI agents has reduced downtime by up to 50%. These systems monitor equipment in real-time and predict failures before they occur.
-
-### Retail and E-commerce
-Personalization engines powered by AI agents are increasing conversion rates and customer lifetime value. These systems learn individual preferences and adapt recommendations in real-time.
-
-## Emerging Trends for 2025 and Beyond
-
-### 1. Multi-Agent Systems
-The future belongs to coordinated teams of AI agents, each specialized in specific tasks, working together to solve complex problems. These systems can handle scenarios that would be impossible for single agents.
-
-### 2. Edge AI and Distributed Intelligence
-As AI agents move closer to data sources, we'll see improved latency, privacy, and efficiency. Edge-based AI agents will enable real-time decision-making without constant cloud connectivity.
-
-### 3. Explainable AI
-As AI agents make increasingly important decisions, the ability to explain their reasoning becomes critical. Explainable AI will become a competitive advantage and a regulatory requirement.
-
-### 4. Human-AI Collaboration
-The most effective systems won't replace humans—they'll augment human capabilities. We'll see more sophisticated interfaces that allow humans and AI agents to work together seamlessly.
-
-### 5. Ethical AI and Governance
-As AI agents become more powerful, ethical considerations and governance frameworks will become increasingly important. Organizations will need to implement robust systems for monitoring, auditing, and controlling AI agent behavior.
-
-## Challenges and Considerations
-
-Despite the tremendous progress, significant challenges remain:
-
-**Data Quality and Availability**: AI agents are only as good as the data they learn from. Organizations need robust data pipelines and quality assurance processes.
-
-**Integration Complexity**: Deploying AI agents in existing systems requires careful planning and integration. Legacy systems often present significant technical challenges.
-
-**Talent Gap**: There's a shortage of professionals who understand both AI and business domains deeply enough to design and deploy effective AI agents.
-
-**Regulatory Uncertainty**: As AI becomes more powerful, regulatory frameworks are still evolving. Organizations need to stay ahead of compliance requirements.
-
-## The Road Ahead
-
-The future of autonomous AI systems is incredibly promising. We're at the beginning of a transformation that will reshape how businesses operate. Organizations that embrace AI agents now will have a significant competitive advantage.
-
-However, success requires more than just technology. It requires:
-
-- Clear business objectives and use cases
-- Investment in data infrastructure
-- Development of AI-literate teams
-- Commitment to ethical AI practices
-- Continuous learning and adaptation
-
-## Conclusion
-
-The autonomous AI systems of tomorrow will be more capable, more efficient, and more integrated into business processes than ever before. The question is not whether AI agents will transform your business—it's when and how you'll adapt to this transformation.
-
-The future is autonomous, intelligent, and collaborative. The time to prepare is now.
-
----
-
-*What are your thoughts on the future of AI agents? Share your insights and join the conversation in the comments below.*
-    `,
-    relatedArticles: [
-      "reducing-costs-ai",
-      "ai-ethics-responsibility",
-      "machine-learning-advances",
-    ],
-  },
-};
+import { trpc } from "@/lib/trpc";
 
 export default function BlogArticle() {
   const [match, params] = useRoute("/blog/:id");
   const [, navigate] = useLocation();
+  const slug = params?.id ?? "";
+  const [copied, setCopied] = useState(false);
 
-  if (!match) {
-    return null;
-  }
+  // Real published article from the backend, by slug.
+  const articleQuery = trpc.articles.getPublishedBySlug.useQuery(
+    { slug },
+    { enabled: !!slug }
+  );
+  const relatedQuery = trpc.articles.getRelated.useQuery(
+    { slug, limit: 3 },
+    { enabled: !!slug && articleQuery.isSuccess }
+  );
 
-  const articleId = params?.id;
-  const article = articleContent[articleId];
+  // Count a view once per mount.
+  const incrementViews = trpc.articles.incrementViews.useMutation();
+  useEffect(() => {
+    if (slug && articleQuery.isSuccess) {
+      incrementViews.mutate({ slug });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug, articleQuery.isSuccess]);
 
-  if (!article) {
+  const isLoading = articleQuery.isLoading;
+  const isError = articleQuery.isError;
+  const article = articleQuery.data;
+
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // clipboard unavailable — non-fatal
+    }
+  };
+
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-4">
-            Article Not Found
+          <Loader2 className="w-10 h-10 text-primary animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading article...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError || !article) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-foreground mb-4">
+            Article not found
           </h1>
           <p className="text-muted-foreground mb-8">
-            The article you're looking for doesn't exist or has been removed.
+            This article may have been unpublished or the link is incorrect.
           </p>
           <Button
             onClick={() => navigate("/blog")}
@@ -137,6 +82,18 @@ export default function BlogArticle() {
       </div>
     );
   }
+
+  function formatDate(iso: string) {
+    return new Date(iso).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+
+  // Rough read-time estimate from content length (~200 wpm).
+  const wordCount = article.content.trim().split(/\s+/).length;
+  const readTime = `${Math.max(1, Math.round(wordCount / 200))} min read`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -182,26 +139,29 @@ export default function BlogArticle() {
           <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold">
-                {article.author.charAt(0)}
+                {article.authorName.charAt(0).toUpperCase()}
               </div>
               <div>
                 <p className="font-semibold text-foreground">
-                  {article.author}
+                  {article.authorName}
                 </p>
-                <p className="text-xs">{article.role}</p>
+                <p className="text-xs">Uncle Robert Consulting</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
-              {article.date}
+              {formatDate(article.publishedAt)}
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4" />
-              {article.readTime}
+              {readTime}
             </div>
-            <button className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors ml-auto">
+            <button
+              onClick={handleShare}
+              className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors ml-auto"
+            >
               <Share2 className="w-4 h-4" />
-              Share
+              {copied ? "Link copied!" : "Share"}
             </button>
           </div>
         </div>
@@ -266,49 +226,47 @@ export default function BlogArticle() {
           <div className="mt-16 p-8 bg-card rounded-lg border border-border">
             <div className="flex items-start gap-6">
               <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
-                {article.author.charAt(0)}
+                {article.authorName.charAt(0).toUpperCase()}
               </div>
               <div>
                 <h3 className="text-xl font-bold text-foreground mb-2">
-                  {article.author}
+                  {article.authorName}
                 </h3>
                 <p className="text-sm text-primary font-semibold mb-3">
-                  {article.role}
+                  Uncle Robert Consulting
                 </p>
                 <p className="text-muted-foreground">
-                  {article.author} is a thought leader in AI and automation with
-                  extensive experience in building intelligent systems. They
-                  regularly contribute insights on emerging technologies and
-                  their business applications.
+                  Practical operator writing about agentic business systems,
+                  servant leadership, and building ownable operating platforms.
                 </p>
               </div>
             </div>
           </div>
 
           {/* Comments Section */}
-          <BlogCommentSection articleId={articleId} />
+          <BlogCommentSection articleId={article.id} />
 
           {/* Related Articles */}
-          {article.relatedArticles && article.relatedArticles.length > 0 && (
+          {relatedQuery.data && relatedQuery.data.length > 0 && (
             <div className="mt-16 pt-16 border-t border-border">
               <h2 className="text-2xl font-bold text-foreground mb-8">
                 Related Articles
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {article.relatedArticles.map((relatedId: string) => (
+                {relatedQuery.data.map(related => (
                   <div
-                    key={relatedId}
-                    onClick={() => navigate(`/blog/${relatedId}`)}
+                    key={related.id}
+                    onClick={() => navigate(`/blog/${related.slug}`)}
                     className="p-6 bg-card rounded-lg border border-border hover:border-primary/50 cursor-pointer transition-all"
                   >
                     <p className="text-sm text-primary font-semibold mb-2">
-                      Related
+                      {related.category}
                     </p>
                     <h3 className="font-bold text-foreground mb-3 line-clamp-2">
-                      {articleContent[relatedId]?.title || "Article"}
+                      {related.title}
                     </h3>
                     <p className="text-sm text-muted-foreground line-clamp-2">
-                      {articleContent[relatedId]?.excerpt || ""}
+                      {related.excerpt}
                     </p>
                   </div>
                 ))}
@@ -323,7 +281,7 @@ export default function BlogArticle() {
         <div className="container">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <p className="text-muted-foreground text-sm">
-              © 2025 AgentLab. All rights reserved.
+              © {new Date().getFullYear()} AgentLab. All rights reserved.
             </p>
             <Button
               onClick={() => navigate("/blog")}

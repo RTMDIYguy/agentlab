@@ -1330,7 +1330,7 @@ export default function CommandCenter() {
                                 <Layers className="w-3.5 h-3.5 text-primary" />
                                 DAG Execution Node Sequence
                               </span>
-                              <span className="text-[11px] font-mono">Success Rate: {wf.successRate || "99.4%"}</span>
+                              <span className="text-[11px] font-mono">Success Rate: {wf.successRate || "—"}</span>
                             </div>
 
                             {steps.length === 0 ? (
@@ -1419,7 +1419,9 @@ export default function CommandCenter() {
                       </div>
                       <div className="text-right font-mono text-[11px]">
                         <div className="text-muted-foreground">{agent.baseModel?.split("-")[0] || "gemini"}</div>
-                        <div className="text-xs text-green-500 font-semibold">{agent.uptime || "99.9%"}</div>
+                        <div className="text-xs text-green-500 font-semibold">
+                          {agent.successRate != null ? `${agent.successRate}% success` : "no steps yet"}
+                        </div>
                       </div>
                     </div>
                   ))}

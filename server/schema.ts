@@ -10,6 +10,8 @@ import {
   jsonb,
   uniqueIndex,
   index,
+  customType,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import {
   type InferSelectModel,
@@ -118,8 +120,11 @@ export const agents = pgTable(
       .default("gemini-1.5-pro"),
     systemPrompt: text("system_prompt").notNull(),
     status: varchar("status", { length: 32 }).notNull().default("idle"), // 'active' | 'idle' | 'error' | 'paused'
+    // Fabricated at seed time in the pre-honesty-audit controller; retained
+    // for backward compatibility but no longer trusted or displayed. Real
+    // per-agent task/success stats are computed from run history instead.
     tasksCompleted: integer("tasks_completed").notNull().default(0),
-    uptime: varchar("uptime", { length: 32 }).notNull().default("99.9%"),
+    uptime: varchar("uptime", { length: 32 }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -152,9 +157,11 @@ export const workflows = pgTable(
     cronExpression: varchar("cron_expression", { length: 64 }),
     nextRunAt: timestamp("next_run_at", { withTimezone: true }),
     status: varchar("status", { length: 32 }).notNull().default("draft"), // 'active' | 'paused' | 'draft' | 'archived'
-    successRate: numeric("success_rate", { precision: 5, scale: 2 })
-      .notNull()
-      .default("100.00"),
+    // Honesty doctrine (CC-2026-09-23-016): a never-run workflow has no success
+    // rate. This column is not written by any controller; per-workflow rates are
+    // computed from real workflow_runs history (see listWorkflows). The old NOT
+    // NULL default of 100.00 presented every never-run workflow as perfect.
+    successRate: numeric("success_rate", { precision: 5, scale: 2 }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -186,9 +193,14 @@ export const workflowSteps = pgTable(
       onDelete: "set null",
     }),
     orderIndex: integer("order_index").notNull(),
-    stepType: varchar("step_type", { length: 32 }).notNull().default("agent"), // 'trigger' | 'agent' | 'guardrail' | 'destination'
+    stepType: varchar("step_type", { length: 32 }).notNull().default("agent"), // 'trigger' | 'agent' | 'guardrail' | 'action' | 'destination'
     title: varchar("title", { length: 128 }).notNull(),
     actionPrompt: text("action_prompt").notNull(),
+    // Per-step execution policy (Tier 1 runner hardening). null = use the
+    // runner defaults; explicit values are clamped to safe bounds by
+    // server/execution/step-policy.ts.
+    timeoutSeconds: integer("timeout_seconds"),
+    maxRetries: integer("max_retries"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -229,6 +241,8 @@ export const auditLogs = pgTable(
     latencyMs: integer("latency_ms").notNull().default(0),
     status: varchar("status", { length: 32 }).notNull().default("success"), // 'success' | 'warning' | 'error'
     errorMessage: text("error_message"),
+    cancelRequested: boolean("cancel_requested").notNull().default(false),
+    cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
     billed: boolean("billed").notNull().default(false),
     policyChecks: jsonb("policy_checks").notNull().default({
       saifPassed: true,
@@ -270,6 +284,8 @@ export const workflowRuns = pgTable(
     startedAt: timestamp("started_at", { withTimezone: true }),
     completedAt: timestamp("completed_at", { withTimezone: true }),
     errorMessage: text("error_message"),
+    cancelRequested: boolean("cancel_requested").notNull().default(false),
+    cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
     initialContext: jsonb("initial_context").default({}),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -288,6 +304,64 @@ export const workflowRuns = pgTable(
 // ==============================================================================
 // 8. WORKFLOW RUN STEPS (Execution state of a single step in a run)
 // ==============================================================================
+// ==============================================================================
+// 26b. ACTION DISPATCHES (human-gated outbound actions — conversion plan Tier 2)
+// Lifecycle: an 'action' step drafts via the agent runner, then parks a row in
+// `awaiting_approval` and pauses the run. A human approves/rejects via the
+// actions router; approval runs the SAIF check, dispatches through the named
+// connector, and records the REAL result. Nothing is ever marked dispatched
+// unless the external system actually accepted it.
+
+export const actionDispatches = pgTable(
+  "action_dispatches",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: uuid("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    workflowRunId: uuid("workflow_run_id").references(() => workflowRuns.id, {
+      onDelete: "set null",
+    }),
+    workflowRunStepId: uuid("workflow_run_step_id").references(
+      () => workflowRunSteps.id,
+      { onDelete: "set null" }
+    ),
+    workflowStepId: uuid("workflow_step_id").references(() => workflowSteps.id, {
+      onDelete: "set null",
+    }),
+    /** e.g. 'hubspot_contact_upsert' — see server/execution/connectors.ts */
+    connector: varchar("connector", { length: 64 }).notNull(),
+    /** 'awaiting_approval' | 'approved' | 'rejected' | 'dispatched' | 'dispatch_failed' | 'cancelled' */
+    status: varchar("status", { length: 32 }).notNull().default("awaiting_approval"),
+    /** Human-readable summary of what would be sent (shown in approval UI). */
+    title: varchar("title", { length: 255 }).notNull(),
+    /** Full structured payload (already connector-shaped). */
+    payload: jsonb("payload").notNull(),
+    /** SAIF gate result recorded at approval time. */
+    saifPassed: boolean("saif_passed"),
+    saifReason: text("saif_reason"),
+    /** The human who approved or rejected. */
+    approvedBy: uuid("approved_by").references(() => users.id, { onDelete: "set null" }),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+    rejectedReason: text("rejected_reason"),
+    /** Real dispatch result from the external system. */
+    dispatchedAt: timestamp("dispatched_at", { withTimezone: true }),
+    externalId: varchar("external_id", { length: 128 }),
+    externalUrl: varchar("external_url", { length: 512 }),
+    dispatchError: text("dispatch_error"),
+    /** For the UI list: the run's real end state, written on approve/reject. */
+    runOutcome: varchar("run_outcome", { length: 32 }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_action_dispatches_workspace").on(table.workspaceId),
+    index("idx_action_dispatches_status").on(table.status),
+    index("idx_action_dispatches_run").on(table.workflowRunId),
+  ]
+);
+
 export const workflowRunSteps = pgTable(
   "workflow_run_steps",
   {
@@ -647,6 +721,196 @@ export const icpProfiles = pgTable(
   table => [
     index("idx_icp_profiles_workspace").on(table.workspaceId),
     index("idx_icp_profiles_industry").on(table.industry),
+  ]
+);
+
+// ==============================================================================
+// 21. NEWSLETTER SUBSCRIBERS (Double opt-in audience list)
+// ==============================================================================
+export const newsletterSubscribers = pgTable(
+  "newsletter_subscribers",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    email: varchar("email", { length: 255 }).notNull(),
+    name: varchar("name", { length: 128 }),
+    status: varchar("status", { length: 32 }).notNull().default("pending"), // 'pending' | 'active' | 'unsubscribed' | 'bounced'
+    source: varchar("source", { length: 64 }).notNull().default("website"),
+    verifyToken: varchar("verify_token", { length: 128 }),
+    unsubscribeToken: varchar("unsubscribe_token", { length: 128 }),
+    verifiedAt: timestamp("verified_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    uniqueIndex("uq_newsletter_subscribers_email").on(table.email),
+    index("idx_newsletter_subscribers_status").on(table.status),
+  ]
+);
+
+// ==============================================================================
+// 22. NEWSLETTER CAMPAIGNS (Admin-authored email sends)
+// ==============================================================================
+export const newsletterCampaigns = pgTable("newsletter_campaigns", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  subject: varchar("subject", { length: 255 }).notNull(),
+  content: text("content").notNull(),
+  status: varchar("status", { length: 32 }).notNull().default("draft"), // 'draft' | 'sent' | 'archived'
+  recipientCount: integer("recipient_count").notNull().default(0),
+  sentCount: integer("sent_count").notNull().default(0),
+  openCount: integer("open_count").notNull().default(0),
+  clickCount: integer("click_count").notNull().default(0),
+  sentAt: timestamp("sent_at", { withTimezone: true }),
+  hubspotEmailId: varchar("hubspot_email_id", { length: 64 }),
+  hubspotTemplatePath: varchar("hubspot_template_path", { length: 255 }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// ==============================================================================
+// 23. CONTACT SUBMISSIONS (Every lead captured on the site in one place)
+// ==============================================================================
+export const contactSubmissions = pgTable(
+  "contact_submissions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    name: varchar("name", { length: 128 }),
+    email: varchar("email", { length: 255 }).notNull(),
+    company: varchar("company", { length: 128 }),
+    painPoint: text("pain_point"),
+    interest: varchar("interest", { length: 128 }),
+    subject: varchar("subject", { length: 255 }),
+    message: text("message"),
+    source: varchar("source", { length: 128 }).notNull().default("website"),
+    status: varchar("status", { length: 32 }).notNull().default("new"), // 'new' | 'synced' | 'archived'
+    crmSyncedAt: timestamp("crm_synced_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_contact_submissions_email").on(table.email),
+    index("idx_contact_submissions_created").on(table.createdAt),
+  ]
+);
+
+// ==============================================================================
+// 23b. HUBSPOT SYNC LOG (honest outcome ledger for every lead-handoff attempt)
+// Blueprint: "Agent Lab OS to HubSpot Lead Handoff Blueprint" (2026-09-23).
+// Every sync attempt — success, skip, or failure — is recorded with the real
+// HTTP outcome and the exact payload, so nothing silently pretends to have
+// synced and failures are diagnosable (missing portal properties, etc.).
+
+export const hubspotSyncLog = pgTable(
+  "hubspot_sync_log",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    submissionId: uuid("submission_id").references(() => contactSubmissions.id, {
+      onDelete: "set null",
+    }),
+    email: varchar("email", { length: 255 }).notNull(),
+    outcome: varchar("outcome", { length: 32 }).notNull(), // 'synced' | 'skipped_no_token' | 'error'
+    hubspotContactId: varchar("hubspot_contact_id", { length: 64 }),
+    httpStatus: integer("http_status"),
+    errorMessage: text("error_message"),
+    /** Exact property payload sent (or would have been sent) to HubSpot. */
+    propertiesPayload: text("properties_payload"),
+    /** True when the row was written by a manual retry, not the capture path. */
+    retryOf: uuid("retry_of"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_hubspot_sync_log_email").on(table.email),
+    index("idx_hubspot_sync_log_submission").on(table.submissionId),
+    index("idx_hubspot_sync_log_created").on(table.createdAt),
+  ]
+);
+
+// ==============================================================================
+// 24. BLOG COMMENTS (Threaded comments on published articles)
+// ==============================================================================
+export const blogComments = pgTable(
+  "blog_comments",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    articleId: integer("article_id")
+      .notNull()
+      .references(() => articles.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    parentCommentId: uuid("parent_comment_id").references(
+      (): AnyPgColumn => blogComments.id,
+      { onDelete: "cascade" }
+    ),
+    content: text("content").notNull(),
+    status: varchar("status", { length: 32 }).notNull().default("visible"), // 'visible' | 'deleted'
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_blog_comments_article").on(table.articleId),
+    index("idx_blog_comments_parent").on(table.parentCommentId),
+  ]
+);
+
+// ==============================================================================
+// 25. MESSENGER THREADS & MESSAGES (ClientMessenger / office channels)
+// ==============================================================================
+export const messengerThreads = pgTable(
+  "messenger_threads",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    type: varchar("type", { length: 16 }).notNull().default("channel"), // 'channel' | 'dm'
+    slug: varchar("slug", { length: 96 }), // stable client key, e.g. 'chan-general' or 'dm-lorenzo'
+    name: varchar("name", { length: 128 }).notNull(),
+    tagline: varchar("tagline", { length: 255 }),
+    role: varchar("role", { length: 96 }),
+    company: varchar("company", { length: 128 }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    uniqueIndex("uq_messenger_threads_slug").on(table.slug),
+    index("idx_messenger_threads_type").on(table.type),
+  ]
+);
+
+export const messengerMessages = pgTable(
+  "messenger_messages",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    threadId: uuid("thread_id")
+      .notNull()
+      .references(() => messengerThreads.id, { onDelete: "cascade" }),
+    sender: varchar("sender", { length: 16 }).notNull().default("founder"), // 'founder' | 'client' | 'bot'
+    senderName: varchar("sender_name", { length: 128 }).notNull(),
+    content: text("content").notNull(),
+    isMeetingLink: boolean("is_meeting_link").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_messenger_messages_thread").on(table.threadId, table.createdAt),
   ]
 );
 
@@ -1051,3 +1315,58 @@ export type NewDiscountCode = InferInsertModel<typeof discountCodes>;
 
 export type DiscountRedemption = InferSelectModel<typeof discountRedemptions>;
 export type NewDiscountRedemption = InferInsertModel<typeof discountRedemptions>;
+
+export type NewsletterSubscriber = InferSelectModel<typeof newsletterSubscribers>;
+export type NewNewsletterSubscriber = InferInsertModel<typeof newsletterSubscribers>;
+
+export type NewsletterCampaign = InferSelectModel<typeof newsletterCampaigns>;
+export type NewNewsletterCampaign = InferInsertModel<typeof newsletterCampaigns>;
+
+export type ContactSubmission = InferSelectModel<typeof contactSubmissions>;
+export type NewContactSubmission = InferInsertModel<typeof contactSubmissions>;
+
+export type BlogComment = InferSelectModel<typeof blogComments>;
+export type NewBlogComment = InferInsertModel<typeof blogComments>;
+
+// ==============================================================================
+// 26. SCREEN TEARDOWN SESSIONS (Async Screen & Video Teardown Studio)
+// ==============================================================================
+
+// Postgres bytea — the studio's .webm recordings persist server-side so
+// sessions survive a browser refresh. Videos are minutes long, not hours,
+// so a modest max keeps rows sane.
+const bytea = customType<{ data: Buffer; driverData: Buffer }>({
+  dataType() {
+    return "bytea";
+  },
+});
+
+export const teardownSessions = pgTable(
+  "teardown_sessions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: uuid("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    title: varchar("title", { length: 128 }).notNull(),
+    durationSeconds: integer("duration_seconds").notNull().default(0),
+    sizeBytes: integer("size_bytes").notNull().default(0),
+    notes: text("notes"),
+    aiBrief: text("ai_brief"),
+    aiBriefModel: varchar("ai_brief_model", { length: 64 }),
+    videoData: bytea("video_data"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_teardown_sessions_workspace").on(table.workspaceId),
+    index("idx_teardown_sessions_created").on(table.workspaceId, table.createdAt),
+  ]
+);
+
+export type TeardownSession = InferSelectModel<typeof teardownSessions>;
+export type NewTeardownSession = InferInsertModel<typeof teardownSessions>;

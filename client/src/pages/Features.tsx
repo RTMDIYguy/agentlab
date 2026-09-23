@@ -138,7 +138,7 @@ export default function Features() {
       automationRate: "90%",
       timeSaved: "6.0 hrs/client",
       color: "from-cyan-500/20 to-cyan-600/5 border-cyan-500/30 text-cyan-400",
-      tagline: "Delightful Client Onboarding & 100% SLA Adherence",
+      tagline: "Delightful Client Onboarding & Proactive SLA Tracking",
       purpose: "Why it exists: Inconsistent client handoffs lead to scope creep and client churn. The Fulfillment Brain automates workspace provisioning, milestone tracking, and quality assurance packets.",
       synergy: "Cross-Department Synergy: Delivers finalized client assets to After-Sales (AFT) for case study generation and quarterly reviews.",
       workflows: [

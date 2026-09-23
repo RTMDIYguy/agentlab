@@ -9,10 +9,13 @@ import {
   workspacePackages,
   knowledgePackages,
   workflowArtifacts,
+  actionDispatches,
 } from "../schema";
 import { runAgentStep } from "./agent-runner";
 import { evaluateArtifactQuality } from "./quality-evaluator";
 import { dispatchScheduledPosts } from "./social-dispatcher";
+import { draftActionPayload, parseActionDraft } from "./action-drafter";
+import { resolveStepPolicy, runWithStepPolicy, StepCancelledError } from "./step-policy";
 
 export async function processPendingRuns() {
   const db = await getDb();
@@ -96,6 +99,24 @@ export async function processPendingRuns() {
           }
           continue;
         }
+
+        // Cooperative cancellation: honor a cancel request between steps so
+        // pending work never starts after the operator asked to stop.
+        if (run.cancelRequested) {
+          await db
+            .update(workflowRuns)
+            .set({
+              status: "cancelled",
+              completedAt: new Date(),
+              errorMessage: "Cancelled before step execution",
+              updatedAt: new Date(),
+            })
+            .where(eq(workflowRuns.id, run.id));
+          console.log(`[QueueProcessor] Run ${run.id} cancelled before step ${step.id}.`);
+          runFailed = true;
+          break;
+        }
+
         // 5. Create workflow_run_steps record (status running)
         // Using crypto.randomUUID() since uuid() in pgTable isn't autoincrement in this setup without db support
         const runStepId = crypto.randomUUID();
@@ -111,6 +132,76 @@ export async function processPendingRuns() {
           inputContext: currentContext,
         } as any); // Using 'as any' safely assuming DB handles default values well
         console.log(`[QueueProcessor] DB QUERY DONE: Inserted workflowRunStep ${runStepId}.`);
+
+        // 5.5 Human-gated action step (conversion plan Tier 2): the agent
+        // drafts the outbound payload, it parks as awaiting_approval, and the
+        // run pauses exactly like a guardrail — a human decides in the
+        // actions router whether the payload ever leaves the OS.
+        if (step.stepType === "action") {
+          try {
+            const draft = await draftActionPayload(
+              step.actionPrompt,
+              currentContext,
+              run.workspaceId
+            );
+            const parse = parseActionDraft(draft);
+            if (!parse.ok) {
+              throw new Error(
+                `Action draft invalid: ${parse.error} — raw: ${String(draft).slice(0, 200)}`
+              );
+            }
+
+            const dispatchId = crypto.randomUUID();
+            await db.insert(actionDispatches).values({
+              id: dispatchId,
+              workspaceId: run.workspaceId,
+              workflowRunId: run.id,
+              workflowRunStepId: runStepId,
+              workflowStepId: step.id,
+              connector: parse.connector,
+              status: "awaiting_approval",
+              title: parse.title,
+              payload: parse.payload as Record<string, unknown>,
+            } as any);
+
+            // Mark the run step so the approval flow can find it, and pause
+            // the run exactly like the guardrail path does.
+            await db
+              .update(workflowRunSteps)
+              .set({
+                status: "awaiting_approval",
+                outputPayload: { actionDispatchId: dispatchId },
+              })
+              .where(eq(workflowRunSteps.id, runStepId));
+
+            await db
+              .update(workflowRuns)
+              .set({ status: "paused_for_approval", updatedAt: new Date() })
+              .where(eq(workflowRuns.id, run.id));
+
+            console.log(
+              `[QueueProcessor] Action step ${step.id} drafted dispatch ${dispatchId} (connector ${parse.connector}); run paused for approval.`
+            );
+            runFailed = true; // halted, awaiting human decision
+            break;
+          } catch (actionErr: any) {
+            console.error("[QueueProcessor] Action step failed:", actionErr.message);
+            await db
+              .update(workflowRunSteps)
+              .set({
+                status: "failed",
+                completedAt: new Date(),
+                errorMessage: actionErr.message,
+              })
+              .where(eq(workflowRunSteps.id, runStepId));
+            await db
+              .update(workflowRuns)
+              .set({ status: "failed", updatedAt: new Date() })
+              .where(eq(workflowRuns.id, run.id));
+            runFailed = true;
+            break;
+          }
+        }
 
         // 6. Guardrail check
         if (step.stepType === "guardrail") {
@@ -150,13 +241,26 @@ export async function processPendingRuns() {
                systemPrompt = (systemPrompt || "") + `\n\n[ACCESS CONTROL]: You are operating with the following active Playbook contexts: ${unlockedDepartments.join(", ")}. The system will actively block you from accessing SOPs outside these areas.`;
             }
 
-            const result = await runAgentStep(
-              step.actionPrompt,
-              systemPrompt,
-              currentContext,
-              run.workspaceId,
-              unlockedDepartments
+            // Tier 1 hardening: per-step timeout + bounded retry policy, with
+            // cooperative cancellation checks between attempts.
+            const policy = resolveStepPolicy(step);
+            const { value: result, attempts } = await runWithStepPolicy(
+              run.id,
+              policy,
+              () =>
+                runAgentStep(
+                  step.actionPrompt,
+                  systemPrompt,
+                  currentContext,
+                  run.workspaceId,
+                  unlockedDepartments
+                )
             );
+            if (attempts > 1) {
+              console.log(
+                `[QueueProcessor] Step ${step.id} succeeded on attempt ${attempts}/${1 + policy.maxRetries}.`
+              );
+            }
 
             // Refusal & Inability Verification Guardrail:
             // If the model responded with a text refusal or inability without executing tools, fail the step with evidence.
@@ -230,8 +334,8 @@ export async function processPendingRuns() {
                     artifactsCreated: result.extractedArtifacts.length,
                   },
                 },
-                cost: result.cost.toString(),
-                latencyMs: result.latencyMs,
+                cost: result.cost?.toString() ?? "0.000000",
+                latencyMs: result.latencyMs ?? 0,
               })
               .where(eq(workflowRunSteps.id, runStepId));
             console.log(`[QueueProcessor] DB QUERY DONE: Updated workflowRunStep ${runStepId} to completed.`);
@@ -250,11 +354,11 @@ export async function processPendingRuns() {
                 artifactsCount: result.extractedArtifacts.length,
                 toolsExecuted: result.toolsExecuted.map(t => ({ name: t.toolName, isSimulated: t.isSimulated })),
               },
-              tokensPrompt: result.tokensPrompt,
-              tokensCompletion: result.tokensCompletion,
-              tokensTotal: result.tokensTotal,
-              cost: result.cost.toString(),
-              latencyMs: result.latencyMs,
+              tokensPrompt: result.tokensPrompt ?? 0,
+              tokensCompletion: result.tokensCompletion ?? 0,
+              tokensTotal: result.tokensTotal ?? 0,
+              cost: result.cost?.toString() ?? "0.000000",
+              latencyMs: result.latencyMs ?? 0,
               status: "success",
               policyChecks: {
                 saifPassed: true,
@@ -266,6 +370,30 @@ export async function processPendingRuns() {
             } as any);
             console.log(`[QueueProcessor] DB QUERY DONE: Inserted auditLog.`);
           } catch (error: any) {
+            // Cancellation is not a failure: mark the run cancelled honestly.
+            if (error instanceof StepCancelledError) {
+              console.log(`[QueueProcessor] Run ${run.id} cancelled during step ${step.id}.`);
+              await db
+                .update(workflowRunSteps)
+                .set({
+                  status: "cancelled",
+                  completedAt: new Date(),
+                  errorMessage: error.message,
+                })
+                .where(eq(workflowRunSteps.id, runStepId));
+              await db
+                .update(workflowRuns)
+                .set({
+                  status: "cancelled",
+                  completedAt: new Date(),
+                  errorMessage: `Cancelled during step ${step.orderIndex} (attempted after cancel request)`,
+                  updatedAt: new Date(),
+                })
+                .where(eq(workflowRuns.id, run.id));
+              runFailed = true;
+              break;
+            }
+
             console.error(`[QueueProcessor] Step failed. error.message=${error.message}`, error);
             if (error.stack) {
               console.error(`[QueueProcessor] Stack trace:`, error.stack);
@@ -342,8 +470,9 @@ export async function processPendingRuns() {
 
       console.log(`[QueueProcessor] Finished processing run ${run.id}. runFailed=${runFailed}`);
       // 11. Complete run if not failed/halted
-      if (!runFailed) {
+            if (!runFailed) {
         console.log(`[QueueProcessor] DB QUERY: Updating run ${run.id} to completed...`);
+
         await db
           .update(workflowRuns)
           .set({
@@ -352,24 +481,36 @@ export async function processPendingRuns() {
             updatedAt: new Date(),
           })
           .where(eq(workflowRuns.id, run.id));
+
         console.log(`[QueueProcessor] DB QUERY DONE: Updated run ${run.id} to completed.`);
-      }
       }
 
       // Dispatch any newly-scheduled social posts whose time has arrived
       const dispatchResults = await dispatchScheduledPosts();
+
       if (dispatchResults.length > 0) {
-        console.log(`[QueueProcessor] Social dispatcher posted ${dispatchResults.filter(r => r.success).length} post(s), ${dispatchResults.filter(r => !r.success).length} failed.`);
+        console.log(
+          `[QueueProcessor] Social dispatcher posted ${
+            dispatchResults.filter((r) => r.success).length
+          } post(s), ${
+            dispatchResults.filter((r) => !r.success).length
+          } failed.`
+        );
+
         for (const r of dispatchResults) {
           if (r.success) {
-            console.log(`[QueueProcessor] ✓ ${r.platform}: ${r.postId || ''} (artifact ${r.artifactId})`);
+            console.log(
+              `[QueueProcessor] ✓ ${r.platform}: ${r.postId || ""} (artifact ${r.artifactId})`
+            );
           } else {
-            console.warn(`[QueueProcessor] ✗ ${r.platform}: ${r.error || 'unknown'} (artifact ${r.artifactId})`);
+            console.warn(
+              `[QueueProcessor] ✗ ${r.platform}: ${r.error || "unknown"} (artifact ${r.artifactId})`
+            );
           }
         }
+      }
     }
+  } catch (err) {
+    console.error("[QueueProcessor] Error processing runs:", err);
   }
-} catch (err) {
-  console.error("[QueueProcessor] Error processing runs:", err);
-}
 }

@@ -1,58 +1,21 @@
+import { param } from "./params";
 import type { Request, Response } from "express";
 import type { ProposedWorkflow } from "./orchestrator";
-import { CronExpressionParser } from "cron-parser";
-
-
-export interface WorkflowSummaryDto {
+import { CronExpressionParser } from "cron-parser";export interface WorkflowSummaryDto {
   id: string;
   name: string;
   description: string;
   triggerType: string;
   status: "active" | "paused" | "draft" | "archived";
-  successRate: number;
+  successRate: number | null;
   stepsCount: number;
-  lastRunAt: string;
+  lastRunAt: string | null;
 }
-
-const DEFAULT_WORKSPACE_WORKFLOWS: WorkflowSummaryDto[] = [
-  {
-    id: "wf-001",
-    name: "Inbound Lead Enrichment",
-    description:
-      "Enriches founder leads from Bootstrapper events with LinkedIn and Hunter.io APIs.",
-    triggerType: "Event / Inbound Webhook",
-    status: "active",
-    successRate: 99.4,
-    stepsCount: 5,
-    lastRunAt: "2026-08-22T10:22:15Z",
-  },
-  {
-    id: "wf-002",
-    name: "M365 Daily Financial Reconciliation",
-    description:
-      "Reconciles Stripe transactions against M365 Finance Control sheet at 18:00 UTC.",
-    triggerType: "Cron Schedule (Daily @ 18:00)",
-    status: "active",
-    successRate: 98.8,
-    stepsCount: 4,
-    lastRunAt: "2026-08-21T18:00:00Z",
-  },
-  {
-    id: "wf-003",
-    name: "Automated CI/CD Test & Refactor Suite",
-    description:
-      "Runs Vitest suites, checks TypeScript compilation, and submits PR reports.",
-    triggerType: "GitHub Webhook (push/PR)",
-    status: "active",
-    successRate: 100.0,
-    stepsCount: 3,
-    lastRunAt: "2026-08-22T10:21:40Z",
-  },
-];
+;
 
 import { getDb } from "../db";
-import { workflows, workflowSteps, agents } from "../schema";
-import { eq, and, asc } from "drizzle-orm";
+import { workflows, workflowSteps, workflowRuns, agents } from "../schema";
+import { eq, and, asc, sql } from "drizzle-orm";
 
 const CANONICAL_10_WORKFLOWS = [
   {
@@ -237,10 +200,37 @@ export async function getWorkflows(req: Request, res: Response): Promise<void> {
       };
     });
 
+    // Honesty doctrine (CC-2026-09-23-016): success rates are computed from
+    // real run history. A workflow that has never run has no rate — it is
+    // never presented as a perfect 100%, and stored success_rate values are
+    // ignored (the column is legacy, not written by any code path).
+    const runStats = await db
+      .select({
+        workflowId: workflowRuns.workflowId,
+        finished: sql<number>`count(*) filter (where ${workflowRuns.status} in ('completed','failed'))::int`,
+        succeeded: sql<number>`count(*) filter (where ${workflowRuns.status} = 'completed')::int`,
+        lastRun: sql<Date | null>`max(${workflowRuns.startedAt})`,
+      })
+      .from(workflowRuns)
+      .where(eq(workflowRuns.workspaceId, workspaceId))
+      .groupBy(workflowRuns.workflowId);
+    const statsByWorkflow = new Map(runStats.map((r) => [r.workflowId, r]));
+
+    const workflowsWithStats = enrichedWorkflows.map((wf) => {
+      const stats = statsByWorkflow.get(wf.id);
+      const finished = stats?.finished ?? 0;
+      const succeeded = stats?.succeeded ?? 0;
+      return {
+        ...wf,
+        successRate: finished > 0 ? Math.round((succeeded / finished) * 1000) / 10 : null,
+        lastRunAt: stats?.lastRun ? new Date(stats.lastRun).toISOString() : null,
+      };
+    });
+
     res.status(200).json({
       workspaceId,
-      workflows: enrichedWorkflows,
-      totalCount: enrichedWorkflows.length,
+      workflows: workflowsWithStats,
+      totalCount: workflowsWithStats.length,
     });
   } catch (error) {
     console.error("[Workflows Controller Error]:", error);
@@ -413,7 +403,7 @@ export async function updateWorkflowSchedule(req: Request, res: Response): Promi
       return;
     }
 
-    const { workflowId } = req.params;
+    const workflowId = param(req, "workflowId");
     const { triggerType, cronExpression } = req.body;
     const db = await getDb();
     if (!db) {
@@ -462,7 +452,7 @@ export async function updateWorkflow(req: Request, res: Response): Promise<void>
       return;
     }
 
-    const { workflowId } = req.params;
+    const workflowId = param(req, "workflowId");
     const { name, description, triggerType, cronExpression, status } = req.body;
     const db = await getDb();
     if (!db) {
@@ -504,7 +494,7 @@ export async function updateWorkflowSteps(req: Request, res: Response): Promise<
       return;
     }
 
-    const { workflowId } = req.params;
+    const workflowId = param(req, "workflowId");
     const { steps: newSteps } = req.body as {
       steps: Array<{
         id?: string;

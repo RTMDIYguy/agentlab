@@ -3,7 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import { trpc } from "@/lib/trpc";
 
 export type AuthUser = {
-  id?: number;
+  /** uuid string, as returned by /api/auth/me (users.id is a uuid). */
+  id?: string;
   openId: string;
   name?: string | null;
   email?: string | null;

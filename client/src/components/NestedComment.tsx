@@ -13,19 +13,19 @@ import {
 import { toast } from "sonner";
 
 type BlogComment = {
-  id: number;
-  articleId: string;
-  userId: number;
-  parentCommentId: number | null;
+  id: string;
+  articleId: number;
+  userId: string | null;
+  authorName?: string;
+  parentCommentId: string | null;
   content: string;
   status: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
 };
 
 interface NestedCommentProps {
   comment: BlogComment;
-  articleId: string;
+  articleId: number;
   depth?: number;
   onCommentDeleted?: () => void;
 }
@@ -43,14 +43,15 @@ export default function NestedComment({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch replies for this comment
-  const { data: replies = [], refetch: refetchReplies } =
-    (trpc as any).blog?.getCommentReplies?.useQuery?.(
-      { commentId: comment.id },
-      { enabled: !!comment.id }
-    ) ?? { data: [], refetch: () => {} };
+  const repliesQuery = trpc.blog.getCommentReplies.useQuery(
+    { commentId: comment.id },
+    { enabled: !!comment.id }
+  );
+  const replies = repliesQuery.data ?? [];
+  const refetchReplies = repliesQuery.refetch;
 
   // Create reply mutation
-  const createReplyMutation = (trpc as any).blog?.createReply?.useMutation?.({
+  const createReplyMutation = trpc.blog.createReply.useMutation({
     onSuccess: () => {
       setReplyText("");
       setShowReplyForm(false);
@@ -60,10 +61,10 @@ export default function NestedComment({
     onError: (error: any) => {
       toast.error(error?.message || "Failed to post reply");
     },
-  }) ?? { mutate: () => {}, isPending: false };
+  });
 
   // Delete comment mutation
-  const deleteCommentMutation = (trpc as any).blog?.deleteComment?.useMutation?.({
+  const deleteCommentMutation = trpc.blog.deleteComment.useMutation({
     onSuccess: () => {
       refetchReplies();
       onCommentDeleted?.();
@@ -72,7 +73,7 @@ export default function NestedComment({
     onError: (error: any) => {
       toast.error(error?.message || "Failed to delete comment");
     },
-  }) ?? { mutate: () => {}, isPending: false };
+  });
 
 
   const handleSubmitReply = async (e: React.FormEvent) => {
@@ -115,7 +116,8 @@ export default function NestedComment({
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3 flex-1">
             <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold text-xs">
-              {comment.id % 10}
+              {/* comment.id is a uuid string — derive a stable single digit for the avatar */}
+              {Array.from(comment.id).reduce((a, c) => a + c.charCodeAt(0), 0) % 10}
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-foreground text-sm">

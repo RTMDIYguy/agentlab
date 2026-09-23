@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import NestedComment from "./NestedComment";
 
 interface BlogCommentSectionProps {
-  articleId: string;
+  articleId: number;
 }
 
 export default function BlogCommentSection({
@@ -19,23 +19,22 @@ export default function BlogCommentSection({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch threaded comments (top-level only)
-  const {
-    data: comments = [],
-    refetch: refetchComments,
-    isLoading,
-  } = (trpc as any).blog?.getThreadedComments?.useQuery?.(
+  const commentsQuery = trpc.blog.getThreadedComments.useQuery(
     { articleId },
     { enabled: !!articleId }
-  ) ?? { data: [], isLoading: false, refetch: () => {} };
+  );
+  const comments = commentsQuery.data ?? [];
+  const refetchComments = commentsQuery.refetch;
+  const isLoading = commentsQuery.isLoading;
 
   // Fetch comment count
-  const { data: commentCountData } = (trpc as any).blog?.getCommentCount?.useQuery?.(
+  const commentCountQuery = trpc.blog.getCommentCount.useQuery(
     { articleId },
     { enabled: !!articleId }
-  ) ?? { data: 0 };
+  );
 
   // Create comment mutation
-  const createCommentMutation = (trpc as any).blog?.createComment?.useMutation?.({
+  const createCommentMutation = trpc.blog.createComment.useMutation({
     onSuccess: () => {
       setCommentText("");
       refetchComments();
@@ -44,10 +43,10 @@ export default function BlogCommentSection({
     onError: (error: any) => {
       toast.error(error?.message || "Failed to post comment");
     },
-  }) ?? { mutate: () => {}, isPending: false };
+  });
 
   // Delete comment mutation
-  const deleteCommentMutation = (trpc as any).blog?.deleteComment?.useMutation?.({
+  const deleteCommentMutation = trpc.blog.deleteComment.useMutation({
     onSuccess: () => {
       refetchComments();
       toast.success("Comment deleted successfully");
@@ -55,7 +54,7 @@ export default function BlogCommentSection({
     onError: (error: any) => {
       toast.error(error?.message || "Failed to delete comment");
     },
-  }) ?? { mutate: () => {}, isPending: false };
+  });
 
 
   const handleSubmitComment = async (e: React.FormEvent) => {
@@ -82,7 +81,7 @@ export default function BlogCommentSection({
     }
   };
 
-  const handleDeleteComment = (commentId: number) => {
+  const handleDeleteComment = (commentId: string) => {
     if (confirm("Are you sure you want to delete this comment?")) {
       deleteCommentMutation.mutate({ commentId });
     }
@@ -93,7 +92,7 @@ export default function BlogCommentSection({
       <div className="flex items-center gap-3 mb-8">
         <MessageCircle className="w-6 h-6 text-primary" />
         <h2 className="text-2xl font-bold text-foreground">
-          Comments ({commentCountData?.count || 0})
+          Comments ({commentCountQuery.data?.count || 0})
         </h2>
       </div>
 

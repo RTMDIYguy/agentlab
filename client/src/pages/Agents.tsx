@@ -32,7 +32,8 @@ interface AgentDto {
   role: string;
   status: "active" | "idle" | "error" | "paused";
   tasksCompleted: number;
-  uptime: string;
+  successRate: number | null;
+  lastStepAt: string | null;
   baseModel: string;
 }
 
@@ -117,6 +118,15 @@ export default function Agents() {
 
   const activeCount = agents.filter((a) => a.status === "active").length;
   const totalTasks = agents.reduce((sum, a) => sum + (a.tasksCompleted || 0), 0);
+  const withRate = agents.filter(
+    (a) => a.successRate != null
+  ) as (AgentDto & { successRate: number })[];
+  const averageSuccessRate =
+    withRate.length > 0
+      ? Math.round(
+          withRate.reduce((sum, a) => sum + a.successRate, 0) / withRate.length
+        )
+      : null;
 
   return (
     <DashboardLayout>
@@ -263,13 +273,17 @@ export default function Agents() {
           <Card className="p-4 border-border bg-card">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Average Uptime
+                Success Rate
               </span>
               <Cpu className="w-4 h-4 text-blue-500" />
             </div>
-            <div className="mt-2 text-2xl font-bold text-foreground">99.7%</div>
+            <div className="mt-2 text-2xl font-bold text-foreground">
+              {averageSuccessRate != null ? `${averageSuccessRate}%` : "—"}
+            </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Cloud Run container SLA
+              {averageSuccessRate != null
+                ? "Across completed workflow run steps"
+                : "No agent steps have finished yet — appears after the first run"}
             </p>
           </Card>
 
@@ -374,10 +388,10 @@ export default function Agents() {
                     <div className="grid grid-cols-2 gap-3 mb-6 p-3 bg-muted/40 rounded-lg border border-border/50">
                       <div>
                         <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                          Uptime
+                          Success Rate
                         </div>
                         <div className="font-bold text-sm text-foreground mt-0.5">
-                          {agent.uptime || "99.9%"}
+                          {agent.successRate != null ? `${agent.successRate}%` : "—"}
                         </div>
                       </div>
                       <div>

@@ -10,8 +10,20 @@ import sys
 import os
 
 CLIENT_ID = "865eewqkmfsb77"
-CLIENT_SECRET = "[REDACTED]"
+# Secret is loaded from .env.local (gitignored) or the LINKEDIN_CLIENT_SECRET env var;
+# never hardcode it here - see the vault doctrine in AGENTS.md.
+CLIENT_SECRET = os.environ.get("LINKEDIN_CLIENT_SECRET") or ""
 ENV_LOCAL = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), ".env.local"))
+
+if not CLIENT_SECRET and os.path.exists(ENV_LOCAL):
+    with open(ENV_LOCAL) as _f:
+        for _line in _f:
+            if _line.strip().startswith("LINKEDIN_CLIENT_SECRET="):
+                CLIENT_SECRET = _line.split("=", 1)[1].strip()
+                break
+if not CLIENT_SECRET:
+    print("[CallbackServer] WARNING: LINKEDIN_CLIENT_SECRET not set - exchange will fail.")
+    print("[CallbackServer] Set it in .env.local or the environment (never hardcoded in this file).")
 PORT = 8080
 
 class Handler(http.server.BaseHTTPRequestHandler):

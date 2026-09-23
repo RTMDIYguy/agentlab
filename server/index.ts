@@ -58,7 +58,7 @@ async function startServer() {
   app.use(express.static(staticPath));
 
   // Client-side SPA fallback
-  app.get("*", (req, res, next) => {
+  app.get("/{*splat}", (req, res, next) => {
     if (req.path.startsWith("/api")) {
       return next();
     }
