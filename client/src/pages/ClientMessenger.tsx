@@ -67,7 +67,10 @@ export default function ClientMessenger() {
     threads.find(t => t.id === activeThreadId) ?? threads[0] ?? null;
 
   const messagesQuery = trpc.messenger.getMessages.useQuery(
-    { threadId: activeThread!.id },
+    // Guarded by enabled below: while threads are loading there is no active
+    // thread yet, so never assert non-null at render time (production crash
+    // class — see CC-2026-09-23-023).
+    { threadId: activeThread?.id ?? "" },
     {
       enabled: !!activeThread,
       refetchInterval: 5000,
@@ -322,7 +325,7 @@ export default function ClientMessenger() {
                   </div>
                 ) : (
                   <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                    {activeThread?.name.charAt(0) ?? "?"}
+                    {activeThread?.name?.charAt(0) ?? "?"}
                   </div>
                 )}
                 <div>
