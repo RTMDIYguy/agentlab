@@ -393,6 +393,25 @@ export async function ensureDatabaseSchema(): Promise<void> {
       ALTER TABLE "workflow_runs" ADD COLUMN IF NOT EXISTS "cancelled_at" timestamp with time zone;
     `;
 
+    // Client-facing run consoles (Tier 1 item 3): hashed share tokens. Raw
+    // token values are shown once at creation and never stored.
+    await client`
+      CREATE TABLE IF NOT EXISTS "workflow_share_tokens" (
+        "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        "workspace_id" uuid NOT NULL REFERENCES "workspaces"("id") ON DELETE CASCADE,
+        "token_hash" varchar(64) NOT NULL,
+        "label" varchar(128),
+        "scope" varchar(16) NOT NULL DEFAULT 'all',
+        "run_id" uuid,
+        "created_by_email" varchar(255),
+        "created_at" timestamp with time zone NOT NULL DEFAULT now(),
+        "last_accessed_at" timestamp with time zone,
+        "revoked_at" timestamp with time zone
+      );
+      CREATE UNIQUE INDEX IF NOT EXISTS "uq_share_token_hash" ON "workflow_share_tokens" ("token_hash");
+      CREATE INDEX IF NOT EXISTS "idx_share_tokens_workspace" ON "workflow_share_tokens" ("workspace_id");
+    `;
+
     // Seed the default office channels so a fresh environment boots usable
     await client`
       INSERT INTO "messenger_threads" ("type", "slug", "name", "tagline")

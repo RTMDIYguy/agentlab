@@ -104,6 +104,39 @@ export const users = pgTable(
 );
 
 // ==============================================================================
+// WORKFLOW SHARE TOKENS — client-facing read-only run consoles (Tier 1 item 3)
+// Tokens are stored hashed (sha256); the raw value is shown exactly once at
+// creation and never again. Revocation is a timestamp, not a delete, so the
+// audit trail survives.
+// ==============================================================================
+export const workflowShareTokens = pgTable(
+  "workflow_share_tokens",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: uuid("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    tokenHash: varchar("token_hash", { length: 64 }).notNull(),
+    label: varchar("label", { length: 128 }),
+    // 'all' = every run in the workspace; 'single' = only runId
+    scope: varchar("scope", { length: 16 }).notNull().default("all"),
+    runId: uuid("run_id"),
+    createdByEmail: varchar("created_by_email", { length: 255 }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    lastAccessedAt: timestamp("last_accessed_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+  },
+  table => [
+    uniqueIndex("uq_share_token_hash").on(table.tokenHash),
+    index("idx_share_tokens_workspace").on(table.workspaceId),
+  ]
+);
+
+// ==============================================================================
 // 3. AGENTS (Autonomous Runtime Nodes)
 // ==============================================================================
 export const agents = pgTable(

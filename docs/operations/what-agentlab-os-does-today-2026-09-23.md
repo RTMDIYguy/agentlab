@@ -17,7 +17,7 @@ AgentLab OS is an AI-native operations platform that runs multi-step agent workf
 ### 1. Real multi-step agent workflows
 
 - Describe a workflow in plain language; the OS builds a step DAG and executes it with real model calls — not simulated progress bars.
-- Every step records its real latency, real token cost, and its outputs as quality-scored artifacts (posts, documents, briefs) stored in the OS with quality grades and verification notes you can inspect — and every artifact and full run bundle exports as Markdown on demand.
+- Every step records its real latency, real token cost, and its outputs as quality-scored artifacts (posts, documents, briefs) stored in the OS with quality grades and verification notes you can inspect — and every artifact and full run bundle exports as Markdown on demand. Share a revocable read-only link and your client sees the same live numbers — real status, real cost, real artifacts — in their own run report.
 - Workflows pause at guardrail steps for human approval and resume when you decide. Failed steps record the actual error, not a polite shrug; per-step timeouts and bounded retries keep a hung model call from stalling a run, and operators can cancel a run cleanly at any point.
 - **In a diagnostic:** we run one of your real workflows on your real material while you watch the run inspector.
 

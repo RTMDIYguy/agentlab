@@ -27,6 +27,13 @@ import {
   exportRunBundle,
 } from "../controllers/export";
 import {
+  listShareTokens,
+  createShareToken,
+  revokeShareToken,
+  getSharedRuns,
+  getSharedRunDetail,
+} from "../controllers/share";
+import {
   getMarketplaceItems,
   getPackages,
   subscribeToPackage,
@@ -164,6 +171,15 @@ apiRouter.post("/runs/:runId/reject", rejectRun);
 apiRouter.post("/runs/:runId/cancel", cancelRun);
 apiRouter.get("/runs/:runId/export", exportRunBundle);
 apiRouter.get("/runs/:runId/artifacts/:artifactId/export", exportRunArtifact);
+
+// Client-facing run consoles (Tier 1 item 3): share-token lifecycle (operator,
+// tenant-scoped) and token-scoped public read-only views. Public reads resolve
+// the workspace from the token hash — never from the tenant middleware.
+apiRouter.get("/share/tokens", listShareTokens);
+apiRouter.post("/share/tokens", createShareToken);
+apiRouter.delete("/share/tokens/:tokenId", revokeShareToken);
+apiRouter.get("/share/runs", getSharedRuns);
+apiRouter.get("/share/runs/:runId", getSharedRunDetail);
 
 // Marketplace Storefront & Workspace Mounting
 apiRouter.get("/marketplace/items", getMarketplaceItems);

@@ -51,6 +51,8 @@ import MedSpaCampaign from "@/pages/campaigns/MedSpaCampaign";
 import MeetingRoom from "@/pages/MeetingRoom";
 import ClientMessenger from "@/pages/ClientMessenger";
 import ScreenRecorder from "@/pages/ScreenRecorder";
+import RunConsole from "@/pages/RunConsole";
+import SharedRuns from "@/pages/SharedRuns";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useEffect } from "react";
 // import { AgenticTour } from "./components/AgenticTour";
@@ -113,6 +115,8 @@ function Router() {
       <Route path={"/messages"} component={ClientMessenger} />
       <Route path={"/screen-recorder"} component={ScreenRecorder} />
       <Route path={"/command-center"} component={CommandCenter} />
+      <Route path={"/run-console"} component={RunConsole} />
+      <Route path={"/shared/runs"} component={SharedRuns} />
       <Route path={"/dashboard/settings"} component={Settings} />
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/privacy"} component={Privacy} />
