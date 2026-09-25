@@ -221,7 +221,7 @@ export default function Dashboard() {
       id: "marksman",
       name: "Market Marksman",
       type: "B2B Deal Opportunity Radar",
-      url: "http://localhost:3001",
+      url: import.meta.env.VITE_MARKSMAN_URL || "https://market-marksman-718497644379.us-central1.run.app/",
       color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
       icon: Target,
       category: "Intelligence",
@@ -230,7 +230,7 @@ export default function Dashboard() {
       id: "pulse",
       name: "Pulse Social",
       type: "Multi-Channel Social Studio",
-      url: "http://localhost:3000",
+      url: import.meta.env.VITE_PULSE_SOCIAL_URL || "https://pulse-social-agentlab-projects.vercel.app",
       color: "text-teal-400 bg-teal-500/10 border-teal-500/20",
       icon: Sparkles,
       category: "Marketing",
@@ -257,7 +257,7 @@ export default function Dashboard() {
       id: "agentmail",
       name: "AgentMail",
       type: "Inbound Reply Ingest",
-      url: "/command-center",
+      url: "/messages",
       color: "text-blue-400 bg-blue-500/10 border-blue-500/20",
       icon: Mail,
       category: "Email",
@@ -266,7 +266,9 @@ export default function Dashboard() {
       id: "n8n",
       name: "n8n Workflow Engine",
       type: "Autonomous DAG Loops",
-      url: "https://n8n.io",
+      // Self-hosted n8n on the GCloud e2-micro VM (my-micro-vm, port 5678 —
+      // replaces the old local CLI instance so it keeps running overnight).
+      url: import.meta.env.VITE_N8N_URL || "http://35.225.47.185:5678",
       color: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
       icon: Cpu,
       category: "Automation",
@@ -275,7 +277,7 @@ export default function Dashboard() {
       id: "m365",
       name: "Microsoft 365",
       type: "OneDrive & File Backbone",
-      url: "https://portal.office.com",
+      url: "https://m365.cloud.microsoft/apps",
       color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
       icon: Server,
       category: "Storage",
@@ -291,15 +293,41 @@ export default function Dashboard() {
     },
   ];
 
-  const customIntegrations = (dbIntegrations || []).map((dbItem: any) => ({
-    id: dbItem.id,
-    name: dbItem.name,
-    type: dbItem.type ? `${dbItem.type.toUpperCase()} Integration` : "Custom Webhook",
-    url: dbItem.config?.portalUrl || dbItem.config?.endpoint || dbItem.config?.url || "/dashboard/settings",
-    color: "text-primary bg-primary/10 border-primary/20",
-    icon: Plug,
-    category: "Custom Tool",
-  }));
+  // Vault-synced DB integrations (workspace_integrations rows created by
+  // Settings' secret sync, e.g. "HubSpot CRM") overlap the canonical list by
+  // name — merge them instead of appending so the dashboard shows one card
+  // per integration, with the live URL from Settings taking precedence.
+  const matchesBuiltinIntegration = (name: string) => {
+    const n = (name || "").toLowerCase();
+    return (
+      n.includes("hubspot") ||
+      n.includes("marksman") ||
+      n.includes("pulse") ||
+      n.includes("instantly") ||
+      n.includes("elevenlabs") ||
+      n.includes("agentmail") ||
+      n.includes("n8n") ||
+      n.includes("microsoft 365") || n.includes("m365") ||
+      n.includes("ionos")
+    );
+  };
+
+  const customIntegrations = (dbIntegrations || [])
+    .filter((dbItem: any) => {
+      // Keep custom rows the user added (custom portal URLs, webhooks, MCP)
+      // but skip vault-synced copies of integrations already on the launcher.
+      if (dbItem.type === "mcp") return false;
+      return !matchesBuiltinIntegration(dbItem.name);
+    })
+    .map((dbItem: any) => ({
+      id: dbItem.id,
+      name: dbItem.name,
+      type: dbItem.type ? `${dbItem.type.toUpperCase()} Integration` : "Custom Webhook",
+      url: dbItem.config?.portalUrl || dbItem.config?.endpoint || dbItem.config?.url || "/dashboard/settings",
+      color: "text-primary bg-primary/10 border-primary/20",
+      icon: Plug,
+      category: "Custom Tool",
+    }));
 
   const allDisplayIntegrations = [...canonicalIntegrationList, ...customIntegrations];
 
@@ -992,6 +1020,24 @@ export default function Dashboard() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Artifact Vault entry (2026-09-24): the user-facing storage area
+                for every document agents and workflows produce. */}
+            <div className="pt-3 mt-1 border-t border-border/40 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono">
+                <FileText className="w-3.5 h-3.5 text-cyan-400" />
+                <span>All generated documents, drafts, reports & SOPs are stored in your vault — revisit, edit, replace, or download them any time.</span>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 text-xs font-mono border-cyan-500/30 hover:bg-cyan-500/10 text-cyan-300 gap-1.5 shrink-0"
+                onClick={() => navigate("/vault")}
+              >
+                <FileText className="w-3.5 h-3.5" />
+                Open Artifact Vault
+              </Button>
             </div>
           </div>
 

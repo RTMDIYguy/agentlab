@@ -2,6 +2,11 @@ import type { Request, Response } from "express";
 import { getDb } from "../db";
 import { workflowArtifacts } from "../schema";
 import { eq, and } from "drizzle-orm";
+import {
+  isGoogleAiConfigured,
+  resolveServiceAccount,
+  getGoogleAccessToken,
+} from "../_core/google-ai";
 
 interface GenerateImagePayload {
   prompt: string;
@@ -74,20 +79,30 @@ function cleanPromptForDiffusion(rawPrompt: string, stylePreset?: string, styleN
  */
 async function generateWithImagen3(
   prompt: string,
-  aspectRatio: string,
-  apiKey: string
+  aspectRatio: string
 ): Promise<{ imageUrl: string; engine: string } | null> {
   try {
     const { imagenRatio } = getDimensionsForRatio(aspectRatio);
-    const cleanKey = apiKey.trim().replace(/^["']|["']$/g, "");
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${cleanKey}`;
+
+    // Auth per org policy (2026-09-24): service-account bearer token when
+    // available; legacy ?key= query param only for API-key environments.
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    let endpoint = "https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict";
+    if (isGoogleAiConfigured() && resolveServiceAccount().key) {
+      const { token } = await getGoogleAccessToken();
+      headers["Authorization"] = `Bearer ${token}`;
+    } else {
+      const geminiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+      if (!geminiKey) return null;
+      endpoint += `?key=${geminiKey.trim().replace(/["']/g, "")}`;
+    }
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
 
     const res = await fetch(endpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       signal: controller.signal,
       body: JSON.stringify({
         instances: [{ prompt: prompt.slice(0, 480) }],
@@ -201,11 +216,10 @@ export async function handleGenerateImage(req: Request, res: Response): Promise<
     console.log(`[IMAGE GENERATOR] Generating (${aspectRatio}): "${cleanedPrompt.slice(0, 100)}..."`);
 
     let result: { imageUrl: string; engine: string } | null = null;
-    const geminiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
-    // 1. Try Google Imagen 3 if key is configured
-    if (geminiKey) {
-      result = await generateWithImagen3(cleanedPrompt, aspectRatio, geminiKey);
+    // 1. Try Google Imagen 3 when a credential is configured
+    if (isGoogleAiConfigured()) {
+      result = await generateWithImagen3(cleanedPrompt, aspectRatio);
     }
 
     // 2. Fall back to Server-Side Multi-Tier Neural (Flux -> Turbo) with buffer verification

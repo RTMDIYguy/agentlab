@@ -1,13 +1,14 @@
 import { generateText, tool } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
 import { z } from "zod";
 import { AgentMailClient } from "../tools/agentmail";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { getDb } from "../db";
-import { auditLogs, workflowRunSteps, workflowArtifacts } from "../schema";
+import { auditLogs, workflowRunSteps, workflowArtifacts, workspaceSecrets } from "../schema";
 import { desc, eq } from "drizzle-orm";
+import { isOperatorWorkspace } from "../_core/env";
 import { listInstantlyCampaigns, addLeadToCampaign, verifyInstantlyConnection } from "../tools/instantly";
 import { convertTextToSpeech } from "../tools/elevenlabs-voice";
 
@@ -62,7 +63,74 @@ function isPathAllowed(filePath: string, unlockedDepartments: string[]): boolean
 }
 
 /**
+ * Multi-tenant credential isolation (2026-09-24).
+ *
+ * Resolves external-service credentials for a workspace. The operator's
+ * own workspace (see isOperatorWorkspace) falls back to the shared
+ * process.env keys, which ARE the operator's credentials. Every other
+ * workspace only ever reads its own workspace_scoped secret rows —
+ * never the operator's process env. No rows → empty tokens, and any tool
+ * that needs them fails honestly with "not configured for this workspace".
+ */
+export async function resolveWorkspaceCredentials(workspaceId: string): Promise<{
+  hubspotToken: string;
+  instantlyToken: string;
+  elevenlabsKey: string;
+  source: "workspace_rows" | "operator_env";
+  configuredProviders: number;
+}> {
+  if (isOperatorWorkspace(workspaceId)) {
+    return {
+      hubspotToken: process.env.HUBSPOT_PAT || process.env.HUBSPOT_ACCESS_TOKEN || "",
+      instantlyToken: process.env.INSTANTLY_API_KEY || "",
+      elevenlabsKey: process.env.ELEVENLABS_API_KEY || "",
+      source: "operator_env" as const,
+      configuredProviders: 0,
+    };
+  }
+
+  // Non-operator workspace: read the workspace's own secret rows. Values
+  // are never stored in plaintext today — the rows only carry status + a
+  // masked preview — so a non-operator workspace currently has NO usable
+  // external credentials. That is the honest state: tools that need real
+  // tokens must not silently execute against the operator's accounts.
+  try {
+    const db = await getDb();
+    if (db) {
+      const rows = await db
+        .select({ provider: workspaceSecrets.provider, status: workspaceSecrets.status })
+        .from(workspaceSecrets)
+        .where(eq(workspaceSecrets.workspaceId, workspaceId));
+      const connectedCount = rows.filter(r => r.status === "connected").length;
+      // Rows exist but plaintext values are not recoverable by design;
+      // report which providers the workspace HAS configured so tool error
+      // messages can be specific.
+      return {
+        hubspotToken: "",
+        instantlyToken: "",
+        elevenlabsKey: "",
+        source: "workspace_rows" as const,
+        configuredProviders: connectedCount,
+      };
+    }
+  } catch {
+    // fall through to empty credentials
+  }
+  return { hubspotToken: "", instantlyToken: "", elevenlabsKey: "", source: "workspace_rows" as const, configuredProviders: 0 };
+}
+
+/**
  * Robust semantic classifier for agent refusals, missing prerequisites, or passive inability statements.
+ *
+ * NOTE (2026-09-24): a tightening of this tripwire was attempted and
+ * REVERTED. The suite in autonomous-execution.test.ts encodes a deliberate
+ * policy: passive acknowledgments ("I will await further instructions",
+ * "I have noted that an AgentLab agent will...") MUST fail a step — a step
+ * that acknowledges instead of executing is a non-execution. The DB error
+ * histogram shows the real instant-failure killers were infrastructure
+ * errors (quota exhaustion, retired gemini-1.5 models, invalid API keys),
+ * now addressed at their actual sources (model chain, env). Do not loosen
+ * these phrases without changing that policy and its tests together.
  */
 export function detectAgentRefusal(text: string): { isRefusal: boolean; reason?: string } {
   if (!text || typeof text !== "string") return { isRefusal: false };
@@ -274,11 +342,16 @@ Available Ecosystem Tools:
 
 CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned specialist tasks immediately. Always invoke tools to persist deliverables and return structured data.`;
 
-  if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    console.warn("[Agent Runner] Missing GOOGLE_GENERATIVE_AI_API_KEY, returning mock response.");
-    const mockOutput = { result: "Mocked success response because GOOGLE_GENERATIVE_AI_API_KEY is missing." };
-    // Honesty rule (honesty-audit P1-1): a mocked response consumed no model
-    // tokens and has no real latency — record nulls, not invented numbers.
+  // Honest configuration gate (2026-09-24, updated for service-account auth):
+  // a missing LLM credential previously produced a MOCK SUCCESS payload —
+  // runs "completed" with invented output. Contract per audit-honesty.test.ts:
+  // the no-credential branch returns a null-telemetry response (no model was
+  // called; no invented numbers). The notice states the real configuration
+  // problem; with the org-policy service account, this fires only when BOTH
+  // the SA key file and any API key are absent.
+  if (!isGoogleAiConfigured()) {
+    console.warn("[Agent Runner] No Gemini credential (service account or API key) — returning null-telemetry config notice.");
+    const mockOutput = { result: "LLM_NOT_CONFIGURED: No Gemini credential is available. Service accounts: place the JSON key at secrets/gemini-service-account.json (org policy forbids API keys). Legacy: set GOOGLE_GENERATIVE_AI_API_KEY — the agent cannot execute without a model provider." };
     return {
       outputPayload: mockOutput,
       tokensPrompt: null,
@@ -292,20 +365,33 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
     };
   }
 
-  const fallbackModels = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
+  // Model fallback chain (2026-09-24): the old chain (2.5-flash → 1.5-flash
+  // → 1.5-pro) contained two dead models — gemini-1.5-pro returns "not found
+  // for API version v1beta" for this key and 1.5-flash is retired — so steps
+  // kept burning retries on models that could never succeed. Current,
+  // generally-available models only.
+  const fallbackModels = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-pro"];
   let text = "";
   let usage: any = {};
   const maxRetries = 3;
   let attempt = 0;
   let success = false;
 
-  const hubspotToken = process.env.HUBSPOT_PAT || process.env.HUBSPOT_ACCESS_TOKEN || "";
+  // Multi-tenant credential isolation (2026-09-24): external-service tokens
+  // are resolved PER WORKSPACE. The shared process.env keys are the
+  // operator's own credentials and only flow into the operator workspace;
+  // every other workspace must have its own workspace_scoped secret rows.
+  // No workspace credentials → tools fail honestly instead of silently
+  // executing against the operator's HubSpot/Instantly accounts.
+  const workspaceCredentials = await resolveWorkspaceCredentials(workspaceId);
+  const hubspotToken = workspaceCredentials.hubspotToken || "";
+  const instantlyKey = workspaceCredentials.instantlyToken || "";
 
   while (attempt < maxRetries && !success) {
     const currentModel = fallbackModels[attempt % fallbackModels.length];
     console.log(`[Agent Runner] Calling AI SDK generateText (Attempt ${attempt + 1}/${maxRetries}) with model ${currentModel}...`);
     try {
-      const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY });
+      const google = createGoogleProvider();
       const response: any = await (generateText as any)({
         model: google(currentModel) as any,
         system: finalSystemPrompt,
@@ -962,6 +1048,19 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
             }),
             execute: async ({ limit }: { limit?: number }) => {
               console.log("[TOOL EXECUTED] Listing Instantly Campaigns...");
+              // Per-workspace credential isolation: no workspace Instantly
+              // credential → honest failure, never the operator's account.
+              if (!instantlyKey) {
+                const errRes = { success: false, error: "INSTANTLY_NOT_CONFIGURED_FOR_WORKSPACE", message: "Instantly.ai is not configured for this workspace. Add an Instantly API key in Settings → Secrets. The workspace operator's credentials are not shared across tenants." };
+                capturedToolCalls.push({
+                  toolName: "listInstantlyCampaigns",
+                  args: { limit },
+                  result: errRes,
+                  isSimulated: false,
+                  timestamp: new Date().toISOString(),
+                });
+                return JSON.stringify(errRes);
+              }
               try {
                 const campaigns = await listInstantlyCampaigns(limit || 10);
                 capturedToolCalls.push({
@@ -999,6 +1098,18 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
             }),
             execute: async (lead: any) => {
               console.log("[TOOL EXECUTED] Enrolling Lead in Instantly Campaign:", lead.email, lead.campaignId);
+              // Per-workspace credential isolation (see listInstantlyCampaigns).
+              if (!instantlyKey) {
+                const errRes = { success: false, error: "INSTANTLY_NOT_CONFIGURED_FOR_WORKSPACE", message: "Instantly.ai is not configured for this workspace. Add an Instantly API key in Settings → Secrets. The workspace operator's credentials are not shared across tenants." };
+                capturedToolCalls.push({
+                  toolName: "addLeadToInstantlyCampaign",
+                  args: lead,
+                  result: errRes,
+                  isSimulated: false,
+                  timestamp: new Date().toISOString(),
+                });
+                return JSON.stringify(errRes);
+              }
               try {
                 const result = await addLeadToCampaign(lead.campaignId, {
                   email: lead.email,
@@ -1488,17 +1599,15 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
     } catch (sdkError: any) {
       attempt++;
       console.warn(`[Agent Runner] AI SDK model ${currentModel} encountered error (Attempt ${attempt}/${maxRetries}):`, sdkError.message || sdkError);
-      
+
       if (attempt >= maxRetries) {
-        console.warn("[Agent Runner] All model retries exhausted. Activating autonomous emergency synthesizer fallback.");
-        // Synthesize concrete deliverable from the action prompt so workflow never crashes
-        text = `# Autonomous Execution Deliverable\n\n` +
-          `**Operational Context**: ${actionPrompt.slice(0, 150)}...\n\n` +
-          `**Execution Status**: Synthesized autonomously via AgentLab local operational engine during temporary upstream rate limit window.\n\n` +
-          `### Deliverable Content:\n` +
-          `${actionPrompt}\n`;
-        success = true;
-        break;
+        // Honesty fix (2026-09-24): the previous "autonomous emergency
+        // synthesizer" fabricated a fake deliverable from the action prompt
+        // and marked the step successful — runs "completed" with invented
+        // content. All model retries exhausted is a REAL failure: surface it.
+        throw new Error(
+          `LLM_RETRIES_EXHAUSTED: all ${maxRetries} model attempts failed. Last error (${fallbackModels[(attempt - 1) % fallbackModels.length]}): ${sdkError.message || sdkError}`
+        );
       }
       // Brief pause before failing over to the next model family
       await new Promise(res => setTimeout(res, 500));

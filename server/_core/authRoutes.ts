@@ -111,6 +111,12 @@ export function registerNativeAuthRoutes(app: Express) {
         return;
       }
 
+      // Smoke-test finding (2026-09-24): when the DB insert below fails,
+      // login still "succeeded" in-memory and auto-provision assigned the
+      // OPERATOR fallback workspace (...0001) to a brand-new user — binding
+      // a stranger into the operator's workspace. Signup must fail loudly
+      // when persistence fails: no DB row, no account.
+
       const openId = `usr_${randomUUID().replace(/-/g, "").slice(0, 16)}`;
       let workspaceId: string = "00000000-0000-0000-0000-000000000001";
       let createdUser: any = null;
@@ -128,6 +134,38 @@ export function registerNativeAuthRoutes(app: Express) {
 
           if (newWorkspace) {
             workspaceId = newWorkspace.id;
+
+            // Visitor → account memory handoff (2026-09-24): if this email
+            // chatted with the Founder Intake Agent before signing up, claim
+            // that profile and seed the workspace so the OS already knows
+            // who they are ("empty instance, except what they told us").
+            try {
+              const { claimVisitorProfile } = await import("../founder-intake/router");
+              const profile = await claimVisitorProfile(normalizedEmail, workspaceId);
+              if (profile) {
+                await database
+                  .update(workspaces)
+                  .set({
+                    ...(profile.name ? { name: `${profile.name}'s Workspace` } : {}),
+                    ...(profile.painPoint || profile.interest || profile.transcript
+                      ? {
+                          onboardingContext: {
+                            source: "founder_intake_chat",
+                            claimedAt: new Date().toISOString(),
+                            painPoint: profile.painPoint ?? null,
+                            interest: profile.interest ?? null,
+                            company: profile.company ?? null,
+                            transcript: profile.transcript ?? null,
+                          },
+                        }
+                      : {}),
+                  }
+                )
+                  .where(eq(workspaces.id, workspaceId));
+              }
+            } catch (seedErr: any) {
+              console.warn("[Auth] visitor profile seed skipped:", seedErr?.message);
+            }
           }
 
           const userTier = computeUserRoleAndTier(normalizedEmail);
@@ -154,19 +192,12 @@ export function registerNativeAuthRoutes(app: Express) {
       }
 
       if (!createdUser) {
-        const userTier = computeUserRoleAndTier(normalizedEmail);
-        createdUser = {
-          id: randomUUID(),
-          openId,
-          email: normalizedEmail,
-          name: displayName,
-          workspaceId,
-          role: userTier.role,
-          tier: userTier.tier,
-          restrictedPackages: userTier.restrictedPackages,
-          loginMethod: "email",
-          lastSignedIn: new Date(),
-        };
+        // Persistence failed — refuse the signup instead of silently
+        // binding the user to the operator fallback workspace (...0001).
+        res.status(503).json({
+          error: "Could not create your account because the database is unavailable. Please try again in a moment.",
+        });
+        return;
       }
 
       inMemoryUsers.set(normalizedEmail, createdUser);

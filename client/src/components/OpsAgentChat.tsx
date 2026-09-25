@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
   Bot, 
   Send, 
@@ -55,6 +55,124 @@ type ChatMessage = {
 const starterMessage =
   "I am the Ops Agent for Uncle Robert Consulting & AgentLab. I can help you synthesize DAG workflows, calibrate department playbooks, or execute autonomous tasks in the OS. What would you like to build or automate?";
 
+const WATCHDOG_POLL_MS = 60_000;
+const LAST_SEEN_FAILURE_KEY = "opsagent_last_seen_failure";
+const LAST_CRED_STATE_KEY = "opsagent_last_credential_state";
+
+/**
+ * Watchdog (2026-09-24): every 60s, check for DAG runs that failed since the
+ * last failure we showed, and proactively report them in this chat with the
+ * real recorded error + a server-classified root cause. No waiting to be asked.
+ */
+function useFailureWatchdog(enabled: boolean) {
+  const [reports, setReports] = useState<ChatMessage[]>([]);
+  const lastSeenRef = useRef<string>(localStorage.getItem(LAST_SEEN_FAILURE_KEY) || new Date(0).toISOString());
+
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
+
+    const check = async () => {
+      try {
+        const res = await fetch(`/api/ops-watchdog/failed-runs?since=${encodeURIComponent(lastSeenRef.current)}&limit=5`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (cancelled || data.error || !Array.isArray(data.failures) || data.failures.length === 0) return;
+
+        const newMsgs: ChatMessage[] = data.failures.map((f: any) => {
+          const wf = f.workflowName ? `"${f.workflowName}"` : "a workflow";
+          const rc = f.rootCause || {};
+          return {
+            id: `watchdog_${f.runId}`,
+            role: "assistant" as const,
+            content:
+              `⚠️ Watchdog: run ${String(f.runId).slice(0, 8)} of ${wf} FAILED${f.failedAt ? ` at ${new Date(f.failedAt).toLocaleTimeString()}` : ""}.\n\n` +
+              `Recorded error: ${f.errorMessage || "(none recorded)"}\n\n` +
+              `Root cause (${rc.category ?? "unknown"}): ${rc.summary ?? ""}\n` +
+              `Recommended fix: ${rc.recommendedFix ?? "open the run inspector"}`,
+          };
+        });
+
+        // Advance the cursor to the newest failure we just delivered.
+        const newest = data.failures[0]?.failedAt;
+        if (newest) {
+          lastSeenRef.current = newest;
+          localStorage.setItem(LAST_SEEN_FAILURE_KEY, newest);
+        }
+        setReports(prev => [...prev, ...newMsgs].slice(-20));
+      } catch {
+        // Watchdog must never break the chat; retry on next tick.
+      }
+    };
+
+    check();
+    const t = setInterval(check, WATCHDOG_POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(t);
+    };
+  }, [enabled]);
+
+  return reports;
+}
+
+/**
+ * Credential-health watchdog (2026-09-25): on the same 60s tick, probe
+ * /api/ops-watchdog/credential-health and announce a missing or broken LLM
+ * credential ONCE per state change — auth rot gets reported before runs
+ * fail, and doesn't spam the chat while it stays broken.
+ */
+function useCredentialWatchdog() {
+  const [reports, setReports] = useState<ChatMessage[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const check = async () => {
+      try {
+        const res = await fetch("/api/ops-watchdog/credential-health");
+        if (!res.ok) return;
+        const health = await res.json();
+        if (cancelled || !health?.state) return;
+
+        const prevState = localStorage.getItem(LAST_CRED_STATE_KEY);
+        // Announce only on a transition (or first observation). The ok-state
+        // announcement on first boot is useful silence: stored, not shown.
+        if (health.state !== prevState) {
+          localStorage.setItem(LAST_CRED_STATE_KEY, health.state);
+          if (health.state !== "ok" || prevState === undefined) {
+            const content =
+              health.state === "missing"
+                ? `🔔 Watchdog: no LLM credential is configured. ${health.detail}\n\nFix: ${health.recommendedFix}`
+                : health.state === "mint_failed"
+                  ? `🔔 Watchdog: the Gemini credential is present but BROKEN. ${health.detail}\n\nFix: ${health.recommendedFix}`
+                  : `🔔 Watchdog: LLM credential check could not complete. ${health.detail}`;
+            setReports(prev => [
+              ...prev,
+              {
+                id: `cred_${health.state}_${Date.now()}`,
+                role: "assistant" as const,
+                content,
+              },
+            ].slice(-20));
+          }
+        }
+      } catch {
+        // Must never break the chat; retry on next tick.
+      }
+    };
+
+    check();
+    const t = setInterval(check, WATCHDOG_POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(t);
+    };
+  }, []);
+
+  return reports;
+}
+
 export function OpsAgentChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -62,6 +180,31 @@ export function OpsAgentChat() {
   ]);
   const [draft, setDraft] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+
+  // The watchdogs run regardless of whether the chat window is open; their
+  // reports merge into the message list so they're waiting when opened.
+  const watchdogReports = useFailureWatchdog(true);
+  const credentialReports = useCredentialWatchdog();
+  const shownReportsRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    const fresh = [...watchdogReports, ...credentialReports].filter(
+      m => !shownReportsRef.current.has(m.id)
+    );
+    if (fresh.length === 0) return;
+    fresh.forEach(m => shownReportsRef.current.add(m.id));
+    setMessages(current => [...current, ...fresh]);
+    if (!isOpen) {
+      const isCredential = credentialReports.includes(fresh[fresh.length - 1]);
+      toast.warning(
+        isCredential
+          ? "Ops Agent: LLM credential needs attention — details in chat."
+          : "Ops Agent: a DAG run just failed — details in chat.",
+        {
+          description: fresh[fresh.length - 1]?.content?.slice(0, 120),
+        }
+      );
+    }
+  }, [watchdogReports, credentialReports, isOpen]);
 
   const sendMessage = async () => {
     const content = draft.trim();
@@ -77,10 +220,17 @@ export function OpsAgentChat() {
     setIsTyping(true);
 
     try {
+      // Send the recent conversation so the Ops Agent keeps thread context
+      // (single-turn chat made it unable to follow a dialogue).
+      const history = messages
+        .filter(m => !m.id.startsWith("msg_init"))
+        .slice(-10)
+        .map(m => ({ role: m.role, content: m.content }));
+
       const res = await fetch("/api/orchestrator/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: content }),
+        body: JSON.stringify({ prompt: content, history }),
       });
 
       if (!res.ok) throw new Error("Failed to get orchestrator response");
@@ -99,12 +249,15 @@ export function OpsAgentChat() {
       ]);
     } catch (err) {
       console.error("[OpsAgentChat error]:", err);
+      // Honesty fix (2026-09-24): this catch previously displayed a canned
+      // "I processed your instruction... dispatch is ready" success message
+      // even when the API call itself failed.
       setMessages((current) => [
         ...current,
         {
           id: `asst_err_${Date.now()}`,
           role: "assistant",
-          content: "I processed your instruction against URC operational guidelines. Swarm DAG dispatch is ready.",
+          content: "I couldn't reach the orchestrator just now — your message wasn't processed. Check the connection and try again.",
         },
       ]);
     } finally {
@@ -466,7 +619,7 @@ export function OpsAgentChat() {
                 </div>
                 <div className="rounded-2xl px-3.5 py-2.5 text-xs bg-card border border-border/80 text-card-foreground rounded-tl-none flex items-center gap-2 shadow-sm">
                   <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
-                  <span className="text-muted-foreground">Synthesizing multi-agent DAG...</span>
+                  <span className="text-muted-foreground">Thinking...</span>
                 </div>
               </div>
             )}

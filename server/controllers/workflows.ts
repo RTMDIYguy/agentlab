@@ -136,6 +136,12 @@ export async function getWorkflows(req: Request, res: Response): Promise<void> {
       return;
     }
 
+    // Archival support (2026-09-24): archived workflows are hidden from the
+    // default list. ?status=archived lists only archived ones; ?status=all
+    // lists everything (restore flow uses this).
+    const statusFilter =
+      typeof req.query?.status === "string" ? req.query.status : "";
+
     let workspaceWorkflows = await db
       .select()
       .from(workflows)
@@ -191,7 +197,14 @@ export async function getWorkflows(req: Request, res: Response): Promise<void> {
       return acc;
     }, {});
 
-    const enrichedWorkflows = workspaceWorkflows.map((wf) => {
+    const visibleWorkflows =
+      statusFilter === "archived"
+        ? workspaceWorkflows.filter(wf => wf.status === "archived")
+        : statusFilter === "all"
+          ? workspaceWorkflows
+          : workspaceWorkflows.filter(wf => wf.status !== "archived");
+
+    const enrichedWorkflows = visibleWorkflows.map((wf) => {
       const steps = stepsByWorkflow[wf.id] || [];
       return {
         ...wf,
@@ -231,6 +244,7 @@ export async function getWorkflows(req: Request, res: Response): Promise<void> {
       workspaceId,
       workflows: workflowsWithStats,
       totalCount: workflowsWithStats.length,
+      archivedCount: workspaceWorkflows.filter(wf => wf.status === "archived").length,
     });
   } catch (error) {
     console.error("[Workflows Controller Error]:", error);
@@ -586,6 +600,167 @@ export async function updateWorkflowSteps(req: Request, res: Response): Promise<
   } catch (error) {
     console.error("[updateWorkflowSteps Error]:", error);
     res.status(500).json({ error: "Failed to update workflow steps." });
+  }
+}
+
+/**
+ * Archive a workflow (duplicate/deprecated cleanup). Archiving is reversible:
+ * the workflow and its run history stay intact, it just disappears from the
+ * active list and can be restored later.
+ */
+export async function archiveWorkflow(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId;
+    if (!workspaceId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const workflowId = param(req, "workflowId");
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
+    // Refuse to archive a workflow with an in-flight run — the queue
+    // processor would lose its workflow row mid-execution.
+    const [inFlight] = await db
+      .select({ id: workflowRuns.id })
+      .from(workflowRuns)
+      .where(
+        and(
+          eq(workflowRuns.workflowId, workflowId),
+          sql`${workflowRuns.status} in ('pending','running','paused_for_approval')`
+        )
+      )
+      .limit(1);
+    if (inFlight) {
+      res.status(409).json({
+        error: "This workflow has a pending or running execution. Cancel or complete it before archiving.",
+      });
+      return;
+    }
+
+    const [updated] = await db
+      .update(workflows)
+      .set({ status: "archived", updatedAt: new Date() })
+      .where(and(eq(workflows.id, workflowId), eq(workflows.workspaceId, workspaceId)))
+      .returning();
+
+    if (!updated) {
+      res.status(404).json({ error: "Workflow not found" });
+      return;
+    }
+
+    res.status(200).json({ workflow: updated, message: `"${updated.name}" archived. Restore it any time from the archived filter.` });
+  } catch (error) {
+    console.error("[archiveWorkflow Error]:", error);
+    res.status(500).json({ error: "Failed to archive workflow." });
+  }
+}
+
+/**
+ * Restore an archived workflow back to active.
+ */
+export async function restoreWorkflow(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId;
+    if (!workspaceId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const workflowId = param(req, "workflowId");
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
+    const [updated] = await db
+      .update(workflows)
+      .set({ status: "active", updatedAt: new Date() })
+      .where(
+        and(
+          eq(workflows.id, workflowId),
+          eq(workflows.workspaceId, workspaceId),
+          eq(workflows.status, "archived")
+        )
+      )
+      .returning();
+
+    if (!updated) {
+      res.status(404).json({ error: "Archived workflow not found" });
+      return;
+    }
+
+    res.status(200).json({ workflow: updated, message: `"${updated.name}" restored to active.` });
+  } catch (error) {
+    console.error("[restoreWorkflow Error]:", error);
+    res.status(500).json({ error: "Failed to restore workflow." });
+  }
+}
+
+/**
+ * Permanently delete a workflow. Allowed only when archived (soft-delete
+ * first — an explicit two-step destroy) and only when no run history exists
+ * (runs cascade, so deleting one with history would destroy execution
+ * evidence). Workflows with history must stay archived.
+ */
+export async function deleteWorkflow(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId;
+    if (!workspaceId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const workflowId = param(req, "workflowId");
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
+    const [wf] = await db
+      .select()
+      .from(workflows)
+      .where(and(eq(workflows.id, workflowId), eq(workflows.workspaceId, workspaceId)));
+
+    if (!wf) {
+      res.status(404).json({ error: "Workflow not found" });
+      return;
+    }
+
+    if (wf.status !== "archived") {
+      res.status(409).json({
+        error: "Archive the workflow before deleting it (soft-delete first, destroy second).",
+      });
+      return;
+    }
+
+    const [history] = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(workflowRuns)
+      .where(eq(workflowRuns.workflowId, workflowId));
+
+    if ((history?.count ?? 0) > 0) {
+      res.status(409).json({
+        error: `This workflow has ${history.count} execution run(s). Runs are permanent evidence — a workflow with history can be archived but not deleted.`,
+      });
+      return;
+    }
+
+    // workflow_steps cascade with the workflow; runs were verified absent.
+    await db
+      .delete(workflows)
+      .where(and(eq(workflows.id, workflowId), eq(workflows.workspaceId, workspaceId)));
+
+    res.status(200).json({ message: `"${wf.name}" permanently deleted.` });
+  } catch (error) {
+    console.error("[deleteWorkflow Error]:", error);
+    res.status(500).json({ error: "Failed to delete workflow." });
   }
 }
 

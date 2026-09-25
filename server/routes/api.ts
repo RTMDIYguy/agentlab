@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { handleOrchestratorChat } from "../controllers/orchestrator";
 import { executeOrchestratorWorkflow } from "../controllers/orchestrator-execute";
+import { getCredentialHealth, getRecentFailedRuns } from "../controllers/ops-watchdog";
 import {
   getAgents,
   deployAgent,
@@ -13,6 +14,9 @@ import {
   updateWorkflowSchedule,
   updateWorkflow,
   updateWorkflowSteps,
+  archiveWorkflow,
+  restoreWorkflow,
+  deleteWorkflow,
 } from "../controllers/workflows";
 import {
   triggerRun,
@@ -69,6 +73,8 @@ import {
   refineArtifact,
   createArtifact,
   listBlogArticles,
+  getArtifact,
+  deleteArtifact,
 } from "../controllers/artifacts";
 import { handleGenerateImage } from "../controllers/image-generation";
 import {
@@ -104,42 +110,44 @@ apiRouter.get("/health", (_req, res) => {
 });
 
 apiRouter.get("/debug/llm", async (req, res) => {
-  const key = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-  let keyStatus = "Missing";
-  let keyLength = 0;
-  let keyPrefix = "";
+  // Auth-mode honesty (2026-09-24): reports WHICH credential path is active.
+  // Never returns secret material — statuses and masked identifiers only.
+  const { resolveServiceAccount, createGoogleProvider, isGoogleAiConfigured } = await import("../_core/google-ai");
+  const sa = resolveServiceAccount();
+  const legacyKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY;
+  const authMode = sa.key ? "service_account" : legacyKey ? "api_key" : "none";
 
-  if (key) {
-    if (key.startsWith('"') || key.endsWith('"')) {
-      keyStatus = "Has Quotes";
-    } else {
-      keyStatus = "Present";
-    }
-    keyLength = key.length;
-    keyPrefix = key.substring(0, 5);
+  let credentialStatus = "Missing";
+  if (sa.key) {
+    credentialStatus = `Present (${sa.source})`;
+  } else if (legacyKey) {
+    credentialStatus = legacyKey.startsWith('"') ? "Has Quotes" : "Present";
   }
 
   let success = false;
   let errorMessage = "";
 
-  try {
-    const { createGoogleGenerativeAI } = await import("@ai-sdk/google");
-    const { generateText } = await import("ai");
-    const google = createGoogleGenerativeAI({ apiKey: key });
-    await generateText({
-      model: google("gemini-2.5-flash") as any,
-      prompt: "Say the word test.",
-    });
-    success = true;
-  } catch (e: any) {
-    success = false;
-    errorMessage = e.stack || e.message;
+  if (isGoogleAiConfigured()) {
+    try {
+      const { generateText } = await import("ai");
+      const google = createGoogleProvider();
+      await generateText({
+        model: google("gemini-2.5-flash") as any,
+        prompt: "Say the word test.",
+      });
+      success = true;
+    } catch (e: any) {
+      success = false;
+      errorMessage = e.stack || e.message;
+    }
+  } else {
+    errorMessage = "No credential configured (service-account key file or API key).";
   }
 
   res.status(200).json({
-    key_status: keyStatus,
-    key_length: keyLength,
-    key_prefix: keyPrefix,
+    auth_mode: authMode,
+    credential_status: credentialStatus,
+    service_account_email: sa.key ? sa.key.client_email : null,
     success,
     error_message: errorMessage,
   });
@@ -148,6 +156,11 @@ apiRouter.get("/debug/llm", async (req, res) => {
 // Orchestrator Synthesis Engine
 apiRouter.post("/orchestrator/chat", handleOrchestratorChat);
 apiRouter.post("/orchestrator/execute", executeOrchestratorWorkflow);
+
+// Ops-Agent Watchdog: proactive failed-run detection (2026-09-24)
+apiRouter.get("/ops-watchdog/failed-runs", getRecentFailedRuns);
+// Credential-health probe: auth rot surfaces before runs fail (2026-09-25)
+apiRouter.get("/ops-watchdog/credential-health", getCredentialHealth);
 
 // Autonomous Swarm Agents
 apiRouter.get("/agents", getAgents);
@@ -160,6 +173,9 @@ apiRouter.post("/workflows", createCustomWorkflow);
 apiRouter.post("/workflows/deploy", deployWorkflow);
 apiRouter.patch("/workflows/:workflowId", updateWorkflow);
 apiRouter.put("/workflows/:workflowId/steps", updateWorkflowSteps);
+apiRouter.post("/workflows/:workflowId/archive", archiveWorkflow);
+apiRouter.post("/workflows/:workflowId/restore", restoreWorkflow);
+apiRouter.delete("/workflows/:workflowId", deleteWorkflow);
 apiRouter.post("/workflows/:workflowId/run", triggerRun);
 apiRouter.patch("/workflows/:workflowId/schedule", updateWorkflowSchedule);
 
@@ -239,11 +255,13 @@ apiRouter.get("/artifacts", listArtifacts);
 apiRouter.get("/artifacts/blog", listBlogArticles);
 apiRouter.get("/artifacts/content-calendar", getContentCalendar);
 apiRouter.get("/artifacts/:id/download", downloadArtifact);
+apiRouter.get("/artifacts/:id", getArtifact);
 apiRouter.post("/artifacts", createArtifact);
 apiRouter.post("/artifacts/:id/evaluate", evaluateArtifact);
 apiRouter.post("/artifacts/:id/refine", refineArtifact);
 apiRouter.get("/runs/:runId/artifacts", getRunArtifacts);
 apiRouter.patch("/artifacts/:id", updateArtifactStatus);
+apiRouter.delete("/artifacts/:id", deleteArtifact);
 
 // AI Graphic & Visual Asset Generation (Imagen 3 & Multi-Engine)
 apiRouter.post("/generate-image", handleGenerateImage);

@@ -12,6 +12,7 @@ import {
   applySecretToEnv,
   generateMaskedPreview,
   syncWorkspaceVaultSecrets,
+  isOperatorWorkspace,
   mapProviderToEnvKey,
   normalizeEnvironmentVariables,
 } from "../_core/env";
@@ -92,8 +93,14 @@ export const settingsRouter = router({
       const workspaceId = ctx.user.workspaceId;
       if (!workspaceId) throw new Error("No workspace ID found for user.");
 
-      // Apply to running process.env dynamically
-      applySecretToEnv(input.provider, input.value);
+      // SECURITY (multi-tenant credential isolation, 2026-09-24): only the
+      // operator's own workspace may touch the shared process.env and
+      // .env.local. Every other workspace's secrets live ONLY in their own
+      // workspace_scoped rows — a tenant saving an API key can never
+      // overwrite the operator's live credentials for all workspaces.
+      if (isOperatorWorkspace(workspaceId)) {
+        applySecretToEnv(input.provider, input.value);
+      }
 
       // Create a masked preview
       const maskedPreview = generateMaskedPreview(input.value);

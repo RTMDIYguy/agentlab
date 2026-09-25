@@ -43,6 +43,7 @@ import CommandCenter from "@/pages/CommandCenter";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import Security from "@/pages/Security";
+import ArtifactVault from "@/pages/ArtifactVault";
 import Careers from "@/pages/Careers";
 import Documentation from "@/pages/Documentation";
 import FounderSignalSystem from "@/pages/FounderSignalSystem";
@@ -118,6 +119,7 @@ function Router() {
       <Route path={"/run-console"} component={RunConsole} />
       <Route path={"/shared/runs"} component={SharedRuns} />
       <Route path={"/dashboard/settings"} component={Settings} />
+      <Route path={"/vault"} component={ArtifactVault} />
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/privacy"} component={Privacy} />
       <Route path={"/terms"} component={Terms} />

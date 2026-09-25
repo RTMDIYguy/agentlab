@@ -7,7 +7,7 @@ import fs from "fs";
 import path from "path";
 import { evaluateArtifactQuality, buildRefinementPrompt } from "../execution/quality-evaluator";
 import { generateText } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
 
 /**
  * Create a workflow artifact for the active workspace.
@@ -131,6 +131,101 @@ export async function listArtifacts(req: Request, res: Response): Promise<void> 
   } catch (error) {
     console.error("[Artifacts Controller Error]:", error);
     res.status(500).json({ error: "Failed to list artifacts" });
+  }
+}
+
+/**
+ * Vault single read (2026-09-24): fetch one artifact with its full content
+ * so the Artifact Vault page can revisit, edit, or replace a document.
+ * Supports ?resolveRun=true to include the originating workflow name.
+ */
+export async function getArtifact(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId;
+    if (!workspaceId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const id = param(req, "id");
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
+    const [artifact] = await db
+      .select()
+      .from(workflowArtifacts)
+      .where(
+        and(
+          eq(workflowArtifacts.id, id),
+          eq(workflowArtifacts.workspaceId, workspaceId)
+        )
+      )
+      .limit(1);
+
+    if (!artifact) {
+      res.status(404).json({ error: "Artifact not found" });
+      return;
+    }
+
+    // Source context: which workflow produced this (display name only).
+    let workflowName: string | null = null;
+    if (artifact.workflowId) {
+      const [wf] = await db
+        .select({ name: workflows.name })
+        .from(workflows)
+        .where(eq(workflows.id, artifact.workflowId))
+        .limit(1);
+      workflowName = wf?.name ?? null;
+    }
+
+    res.status(200).json({ artifact: { ...artifact, workflowName } });
+  } catch (error) {
+    console.error("[Get Artifact Error]:", error);
+    res.status(500).json({ error: "Failed to fetch artifact" });
+  }
+}
+
+/**
+ * Vault delete (2026-09-24): remove a document the user no longer wants.
+ * Workspace-scoped; no cascade surprises (artifacts have no dependents).
+ */
+export async function deleteArtifact(req: Request, res: Response): Promise<void> {
+  try {
+    const workspaceId = req.workspaceId;
+    if (!workspaceId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const id = param(req, "id");
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
+    const deleted = await db
+      .delete(workflowArtifacts)
+      .where(
+        and(
+          eq(workflowArtifacts.id, id),
+          eq(workflowArtifacts.workspaceId, workspaceId)
+        )
+      )
+      .returning({ id: workflowArtifacts.id });
+
+    if (deleted.length === 0) {
+      res.status(404).json({ error: "Artifact not found" });
+      return;
+    }
+
+    res.status(200).json({ success: true, message: "Artifact deleted." });
+  } catch (error) {
+    console.error("[Delete Artifact Error]:", error);
+    res.status(500).json({ error: "Failed to delete artifact" });
   }
 }
 
@@ -478,15 +573,10 @@ export async function refineArtifact(req: Request, res: Response): Promise<void>
 
     let refinedContent = original.content;
 
-    // Use Gemini if available
-    const apiKey =
-      process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
-      process.env.GEMINI_API_KEY ||
-      process.env.AI_STUDIO_API_KEY;
-
-    if (apiKey) {
+    // Use Gemini if available (service-account OAuth per org policy, or API key)
+    if (isGoogleAiConfigured()) {
       try {
-        const google = createGoogleGenerativeAI({ apiKey });
+        const google = createGoogleProvider();
         const model = google("gemini-2.5-flash");
         const prompt = buildRefinementPrompt(original.content, instructions, initialEval);
 

@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import { db } from "../db";
 import { assessmentQuestions, assessmentSessions } from "../schema";
 import { eq, and, desc, or, isNull } from "drizzle-orm";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateText } from "ai";
+import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
 
 // Default seed bank of 18 high-signal consulting questions
 export const defaultQuestionSeed = [
@@ -324,17 +324,14 @@ export async function deleteAssessmentQuestion(req: Request, res: Response) {
 export async function generateAIAssessmentQuestions(req: Request, res: Response) {
   try {
     const { domain = "Operations", focusArea = "General Discovery", industry = "B2B Professional Services", count = 3 } = req.body;
-    const workspaceId = (req as any).workspaceId || req.body.workspaceId;
-
-    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-    if (!apiKey) {
+    const workspaceId = (req as any).workspaceId || req.body.workspaceId;    if (!isGoogleAiConfigured()) {
       return res.status(503).json({
         success: false,
-        error: "GOOGLE_GENERATIVE_AI_API_KEY not configured",
+        error: "No Gemini credential is configured (service-account key or API key).",
       });
     }
 
-    const google = createGoogleGenerativeAI({ apiKey });
+    const google = createGoogleProvider();
     const prompt = `You are an elite management consultant and COO diagnostics architect for Uncle Robert Consulting (URC) & AgentLab.
 Generate ${count} high-signal, deep-probing diagnostic assessment questions for discovery calls with business founders.
 

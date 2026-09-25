@@ -2,11 +2,71 @@ import { ENV } from "./_core/env";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import dns from "node:dns";
 import * as schema from "./schema";
 
+// Evidence-based fix (2026-09-24 smoke test): the Neon pooler hostname
+// advertises both AAAA and A records; the AAAA candidate refuses TCP on
+// this host, so every Nth connection (when the pool expands or DNS
+// rotates) died with ECONNREFUSED — boot schema silently skipped, vault
+// sync failing, signups falling back to memory. Neon's documented guidance
+// for runtimes that prefer IPv6 is to use IPv4. ipv4first makes all
+// lookups A-first for this process.
+try { dns.setDefaultResultOrder("ipv4first"); } catch { /* older Node */ }
+
 const connectionString = process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/agentlab';
-const client = postgres(connectionString);
-export const db = drizzle(client, { schema });
+// PgBouncer/Neon-pooler hardening (2026-09-24 smoke test):
+// 1. prepare:false — the pooler runs in transaction mode; named prepared
+//    statements break across connections, so boot-time queries failed with
+//    'Failed query' and ensureDatabaseSchema silently died. Unnamed
+//    statements are PgBouncer-safe.
+// 2. ensureDatabaseSchema's multi-statement DDL templates are executed via
+//    the `client` wrapper below, which forces the simple query protocol
+//    (.simple()) — extended protocol rejects multi-command statements with
+//    'cannot insert multiple commands into a prepared statement'.
+const pgClient = postgres(connectionString, {
+  prepare: false,
+  // Cold-started serverless Postgres (Neon) can take seconds to accept the
+  // first connection; the boot-time retry in _core/index.ts handles the
+  // rest. Keep this client minimal — speculative network options break
+  // more than they fix (tried and reverted during the 2026-09-24 smoke).
+  connect_timeout: 15,
+});
+const client = ((strings: TemplateStringsArray, ...values: any[]) =>
+  (pgClient(strings as any, ...values) as any).simple()) as typeof pgClient;
+export const db = drizzle(pgClient, { schema });
+
+/**
+ * Neon keepalive (2026-09-24, CC-2026-09-24-006): the free-plan compute
+ * auto-suspends after ~5 minutes of inactivity (ENDPOINT INACTIVE bands in
+ * the Neon console timeline). Every wake is a cold start — multi-second
+ * first queries and, during the smoke test, intermittent ECONNREFUSED while
+ * the endpoint resumed. Set NEON_KEEPALIVE_MINUTES to ping SELECT 1 on an
+ * interval and keep the compute warm during work hours.
+ *
+ * COST MATH (honest tradeoff, default OFF): the free plan allots ~190
+ * compute-hours/month. This project's compute is 0.25 CU, so a 16-hour
+ * waking-day keepalive costs ~4 CU-hrs/day (~120/month) — affordable, but
+ * it erases most of the scale-to-zero savings. Set NEON_KEEPALIVE_MINUTES=5
+ * to enable during the workday; leave unset/0 to keep pure scale-to-zero.
+ */
+let keepaliveTimer: ReturnType<typeof setInterval> | null = null;
+export function startDatabaseKeepalive(): void {
+  const minutes = Number(process.env.NEON_KEEPALIVE_MINUTES || "0");
+  if (!minutes || minutes <= 0 || keepaliveTimer) return;
+  const ms = minutes * 60 * 1000;
+  keepaliveTimer = setInterval(async () => {
+    try {
+      await pgClient`SELECT 1`;
+    } catch (err: any) {
+      // Keepalives must never crash the process; log once per failure.
+      console.warn("[Database] Keepalive ping failed (compute may be waking):", err?.message || err);
+    }
+  }, ms);
+  // Do not hold the event loop open just for the keepalive.
+  keepaliveTimer.unref?.();
+  console.log(`[Database] Keepalive enabled: pinging every ${minutes} min to prevent Neon auto-suspend.`);
+}
 
 export async function getDb() {
   return db;
@@ -421,6 +481,32 @@ export async function ensureDatabaseSchema(): Promise<void> {
         ('channel', 'chan-fulfillment', 'fulfillment-briefs', 'Active sprints & DAG delivery'),
         ('channel', 'chan-portal', 'client-portal', 'Client-facing updates & approvals')
       ON CONFLICT ("slug") DO NOTHING;
+    `;
+
+    // Visitor profiles (2026-09-24): pre-signup intake memory. The founder
+    // intake chat accumulates what it learns about a visitor here ("the temp
+    // file"), and account creation consumes it to seed the new workspace.
+    await client`
+      CREATE TABLE IF NOT EXISTS "visitor_profiles" (
+        "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        "email" varchar(255) NOT NULL,
+        "name" varchar(128),
+        "company" varchar(128),
+        "pain_point" text,
+        "interest" varchar(128),
+        "conversation" jsonb,
+        "claimed_by_workspace_id" uuid,
+        "claimed_at" timestamp with time zone,
+        "created_at" timestamp with time zone NOT NULL DEFAULT now(),
+        "updated_at" timestamp with time zone NOT NULL DEFAULT now()
+      );
+      CREATE UNIQUE INDEX IF NOT EXISTS "uq_visitor_profiles_email" ON "visitor_profiles" ("email");
+      CREATE INDEX IF NOT EXISTS "idx_visitor_profiles_workspace" ON "visitor_profiles" ("claimed_by_workspace_id");
+    `;
+
+    // Workspace onboarding context column (visitor→account handoff seed).
+    await client`
+      ALTER TABLE "workspaces" ADD COLUMN IF NOT EXISTS "onboarding_context" jsonb;
     `;
 
     console.log("[Database] Newsletter, contact, blog comments & messenger tables verified.");

@@ -345,7 +345,7 @@ export default function Settings() {
       protocol: "n8n Webhook / MCP Server",
       icon: Zap,
       color: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
-      details: "MKT-02 Nurture & SDR-Agent Sync live",
+      details: "MKT-02 Nurture & SDR-Agent Sync live • VM: http://35.225.47.185:5678",
     },
     {
       id: "builtin-instantly",
@@ -1456,7 +1456,7 @@ export default function Settings() {
                         </span>
                         <div className="flex flex-wrap gap-1.5">
                           {[
-                            { name: "n8n Autonomous Workflow Trigger", type: "webhook", endpoint: "http://localhost:5678/webhook/agentlab-intake", portalUrl: "http://localhost:5678", badge: "n8n Trigger" },
+                            { name: "n8n Autonomous Workflow Trigger", type: "webhook", endpoint: "http://35.225.47.185:5678/webhook/agentlab-intake", portalUrl: "http://35.225.47.185:5678", badge: "n8n Trigger" },
                             { name: "Slack Operations Channel Alert", type: "webhook", endpoint: "https://example.com/webhook/slack-alerts", portalUrl: "https://app.slack.com", badge: "Slack Alerts" },
                             { name: "Stripe Payment & Checkout Sync", type: "webhook", endpoint: "https://agent-lab.tech/api/stripe/webhook", portalUrl: "https://dashboard.stripe.com", badge: "Stripe Webhook" },
                             { name: "Mercury Bank Transaction Ingest", type: "webhook", endpoint: "https://api.mercury.com/v1/webhooks", portalUrl: "https://app.mercury.com", badge: "Mercury Bank" },

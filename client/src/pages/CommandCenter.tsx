@@ -57,6 +57,8 @@ import {
   RotateCcw,
   ListTodo,
   History,
+  Archive,
+  ArchiveRestore,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
@@ -312,15 +314,19 @@ export default function CommandCenter() {
   const [isSavingWorkflow, setIsSavingWorkflow] = useState(false);
   const [inspectingRunId, setInspectingRunId] = useState<string | null>(null);
 
+  // Archived filter lives above the query that depends on it.
+  const [showArchived, setShowArchived] = useState(false);
+
   // 1. Fetch Workflows
   const {
     data: workflowsData,
     isLoading: isLoadingWorkflows,
     refetch: refetchWorkflows,
-  } = useQuery<{ workflows: WorkflowItem[] }>({
-    queryKey: ["workflows", user?.openId],
+  } = useQuery<{ workflows: WorkflowItem[]; archivedCount?: number }>({
+    queryKey: ["workflows", user?.openId, showArchived],
     queryFn: async () => {
-      const res = await fetch("/api/workflows", { headers: { Accept: "application/json" } });
+      const url = showArchived ? "/api/workflows?status=archived" : "/api/workflows";
+      const res = await fetch(url, { headers: { Accept: "application/json" } });
       if (!res.ok) throw new Error("Failed to fetch workflows");
       return res.json();
     },
@@ -658,6 +664,35 @@ export default function CommandCenter() {
           agentId: "Auditor-Bot-9",
         },
       ]);
+    }
+  };
+
+  // Workflow lifecycle (2026-09-24): archive/restore/delete for duplicate
+  // and deprecated DAGs. Delete is only offered for archived workflows with
+  // no run history (the API enforces this too — evidence is never destroyed).
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  const handleLifecycle = async (wf: WorkflowItem, action: "archive" | "restore" | "delete") => {
+    if (action === "delete" && confirmDeleteId !== wf.id) {
+      setConfirmDeleteId(wf.id);
+      return;
+    }
+    setConfirmDeleteId(null);
+    try {
+      const res = await fetch(
+        action === "archive"
+          ? `/api/workflows/${wf.id}/archive`
+          : action === "restore"
+            ? `/api/workflows/${wf.id}/restore`
+            : `/api/workflows/${wf.id}`,
+        { method: action === "delete" ? "DELETE" : "POST", headers: { "Content-Type": "application/json" } }
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `Failed to ${action} workflow`);
+      toast.success(data.message || `Workflow ${action}d.`);
+      queryClient.invalidateQueries({ queryKey: ["workflows"] });
+    } catch (err: any) {
+      toast.error(err.message || `Failed to ${action} workflow.`);
     }
   };
 
@@ -1244,9 +1279,27 @@ export default function CommandCenter() {
                   <Zap className="w-5 h-5 text-primary" />
                   <CardTitle className="text-lg">Deployable Workflows & SOP Playbooks</CardTitle>
                 </div>
-                <span className="text-xs text-muted-foreground font-mono">
-                  {isLoadingWorkflows ? "Loading..." : `${workflows.length} Active DAGs`}
-                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowArchived(v => !v)}
+                    className={`text-xs font-mono px-2.5 py-1 rounded-lg border transition-colors ${
+                      showArchived
+                        ? "border-amber-500/50 bg-amber-500/10 text-amber-700"
+                        : "border-border text-muted-foreground hover:text-foreground hover:border-primary/40"
+                    }`}
+                    title={showArchived ? "Showing archived workflows — click to return to active" : "View archived workflows"}
+                  >
+                    <Archive className="w-3.5 h-3.5 inline mr-1" />
+                    {showArchived ? "Viewing Archived" : "Archived"}
+                    {typeof workflowsData?.archivedCount === "number" && workflowsData.archivedCount > 0 && !showArchived && (
+                      <span className="ml-1 text-[10px] font-bold">({workflowsData.archivedCount})</span>
+                    )}
+                  </button>
+                  <span className="text-xs text-muted-foreground font-mono">
+                    {isLoadingWorkflows ? "Loading..." : `${workflows.length} ${showArchived ? "Archived" : "Active"} DAGs`}
+                  </span>
+                </div>
               </div>
               <CardDescription>
                 Trigger multi-department swarms, inspect detailed execution steps, or adjust step configurations without rebuilding.
@@ -1308,6 +1361,41 @@ export default function CommandCenter() {
                               <Play className="w-3.5 h-3.5" />
                               Execute Run
                             </Button>
+
+                            {/* Lifecycle: Archive / Restore / Delete (2026-09-24) */}
+                            {showArchived ? (
+                              <>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 text-xs gap-1.5 border-emerald-500/40 text-emerald-600 hover:bg-emerald-500/10"
+                                  onClick={() => handleLifecycle(wf, "restore")}
+                                  title="Restore this workflow to the active list"
+                                >
+                                  <ArchiveRestore className="w-3.5 h-3.5" />
+                                  Restore
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className={`h-8 w-8 p-0 ${confirmDeleteId === wf.id ? "border-red-500 bg-red-500/10 text-red-600" : "border-border text-muted-foreground hover:text-red-600 hover:border-red-400"}`}
+                                  onClick={() => handleLifecycle(wf, "delete")}
+                                  title={confirmDeleteId === wf.id ? "Click again to PERMANENTLY delete" : "Delete permanently (only if no run history)"}
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </Button>
+                              </>
+                            ) : (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0 text-muted-foreground hover:text-amber-600"
+                                onClick={() => handleLifecycle(wf, "archive")}
+                                title="Archive this workflow (reversible — hide from active list)"
+                              >
+                                <Archive className="w-4 h-4" />
+                              </Button>
+                            )}
 
                             {/* Expand / Collapse Steps */}
                             <Button

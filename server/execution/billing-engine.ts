@@ -2,7 +2,7 @@ import { getDb } from "../db";
 import { workspaces, auditLogs, workspacePackages, knowledgePackages } from "../schema";
 import { lt, eq, and, sql, gte } from "drizzle-orm";
 import { generateText } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
 
 /**
  * Smart Downgrade & Pay-As-You-Go Engine
@@ -48,13 +48,12 @@ export async function processTrialExpirations() {
 
       const allPackages = await db.select().from(knowledgePackages);
 
-      const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-      if (!apiKey) {
-        console.warn("[Billing Engine] GOOGLE_GENERATIVE_AI_API_KEY not set, skipping smart downgrade LLM check.");
+      if (!isGoogleAiConfigured()) {
+        console.warn("[Billing Engine] No Gemini credential (service account or API key), skipping smart downgrade LLM check.");
         continue;
       }
       
-      const google = createGoogleGenerativeAI({ apiKey });
+      const google = createGoogleProvider();
       
       try {
         const { text } = await generateText({

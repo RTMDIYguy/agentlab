@@ -20,7 +20,7 @@ import { apiRouter } from "../routes/api";
 import { tenantMiddleware } from "../middleware/tenant";
 import { securityMiddleware } from "../middleware/security";
 import { triggerFullEcosystemSync } from "../controllers/aiStudioSync";
-import { ensureDatabaseSchema } from "../db";
+import { ensureDatabaseSchema, startDatabaseKeepalive } from "../db";
 
 function startDailyEcosystemScheduler() {
   const calculateNext5AmCt = () => {
@@ -73,10 +73,34 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function startServer() {
-  // Ensure database schema and required tables are self-healed and active
-  await ensureDatabaseSchema();
-  // Auto-sync workspace vault secrets from environment to database
-  await syncWorkspaceVaultSecrets();
+  // Schema bootstrap with retry (2026-09-24): the Neon cold-start frequently
+  // refuses the very first connection(s); previously a single failed attempt
+  // left ensureDatabaseSchema dead for the whole process lifetime, so every
+  // DB write silently no-oped (signups fell back to the in-memory user
+  // cache). Retry with backoff before giving up.
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    try {
+      await ensureDatabaseSchema();
+      console.log(`[Database] Schema bootstrap OK (attempt ${attempt}).`);
+      break;
+    } catch (err: any) {
+      console.error(`[Database] Schema bootstrap attempt ${attempt}/4 failed:`, err?.message ?? err);
+      if (attempt === 4) {
+        console.error("[Database] Continuing without verified schema — DB-backed features will be degraded until the connection recovers.");
+        break;
+      }
+      await new Promise(r => setTimeout(r, attempt * 3000));
+    }
+  }
+  // Auto-sync workspace vault secrets from environment to database (retried
+  // in the background — a cold-start failure here must not kill boot).
+  syncWorkspaceVaultSecrets().catch(err =>
+    console.warn("[Vault Sync] background retry failed:", err?.message ?? err)
+  );
+
+  // Neon keepalive (opt-in via NEON_KEEPALIVE_MINUTES): prevents the
+  // free-plan compute auto-suspend cold starts documented in CC-2026-09-24-004.
+  startDatabaseKeepalive();
 
   const app = express();
   const server = createServer(app);

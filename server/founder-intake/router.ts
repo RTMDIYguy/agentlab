@@ -2,8 +2,120 @@ import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { publicProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
-import { contactSubmissions } from "../schema";
+import { contactSubmissions, visitorProfiles } from "../schema";
 import { syncContactSubmission } from "../hubspot/sync";
+import { generateText } from "ai";
+import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
+
+/**
+ * Visitor memory ("the temp file", 2026-09-24):
+ * Every intake turn persists what the agent has learned about the visitor
+ * into visitor_profiles, keyed by email once shared. Previously the
+ * conversation lived only in React state and died with the tab — there was
+ * no memory when the visitor returned, and nothing to seed a workspace with
+ * at signup. Bounded: keeps the latest 12 turns and 8KB of transcript text.
+ */
+const MAX_CONVERSATION_TURNS = 12;
+const MAX_CONVERSATION_CHARS = 8192;
+
+async function rememberVisitorTurn(
+  lead: LeadContext,
+  messages: ChatMessage[]
+): Promise<void> {
+  const email = (lead.email || "").trim().toLowerCase();
+  if (!email || !email.includes("@")) return; // anonymous so far — nothing to key on
+
+  try {
+    const db = await getDb();
+    if (!db) return;
+
+    const trimmed = messages.slice(-MAX_CONVERSATION_TURNS);
+    const transcript = trimmed
+      .map(m => `${m.role === "user" ? "Visitor" : "Agent"}: ${m.content}`)
+      .join("\n")
+      .slice(-MAX_CONVERSATION_CHARS);
+
+    const [existing] = await db
+      .select({ id: visitorProfiles.id })
+      .from(visitorProfiles)
+      .where(eq(visitorProfiles.email, email))
+      .limit(1);
+
+    if (existing) {
+      await db
+        .update(visitorProfiles)
+        .set({
+          name: lead.name || undefined,
+          company: lead.company || undefined,
+          painPoint: lead.painPoint || undefined,
+          interest: lead.interest || undefined,
+          conversation: { turns: trimmed, transcript },
+          updatedAt: new Date(),
+        })
+        .where(eq(visitorProfiles.id, existing.id));
+    } else {
+      await db.insert(visitorProfiles).values({
+        email,
+        name: lead.name || null,
+        company: lead.company || null,
+        painPoint: lead.painPoint || null,
+        interest: lead.interest || null,
+        conversation: { turns: trimmed, transcript },
+      });
+    }
+  } catch (err: any) {
+    // Memory must never break the conversation.
+    console.warn("[Founder Intake] visitor memory write skipped:", err?.message);
+  }
+}
+
+/**
+ * Claim (consume) a visitor profile at signup: marks it as seeded into the
+ * given workspace and returns the profile for workspace initialization.
+ */
+export async function claimVisitorProfile(
+  email: string,
+  workspaceId: string
+): Promise<{
+  name: string | null;
+  company: string | null;
+  painPoint: string | null;
+  interest: string | null;
+  transcript: string | null;
+} | null> {
+  try {
+    const db = await getDb();
+    if (!db) return null;
+    const normalized = (email || "").trim().toLowerCase();
+    if (!normalized) return null;
+
+    const [profile] = await db
+      .select()
+      .from(visitorProfiles)
+      .where(eq(visitorProfiles.email, normalized))
+      .limit(1);
+    if (!profile) return null;
+
+    if (!profile.claimedByWorkspaceId) {
+      await db
+        .update(visitorProfiles)
+        .set({ claimedByWorkspaceId: workspaceId, claimedAt: new Date(), updatedAt: new Date() })
+        .where(eq(visitorProfiles.id, profile.id));
+    }
+
+    const conv = profile.conversation as { transcript?: string } | null;
+    return {
+      name: profile.name,
+      company: profile.company,
+      painPoint: profile.painPoint,
+      interest: profile.interest,
+      transcript: conv?.transcript ?? null,
+    };
+  } catch (err: any) {
+    console.warn("[Founder Intake] visitor profile claim failed:", err?.message);
+    return null;
+  }
+}
 
 async function relayToN8nIfConfigured(payload: Record<string, unknown>) {
   const webhookUrl = process.env.N8N_INTAKE_WEBHOOK_URL;
@@ -53,6 +165,17 @@ type IntakeResponse = {
   recommendedCta: string | null;
   shouldCaptureLead: boolean;
   collected: LeadContext;
+};
+
+/**
+ * Honest status of why the LLM path did not answer (surfaced in the API
+ * response so the UI and the watchdog can tell "no credential configured"
+ * apart from "credential failed").
+ */
+export type IntakeLlmStatus = {
+  engine: "gemini" | "fallback";
+  reason: "ok" | "not_configured" | "llm_error";
+  detail?: string;
 };
 
 function buildConversation(messages: ChatMessage[]) {
@@ -139,15 +262,26 @@ function buildFallbackResponse(
   };
 }
 
-async function callOpenAI(
+/**
+ * Gemini migration (2026-09-25): the intake agent previously called OpenAI's
+ * raw HTTP API directly — off-policy for the org's no-API-key rule, and in
+ * practice dead weight: no OPENAI_API_KEY is configured in this deployment,
+ * so every visitor conversation has been running on the canned fallback
+ * script. It now goes through the app's one Gemini auth factory
+ * (server/_core/google-ai.ts: service-account OAuth under the org policy,
+ * API-key fallback preserved) with the same model fallback chain the other
+ * controllers use.
+ */
+async function callGemini(
   messages: ChatMessage[],
   lead: LeadContext
-): Promise<IntakeResponse | null> {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return null;
+): Promise<{ response: IntakeResponse | null; status: IntakeLlmStatus } | null> {
+  // null return = no credential configured; respond() reports that honestly
+  // instead of disguising it as an LLM failure.
+  if (!isGoogleAiConfigured()) return null;
 
   const normalizedLead = normalizeCollectedLead(lead, messages);
-  const model = process.env.OPENAI_FOUNDER_AGENT_MODEL || "gpt-5-mini";
+  const models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
 
   const prompt = `
 You are the Founder Intake Agent for Uncle Robert Consulting, Bootstrapper Capital, Tactix, and Ownable OS.
@@ -189,57 +323,62 @@ Return valid JSON with this exact shape:
   }
 }`.trim();
 
-  const response = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model,
-      input: prompt,
-    }),
-  });
+  let lastError: string | null = null;
+  const google = createGoogleProvider();
+  for (const modelId of models) {
+    try {
+      const result = await generateText({
+        model: google(modelId) as any,
+        prompt,
+      });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error("[Founder Intake] OpenAI error:", response.status, errorText);
-    return null;
+      const outputText = (result.text || "").trim();
+      if (!outputText) {
+        lastError = `model ${modelId} returned an empty response`;
+        continue;
+      }
+
+      // Tolerate markdown-fenced JSON: Gemini occasionally wraps even when
+      // told not to, and the fallback script is a worse visitor experience.
+      const jsonText = outputText
+        .replace(/^```(?:json)?\s*/i, "")
+        .replace(/\s*```\s*$/, "")
+        .trim();
+
+      try {
+        const parsed = JSON.parse(jsonText);
+        return {
+          response: {
+            reply: parsed.reply,
+            stage: parsed.stage,
+            recommendedOffer: parsed.recommendedOffer ?? null,
+            recommendedCta: parsed.recommendedCta ?? null,
+            shouldCaptureLead: Boolean(parsed.shouldCaptureLead),
+            collected: {
+              name: parsed.collected?.name,
+              email: parsed.collected?.email,
+              company: parsed.collected?.company,
+              painPoint: parsed.collected?.painPoint,
+              interest: parsed.collected?.interest,
+            },
+          },
+          status: { engine: "gemini", reason: "ok" },
+        };
+      } catch (parseErr: any) {
+        console.error("[Founder Intake] Failed to parse Gemini JSON:", parseErr?.message);
+        lastError = `model ${modelId} returned unparseable JSON`;
+        continue;
+      }
+    } catch (mErr: any) {
+      console.warn(`[Founder Intake] Model ${modelId} failed, falling back:`, mErr?.message);
+      lastError = mErr?.message || String(mErr);
+    }
   }
 
-  const payload = (await response.json()) as any;
-  const outputText =
-    typeof payload.output_text === "string"
-      ? payload.output_text
-      : Array.isArray(payload.output)
-        ? payload.output
-            .flatMap((item: any) => item.content || [])
-            .map((item: any) => item.text || "")
-            .join("")
-        : "";
-
-  if (!outputText) return null;
-
-  try {
-    const parsed = JSON.parse(outputText);
-    return {
-      reply: parsed.reply,
-      stage: parsed.stage,
-      recommendedOffer: parsed.recommendedOffer ?? null,
-      recommendedCta: parsed.recommendedCta ?? null,
-      shouldCaptureLead: Boolean(parsed.shouldCaptureLead),
-      collected: {
-        name: parsed.collected?.name,
-        email: parsed.collected?.email,
-        company: parsed.collected?.company,
-        painPoint: parsed.collected?.painPoint,
-        interest: parsed.collected?.interest,
-      },
-    };
-  } catch (error) {
-    console.error("[Founder Intake] Failed to parse OpenAI JSON:", error);
-    return null;
-  }
+  return {
+    response: null,
+    status: { engine: "fallback", reason: "llm_error", detail: lastError || "all models failed" },
+  };
 }
 
 export const founderIntakeRouter = router({
@@ -251,8 +390,40 @@ export const founderIntakeRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const aiResponse = await callOpenAI(input.messages, input.lead);
-      return aiResponse ?? buildFallbackResponse(input.lead, input.messages);
+      const llm = await callGemini(input.messages, input.lead);
+
+      // Three honest states, never disguised: (1) no credential configured,
+      // (2) a credential exists but every model in the chain failed, (3) the
+      // Gemini path answered. llmStatus rides along so the UI and the ops
+      // watchdog can tell them apart.
+      let response: IntakeResponse;
+      let llmStatus: IntakeLlmStatus;
+      if (llm && llm.response) {
+        response = llm.response;
+        llmStatus = llm.status;
+      } else {
+        response = buildFallbackResponse(input.lead, input.messages);
+        llmStatus = llm
+          ? llm.status
+          : {
+              engine: "fallback",
+              reason: "not_configured",
+              detail:
+                "No Gemini credential configured (secrets/gemini-service-account.json or GOOGLE_SERVICE_ACCOUNT_JSON); visitor got the scripted fallback.",
+            };
+      }
+
+      // Persist what we learned this turn ("the temp file") — before this
+      // change, visitor context evaporated when the tab closed.
+      const mergedLead: LeadContext = {
+        ...input.lead,
+        ...response.collected,
+        name: response.collected.name || input.lead.name,
+        email: response.collected.email || input.lead.email,
+      };
+      await rememberVisitorTurn(mergedLead, input.messages);
+
+      return { ...response, llmStatus };
     }),
 
   captureLead: publicProcedure

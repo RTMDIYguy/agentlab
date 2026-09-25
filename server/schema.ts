@@ -55,6 +55,8 @@ export const workspaces = pgTable(
     defaultModel: varchar("default_model", { length: 64 })
       .notNull()
       .default("gemini-1.5-pro"),
+    /** Visitor→account handoff context (founder intake chat), 2026-09-24. */
+    onboardingContext: jsonb("onboarding_context"),
     trialEndsAt: timestamp("trial_ends_at", { withTimezone: true }).default(
       sql`now() + interval '30 days'`
     ),
@@ -870,6 +872,42 @@ export const hubspotSyncLog = pgTable(
 );
 
 // ==============================================================================
+// 23c. VISITOR PROFILES (pre-signup intake memory → workspace seed)
+// The Founder Intake Agent learns about anonymous visitors; this table is the
+// "temp file" that conversation accumulates into, keyed by email once shared.
+// When the visitor later creates an account, the new workspace is seeded from
+// this profile (fix 3 of the 2026-09-24 rewiring): the OS greets a returning
+// prospect by name with full context instead of starting from zero.
+export const visitorProfiles = pgTable(
+  "visitor_profiles",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    email: varchar("email", { length: 255 }).notNull(),
+    name: varchar("name", { length: 128 }),
+    company: varchar("company", { length: 128 }),
+    painPoint: text("pain_point"),
+    interest: varchar("interest", { length: 128 }),
+    /** Rolling conversation transcript (bounded, oldest trimmed). */
+    conversation: jsonb("conversation"),
+    /** Set when the visitor's account is created; profile is consumed. */
+    claimedByWorkspaceId: uuid("claimed_by_workspace_id"),
+    claimedAt: timestamp("claimed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    // One live profile per email; claimed profiles keep their history via
+    // claimedByWorkspaceId. Upserts target this key.
+    uniqueIndex("uq_visitor_profiles_email").on(table.email),
+    index("idx_visitor_profiles_workspace").on(table.claimedByWorkspaceId),
+  ]
+);
+
+// ==============================================================================
 // 24. BLOG COMMENTS (Threaded comments on published articles)
 // ==============================================================================
 export const blogComments = pgTable(
@@ -1357,6 +1395,9 @@ export type NewNewsletterCampaign = InferInsertModel<typeof newsletterCampaigns>
 
 export type ContactSubmission = InferSelectModel<typeof contactSubmissions>;
 export type NewContactSubmission = InferInsertModel<typeof contactSubmissions>;
+
+export type VisitorProfile = InferSelectModel<typeof visitorProfiles>;
+export type NewVisitorProfile = InferInsertModel<typeof visitorProfiles>;
 
 export type BlogComment = InferSelectModel<typeof blogComments>;
 export type NewBlogComment = InferInsertModel<typeof blogComments>;

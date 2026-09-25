@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { generateObject } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { generateObject, generateText } from "ai";
+import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
 import { eq, and, desc } from "drizzle-orm";
 import { getDb } from "../db";
 import {
@@ -12,6 +12,7 @@ import {
   workflowArtifacts,
   workflows as dbWorkflows,
   agents as dbAgents,
+  workspaces,
 } from "../schema";
 import {
   workflowProposalSchema,
@@ -31,8 +32,10 @@ export interface ProposedWorkflow extends WorkflowProposal {}
 export interface LiveSystemTelemetry {
   recentErrors?: string[];
   recentRuns?: string[];
+  recentRunFailures?: string[];
   activeWorkflows?: string[];
   activeAgents?: string[];
+  prospectContext?: string;
 }
 
 export interface OrchestratorChatRequest {
@@ -77,9 +80,14 @@ LIVE SYSTEM STATE, RECENT AUDIT LOGS & RUNTIME TELEMETRY:
 - Active Workflows in Workspace: ${telemetry.activeWorkflows?.length ? telemetry.activeWorkflows.join("; ") : "Default Canonical 10 Workflows Active"}
 - Active Agents in Workspace: ${telemetry.activeAgents?.length ? telemetry.activeAgents.join("; ") : "Alpha-Node-01, Coder-Agent-07, SDR-Writer-02, Auditor-Bot-9"}
 - Recent Workflow Runs: ${telemetry.recentRuns?.length ? telemetry.recentRuns.join("; ") : "No recent runs"}
+- FAILED RUNS (real recorded errors — surface these proactively when relevant):
+  ${telemetry.recentRunFailures?.length ? telemetry.recentRunFailures.join("\n  ") : "(no failed runs recorded)"}
 - Recent System Audit Logs / Errors:
   ${telemetry.recentErrors?.length ? telemetry.recentErrors.join("\n  ") : "All recent audit logs nominal (zero active unhandled crashes)"}
-`
+${telemetry.prospectContext ? `
+PROSPECT CONTEXT (from this user's pre-signup intake conversations — use it to greet them by name, remember their stated pain points, and build on what they already told us):
+  ${telemetry.prospectContext}
+` : ""}`
     : "";
 
   return `You are the Ops Agent & Master Orchestrator for AgentLab, powered exclusively by the proprietary **AgentLab DAG Orchestration Engine v2.4**. You act as the consultative Chief Operating Officer (COO), Lead Systems Architect, and Technical Partner to the founder.
@@ -400,9 +408,19 @@ export async function handleOrchestratorChat(
         .from(workflowRuns)
         .where(eq(workflowRuns.workspaceId, workspaceId))
         .orderBy(desc(workflowRuns.startedAt))
-        .limit(5);
+        .limit(10);
 
-      telemetry.recentRuns = runs.map(r => `Run ${r.id}: status=${r.status}`);
+      telemetry.recentRuns = runs
+        .slice(0, 5)
+        .map(r => `Run ${r.id}: status=${r.status}`);
+
+      // Real failure evidence (2026-09-24): the agent must be able to SEE
+      // its own failed runs — previously it only got run statuses, so it
+      // could not diagnose why DAGs were dying without being told.
+      telemetry.recentRunFailures = runs
+        .filter(r => r.status === "failed")
+        .slice(0, 5)
+        .map(r => `Run ${r.id} (workflow ${r.workflowId ?? "n/a"}): ${r.errorMessage || "no recorded error message"}`);
 
       const wfs = await db
         .select()
@@ -417,6 +435,31 @@ export async function handleOrchestratorChat(
         .where(eq(dbAgents.workspaceId, workspaceId));
 
       telemetry.activeAgents = ags.map(a => `${a.name} (${a.role})`);
+
+      // Visitor→account memory: surface what the user told the intake agent
+      // pre-signup so the Ops Agent greets a returning prospect with context
+      // instead of starting cold.
+      try {
+        const [ws] = await db
+          .select({ onboardingContext: workspaces.onboardingContext })
+          .from(workspaces)
+          .where(eq(workspaces.id, workspaceId))
+          .limit(1);
+        const ctx = ws?.onboardingContext as any;
+        if (ctx && typeof ctx === "object") {
+          const bits = [
+            ctx.company ? `Company: ${ctx.company}` : null,
+            ctx.painPoint ? `Stated pain point: ${ctx.painPoint}` : null,
+            ctx.interest ? `Interest: ${ctx.interest}` : null,
+            ctx.transcript ? `Intake transcript (truncated): ${String(ctx.transcript).slice(0, 1500)}` : null,
+          ].filter(Boolean);
+          if (bits.length > 0) {
+            telemetry.prospectContext = bits.join(" | ");
+          }
+        }
+      } catch {
+        // onboarding context is optional enrichment
+      }
     }
   } catch (e) {
     console.warn("[Orchestrator] Telemetry query note:", e);
@@ -429,9 +472,34 @@ export async function handleOrchestratorChat(
 
   // Attempt dynamic LLM orchestration via Vercel AI SDK & Google Gemini / Vertex AI
   try {
-    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY;
-    const google = createGoogleGenerativeAI(apiKey ? { apiKey } : undefined);
+    if (!isGoogleAiConfigured()) {
+      throw new Error(
+        "LLM_NOT_CONFIGURED: no Gemini credential (service-account key or API key) is available. Place the service-account JSON at secrets/gemini-service-account.json."
+      );
+    }
+    const google = createGoogleProvider();
     const systemPrompt = buildSystemPrompt(unlockedDepartments, telemetry);
+
+    // Conversation history (2026-09-24): the chat was single-turn — every
+    // message started a fresh context. Pass prior turns through so the Ops
+    // Agent can hold a real thread.
+    const rawHistory: any[] = Array.isArray(req.body.history) ? req.body.history : [];
+    const history = rawHistory
+      .filter((m: any) => m && typeof m.content === "string" && m.content.trim() &&
+        (m.role === "user" || m.role === "assistant"))
+      .slice(-12)
+      .map((m: any) => ({ role: m.role as "user" | "assistant", content: m.content as string }));
+
+    // Mode routing (2026-09-24): the previous implementation forced EVERY
+    // response through generateObject(workflowProposalSchema), so the agent
+    // was structurally unable to simply converse, diagnose, or answer
+    // questions — it could only emit a DAG proposal. Now: proposals are
+    // generated only when the user actually wants one; everything else gets
+    // a real conversational answer grounded in the live telemetry (including
+    // real failed-run errors).
+    const wantsProposal =
+      /\b(build|create|synthesize|design|automate|draft a workflow|propose a workflow|new workflow|dag|workflow for|set up|execute|run)\b/i.test(rawPrompt) ||
+      req.body.forceProposal === true;
 
     const userMessageContent: Array<{ type: "text"; text: string } | { type: "image"; image: string }> = [
       { type: "text", text: prompt },
@@ -444,25 +512,46 @@ export async function handleOrchestratorChat(
       });
     }
 
-    const result = await generateObject({
-      model: google("gemini-2.5-flash") as any,
-      schema: workflowProposalSchema,
-      system: systemPrompt,
-      messages: [
-        {
-          role: "user",
-          content: userMessageContent as any,
-        },
-      ],
-    });
+    const baseMessages = [
+      ...history.map(h => ({ role: h.role, content: h.content as any })),
+      { role: "user" as const, content: userMessageContent as any },
+    ];
 
-    proposal = result.object;
-    reply =
-      proposal.reply ||
-      `Synthesized multi-agent DAG proposal for "${proposal.name}" governed by URC ${proposal.departmentCode.toUpperCase()} operations.`;
-    // Honesty rule (honesty-audit P1-1): when the model does not report usage,
-    // we record null — never a random number.
-    tokensUsed = result.usage?.totalTokens ?? null;
+    if (wantsProposal) {
+      const result = await generateObject({
+        model: google("gemini-2.5-flash") as any,
+        schema: workflowProposalSchema,
+        system: systemPrompt,
+        messages: baseMessages as any,
+      });
+
+      proposal = result.object;
+      reply =
+        proposal.reply ||
+        `Synthesized multi-agent DAG proposal for "${proposal.name}" governed by URC ${proposal.departmentCode.toUpperCase()} operations.`;
+      // Honesty rule (honesty-audit P1-1): when the model does not report usage,
+      // we record null — never a random number.
+      tokensUsed = result.usage?.totalTokens ?? null;
+    } else {
+      const conversationalSystem = `${systemPrompt}
+
+=== RESPONSE MODE: CONSULTATIVE DIALOGUE (NOT a workflow proposal) ===
+The founder is asking a question, reporting an issue, or thinking out loud. Respond in natural prose — NOT as a workflow proposal.
+Rules:
+- Answer the actual question. If they ask about failed runs, diagnose using the FAILED RUNS and audit-log telemetry in your context; quote the real recorded error messages.
+- If the telemetry shows failures, say so plainly with the specific error, the affected workflow, and your recommended fix — never claim "all systems nominal" if failed runs are listed above.
+- You may suggest that a workflow proposal COULD address the issue, and ask if they want one. Do not fabricate a proposal object in prose.
+- Keep the consultative COO voice: direct, evidence-based, no fluff.`;
+
+      const result = await generateText({
+        model: google("gemini-2.5-flash") as any,
+        system: conversationalSystem,
+        messages: baseMessages as any,
+      });
+
+      reply = result.text;
+      tokensUsed = result.usage?.totalTokens ?? null;
+    }
   } catch (llmError) {
     console.warn(
       "[Orchestrator] Vertex AI dynamic call returned exception, falling back to deterministic URC engine:",

@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import { db } from "../db";
 import { icpProfiles } from "../schema";
 import { eq, desc, and, or, isNull } from "drizzle-orm";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateText } from "ai";
+import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
 
 // Default seed ICP profiles for initial bootstrap
 export const defaultIcpSeed = [
@@ -169,16 +169,14 @@ export async function generateIcpProfile(req: Request, res: Response) {
     } = req.body;
 
     const workspaceId = (req as any).workspaceId || req.body.workspaceId;
-    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-
-    if (!apiKey) {
+    if (!isGoogleAiConfigured()) {
       return res.status(503).json({
         success: false,
-        error: "GOOGLE_GENERATIVE_AI_API_KEY is not configured.",
+        error: "No Gemini credential is configured (service-account key or API key).",
       });
     }
 
-    const google = createGoogleGenerativeAI({ apiKey });
+    const google = createGoogleProvider();
     const prompt = `You are an elite B2B Go-To-Market Strategist and Chief Revenue Officer for Uncle Robert Consulting (URC) & AgentLab.
 Synthesize a deep, actionable Ideal Customer Profile (ICP) dossier for:
 

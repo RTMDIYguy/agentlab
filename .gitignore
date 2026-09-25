@@ -19,6 +19,9 @@ build/
 .env.*
 !.env.example
 
+# Service-account key files (NEVER commit)
+secrets/
+
 # Database & Logs
 pgsql/
 postgres_bin/
