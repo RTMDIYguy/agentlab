@@ -30,12 +30,11 @@ const GET_USER_INFO_WITH_JWT_PATH = `/webdev.v1.WebDevAuthPublicService/GetUserI
 
 class OAuthService {
   constructor(private client: ReturnType<typeof axios.create>) {
-    console.log("[OAuth] Initialized with baseURL:", ENV.oAuthServerUrl);
-    if (!ENV.oAuthServerUrl) {
-      console.error(
-        "[OAuth] ERROR: OAUTH_SERVER_URL is not configured! Set OAUTH_SERVER_URL environment variable."
-      );
-    }
+    // Note (2026-09-25): OAUTH_SERVER_URL was a leftover from the original
+    // hosted platform's OAuth portal and is not used by this deployment
+    // (sign-in goes through the native auth routes). The env var and the
+    // boot-time error about it were removed with the Infisical migration
+    // (CC-2026-09-25-005); the routes below remain for compatibility.
   }
 
   private decodeState(state: string): string {
@@ -78,7 +77,9 @@ class OAuthService {
 
 const createOAuthHttpClient = (): AxiosInstance =>
   axios.create({
-    baseURL: ENV.oAuthServerUrl,
+    // No baseURL: the hosted OAuth portal this client was built for is not
+    // part of this deployment (see note in OAuthService above). The client
+    // remains wired so the SDK shape is unchanged.
     timeout: AXIOS_TIMEOUT_MS,
   });
 

@@ -6,7 +6,7 @@ authority_level: operational
 status: active
 owner: "Robert T. McCarthy / SECURITY"
 canonical_sources: ["governance/registry/policies.yaml"]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-09-25
 ---
 
 # URC Secret Handling Standard
@@ -36,7 +36,8 @@ does not need secret values in the repo to achieve that.
 - Do not print secret file contents to terminal output.
 - Do not import raw files from `Keys`, backup-code folders, `.env` files, or
   credential exports into the repo.
-- Store actual values only in an approved vault or credential surface: Postman
+- Approved credential surfaces: Infisical (added 2026-09-25 for AgentLab OS -
+  see `docs/operations/infisical-secrets-runbook.md`), Postman
   Vault, n8n credentials, a password manager, environment variables, or another
   explicitly approved secure store.
 - Record metadata and handling actions, not values.

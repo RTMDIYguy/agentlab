@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
-import dotenv from "dotenv";
 import { db } from "../db";
+import { loadSecretLayers, isInfisicalManaged } from "./secrets-source";
 import { workspaceSecrets, workspaceIntegrations, workspaces } from "../schema";
 import { eq, and } from "drizzle-orm";
 
@@ -14,18 +14,28 @@ function isTestProcess(): boolean {
   return process.env.VITEST === "true" || process.env.NODE_ENV === "test";
 }
 
-// 1. Load .env.local first (local secrets override) if present, then fallback to .env
-const envLocalPath = path.resolve(process.cwd(), ".env.local");
-if (fs.existsSync(envLocalPath)) {
-  dotenv.config({ path: envLocalPath, override: true });
-}
-dotenv.config();
+// 1. Load the on-disk secret layers (.env.local overrides .env) — unless
+// Infisical owns this process, in which case the CLI-injected values win and
+// the files may only fill gaps. See server/_core/secrets-source.ts.
+const secretsLoad = loadSecretLayers();
+console.log(
+  secretsLoad.source === "infisical"
+    ? `[env] secrets source: Infisical (project injected via infisical run)${
+        secretsLoad.contributedKeys.length
+          ? ` — ${secretsLoad.contributedKeys.length} key(s) still filled from disk: ${secretsLoad.contributedKeys
+              .slice(0, 8)
+              .join(", ")}${secretsLoad.contributedKeys.length > 8 ? ", …" : ""}`
+          : " — no key read from disk"
+      }`
+    : `[env] secrets source: local disk (${
+        secretsLoad.loadedFiles.map(file => path.basename(file)).join(", ") || "no .env files found"
+      })`
+);
 
 export const ENV = {
   get ownerOpenId(): string { return process.env.OWNER_OPEN_ID || ""; },
   get forgeApiUrl(): string { return process.env.BUILT_IN_FORGE_API_URL || process.env.FORGE_API_URL || ""; },
   get forgeApiKey(): string { return process.env.BUILT_IN_FORGE_API_KEY || process.env.FORGE_API_KEY || ""; },
-  get oAuthServerUrl(): string { return process.env.OAUTH_SERVER_URL || ""; },
   get appId(): string { return process.env.VITE_APP_ID || process.env.APP_ID || ""; },
   get cookieSecret(): string { return process.env.COOKIE_SECRET || process.env.JWT_SECRET || ""; },
   get databaseUrl(): string { return process.env.DATABASE_URL || ""; },
@@ -37,11 +47,9 @@ export function normalizeEnvironmentVariables() {
   // Reload .env.local (local secrets override) — but never inside tests:
   // test runs must not read potentially stale disk state over live process env.
   if (!isTestProcess()) {
-    const envLocalPath = path.resolve(process.cwd(), ".env.local");
-    if (fs.existsSync(envLocalPath)) {
-      dotenv.config({ path: envLocalPath, override: true });
-    }
-    dotenv.config();
+    // Same precedence rules as boot: Infisical-injected values are never
+    // clobbered by disk files (see server/_core/secrets-source.ts).
+    loadSecretLayers();
   }
 
   // HubSpot aliases
@@ -166,12 +174,27 @@ const HUBSPOT_ALIAS_KEYS = [
  * For hubspot, all alias keys present in the file are updated to the same value
  * so the file stays self-consistent with the runtime alias logic in
  * `normalizeEnvironmentVariables()`.
+ *
+ * No-ops (with a warning) when the process is Infisical-managed: writing
+ * credentials back to disk would re-create the local secret store the
+ * Infisical migration removed.
  */
 export function persistSecretToEnvFile(provider: string, value: string): void {
   // Hard guard: tests call applySecretToEnv with dummy values; persisting them
   // here would overwrite real secrets on disk (this exact bug destroyed the
   // HubSpot/Instantly/ElevenLabs keys in .env.local once already).
   if (isTestProcess()) {
+    return;
+  }
+  // Infisical guard (2026-09-25): under `infisical run` the vault is the
+  // source of truth. Writing a UI-saved credential back to .env.local would
+  // silently re-create the on-disk secret store this migration removed, so
+  // the value is applied to this process only and the operator is told where
+  // to persist it properly.
+  if (isInfisicalManaged()) {
+    console.warn(
+      `[Vault] ${mapProviderToEnvKey(provider)} was applied to this running process only — secrets are managed by Infisical, so nothing was written to .env.local. Add the value in the Infisical dashboard (project → env) to persist it across restarts.`
+    );
     return;
   }
   const envLocalPath = path.resolve(process.cwd(), ".env.local");
@@ -257,7 +280,31 @@ export const CORE_PROVIDERS_CONFIG = [
 /**
  * Synchronize workspace_secrets and workspace_integrations in DB
  * with current active process.env keys for a given workspace (or all workspaces).
+ *
+ * SECURITY (multi-tenant credential isolation, 2026-09-24): the operator's
+ * local process.env keys are the OPERATOR's credentials. They must only ever
+ * be bridged into the operator's own workspace — never into other tenants'.
+ * Callers that pass an explicit targetWorkspaceId must therefore resolve to
+ * the operator workspace; other workspaces only get their own rows cleaned
+ * up (stale rows flipped to disconnected) but never receive operator keys.
  */
+function resolveOperatorWorkspaceIds(): Set<string> {
+  const ids = new Set<string>();
+  const explicit = [
+    process.env.OPERATOR_WORKSPACE_ID,
+    process.env.DEFAULT_WORKSPACE_ID,
+  ].filter(Boolean) as string[];
+  for (const id of explicit) ids.add(id);
+  // The canonical operator workspace used across the OS (auth fallback,
+  // demo telemetry, workspace creation fallback).
+  ids.add("00000000-0000-0000-0000-000000000001");
+  return ids;
+}
+
+export function isOperatorWorkspace(workspaceId: string): boolean {
+  return resolveOperatorWorkspaceIds().has(workspaceId);
+}
+
 export async function syncWorkspaceVaultSecrets(targetWorkspaceId?: string): Promise<void> {
   normalizeEnvironmentVariables();
 
@@ -272,8 +319,36 @@ export async function syncWorkspaceVaultSecrets(targetWorkspaceId?: string): Pro
 
     if (workspaceList.length === 0) return;
 
+    const operatorIds = resolveOperatorWorkspaceIds();
+
     for (const ws of workspaceList) {
       const workspaceId = ws.id;
+
+      // Multi-tenant guard: operator env keys flow ONLY into operator
+      // workspaces. Non-operator workspaces never receive them; their stale
+      // connected rows (if any were created before this guard) are flipped
+      // to disconnected so the UI stops claiming live operator credentials.
+      if (!operatorIds.has(workspaceId)) {
+        await db
+          .update(workspaceSecrets)
+          .set({ status: "disconnected", updatedAt: new Date() })
+          .where(
+            and(
+              eq(workspaceSecrets.workspaceId, workspaceId),
+              eq(workspaceSecrets.status, "connected")
+            )
+          );
+        await db
+          .update(workspaceIntegrations)
+          .set({ status: "inactive", updatedAt: new Date() })
+          .where(
+            and(
+              eq(workspaceIntegrations.workspaceId, workspaceId),
+              eq(workspaceIntegrations.status, "active")
+            )
+          );
+        continue;
+      }
 
       for (const item of CORE_PROVIDERS_CONFIG) {
         const secretVal = process.env[item.envKey];
@@ -382,6 +457,10 @@ export async function syncWorkspaceVaultSecrets(targetWorkspaceId?: string): Pro
       }
     }
   } catch (err: any) {
+    // Re-throw so callers can retry (boot wrapper in index.ts). Original
+    // behavior only warned, which let a cold-start failure silently disable
+    // vault sync for the entire process lifetime.
     console.warn("[Vault Sync] Vault secret sync warning:", err?.message || err);
+    throw err;
   }
 }

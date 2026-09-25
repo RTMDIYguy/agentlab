@@ -4,10 +4,16 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development tsx watch server/_core/index.ts",
+    "dev": "infisical run --env=dev -- cross-env NODE_ENV=development SECRETS_SOURCE=infisical tsx watch server/_core/index.ts",
+    "dev:local": "cross-env NODE_ENV=development tsx watch server/_core/index.ts",
     "build": "vite build && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "start": "cross-env NODE_ENV=production node dist/index.js",
+    "start:infisical": "infisical run --env=prod -- cross-env NODE_ENV=production SECRETS_SOURCE=infisical node dist/index.js",
     "check": "tsc --noEmit",
+    "secrets:login": "infisical login",
+    "secrets:link": "infisical init",
+    "secrets:check": "tsx scripts/verify-secrets-source.mjs",
+    "secrets:check:infisical": "infisical run --env=dev -- cross-env SECRETS_SOURCE=infisical tsx scripts/verify-secrets-source.mjs",
     "change-control:check": "node scripts/verify-change-control.mjs",
     "daily-command:sync": "node scripts/sync-command-center.mjs",
     "daily-command:center": "node scripts/daily-command-center.mjs",
@@ -21,6 +27,7 @@
     "git:sync": "node scripts/git-sync.mjs"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.62",
     "@ai-sdk/google": "^4.0.48",
     "@autonoma-ai/sdk": "^0.2.9",
     "@autonoma-ai/server-express": "^0.2.9",
@@ -128,14 +135,5 @@
     "vite-plugin-manus-runtime": "^0.0.59",
     "vitest": "^5.0.0"
   },
-  "packageManager": "pnpm@11.25.0",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@firebase/util",
-      "@google/genai",
-      "bufferutil",
-      "esbuild",
-      "protobufjs"
-    ]
-  }
+  "packageManager": "pnpm@11.25.0"
 }

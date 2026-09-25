@@ -2,9 +2,14 @@ import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 
+// Mirror the app loader (server/_core/secrets-source.ts): under `infisical run`
+// the injected values win and disk files may only fill gaps. Prefer
+// `pnpm secrets:check` for a full source report.
+const infisicalManaged =
+  process.env.SECRETS_SOURCE === "infisical" || Boolean(process.env.INFISICAL_PROJECT_ID);
 const envLocalPath = path.resolve(process.cwd(), ".env.local");
 if (fs.existsSync(envLocalPath)) {
-  dotenv.config({ path: envLocalPath, override: true });
+  dotenv.config({ path: envLocalPath, override: !infisicalManaged });
 }
 dotenv.config();
 

@@ -48,6 +48,7 @@ If the task relates to the broader business archive and recovered files, also re
 - Preserve existing business data.
 - Treat individual workflows (`MKT-01`, `SAL-01`, `FUL-02`) as department procedures, and Playbooks (`revenue-lead-to-sale`, `sale-to-delivery`, `delivery-to-retention`, `finance-control-loop`, `proof-and-referral-loop`) as the governed cross-department journeys with required inputs, handoff contracts, and fallback protocols.
 - Use `Microsoft 365` as the default operating backbone.
+- Deliver credentials with Infisical, not local files: run `pnpm dev` (already wrapped by `infisical run`), never hand-edit `.env.local`, and never commit, echo, or paste a secret value. Offline fallback is `pnpm dev:local`; see `docs/operations/infisical-secrets-runbook.md`.
 - Use the current Microsoft 365 finance tracker as the finance control layer while revenue is small; do not assume paid finance tools are worth keeping.
 - Use `Notion` sparingly as a lightweight dashboard layer only.
 - Treat the book as an authority and funnel asset.
