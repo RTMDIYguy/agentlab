@@ -453,6 +453,22 @@ export async function ensureDatabaseSchema(): Promise<void> {
       ALTER TABLE "workflow_runs" ADD COLUMN IF NOT EXISTS "cancelled_at" timestamp with time zone;
     `;
 
+    // CC-2026-09-25-008: workflow_steps rows synced before CC-2026-09-25-007
+    // can carry an agent_id whose agents row no longer exists. Postgres FKs
+    // are table-global, so a dangling id fails every audit insert that repeats
+    // it (the 2026-09-26 Initiate Partnership Workflow failure). The schema's
+    // onDelete "set null" only fires when an agent row is deleted AFTER the
+    // step was created — it cannot heal ids that were wrong at insert time.
+    // Scrub them at boot; insertAuditLog additionally self-heals per insert.
+    await client`
+      UPDATE "workflow_steps"
+      SET "agent_id" = NULL
+      WHERE "agent_id" IS NOT NULL
+        AND NOT EXISTS (
+          SELECT 1 FROM "agents" WHERE "agents"."id" = "workflow_steps"."agent_id"
+        );
+    `;
+
     // Client-facing run consoles (Tier 1 item 3): hashed share tokens. Raw
     // token values are shown once at creation and never stored.
     await client`

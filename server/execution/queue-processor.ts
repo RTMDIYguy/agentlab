@@ -4,7 +4,6 @@ import {
   workflowRuns,
   workflowSteps,
   workflowRunSteps,
-  auditLogs,
   agents,
   workspacePackages,
   knowledgePackages,
@@ -16,6 +15,7 @@ import { evaluateArtifactQuality } from "./quality-evaluator";
 import { dispatchScheduledPosts } from "./social-dispatcher";
 import { draftActionPayload, parseActionDraft } from "./action-drafter";
 import { resolveStepPolicy, runWithStepPolicy, StepCancelledError } from "./step-policy";
+import { insertAuditLog } from "./audit-logger";
 
 export async function processPendingRuns() {
   const db = await getDb();
@@ -340,11 +340,14 @@ export async function processPendingRuns() {
               .where(eq(workflowRunSteps.id, runStepId));
             console.log(`[QueueProcessor] DB QUERY DONE: Updated workflowRunStep ${runStepId} to completed.`);
 
-            // 11. Create auditLog entry with full evidence trace
-            // agentId normalization (CC-2026-09-25-007): bind SQL NULL for
-            // agent-less steps instead of trusting the raw column value.
+            // 11. Create auditLog entry with full evidence trace.
+            // CC-2026-09-25-008: this insert previously sat unprotected and its
+            // throw bubbled into the step catch below, marking a step FAILED
+            // after the agent had already succeeded (telemetry killed work).
+            // insertAuditLog is non-fatal by contract: dangling agent_id FK
+            // violations retry with NULL, everything else degrades to a warning.
             console.log(`[QueueProcessor] DB QUERY: Inserting auditLog for runStep ${runStepId}...`);
-            await db.insert(auditLogs).values({
+            const auditOk = await insertAuditLog(db, {
               workspaceId: run.workspaceId,
               workflowId: run.workflowId,
               agentId: step.agentId || null,
@@ -369,8 +372,10 @@ export async function processPendingRuns() {
                 toolsExecutedCount: result.toolsExecuted.length,
                 artifactsCount: result.extractedArtifacts.length,
               },
-            } as any);
-            console.log(`[QueueProcessor] DB QUERY DONE: Inserted auditLog.`);
+            });
+            if (auditOk) {
+              console.log(`[QueueProcessor] DB QUERY DONE: Inserted auditLog.`);
+            }
           } catch (error: any) {
             // Cancellation is not a failure: mark the run cancelled honestly.
             if (error instanceof StepCancelledError) {
@@ -424,33 +429,30 @@ export async function processPendingRuns() {
               .where(eq(workflowRuns.id, run.id));
             console.log(`[QueueProcessor] DB QUERY DONE: Updated workflowRuns ${run.id} to failed.`);
 
-            // Insert failure audit log for full governance visibility
-            try {
-              await db.insert(auditLogs).values({
-                workspaceId: run.workspaceId,
-                workflowId: run.workflowId,
-                agentId: step.agentId || null,
-                actionType: "agent_step_execution_failure",
-                model: "gemini-2.5-flash",
-                payloadIn: currentContext,
-                payloadOut: { error: error.message },
-                tokensPrompt: 0,
-                tokensCompletion: 0,
-                tokensTotal: 0,
-                cost: "0.000000",
-                latencyMs: 0,
-                status: "error",
-                errorMessage: error.message,
-                policyChecks: {
-                  saifPassed: false,
-                  piiDetected: 0,
-                  budgetThresholdPassed: true,
-                  failureReason: error.message,
-                },
-              } as any);
-            } catch (auditErr) {
-              console.error("[QueueProcessor] Failed to insert error audit log:", auditErr);
-            }
+            // Insert failure audit log for full governance visibility.
+            // Same non-fatal contract as the success path (CC-2026-09-25-008).
+            await insertAuditLog(db, {
+              workspaceId: run.workspaceId,
+              workflowId: run.workflowId,
+              agentId: step.agentId || null,
+              actionType: "agent_step_execution_failure",
+              model: "gemini-2.5-flash",
+              payloadIn: currentContext,
+              payloadOut: { error: error.message },
+              tokensPrompt: 0,
+              tokensCompletion: 0,
+              tokensTotal: 0,
+              cost: "0.000000",
+              latencyMs: 0,
+              status: "error",
+              errorMessage: error.message,
+              policyChecks: {
+                saifPassed: false,
+                piiDetected: 0,
+                budgetThresholdPassed: true,
+                failureReason: error.message,
+              },
+            });
 
             runFailed = true;
             break;
