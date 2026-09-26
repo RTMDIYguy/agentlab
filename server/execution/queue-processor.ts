@@ -341,11 +341,13 @@ export async function processPendingRuns() {
             console.log(`[QueueProcessor] DB QUERY DONE: Updated workflowRunStep ${runStepId} to completed.`);
 
             // 11. Create auditLog entry with full evidence trace
+            // agentId normalization (CC-2026-09-25-007): bind SQL NULL for
+            // agent-less steps instead of trusting the raw column value.
             console.log(`[QueueProcessor] DB QUERY: Inserting auditLog for runStep ${runStepId}...`);
             await db.insert(auditLogs).values({
               workspaceId: run.workspaceId,
               workflowId: run.workflowId,
-              agentId: step.agentId,
+              agentId: step.agentId || null,
               actionType: "agent_step_execution",
               model: "gemini-2.5-flash",
               payloadIn: currentContext,
@@ -427,7 +429,7 @@ export async function processPendingRuns() {
               await db.insert(auditLogs).values({
                 workspaceId: run.workspaceId,
                 workflowId: run.workflowId,
-                agentId: step.agentId,
+                agentId: step.agentId || null,
                 actionType: "agent_step_execution_failure",
                 model: "gemini-2.5-flash",
                 payloadIn: currentContext,

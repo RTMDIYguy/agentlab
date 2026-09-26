@@ -13,7 +13,10 @@ import {
   DollarSign, 
   ShieldCheck, 
   ArrowRight,
-  Sparkles
+  Sparkles,
+  RotateCcw,
+  Trash2,
+  XCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -180,6 +183,17 @@ export function OpsAgentChat() {
   ]);
   const [draft, setDraft] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  // Inline revision box state (CC-2026-09-25-007)
+  const [revisingMsgId, setRevisingMsgId] = useState<string | null>(null);
+  const [revisionDraft, setRevisionDraft] = useState("");
+
+  const clearChat = () => {
+    setMessages([{ id: "msg_init", role: "assistant", content: starterMessage }]);
+    setDraft("");
+    setRevisingMsgId(null);
+    setRevisionDraft("");
+    toast.info("Ops Agent conversation cleared.");
+  };
 
   // The watchdogs run regardless of whether the chat window is open; their
   // reports merge into the message list so they're waiting when opened.
@@ -517,7 +531,11 @@ export function OpsAgentChat() {
                                 title: `Custom Node ${newStepNum}`,
                                 type: "ACTION",
                                 detail: "Custom human-defined operational step",
-                                agentId: "agent_ops_lead",
+                                // No agentId (CC-2026-09-25-007): the old
+                                // hardcoded "agent_ops_lead" was neither a UUID
+                                // nor a real agent row, and crashed runs on the
+                                // uuid column binding. Agent-less steps run on
+                                // the default specialist prompt.
                               };
                               setMessages((curr) =>
                                 curr.map((m) =>
@@ -548,6 +566,14 @@ export function OpsAgentChat() {
 
                         {/* Execution & Rejection Actions */}
                         <div className="pt-2 flex items-center gap-2">
+                          {msg.executionStatus === "failed" && (
+                            <div className="p-2 w-full rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[11px] flex items-center justify-between mb-1">
+                              <div className="flex items-center gap-1.5 font-bold">
+                                <XCircle className="w-4 h-4 text-rose-400" />
+                                <span>Run failed ({msg.runResult?.runId?.slice(0, 8)})</span>
+                              </div>
+                            </div>
+                          )}
                           {msg.executionStatus === "paused" ? (
                             <div className="p-2 w-full rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[11px] flex items-center justify-between">
                               <div className="flex items-center gap-1.5 font-bold">
@@ -566,45 +592,94 @@ export function OpsAgentChat() {
                                 {msg.runResult?.latencyMs != null ? `${msg.runResult.latencyMs}ms` : "latency not reported"}
                               </span>
                             </div>
-                          ) : (
+                          ) : null}
+
+                          {/* Run controls: available from idle AND after a
+                              failed/completed run (CC-2026-09-25-007) — a
+                              finished run no longer locks the card. Edit any
+                              step above, then re-run or ask for a revision. */}
+                          {msg.executionStatus !== "paused" && msg.executionStatus !== "running" && (
                             <>
                               <Button
                                 size="sm"
-                                disabled={msg.executionStatus === "running" || (msg.proposal.steps?.length || 0) === 0}
+                                disabled={(msg.proposal.steps?.length || 0) === 0}
                                 onClick={() => executeProposal(msg.id, msg.proposal!)}
                                 className="flex-1 text-xs font-bold gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow"
                               >
-                                {msg.executionStatus === "running" ? (
-                                  <>
-                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                    <span>Executing DAG...</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Play className="w-3.5 h-3.5" />
-                                    <span>Approve & Execute DAG</span>
-                                  </>
-                                )}
+                                <Play className="w-3.5 h-3.5" />
+                                <span>
+                                  {msg.executionStatus === "failed" || msg.executionStatus === "completed"
+                                    ? "Re-run Amended DAG"
+                                    : "Approve & Execute DAG"}
+                                </span>
                               </Button>
 
                               <Button
                                 size="sm"
                                 variant="outline"
-                                disabled={msg.executionStatus === "running"}
-                                onClick={() => {
-                                  const reason = prompt("What would you like the Ops Agent to change about this proposal?") || "";
-                                  if (reason) {
-                                    setDraft(`Please revise the "${msg.proposal?.name}" workflow proposal with this feedback: ${reason}`);
-                                    toast.info("Feedback staged in prompt bar. Press Send to revise!");
-                                  }
-                                }}
+                                onClick={() => setRevisingMsgId(msg.id)}
                                 className="text-xs font-bold text-muted-foreground hover:text-destructive hover:bg-destructive/10 border-border"
                               >
-                                Reject / Revise
+                                Revise
                               </Button>
                             </>
                           )}
+                          {msg.executionStatus === "running" && (
+                            <Button size="sm" disabled className="flex-1 text-xs font-bold gap-1.5">
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              <span>Executing DAG...</span>
+                            </Button>
+                          )}
                         </div>
+
+                        {/* Inline revision box (CC-2026-09-25-007): replaces
+                            the browser prompt() — the feedback stays in the
+                            conversation and sends as a normal chat turn. */}
+                        {revisingMsgId === msg.id && (
+                          <div className="pt-2 space-y-1.5">
+                            <textarea
+                              autoFocus
+                              value={revisionDraft}
+                              onChange={(e) => setRevisionDraft(e.target.value)}
+                              placeholder={`What should change about "${msg.proposal.name}"? (e.g. remove step 3, change the destination to AgentMail...)`}
+                              rows={2}
+                              className="w-full rounded-lg border border-input bg-card/60 px-2.5 py-2 text-[11px] text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
+                            />
+                            <div className="flex items-center gap-2 justify-end">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-6 text-[10px]"
+                                onClick={() => {
+                                  setRevisingMsgId(null);
+                                  setRevisionDraft("");
+                                }}
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                size="sm"
+                                className="h-6 text-[10px] gap-1"
+                                disabled={!revisionDraft.trim() || isTyping}
+                                onClick={() => {
+                                  const feedback = revisionDraft.trim();
+                                  setRevisingMsgId(null);
+                                  setRevisionDraft("");
+                                  setDraft(`Please revise the "${msg.proposal?.name}" workflow proposal with this feedback: ${feedback}`);
+                                  // Send immediately — the staged draft is the
+                                  // message; no extra click required.
+                                  setTimeout(() => {
+                                    const input = document.querySelector<HTMLInputElement>("[data-opsagent-input]");
+                                    input?.form?.requestSubmit();
+                                  }, 0);
+                                }}
+                              >
+                                <Send className="w-3 h-3" />
+                                Send revision
+                              </Button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -636,12 +711,25 @@ export function OpsAgentChat() {
             >
               <input
                 type="text"
+                data-opsagent-input
                 placeholder="Task the Ops Agent (e.g. 'Sync HubSpot CRM', 'Run Lead Outreach')..."
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 disabled={isTyping}
                 className="flex-1 rounded-full border border-input bg-card/60 px-4 py-2 text-xs text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
               />
+              <Button
+                type="button"
+                size="icon"
+                variant="outline"
+                onClick={clearChat}
+                disabled={isTyping}
+                title="Clear conversation and start a new task"
+                className="h-8 w-8 rounded-full shrink-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 border-border"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                <span className="sr-only">Clear chat</span>
+              </Button>
               <Button
                 type="submit"
                 size="icon"

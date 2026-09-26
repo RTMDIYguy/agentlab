@@ -13,8 +13,12 @@ export const workflowStepSchema = z.object({
     .describe("Operational specification and instructions for this step"),
   agentId: z
     .string()
+    .uuid()
     .optional()
-    .describe("Optional ID of the assigned specialized agent"),
+    .nullable()
+    .describe(
+      "Optional UUID of an existing agent row. Fake or invented ids are rejected here (CC-2026-09-25-007): non-UUID values used to reach workflow_steps.agent_id and crash the run on uuid binding. Omit when no specific agent applies."
+    ),
 });
 
 export const workflowProposalSchema = z.object({

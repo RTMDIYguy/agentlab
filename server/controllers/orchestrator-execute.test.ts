@@ -4,6 +4,7 @@ import { executeOrchestratorWorkflow } from "./orchestrator-execute";
 import { getDb } from "../db";
 import { processPendingRuns } from "../execution/queue-processor";
 import {
+  agents,
   workflows,
   workflowSteps,
   workflowRuns,
@@ -40,6 +41,7 @@ function makeRes() {
 function makeDb(config: {
   findWorkflow?: any[];
   existingSteps?: any[];
+  existingAgents?: any[];
   finalRun?: any;
   runSteps?: any[];
   artifacts?: any[];
@@ -93,6 +95,7 @@ function makeDb(config: {
     if (table === workflowRuns) return config.finalRun ? [config.finalRun] : [];
     if (table === workflowRunSteps) return config.runSteps ?? [];
     if (table === workflowArtifacts) return config.artifacts ?? [];
+    if (table === agents) return config.existingAgents ?? [];
     return [];
   }
 
@@ -328,5 +331,84 @@ describe("executeOrchestratorWorkflow (real pipeline)", () => {
     expect(source).not.toContain("qualityScore: 96");
     expect(source).not.toContain("new Date(Date.now() - 3600)");
     expect(source).not.toContain("status: \"completed\"");
+  });
+
+  // CC-2026-09-25-007: invented agent ids ("agent_ops_lead", "agent-sal-crm")
+  // used to sync into workflow_steps.agent_id (a uuid column) and crash the
+  // run on bind. Only ids that exist in the agents table may pass through;
+  // everything else must bind SQL NULL.
+  it("resolves proposal agentIds to NULL unless they exist as real agent rows", async () => {
+    const realAgentId = "11111111-1111-1111-1111-111111111111";
+    const db = makeDb({
+      existingAgents: [{ id: realAgentId }],
+      finalRun: {
+        id: "generated-id",
+        status: "completed",
+        startedAt: new Date("2026-09-25T10:00:00Z"),
+        completedAt: new Date("2026-09-25T10:00:01Z"),
+      },
+      runSteps: [{ status: "completed" }],
+      artifacts: [],
+    });
+    vi.mocked(getDb).mockResolvedValue(db);
+
+    const res = makeRes();
+    await executeOrchestratorWorkflow(
+      {
+        workspaceId: "ws-1",
+        body: {
+          proposal: {
+            ...validProposal,
+            steps: [
+              {
+                stepNumber: 1,
+                title: "Enrich leads",
+                type: "agent",
+                detail: "Use the real agent",
+                agentId: realAgentId,
+              },
+              {
+                stepNumber: 2,
+                title: "Fake agent reference",
+                type: "agent",
+                detail: "This id was invented by a generator",
+                agentId: "agent_ops_lead",
+              },
+              {
+                stepNumber: 3,
+                title: "No agent at all",
+                type: "trigger",
+                detail: "Agent-less step",
+              },
+            ],
+          },
+        },
+      } as any,
+      res
+    );
+
+    const stepInsert = db._insertedValues.find(
+      (iv: any) => iv.table === workflowSteps
+    );
+    expect(stepInsert).toBeDefined();
+    const rows = Array.isArray(stepInsert.values)
+      ? stepInsert.values
+      : [stepInsert.values];
+    expect(rows[0].agentId).toBe(realAgentId); // real row -> kept
+    expect(rows[1].agentId).toBeNull(); // invented id -> NULL, never the string
+    expect(rows[2].agentId).toBeNull(); // absent -> NULL
+    expect(res.body.status).toBe("completed");
+  });
+
+  it("never writes the fake agent ids that crashed DAG runs", () => {
+    // The comment in orchestrator-execute.ts mentions the old fake id; assert
+    // on ASSIGNMENT forms, not documentation strings.
+    const executeSource = readFileSync("server/controllers/orchestrator-execute.ts", "utf-8");
+    expect(executeSource).not.toMatch(/agentId:\s*["']agent_ops_lead/);
+    const chatSource = readFileSync("client/src/components/OpsAgentChat.tsx", "utf-8");
+    expect(chatSource).not.toMatch(/agentId:\s*["']agent_ops_lead/);
+    const orchestratorSource = readFileSync("server/controllers/orchestrator.ts", "utf-8");
+    expect(orchestratorSource).not.toMatch(/agentId:\s*["']agent-sal-crm/);
+    expect(orchestratorSource).not.toContain("-specialist`");
   });
 });

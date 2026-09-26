@@ -1,7 +1,8 @@
 import type { Request, Response } from "express";
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
 import { getDb } from "../db";
 import {
+  agents,
   auditLogs,
   workflowArtifacts,
   workflowRuns,
@@ -133,10 +134,33 @@ export async function executeOrchestratorWorkflow(
       .orderBy(asc(workflowSteps.orderIndex));
 
     if (existingSteps.length === 0) {
+      // CC-2026-09-25-007: proposal agentIds are resolved against the agents
+      // table before they touch a uuid column. Any id that is not a real,
+      // existing agent row becomes NULL — an invented id ("agent_ops_lead",
+      // "agent-sal-crm") used to crash the run on uuid binding instead.
+      const proposedAgentIds = proposal.steps
+        .slice(0, 20)
+        .map(s => (s as any).agentId)
+        .filter((id): id is string => typeof id === "string" && id.trim().length > 0);
+      const validAgentIds = proposedAgentIds.length
+        ? new Set(
+            (
+              await db
+                .select({ id: agents.id })
+                .from(agents)
+                .where(inArray(agents.id, proposedAgentIds))
+            ).map(a => a.id)
+          )
+        : new Set<string>();
+
       const stepRows = proposal.steps.slice(0, 20).map((step, idx) => ({
         workspaceId,
         workflowId: targetWfId!,
-        agentId: step.agentId || null,
+        agentId:
+          typeof (step as any).agentId === "string" &&
+          validAgentIds.has((step as any).agentId)
+            ? (step as any).agentId
+            : null,
         orderIndex: step.stepNumber ?? idx + 1,
         stepType: classifyStepType(step.type),
         title: (step.title || `Step ${idx + 1}`).slice(0, 128),

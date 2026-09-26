@@ -291,7 +291,11 @@ export function generateFallbackWorkflowProposal(
         detail: isHubSpot
           ? "Enrich contact firmographics, qualify lead tier, and stage deal next steps."
           : `Analyze operational parameters, enrich context, and synthesize workflow artifact using approved toolsets.`,
-        agentId: isHubSpot ? "agent-sal-crm" : `agent-${deptCode}-specialist`,
+        // No agentId here (CC-2026-09-25-007): the old generator emitted fake
+        // ids like "agent-sal-crm" that are neither UUIDs nor real rows in the
+        // agents table - executing such a proposal died on the uuid column
+        // binding. The runner falls back to the default specialist prompt
+        // when a step has no agent, which is the honest behavior.
       },
       {
         stepNumber: 3,
