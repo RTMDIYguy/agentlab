@@ -7,7 +7,7 @@
 // Prints owner emails only for accounts; visitor content is summarized by
 // counts and dates, never raw transcripts.
 import postgres from "postgres";
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 
 const since = new Date(Date.now() - 7 * 24 * 3600 * 1000);
 const iso = since.toISOString();
@@ -63,10 +63,47 @@ await sql.end();
 // 4. Raw clicks from Cloud Run logs (optional — needs gcloud auth)
 console.log(`\n## Raw clicks (Cloud Run, last 7 days)`);
 try {
-  const out = execSync(
-    `gcloud logging read 'resource.type="cloud_run_revision" AND resource.labels.service_name="agentlab" AND timestamp>="${iso}" AND httpRequest.requestUrl:"run.app"' --limit=2000 --format="value(httpRequest.remoteIp,httpRequest.userAgent)" 2>nul`,
-    { encoding: "utf8", timeout: 60_000, shell: true }
-  ).trim();
+  // Cross-platform notes (each discovered the hard way):
+  //  - Node (CVE-2024-27980) refuses to spawn .cmd wrappers with shell:false,
+  //    so Windows goes through cmd.exe (shell:true), where Node joins args
+  //    VERBATIM — no quoting is added. The filter therefore carries its own
+  //    outer double quotes, and to survive cmd's quote parsing it contains
+  //    NO inner quotes: values are barewords (valid Logging syntax) and the
+  //    timestamp clause became --freshness (its '>' had been read by cmd as
+  //    redirection when unquoted).
+  //  - Everywhere else: no shell, args array, one argv element, no quotes.
+  const plainFilter =
+    'resource.type=cloud_run_revision AND resource.labels.service_name=agentlab AND httpRequest.requestUrl:run.app';
+  let out = "";
+  if (process.platform === "win32") {
+    out = execFileSync(
+      "gcloud.cmd",
+      [
+        "logging",
+        "read",
+        `"${plainFilter}"`,
+        "--freshness=7d",
+        "--limit=2000",
+        "--format=value(httpRequest.remoteIp,httpRequest.userAgent)",
+      ],
+      // stderr piped (not ignored) so the catch block can surface gcloud's
+      // actual error message instead of an opaque Command failed.
+      { encoding: "utf8", timeout: 60_000, stdio: ["ignore", "pipe", "pipe"], shell: true }
+    ).trim();
+  } else {
+    out = execFileSync(
+      "gcloud",
+      [
+        "logging",
+        "read",
+        plainFilter,
+        "--freshness=7d",
+        "--limit=2000",
+        "--format=value(httpRequest.remoteIp,httpRequest.userAgent)",
+      ],
+      { encoding: "utf8", timeout: 60_000, stdio: ["ignore", "pipe", "ignore"] }
+    ).trim();
+  }
   const lines = out ? out.split("\n").filter(Boolean) : [];
   const human = lines.filter((l) => !/Tsunami|Scanner|bot|spider|crawler/i.test(l));
   const ips = new Set(human.map((l) => l.split("\t")[0]));
@@ -75,8 +112,10 @@ try {
     for (const l of human) console.log(`  - ${l.split("\t").join(" via ")}`);
   }
   if (lines.length === 0) console.log("- no request logs found in window (or gcloud unavailable)");
-} catch {
-  console.log("- gcloud not available or not authenticated; skipping click counts (run manually: gcloud logging read ...)");
+} catch (err) {
+  const stderr = String(err?.stderr || "").split("\n").filter(Boolean)[0];
+  const msg = stderr || String(err?.message || err).split("\n")[0];
+  console.log(`- click counts skipped (gcloud subprocess failed: ${msg}). Run manually: gcloud logging read ...`);
 }
 
 console.log("\nDONE");
