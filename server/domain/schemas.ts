@@ -5,8 +5,10 @@ export const workflowStepSchema = z.object({
     .number()
     .describe("Sequence index of this step in the execution DAG"),
   type: z
-    .enum(["trigger", "agent", "guardrail", "destination"])
-    .describe("Step node type in the workflow graph"),
+    .enum(["trigger", "agent", "guardrail", "action", "destination"])
+    .describe(
+      "Step node type in the workflow graph. 'agent' runs an LLM step; 'guardrail' pauses the run for human approval; 'action' drafts a human-gated outbound payload; 'destination' delivers output."
+    ),
   title: z.string().describe("Short descriptive title for the step"),
   detail: z
     .string()
@@ -30,12 +32,23 @@ export const workflowProposalSchema = z.object({
   departmentCode: z
     .string()
     .describe("Department code (e.g. mkt, sal, ful, fin, ops, cul, afc, hr)"),
+  // CC-2026-09-25-011: optional-nullable. The model has no honest basis for
+  // these numbers until runs exist; inventing "$0.02 / 12s" presented fiction
+  // as fact. Omit rather than estimate; the client renders "not estimated".
   estimatedCostPerRun: z
     .number()
-    .describe("Estimated cost in USD per execution run"),
+    .optional()
+    .nullable()
+    .describe(
+      "Estimated cost in USD per execution run. OMIT unless the workflow reuses a connector with a known published price; never guess."
+    ),
   estimatedLatencySeconds: z
     .number()
-    .describe("Estimated latency in seconds for complete workflow run"),
+    .optional()
+    .nullable()
+    .describe(
+      "Estimated latency in seconds for a complete workflow run. OMIT rather than guess."
+    ),
   triggerType: z
     .string()
     .describe("Trigger mechanism (e.g. Webhook, Schedule, Manual, Event)"),

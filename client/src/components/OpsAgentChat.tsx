@@ -43,6 +43,7 @@ export type WorkflowProposal = {
 
 type ChatMessage = {
   id: string;
+  serverId?: string; // ops_agent_messages row id once persisted (CC-2026-09-25-011)
   role: "user" | "assistant";
   content: string;
   proposal?: WorkflowProposal;
@@ -52,6 +53,7 @@ type ChatMessage = {
     summary: string;
     latencyMs: number | null;
     tokensUsed: number | null;
+    cost?: string | null;
   };
 };
 
@@ -187,7 +189,84 @@ export function OpsAgentChat() {
   const [revisingMsgId, setRevisingMsgId] = useState<string | null>(null);
   const [revisionDraft, setRevisionDraft] = useState("");
 
-  const clearChat = () => {
+  // CC-2026-09-25-011: server-persisted thread. The thread id is generated
+  // once per browser and survives reloads; hydration restores the whole
+  // conversation — including live, editable DAG proposal cards. Clear Chat
+  // deletes the stored thread and issues a fresh id.
+  const [threadId, setThreadId] = useState<string>(() => {
+    const existing = localStorage.getItem("opsagent_thread_id");
+    if (existing) return existing;
+    const fresh = `opsagent_${crypto.randomUUID()}`;
+    localStorage.setItem("opsagent_thread_id", fresh);
+    return fresh;
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/orchestrator/chat/${threadId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (cancelled || !Array.isArray(data.messages) || data.messages.length === 0) return;
+        setMessages(
+          data.messages.map((m: any) => ({
+            id: m.id,
+            serverId: m.id,
+            role: m.role === "user" ? ("user" as const) : ("assistant" as const),
+            content: m.content,
+            proposal: m.proposal ?? undefined,
+            executionStatus: m.executionStatus ?? (m.proposal ? "idle" : undefined),
+            runResult: m.runResult ?? undefined,
+          }))
+        );
+      } catch {
+        // Hydration is best-effort; the chat still works without it.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [threadId]);
+
+  // Best-effort persistence: a failed write never breaks the chat itself.
+  // Watchdog reports are deliberately NOT persisted — they are ephemeral
+  // telemetry whose seen-cursor already lives in localStorage.
+  const persistMessage = async (msg: ChatMessage) => {
+    try {
+      const res = await fetch(`/api/orchestrator/chat/${threadId}/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role: msg.role,
+          content: msg.content,
+          proposal: msg.proposal ?? null,
+          runResult: msg.runResult ?? null,
+          executionStatus: msg.executionStatus ?? null,
+        }),
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data?.message?.id) {
+        const serverId = data.message.id as string;
+        setMessages(curr =>
+          curr.map(m => (m.id === msg.id ? { ...m, serverId } : m))
+        );
+      }
+    } catch {
+      // Ignore — offline persistence retry lands with the next message.
+    }
+  };
+
+  const clearChat = async () => {
+    try {
+      await fetch(`/api/orchestrator/chat/${threadId}`, { method: "DELETE" });
+    } catch {
+      // Best-effort: clear locally even if the server is unreachable.
+    }
+    const fresh = `opsagent_${crypto.randomUUID()}`;
+    localStorage.setItem("opsagent_thread_id", fresh);
+    setThreadId(fresh);
     setMessages([{ id: "msg_init", role: "assistant", content: starterMessage }]);
     setDraft("");
     setRevisingMsgId(null);
@@ -230,6 +309,7 @@ export function OpsAgentChat() {
       { id: userMsgId, role: "user", content },
     ];
     setMessages(nextMessages);
+    void persistMessage({ id: userMsgId, role: "user", content });
     setDraft("");
     setIsTyping(true);
 
@@ -250,17 +330,15 @@ export function OpsAgentChat() {
       if (!res.ok) throw new Error("Failed to get orchestrator response");
       const data = await res.json();
 
-      const assistantMsgId = `asst_${Date.now()}`;
-      setMessages((current) => [
-        ...current,
-        {
-          id: assistantMsgId,
-          role: "assistant",
-          content: data.reply || "Operational prompt analyzed against URC guidelines.",
-          proposal: data.proposal,
-          executionStatus: "idle",
-        },
-      ]);
+      const assistantMsg: ChatMessage = {
+        id: `asst_${Date.now()}`,
+        role: "assistant",
+        content: data.reply || "Operational prompt analyzed against URC guidelines.",
+        proposal: data.proposal,
+        executionStatus: data.proposal ? "idle" : undefined,
+      };
+      setMessages((current) => [...current, assistantMsg]);
+      void persistMessage(assistantMsg);
     } catch (err) {
       console.error("[OpsAgentChat error]:", err);
       // Honesty fix (2026-09-24): this catch previously displayed a canned
@@ -314,26 +392,37 @@ export function OpsAgentChat() {
         );
       }
 
+      const nextStatus =
+        data.status === "failed"
+          ? ("failed" as const)
+          : data.status === "paused_for_approval"
+            ? ("paused" as const)
+            : ("completed" as const);
+      const nextRunResult = {
+        runId: data.runId,
+        summary: data.summary,
+        latencyMs: data.executionMetrics?.latencyMs ?? null,
+        tokensUsed: data.executionMetrics?.tokensUsed ?? null,
+        cost: data.executionMetrics?.cost ?? null,
+      };
       setMessages((current) =>
-        current.map((m) =>
-          m.id === msgId
-            ? {
-                ...m,
-                executionStatus:
-                  data.status === "failed"
-                    ? "failed"
-                    : data.status === "paused_for_approval"
-                      ? "paused"
-                      : "completed",
-                runResult: {
-                  runId: data.runId,
-                  summary: data.summary,
-                  latencyMs: data.executionMetrics?.latencyMs ?? null,
-                  tokensUsed: data.executionMetrics?.tokensUsed ?? null,
-                },
-              }
-            : m
-        )
+        current.map((m) => {
+          if (m.id !== msgId) return m;
+          // CC-2026-09-25-011: persist the run outcome so a reloaded thread
+          // shows measured cost/latency and the right card state. The PATCH
+          // is idempotent (same values on every write).
+          if (m.serverId) {
+            void fetch(`/api/orchestrator/chat/messages/${m.serverId}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                executionStatus: nextStatus,
+                runResult: nextRunResult,
+              }),
+            }).catch(() => {});
+          }
+          return { ...m, executionStatus: nextStatus, runResult: nextRunResult };
+        })
       );
 
       // Dispatch window event so dashboards and command center refresh
@@ -441,6 +530,40 @@ export function OpsAgentChat() {
                                 {sIdx + 1}
                               </span>
 
+                              {/* Step type selector (CC-2026-09-25-011):
+                                  agent = LLM step, guardrail = human approval
+                                  pause, action = human-gated outbound draft,
+                                  destination = delivery. No chat round-trip
+                                  needed to insert a human gate. */}
+                              <select
+                                value={step.type}
+                                onChange={(e) => {
+                                  const updatedType = e.target.value;
+                                  setMessages((curr) =>
+                                    curr.map((m) =>
+                                      m.id === msg.id && m.proposal
+                                        ? {
+                                            ...m,
+                                            proposal: {
+                                              ...m.proposal,
+                                              steps: m.proposal.steps.map((st, idx) =>
+                                                idx === sIdx ? { ...st, type: updatedType } : st
+                                              ),
+                                            },
+                                          }
+                                        : m
+                                    )
+                                  );
+                                }}
+                                title="Step type: agent (LLM step), guardrail (human approval pause), action (human-gated outbound draft), destination (delivery)"
+                                className="shrink-0 mt-0.5 rounded border border-border/60 bg-card px-1 py-0.5 text-[9px] font-mono uppercase text-muted-foreground focus:border-primary focus:outline-none"
+                              >
+                                <option value="agent">AGENT</option>
+                                <option value="guardrail">GUARDRAIL</option>
+                                <option value="action">ACTION</option>
+                                <option value="destination">DEST</option>
+                              </select>
+
                               <div className="flex-1 space-y-0.5">
                                 <input
                                   type="text"
@@ -529,7 +652,11 @@ export function OpsAgentChat() {
                               const customNode: WorkflowProposalStep = {
                                 stepNumber: newStepNum,
                                 title: `Custom Node ${newStepNum}`,
-                                type: "ACTION",
+                                // CC-2026-09-25-011: "agent" is the honest
+                                // general case for a custom node, and the type
+                                // selector above lets you switch it to
+                                // guardrail/action/destination in one click.
+                                type: "agent",
                                 detail: "Custom human-defined operational step",
                                 // No agentId (CC-2026-09-25-007): the old
                                 // hardcoded "agent_ops_lead" was neither a UUID
@@ -558,10 +685,32 @@ export function OpsAgentChat() {
                           </Button>
                         </div>
 
-                        {/* Cost & Latency Metrics */}
+                        {/* Cost & Latency (CC-2026-09-25-011): honest values
+                            only. Pre-run: the model's estimate when it supplied
+                            one (schema now makes them optional), otherwise
+                            "not estimated" — never fabricated $0.02/12s.
+                            Post-run: the run's REAL measured cost and latency. */}
                         <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground pt-2 border-t border-border/50">
-                          <span>Est. Cost: <strong className="text-emerald-400 font-bold">${msg.proposal.estimatedCostPerRun || 0.02}</strong></span>
-                          <span>Est. Latency: <strong className="text-primary font-bold">{msg.proposal.estimatedLatencySeconds || 12}s</strong></span>
+                          <span>
+                            Cost:{" "}
+                            {msg.runResult?.cost != null ? (
+                              <strong className="text-emerald-400 font-bold">${msg.runResult.cost} measured</strong>
+                            ) : msg.proposal.estimatedCostPerRun != null ? (
+                              <strong className="text-emerald-400 font-bold">${msg.proposal.estimatedCostPerRun} est.</strong>
+                            ) : (
+                              <strong>not estimated</strong>
+                            )}
+                          </span>
+                          <span>
+                            Latency:{" "}
+                            {msg.runResult?.latencyMs != null ? (
+                              <strong className="text-primary font-bold">{msg.runResult.latencyMs}ms measured</strong>
+                            ) : msg.proposal.estimatedLatencySeconds != null ? (
+                              <strong className="text-primary font-bold">{msg.proposal.estimatedLatencySeconds}s est.</strong>
+                            ) : (
+                              <strong>not estimated</strong>
+                            )}
+                          </span>
                         </div>
 
                         {/* Execution & Rejection Actions */}

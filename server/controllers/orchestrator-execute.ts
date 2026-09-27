@@ -296,13 +296,17 @@ export async function executeOrchestratorWorkflow(
 /**
  * Map a proposal step's free-text type onto a real workflow_steps.stepType.
  * Unknown types default to "agent" — the pipeline's honest general case.
+ * Exported for regression tests (CC-2026-09-25-011 added the 'action' type:
+ * human-gated outbound payloads drafted by the agent and approved by a human
+ * via the actions router).
  */
-function classifyStepType(type: string | undefined): string {
+export function classifyStepType(type: string | undefined): string {
   const t = (type || "").toLowerCase();
   if (t.includes("guardrail") || t.includes("approval") || t.includes("hitl")) {
     return "guardrail";
   }
   if (t.includes("trigger")) return "trigger";
+  if (t.includes("action")) return "action";
   if (t.includes("destination") || t.includes("publish") || t.includes("email")) {
     return "destination";
   }

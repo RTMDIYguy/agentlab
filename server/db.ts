@@ -482,6 +482,25 @@ export async function ensureDatabaseSchema(): Promise<void> {
       ALTER TABLE "workflow_share_tokens" ALTER COLUMN "last_accessed_at" SET NOT NULL;
     `;
 
+    // CC-2026-09-25-011: Ops Agent chat persistence. The conversation lived
+    // in React state only and died on every refresh; messages are now
+    // workspace-scoped rows keyed by a client-generated thread id.
+    await client`
+      CREATE TABLE IF NOT EXISTS "ops_agent_messages" (
+        "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        "workspace_id" uuid NOT NULL REFERENCES "workspaces"("id") ON DELETE CASCADE,
+        "thread_id" varchar(64) NOT NULL,
+        "role" varchar(16) NOT NULL,
+        "content" text NOT NULL,
+        "proposal" jsonb,
+        "run_result" jsonb,
+        "execution_status" varchar(16),
+        "created_at" timestamp with time zone NOT NULL DEFAULT now()
+      );
+      CREATE INDEX IF NOT EXISTS "idx_ops_agent_messages_thread"
+        ON "ops_agent_messages" ("workspace_id", "thread_id", "created_at");
+    `;
+
     // CC-2026-09-25-008: workflow_steps rows synced before CC-2026-09-25-007
     // can carry an agent_id whose agents row no longer exists. Postgres FKs
     // are table-global, so a dangling id fails every audit insert that repeats

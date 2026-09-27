@@ -266,8 +266,10 @@ export function generateFallbackWorkflowProposal(
       ? "Direct synchronization bridge between HubSpot CRM and AgentLab multi-agent state, mapping contact fields, deal velocity, and M365 audit logs."
       : `Synthesized operational DAG workflow for ${title} under URC ${dept.name} department operating guidelines.`,
     departmentCode: deptCode,
-    estimatedCostPerRun: isHubSpot ? 0.02 : 0.04,
-    estimatedLatencySeconds: isHubSpot ? 8 : 15,
+    // CC-2026-09-25-011: estimatedCostPerRun / estimatedLatencySeconds are no
+    // longer emitted — the deterministic fallback has no honest basis for a
+    // number, and the schema now treats them as optional. The client shows
+    // "not estimated" instead of fabricated "$0.02 / 12s".
     triggerType: isHubSpot ? "HubSpot Webhook / Scheduled Polling" : "Webhook / Scheduled Event",
     guardrails: [
       "Pre-execution rate-limit check",
@@ -327,6 +329,45 @@ export function generateFallbackWorkflowProposal(
 /**
  * Controller endpoint: POST /api/orchestrator/chat
  */
+/**
+ * Decide whether a chat turn is a workflow build request (structured DAG
+ * proposal) or consultative dialogue. Exported for regression tests.
+ *
+ * CC-2026-09-25-011: the original keyword regex matched question forms too
+ * ("run that by me again", "what runs do we have?", "how do we execute
+ * onboarding?"), forcing a DAG proposal where the founder wanted an answer.
+ * Rules, in precedence order:
+ *  1. forceProposal (set programmatically) always wins.
+ *  2. A STRONG imperative opener (build/create/synthesize/design/automate/
+ *     set up) is unambiguous commissioning language and proposes even if the
+ *     sentence carries a question mark ("build the onboarding DAG, ok?").
+ *     Weak verbs like "run"/"execute" deliberately do NOT get this privilege:
+ *     "run that by me again" was the original false positive.
+ *  3. Any other sentence containing a build verb proposes only when it does
+ *     not read as a question (no "?", no interrogative opener).
+ */
+const BUILD_VERBS =
+  /\b(build|create|synthesize|design|automate|draft a workflow|propose a workflow|new workflow|dag|workflow for|set up|execute|run)\b/i;
+const STRONG_IMPERATIVE_OPEN =
+  /^(build|create|synthesize|design|automate|set up|draft|propose)\b/i;
+const INTERROGATIVE_START =
+  /^(what|when|where|which|who|whom|whose|why|how|do|does|did|can|could|should|would|is|are|was|were|will|may|might|have|has)\b/i;
+
+export function shouldProposeWorkflow(
+  rawPrompt: string,
+  forceProposal = false
+): boolean {
+  if (forceProposal) return true;
+  const text = (rawPrompt || "").trim();
+  if (!text) return false;
+  if (STRONG_IMPERATIVE_OPEN.test(text)) return true;
+  if (!BUILD_VERBS.test(text)) return false;
+  // A question mark anywhere, or a sentence that opens like a question, means
+  // the founder is asking — not commissioning.
+  if (text.includes("?") || INTERROGATIVE_START.test(text)) return false;
+  return true;
+}
+
 export async function handleOrchestratorChat(
   req: Request,
   res: Response
@@ -501,9 +542,13 @@ export async function handleOrchestratorChat(
     // generated only when the user actually wants one; everything else gets
     // a real conversational answer grounded in the live telemetry (including
     // real failed-run errors).
-    const wantsProposal =
-      /\b(build|create|synthesize|design|automate|draft a workflow|propose a workflow|new workflow|dag|workflow for|set up|execute|run)\b/i.test(rawPrompt) ||
-      req.body.forceProposal === true;
+    // CC-2026-09-25-011: routing extracted into shouldProposeWorkflow with an
+    // interrogative guard — "run that by me again", "what runs do we have?",
+    // and other question forms are conversation, not build requests.
+    const wantsProposal = shouldProposeWorkflow(
+      rawPrompt,
+      req.body.forceProposal === true
+    );
 
     const userMessageContent: Array<{ type: "text"; text: string } | { type: "image"; image: string }> = [
       { type: "text", text: prompt },

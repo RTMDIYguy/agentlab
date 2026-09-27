@@ -1,6 +1,12 @@
 import { Router } from "express";
 import { handleOrchestratorChat } from "../controllers/orchestrator";
 import { executeOrchestratorWorkflow } from "../controllers/orchestrator-execute";
+import {
+  getOpsAgentThread,
+  appendOpsAgentMessage,
+  updateOpsAgentMessage,
+  clearOpsAgentThread,
+} from "../controllers/ops-chat";
 import { getCredentialHealth, getRecentFailedRuns } from "../controllers/ops-watchdog";
 import {
   getAgents,
@@ -156,6 +162,14 @@ apiRouter.get("/debug/llm", async (req, res) => {
 // Orchestrator Synthesis Engine
 apiRouter.post("/orchestrator/chat", handleOrchestratorChat);
 apiRouter.post("/orchestrator/execute", executeOrchestratorWorkflow);
+
+// Ops Agent chat thread persistence (CC-2026-09-25-011): the conversation
+// survives refreshes and restarts; thread ids are client-generated.
+// NOTE: /chat/:threadId must not shadow POST /chat, hence the distinct verbs.
+apiRouter.get("/orchestrator/chat/:threadId", getOpsAgentThread);
+apiRouter.post("/orchestrator/chat/:threadId/messages", appendOpsAgentMessage);
+apiRouter.patch("/orchestrator/chat/messages/:id", updateOpsAgentMessage);
+apiRouter.delete("/orchestrator/chat/:threadId", clearOpsAgentThread);
 
 // Ops-Agent Watchdog: proactive failed-run detection (2026-09-24)
 apiRouter.get("/ops-watchdog/failed-runs", getRecentFailedRuns);

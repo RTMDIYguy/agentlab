@@ -1444,3 +1444,42 @@ export const teardownSessions = pgTable(
 
 export type TeardownSession = InferSelectModel<typeof teardownSessions>;
 export type NewTeardownSession = InferInsertModel<typeof teardownSessions>;
+
+// ==============================================================================
+// 27. OPS AGENT CHAT MESSAGES (CC-2026-09-25-011)
+// ==============================================================================
+// The Ops Agent conversation previously lived in React state only: a page
+// refresh or dev-server restart silently erased the entire thread, along with
+// any DAG proposals the founder was still editing. Messages are now
+// workspace-scoped rows with a client-generated thread id so a browser can
+// resume its thread across reloads. The proposal and run outcome are stored
+// denormalized on the assistant message that carried them, so a reloaded
+// thread restores fully interactive proposal cards.
+export const opsAgentMessages = pgTable(
+  "ops_agent_messages",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: uuid("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    threadId: varchar("thread_id", { length: 64 }).notNull(), // client-generated (e.g. "opsagent_<random>")
+    role: varchar("role", { length: 16 }).notNull(), // 'user' | 'assistant' | 'watchdog'
+    content: text("content").notNull(),
+    proposal: jsonb("proposal"), // WorkflowProposal when the message carries a DAG card
+    runResult: jsonb("run_result"), // { runId, summary, latencyMs, tokensUsed, status? }
+    executionStatus: varchar("execution_status", { length: 16 }), // idle/running/completed/failed/paused for proposal cards
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    index("idx_ops_agent_messages_thread").on(
+      table.workspaceId,
+      table.threadId,
+      table.createdAt
+    ),
+  ]
+);
+
+export type OpsAgentMessage = InferSelectModel<typeof opsAgentMessages>;
+export type NewOpsAgentMessage = InferInsertModel<typeof opsAgentMessages>;
