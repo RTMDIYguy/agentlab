@@ -10,20 +10,23 @@ import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
 /**
  * Visitor memory ("the temp file", 2026-09-24):
  * Every intake turn persists what the agent has learned about the visitor
- * into visitor_profiles, keyed by email once shared. Previously the
- * conversation lived only in React state and died with the tab — there was
- * no memory when the visitor returned, and nothing to seed a workspace with
- * at signup. Bounded: keeps the latest 12 turns and 8KB of transcript text.
+ * into visitor_profiles. CC-2026-09-25-013: anonymous turns persist too —
+ * keyed by an opaque client-generated visitor_key until an email is shared,
+ * then by email (the same row is found via visitor_key and stamped with the
+ * address). Every curious visitor is now captured and resumable, not just
+ * the ones who hand over an email. Bounded: latest 12 turns, 8KB transcript.
  */
 const MAX_CONVERSATION_TURNS = 12;
 const MAX_CONVERSATION_CHARS = 8192;
 
 async function rememberVisitorTurn(
   lead: LeadContext,
-  messages: ChatMessage[]
+  messages: ChatMessage[],
+  visitorKey?: string
 ): Promise<void> {
   const email = (lead.email || "").trim().toLowerCase();
-  if (!email || !email.includes("@")) return; // anonymous so far — nothing to key on
+  const key = (visitorKey || "").trim().slice(0, 64);
+  if (!email && !key) return; // nothing to key on (should not happen)
 
   try {
     const db = await getDb();
@@ -35,27 +38,44 @@ async function rememberVisitorTurn(
       .join("\n")
       .slice(-MAX_CONVERSATION_CHARS);
 
-    const [existing] = await db
-      .select({ id: visitorProfiles.id })
-      .from(visitorProfiles)
-      .where(eq(visitorProfiles.email, email))
-      .limit(1);
+    // Find the visitor's row: by email when known, else by visitor_key.
+    let existing: { id: string; email: string | null } | undefined;
+    if (email) {
+      [existing] = await db
+        .select({ id: visitorProfiles.id, email: visitorProfiles.email })
+        .from(visitorProfiles)
+        .where(eq(visitorProfiles.email, email))
+        .limit(1);
+    }
+    if (!existing && key) {
+      [existing] = await db
+        .select({ id: visitorProfiles.id, email: visitorProfiles.email })
+        .from(visitorProfiles)
+        .where(eq(visitorProfiles.visitorKey, key))
+        .limit(1);
+    }
+
+    const learned = {
+      name: lead.name || undefined,
+      company: lead.company || undefined,
+      painPoint: lead.painPoint || undefined,
+      interest: lead.interest || undefined,
+      conversation: { turns: trimmed, transcript },
+      updatedAt: new Date(),
+    };
 
     if (existing) {
       await db
         .update(visitorProfiles)
-        .set({
-          name: lead.name || undefined,
-          company: lead.company || undefined,
-          painPoint: lead.painPoint || undefined,
-          interest: lead.interest || undefined,
-          conversation: { turns: trimmed, transcript },
-          updatedAt: new Date(),
-        })
+        .set(
+          // First turn that includes an email stamps the anonymous row.
+          email && !existing.email ? { ...learned, email } : learned
+        )
         .where(eq(visitorProfiles.id, existing.id));
     } else {
       await db.insert(visitorProfiles).values({
-        email,
+        email: email || null,
+        visitorKey: key || null,
         name: lead.name || null,
         company: lead.company || null,
         painPoint: lead.painPoint || null,
@@ -381,12 +401,62 @@ Return valid JSON with this exact shape:
   };
 }
 
+/**
+ * Claim an ANONYMOUS visitor profile at signup (CC-2026-09-25-013). The
+ * visitor chatted without ever sharing an email, so signup cannot find them
+ * by address; the browser hands over its visitor_key (via localStorage) and
+ * the just-created account absorbs whatever the intake agent learned. Same
+ * contract as claimVisitorProfile: mark claimed, return the context.
+ */
+export async function claimAnonymousVisitorProfile(
+  visitorKey: string,
+  workspaceId: string
+): Promise<{
+  name: string | null;
+  company: string | null;
+  painPoint: string | null;
+  interest: string | null;
+  transcript: string | null;
+} | null> {
+  try {
+    const db = await getDb();
+    if (!db) return null;
+    const key = (visitorKey || "").trim().slice(0, 64);
+    if (!key) return null;
+
+    const [profile] = await db
+      .select()
+      .from(visitorProfiles)
+      .where(eq(visitorProfiles.visitorKey, key))
+      .limit(1);
+    if (!profile || profile.claimedByWorkspaceId) return null;
+
+    await db
+      .update(visitorProfiles)
+      .set({ claimedByWorkspaceId: workspaceId, claimedAt: new Date() })
+      .where(eq(visitorProfiles.id, profile.id));
+
+    const conv = profile.conversation as { transcript?: string } | null;
+    return {
+      name: profile.name,
+      company: profile.company,
+      painPoint: profile.painPoint,
+      interest: profile.interest,
+      transcript: conv?.transcript ?? null,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export const founderIntakeRouter = router({
   respond: publicProcedure
     .input(
       z.object({
         messages: z.array(chatMessageSchema).min(1).max(24),
         lead: leadSchema.default({}),
+        // CC-2026-09-25-013: opaque browser key so anonymous turns persist.
+        visitorKey: z.string().max(64).optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -421,7 +491,7 @@ export const founderIntakeRouter = router({
         name: response.collected.name || input.lead.name,
         email: response.collected.email || input.lead.email,
       };
-      await rememberVisitorTurn(mergedLead, input.messages);
+      await rememberVisitorTurn(mergedLead, input.messages, input.visitorKey);
 
       return { ...response, llmStatus };
     }),

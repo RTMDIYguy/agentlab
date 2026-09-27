@@ -573,6 +573,15 @@ export async function ensureDatabaseSchema(): Promise<void> {
       ALTER TABLE "workspaces" ADD COLUMN IF NOT EXISTS "onboarding_context" jsonb;
     `;
 
+    // CC-2026-09-25-013: anonymous visitor persistence. email becomes nullable
+    // and visitor_key identifies a pre-email browser so every curious visitor
+    // is captured, not just the ones who share an address.
+    await client`
+      ALTER TABLE "visitor_profiles" ADD COLUMN IF NOT EXISTS "visitor_key" varchar(64);
+      ALTER TABLE "visitor_profiles" ALTER COLUMN "email" DROP NOT NULL;
+      CREATE INDEX IF NOT EXISTS "idx_visitor_profiles_visitor_key" ON "visitor_profiles" ("visitor_key");
+    `;
+
     console.log("[Database] Newsletter, contact, blog comments & messenger tables verified.");
   } catch (err: any) {
     console.warn("[Database] Schema ensure notice:", err.message);

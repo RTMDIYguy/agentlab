@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, ArrowRight, Lock, Mail, AlertCircle, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { getVisitorKey } from "@/lib/visitorKey";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -31,7 +32,14 @@ export default function Signup() {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({
+          email,
+          password,
+          name,
+          // CC-2026-09-25-013: hand over the browser's intake key so any
+          // anonymous founder-intake history is claimed into this workspace.
+          visitorKey: getVisitorKey(),
+        }),
       });
 
       const data = await res.json();

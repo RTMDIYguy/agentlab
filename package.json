@@ -15,6 +15,7 @@
     "secrets:check": "tsx scripts/verify-secrets-source.mjs",
     "secrets:check:infisical": "infisical run --env=dev -- cross-env SECRETS_SOURCE=infisical tsx scripts/verify-secrets-source.mjs",
     "change-control:check": "node scripts/verify-change-control.mjs",
+    "usage:weekly": "infisical run --env=dev -- node scripts/usage-weekly.mjs",
     "daily-command:sync": "node scripts/sync-command-center.mjs",
     "daily-command:center": "node scripts/daily-command-center.mjs",
     "public-scan:browserbase": "tsx scripts/public-scan-browserbase.ts",

@@ -72,6 +72,10 @@ export function registerNativeAuthRoutes(app: Express) {
   app.post("/api/auth/signup", async (req: Request, res: Response) => {
     try {
       const { email, password, name } = req.body || {};
+      // CC-2026-09-25-013: optional browser visitor key so anonymous intake
+      // history (pre-email chats) can be claimed into the new workspace.
+      const visitorKey =
+        typeof req.body?.visitorKey === "string" ? req.body.visitorKey.slice(0, 64) : undefined;
 
       if (!email || typeof email !== "string" || !email.includes("@")) {
         res.status(400).json({ error: "A valid email address is required." });
@@ -139,9 +143,15 @@ export function registerNativeAuthRoutes(app: Express) {
             // chatted with the Founder Intake Agent before signing up, claim
             // that profile and seed the workspace so the OS already knows
             // who they are ("empty instance, except what they told us").
+            // CC-2026-09-25-013: anonymous chat is claimable too — if no
+            // email-keyed profile exists, the browser's visitor_key (localStorage)
+            // absorbs whatever the intake agent learned pre-signup.
             try {
-              const { claimVisitorProfile } = await import("../founder-intake/router");
-              const profile = await claimVisitorProfile(normalizedEmail, workspaceId);
+              const intake = await import("../founder-intake/router");
+              let profile = await intake.claimVisitorProfile(normalizedEmail, workspaceId);
+              if (!profile && visitorKey) {
+                profile = await intake.claimAnonymousVisitorProfile(visitorKey, workspaceId);
+              }
               if (profile) {
                 await database
                   .update(workspaces)

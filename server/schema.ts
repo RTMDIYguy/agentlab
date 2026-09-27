@@ -882,7 +882,9 @@ export const visitorProfiles = pgTable(
   "visitor_profiles",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    email: varchar("email", { length: 255 }).notNull(),
+    email: varchar("email", { length: 255 }),
+    /** Opaque client-generated key (localStorage) identifying an anonymous browser. */
+    visitorKey: varchar("visitor_key", { length: 64 }),
     name: varchar("name", { length: 128 }),
     company: varchar("company", { length: 128 }),
     painPoint: text("pain_point"),
@@ -901,8 +903,10 @@ export const visitorProfiles = pgTable(
   },
   table => [
     // One live profile per email; claimed profiles keep their history via
-    // claimedByWorkspaceId. Upserts target this key.
+    // claimedByWorkspaceId. Upserts target this key. Anonymous rows key on
+    // visitor_key instead (non-unique index; upsert logic is select-then-write).
     uniqueIndex("uq_visitor_profiles_email").on(table.email),
+    index("idx_visitor_profiles_visitor_key").on(table.visitorKey),
     index("idx_visitor_profiles_workspace").on(table.claimedByWorkspaceId),
   ]
 );

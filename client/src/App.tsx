@@ -8,6 +8,7 @@ import { LiveChat } from "./components/LiveChat";
 import { OpsAgentChat } from "./components/OpsAgentChat";
 import { PamelaVoiceWidget } from "./components/PamelaVoiceWidget";
 import Home from "./pages/Home";
+import Start from "./pages/Start";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -86,6 +87,7 @@ function Router() {
   return (
     <Switch>
       <Route path={"/"} component={RootRoute} />
+      <Route path={"/start"} component={Start} />
       <Route path={"/login"} component={Login} />
       <Route path={"/signup"} component={Signup} />
       <Route path={"/services"} component={Services} />

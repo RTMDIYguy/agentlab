@@ -3,6 +3,7 @@ import { MessageCircle, Send, X } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
+import { getVisitorKey } from "@/lib/visitorKey";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -12,11 +13,16 @@ type ChatMessage = {
 const starterMessage =
   "Hi, I’m the Founder Intake Agent. I can help you find the right next step, usually a Founder Roundtable or a Business Systems Diagnostic. What’s the biggest thing slowing your business down right now?";
 
-export function LiveChat() {
-  const { isAuthenticated } = useAuth();
-  const [location] = useLocation();
-
-  const [isOpen, setIsOpen] = useState(false);
+/**
+ * FounderIntakeChat (CC-2026-09-25-013): the intake conversation as a
+ * reusable panel. Previously this logic lived only inside the corner-bubble
+ * LiveChat and was gated to the home route, so a visitor who landed on the
+ * URL and looked around never met the intake agent. Now /start embeds the
+ * same conversation as the front door. Every turn carries the browser's
+ * opaque visitor key, so anonymous (pre-email) visitors persist in
+ * visitor_profiles and their history is claimable at signup.
+ */
+export function FounderIntakeChat({ className = "" }: { className?: string }) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: starterMessage },
   ]);
@@ -34,11 +40,6 @@ export function LiveChat() {
   const respondMutation = trpc.founderIntake.respond.useMutation();
   const captureLeadMutation = trpc.founderIntake.captureLead.useMutation();
 
-  // Keep hooks unconditional; only the visible chat is route-gated.
-  if (isAuthenticated || (location !== "/" && location !== "")) {
-    return null;
-  }
-
   const handleQuickSelect = async (option: string) => {
     if (respondMutation.isPending) return;
     const nextMessages: ChatMessage[] = [
@@ -52,6 +53,7 @@ export function LiveChat() {
       const response = await respondMutation.mutateAsync({
         messages: nextMessages,
         lead: { ...lead, interest: option, painPoint: lead.painPoint || option },
+        visitorKey: getVisitorKey(),
       });
 
       setLead(current => ({
@@ -94,6 +96,7 @@ export function LiveChat() {
       const response = await respondMutation.mutateAsync({
         messages: nextMessages,
         lead: nextLead,
+        visitorKey: getVisitorKey(),
       });
 
       setLead(current => ({
@@ -165,133 +168,154 @@ export function LiveChat() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex max-w-[calc(100vw-2rem)] flex-col items-end gap-3">
-      {isOpen ? (
-        <div className="w-[360px] max-w-full overflow-hidden rounded-2xl border border-stone-300 bg-white shadow-2xl">
-          <div className="flex items-center justify-between bg-stone-950 px-4 py-3 text-stone-50">
-            <div>
-              <div className="text-sm font-semibold">Founder Intake Agent</div>
-              <div className="text-xs text-stone-300">
-                Simplify your stack and find the right path into Ownable OS
-              </div>
+    <div className={`overflow-hidden rounded-2xl border border-stone-300 bg-white shadow-2xl ${className}`}>
+      <div className="flex items-center justify-between bg-stone-950 px-4 py-3 text-stone-50">
+        <div>
+          <div className="text-sm font-semibold">Founder Intake Agent</div>
+          <div className="text-xs text-stone-300">
+            Simplify your stack and find the right path into Ownable OS
+          </div>
+        </div>
+      </div>
+
+      <div className="max-h-[420px] space-y-3 overflow-y-auto bg-stone-50 p-4">
+        {messages.map((message, index) => (
+          <div
+            key={`${message.role}-${index}`}
+            className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-6 ${
+              message.role === "assistant"
+                ? "bg-white text-stone-900 shadow-sm"
+                : "ml-auto bg-stone-950 text-white"
+            }`}
+          >
+            {message.content}
+          </div>
+        ))}
+
+        {showLeadForm ? (
+          <div className="space-y-2 rounded-2xl border border-stone-200 bg-white p-3 shadow-sm">
+            <div className="text-sm font-semibold text-stone-900">
+              Get the next step
             </div>
+            <input
+              value={lead.name}
+              onChange={event =>
+                setLead(current => ({
+                  ...current,
+                  name: event.target.value,
+                }))
+              }
+              placeholder="Your name"
+              className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-950"
+            />
+            <input
+              value={lead.email}
+              onChange={event =>
+                setLead(current => ({
+                  ...current,
+                  email: event.target.value,
+                }))
+              }
+              placeholder="Email address"
+              className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-950"
+            />
+            <input
+              value={lead.company}
+              onChange={event =>
+                setLead(current => ({
+                  ...current,
+                  company: event.target.value,
+                }))
+              }
+              placeholder="Company (optional)"
+              className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-950"
+            />
             <button
               type="button"
-              onClick={() => setIsOpen(false)}
-              className="rounded-full p-1 text-stone-200 transition hover:bg-stone-800 hover:text-white"
-              aria-label="Close founder intake chat"
+              onClick={submitLead}
+              disabled={
+                captureLeadMutation.isPending || captureStatus === "saved"
+              }
+              className="w-full rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
             >
-              <X className="h-4 w-4" />
+              {captureStatus === "saved"
+                ? "Captured"
+                : captureLeadMutation.isPending
+                  ? "Saving..."
+                  : "Send my details"}
             </button>
           </div>
+        ) : null}
+      </div>
 
-          <div className="max-h-[420px] space-y-3 overflow-y-auto bg-stone-50 p-4">
-            {messages.map((message, index) => (
-              <div
-                key={`${message.role}-${index}`}
-                className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-6 ${
-                  message.role === "assistant"
-                    ? "bg-white text-stone-900 shadow-sm"
-                    : "ml-auto bg-stone-950 text-white"
-                }`}
-              >
-                {message.content}
-              </div>
-            ))}
+      <div className="border-t border-stone-200 bg-white p-3">
+        <div className="mb-2 flex flex-wrap gap-2">
+          {[
+            "Founder Roundtable",
+            "Business Systems Diagnostic",
+            "Ownable OS",
+          ].map(option => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => handleQuickSelect(option)}
+              className="rounded-full border border-stone-300 px-3 py-1 text-xs text-stone-700 transition hover:border-stone-950 hover:text-stone-950 hover:bg-stone-100"
+            >
+              {option}
+            </button>
+          ))}
+        </div>
 
-            {showLeadForm ? (
-              <div className="space-y-2 rounded-2xl border border-stone-200 bg-white p-3 shadow-sm">
-                <div className="text-sm font-semibold text-stone-900">
-                  Get the next step
-                </div>
-                <input
-                  value={lead.name}
-                  onChange={event =>
-                    setLead(current => ({
-                      ...current,
-                      name: event.target.value,
-                    }))
-                  }
-                  placeholder="Your name"
-                  className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-950"
-                />
-                <input
-                  value={lead.email}
-                  onChange={event =>
-                    setLead(current => ({
-                      ...current,
-                      email: event.target.value,
-                    }))
-                  }
-                  placeholder="Email address"
-                  className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-950"
-                />
-                <input
-                  value={lead.company}
-                  onChange={event =>
-                    setLead(current => ({
-                      ...current,
-                      company: event.target.value,
-                    }))
-                  }
-                  placeholder="Company (optional)"
-                  className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-950"
-                />
-                <button
-                  type="button"
-                  onClick={submitLead}
-                  disabled={
-                    captureLeadMutation.isPending || captureStatus === "saved"
-                  }
-                  className="w-full rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
-                >
-                  {captureStatus === "saved"
-                    ? "Captured"
-                    : captureLeadMutation.isPending
-                      ? "Saving..."
-                      : "Send my details"}
-                </button>
-              </div>
-            ) : null}
-          </div>
+        <div className="flex items-end gap-2">
+          <textarea
+            value={draft}
+            onChange={event => setDraft(event.target.value)}
+            placeholder="Tell me what’s slowing the business down..."
+            rows={2}
+            className="min-h-[56px] flex-1 resize-none rounded-xl border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-950"
+          />
+          <button
+            type="button"
+            onClick={sendMessage}
+            disabled={respondMutation.isPending}
+            className="rounded-xl bg-stone-950 p-3 text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:bg-stone-400"
+            aria-label="Send message"
+          >
+            <Send className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-          <div className="border-t border-stone-200 bg-white p-3">
-            <div className="mb-2 flex flex-wrap gap-2">
-              {[
-                "Founder Roundtable",
-                "Business Systems Diagnostic",
-                "Ownable OS",
-              ].map(option => (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => handleQuickSelect(option)}
-                  className="rounded-full border border-stone-300 px-3 py-1 text-xs text-stone-700 transition hover:border-stone-950 hover:text-stone-950 hover:bg-stone-100"
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
+/**
+ * LiveChat: the original corner bubble, now hosting the shared intake panel.
+ * Unchanged public behavior — home route only, hidden once authenticated.
+ */
+export function LiveChat() {
+  const { isAuthenticated } = useAuth();
+  const [location] = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
 
-            <div className="flex items-end gap-2">
-              <textarea
-                value={draft}
-                onChange={event => setDraft(event.target.value)}
-                placeholder="Tell me what’s slowing the business down..."
-                rows={2}
-                className="min-h-[56px] flex-1 resize-none rounded-xl border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-950"
-              />
-              <button
-                type="button"
-                onClick={sendMessage}
-                disabled={respondMutation.isPending}
-                className="rounded-xl bg-stone-950 p-3 text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:bg-stone-400"
-                aria-label="Send message"
-              >
-                <Send className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
+  // Keep hooks unconditional; only the visible chat is route-gated.
+  if (isAuthenticated || (location !== "/" && location !== "")) {
+    return null;
+  }
+
+  return (
+    <div className="fixed bottom-4 right-4 z-50 flex max-w-[calc(100vw-2rem)] flex-col items-end gap-3">
+      {isOpen ? (
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            className="absolute -top-3 -right-3 z-10 rounded-full bg-stone-950 p-1.5 text-white shadow-lg transition hover:bg-stone-700"
+            aria-label="Close founder intake chat"
+          >
+            <X className="h-4 w-4" />
+          </button>
+          <FounderIntakeChat className="w-[360px] max-w-full" />
         </div>
       ) : null}
 
@@ -306,5 +330,3 @@ export function LiveChat() {
     </div>
   );
 }
-
-export default LiveChat;

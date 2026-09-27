@@ -29,7 +29,8 @@ import {
   HelpCircle,
   BarChart3,
   Flame,
-  Globe
+  Globe,
+  MessageSquareText
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -139,8 +140,16 @@ export default function Home() {
               <div className="pt-2 flex flex-wrap items-center justify-center gap-4">
                 <Button 
                   size="lg" 
-                  onClick={() => setLocation("/pricing")} 
+                  onClick={() => setLocation("/start")} 
                   className="font-bold text-xs gap-2 shadow-lg shadow-primary/25 button-glow"
+                >
+                  <MessageSquareText className="w-4 h-4" />
+                  Start the 2-Minute Intake Chat
+                </Button>
+                <Button 
+                  size="lg" 
+                  onClick={() => setLocation("/pricing")} 
+                  className="font-bold text-xs gap-2 glass-card"
                 >
                   <ShoppingBag className="w-4 h-4" />
                   View Pricing & Showroom

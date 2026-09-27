@@ -15,6 +15,13 @@
       "when": 1790531249509,
       "tag": "0001_steep_marten_broadcloak",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790534270625,
+      "tag": "0002_loose_starbolt",
+      "breakpoints": true
     }
   ]
 }
