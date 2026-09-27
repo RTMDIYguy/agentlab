@@ -453,6 +453,20 @@ export async function ensureDatabaseSchema(): Promise<void> {
       ALTER TABLE "workflow_runs" ADD COLUMN IF NOT EXISTS "cancelled_at" timestamp with time zone;
     `;
 
+    // CC-2026-09-25-009 (schema/DDL drift): commit f33439d8 added
+    // cancelRequested/cancelledAt to schema.ts on BOTH workflow_runs and
+    // audit_logs, but 0010-runner-hardening.sql and this self-heal only
+    // mirrored the workflow_runs pair. Every audit_logs insert naming the
+    // missing columns has failed with SQLSTATE 42703 since 2026-09-23 -
+    // silently at most sites, and fatally at the queue-processor's
+    // then-unprotected success path until CC-2026-09-25-008 made it
+    // non-fatal. The live DB's drizzle journal stops at 0002, so this
+    // self-heal is the path that actually ships the DDL in dev.
+    await client`
+      ALTER TABLE "audit_logs" ADD COLUMN IF NOT EXISTS "cancel_requested" boolean NOT NULL DEFAULT false;
+      ALTER TABLE "audit_logs" ADD COLUMN IF NOT EXISTS "cancelled_at" timestamp with time zone;
+    `;
+
     // CC-2026-09-25-008: workflow_steps rows synced before CC-2026-09-25-007
     // can carry an agent_id whose agents row no longer exists. Postgres FKs
     // are table-global, so a dangling id fails every audit insert that repeats

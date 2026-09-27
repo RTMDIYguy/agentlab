@@ -45,6 +45,7 @@ interface FkErrorShape {
   code?: string;
   constraint?: string;
   detail?: string;
+  message?: string;
   cause?: FkErrorShape;
 }
 
@@ -64,6 +65,29 @@ function findAgentIdFkViolation(err: unknown): FkErrorShape | undefined {
     cursor = cursor.cause;
   }
   return undefined;
+}
+
+// SQLSTATE 42703 (undefined_column) in an audit insert means the live table's
+// columns have drifted from server/schema.ts - an insert built from the schema
+// file references a column the database does not have. CC-2026-09-25-009:
+// exactly this hid for four days as quiet warnings while every audit write
+// failed. Make it loud and actionable so the next drift is found in minutes.
+function reportUndefinedColumn(err: unknown): void {
+  let cursor = err as FkErrorShape | undefined;
+  for (let depth = 0; cursor && depth < 5; depth++) {
+    if (cursor.code === "42703") {
+      console.error(
+        `[AuditLogger] SCHEMA/DDL DRIFT: audit insert failed with undefined_column (42703): ${
+          cursor.message ?? "unknown"
+        }. The audit_logs table is missing a column that server/schema.ts declares. ` +
+          `Run the ensureDatabaseSchema self-heal (restart the server) or apply ` +
+          `drizzle/0012-audit-logs-cancel-columns.sql. Until then, ALL audit ` +
+          `writes referencing that column will fail.`
+      );
+      return;
+    }
+    cursor = cursor.cause;
+  }
 }
 
 export async function insertAuditLog(
@@ -105,6 +129,7 @@ export async function insertAuditLog(
       "[AuditLogger] audit insert failed (non-fatal):",
       err instanceof Error ? err.message : err
     );
+    reportUndefinedColumn(err);
     return false;
   }
 }
