@@ -80,9 +80,9 @@ function reportUndefinedColumn(err: unknown): void {
         `[AuditLogger] SCHEMA/DDL DRIFT: audit insert failed with undefined_column (42703): ${
           cursor.message ?? "unknown"
         }. The audit_logs table is missing a column that server/schema.ts declares. ` +
-          `Run the ensureDatabaseSchema self-heal (restart the server) or apply ` +
-          `drizzle/0012-audit-logs-cancel-columns.sql. Until then, ALL audit ` +
-          `writes referencing that column will fail.`
+          `Run the ensureDatabaseSchema self-heal (restart the server); the ` +
+          `historical fix lives in drizzle/legacy/0012-audit-logs-cancel-columns.sql. ` +
+          `Until then, ALL audit writes referencing that column will fail.`
       );
       return;
     }

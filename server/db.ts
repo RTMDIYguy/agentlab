@@ -467,6 +467,21 @@ export async function ensureDatabaseSchema(): Promise<void> {
       ALTER TABLE "audit_logs" ADD COLUMN IF NOT EXISTS "cancelled_at" timestamp with time zone;
     `;
 
+    // CC-2026-09-25-010 (attribute-level convergence): the drizzle baseline
+    // reconciliation surfaced four column attributes that schema.ts declares
+    // but the hand-mirrored DDL never shipped on the live DB. All are
+    // additive-safe; the share-token NOT NULL is backfilled first so existing
+    // NULL rows cannot fail the constraint.
+    await client`
+      ALTER TABLE "workspaces" ALTER COLUMN "trial_ends_at" SET DEFAULT now() + interval '30 days';
+      ALTER TABLE "agents" ALTER COLUMN "uptime" DROP DEFAULT;
+      ALTER TABLE "agents" ALTER COLUMN "uptime" DROP NOT NULL;
+      ALTER TABLE "workflow_artifacts" ALTER COLUMN "verification_notes" SET DEFAULT '{"feedback":["Initial generation verified."],"suggestions":[],"passed":true,"rubric":{"brandAlignment":95,"actionableCta":90,"factualIntegrity":95,"formatting":90}}'::jsonb;
+      UPDATE "workflow_share_tokens" SET "last_accessed_at" = "created_at" WHERE "last_accessed_at" IS NULL;
+      ALTER TABLE "workflow_share_tokens" ALTER COLUMN "last_accessed_at" SET DEFAULT now();
+      ALTER TABLE "workflow_share_tokens" ALTER COLUMN "last_accessed_at" SET NOT NULL;
+    `;
+
     // CC-2026-09-25-008: workflow_steps rows synced before CC-2026-09-25-007
     // can carry an agent_id whose agents row no longer exists. Postgres FKs
     // are table-global, so a dangling id fails every audit insert that repeats
