@@ -570,3 +570,10 @@ Before ending a change session:
 - **Fix 4 (persistent threads)**: new ops_agent_messages table (workspace-scoped, client-generated thread id, denormalized proposal/runResult/executionStatus) + REST endpoints (GET/POST/PATCH/DELETE under /api/orchestrator/chat) in the new ops-chat controller. The client hydrates the thread on mount, persists user/assistant messages (best-effort, never blocks chat), PATCHes run outcomes onto the stored assistant message, and Clear Chat deletes the server thread and issues a fresh id. Watchdog reports stay ephemeral by design.
 - **Validation**: full suite 454/454 (9 new), tsc clean, change-control green. drizzle-kit generate emitted a clean single-table migration (0001) and a second run reports no changes - first live exercise of the 010 code-truth baseline, no legacy churn. Table DDL also added to ensureDatabaseSchema so dev self-heals at next boot.
 - **Rollback**: revert the listed files; drop ops_agent_messages if desired.
+## CC-2026-09-25-012 - Production deploy via manual path (push-to-deploy still broken)
+- **Date**: 2026-09-27
+- **Type**: operational (production release)
+- **Scope**: production Cloud Run service agentlab (us-central1)
+- **Change**: deployed commits 5880856a..184fe2c1 (Infisical secrets, dependency remediation, DAG fixes 007/008, schema-drift fix 009, drizzle baseline 010, Ops Agent UX 011) via the documented manual path: gcloud builds submit --config cloudbuild.yaml --substitutions COMMIT_SHA=184fe2c1 . Build f6fd1622 succeeded in 5m50s; revision agentlab-00166-fff is latestCreated AND latestReady; service URL returns 200. On boot the new bundle self-heals the audit_logs cancel columns (if not already present) and creates ops_agent_messages.
+- **Reminder (unchanged from CC-2026-09-24-001)**: GitHub push still does NOT deploy - deploy.yml has failed since 2026-09-16 on the missing GCP_SA_KEY repo secret. Robert decision pending: add the secret to restore push-to-deploy, or delete deploy.yml and make the manual path canonical.
+- **Rollback**: gcloud run services update-traffic agentlab --to-revisions=<previous> --region=us-central1, or redeploy the prior commit SHA.
