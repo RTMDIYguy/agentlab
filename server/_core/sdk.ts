@@ -1,7 +1,9 @@
 import { AXIOS_TIMEOUT_MS, COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import { ForbiddenError } from "@shared/_core/errors";
 import axios, { type AxiosInstance } from "axios";
-import { parse as parseCookieHeader } from "cookie";
+// cookie@2 renamed parse → parseCookie (Dependabot #81); the local alias keeps
+// every call site unchanged.
+import { parseCookie as parseCookieHeader } from "cookie";
 import type { Request } from "express";
 import { SignJWT, jwtVerify } from "jose";
 import type { User } from "../schema";

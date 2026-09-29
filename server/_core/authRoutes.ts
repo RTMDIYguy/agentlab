@@ -6,7 +6,9 @@ import { getDb } from "../db";
 import { users, workspaces } from "../schema";
 import { eq } from "drizzle-orm";
 import { randomUUID } from "crypto";
-import { parse as parseCookieHeader } from "cookie";
+// cookie@2 renamed parse → parseCookie (Dependabot #81); the local alias keeps
+// every call site unchanged.
+import { parseCookie as parseCookieHeader } from "cookie";
 
 // In-memory fallback user cache for resilience in case DB is momentarily unavailable
 const inMemoryUsers = new Map<string, any>();

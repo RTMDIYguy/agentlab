@@ -38,6 +38,45 @@ Small typo fixes can be grouped. Anything that changes behavior, ownership,
 workflow steps, automations, source-of-truth status, or required tools needs its
 own entry.
 
+## 2026-09-29 (evening) — cookie@2 boot-crash fixed; morning zombie-instance theory corrected
+
+- **Change:** `server/_core/authRoutes.ts` and `server/_core/sdk.ts`: import
+  renamed from `parse` to `parseCookie` (cookie@2's new API, Dependabot #81
+  merged 1.1.1 → 2.0.1). The local alias `parseCookieHeader` is preserved, so
+  no call sites changed. These are the only two files importing `cookie`.
+- **Why:** All three post-merge deploys (revisions 00176–00178, PRs #81/#82/#83,
+  19:40–19:52Z) crashed on boot:
+  `SyntaxError: The requested module 'cookie' does not provide an export named 'parse'`
+  → `HealthCheckContainerError`. Production traffic stayed on the last-good
+  revision 00175 (uuid bump, PR #80), so no downtime — but main was
+  undeployable and every new merge kept producing dead revisions.
+- **CORRECTION of this morning's entry:** the "stale pre-09-27 Cloud Run
+  instance" theory is wrong — no zombie executor exists. The real mechanics:
+  deploys trail pushes (yesterday's model-chain fix deployed 05:14 local), the
+  always-on Cloud Run instance processes pending runs continuously, and the
+  15:42Z `bf87810f` failure used the NEW chain (`gemini-pro-latest`) because
+  the new code was already live — the quota exhaustion is REAL free-tier
+  exhaustion on the service-account credential (which also explains how
+  executors get model errors at all while the stored API key 401s). The
+  04:03Z `f28b9301` failure (`gemini-2.5-pro`, ops_agent_execute trigger) was
+  revision 00175's predecessor code — old chain by deploy timing, not a rogue
+  process.
+- **Verified:** cookie@2.0.1 exports confirmed from unpkg (`parseCookie`,
+  `stringifyCookie`; no `parse`). Repo-wide import scan: exactly two importers,
+  both fixed. Local suite/typecheck COULD NOT run: `pnpm install` hangs on this
+  machine (two attempts, 10-minute timeouts, even with CI=true) and
+  node_modules is half-unlinked (cookie unresolvable) — local verification is
+  blocked until install is repaired; do NOT restart the local dev server until
+  then. Verification path instead: push → Cloud Build fresh install → revision
+  Ready check; worst case equals the current safe state (traffic pinned to
+  00175).
+- **State at close:** fix committed and pushed; watching next revision for
+  Ready=True. Open blockers unchanged: Gemini free-tier quota exhausted (all
+  agents fail until a paid tier or fresh credential), P1 scopes upload with
+  HubSpot support, local install repair queued.
+- **Owner:** Agent session, approved by Robert (in-chat; deploys on push are
+  the standing instruction this session).
+
 ## 2026-09-29 — P2 step 1 done: thin dispatch rejected; stale remote executor + dead model chain exposed
 
 - **Change:** (1) Extended `scripts/dispatch-approved-action.ts` with a `--reject
