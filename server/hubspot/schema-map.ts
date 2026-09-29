@@ -56,7 +56,7 @@ export const HUBSPOT_CONTACT_PROPERTIES: HubSpotPropertyDef[] = [
   { name: "hs_lead_status", label: "Lead Status", type: "enumeration", fieldType: "select", custom: false, group: GROUP_OS, mvp: false },
 
   // ---- Source & attribution (blueprint Part 1; signup_* names kept from the n8n contract)
-  { name: "lead_source_system", label: "Lead Source System", type: "enumeration", fieldType: "select", options: ["Agent Lab OS"], custom: true, group: GROUP_OS, mvp: true },
+  { name: "lead_source_system", label: "Lead Source System", type: "enumeration", fieldType: "select", options: ["agent_lab_os"], custom: true, group: GROUP_OS, mvp: true },
   { name: "signup_source", label: "Signup Source", type: "string", fieldType: "text", custom: true, group: GROUP_SIGNUP, mvp: true },
   { name: "agentlab_source_channel", label: "Agent Lab Source Channel", type: "enumeration", fieldType: "select", options: ["website form", "chat", "sms", "video consult", "intake form", "newsletter", "direct"], custom: true, group: GROUP_OS, mvp: true },
   { name: "agentlab_entry_point", label: "Agent Lab Entry Point", type: "string", fieldType: "text", custom: true, group: GROUP_OS, mvp: false },
@@ -67,7 +67,7 @@ export const HUBSPOT_CONTACT_PROPERTIES: HubSpotPropertyDef[] = [
   { name: "offer_of_interest", label: "Offer of Interest", type: "string", fieldType: "text", custom: true, group: GROUP_SIGNUP, mvp: true },
 
   // ---- Qualification & intent (blueprint Phase 2 fields; populated as the OS collects them)
-  { name: "agentlab_intent_level", label: "Agent Lab Intent Level", type: "enumeration", fieldType: "select", options: ["Low", "Medium", "High"], custom: true, group: GROUP_OS, mvp: true },
+  { name: "agentlab_intent_level", label: "Agent Lab Intent Level", type: "enumeration", fieldType: "select", options: ["low", "medium", "high"], custom: true, group: GROUP_OS, mvp: true },
   { name: "agentlab_priority_score", label: "Agent Lab Priority Score", type: "number", fieldType: "number", custom: true, group: GROUP_OS, mvp: false },
   { name: "agentlab_qualification_reason", label: "Qualification Reason", type: "string", fieldType: "textarea", custom: true, group: GROUP_OS, mvp: false },
   { name: "agentlab_sales_ready", label: "Sales Ready", type: "bool", fieldType: "booleancheckbox", custom: true, group: GROUP_OS, mvp: false },
@@ -154,8 +154,10 @@ export function mapSubmissionToHubSpotProperties(
 ): Record<string, string> {
   const properties: Record<string, string> = {
     email: submission.email,
-    // Blueprint: every record is stamped with source system + lifecycle
-    lead_source_system: "Agent Lab OS",
+    // Blueprint: every record is stamped with source system + lifecycle.
+    // lead_source_system uses the portal's actual enumeration value
+    // (agent_lab_os — verified live 2026-09-28).
+    lead_source_system: "agent_lab_os",
     lifecyclestage: "lead",
   };
 
@@ -200,6 +202,82 @@ export function normalizeChannel(source: string): string {
   if (s.includes("newsletter") || s.includes("email")) return "newsletter";
   if (s.includes("intake")) return "intake form";
   return "website form";
+}
+
+// ------------------------------------------------------------- draft mapping ----
+
+/**
+ * Maps a human-gated action draft payload onto the blueprint contract
+ * (2026-09-28, CC-2026-09-25-014 validation). The drafter's prompt teaches
+ * connector names and shapes but not the HubSpot property list, so models
+ * return informal keys (`deal_value_usd`, `engagement_score`, …). The
+ * connector must translate — not invent — using two sources of truth:
+ *
+ *  1. blueprint properties: keys already in HUBSPOT_CONTACT_PROPERTIES pass
+ *     through verbatim (real values only, nothing defaulted);
+ *  2. informal→contract translation: fields that have a real contract home.
+ *
+ * Information with no contract home is folded into `agentlab_intake_summary`
+ * (a real blueprint textarea) so NO approved signal is silently dropped.
+ * Translation is deterministic and unit-tested; unknown keys are preserved
+ * verbatim in the summary appendix.
+ */
+export function mapDraftToHubSpotProperties(
+  payload: Record<string, unknown>
+): Record<string, string> {
+  const properties: Record<string, string> = {};
+  const leftover: string[] = [];
+
+  // Informal → contract-home translation table. Only real values; nothing
+  // is defaulted or invented.
+  const translation: Record<string, (v: unknown) => void> = {
+    engagement_score: (v) => {
+      // `agentlab_intent_level` is an enumeration whose portal values are
+      // lowercase (verified live 2026-09-28: [low, medium, high]).
+      const s = String(v).toLowerCase();
+      if (s.includes("high")) properties.agentlab_intent_level = "high";
+      else if (s.includes("medium")) properties.agentlab_intent_level = "medium";
+      else if (s.includes("low")) properties.agentlab_intent_level = "low";
+      else leftover.push(`engagement_score: ${String(v)}`);
+      return;
+    },
+    next_steps: (v) => {
+      leftover.push(`Next step: ${String(v)}`);
+    },
+  };
+
+  for (const [key, value] of Object.entries(payload)) {
+    if (value === undefined || value === null) continue;
+    const isBlueprintProperty = HUBSPOT_CONTACT_PROPERTIES.some(
+      (p) => p.name === key
+    );
+    if (isBlueprintProperty && typeof value !== "object") {
+      properties[key] = String(value);
+      continue;
+    }
+    if (translation[key]) {
+      translation[key](value);
+      continue;
+    }
+    // No direct or translated home → preserve in the summary appendix so the
+    // approved signal still reaches the CRM record.
+    leftover.push(`${key}: ${typeof value === "object" ? JSON.stringify(value) : String(value)}`);
+  }
+
+  if (leftover.length > 0) {
+    const appendix = leftover.join("; ");
+    properties.agentlab_intake_summary = properties.agentlab_intake_summary
+      ? `${properties.agentlab_intake_summary} — ${appendix}`.slice(0, 2000)
+      : appendix.slice(0, 2000);
+  }
+
+  // The connector's own contract: every dispatch is stamped as coming from
+  // the OS with the lead lifecycle. Portal enumeration values are lowercase
+  // snake_case (verified live 2026-09-28: [agent_lab_os]).
+  properties.lead_source_system = properties.lead_source_system || "agent_lab_os";
+  properties.lifecyclestage = properties.lifecyclestage || "lead";
+
+  return properties;
 }
 
 /** Detects HubSpot property-validation errors so logs name the missing property. */

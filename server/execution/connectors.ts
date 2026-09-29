@@ -12,6 +12,12 @@
 
 import { getDb } from "../db";
 import { users } from "../schema";
+import { mapDraftToHubSpotProperties } from "../hubspot/schema-map";
+import {
+  createEmailTemplate,
+  createMarketingEmail,
+  publishMarketingEmail,
+} from "../tools/hubspotEmail";
 import { eq } from "drizzle-orm";
 
 export interface DispatchResult {
@@ -90,13 +96,12 @@ async function dispatchHubSpotContactUpsert(
       };
     }
 
-    // Only pass properties the connector contract knows; strings only.
-    const properties: Record<string, string> = {};
-    for (const [k, v] of Object.entries(payload)) {
-      if (v !== undefined && v !== null && typeof v !== "object") {
-        properties[k] = String(v);
-      }
-    }
+    // Translate the draft onto the blueprint contract (2026-09-28,
+    // CC-2026-09-25-014): the drafter is not taught the HubSpot property
+    // list, so the connector maps informal keys to their contract homes and
+    // preserves unmatched approved signal in agentlab_intake_summary.
+    // Nothing invented, nothing silently dropped.
+    const properties = mapDraftToHubSpotProperties(payload);
     const propertyKeys = Object.keys(properties);
     if (propertyKeys.length === 0) {
       return { ok: false, error: "Payload has no writable properties" };
@@ -135,6 +140,55 @@ async function dispatchHubSpotContactUpsert(
   }
 }
 
+// ------------------------------------------------- HubSpot marketing email ----
+
+/**
+ * HubSpot marketing email connector (2026-09-28; outbound channel after the
+ * Instantly trial ended — Marketing Hub Enterprise owns delivery, tracking,
+ * and compliance where the contacts already live).
+ *
+ * Contract: builds a custom-coded email template from the draft HTML via the
+ * Design Manager, creates the marketing email draft, and (optionally)
+ * requests an API publish. Without a recipient list attached in HubSpot, the
+ * API publish is refused by HubSpot — the honest outcome surfaces as a real
+ * error; the draft always remains in HubSpot for human send/scheduling.
+ * Required PAT scopes: content, marketing-email read/write (probed 403
+ * 2026-09-28 — grant pending; the connector reports it honestly).
+ */
+async function dispatchHubSpotMarketingEmail(
+  payload: Record<string, unknown>
+): Promise<DispatchResult> {
+  try {
+    const name = String(payload.name || "AgentLab outreach");
+    // Transparent 1:1 labeling: the target and event travel in the email NAME
+    // so a human sees exactly who this draft is for inside HubSpot. This does
+    // NOT send to the address — recipients are attached in HubSpot.
+    const labelBits: string[] = [];
+    if (payload.to_email) labelBits.push(String(payload.to_email));
+    if (payload.event_id) labelBits.push(String(payload.event_id));
+    const emailName = labelBits.length > 0 ? `${name} [${labelBits.join(" | ")}]` : name;
+
+    const template = await createEmailTemplate(emailName, String(payload.html));
+    const { emailId } = await createMarketingEmail({
+      name: emailName,
+      subject: String(payload.subject),
+      templatePath: template.path,
+      fromName: payload.from_name ? String(payload.from_name) : undefined,
+      fromEmail: payload.from_email ? String(payload.from_email) : undefined,
+      replyTo: payload.reply_to ? String(payload.reply_to) : undefined,
+    });
+
+    if (payload.publish === true) {
+      await publishMarketingEmail(emailId);
+      return { ok: true, externalId: emailId };
+    }
+
+    return { ok: true, externalId: emailId };
+  } catch (err: any) {
+    return { ok: false, error: err?.message ?? String(err) };
+  }
+}
+
 // ----------------------------------------------------------------- registry ----
 
 export const CONNECTORS: Record<string, ConnectorDef> = {
@@ -154,8 +208,39 @@ export const CONNECTORS: Record<string, ConnectorDef> = {
       "agentlab_stated_challenge",
       "agentlab_intake_summary",
       "lifecyclestage",
+      // Informal drafter keys the blueprint mapper understands (2026-09-28,
+      // CC-2026-09-25-014): translated to contract homes or folded into
+      // agentlab_intake_summary. Anything outside this list still fails
+      // validation loudly.
+      "notes",
+      "event_id",
+      "event_name",
+      "deal_stage",
+      "deal_value_usd",
+      "service_line",
+      "next_steps",
+      "lead_source",
+      "profit_engine_link",
+      "engagement_score",
     ],
     dispatch: dispatchHubSpotContactUpsert,
+  },
+  hubspot_marketing_email: {
+    name: "hubspot_marketing_email",
+    label: "HubSpot Marketing Email",
+    description:
+      "Creates a HubSpot marketing email (custom-coded template from the draft HTML; Marketing Hub Enterprise). Recipients/scheduling are attached in HubSpot; publish:true attempts the API publish. Delivery and open/click tracking live natively in HubSpot.",
+    requiredKeys: ["name", "subject", "html"],
+    optionalKeys: [
+      "from_name",
+      "from_email",
+      "reply_to",
+      "publish",
+      "list_id",
+      "to_email",
+      "event_id",
+    ],
+    dispatch: dispatchHubSpotMarketingEmail,
   },
 };
 

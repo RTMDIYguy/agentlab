@@ -85,13 +85,17 @@ function useFailureWatchdog(enabled: boolean) {
         if (cancelled || data.error || !Array.isArray(data.failures) || data.failures.length === 0) return;
 
         const newMsgs: ChatMessage[] = data.failures.map((f: any) => {
-          const wf = f.workflowName ? `"${f.workflowName}"` : "a workflow";
+          // Evidence hygiene (2026-09-27): the report must always name the
+          // workflow (or its id when the name is unresolvable) and show the
+          // failure DATE — an id-only or time-only citation is what let a
+          // workflow mix-up survive review (CC-2026-09-25-014 follow-up).
+          const wf = f.workflowName ? `"${f.workflowName}"` : f.workflowId ? `workflow ${f.workflowId}` : "a workflow";
           const rc = f.rootCause || {};
           return {
             id: `watchdog_${f.runId}`,
             role: "assistant" as const,
             content:
-              `⚠️ Watchdog: run ${String(f.runId).slice(0, 8)} of ${wf} FAILED${f.failedAt ? ` at ${new Date(f.failedAt).toLocaleTimeString()}` : ""}.\n\n` +
+              `⚠️ Watchdog: run ${String(f.runId).slice(0, 8)} of ${wf} FAILED${f.failedAt ? ` at ${new Date(f.failedAt).toLocaleString()}` : ""}.\n\n` +
               `Recorded error: ${f.errorMessage || "(none recorded)"}\n\n` +
               `Root cause (${rc.category ?? "unknown"}): ${rc.summary ?? ""}\n` +
               `Recommended fix: ${rc.recommendedFix ?? "open the run inspector"}`,

@@ -32,7 +32,7 @@ these keys:
   "connector": one of the registered connectors
   "title": a short human-readable summary of what this dispatch does (max 200 chars)
   "payload": the outbound payload, shaped for the chosen connector
-Do not include commentary outside the JSON.`;
+Output raw JSON only — no markdown code fences, no commentary outside the JSON.`;
 
 export async function draftActionPayload(
   actionPrompt: string,
@@ -47,6 +47,13 @@ export async function draftActionPayload(
 
 [REGISTERED CONNECTORS]
 ${registered}
+
+[CHANNEL RULE]
+For email outreach, use hubspot_marketing_email (HubSpot Marketing Hub
+Enterprise): give it name, subject, and complete polished html. Recipients
+and scheduling are attached inside HubSpot by a human — set to_email and
+event_id for transparent 1:1 labeling in the email name. Never use
+hubspot_contact_upsert for outreach; that connector updates CRM records only.
 
 Draft the outbound action as the JSON contract described in your instructions.`;
 
@@ -64,16 +71,22 @@ Draft the outbound action as the JSON contract described in your instructions.`;
     );
   }
 
-  // The runner's payload is structured; prefer an explicit `draft` field,
-  // else stringify the whole payload (models often emit raw JSON text).
+  // The runner's payload is structured; prefer an explicit `draft` field.
+  // Otherwise return the raw `result` string untouched: the runner wraps
+  // non-JSON model output as { result: text }, and that text may be the draft
+  // wrapped in a markdown code fence. extractJsonObject in parseActionDraft
+  // already pulls balanced JSON out of mixed text, so stripping the fence here
+  // would only duplicate work — but stringifying the whole wrapper would bury
+  // the draft one level down where the parser cannot see the connector.
   const payload = result.outputPayload as Record<string, unknown>;
   if (typeof payload?.draft === "string") return payload.draft;
   if (payload?.draft && typeof payload?.draft === "object") {
     return JSON.stringify(payload.draft);
   }
-  if (typeof payload?.result === "string" && payload.result.trim().startsWith("{")) {
+  if (typeof payload?.result === "string") {
     return payload.result;
   }
+  // Last resort: a structured payload with no draft/result shape at all.
   return JSON.stringify(payload);
 }
 
