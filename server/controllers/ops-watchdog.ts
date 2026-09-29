@@ -40,6 +40,27 @@ export type WatchdogFailure = {
   };
 };
 
+type Db = NonNullable<Awaited<ReturnType<typeof getDb>>>;
+
+/**
+ * Resolves display names for a set of workflow ids (evidence hygiene,
+ * 2026-09-27): every failed-run citation must carry the workflow's NAME next
+ * to its id — a bare UUID wall let the ops agent conflate workflows when
+ * narrating failures (CC-2026-09-25-014 follow-up). Shared by the HTTP
+ * endpoint and the internal tick so both paths cite identically.
+ */
+async function resolveWorkflowNames(db: Db, ids: Array<string | null | undefined>): Promise<Map<string, string>> {
+  const wfIds = Array.from(new Set(ids.filter((v): v is string => !!v)));
+  const names = new Map<string, string>();
+  if (wfIds.length === 0) return names;
+  const rows = await db
+    .select({ id: workflows.id, name: workflows.name })
+    .from(workflows)
+    .where(inArray(workflows.id, wfIds));
+  for (const r of rows) names.set(r.id, r.name);
+  return names;
+}
+
 /**
  * Classify a recorded run error into an actionable root cause. Deterministic
  * (no LLM involved) so the watchdog still works when the model layer is down —
@@ -154,16 +175,8 @@ export async function getRecentFailedRuns(req: Request, res: Response): Promise<
       .orderBy(desc(workflowRuns.updatedAt))
       .limit(limit);
 
-    // Resolve display names for the affected workflows.
-    const wfIds = Array.from(new Set(failed.map(f => f.workflowId).filter((v): v is string => !!v)));
-    const names = new Map<string, string>();
-    if (wfIds.length > 0) {
-      const rows = await db
-        .select({ id: workflows.id, name: workflows.name })
-        .from(workflows)
-        .where(inArray(workflows.id, wfIds));
-      for (const r of rows) names.set(r.id, r.name);
-    }
+    // Resolve display names for the affected workflows (shared helper).
+    const names = await resolveWorkflowNames(db, failed.map(f => f.workflowId));
 
     const failures: WatchdogFailure[] = failed.map(f => ({
       runId: f.id,
@@ -306,12 +319,12 @@ export async function getCredentialHealth(_req: Request, res: Response): Promise
  * Watchdog tick — logs a console line per new failure so server operators
  * see the same proactive signal the chat gets. (Called by the same endpoint
  * internally; kept separate for future cron/scheduler wiring.)
- */
-export async function watchdogTick(workspaceId: string, since: Date): Promise<WatchdogFailure[]> {
+ */export async function watchdogTick(workspaceId: string, since: Date): Promise<WatchdogFailure[]> {
   const db = await getDb();
   if (!db) return [];
   const failed = await db
     .select({
+
       id: workflowRuns.id,
       workflowId: workflowRuns.workflowId,
       errorMessage: workflowRuns.errorMessage,
@@ -329,10 +342,16 @@ export async function watchdogTick(workspaceId: string, since: Date): Promise<Wa
     .orderBy(desc(workflowRuns.updatedAt))
     .limit(20);
 
+  // Evidence hygiene (2026-09-27): the tick must cite workflow NAMES, not
+  // just ids — same contract as the HTTP endpoint above. A null name here
+  // would silently re-introduce the conflation class in any future
+  // cron/scheduler wiring of this function.
+  const names = await resolveWorkflowNames(db, failed.map(f => f.workflowId));
+
   return failed.map(f => ({
     runId: f.id,
     workflowId: f.workflowId,
-    workflowName: null,
+    workflowName: f.workflowId ? names.get(f.workflowId) ?? null : null,
     failedAt: (f.completedAt ?? f.updatedAt)?.toISOString?.() ?? null,
     errorMessage: f.errorMessage,
     rootCause: classifyRunFailure(f.errorMessage),

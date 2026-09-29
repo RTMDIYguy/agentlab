@@ -35,6 +35,17 @@ describe("connector registry", () => {
   it("requires email for hubspot_contact_upsert", () => {
     expect(CONNECTORS.hubspot_contact_upsert.requiredKeys).toContain("email");
   });
+
+  it("registers the HubSpot marketing email connector with an honest contract", () => {
+    expect(CONNECTORS.hubspot_marketing_email.requiredKeys).toEqual([
+      "name",
+      "subject",
+      "html",
+    ]);
+    // Recipients are attached in HubSpot, not in the payload.
+    expect(CONNECTORS.hubspot_marketing_email.optionalKeys).toContain("to_email");
+    expect(CONNECTORS.hubspot_marketing_email.optionalKeys).toContain("list_id");
+  });
 });
 
 describe("validatePayloadForConnector", () => {
@@ -171,7 +182,7 @@ describe("hubspot_contact_upsert dispatch (real HTTP contract)", () => {
   it("surfaces HubSpot's real rejection", async () => {
     process.env.HUBSPOT_PAT = "pat-test";
     fetchMock
-      .mockResolvedValueOnce(new Response("not found", { status: 404 }))
+      .mockResolvedValueOnce(new Response("nope", { status: 404 }))
       .mockResolvedValueOnce(
         new Response(JSON.stringify({ message: "invalid property" }), { status: 400 })
       );
@@ -181,5 +192,120 @@ describe("hubspot_contact_upsert dispatch (real HTTP contract)", () => {
     });
     expect(out.ok).toBe(false);
     expect(out.error).toContain("400");
+  });
+
+  it("translates informal draft keys onto the blueprint contract and preserves unmatched signal (CC-2026-09-25-014)", async () => {
+    process.env.HUBSPOT_PAT = "pat-test";
+    fetchMock
+      .mockResolvedValueOnce(new Response("not found", { status: 404 }))
+      .mockResolvedValueOnce(okJson({ id: "777" }, 201));
+
+    // Mirrors the real parked dispatch 2cd0f477 payload shape.
+    const out = await CONNECTORS.hubspot_contact_upsert.dispatch({
+      email: "sandra@apexdigital.example",
+      firstname: "Sandra",
+      lastname: "Hill",
+      company: "Apex Digital",
+      event_id: "FR-001",
+      event_name: "Founder RoundTable",
+      engagement_score: "High (Proposal Sent)",
+      deal_stage: "Proposal Sent",
+      deal_value_usd: 12500,
+      service_line: "AI Agency Build-Out",
+      next_steps: "Follow up Thurs",
+      lead_source: "LinkedIn_Connect",
+      profit_engine_link: "Ownable OS Profit Engine",
+      notes: "Founder RoundTable attendee (FR-001). Service interest: AI Agency Build-Out ($12,500).",
+    });
+    expect(out.ok).toBe(true);
+    const [, init] = fetchMock.mock.calls[1];
+    const props = JSON.parse(init.body).properties;
+
+    // Blueprint pass-through keys arrive verbatim.
+    expect(props.email).toBe("sandra@apexdigital.example");
+    expect(props.firstname).toBe("Sandra");
+    expect(props.lastname).toBe("Hill");
+    expect(props.company).toBe("Apex Digital");
+    // Informal → contract translation (portal enumeration values are lowercase).
+    expect(props.agentlab_intent_level).toBe("high");
+    // Approved signal with no direct home is preserved in the summary.
+    expect(props.agentlab_intake_summary).toContain("deal_value_usd: 12500");
+    expect(props.agentlab_intake_summary).toContain("Next step: Follow up Thurs");
+    expect(props.agentlab_intake_summary).toContain("notes: Founder RoundTable attendee");
+    // Stamps per the OS contract.
+    expect(props.lead_source_system).toBe("agent_lab_os");
+    expect(props.lifecyclestage).toBe("lead");
+  });
+
+  it("reports NOT sent when no HubSpot token is configured (marketing email)", async () => {
+    const out = await CONNECTORS.hubspot_marketing_email.dispatch({
+      name: "FR-001 follow-up",
+      subject: "Great meeting you at Founder RoundTable",
+      html: "<html><body><p>Hi Sandra,</p></body></html>",
+    });
+    expect(out.ok).toBe(false);
+    expect(out.error).toMatch(/not configured/i);
+  });
+
+  it("materializes template + email draft and labels the target transparently (marketing email)", async () => {
+    process.env.HUBSPOT_PAT = "pat-test";
+    fetchMock
+      // 1. Design Manager template create
+      .mockResolvedValueOnce(okJson({ path: "/agentlab-emails/test-1" }, 201))
+      // 2. Marketing email create
+      .mockResolvedValueOnce(okJson({ id: "email-123" }, 201));
+
+    const out = await CONNECTORS.hubspot_marketing_email.dispatch({
+      name: "FR-001 follow-up",
+      subject: "Great meeting you at Founder RoundTable",
+      html: "<html><body><p>Hi Sandra,</p><p>Following up Thursday.</p></body></html>",
+      to_email: "sandra@apexdigital.example",
+      event_id: "FR-001",
+      from_name: "Robert",
+      from_email: "robert@agent-lab.tech",
+    });
+    expect(out.ok).toBe(true);
+    expect(out.externalId).toBe("email-123");
+
+    // Template call: custom-coded email template from the draft HTML.
+    const [tplUrl, tplInit] = fetchMock.mock.calls[0];
+    expect(tplUrl).toBe("https://api.hubapi.com/designmanager/v1/templates");
+    expect(tplInit.method).toBe("POST");
+    const tplBody = JSON.parse(tplInit.body);
+    expect(tplBody.template_type).toBe(2);
+    expect(tplBody.source).toContain("Following up Thursday");
+
+    // Email create call: references the SAME template path the tool created;
+    // name labels the 1:1 target.
+    const [emailUrl, emailInit] = fetchMock.mock.calls[1];
+    expect(emailUrl).toBe("https://api.hubapi.com/marketing/v3/emails");
+    const emailBody = JSON.parse(emailInit.body);
+    expect(emailBody.name).toContain("sandra@apexdigital.example");
+    expect(emailBody.name).toContain("FR-001");
+    expect(emailBody.subject).toBe("Great meeting you at Founder RoundTable");
+    expect(emailBody.content.templatePath).toBe(tplBody.path);
+    expect(emailBody.content.fromName).toBe("Robert");
+    expect(emailBody.content.fromEmail).toBe("robert@agent-lab.tech");
+    // No publish call without publish:true.
+    expect(fetchMock.mock.calls.length).toBe(2);
+  });
+
+  it("attempts API publish only when publish:true is set (marketing email)", async () => {
+    process.env.HUBSPOT_PAT = "pat-test";
+    fetchMock
+      .mockResolvedValueOnce(okJson({ path: "/agentlab-emails/test-2" }, 201))
+      .mockResolvedValueOnce(okJson({ id: "email-456" }, 201))
+      .mockResolvedValueOnce(new Response("", { status: 202 }));
+
+    const out = await CONNECTORS.hubspot_marketing_email.dispatch({
+      name: "Blast",
+      subject: "S",
+      html: "<p>x</p>",
+      publish: true,
+    });
+    expect(out.ok).toBe(true);
+    expect(fetchMock.mock.calls.length).toBe(3);
+    const [pubUrl] = fetchMock.mock.calls[2];
+    expect(pubUrl).toBe("https://api.hubapi.com/marketing/v3/emails/email-456/publish");
   });
 });

@@ -65,7 +65,7 @@ describe("mapSubmissionToHubSpotProperties (blueprint Phase 1)", () => {
     expect(p.firstname).toBe("Jane");
     expect(p.lastname).toBe("van der Berg");
     expect(p.company).toBe("Acme Clinic");
-    expect(p.lead_source_system).toBe("Agent Lab OS");
+    expect(p.lead_source_system).toBe("agent_lab_os");
     expect(p.lifecyclestage).toBe("lead");
     expect(p.signup_source).toBe("founder-intake-chat");
     expect(p.agentlab_source_channel).toBe("chat");
@@ -83,7 +83,7 @@ describe("mapSubmissionToHubSpotProperties (blueprint Phase 1)", () => {
     });
     expect(p).toEqual({
       email: "bare@example.com",
-      lead_source_system: "Agent Lab OS",
+      lead_source_system: "agent_lab_os",
       lifecyclestage: "lead",
     });
     expect(p.agentlab_intent_level).toBeUndefined();

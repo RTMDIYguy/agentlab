@@ -22,6 +22,17 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
  * An API-key fallback is preserved for environments without the org policy
  * (GOOGLE_GENERATIVE_AI_API_KEY / GEMINI_API_KEY), but the service account
  * always wins when present.
+ *
+ * ADC user-principal path (2026-09-27, CC-2026-09-25-016): probes proved this
+ * org's gateway treats the Gemini API as PRINCIPAL-ONLY — the new AQ. AI
+ * Studio keys are rejected with API_KEY_SERVICE_BLOCKED no matter the header
+ * style or API version, so NO API key can authenticate. The credential that
+ * DOES assert a principal is the gcloud user login. After a one-time
+ * `gcloud auth application-default login --scopes=…,generative-language`,
+ * the ADC authorized_user file at %APPDATA%|~/.config/gcloud/
+ * application_default_credentials.json mints refresh-grant tokens that the
+ * API accepts. Precedence: service account (org policy) → ADC user →
+ * API key. Path override: GOOGLE_AI_ADC_FILE (also how tests stay hermetic).
  */
 
 const OAUTH_TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -63,6 +74,92 @@ type ServiceAccountKey = {
   project_id?: string;
   type?: string;
 };
+
+type AdcAuthorizedUser = {
+  type: "authorized_user";
+  client_id: string;
+  client_secret: string;
+  refresh_token: string;
+  quota_project_id?: string;
+};
+
+/**
+ * Locate a gcloud ADC authorized_user credential. Order: explicit override
+ * (GOOGLE_AI_ADC_FILE), then GOOGLE_APPLICATION_CREDENTIALS if it points at
+ * an authorized_user file, then the standard gcloud locations. Only
+ * authorized_user files are usable here — service-account files go through
+ * resolveServiceAccount instead.
+ */
+export function resolveAdcUserCredentials(): { creds: AdcAuthorizedUser | null; source: string } {
+  // Explicit overrides short-circuit: if GOOGLE_AI_ADC_FILE or
+  // GOOGLE_APPLICATION_CREDENTIALS is set, the machine-default ADC file is
+  // NOT consulted — an explicit pointer that is absent or unusable means
+  // "no ADC credential", never "silently use whatever is lying around".
+  const explicit = process.env.GOOGLE_AI_ADC_FILE || process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  const label = process.env.GOOGLE_AI_ADC_FILE ? "GOOGLE_AI_ADC_FILE" : "GOOGLE_APPLICATION_CREDENTIALS";
+  const candidates: Array<{ p: string; source: string }> = explicit
+    ? [{ p: explicit, source: `${label}: ${explicit}` }]
+    : [];
+  if (!explicit) {
+    const gcloudDir = process.env.APPDATA
+      ? path.join(process.env.APPDATA, "gcloud")
+      : process.env.HOME
+        ? path.join(process.env.HOME, ".config", "gcloud")
+        : null;
+    if (gcloudDir) {
+      candidates.push({
+        p: path.join(gcloudDir, "application_default_credentials.json"),
+        source: "gcloud ADC default",
+      });
+    }
+  }
+
+  for (const { p, source } of candidates) {
+    try {
+      if (!fs.existsSync(p)) continue;
+      const parsed = JSON.parse(fs.readFileSync(p, "utf-8"));
+      if (
+        parsed?.type === "authorized_user" &&
+        typeof parsed?.client_id === "string" &&
+        typeof parsed?.client_secret === "string" &&
+        typeof parsed?.refresh_token === "string"
+      ) {
+        return { creds: parsed as AdcAuthorizedUser, source };
+      }
+    } catch {
+      // Unreadable/malformed candidate — treated as absent.
+    }
+  }
+  return { creds: null, source: "" };
+}
+
+/**
+ * Mint an access token from the ADC refresh grant. The granted scopes come
+ * from the ORIGINAL interactive login (`gcloud auth application-default
+ * login --scopes=...`) — the token endpoint clamps to what was consented,
+ * so a login without the generative-language scope cannot be elevated here.
+ */
+export async function mintAdcUserToken(
+  creds: AdcAuthorizedUser
+): Promise<{ token: string; expiresInSec: number }> {
+  const res = await fetch(OAUTH_TOKEN_URL, {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: creds.client_id,
+      client_secret: creds.client_secret,
+      refresh_token: creds.refresh_token,
+      grant_type: "refresh_token",
+    }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`ADC refresh-token exchange failed (${res.status}): ${text.slice(0, 300)}`);
+  }
+  const data = (await res.json()) as { access_token?: string; expires_in?: number };
+  if (!data.access_token) throw new Error("ADC refresh-token exchange returned no access_token.");
+  return { token: data.access_token, expiresInSec: data.expires_in ?? 3600 };
+}
 
 let cachedToken: { token: string; expiryMs: number } | null = null;
 // Which scope the token endpoint actually accepted (avoid re-probing).
@@ -164,28 +261,41 @@ export async function getGoogleAccessToken(): Promise<{ token: string; scope: st
     return { token: cachedToken.token, scope: workingScope || GEMINI_OAUTH_SCOPE, source: "cache" };
   }
 
+  // Precedence (org policy): service account first, then the ADC user
+  // principal (the only credential class this org's gateway accepts for the
+  // Gemini API), then the legacy API-key path at the call sites.
   const { key, source } = resolveServiceAccount();
-  if (!key) {
-    throw new Error(
-      "GOOGLE_SERVICE_ACCOUNT: no service-account key available. Place the JSON key at secrets/gemini-service-account.json (or set GOOGLE_SERVICE_ACCOUNT_JSON), or provide GOOGLE_GENERATIVE_AI_API_KEY."
-    );
+  if (key) {
+    const scopes = workingScope ? [workingScope] : resolveScopes();
+    let lastError: Error | null = null;
+    for (const scope of scopes) {
+      try {
+        const { token, expiresInSec } = await mintServiceAccountToken(key, scope);
+        cachedToken = { token, expiryMs: now + expiresInSec * 1000 };
+        workingScope = scope;
+        return { token, scope, source };
+      } catch (err: any) {
+        lastError = err;
+        // invalid_scope → try the next candidate; anything else is fatal.
+        if (!/invalid_scope|Scope/i.test(err?.message || "")) throw err;
+      }
+    }
+    throw lastError || new Error("Google OAuth token exchange failed for all candidate scopes.");
   }
 
-  const scopes = workingScope ? [workingScope] : resolveScopes();
-  let lastError: Error | null = null;
-  for (const scope of scopes) {
-    try {
-      const { token, expiresInSec } = await mintServiceAccountToken(key, scope);
-      cachedToken = { token, expiryMs: now + expiresInSec * 1000 };
-      workingScope = scope;
-      return { token, scope, source };
-    } catch (err: any) {
-      lastError = err;
-      // invalid_scope → try the next candidate; anything else is fatal.
-      if (!/invalid_scope|Scope/i.test(err?.message || "")) throw err;
-    }
+  const adc = resolveAdcUserCredentials();
+  if (adc.creds) {
+    const { token, expiresInSec } = await mintAdcUserToken(adc.creds);
+    cachedToken = { token, expiryMs: now + expiresInSec * 1000 };
+    // The refresh grant returns whatever scopes were originally consented;
+    // record the Gemini scope as the effective one for telemetry.
+    workingScope = GEMINI_OAUTH_SCOPE;
+    return { token, scope: GEMINI_OAUTH_SCOPE, source: adc.source };
   }
-  throw lastError || new Error("Google OAuth token exchange failed for all candidate scopes.");
+
+  throw new Error(
+    "GOOGLE AI AUTH: no usable credential. This org's gateway is principal-only (API keys are rejected with API_KEY_SERVICE_BLOCKED). Run: gcloud auth application-default login --scopes=https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/generative-language — or place a service-account key at secrets/gemini-service-account.json."
+  );
 }
 
 /**
@@ -197,10 +307,11 @@ export function clearGoogleTokenCache(): void {
   workingScope = null;
 }
 
-/** True when Gemini is reachable through either auth path. */
+/** True when Gemini is reachable through any auth path (SA, ADC user, or key). */
 export function isGoogleAiConfigured(): boolean {
   if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) return true;
-  return resolveServiceAccount().key !== null;
+  if (process.env.GOOGLE_AI_ADC_DISABLED === "1") return resolveServiceAccount().key !== null;
+  return resolveAdcUserCredentials().creds !== null || resolveServiceAccount().key !== null;
 }
 
 function mergeHeaders(input: any, init: any): Headers {
@@ -251,6 +362,20 @@ export function createOAuthFetch(source: string): typeof fetch {
 export function createGoogleProvider() {
   const { key, source } = resolveServiceAccount();
   const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY;
+  const adc = process.env.GOOGLE_AI_ADC_DISABLED === "1" ? { creds: null } : resolveAdcUserCredentials();
+
+  // ADC user-principal bearer: the only credential class this org's gateway
+  // accepts for the Gemini API (principal-only — see header comment). It
+  // outranks the API-key fallback because keys are PROVEN unusable on this
+  // gateway (API_KEY_SERVICE_BLOCKED); a stale key must not shadow it.
+  if (adc.creds) {
+    const baseUrl = resolveBaseUrl();
+    return createGoogleGenerativeAI({
+      apiKey: "adc-user-oauth",
+      ...(baseUrl ? { baseURL: baseUrl } : {}),
+      fetch: createOAuthFetch(adc.source) as any,
+    });
+  }
 
   if (key) {
     // The SDK requires a non-empty apiKey string at construction; the real

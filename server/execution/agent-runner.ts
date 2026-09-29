@@ -1,4 +1,5 @@
 import { generateText, tool } from "ai";
+import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
 import { z } from "zod";
 import { AgentMailClient } from "../tools/agentmail";
@@ -43,6 +44,8 @@ export interface AgentRunnerResult {
   hasRefusal: boolean;
   refusalReason?: string;
   extractedArtifacts: CapturedArtifact[];
+  /** Model id that actually answered, when it was the Anthropic fallback. */
+  modelUsed?: string;
 }
 
 function isPathAllowed(filePath: string, unlockedDepartments: string[]): boolean {
@@ -365,15 +368,29 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
     };
   }
 
-  // Model fallback chain (2026-09-24): the old chain (2.5-flash → 1.5-flash
-  // → 1.5-pro) contained two dead models — gemini-1.5-pro returns "not found
-  // for API version v1beta" for this key and 1.5-flash is retired — so steps
-  // kept burning retries on models that could never succeed. Current,
-  // generally-available models only.
-  const fallbackModels = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-pro"];
+  // Model fallback chain (2026-09-28): the previous chain (2.5-flash →
+  // 2.0-flash → 2.5-pro) is dead for NEW Gemini API accounts — every attempt
+  // returns "no longer available to new users", pointing at the 3.x family
+  // (observed live 2026-09-28 during the ADC user-principal validation,
+  // CC-2026-09-25-014). The "-latest" aliases track the current GA model on
+  // every account, so they lead the chain; pinned 3.x ids follow as concrete
+  // fallbacks. Candidates were verified with live one-token generations
+  // before this change; 2.5 ids remain valid ONLY for older accounts.
+  const fallbackModels = ["gemini-flash-latest", "gemini-3.8-flash", "gemini-pro-latest"];
+  // Cross-provider last resort (2026-09-27): the Gemini credential can fail in
+  // ways no in-project enablement can fix — most recently an AI Studio "AQ."
+  // auth key rejected by generativelanguage with API_KEY_SERVICE_BLOCKED even
+  // with the API enabled on every project in the account (see
+  // CC-2026-09-25-014). When an Anthropic key is configured, one final attempt
+  // runs on Claude before the step fails honestly. Without the key, behavior
+  // is identical to the previous three-attempt chain.
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  const maxRetries = 3 + (anthropicKey ? 1 : 0);
   let text = "";
   let usage: any = {};
-  const maxRetries = 3;
+  let usedAnthropic = false;
+  let answeredModel = "";
+  let lastAttemptedModel = "";
   let attempt = 0;
   let success = false;
 
@@ -388,12 +405,20 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
   const instantlyKey = workspaceCredentials.instantlyToken || "";
 
   while (attempt < maxRetries && !success) {
-    const currentModel = fallbackModels[attempt % fallbackModels.length];
+    const useAnthropic = !!anthropicKey && attempt === maxRetries - 1;
+    const currentModel = useAnthropic ? "claude-haiku-4-5" : fallbackModels[attempt % fallbackModels.length];
+    if (useAnthropic) usedAnthropic = true;
+    lastAttemptedModel = currentModel;
     console.log(`[Agent Runner] Calling AI SDK generateText (Attempt ${attempt + 1}/${maxRetries}) with model ${currentModel}...`);
     try {
-      const google = createGoogleProvider();
+      const providerModel = useAnthropic
+        ? (() => {
+            const anthropic = createAnthropic({ apiKey: anthropicKey });
+            return anthropic(currentModel) as any;
+          })()
+        : createGoogleProvider()(currentModel) as any;
       const response: any = await (generateText as any)({
-        model: google(currentModel) as any,
+        model: providerModel,
         system: finalSystemPrompt,
         prompt: fullPrompt,
         maxSteps: 8,
@@ -1594,7 +1619,8 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
       });
       text = response.text;
       usage = response.usage;
-      console.log(`[Agent Runner] AI SDK generateText succeeded using model ${currentModel}.`);
+      console.log(`[Agent Runner] AI SDK generateText succeeded using model ${currentModel}${usedAnthropic ? " [anthropic fallback]" : ""}.`);
+      answeredModel = currentModel;
       success = true;
     } catch (sdkError: any) {
       attempt++;
@@ -1606,7 +1632,7 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
         // and marked the step successful — runs "completed" with invented
         // content. All model retries exhausted is a REAL failure: surface it.
         throw new Error(
-          `LLM_RETRIES_EXHAUSTED: all ${maxRetries} model attempts failed. Last error (${fallbackModels[(attempt - 1) % fallbackModels.length]}): ${sdkError.message || sdkError}`
+          `LLM_RETRIES_EXHAUSTED: all ${maxRetries} model attempts failed. Last error (${lastAttemptedModel}): ${sdkError.message || sdkError}`
         );
       }
       // Brief pause before failing over to the next model family
@@ -1621,8 +1647,12 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
   const tokensCompletion = usageAny?.completionTokens || 0;
   const tokensTotal = usageAny?.totalTokens || 0;
 
-  const cost =
-    (tokensPrompt / 1_000_000) * 1.25 + (tokensCompletion / 1_000_000) * 5.0;
+  // Per-provider pricing (honesty): the old formula was Gemini-only
+  // (flash-class input/output). Claude Haiku 4.5 prices differ; charging a
+  // Claude call at Gemini rates would corrupt cost telemetry.
+  const cost = usedAnthropic
+    ? (tokensPrompt / 1_000_000) * 1.0 + (tokensCompletion / 1_000_000) * 5.0
+    : (tokensPrompt / 1_000_000) * 1.25 + (tokensCompletion / 1_000_000) * 5.0;
 
   let outputPayload;
   try {
@@ -1646,5 +1676,9 @@ CRITICAL INSTRUCTION: You have full access to all tools. Execute your assigned s
     hasRefusal: refusalCheck.isRefusal && capturedToolCalls.length === 0,
     refusalReason: refusalCheck.reason,
     extractedArtifacts,
+    // (2026-09-28) Always report the model that actually answered — Gemini
+    // legs included — so audit rows and step telemetry never name a model
+    // that did not produce the output.
+    modelUsed: usedAnthropic ? `anthropic:${answeredModel}` : answeredModel || undefined,
   };
 }

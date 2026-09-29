@@ -38,6 +38,37 @@ export interface LiveSystemTelemetry {
   prospectContext?: string;
 }
 
+/**
+ * Formats one workflow run as citable evidence for the ops agent.
+ *
+ * Evidence-hygiene rule (2026-09-27, after the CC-2026-09-25-014 follow-up
+ * where the agent attributed a Sept-5 failure of one workflow to another): a
+ * citation MUST carry the workflow's NAME and the run's creation date next to
+ * the id. Ids are opaque hex; the name is what the agent (and the founder)
+ * can actually check a claim against. Exported pure for regression tests.
+ */
+export function formatRunEvidence(
+  run: {
+    id: string;
+    workflowId?: string | null;
+    createdAt?: Date | string | null;
+    status?: string | null;
+    errorMessage?: string | null;
+  },
+  workflowNameById: Map<string, string>
+): string {
+  const name = (run.workflowId && workflowNameById.get(run.workflowId)) || "unknown workflow";
+  const d = run.createdAt ? new Date(run.createdAt) : null;
+  const date = d && !Number.isNaN(d.getTime()) ? d.toISOString().slice(0, 10) : "date unknown";
+  const outcome =
+    run.status === "failed" || run.errorMessage
+      ? run.errorMessage || "no recorded error message"
+      : run.status
+        ? `status=${run.status}`
+        : "no recorded outcome";
+  return `Run ${run.id} — workflow "${name}" (workflow id ${run.workflowId ?? "n/a"}, run created ${date}): ${outcome}`;
+}
+
 export interface OrchestratorChatRequest {
   prompt: string;
   context?: Record<string, unknown>;
@@ -103,6 +134,7 @@ You have 360-degree knowledge of the AgentLab platform, database schemas, and mu
 2. **Autonomous Execution & Diagnostic Intelligence**:
    - When the user shares audit logs, screenshots, or error traces (such as "Failed query: insert into workflow_artifacts..."), do NOT ask basic questions or say "I cannot interpret the screenshot". You have full visual inspection and telemetry access.
    - Accurately diagnose root causes (e.g. database schema migrations, column type constraints like UUID vs string agent names, refusal detection, API rate limits, or missing inputs).
+   - EVIDENCE CITATION RULE (CRITICAL — 2026-09-27): when you cite a run as evidence, you MUST state the workflow's NAME (from Active Workflows or the run's own citation line) and the run's date alongside the id. NEVER attribute a run to a workflow by id-shape or assumption — ids are opaque hex and two workflows of the same program share none. If the telemetry line already names the workflow, repeat that name verbatim; if a run's workflow name is 'unknown workflow', say so and verify before diagnosing. Do not bundle unrelated runs into one narrative (one workflow's old failure is not evidence about another workflow's current bug).
    - Provide concrete explanations and propose refined, stateful DAG proposals that address and resolve those failure modes.
 3. **Collaborative Pair Architect Relationship**:
    - Think of yourself as a senior technical co-founder / COO who advises, diagnoses, and architects the business without executing destructively.
@@ -455,17 +487,12 @@ export async function handleOrchestratorChat(
         .orderBy(desc(workflowRuns.startedAt))
         .limit(10);
 
-      telemetry.recentRuns = runs
-        .slice(0, 5)
-        .map(r => `Run ${r.id}: status=${r.status}`);
-
       // Real failure evidence (2026-09-24): the agent must be able to SEE
       // its own failed runs — previously it only got run statuses, so it
       // could not diagnose why DAGs were dying without being told.
-      telemetry.recentRunFailures = runs
-        .filter(r => r.status === "failed")
-        .slice(0, 5)
-        .map(r => `Run ${r.id} (workflow ${r.workflowId ?? "n/a"}): ${r.errorMessage || "no recorded error message"}`);
+      //
+      // Citations go through formatRunEvidence: every line carries the
+      // joined workflow NAME and run date, never a bare UUID wall.
 
       const wfs = await db
         .select()
@@ -473,6 +500,17 @@ export async function handleOrchestratorChat(
         .where(eq(dbWorkflows.workspaceId, workspaceId));
 
       telemetry.activeWorkflows = wfs.map(w => `${w.name} (${w.status})`);
+
+      const wfNameById = new Map(wfs.map(w => [w.id, w.name]));
+
+      telemetry.recentRuns = runs
+        .slice(0, 5)
+        .map(r => formatRunEvidence(r, wfNameById));
+
+      telemetry.recentRunFailures = runs
+        .filter(r => r.status === "failed")
+        .slice(0, 5)
+        .map(r => formatRunEvidence(r, wfNameById));
 
       const ags = await db
         .select()
