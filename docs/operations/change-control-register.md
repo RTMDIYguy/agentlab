@@ -80,9 +80,11 @@ own entry.
   would risk stale-remote capture. The run is inert (`failed`), which is the
   safe resting state until (a) the stale remote instance is stopped or
   redeployed and (b) a live Gemini credential is confirmed.
-- **State at close:** `ed7f0890` rejected and closed; run `bf87810f` `failed`
-  at step 6 awaiting re-arm decision; reject mode + probe prefix resolution in
-  working tree (uncommitted); suite/typecheck run pending this session.
+- **State at close (amended 2026-09-29 after commits):** `ed7f0890` rejected
+  and closed; run `bf87810f` `failed` at step 6 awaiting re-arm decision;
+  reject mode + probe prefix resolution committed as `9b807c9e` (suite
+  480/480, typecheck clean, change-control green); command brief committed as
+  `b9e07e05`; both pushed to origin 2026-09-29 on Robert's instruction.
 - **Owner:** Agent session, approved by Robert (in-chat; P2 approved, stale
   remote + model-chain decisions requested).
 
