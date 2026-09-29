@@ -50,12 +50,7 @@ export const actionsRouter = router({
       const recent = await db
         .select()
         .from(actionDispatches)
-        .where(
-          and(
-            eq(actionDispatches.workspaceId, workspaceId),
-            eq(actionDispatches.workspaceId, workspaceId)
-          )
-        )
+        .where(eq(actionDispatches.workspaceId, workspaceId))
         .orderBy(desc(actionDispatches.createdAt))
         .limit(input.limit);
 

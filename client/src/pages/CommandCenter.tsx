@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { trpc } from "@/lib/trpc";
 import {
   TerminalSquare,
   Play,
@@ -563,6 +564,33 @@ export default function CommandCenter() {
     },
     onError: (err: any) => {
       toast.error(err.message || "Failed to trigger workflow");
+    },
+  });
+
+  // 4.5 Action dispatch decisions (human-gated outbound payloads).
+  // The approval card for 'action' steps lives HERE, not in the run approve
+  // button: run-level approve only resumes paused runs, while a dispatch
+  // decision releases (or refuses) the drafted outbound payload itself.
+  const dispatchQueue = trpc.actions.listDispatches.useQuery({ limit: 20 });
+  const utils = trpc.useContext();
+  const approveDispatchMutation = trpc.actions.approve.useMutation({
+    onSuccess: () => {
+      toast.success("Dispatch approved & sent to the external system.");
+      utils.actions.listDispatches.invalidate();
+      queryClient.invalidateQueries({ queryKey: ["runs"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to approve dispatch");
+    },
+  });
+  const rejectDispatchMutation = trpc.actions.reject.useMutation({
+    onSuccess: () => {
+      toast.success("Dispatch rejected — run resumes past this step.");
+      utils.actions.listDispatches.invalidate();
+      queryClient.invalidateQueries({ queryKey: ["runs"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to reject dispatch");
     },
   });
 
@@ -1257,6 +1285,67 @@ export default function CommandCenter() {
                           className="w-full h-7 text-xs"
                           onClick={() => rejectRunMutation.mutate(run.id)}
                           disabled={rejectRunMutation.isPending}
+                        >
+                          Reject
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Action Dispatch Decisions (human-gated outbound payloads) */}
+          <Card className="border-purple-500/30 bg-card">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Send className="w-5 h-5 text-purple-500" />
+                  <CardTitle className="text-lg">Dispatch Decisions</CardTitle>
+                </div>
+                <Badge variant={(dispatchQueue?.data?.awaiting?.length ?? 0) > 0 ? "destructive" : "outline"} className="text-xs">
+                  {dispatchQueue?.data?.awaiting?.length ?? 0} Awaiting
+                </Badge>
+              </div>
+              <CardDescription>Outbound actions drafted by agents — Approve sends them to the external system</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {(dispatchQueue?.data?.awaiting?.length ?? 0) === 0 ? (
+                <div className="flex flex-col items-center justify-center py-6 text-center text-muted-foreground">
+                  <CheckCircle2 className="w-8 h-8 text-green-500/60 mb-2" />
+                  <p className="text-sm font-medium">No dispatches awaiting decision</p>
+                  <p className="text-xs text-muted-foreground">Agent-drafted outbound actions will appear here for approval.</p>
+                </div>
+              ) : (
+                <div className="space-y-3 max-h-[260px] overflow-y-auto">
+                  {dispatchQueue?.data?.awaiting?.map((d: any) => (
+                    <div key={d.id} className="p-3 bg-muted/40 rounded-lg border border-border text-xs space-y-2">
+                      <div className="flex justify-between items-start gap-2">
+                        <span className="font-semibold leading-snug">{d.title}</span>
+                        <Badge variant="outline" className="text-[10px] shrink-0">{d.connector}</Badge>
+                      </div>
+                      <pre className="p-2 rounded bg-background/60 border border-border font-mono text-[10px] overflow-x-auto max-h-24">
+                        {JSON.stringify(d.payload, null, 2)}
+                      </pre>
+                      <div className="flex items-center gap-1.5 pt-1">
+                        <Button
+                          size="sm"
+                          className="w-full bg-green-600 hover:bg-green-700 h-7 text-xs"
+                          onClick={() => approveDispatchMutation.mutate(d.id)}
+                          disabled={approveDispatchMutation.isPending}
+                        >
+                          Approve & Send
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="w-full h-7 text-xs"
+                          onClick={() => {
+                            const reason = window.prompt("Reason for rejection (recorded in the audit trail):");
+                            if (reason) rejectDispatchMutation.mutate({ dispatchId: d.id, reason });
+                          }}
+                          disabled={rejectDispatchMutation.isPending}
                         >
                           Reject
                         </Button>
