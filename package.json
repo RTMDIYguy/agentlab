@@ -71,7 +71,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
-    "cookie": "^1.0.2",
+    "cookie": "^2.0.1",
     "cors": "^2.8.6",
     "cron-parser": "^5.10.0",
     "date-fns": "^4.1.0",
