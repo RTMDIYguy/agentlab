@@ -38,6 +38,292 @@ Small typo fixes can be grouped. Anything that changes behavior, ownership,
 workflow steps, automations, source-of-truth status, or required tools needs its
 own entry.
 
+## 2026-09-28 — handoff doc: ADC re-login paste warning
+
+- **Change:** Added a one-line paste warning to the Priority 1 gcloud command in
+  `docs/operations/morning-handoff-2026-09-28.md` (no command text altered).
+- **Why:** Robert's paste of the valid command produced a misleading
+  `--scopes` validation error; SDK source (surface/auth/application_default/login.py:272,
+  SDK 584.0.0) shows an exact-string check, and a byte-level check of the doc
+  confirmed the stored command is clean. Rich-text/terminal paste artifacts are
+  the likely cause.
+- **Verified:** Controlled re-run of the exact command with `--no-launch-browser`
+  passed scope validation and built the consent URL with both scopes.
+- **Owner:** Agent session, approved by Robert (in-chat).
+- **SUPERSEDED 2026-09-28:** This entry blamed paste artifacts; wrong. See the
+  follow-up entry below.
+
+## 2026-09-28 — handoff doc: quote --scopes in PowerShell (root cause)
+
+- **Change:** Priority 1 gcloud command in `morning-handoff-2026-09-28.md` now
+  quotes the scopes value:
+  `--scopes="https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/generative-language"`.
+  The paste-warning note was replaced with the verified root cause.
+- **Why:** Robert reproduced the error twice from PowerShell in the repo folder.
+  PowerShell parses an unquoted comma as an array separator; the array is then
+  flattened with the comma replaced by a space. gcloud's debug log shows it
+  received one mangled scope (`cloud-platform generative-language` as a single
+  token), which fails the exact-string `cloud-platform` membership check at
+  surface/auth/application_default/login.py:272. Bash/cmd wrappers pass the
+  value through intact, which is why the earlier Git Bash test passed.
+- **Verified:** The same PowerShell invocation with the scopes value quoted
+  passed validation and built the correct consent URL. gcloud debug log
+  (`%APPDATA%\gcloud\logs`) captured the mangled argument. Temp shim/scripts
+  removed; only the two doc changes remain.
+- **Owner:** Agent session, approved by Robert (in-chat).
+
+## 2026-09-28 — handoff doc: Gemini consent scope is generative-language.retriever
+
+- **Change:** Priority 1 gcloud command in `morning-handoff-2026-09-28.md` now
+  requests `--scopes="https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/generative-language.retriever"`.
+- **Why:** After the quoting fix, Google's consent screen rejected bare
+  `generative-language` with `Error 400: invalid_scope` ("Some requested scopes
+  cannot be shown"). Google's official Gemini OAuth quickstart
+  (ai.google.dev/gemini-api/docs/oauth, Aug 2026) documents the ADC scope for
+  this API as `generative-language.retriever`. This matters end to end because
+  the app's ADC mint path (`server/_core/google-ai.ts`) requests no scope at
+  refresh time — the consented set from the login is what lands on every token,
+  so the login scope choice is the only one that counts.
+- **Open question:** Unverified whether the Gemini API accepts `.retriever`
+  tokens on this gateway (probe prints `SUCCESS` only if it does). The API may
+  also accept `cloud-platform` tokens for user principals; Robert's next probe
+  run will tell us without another login if that is true.
+- **Owner:** Agent session, approved by Robert (in-chat).
+
+## 2026-09-28 — Google Cloud org: dedicated ADC OAuth client + External/Testing audience
+
+- **Change:** In Cloud project `project-36330a6c-5e91-4901-9dd`
+  (agentlab-tech-org): (1) OAuth audience flipped from Internal to
+  **External/Testing** (one-way; Internal blocked consumer Gmail accounts and
+  no Workspace account will ever consent); (2) test user
+  `agentlab.tech@gmail.com` added; (3) new Desktop OAuth client
+  "AgentLab ADC Gateway" created
+  (`718497644379-a8mi5ckv3ik2msic1fmhkptjo36cr07d`), client JSON stored at
+  gitignored `secrets/gemini-adc-oauth-client.json`.
+- **Why:** Robert hit "This app is blocked" consenting on Google's default SDK
+  client, then `org_internal` ("restricted to users within its organization")
+  on the new client — root cause was the project's Internal audience. Fix
+  follows Google's Gemini OAuth quickstart (own Desktop client, External
+  Testing audience, self as test user). Google no longer allows downloading
+  existing client secrets, hence the new client. The existing "Portable Founder
+  Dashboard" client was left untouched.
+- **Verified:** Identical consent URL for the new client returned `org_internal`
+  before the audience change and reached the normal account chooser after it.
+  Note: the Gemini API previously rejected a `cloud-platform`-only token
+  (`ACCESS_TOKEN_SCOPE_INSUFFICIENT`), so the `.retriever` consent is required.
+  Final gate is the live probe: `node scripts/probe-adc-scope.mjs` must print
+  `SUCCESS` after Robert completes the login.
+- **Owner:** Agent session, approved by Robert (in-chat).
+
+## 2026-09-28 — CC-2026-09-25-014: validation run live through guardrail gate; Gemini model chain refreshed
+
+- **Change:** (1) ADC user-principal credential chain certified end to end:
+  `node scripts/probe-adc-scope.mjs https://www.googleapis.com/auth/generative-language.retriever`
+  prints `SUCCESS` (HTTP 200) after Robert's consent via the new
+  "AgentLab ADC Gateway" client. (2) `agent-runner.ts` fallback chain replaced
+  (2.5-era ids → `gemini-flash-latest`, `gemini-3.8-flash`,
+  `gemini-pro-latest`) — the old ids are withdrawn for new Gemini accounts
+  (live-verified: each old id 404s "no longer available to new users"; each
+  new id passed a real one-token generation). (3) Honest telemetry:
+  `modelUsed` now always reports the model that actually answered;
+  `queue-processor.ts` audit rows and step `_telemetry` carry it instead of a
+  hard-coded `gemini-2.5-flash`. (4) `scripts/probe-run-context.mjs` accepts a
+  run-id argument. Full suite 475/475; change-control green.
+- **Why:** Validation run `bf87810f` (10 real CRM-Lite sheet contacts, Sept 27
+  DAG `c93d4c1c`) proved the credential fix live: step 1 agent executed on
+  `gemini-flash-latest` and persisted its artifact — the first Gemini success
+  through the user principal. The 2.5-era chain would have failed every step
+  regardless of credentials; the refresh prevents silent rot via `-latest`
+  aliases.
+- **State:** Run is `paused_for_approval` after step 2 guardrail completed —
+  by design. Steps 0–2 completed; the HubSpot action step (step 5,
+  `hubspot_contact_upsert`) has NOT run and no dispatch exists yet
+  (`action_dispatches` empty). The run row's stale `error_message` is residue
+  from the pre-fix attempt (cosmetic). No auto-approval: the gate and the
+  production-CRM dispatch are human decisions.
+- **Owner:** Agent session, approved by Robert (in-chat).
+
+## 2026-09-28 — env: port-3000 squatter retired; dev server restored on current code; run advanced to HubSpot dispatch gate
+
+- **Change:** (1) Killed the ~7.6MB squatter node process holding port 3000
+  (flagged in the 2026-09-28 handoff). (2) Dev server restarted from repo root
+  pinned via `PORT=3000` (default run binds port 0 — the dev env injects
+  `PORT=0`, so the server picked a random port; `dev-server.log` at repo root
+  records runtime output). (3) Validation run `bf87810f` reset and re-executed
+  to the final gate: dispatch `2cd0f477` (`hubspot_contact_upsert`, contact
+  Sandra Hill / Apex Digital, FR-001) parked `awaiting_approval` — CC-
+  2026-09-25-014's target state reached; awaiting Robert's UI decision. No
+  auto-approval.
+- **Incident:** Robert's first guardrail approval was consumed by a process
+  running stale pre-change code (step 3 failed on the withdrawn
+  `gemini-2.5-pro`, proving the server predated the model-chain fix). Root
+  cause: the dev server had not been restarted after the 2026-09-27/28 edits.
+  No data loss: the run was reset and completed steps were skipped on resume.
+  Lesson: restart the dev server (or re-run via the processor script) after
+  any execution-path change before approvals.
+- **Observation (engine behavior, no change made):** on resume after
+  `paused_for_approval`, the processor marks every remaining guardrail step
+  completed as it passes them, so one approval carried the run past both the
+  step-2 and step-4 guardrails. If each guardrail should gate individually,
+  the resume path needs a dedicated entry.
+- **Owner:** Agent session, approved by Robert (in-chat).
+
+## 2026-09-28 — CORRECTION: approval was consumed by a second (remote) AgentLab instance on the shared DB; dispatch gate still intact
+
+- **Supersedes:** the process-attribution claim in the 2026-09-28 "port-3000
+  squatter retired" entry ("stale local dev server"). Wrong: process listing
+  proves exactly one local server exists — started 20:22 by this session,
+  current code — and its log shows zero activity at 01:25:04Z when the run was
+  resumed, the action step re-drafted, and the step marked failed. The actor
+  was a second AgentLab instance (most likely a deployed/remote checkout)
+  sharing the same Neon database, running pre-fix code — matching the earlier
+  step-3 failure that named the withdrawn `gemini-2.5-pro`.
+- **State after Robert's run-level approval:** dispatch `2cd0f477`
+  (`hubspot_contact_upsert`, Sandra Hill) is UNTOUCHED and still
+  `awaiting_approval` — the decision that reaches it must be the dispatch-level
+  approve/reject card, not the run-level approve. The re-draft attempt by the
+  remote instance failed honestly on the old drafter's fence-handling gap
+  (draft buried in `{"result":"```json…"}`) — a defect already fixed in the
+  uncommitted local changes.
+- **Implication (needs Robert's decision):** two instances against one dev
+  database will keep fighting over runs. Before further approvals, confirm
+  which host the OS UI targets, or retire the remote instance.
+- **Owner:** Agent session, approved by Robert (in-chat).
+
+## 2026-09-28 — HubSpot blueprint contract gap found: properties never provisioned; PAT lacks schema scopes
+
+- **Change:** (1) `server/hubspot/schema-map.ts` gains
+  `mapDraftToHubSpotProperties` — deterministic draft→blueprint translation
+  (informal keys → contract homes; unmatched approved signal preserved in
+  `agentlab_intake_summary`, never dropped or invented). (2)
+  `connectors.ts` dispatch now routes through the mapper and declares the
+  informal drafter keys in its contract; anything else still fails loudly.
+  (3) New `scripts/ensure-hubspot-properties.ts` idempotently provisions the
+  blueprint's property groups + custom properties; new
+  `scripts/dispatch-approved-action.ts` executes an approved dispatch through
+  the exact actions-router path. Suite 476/476.
+- **Why:** The parked dispatch `2cd0f477` payload used informal keys; the
+  connector forwarded them raw (would 400 at HubSpot). Root cause of the
+  whole gap: the blueprint (Sep 23) was committed but its portal properties
+  were never provisioned, and the stored PAT returns **403 (missing schema
+  scopes)** on every property/group creation — so even the provisioner cannot
+  finish without a HubSpot scope grant.
+- **State:** Dispatch `2cd0f477` recorded `dispatch_failed` with HubSpot's
+  real 400 (`agentlab_intake_summary` does not exist). Nothing was written to
+  the production CRM. Robert approved this dispatch three times in-session
+  (twice consumed by the run-level endpoint on the pre-09-27 Cloud Run
+  deploy; once at the card with no dispatch wiring in the deployed UI).
+- **Needed from Robert:** grant `crm.schemas.contacts.write` (+ groups) to the
+  HubSpot private app, then agent re-runs provisioner → dispatch. Alternative:
+  approve a reduced identity-only write (approved signal stays in the OS
+  evidence, not the CRM).
+- **Owner:** Agent session, approved by Robert (in-chat).
+
+## 2026-09-28 — UI: dispatch-level approve/reject wired into Command Center
+
+- **Change:** `client/src/pages/CommandCenter.tsx` gains a **Dispatch
+  Decisions** card (below Approval Queue) wired to the existing
+  `actions.listDispatches` / `actions.approve` / `actions.reject` tRPC
+  endpoints: awaiting dispatches render title, connector badge, and full
+  payload; Approve sends to the external system, Reject records a reason.
+  Also fixed a duplicate-condition bug in `actions.listDispatches`' `recent`
+  query. Typecheck clean; suite 476/476.
+- **Why:** Registered gap — the deployed UI's only approval surfaces called
+  the run-level endpoint, so dispatch decisions could never be released from
+  any screen (both of Robert's earlier approvals hit
+  `/api/runs/:id/approve` per Cloud Run logs).
+- **Deploy note:** Takes effect on the Cloud Run service after the next Cloud
+  Build (uncommitted locally until Robert says go).
+- **Owner:** Agent session, approved by Robert (in-chat).
+
+## 2026-09-28 — CC-2026-09-25-014 CLOSED: HubSpot dispatch verified live end to end
+
+- **Outcome:** Robert created the blueprint contact properties in the portal
+  (23 created, 16 pre-existing; groups landed in "Custom information" —
+  cosmetic cleanup pending). Dispatch `2cd0f477` executed through the
+  actions-router path after two honest portal-truth fixes: enumeration values
+  are lowercase (`high`, not `High`) and `lead_source_system` is
+  `agent_lab_os`. Result: **DISPATCHED, externalId 560622406361**; API
+  read-back confirms Sandra Hill / Apex Digital with `agentlab_intent_level`
+  = high and the full approved signal preserved in `agentlab_intake_summary`
+  (FR-001, deal stage, $12,500, service line, next steps, Profit Engine
+  link). Suite 476/476; change-control green.
+- **Run state:** `bf87810f` advanced past the HubSpot gate and paused at step
+  6 ("Schedule & Dispatch Personalized Emails") — a NEW dispatch
+  (`ed7f0890`, `awaiting_approval`) drafted by the agent. NOT approved: (a)
+  no email connector is registered, so the drafter re-picked
+  `hubspot_contact_upsert` and a second dispatch would overwrite Sandra's
+  rich record with a thinner one; (b) outbound email to a real lead is a
+  human decision. Decision needed: register an email connector and reject the
+  thin duplicate, or approve as-is.
+- **Owner:** Agent session, approved by Robert (in-chat).
+
+## 2026-09-28 — outbound email channel: hubspot_marketing_email connector registered
+
+- **Change:** New connector `hubspot_marketing_email` in `connectors.ts`, built
+  on the existing `server/tools/hubspotEmail.ts` suite (custom-coded template
+  via Design Manager → marketing email draft → optional API publish;
+  recipient list + scheduling stay in HubSpot where Marketing Hub Enterprise
+  owns delivery/tracking/compliance). Payload contract: name/subject/html
+  required; from_*/reply_to/publish/list_id optional; to_email + event_id
+  give transparent 1:1 labeling in the HubSpot email name. Drafter prompt
+  gains a CHANNEL RULE: email outreach goes to the marketing-email connector;
+  `hubspot_contact_upsert` is CRM-record-only. Four new connector tests;
+  suite 480/480.
+- **Why:** Step 6 of run `bf87810f` ("Schedule & Dispatch Personalized
+  Emails") had no email channel to choose — the drafter re-picked
+  `hubspot_contact_upsert`, which would overwrite Sandra Hill's rich CRM
+  record with a thin outreach draft. Instantly is gone (trial ended);
+  Robert confirmed HubSpot Marketing Hub Enterprise as the delivery owner.
+- **Blocker (same shape as the schema scopes):** live probe returns 403
+  MISSING_SCOPES on /marketing/v3/emails — the PAT needs `marketing.email.read`,
+  `marketing.email.write`, and `content`. Until granted, a marketing-email
+  dispatch fails honestly; the drafter may still draft and park for approval.
+- **Owner:** Agent session, approved by Robert (in-chat).
+
+## 2026-09-28 — GUARDRAIL: HubSpot two-portal map (after near-miss)
+
+- **Map (probe-verified):** The OS's HubSpot credentials belong to portal
+  **243478405** (Marketing Hub Enterprise, app `agentlabhs` / private app id
+  53416564, UI host `app-na2.hubspot.com`). This is where all OS writes land,
+  including contact 560622406361. Portal **50504462**
+  (uncle-robert-consulting-llc) is a FREE portal and is also the HubSpot CLI's
+  default authenticated account here; **52008786** (newdevtest) is the test
+  integration; **247477499** is the sandbox.
+- **Rule (amended same day after Robert located the build home):** HubSpot CLI
+  has TWO legitimate targets and one forbidden one. **`--account 52008786`
+  (newdevtest) is where the agentlabhs project/app was built** — project
+  uploads (`hs project upload`) belong there; installed framework id
+  52709753. **`--account 243478405` is production** — all data/API operations
+  (contacts, emails, dispatches) belong there; the OS PATs are bound to it.
+  **50504462 is a free portal and the CLI default — never target it.** The
+  243 private-app entry (53416564) is the production INSTALL of the 52008786
+  project app; its scopes update when a new build from 52008786 is promoted
+  to the 243 installation, not via the Auth screen.
+- **Credential note:** CLI needs a *personal access key* (PAK, generated at
+  `https://app-na2.hubspot.com/l/personal-access-key/243478405`) — NOT a
+  `pat-…` private-app token (the CLI rejects PATs with 400; both credential
+  species verified empirically). PATs belong in the OS/Infisical, the PAK in
+  the CLI config.
+- **Owner:** Agent session, approved by Robert (in-chat).
+
+## 2026-09-28 — session close: work committed per Commit Plan; upload resume point documented
+
+- **Change:** End-of-session cleanup: wedged upload process killed (PID 18620,
+  was compressing with nested node_modules suspected — resume instructions in
+  `docs/operations/morning-handoff-2026-09-29.md` Priority 1). Temporary logs
+  removed. Morning handoff for 2026-09-29 created, including the **"How Ops
+  Agent works" discussion item** (Robert's newdevtest screenshots of the
+  Bryan Clark contact card: ICP Growth Match, Market Marksman Radar signals,
+  recommended offer, 1-Click OS Workflows) — details to be provided by Robert
+  in-session; no card redesign before that discussion.
+- **State at close:** Suite 480/480, typecheck clean, change-control green.
+  All 2026-09-28 work local and uncommitted pending Robert's go on the Commit
+  Plan (handoff doc). Run `bf87810f` paused at step 6; thin duplicate dispatch
+  `ed7f0890` awaiting rejection; scopes upload one fix away (nested
+  node_modules exclusion).
+- **Owner:** Agent session, approved by Robert (in-chat).
+
 ## Log Distribution Rule
 
 Station a log beside the workflow, kit, tracker, or automation it verifies when
@@ -588,3 +874,29 @@ Before ending a change session:
 - **Privacy stance**: the visitor key identifies a browser, not a person; transcripts are bounded (12 turns / 8KB) as before; /start states what is stored and that it can be deleted on request.
 - **Validation**: 6 new hermetic tests (anonymous persistence, no-key no-op, email stamping, claim/already-claimed/missing); full suite 460/460; tsc clean; drizzle generate emitted a minimal 3-statement migration with idempotent re-run.
 - **Rollback**: revert listed files; migration 0002 is additive (drop visitor_key index/column optional).
+## CC-2026-09-25-014 - Agent Execution / Action drafts / Markdown-fenced drafts no longer killed the HubSpot dispatch step
+- **Date**: 2026-09-27
+- **Type**: bugfix (human-gated action pipeline, CC-2026-09-23-018 surface)
+- **Scope**: server/execution/action-drafter.ts; server/execution/action-drafter.test.ts
+- **Trigger**: the Founder RoundTable Event Data Ingest DAG failed its action step with "Action draft invalid: unknown or missing connector (registered: hubspot_contact_upsert)" even though the raw draft visibly contained the correct connector.
+- **Root cause**: three-link chain. (1) When model output is not clean JSON, agent-runner wraps it as `{ result: text }`; the model emitted the draft inside a ```json fence, so the parse failed and the whole fenced string landed in result. (2) draftActionPayload's result branch only passed the string through if it STARTED with `{`; a code fence does not, so it fell through to JSON.stringify of the entire wrapper. (3) parseActionDraft then saw the wrapper object - no connector key at top level - and failed, while extractJsonObject (which already handles fenced and mixed text) never got the chance. The drafter's own system suffix even demanded raw JSON, but the model fenced anyway; the fallback should have been tolerant the same way the parser already is.
+- **Fix**: draftActionPayload now passes raw `result` strings through untouched, letting extractJsonObject pull the embedded draft out (it already strips fences and prose). Nothing about the strict contract changed: unknown connectors, missing titles, and non-object payloads still fail the step honestly; a result string with no JSON draft in it still fails validation. Also tightened the drafting prompt to say no markdown code fences explicitly. No changes to connectors, queue-processor, the actions router, or HubSpot itself - the dispatch ledger, approval gates, and SAIF tripwires are untouched.
+- **Tests**: 4 new regression tests pin the production shape (fenced JSON inside result unwraps to a valid hubspot_contact_upsert draft; prose-wrapped JSON still parses; a result string with no draft fails honestly) plus the existing strict-contract tests unchanged; drafter suite 12/12, tsc --noEmit clean, change-control green.
+- **Robert action**: re-run the failed Founder RoundTable run - the HubSpot step will now draft successfully and pause for approval as designed. Confirm the vault HUBSPOT_PAT is healthy in Infisical before approving the dispatch.
+- **Rollback**: revert the two listed files (one-code-branch change).
+- **Ops-agent cross-check (same day, follow-up)**: Robert relayed the ops agent's endorsement, which bundled three claims that did not survive contact with the live rows: (1) it attributed a "capability check failure in Step 1" to run e977032c of the Founder RoundTable DAG - the run exists but belongs to the unrelated Daily Agency Operations & State Report workflow (c8b910e7) and is dated 2026-09-05; that workflow's last three runs COMPLETED, and its historical failures are a real refusal-phrase artifact ("my capabilities are limited to..." tripping detectAgentRefusal), not a configuration bug - the deterministic fallback voice says "limited to" and pre-dated the quota fix. (2) The genuinely failed run is c5a8f2d5 of the NEW Founder RoundTable Post-Event Engagement & Nurture workflow (c93d4c1c, itself proposed by the ops agent earlier today): steps 0-4 completed; step 5 (Update HubSpot CRM with Event Engagement) failed at 16:17 local with the exact fenced-result parse error 014 fixes - the fix landed ~16:28, so the failure predates it; expected to pass on re-run. (3) Its proposed "HubSpot Connector Fix Validation" DAG was REJECTED without execution: step 4 would have dispatched a synthetic test@example.com contact to the LIVE production HubSpot CRM (connector contract validates the payload cleanly), polluting the real CRM with test data; its guardrail step reviews formatting but can catch nothing (the dispatch ledger validates before parking); and its step 3-to-4 chaining misreads the actual pipeline (guardrails pause the run; action steps draft and pause again; approval happens in the actions router, not in a later step). Validation instead happens via re-running the real DAG with real event data. Read-only DB probe followed the CC-2026-09-25-009 pattern (SELECT only, Infisical-wrapped, no secret values printed; probe script deleted after use).
+- **Validation attempt result (same day)**: end-to-end validation is currently BLOCKED on the LLM credential, not on the 014 fix. Run d68deaa9 was triggered against workflow c93d4c1c with the REAL URC-Phase1-CRM-Lite tracker rows Robert provided (10 contacts, Event IDs FR-001..FR003/BC-001, verbatim from the sheet; no attendee fields invented - only Sandra Hill has a recorded email, and the ingest context explicitly forbids the agents from fabricating addresses/chat/Q&A data). Executed through the REAL processPendingRuns pipeline (the local dev server was found DOWN - an unrelated ~6MB node process squats port 3000 and 404s everything; the app is not listening on 3001-3005 - so the queue processor was invoked directly via a kept script, scripts/execute-pending-runs.ts). The run failed honestly at step 1 before reaching the HubSpot action step: all three fallback models returned 401. Root cause identified by a no-exposure probe (scripts/diagnose-gemini-env.mjs, prints statuses/prefixes and Google's error only): the GOOGLE_GENERATIVE_AI_API_KEY value stored in Infisical is a 53-char Google OAuth ACCESS TOKEN (prefix AQ.A...), not an AI Studio API key (39-char, AIza...). Google rejects it with ACCESS_TOKEN_TYPE_UNSUPPORTED. It was evidently still valid at 16:15 today (the earlier run made real 22.7s/5.4s model calls) and expired within the hour - OAuth access tokens are short-lived by design. CC-2026-09-25-004 already established the correct fix path. ROBERT ACTIONS: (1) aistudio.google.com > Get API key > create key (starts AIza); (2) replace the GOOGLE_GENERATIVE_AI_API_KEY value in Infisical dev (the AQ.A... token is wrong AND dead); (3) restart the dev server (pnpm dev) and retire whatever holds port 3000; (4) re-run validation: pnpm exec infisical run --env=dev -- node scripts/trigger-roundtable-validation.mjs then node scripts/execute-pending-runs.ts (or just trigger from the UI once the server is up). Kept scripts (documented tools, not scratch): trigger-roundtable-validation.mjs (re-trigger with sheet data), execute-pending-runs.ts (real-pipeline executor), diagnose-gemini-env.mjs (credential probe, no secret material printed). The run row d68deaa9 stands as the honest failure record.
+- **Diagnosis correction (same day, after Robert reported AI Studio only issues AQ.-prefixed keys)**: the earlier read of the Infisical value as an "expired OAuth access token" was WRONG. The AQ.-prefixed value is Google's NEW AI Studio key format: since June 2026 AI Studio issues "Authentication Keys" (AQ....) platform-wide, retiring the legacy AIza "traffic keys" - not an org-policy artifact and not short-lived by design. Dual-mode probe results with the stored key: x-goog-api-key header -> 401 ACCESS_TOKEN_TYPE_UNSUPPORTED; Authorization Bearer -> 401 API_KEY_SERVICE_BLOCKED (Google classifies the credential as API-key-type but blocks it from generativelanguage.googleapis.com). That means the remaining unblock question is whether API-key access to the Generative Language API can be enabled for this key/project (enable the API, or the org's API-key restrictions cover it - consistent with the org constraints documented in CC-2026-09-24-006) or whether this org cannot use Gemini API keys at all. Fallback path that needs NO Google credential: ANTHROPIC_API_KEY is present and verified live (CC-2026-09-24-005) and @ai-sdk/anthropic is already a dependency; adding an Anthropic leg to the agent-runner's provider fallback chain is a code option if the Google routes stay blocked.
+- **Robert decision executed + second diagnosis correction (same day)**: Robert chose "enable the Gemini API". gcloud (authenticated as agentlab.tech@gmail.com) confirmed generativelanguage.googleapis.com was NOT enabled on any candidate project while aiplatform.googleapis.com WAS enabled on the org project; enabled the Gemini API on the org project (project-36330a6c-5e91-4901-9dd) and, after the stored key STILL returned API_KEY_SERVICE_BLOCKED, on the remaining visible projects (cs-poc-*, portable-founder-dashboard, project-...-abf80; the three gen-lang-client auto-projects already had it). Key still service-blocked after propagation - so the AQ.-key rejection persists regardless of project enablement, consistent with the community reports of AQ-key incompatibility cohorts; this is now a Google-side limitation we cannot fix from the account. CORRECTION to CC-2026-09-24-005's framing carried forward: the Anthropic key "verified live" check only exercised the free models-list endpoint - it never proved paid inference. Live proof via the new runner leg: the stored ANTHROPIC_API_KEY is AUTH-VALID but the account has ZERO CREDITS ("Your credit balance is too low to access the Anthropic API").
+- **CC-2026-09-25-015 - Agent Execution / Provider resilience / Anthropic fallback leg in the agent runner**: with the Gemini credential unusable from our side, the runner gained a cross-provider last resort: the legacy 3-attempt Gemini chain is unchanged, then - ONLY when ANTHROPIC_API_KEY is configured - one final attempt runs claude-haiku-4-5 via @ai-sdk/anthropic (already a dependency) through the same generateText call with the full tool contract. Without the key, behavior is byte-identical to before. Honesty details: cost ternary prices the Anthropic branch at Claude rates (1.0 in / 5.0 out per 1M) instead of silently charging Claude calls at Gemini rates; the result carries modelUsed ('anthropic:<id>') so telemetry can show which provider actually answered; the retries-exhausted error now names the REAL last attempted model (the old index arithmetic misattributed it to a Gemini model). 3 source-pin regression tests in server/execution/anthropic-fallback.test.ts; tsc clean; execution suite 85/85.
+- **Live validation status (end of day)**: run d68deaa9 executed twice through the real pipeline, failed honestly both times at step 1 BEFORE the HubSpot action step, now with a fully characterized error chain: attempts 1-3 Gemini 401 (AQ. key rejected by Google service-side), attempt 4 Claude 402 (no credits). Validation is one Robert action away: fund the Anthropic account (console.anthropic.com > Plans & Billing > credits) - after which the same run should proceed to the HubSpot step and park as awaiting_approval, completing the 014 verification. Kept scripts: reset-run.mjs added (reset a failed run to pending); trigger/execute/diagnose scripts unchanged.
+- **Gemini-recommended dual-header workaround TESTED AND REJECTED (same day)**: a snippet (attributed to Gemini) suggested forcing Authorization: Bearer alongside the SDK's x-goog-api-key for AQ. keys. Probed directly with the stored key: dual header on generativelanguage v1beta -> 401 with a NEW message - "API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal" (reason API_KEY_SERVICE_BLOCKED); same on v1alpha; Bearer-only unchanged. VERDICT: this account's gateway treats the Gemini API as PRINCIPAL-ONLY - no API key format (AIza or AQ.) can authenticate; Gemini's snippet does not fix this account. Vertex express-mode probes (global + project-qualified URLs, x-goog-api-key / Bearer / query-param key) all returned bare 404s identical to a no-auth control - inconclusive, no auth signal. TWO VIABLE ROUTES REMAIN: (a) fund Anthropic credits - one click, the runner leg is already built and proven to reach the API; (b) keyless OAuth user principal via gcloud ADC (`gcloud auth application-default login` once, interactive) plus a small google-ai.ts extension to mint access tokens from ADC user credentials - the "credentials that assert a principal" the API says it wants, org-policy-compliant (no service-account key, no API key), and gcloud itself already proves user-principal tokens are accepted on this account (all the service-enable calls ran under it).
+## CC-2026-09-25-016 - Google AI auth / ADC user-principal path for the principal-only gateway
+- **Date**: 2026-09-27
+- **Type**: feature (auth) + unblock route (Robert chose the ADC option)
+- **Scope**: server/_core/google-ai.ts; server/_core/google-ai.test.ts; scripts/probe-adc-scope.mjs (new, kept)
+- **Probe evidence chain** (all statuses only, no secret material printed): existing ADC file EXISTS and mints tokens; plain user-principal Bearer against generativelanguage = 403 ACCESS_TOKEN_SCOPE_INSUFFICIENT (auth OK, scope missing - the first non-401 of the day); minting a refresh-grant token WITH the generative-language scope fails invalid_scope (the original ADC consent did not include it); minting with cloud-platform succeeds but the API still demands its own scope; gcloud CLI token equally scope-limited. CONCLUSION: the ADC path is correct but the existing credential was consented without the Gemini scope; one interactive re-login adds it.
+- **Robert action (one command, browser consent)**: gcloud auth application-default login --scopes=https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/generative-language — then verify instantly with: node scripts/probe-adc-scope.mjs (should print SUCCESS). No restart needed at runtime: the factory resolves ADC per call and caches tokens for the grant lifetime; clearGoogleTokenCache is available if needed.
+- **Implementation**: resolveAdcUserCredentials (explicit GOOGLE_AI_ADC_FILE / GOOGLE_APPLICATION_CREDENTIALS short-circuit - an explicit pointer that is absent means NO ADC, never machine-default fallback; otherwise the standard gcloud ADC location) + mintAdcUserToken (refresh grant, Node fetch, no new deps). Precedence everywhere: service account (org policy) -> ADC user principal -> API-key fallback; the ADC path deliberately outranks API keys in createGoogleProvider because keys are PROVEN unusable on this gateway (a stale key must not shadow the working principal). isGoogleAiConfigured counts ADC unless GOOGLE_AI_ADC_DISABLED=1. Tokens cached with the same 5-min-early refresh as the SA path. The no-credential error now states the principal-only reality and prints the exact gcloud command.
+- **Tests**: google-ai.test.ts extended (ADC-configured true, hermetic no-credential case via explicit-absent override, GOOGLE_AI_ADC_DISABLED semantics); 13/13 in the file, _core 19/19, tsc clean. A test-caught real semantic bug: the first resolver draft fell back to machine ADC when an explicit override was absent - fixed to credential-isolation semantics before landing.
+- **Rollback**: revert google-ai.ts + test file; delete scripts/probe-adc-scope.mjs.
