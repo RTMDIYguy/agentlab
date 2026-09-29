@@ -22,6 +22,9 @@ const ENV_KEYS = [
   "GOOGLE_SERVICE_ACCOUNT_FILE",
   "GOOGLE_GENERATIVE_AI_API_KEY",
   "GEMINI_API_KEY",
+  "GOOGLE_AI_ADC_FILE",
+  "GOOGLE_AI_ADC_DISABLED",
+  "GOOGLE_APPLICATION_CREDENTIALS",
 ] as const;
 
 function makeRsaKeyPem(): string {
@@ -235,8 +238,33 @@ describe("isGoogleAiConfigured", () => {
     expect(isGoogleAiConfigured()).toBe(true);
   });
 
-  it("is false when no credential exists", () => {
+  it("is false when no credential exists (ADC disabled for hermeticity)", () => {
+    // The dev machine may carry a real gcloud ADC file; tests must not
+    // depend on it. GOOGLE_AI_ADC_FILE points at a nonexistent path.
     process.env.GOOGLE_SERVICE_ACCOUNT_FILE = path.join(tmpDir, "absent.json");
+    process.env.GOOGLE_AI_ADC_FILE = path.join(tmpDir, "absent-adc.json");
+    expect(isGoogleAiConfigured()).toBe(false);
+  });
+
+  it("is true with an ADC authorized_user file only", () => {
+    process.env.GOOGLE_SERVICE_ACCOUNT_FILE = path.join(tmpDir, "absent.json");
+    const adcPath = path.join(tmpDir, "adc.json");
+    fs.writeFileSync(
+      adcPath,
+      JSON.stringify({
+        type: "authorized_user",
+        client_id: "test-client",
+        client_secret: "test-secret",
+        refresh_token: "test-refresh",
+      })
+    );
+    process.env.GOOGLE_AI_ADC_FILE = adcPath;
+    expect(isGoogleAiConfigured()).toBe(true);
+  });
+
+  it("is false when GOOGLE_AI_ADC_DISABLED=1 and nothing else exists", () => {
+    process.env.GOOGLE_SERVICE_ACCOUNT_FILE = path.join(tmpDir, "absent.json");
+    process.env.GOOGLE_AI_ADC_DISABLED = "1";
     expect(isGoogleAiConfigured()).toBe(false);
   });
 });
