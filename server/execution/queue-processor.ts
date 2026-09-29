@@ -332,6 +332,8 @@ export async function processPendingRuns() {
                   _telemetry: {
                     toolsExecuted: result.toolsExecuted,
                     artifactsCreated: result.extractedArtifacts.length,
+                    // Honesty doctrine: name the model that actually answered.
+                    ...(result.modelUsed ? { modelUsed: result.modelUsed } : {}),
                   },
                 },
                 cost: result.cost?.toString() ?? "0.000000",
@@ -352,7 +354,11 @@ export async function processPendingRuns() {
               workflowId: run.workflowId,
               agentId: step.agentId || null,
               actionType: "agent_step_execution",
-              model: "gemini-2.5-flash",
+              // Honest telemetry (2026-09-28): the runner reports the model
+              // that actually answered; the old hard-coded "gemini-2.5-flash"
+              // stopped being true when that model was withdrawn for new
+              // accounts and the chain moved to the -latest aliases.
+              model: result.modelUsed || "gemini-flash-latest",
               payloadIn: currentContext,
               payloadOut: {
                 ...result.outputPayload,
@@ -436,7 +442,10 @@ export async function processPendingRuns() {
               workflowId: run.workflowId,
               agentId: step.agentId || null,
               actionType: "agent_step_execution_failure",
-              model: "gemini-2.5-flash",
+              // The step threw before any model answered — no result object
+              // exists here. "unavailable" beats naming a model that did not
+              // produce the failure output.
+              model: "unavailable",
               payloadIn: currentContext,
               payloadOut: { error: error.message },
               tokensPrompt: 0,

@@ -123,6 +123,51 @@ describe("draftActionPayload (runner integration)", () => {
     expect(runAgentStepMock).toHaveBeenCalledTimes(1);
   });
 
+  it("unwraps a markdown-fenced draft returned in the result field", async () => {
+    // Regression: the runner wraps non-JSON model output as { result: text },
+    // and models often emit the draft inside a ```json fence. That fence used
+    // to fall through to JSON.stringify of the whole wrapper, burying the
+    // draft one level down where the parser could not see the connector.
+    runAgentStepMock.mockResolvedValueOnce({
+      outputPayload: {
+        result:
+          '```json\n{"connector":"hubspot_contact_upsert","title":"Fenced","payload":{"email":"a@b.com"}}\n```',
+      },
+      hasRefusal: false,
+    });
+
+    const draft = await draftActionPayload("upsert the lead", {}, "ws-1");
+    const parsed = parseActionDraft(draft);
+    expect(parsed.ok).toBe(true);
+    expect(parsed.connector).toBe("hubspot_contact_upsert");
+    expect(parsed.title).toBe("Fenced");
+  });
+
+  it("passes a raw result string through for the parser to extract from", async () => {
+    runAgentStepMock.mockResolvedValueOnce({
+      outputPayload: {
+        result:
+          'Here is your draft:\n{"connector":"hubspot_contact_upsert","title":"Prose","payload":{"email":"a@b.com"}}\nLet me know if you need changes.',
+      },
+      hasRefusal: false,
+    });
+
+    const draft = await draftActionPayload("upsert the lead", {}, "ws-1");
+    const parsed = parseActionDraft(draft);
+    expect(parsed.ok).toBe(true);
+    expect(parsed.title).toBe("Prose");
+  });
+
+  it("fails honestly when the result string contains no JSON draft", async () => {
+    runAgentStepMock.mockResolvedValueOnce({
+      outputPayload: { result: "I have some thoughts but no draft to give." },
+      hasRefusal: false,
+    });
+
+    const draft = await draftActionPayload("upsert the lead", {}, "ws-1");
+    expect(parseActionDraft(draft).ok).toBe(false);
+  });
+
   it("throws on agent refusal instead of producing a draft", async () => {
     runAgentStepMock.mockResolvedValueOnce({
       outputPayload: { result: "cannot comply" },
