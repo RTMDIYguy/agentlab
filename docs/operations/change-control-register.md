@@ -70,10 +70,12 @@ own entry.
   then. Verification path instead: push → Cloud Build fresh install → revision
   Ready check; worst case equals the current safe state (traffic pinned to
   00175).
-- **State at close:** fix committed and pushed; watching next revision for
-  Ready=True. Open blockers unchanged: Gemini free-tier quota exhausted (all
-  agents fail until a paid tier or fresh credential), P1 scopes upload with
-  HubSpot support, local install repair queued.
+- **State at close (verified):** fix pushed as `7bcef2ae`; Cloud Build
+  `083fbb85` SUCCESS; revision `agentlab-00179-wm9` Ready (first Ready since
+  00175); production smoke HTTP 200 in 0.35s. Deploy lane restored. Open
+  blockers unchanged: Gemini free-tier quota exhausted (all agents fail until
+  a paid tier or fresh credential), P1 scopes upload with HubSpot support,
+  local install repair queued (dev server down until then).
 - **Owner:** Agent session, approved by Robert (in-chat; deploys on push are
   the standing instruction this session).
 
