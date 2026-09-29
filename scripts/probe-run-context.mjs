@@ -1,7 +1,9 @@
 /**
  * READ-ONLY poller for a validation run: run status, per-step rows,
  * and any action_dispatches parked for approval.
- * Usage: node probe-run-context.mjs [runId]  (default: d68deaa9 legacy run)
+ * Usage: node probe-run-context.mjs [runId|runIdPrefix]  (default: d68deaa9 legacy run)
+ * Accepts the short-ID prefixes used in the change-control register — the full
+ * UUID is resolved from workflow_runs before probing.
  */
 import postgres from "postgres";
 
@@ -11,7 +13,26 @@ if (!url) {
   process.exit(1);
 }
 const sql = postgres(url, { prepare: false, max: 1 });
-const RUN_ID = process.argv[2] || "d68deaa9-ed7d-44aa-a611-a9f1d25dd974";
+const RUN_ARG = process.argv[2] || "d68deaa9-ed7d-44aa-a611-a9f1d25dd974";
+
+let RUN_ID = RUN_ARG;
+if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(RUN_ARG)) {
+  const matches = await sql`
+    select id from workflow_runs where id::text like ${RUN_ARG + "%"} order by created_at desc`;
+  if (matches.length === 0) {
+    console.error(`No workflow_runs row matches prefix "${RUN_ARG}".`);
+    await sql.end({ timeout: 5 });
+    process.exit(1);
+  }
+  if (matches.length > 1) {
+    console.error(`Prefix "${RUN_ARG}" is ambiguous (${matches.length} runs):`);
+    for (const m of matches) console.error("  " + m.id);
+    await sql.end({ timeout: 5 });
+    process.exit(1);
+  }
+  RUN_ID = matches[0].id;
+  console.log(`[probe] resolved prefix ${RUN_ARG} -> ${RUN_ID}`);
+}
 
 try {
   const run = await sql`

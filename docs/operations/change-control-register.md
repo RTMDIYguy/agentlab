@@ -38,6 +38,54 @@ Small typo fixes can be grouped. Anything that changes behavior, ownership,
 workflow steps, automations, source-of-truth status, or required tools needs its
 own entry.
 
+## 2026-09-29 — P2 step 1 done: thin dispatch rejected; stale remote executor + dead model chain exposed
+
+- **Change:** (1) Extended `scripts/dispatch-approved-action.ts` with a `--reject
+  <dispatchId> "<reason>"` mode. It does NOT mirror the router's reject
+  semantics verbatim: the queue processor skips any step with a `completed`
+  run-step row, so the script marks the step row `rejected` (reason in
+  `error_message` + `output_payload`) instead — a resume re-executes the step
+  and inserts a fresh row, preserving history. It resets the run to `pending`
+  only when the run is `paused_for_approval`; any other state is left untouched
+  with an explicit message. (2) `scripts/probe-run-context.mjs` now resolves
+  short-ID prefixes (`bf87810f`) to full UUIDs, matching the register's ID
+  convention. (3) Executed the rejection of dispatch `ed7f0890` with reason:
+  "no email connector existed at draft time; superseded by
+  hubspot_marketing_email; re-draft required".
+- **Why:** Morning handoff P2 step 1. The thin duplicate dispatch would have
+  overwritten Sandra Hill's rich CRM record ("Follow up Thurs" notes vs the
+  full approved payload). Rejection removes the accidental-approval risk
+  permanently, including from any stale remote UI.
+- **Verified:** Read-only probe first: `ed7f0890` was `awaiting_approval` with
+  the thin payload; dispatch `2cd0f477` (the good one) is `dispatched` and
+  untouched. Post-reject probe: `ed7f0890` = `rejected` with the recorded
+  reason; step row marked `rejected`; run row untouched (see below).
+- **Incident discovered during probe (stale-code class, new instance):** Run
+  `bf87810f` is now `failed` (was `paused_for_approval` at last night's close).
+  At 2026-09-29T15:42Z, step 6 was re-attempted and failed with the model chain
+  names `gemini-pro-latest` (quota exhausted) and `gemini-2.5-pro`
+  ("no longer available to new users") — `gemini-2.5-pro` is not in the current
+  chain (`gemini-flash-latest`, `gemini-3.8-flash`, `gemini-pro-latest`, shipped
+  2026-09-29 00:08 local). The local dev server (PID 16680, up since 21:58 the
+  prior night, pre-refresh boot) wrote nothing to `dev-server.log` after
+  ~10:00Z and no audit rows exist after 15:30Z — conclusion: the **pre-09-27
+  Cloud Run instance is still executing pending runs from the shared production
+  DB**. Registered earlier as "remote instance ran pre-09-27 code all
+  yesterday"; it remains live and is now the primary operational hazard: any
+  run reset to `pending` can be grabbed by stale code before a local execution.
+- **Blocker for P2 steps 2–3 (re-arm + re-draft):** the whole model chain is
+  currently dead — Gemini quota exhausted on the live legs plus the deprecated
+  leg, and Anthropic credits are zero (fallback leg unusable,
+  CC-2026-09-25-002-class). A re-draft attempt now would fail; a reset now
+  would risk stale-remote capture. The run is inert (`failed`), which is the
+  safe resting state until (a) the stale remote instance is stopped or
+  redeployed and (b) a live Gemini credential is confirmed.
+- **State at close:** `ed7f0890` rejected and closed; run `bf87810f` `failed`
+  at step 6 awaiting re-arm decision; reject mode + probe prefix resolution in
+  working tree (uncommitted); suite/typecheck run pending this session.
+- **Owner:** Agent session, approved by Robert (in-chat; P2 approved, stale
+  remote + model-chain decisions requested).
+
 ## 2026-09-28 — handoff doc: ADC re-login paste warning
 
 - **Change:** Added a one-line paste warning to the Priority 1 gcloud command in
