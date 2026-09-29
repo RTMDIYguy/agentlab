@@ -182,11 +182,11 @@ importers:
         specifier: ^4.1.0
         version: 4.4.0
       dotenv:
-        specifier: ^17.2.2
-        version: 17.4.2
+        specifier: ^18.0.4
+        version: 18.0.4
       drizzle-orm:
         specifier: ^0.45.2
-        version: 0.45.3(@opentelemetry/api@1.9.0)(mysql2@3.24.4(@types/node@26.5.1))(postgres@3.4.9)
+        version: 0.45.3(@opentelemetry/api@1.9.0)(mysql2@3.24.4(@types/node@26.6.2))(postgres@3.4.9)
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.3.0)
@@ -2994,9 +2994,10 @@ packages:
   devtools-protocol@0.0.1464554:
     resolution: {integrity: sha512-CAoP3lYfwAGQTaAXYvA6JZR0fjGUb7qec1qf4mToyoH2TZgUFeIqYcjh6f9jNuhHfuZiEdH+PONHYrLhRQX6aw==}
 
-  dotenv@17.4.2:
-    resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
+  dotenv@18.0.4:
+    resolution: {integrity: sha512-jGt9uI5BIxpVO15kvy+iEFqNAwxYClKWnkptLjSNPnFLC003Imd0ofr3aEVsbpHdSBdSsbcApNIlz4nbyGMwdA==}
     engines: {node: '>=12'}
+    hasBin: true
 
   drizzle-kit@0.31.11:
     resolution: {integrity: sha512-YCYqxTLIB2OCqf6w9/Vef13baBVbwQIPcbT4Y56AfO6B9ajZhDhD8Jkveg/hJvT/iuMloKD/IYYkyMMNhr7Kqg==}
@@ -7787,7 +7788,7 @@ snapshots:
 
   devtools-protocol@0.0.1464554: {}
 
-  dotenv@17.4.2: {}
+  dotenv@18.0.4: {}
 
   drizzle-kit@0.31.11:
     dependencies:
@@ -7796,7 +7797,7 @@ snapshots:
       esbuild: 0.25.10
       tsx: 4.23.15
 
-  drizzle-orm@0.45.3(@opentelemetry/api@1.9.0)(mysql2@3.24.4(@types/node@26.5.1))(postgres@3.4.9):
+  drizzle-orm@0.45.3(@opentelemetry/api@1.9.0)(mysql2@3.24.4(@types/node@26.6.2))(postgres@3.4.9):
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
       mysql2: 3.24.4(@types/node@26.6.2)
