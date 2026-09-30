@@ -16,6 +16,38 @@ version: "1.0.0"
 
 Date started: 2026-05-07
 
+## 2026-09-30 (evening) — Main app audit driven to ZERO findings: vestigial firebase + tsoa removed; sub-projects swept
+
+- **Change (deps, 3 files):** GitHub's dashboard showed 260 findings
+  (14 critical) on the default branch; investigation showed the real per-
+  manifest picture: the MAIN app had 4 findings (2 high), and the rest came
+  from sub-project manifests. Remediation:
+  (1) `package.json` — removed `firebase` (a declared PROD dependency with
+  ZERO imports anywhere in server/ or client/, no firebase.json/.firebaserc,
+  no config) and `tsoa` (devDependency with no tsoa.json, no scripts, no
+  imports). Consequences: the 2 high findings died with them — path-to-regexp
+  <0.1.13 existed ONLY in tsoa's express@4 tree (the documented reason the
+  09-25 remediation could not override it), and @grpc/grpc-js rode in via
+  firebase; ts-deepmerge (moderate) also rode in via tsoa.
+  (2) `pnpm-workspace.yaml` — '@firebase/util' removed from
+  onlyBuiltDependencies/allowBuilds; the path-to-regexp NOTE updated to
+  record why the override is now gone (tsoa removed, CC-2026-09-30-008).
+  (3) lockfile regenerated (single install pass).
+  Sub-project sweep: agentlabhs cards/pages/settings — `npm audit fix
+  --package-lock-only` each, ALL now 0 findings (brace-expansion highs were
+  lockfile-bump-only). pr-posse — reduced; remaining 2 findings (moderate
+  @opentelemetry/core <2.8.0 + 1 high in the agentic-flow tree) require a
+  BREAKING major bump of agentic-flow to 1.10.2: not forced on a demo lane;
+  filed as a dated decision in scheduled-change-queue (CC-2026-09-30-008).
+- **Verification:** `pnpm audit` → **"No known vulnerabilities found"**
+  (from 4 findings / 2 high; from 35 pre-remediation on 09-25); vitest
+  487/487; tsc — the 4 remaining errors are the documented pre-existing
+  cookie@2 noise in authRoutes/sdk.ts (untouched by this change; Cloud Build
+  does not typecheck); change-control green.
+- **Deploy note:** dependency change rides the next Cloud Build; the image
+  gets smaller and the build simpler.
+- **Owner:** Buffy agent session, pending Robert review.
+
 ## 2026-09-30 (late afternoon, second) — Dispatch Decisions card unblocked: admins see operator-workspace dispatches; approvals work from the cockpit
 
 - **Change (code, 2 files):**
@@ -1422,3 +1454,13 @@ Before ending a change session:
 - **Change**: Router resolves dispatches across the operator workspace set (user ∪ sentinel ...0001 ∪ god-mode ...0000) for list/get/approve/reject; approve/reject verify visibility explicitly and fail closed; constants named and documented; visibility-not-re-ownership rationale recorded (sentinel remains an active write target). Tests: inArray-aware fake db; sentinel visibility, cross-workspace approve/reject, out-of-set invisibility, fail-closed approve — 11/11 in file, 487/487 full suite.
 - **Verification**: targeted 11/11; full suite 487/487; tsc clean; change-control green.
 - **Rollback**: revert the two listed files.
+
+## CC-2026-09-30-008 - Security / Dependencies / Main app audit driven to zero; firebase + tsoa removed as vestigial
+- **Date**: 2026-09-30
+- **Type**: dependency remediation (no runtime code changed)
+- **Scope**: package.json; pnpm-workspace.yaml; pnpm-lock.yaml; agentlabhs/src/app/{cards,pages,settings}/package-lock.json; pr-posse/package-lock.json
+- **Trigger**: GitHub reported 260 vulnerabilities (14 critical) on the default branch; Robert asked what can be done.
+- **Diagnosis**: the count was cross-manifest aggregation; the main app had 4 findings (2 high) and both highs traced to vestigial dependencies — firebase (declared prod dep, zero imports, no config files) and tsoa (no config, no scripts, no imports). tsoa was the ONLY reason the un-overridable express@4/path-to-regexp 0.1.x tree existed (the exact blocker documented in CC-2026-09-25-006).
+- **Change**: removed firebase + tsoa; the @grpc/grpc-js and ts-deepmerge findings died with them; cleaned workspace build-allow lists; lockfile-only audit fixes in the three agentlabhs sub-projects (all 0 now); pr-posse reduced to 2 findings requiring a breaking agentic-flow major — filed as a dated decision in scheduled-change-queue rather than forced.
+- **Verification**: pnpm audit clean ("No known vulnerabilities found"); vitest 487/487; tsc noise unchanged (pre-existing cookie@2); change-control green.
+- **Rollback**: `pnpm add firebase@^12.18.0 && pnpm add -D tsoa@7.0.0-alpha.0 && pnpm install`, or revert the three files.

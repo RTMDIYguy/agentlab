@@ -24,9 +24,10 @@ overrides:
   # Security overrides (2026-09-25 remediation pass, pnpm audit 35 -> 2):
   # forced patched versions of vulnerable transitive deps. Sources in
   # docs/operations/change-control-register.md (CC-2026-09-25-006).
-  # NOTE: path-to-regexp is intentionally NOT overridden - Express 5's router
-  # needs the 8.x API while tsoa's express@4 needs 0.1.13; a flat override
-  # forces one API onto both and breaks route registration (verified live).
+  # NOTE: path-to-regexp override removed 2026-09-30 with tsoa itself —
+  # tsoa was vestigial (no config, no scripts, no imports) and was the only
+  # reason an express@4/0.1.x path-to-regexp tree existed. See
+  # CC-2026-09-30-008.
   fast-uri: ^3.1.4
   hono: ^4.12.34
   '@hono/node-server': ^1.19.15
@@ -36,13 +37,11 @@ overrides:
   # low: stagehand's old @ai-sdk/* tree pins provider-utils 3.0.25 (dev-only path)
   '@ai-sdk/provider-utils@3.0.25': ^3.0.28
 onlyBuiltDependencies:
-  - '@firebase/util'
   - '@google/genai'
   - bufferutil
   - esbuild
   - protobufjs
 allowBuilds:
-  '@firebase/util': true
   '@google/genai': true
   bufferutil: true
   esbuild: true
