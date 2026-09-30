@@ -9,7 +9,7 @@
  */
 
 import { z } from "zod";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, inArray } from "drizzle-orm";
 import { adminProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 import { actionDispatches, workflowRunSteps, workflowRuns } from "../schema";
@@ -20,6 +20,33 @@ import {
   runSaifCheck,
   validatePayloadForConnector,
 } from "../execution/connectors";
+
+/**
+ * Operator workspaces whose dispatches admins must see from the cockpit.
+ *
+ * The mismatch this fixes: seeded and agent-generated material lives in the
+ * sentinel workspace (...0001, the default write target for controllers
+ * like aiStudioSync), REST god-mode traffic maps to (...0000, tenant.ts),
+ * while Robert's tRPC session resolves to his real user workspace — so the
+ * Dispatch Decisions card showed zero awaiting items and every approve/
+ * reject failed the workspace match, forcing the script lane.
+ *
+ * Visibility (not re-ownership) is deliberate: the sentinel stays an ACTIVE
+ * write target, so re-owning rows would not stop new mismatches. Admins are
+ * already gated by adminProcedure; this union only widens what they can see.
+ */
+const OPERATOR_SENTINEL_WORKSPACE_ID = "00000000-0000-0000-0000-000000000001";
+const GOD_MODE_WORKSPACE_ID = "00000000-0000-0000-0000-000000000000";
+
+function visibleWorkspaces(userWorkspaceId: string): string[] {
+  return Array.from(
+    new Set([
+      userWorkspaceId,
+      OPERATOR_SENTINEL_WORKSPACE_ID,
+      GOD_MODE_WORKSPACE_ID,
+    ])
+  );
+}
 
 export const actionsRouter = router({
   /** Admin: dispatches awaiting approval, then recent decisions. */
@@ -40,7 +67,10 @@ export const actionsRouter = router({
         .from(actionDispatches)
         .where(
           and(
-            eq(actionDispatches.workspaceId, workspaceId),
+            inArray(
+              actionDispatches.workspaceId,
+              visibleWorkspaces(workspaceId)
+            ),
             eq(actionDispatches.status, "awaiting_approval")
           )
         )
@@ -50,7 +80,12 @@ export const actionsRouter = router({
       const recent = await db
         .select()
         .from(actionDispatches)
-        .where(eq(actionDispatches.workspaceId, workspaceId))
+        .where(
+          inArray(
+            actionDispatches.workspaceId,
+            visibleWorkspaces(workspaceId)
+          )
+        )
         .orderBy(desc(actionDispatches.createdAt))
         .limit(input.limit);
 
@@ -78,7 +113,10 @@ export const actionsRouter = router({
         .where(
           and(
             eq(actionDispatches.id, input.dispatchId),
-            eq(actionDispatches.workspaceId, workspaceId)
+            inArray(
+              actionDispatches.workspaceId,
+              visibleWorkspaces(workspaceId)
+            )
           )
         );
       if (!row) throw new Error("Dispatch not found");
@@ -109,13 +147,13 @@ export const actionsRouter = router({
       const [dispatch] = await db
         .select()
         .from(actionDispatches)
-        .where(
-          and(
-            eq(actionDispatches.id, input.dispatchId),
-            eq(actionDispatches.workspaceId, workspaceId)
-          )
-        );
-      if (!dispatch) throw new Error("Dispatch not found");
+        .where(eq(actionDispatches.id, input.dispatchId));
+      if (
+        !dispatch ||
+        !visibleWorkspaces(workspaceId).includes(dispatch.workspaceId)
+      ) {
+        throw new Error("Dispatch not found");
+      }
       if (dispatch.status !== "awaiting_approval") {
         throw new Error(
           `Dispatch is ${dispatch.status}, not awaiting_approval — it was already decided.`
@@ -264,13 +302,13 @@ export const actionsRouter = router({
       const [dispatch] = await db
         .select()
         .from(actionDispatches)
-        .where(
-          and(
-            eq(actionDispatches.id, input.dispatchId),
-            eq(actionDispatches.workspaceId, workspaceId)
-          )
-        );
-      if (!dispatch) throw new Error("Dispatch not found");
+        .where(eq(actionDispatches.id, input.dispatchId));
+      if (
+        !dispatch ||
+        !visibleWorkspaces(workspaceId).includes(dispatch.workspaceId)
+      ) {
+        throw new Error("Dispatch not found");
+      }
       if (dispatch.status !== "awaiting_approval") {
         throw new Error(
           `Dispatch is ${dispatch.status}, not awaiting_approval — it was already decided.`

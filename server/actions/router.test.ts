@@ -50,7 +50,11 @@ const h = vi.hoisted(() => {
         where: (conds: any) => {
           const list = Array.isArray(conds) ? conds : [conds];
           const filtered = Object.values(rowsFor(table)).filter((row) =>
-            list.every((c) => row[c?.col] === c?.val)
+            list.every((c) =>
+              c?.in
+                ? Array.isArray(c.val) && c.val.includes(row[c?.col])
+                : row[c?.col] === c?.val
+            )
           );
           const result = Promise.resolve(filtered) as any;
           result.orderBy = () => ({
@@ -92,6 +96,7 @@ vi.mock("drizzle-orm", () => ({
   eq: (col: any, val: any) => ({ col: col?.name, val }),
   and: (...conds: any[]) => conds,
   desc: (col: any) => ({ col: col?.name, dir: "desc" }),
+  inArray: (col: any, vals: any[]) => ({ col: col?.name, val: vals, in: true }),
 }));
 
 vi.mock("../schema", () => ({
@@ -129,6 +134,8 @@ vi.mock("../execution/connectors", () => ({
 import { actionsRouter } from "./router";
 
 const WORKSPACE = "a1111111-1111-4111-8111-111111111111";
+const SENTINEL = "00000000-0000-0000-0000-000000000001";
+const OUTSIDE = "99999999-9999-4999-8999-999999999999";
 const USER_ID = "b2222222-2222-4222-8222-222222222222";
 
 function makeCaller() {
@@ -264,5 +271,57 @@ describe("actions.listDispatches", () => {
     const out = await caller.listDispatches({});
     expect(out.awaiting.length).toBe(1);
     expect(out.recent.length).toBe(2);
+  });
+
+  it("surfaces awaiting items from the sentinel workspace for an admin in their own workspace", async () => {
+    // This is the production mismatch: agent-drafted dispatches land in the
+    // sentinel (...0001) while the admin's session resolves elsewhere.
+    seedAwaitingDispatch({ workspaceId: SENTINEL });
+    const caller = makeCaller();
+    const out = await caller.listDispatches({});
+    expect(out.awaiting.length).toBe(1);
+    expect(out.awaiting[0].workspaceId).toBe(SENTINEL);
+  });
+
+  it("never shows dispatches from workspaces outside the operator set", async () => {
+    seedAwaitingDispatch({ workspaceId: OUTSIDE });
+    const caller = makeCaller();
+    const out = await caller.listDispatches({});
+    expect(out.awaiting.length).toBe(0);
+    expect(out.recent.length).toBe(0);
+  });
+});
+
+describe("cross-workspace admin decisions (the cockpit-unblock)", () => {
+  it("an admin can approve a sentinel-workspace dispatch from their own workspace session", async () => {
+    const id = seedAwaitingDispatch({ workspaceId: SENTINEL });
+    h.dispatchMock.mockResolvedValueOnce({ ok: true, externalId: "ext-1" });
+
+    const caller = makeCaller();
+    const out = await caller.approve({ dispatchId: id });
+
+    expect(out.dispatched).toBe(true);
+    expect(h.dispatchRows[id].status).toBe("dispatched");
+    expect(h.processPendingRuns).toHaveBeenCalledTimes(1);
+  });
+
+  it("an admin can reject a sentinel-workspace dispatch from their own workspace session", async () => {
+    const id = seedAwaitingDispatch({ workspaceId: SENTINEL });
+
+    const caller = makeCaller();
+    const out = await caller.reject({ dispatchId: id, reason: "thin duplicate" });
+
+    expect(out.rejected).toBe(true);
+    expect(h.dispatchRows[id].status).toBe("rejected");
+    expect(h.dispatchMock).not.toHaveBeenCalled();
+  });
+
+  it("approve on a dispatch outside the operator workspaces fails closed", async () => {
+    const id = seedAwaitingDispatch({ workspaceId: OUTSIDE });
+    const caller = makeCaller();
+    await expect(caller.approve({ dispatchId: id })).rejects.toThrow(
+      /Dispatch not found/
+    );
+    expect(h.dispatchMock).not.toHaveBeenCalled();
   });
 });
