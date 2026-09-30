@@ -6,7 +6,11 @@ import {
 } from "./dashboard-telemetry";
 import { getDb } from "../db";
 import { syncWorkspaceVaultSecrets } from "../_core/env";
-import { invokeLLM } from "../_core/llm";
+import {
+  isGoogleAiConfigured,
+  createGoogleProvider,
+} from "../_core/google-ai";
+import { generateText } from "ai";
 import {
   workflowRunSteps,
   workspaceIntegrations,
@@ -14,7 +18,11 @@ import {
 
 vi.mock("../db", () => ({ getDb: vi.fn() }));
 vi.mock("../_core/env", () => ({ syncWorkspaceVaultSecrets: vi.fn() }));
-vi.mock("../_core/llm", () => ({ invokeLLM: vi.fn() }));
+vi.mock("../_core/google-ai", () => ({
+  isGoogleAiConfigured: vi.fn(),
+  createGoogleProvider: vi.fn(),
+}));
+vi.mock("ai", () => ({ generateText: vi.fn() }));
 
 function makeRes() {
   const res: any = {
@@ -94,7 +102,8 @@ describe("getDashboardTelemetry (real state)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(syncWorkspaceVaultSecrets).mockResolvedValue(undefined);
-    process.env.OPENAI_API_KEY = "test-key";
+    // The badge reports the ORCHESTRATOR leg (Gemini), not the OpenAI leg.
+    vi.mocked(isGoogleAiConfigured).mockReturnValue(true);
   });
 
   it("reports HubSpot connected from the real vault-synced integration row", async () => {
@@ -153,14 +162,19 @@ describe("getDashboardTelemetry (real state)", () => {
     expect(res.body.compute.totalCost).toBeNull();
   });
 
-  it("reports the LLM as not configured when the API key is absent", async () => {
-    delete process.env.OPENAI_API_KEY;
+  it("reports the LLM as not configured when the Gemini leg is unconfigured", async () => {
+    vi.mocked(isGoogleAiConfigured).mockReturnValue(false);
     const db = makeDb({ integrationRows: [], lastStep: null });
     vi.mocked(getDb).mockResolvedValue(db);
 
     const res = await call(db);
 
     expect(res.body.llm.configured).toBe(false);
+  });
+
+  it("does not key the orchestrator badge on the never-used OPENAI leg", () => {
+    const source = readFileSync("server/controllers/dashboard-telemetry.ts", "utf-8");
+    expect(source).not.toContain("!!process.env.OPENAI_API_KEY");
   });
 
   it("401s without a workspace and never invents telemetry", async () => {
@@ -178,43 +192,61 @@ describe("getDashboardTelemetry (real state)", () => {
   });
 });
 
-describe("pingLlm (verified liveness)", () => {
+describe("pingLlm (verified liveness of the ORCHESTRATOR leg)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(isGoogleAiConfigured).mockReturnValue(true);
+    vi.mocked(createGoogleProvider).mockReturnValue(
+      ((model: string) => ({ modelId: model })) as any
+    );
   });
 
   it("reports alive with measured latency on a real round-trip", async () => {
-    vi.mocked(invokeLLM).mockResolvedValue({
-      model: "gemini-2.5-flash",
-      choices: [{ message: { content: "pong" } }],
+    vi.mocked(generateText).mockResolvedValue({
+      text: "pong",
+      model: "gemini-flash-latest",
     } as any);
 
     const res = makeRes();
     await pingLlm({} as any, res);
 
     expect(res.body.alive).toBe(true);
-    expect(res.body.model).toBe("gemini-2.5-flash");
+    expect(res.body.model).toBe("gemini-flash-latest");
     expect(typeof res.body.latencyMs).toBe("number");
     expect(res.body.checkedAt).toBeTruthy();
   });
 
-  it("pings with a minimal prompt through the app's invokeLLM path", async () => {
-    vi.mocked(invokeLLM).mockResolvedValue({
+  it("pings through the SAME provider construction the agent pipeline uses", async () => {
+    vi.mocked(generateText).mockResolvedValue({
+      text: "pong",
       model: "m",
-      choices: [{ message: { content: "pong" } }],
     } as any);
 
     await pingLlm({} as any, makeRes());
 
-    const call = vi.mocked(invokeLLM).mock.calls[0][0];
-    expect(call.messages).toHaveLength(1);
-    expect(JSON.stringify(call.messages)).toMatch(/pong/i);
-    expect(call.maxTokens).toBeLessThanOrEqual(512);
+    // createGoogleProvider is the agent-runner construction path.
+    expect(vi.mocked(createGoogleProvider)).toHaveBeenCalled();
+    const call = vi.mocked(generateText).mock.calls[0][0] as any;
+    expect(call.prompt).toMatch(/pong/i);
+    expect(call.maxOutputTokens).toBeLessThanOrEqual(512);
+    expect(call.model).toEqual({ modelId: "gemini-flash-latest" });
   });
 
-  it("reports not-configured distinctly when the API key is absent", async () => {
-    vi.mocked(invokeLLM).mockRejectedValue(
-      new Error("OPENAI_API_KEY is not configured")
+  it("short-circuits not-configured without burning a model call", async () => {
+    vi.mocked(isGoogleAiConfigured).mockReturnValue(false);
+
+    const res = makeRes();
+    await pingLlm({} as any, res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.alive).toBe(false);
+    expect(res.body.notConfigured).toBe(true);
+    expect(vi.mocked(generateText)).not.toHaveBeenCalled();
+  });
+
+  it("reports not-configured distinctly when the provider reports a missing credential", async () => {
+    vi.mocked(generateText).mockRejectedValue(
+      new Error("no api key configured for provider")
     );
 
     const res = makeRes();
@@ -223,12 +255,11 @@ describe("pingLlm (verified liveness)", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.alive).toBe(false);
     expect(res.body.notConfigured).toBe(true);
-    expect(res.body.reason).toMatch(/not configured/i);
   });
 
   it("reports reachable-but-erroring without the notConfigured flag", async () => {
-    vi.mocked(invokeLLM).mockRejectedValue(
-      new Error("LLM invoke failed: 503 Service Unavailable – upstream down")
+    vi.mocked(generateText).mockRejectedValue(
+      new Error("503 Service Unavailable – upstream down")
     );
 
     const res = makeRes();
@@ -240,9 +271,9 @@ describe("pingLlm (verified liveness)", () => {
   });
 
   it("never claims liveness on an empty model response", async () => {
-    vi.mocked(invokeLLM).mockResolvedValue({
+    vi.mocked(generateText).mockResolvedValue({
+      text: "",
       model: "m",
-      choices: [{ message: { content: "" } }],
     } as any);
 
     const res = makeRes();
@@ -252,21 +283,10 @@ describe("pingLlm (verified liveness)", () => {
     expect(res.body.reason).toMatch(/empty response/i);
   });
 
-  it("flattens array-content responses before judging liveness", async () => {
-    vi.mocked(invokeLLM).mockResolvedValue({
-      model: "m",
-      choices: [
-        {
-          message: {
-            content: [{ type: "text", text: "pong" }],
-          },
-        },
-      ],
-    } as any);
-
-    const res = makeRes();
-    await pingLlm({} as any, res);
-
-    expect(res.body.alive).toBe(true);
+  it("the ping never routes through the OpenAI-compatible Forge leg", () => {
+    const source = readFileSync("server/controllers/dashboard-telemetry.ts", "utf-8");
+    const pingSection = source.slice(source.indexOf("export async function pingLlm"));
+    expect(pingSection).not.toContain("invokeLLM");
+    expect(pingSection).toContain("createGoogleProvider");
   });
 });

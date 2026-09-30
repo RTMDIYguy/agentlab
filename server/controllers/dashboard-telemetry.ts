@@ -7,7 +7,11 @@ import {
   workspaceIntegrations,
 } from "../schema";
 import { syncWorkspaceVaultSecrets } from "../_core/env";
-import { invokeLLM } from "../_core/llm";
+import {
+  isGoogleAiConfigured,
+  createGoogleProvider,
+} from "../_core/google-ai";
+import { generateText } from "ai";
 
 /**
  * Real-state telemetry for the Dashboard's System Telemetry Console.
@@ -100,8 +104,12 @@ export async function getDashboardTelemetry(
     res.status(200).json({
       hubspot,
       llm: {
-        provider: "gemini-2.5-flash",
-        configured: !!process.env.OPENAI_API_KEY,
+        // The orchestrator brain is the Gemini pipeline leg (agent-runner,
+        // orchestrator, intake, etc. all run through google-ai.ts). The
+        // badge must reflect THAT credential state — not the OpenAI leg,
+        // which has never been configured in this deployment.
+        provider: "gemini-flash-latest",
+        configured: isGoogleAiConfigured(),
         // Per-request LLM latency is not persisted anywhere; report the
         // real pipeline latency instead of a made-up number.
         lastStepLatencyMs,
@@ -130,10 +138,13 @@ function countConfiguredTools(config: unknown): number {
 }
 
 /**
- * Verified LLM liveness: a minimal real round-trip through the app's
- * invokeLLM path with measured wall latency. Kept separate from the main
- * telemetry endpoint so the cheap 30s console poll never triggers a model
- * call — the Dashboard pings this on mount and every 5 minutes.
+ * Verified liveness of the REAL orchestrator leg: a minimal round-trip
+ * through the same provider the agent pipeline uses (createGoogleProvider
+ * + generateText, mirroring agent-runner.ts). The previous version pinged
+ * invokeLLM (the OpenAI-compatible Forge leg, never configured here) while
+ * the card was labeled Gemini — reporting NOT CONFIGURED about the one
+ * subsystem that was live. Kept separate from the cheap 30s telemetry poll
+ * so polling never triggers a model call.
  *
  * GET /api/dashboard/llm-ping
  */
@@ -141,29 +152,29 @@ export async function pingLlm(req: Request, res: Response): Promise<void> {
   const startedAt = Date.now();
 
   try {
-    const result = await invokeLLM({
-      messages: [
-        {
-          role: "user",
-          content: "Reply with the single word: pong",
-        },
-      ],
-      maxTokens: 512,
+    if (!isGoogleAiConfigured()) {
+      res.status(200).json({
+        alive: false,
+        notConfigured: true,
+        reason:
+          "Gemini is not configured on the server (no API key, ADC user principal, or service account).",
+        latencyMs: Date.now() - startedAt,
+        checkedAt: new Date().toISOString(),
+      });
+      return;
+    }
+
+    // Same construction the agent pipeline uses (agent-runner.ts):
+    // provider from google-ai.ts, one small generation, no tools.
+    const response: any = await (generateText as any)({
+      model: createGoogleProvider()("gemini-flash-latest") as any,
+      prompt: "Reply with the single word: pong",
+      maxOutputTokens: 512,
     });
 
     const latencyMs = Date.now() - startedAt;
-    const choice = result.choices?.[0] as any;
-    const rawContent = choice?.message?.content;
     const replied =
-      typeof rawContent === "string"
-        ? rawContent.trim()
-        : Array.isArray(rawContent)
-          ? rawContent
-              .filter((p: any) => p?.type === "text")
-              .map((p: any) => p.text)
-              .join("")
-              .trim()
-          : "";
+      typeof response?.text === "string" ? response.text.trim() : "";
 
     // A 200 with an empty body is not liveness — report what happened.
     if (!replied) {
@@ -179,14 +190,16 @@ export async function pingLlm(req: Request, res: Response): Promise<void> {
     res.status(200).json({
       alive: true,
       latencyMs,
-      model: result.model ?? "unknown",
+      model: response.model ?? "gemini-flash-latest",
       checkedAt: new Date().toISOString(),
     });
   } catch (error: any) {
     // Honest failure: not configured vs reachable-but-erroring are
     // different states and the badge needs to distinguish them.
     const message = error?.message || "Unknown error";
-    const notConfigured = /not configured/i.test(message);
+    const notConfigured = /not configured|no api key|api key not/i.test(
+      message
+    );
     res.status(200).json({
       alive: false,
       reason: message,

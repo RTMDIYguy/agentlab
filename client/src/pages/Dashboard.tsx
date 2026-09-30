@@ -726,14 +726,14 @@ export default function Dashboard() {
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between p-3 rounded-xl bg-card/60 border border-white/5">
                   <div>
-                    <p className="text-xs font-bold font-mono text-foreground">Orchestrator LLM (Gemini 2.5 Flash)</p>
+                    <p className="text-xs font-bold font-mono text-foreground">Orchestrator LLM (Gemini)</p>
                     <p className="text-[11px] text-muted-foreground">
                       {llmPing == null && isPingingLlm
                         ? "Pinging model…"
                         : llmPing?.alive
                           ? `LIVE — round-trip ${llmPing.latencyMs}ms • last step ${telemetry?.llm.lastStepLatencyMs != null ? `${telemetry.llm.lastStepLatencyMs}ms` : "not reported"}`
                           : llmPing?.notConfigured
-                            ? "API key not configured — set OPENAI_API_KEY in Settings → Secrets"
+                            ? "Gemini not configured on server — add a Google AI credential (Settings → Secrets)"
                             : llmPing?.reason
                               ? `Ping failed: ${llmPing.reason}`
                               : "Checking model…"}
