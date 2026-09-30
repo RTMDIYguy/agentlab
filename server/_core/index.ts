@@ -208,13 +208,24 @@ async function startServer() {
         const email = String(payload.email || "").toLowerCase();
         if (saId) {
           authorized = sub === saId;
+          if (!authorized) {
+            // Lengths only — never log token contents.
+            console.log(
+              `[PollerKick] sub mismatch: token_sub_len=${sub.length} expected_len=${saId.length}`
+            );
+          }
         } else if (payload.email !== undefined) {
           authorized = email === schedulerSa.toLowerCase();
         }
         // Without POLLER_SCHEDULER_SA_ID and without an email claim we do
         // NOT accept — iss+aud alone would admit any Google user minting a
         // token against our public URL.
-      } catch {
+      } catch (e: any) {
+        // Verify failures (JWKS fetch, signature, iss/aud) must be visible:
+        // this catch previously hid the reason entirely.
+        console.log(
+          `[PollerKick] oidc verify failed: ${e?.name ?? "Error"}: ${String(e?.message ?? "").slice(0, 160)}`
+        );
         authorized = false;
       }
     }
