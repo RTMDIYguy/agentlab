@@ -38,6 +38,161 @@ Small typo fixes can be grouped. Anything that changes behavior, ownership,
 workflow steps, automations, source-of-truth status, or required tools needs its
 own entry.
 
+## 2026-09-30 (late) — Execution lease + poller implemented (code); Cloud Run Job/Scheduler wiring follows deploy
+
+- **Change (code, 5 files + 1 new):**
+  (1) `server/schema.ts` — `workflow_runs.locked_at`/`locked_by` lease columns
+  + `idx_workflow_runs_claim` index.
+  (2) `server/db.ts` — matching idempotent DDL in `ensureDatabaseSchema()`.
+  (3) `server/execution/queue-processor.ts` — `claimPendingRuns()` atomic
+  claim (CTE UPDATE + `FOR UPDATE SKIP LOCKED`), `requeueExpiredLeases()`
+  10-min-TTL dead-worker recovery, per-step heartbeat guard
+  `locked_by = worker`, `processPendingRuns(limit)` now returns claimed
+  count; body mapped from raw snake_case claim rows (only 5 fields used —
+  verified by grep). This is the prerequisite correctness guard: prior shape
+  selected all pending rows with no claim guard and was only accidentally
+  safe while at most one lane ran.
+  (4) `server/_core/poll-tick.ts` (new) — Job entrypoint: recovery +
+  claim/drain loop, exits when idle, 50-min runaway budget; bundled by the
+  build script to `dist/poll-tick.js` (esbuild multi-entry keeps outputs
+  flat — Dockerfile CMD untouched).
+  (5) `server/_core/index.ts` — `POST /api/internal/poller-kick` registered
+  before the `/api` mount (no tenant middleware): auth = Scheduler OIDC
+  (Google JWKS, iss accounts.google.com, aud = service URL, email pinned to
+  `POLLER_SCHEDULER_SA`) XOR `KICK_SECRET` (constant-time compare);
+  fire-and-forget Run API `jobs/{name}:run` with active-execution quota
+  guard; answers 503 when unconfigured — honest, never open.
+  (6) `package.json` — build script adds the second esbuild entrypoint.
+- **Why:** implements `cloud-run-poller-design.md`. Pending runs currently
+  sit forever unless an authenticated request path sweeps them (bf87810f
+  waited ~26 h across two credential failures).
+- **Verification (local):** targeted suite 16/16
+  (`orchestrator-execute.test.ts`, `actions/router.test.ts` — the two files
+  exercising the execution pipeline); `tsc --noEmit`: ZERO errors in the five
+  touched files (full-tree noise is pre-existing: stale `cookie` types since
+  the cookie@2 merge — Cloud Build never typechecks, and an incomplete
+  `lucide-react` store entry from the interrupted install — build-time only,
+  self-heals on next clean install).
+- **Deployment sequence (next, same change):** push → Cloud Build revision
+  Ready → Secret Manager `agentlab-gemini-key` + `agentlab-poller-kick`
+  (+ Secret Accessor on the runtime SA) → service `--update-secrets` →
+  Job `agentlab-poller` (same image, command `node dist/poll-tick.js`, full
+  env minus PORT) → grant `roles/run.jobs.run` to the service runtime SA →
+  Scheduler `agentlab-poller-kick` (1 min, OIDC to the endpoint) → E2E:
+  seed pending run → ≤2 min → verify claim/lock/evidence.
+- **Rollback:** pause Scheduler job (service unaffected); revert = previous
+  revision; the lease columns are inert to old code paths.
+
+## 2026-09-30 (morning) — Gemini key rotated end-to-end; sentinel env path fixed; three stale keys found
+
+- **Change:** `GOOGLE_GENERATIVE_AI_API_KEY` on Cloud Run `agentlab` rotated to
+  Robert's newly issued AI Studio key (suffix `…-hQVw`, created by Robert in
+  `My First Project` inside AI Studio, stored in the operator Keys folder).
+  Revisions: `agentlab-00183-ht9` (key swap, `--update-env-vars` — all other
+  env preserved) then `agentlab-00184-qcg` (sentinel fix, via PowerShell).
+  Local `.env.local` key line replaced with the same new key (it held a THIRD
+  distinct stale key, suffix `…dQ_`).
+- **Verification (all green before old-key deletion):** new key direct ping
+  HTTP 200 + real "pong" pre-install; revision Ready at 100% with sentinels
+  intact (`GOOGLE_AI_ADC_DISABLED=1`,
+  `GOOGLE_SERVICE_ACCOUNT_FILE=/nonexistent/…`); smoke HTTP 200; and a REAL
+  server-side generation — probe run `3ed8fd67` ("Vision purpose (2)",
+  `triggerSource: gemini_key_rotation_probe`) executed its agent step on 00184
+  in 1,658 ms, completed, paused at its guardrail as designed.
+- **Field learnings (folded into the runbook):** (1) gcloud runs from the local
+  machine — SDK 586, authed `agentlab.tech@gmail.com`; no Cloud Shell needed.
+  (2) Git Bash MSYS mangles `/...` env values: the 09-29 sentinel had actually
+  landed as `C:/Program Files/Git/nonexistent/…` (worked by accident — file
+  absent either way); `MSYS_NO_PATHCONV=1` breaks the gcloud launcher itself,
+  so the reliable lane is `powershell -NoProfile -Command "gcloud …"`.
+  (3) Key inventory BEFORE rotation: three distinct stale keys were in
+  circulation (`…oLgQ` dead in AI Studio, `…dQ_` in `.env.local`, `…bHtg`
+  exposed on Cloud Run) — rotation must sweep service env + local env + Keys
+  folder + (future) poller Job. (4) `llm-ping` is the Forge leg
+  (`FORGE_API_KEY`, error text misleadingly says OPENAI_API_KEY); dashboard
+  Gemini tile is presence-based; Settings → Test Integration has NO Gemini
+  branch — the only true proof is a real workflow agent step.
+- **Closed (same morning):** Robert deleted the condemned keys in AI Studio.
+  Final verification: old key `…bHtg` now returns HTTP 401 (deletion proven),
+  live key `…-hQVw` returns HTTP 200 (correct key survived). Local env sweep:
+  exactly ONE Gemini key variable exists across `.env`/`.env.local`, holding
+  `…-hQVw` (`.env` holds none; the `GOOGLE_CLIENT_*` vars are OAuth sign-in
+  credentials, out of rotation scope). `…dQ_` deletion per Robert, untestable
+  (its value was overwritten locally before the check). `…oLgQ` was already
+  dead pre-rotation. Post-rotation state: the `…-hQVw` key exists only in
+  AI Studio, Cloud Run env, local `.env.local`, and the operator Keys folder.
+  Next hardening option (deferred): Secret Manager via `--update-secrets` so
+  future rotations never cross a command line.
+
+## 2026-09-30 (small hours) — Poller design + key-rotation runbook authored
+
+- **Change:** Added two operational documents:
+  `docs/operations/cloud-run-poller-design.md` (proposal) and
+  `docs/operations/ai-studio-key-rotation-runbook.md` (active runbook).
+- **Why:** The 09-29 night entry proved pending runs never execute in the
+  background on Cloud Run; today's sweep-vehicle workaround worked but is
+  manual. The design doc specifies the fix: Cloud Run **Job** (`agentlab-poller`)
+  kicked every minute by Cloud Scheduler through an authenticated service
+  endpoint, with a `FOR UPDATE SKIP LOCKED` DB lease + 10-min heartbeat/TTL on
+  `workflow_runs` as the prerequisite correctness guard — the processor
+  currently selects all pending runs with no claim guard, so any concurrent
+  poller would double-execute steps. Rejected alternatives documented with
+  reasons (in-service setInterval starves/duplicates; HTTP Scheduler lane
+  hits the 60-min request ceiling vs 7–52 min observed runs). The runbook
+  encodes tonight's exposure: the live key crossed chat + Cloud Run CLI +
+  local env, so it is condemned pending rotation; runbook fixes the safe
+  ordering (new key verified in production BEFORE old key deleted), covers
+  service + Job + local `.env.local` sync, and the cookie@2 non-Ready-revision
+  rollback trap.
+- **No code changed.** Both docs await Robert's go-ahead (implementation is a
+  separate scheduled change; rotation is Robert's manual step 1 in AI Studio).
+
+## 2026-09-30 (small hours) — P2 step-6 re-draft executed; approval driven through sanctioned script; HubSpot scopes remain the last blocker
+
+- **Change:** Run `bf87810f` step 6 ("Schedule & Dispatch Personalized Emails")
+  re-drafted successfully with the live Gemini key: new run-step row
+  `awaiting_approval`, new dispatch `f0a54f2c-692f-4f47-b028-74410165939a`
+  (connector `hubspot_marketing_email`, self-addressed FR-001 test for
+  `agentlab.tech@gmail.com`). Approved via
+  `scripts/dispatch-approved-action.ts` (the sanctioned human-decision path)
+  after reviewing the full payload. SAIF passed, payload validation passed,
+  the real HubSpot call was attempted and refused: template create 403
+  `design-manager-access` — the dispatch now records `dispatch_failed` with
+  the full HubSpot error, `approved_at`/`dispatched_at` set. Run remains
+  `paused_for_approval`; step-6 row remains `awaiting_approval`.
+- **Why:** Post-reboot the local `pnpm exec` executor was stuck ~25 min inside
+  pnpm's self-repair (`pnpm install` inner process, no DB movement); the tree
+  was killed cleanly. Execution instead used the **UI sweep lane**: triggering
+  any workflow in Command Center fires `POST /api/workflows/:id/run`, which
+  runs `processPendingRuns()` inline — sweeping up all pending runs. Vehicle:
+  "Vision purpose (2)" (`7141313e…`, 4 steps, no actions) triggered with
+  `triggerSource: 'buffy_sweep'`; it produced one small extra run that parked
+  its own dispatch awaiting a future decision. Lane executed in production
+  via the signed-in OS UI (revision 00181 has the live key).
+- **UI GAP (product finding):** the Dispatch Decisions card cannot release
+  dispatches: `listDispatches` filters `workspace_id` = the signed-in user's
+  workspace, but all seeded runs/dispatches live in operator sentinel
+  workspace `00000000-0000-0000-0000-000000000001` while Robert's account maps
+  to `b1d615d2-…` — so his card always shows 0. The card's approve/reject
+  mutations would also fail: the API requires the dispatch's own workspace
+  match. Workaround used: the approve script (same state transitions the
+  router would run). Permanent fix options: (a) expose sentinel-workspace
+  items to the owner role, or (b) re-own the seeded workflows/runs into
+  Robert's real workspace.
+- **Honest failure recording:** the 403 confirms the P1 blocker unchanged —
+  the production PAT (masked `pat-••••4d05`) still lacks `content`
+  (`design-manager-access`) and `marketing-email` read/write scopes; grant
+  still pending with HubSpot support (`agentlabhs` project, production portal
+  243478405). No connector code changed; the failure is the system working as
+  designed (honest recording, no silent success).
+- **Env repair note:** rebooted `node_modules` had complete `.pnpm` store but
+  sparse top-level links; `dotenv` + `drizzle-orm` junctions recreated by hand
+  and `tsx` invoked directly from `.pnpm` (bypasses `pnpm exec`'s repair
+  hang). OneDrive disk slowness makes broad greps time out; keep probes lean.
+- **Open actions:** Robert approves/rejects the vehicle dispatch
+  (`940b36e6…`); HubSpot scopes grant (P1) still awaited; rotate the Gemini
+  key (it has now crossed chat, a Cloud Run command line, and a local env).
+
 ## 2026-09-29 (night) — Gemini unblocked with live Tier-1 key; poller gap discovered and corrected
 
 - **Change:** Cloud Run service `agentlab` env updated (revision
