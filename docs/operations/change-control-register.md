@@ -1481,3 +1481,14 @@ Before ending a change session:
 - **Change**: firebase@^12.18.0 restored at root; '@firebase/util' restored to onlyBuiltDependencies/allowBuilds; NEW override '@grpc/grpc-js': ^1.14.5 kills BOTH grpc advisories at the patched line so the audit stays clean WITH firebase present (resolution verified 1.14.5 across the tree; pnpm audit still reports zero findings; suite 487/487). tsoa removal NOT reverted — it remains config-less, script-less, and import-less.
 - **Lesson recorded**: an import scan of the entrypoints is NOT proof a dependency is unused in a repo containing standalone apps that resolve upward; Robert's operational knowledge outranks a negative grep. Future dep removals need a consumer survey across ALL manifests + an upward-resolution check first.
 - **Rollback**: remove the firebase dep and the @grpc/grpc-js override; revert the three files.
+
+## CC-2026-09-30-010 - Dependencies / Standalone-app own-install attempt: infeasible in agent session; queued with runbook; partial install safely removed
+- **Date**: 2026-09-30
+- **Type**: operational attempt + queue entry (no repo dependency changes)
+- **Scope**: agentlab/node_modules (created, then removed); docs/operations/scheduled-change-queue.md (CC-2026-09-30-009 queue row); this register
+- **Trigger**: Robert approved giving the standalone apps their own installs (per CC-2026-09-30-009's upward-resolution finding).
+- **Discovery**: `agentlab/` is GITIGNORED (.gitignore line `agentlab/`) — invisible to git, Dependabot, and repo tooling; explains both the phantom-dependency blindness and why GitHub's alert count will never include it. Has NO lockfile and NO node_modules of its own on this machine.
+- **Attempt and constraint**: three `pnpm install --ignore-workspace` runs in `agentlab/` were each truncated at the 10-minute tool ceiling (~880-package install on OneDrive); a second concurrent installer spawned by a retry reproduced the EXACT OneDrive pnpm-deadlock pattern documented 2026-09-25 (both killed via taskkill per the register's lesson); a detached relaunch died immediately because agent tool shells kill child processes between calls. Conclusion: the first full install must be run from a REAL terminal, not an agent session.
+- **State restored**: the partial install (879 staged packages, no lockfile, firebase not yet linked) was REMOVED — a partial node_modules is worse than none because it shadows the root tree the apps borrow from. `agentlab/` is back to the exact pre-session state (no node_modules; upward resolution into root, where firebase@^12.18.0 + the @grpc/grpc-js >=1.14.5 override now live).
+- **Queued**: CC-2026-09-30-009 in scheduled-change-queue carries the exact commands, the deadlock rule, the real-terminal requirement, and post-install verification steps (resolution check inside the app dir + the app's own audit).
+- **Rollback**: none needed (net state change is the two docs rows; node_modules removal restored the prior state).
