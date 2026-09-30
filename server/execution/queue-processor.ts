@@ -78,35 +78,34 @@ interface ClaimedRunRow {
 /**
  * Atomically claim up to $limit pending runs (unclaimed, or whose 10-minute
  * lease expired). FOR UPDATE SKIP LOCKED makes concurrent claimers safe:
- * each pending run is handed to exactly one worker. Returns raw snake_case
- * rows mapped by the caller onto the workflowRuns shape (the insert-bearing
- * queries below only read five columns).
+ * each pending run is handed to exactly one worker. Single-statement
+ * UPDATE…RETURNING (no CTE wrapper): rows come back from the UPDATE itself —
+ * the earlier CTE+outer-SELECT shape set the lease but returned zero rows
+ * through the drizzle driver (observed on execution agentlab-poller-b5qnv).
  */
 export async function claimPendingRuns(limit = 20): Promise<ClaimedRunRow[]> {
   const db = await getDb();
   if (!db) return [];
   const result = await db.execute(sql`
-    WITH claimed AS (
-      UPDATE workflow_runs
-      SET status = 'running',
-          locked_at = now(),
-          locked_by = ${WORKER_ID},
-          updated_at = now(),
-          started_at = COALESCE(started_at, now())
-      WHERE id IN (
-        SELECT id FROM workflow_runs
-        WHERE status = 'pending'
-          AND (locked_at IS NULL OR locked_at < now() - interval '${sql.raw(String(LEASE_TTL_MINUTES))} minutes')
-        ORDER BY created_at
-        FOR UPDATE SKIP LOCKED
-        LIMIT ${limit}
-      )
-      RETURNING id, workspace_id, workflow_id, status, trigger_source,
-                initial_context, locked_at, locked_by, cancel_requested, created_at
+    UPDATE workflow_runs
+    SET status = 'running',
+        locked_at = now(),
+        locked_by = ${WORKER_ID},
+        updated_at = now(),
+        started_at = COALESCE(started_at, now())
+    WHERE id IN (
+      SELECT id FROM workflow_runs
+      WHERE status = 'pending'
+        AND (locked_at IS NULL OR locked_at < now() - interval '${sql.raw(String(LEASE_TTL_MINUTES))} minutes')
+      ORDER BY created_at
+      FOR UPDATE SKIP LOCKED
+      LIMIT ${limit}
     )
-    SELECT * FROM claimed ORDER BY created_at
+    RETURNING id, workspace_id, workflow_id, status, trigger_source,
+              initial_context, locked_at, locked_by, cancel_requested, created_at
   `);
-  return ((result as unknown as { rows?: ClaimedRunRow[] }).rows ?? []) as ClaimedRunRow[];
+  const rows = ((result as unknown as { rows?: ClaimedRunRow[] }).rows ?? []) as ClaimedRunRow[];
+  return rows.sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)));
 }
 
 export async function processPendingRuns(limit = 20): Promise<number> {
