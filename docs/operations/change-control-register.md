@@ -38,6 +38,50 @@ Small typo fixes can be grouped. Anything that changes behavior, ownership,
 workflow steps, automations, source-of-truth status, or required tools needs its
 own entry.
 
+## 2026-09-29 (night) — Gemini unblocked with live Tier-1 key; poller gap discovered and corrected
+
+- **Change:** Cloud Run service `agentlab` env updated (revision
+  `agentlab-00181-95t`, serving 100%): `GOOGLE_GENERATIVE_AI_API_KEY` replaced
+  with Robert's live Tier-1 Prepay AI Studio key (the `…bHtg` one; verified
+  HTTP 200 + a real "pong" generation before install), `GOOGLE_AI_ADC_DISABLED=1`,
+  `GOOGLE_SERVICE_ACCOUNT_FILE=/nonexistent/…` sentinel (the container may
+  carry a baked `secrets/` SA or ADC file from `COPY . .` with no
+  .dockerignore — the sentinel makes the key path win deterministically; the
+  SDK key fallback then uses the env key directly). Run `bf87810f` re-armed to
+  `pending` for the step-6 re-draft.
+- **Why:** The stored key (suffix `…oLgQ`, len 53) is NOT in Robert's AI Studio
+  list — deleted/rotated, hence the 401 — which silently pushed every model
+  call onto the principal path and its FREE-TIER quota (exhausted). Correction
+  of record: `AQ.`-prefixed strings are the current AI Studio key FORMAT, not
+  OAuth tokens; the earlier "OAuth bearer" reading was wrong (this key works
+  via `x-goog-api-key`, fails via `Authorization: Bearer`). The `…bHtg` key on
+  My First Project (linked to billing `016C27…`, $9.82 prepay) is Tier 1.
+- **PLATFORM FINDING (corrects this evening's entry):** the deployed container
+  runs `server/_core/index.ts`, which registers NO queue poller — the 5-second
+  Execution Engine poller lives in `server/index.ts`, not what ships. Boot
+  logs for 00179/00181 show "Server running" + Scheduler but never "Background
+  poller started". So the deployed instance NEVER executes pending runs in the
+  background; every historical execution came from inline
+  `processPendingRuns()` calls inside authenticated request paths (trigger,
+  approve/reject, ops_agent_execute). "Executes pending runs continuously" in
+  the evening entry is wrong. Consequence: a `pending` run sits inert until
+  someone drives it — scripts/execute-pending-runs.ts locally is the working
+  pattern (used successfully by yesterday's session). Also: GET
+  `/api/dashboard/llm-ping` checks the OPENAI leg ("OPENAI_API_KEY is not
+  configured"), NOT Gemini — it is not a Gemini liveness gauge.
+- **Verification path:** executed re-arm via direct SQL (23:13Z); launched
+  local `execute-pending-runs.ts` with the live key injected via env only
+  (nothing written to disk; process detached with executor.log). Note: first
+  invocation spent 5+ minutes in pnpm dependency self-repair (the earlier
+  killed install left node_modules incomplete — `pnpm exec` resolves before
+  running; left uninterrupted to finish the repair). Robert to approve the
+  resulting `hubspot_marketing_email` dispatch in the Dispatch Decisions card.
+- **Security:** the live key was pasted in-chat by Robert and transited a
+  Cloud Run command line; it should be rotated in AI Studio once the sequence
+  is done. No key material in this register or the repo.
+- **Owner:** Agent session, approved by Robert (in-chat; key provided and
+  path chosen by Robert).
+
 ## 2026-09-29 (evening) — cookie@2 boot-crash fixed; morning zombie-instance theory corrected
 
 - **Change:** `server/_core/authRoutes.ts` and `server/_core/sdk.ts`: import
