@@ -16,6 +16,167 @@ version: "1.0.0"
 
 Date started: 2026-05-07
 
+## 2026-09-30 (late afternoon, second) — Dispatch Decisions card unblocked: admins see operator-workspace dispatches; approvals work from the cockpit
+
+- **Change (code, 2 files):**
+  (1) `server/actions/router.ts` — the workspace mismatch from the
+  2026-09-30 (small hours) entry is fixed at the router: listDispatches,
+  getDispatch, approve, and reject now resolve dispatches across the
+  operator workspace set (caller's workspace ∪ sentinel `…0001` ∪ god-mode
+  `…0000`) via `inArray` unions + explicit membership checks; approve/reject
+  select by id then verify visibility (fail closed with "Dispatch not
+  found"); named constants replace raw literals with a comment block
+  explaining the mismatch and why visibility (not re-ownership) is the fix
+  (the sentinel stays an ACTIVE write target).
+  (2) `server/actions/router.test.ts` — fake db gained `inArray`
+  evaluation; +4 tests pin the behavior: sentinel awaiting items surface in
+  an admin's list, admin approve/reject of sentinel dispatches works from
+  their own workspace session, out-of-set workspaces stay invisible, and
+  approve fails closed outside the operator set.
+- **Why:** the card showed zero awaiting dispatches and every card approval
+  failed the workspace match (register 2026-09-30 small hours: "his card
+  always shows 0"), forcing the script lane for every human decision — the
+  exact approval surface the human-gated design depends on was unreachable
+  from the UI.
+- **Verified:** targeted file 11/11; full suite 487/487; tsc clean in
+  touched files; change-control green.
+- **Deploy note:** ships with the telemetry badge fix and Services section
+  at the next Cloud Build (committed and pushed this session per Robert's
+  commit-plan approval).
+- **Owner:** Buffy agent session, executed on Robert's in-chat instruction.
+
+## 2026-09-30 (late afternoon) — Orchestrator LLM badge was measuring the wrong leg; ping rewired onto the real Gemini pipeline path
+
+- **Change (code, 3 files):**
+  (1) `server/controllers/dashboard-telemetry.ts` — ROOT CAUSE: the
+  telemetry `configured` flag keyed on `!!process.env.OPENAI_API_KEY` while
+  the card is labeled "Orchestrator LLM (Gemini)", and `pingLlm` round-tripped
+  through `invokeLLM` (the OpenAI-compatible Forge leg, never configured in
+  this deployment) — so production honestly displayed NOT CONFIGURED about
+  the one subsystem that is live (Gemini verified with a real generation on
+  revision 00184). Fix: `configured` now reports `isGoogleAiConfigured()`
+  (the same factory the agent-runner, orchestrator, intake, and billing
+  paths gate on), stale provider label `gemini-2.5-flash` →
+  `gemini-flash-latest` (the live chain head), and `pingLlm` now
+  short-circuits not-configured WITHOUT burning a model call, else pings
+  through `createGoogleProvider()("gemini-flash-latest")` + `generateText`
+  — the exact construction in agent-runner.ts. `invokeLLM` import removed.
+  (2) `client/src/pages/Dashboard.tsx` — card label → "Orchestrator LLM
+  (Gemini)"; the not-configured hint no longer instructs setting
+  OPENAI_API_KEY (wrong subsystem).
+  (3) `server/controllers/dashboard-telemetry.test.ts` — suite re-pinned to
+  the Gemini leg: mocks for google-ai + ai, provider-construction assertion,
+  no-model-call-on-not-configured assertion, and two source-pin regressions
+  (telemetry must not key on OPENAI_API_KEY; ping must never route through
+  invokeLLM).
+- **Why:** Robert read the dashboard, saw NOT CONFIGURED, and asked — the
+  badge was honest about a number that described the wrong subsystem, which
+  is its own class of fiction. Register precedent (09-29 field learning:
+  "llm-ping is the Forge leg … not a Gemini liveness gauge") is now fixed in
+  code, not just documented.
+- **Verified:** targeted file 15/15; full suite 482/482; tsc clean in all
+  touched files; change-control green.
+- **Deploy note:** takes effect at next Cloud Build; uncommitted pending
+  Robert's commit plan.
+- **Owner:** Buffy agent session, pending Robert review.
+
+## 2026-09-30 (afternoon, fourth) — Money check resolved ($14.95/mo membership); byline is self-service; article snapshot archived
+
+- **Change (docs, 3 files):**
+  (1) `docs/operations/press-mentions/notable-men-feature-2026-09-30.md` —
+  money check RESOLVED: Robert pays Notable Men **$14.95/month** (a
+  feature-membership model; no separate upsell reported) — reframes the
+  platform as pay-to-feature membership at ~$179/yr; byline flag updated:
+  Notable Men provided a self-edit dashboard, so no correction request is
+  needed (suggested edit recorded: "Founder, Uncle Robert Consulting LLC");
+  leverage plan items marked done/updated; Ask Robert section closed out.
+  (2) `docs/operations/press-mentions/notable-men-feature-2026-09-30-snapshot.md`
+  (new) — verbatim full-text archive of the article as published (provenance:
+  captured from the canonical URL before any byline self-edit), so the proof
+  asset survives independent of the subscription-hosted platform.
+  (3) this entry (CC-2026-09-30-004).
+- **Why:** the feature lives behind a paid membership — if the subscription
+  lapses, the live link dies; the snapshot protects the proof asset, and the
+  finance picture now includes an active $14.95/mo subscription that should
+  be re-evaluated against produced leads before renewal.
+- **Owner:** Buffy agent session, pending Robert review.
+
+## 2026-09-30 (afternoon, third) — Fundable folded into owned surface: URC Brand Family section on Services + Notable Men proof card (Robert decision executed)
+
+- **Change (code, 1 file):** `client/src/pages/Services.tsx` — new
+  "One Family, Five Brands" section (`#brand-family`) between the IONOS
+  infrastructure block and the CTA: five brand cards (URC main brand,
+  AgentLab Agentic OS, Tactix fulfillment, Bootstrapper Capital founder
+  funnel, Fundable Consulting financial arm) using the existing
+  `/logos/` assets; Fundable's card carries the only CTA, opening the
+  Bootstrapper.ai `business_financing` diagnostic intake — so the brand
+  that lost its domain now routes visitors to an owned, working intake
+  path. Same section adds an "As featured in Notable Men" proof card
+  linking the canonical article URL (no tracking params).
+- **Why:** executes Robert's decision (CC-2026-09-30-002 open item):
+  fold Fundable into an owned surface. Fixes the dead-search exposure
+  from the published Notable Men bio ("financial solutions via Fundable
+  Consulting") and lands the first proof line from CC-2026-09-30-001's
+  leverage plan. Zero spend; no new domain.
+- **Verified:** `npx tsc --noEmit` — zero errors in Services.tsx (full-tree
+  noise is pre-existing); vitest suite 480/480; change-control green.
+- **Deploy note:** takes effect on the production site at next Cloud Build;
+  uncommitted locally until Robert says go (standing commit-plan rule).
+- **Owner:** Buffy agent session, executed on Robert's in-chat decision.
+
+## 2026-09-30 (afternoon, second) — Fundable Consulting domain confirmed lapsed and parked; press-mention capture amended
+
+- **Change (docs, 2 files):**
+  (1) `docs/operations/press-mentions/notable-men-feature-2026-09-30.md` —
+  added Flag 4 and placement rule after Robert reported he lost
+  `fundableconsulting.online` (renewal price too high): verified same day
+  that the domain now serves a GoDaddy domains-on-auction park page
+  (DNS resolves to 2.59.170.20 / 104.219.250.37; HTTPS cert error consistent
+  with parking). Repo sweep found zero live references — only historical
+  register entries (CC-2026-05-27-001, GoHighLevel-trial era). Placement
+  rule recorded: until resolved, no proof line, post, or funnel asset may
+  route anyone to that domain.
+  (2) this entry (CC-2026-09-30-002).
+- **Why:** the live Notable Men bio names "financial solutions via Fundable
+  Consulting"; a reader who searches the brand now lands on an auction page.
+  The domain is dropped and in third-party/auction circulation — no cheap
+  re-registration path — so this is a standing brand gap, not a quick fix.
+- **Open decision (Robert):** fold Fundable into an owned surface (free,
+  preferred under the low-cost rule — e.g. a URC or Agent Lab page section
+  referenced from the feature leverage), register a low-cost replacement
+  domain, or leave the brand site-less. No spend authorized.
+- **Owner:** Buffy agent session, pending Robert review.
+
+## 2026-09-30 (afternoon) — Notable Men feature captured as proof asset; leverage plan queued
+
+- **Change (docs, 2 files):**
+  (1) `docs/operations/press-mentions/notable-men-feature-2026-09-30.md`
+  (new) — capture doc for Robert McCarthy's published Notable Men feature
+  ("From Family Favor to Business Purpose", Notable Insights series,
+  live 2026-09-30): verified canonical URL (200, tracking params stripped),
+  title/subtitle/published/byline facts, bio accuracy check (all claims
+  consistent with the 5-brand cluster — Fundable Consulting legitimately
+  named as the financial arm per CC-2026-09-03-009), publication due
+  diligence (legitimate-but-promotional assessment; no spend until Robert
+  confirms none was requested), three flags (byline says "Agent Lab" not URC
+  — brand-hierarchy call for Robert; rights unconfirmed before marketing
+  reuse; Agent Lab LinkedIn Content-Queue unreachable from this machine —
+  routine could not run, gap flagged), and a funnel-aligned leverage plan
+  (LinkedIn announcement with one CTA, HubSpot nurture note, "featured in"
+  proof lines on Services/FSS/MKT-05/roundtable invites, MKT-04 proof-asset
+  logging; free podcast/masterclass exposure yes, paid upsells gated on the
+  money/client-trust check).
+  (2) this register entry.
+- **Why:** the feature is live public proof; it must be captured before it
+  rots in an inbox, verified for brand accuracy, and wired into the lead flow
+  it can feed. Also satisfies the press-mention hygiene rules (canonical URL
+  over tracking link; no spend until money check).
+- **No code, no workflow, no source-of-truth files changed.** Capture doc is
+  the single press-mention record; three Robert decisions requested in the
+  doc's Ask Robert section (money/upsell check, byline correction, first
+  proof-line placement).
+- **Owner:** Buffy agent session, pending Robert review.
+
 ## Purpose
 
 This register stops fast operational changes from leaking past the audit trail.
@@ -925,6 +1086,13 @@ Before ending a change session:
 | 2026-09-23 | CC-2026-09-23-011 | Fullstack / Ops Agent / Real Pipeline Execution | `server/controllers/orchestrator-execute.ts` (new); `server/controllers/orchestrator.ts`; `server/controllers/orchestrator-execute.test.ts` (new); `server/routes/api.ts`; `client/src/components/OpsAgentChat.tsx`; `docs/operations/honesty-audit-2026-09-23.md`; `docs/operations/change-control-register.md` | Rewired executeOrchestratorWorkflow onto the real agent pipeline, removing the last P1-class fiction: previously it inserted an instant-completed run with a backdated startedAt (now minus 3600ms), inserted pre-canned template artifacts (hardcoded ICP brief, message map, 3 LinkedIn posts with invented stats and quality scores up to 98), wrote an audit row with fabricated telemetry (latencyMs 32, tokensTotal 1250, cost 0.00125, saifPassed true), and always returned success. Now: proposal steps are synced into real workflow_steps rows (create-once per workflow so re-executions reuse the DAG instead of duplicating cascade-linked rows), the run is inserted as pending with real timestamps, processPendingRuns executes it through the actual agent runner (real per-step LLM execution, artifact extraction with quality evaluation, guardrail steps pausing for approval, real failure marking with error messages), and the response reports the run's actual DB state including paused_for_approval and failed outcomes, per-step cost summed from workflow_run_steps, artifacts counted from the run's real rows, and tokens as null because per-run token counts are not persisted anywhere. OpsAgentChat renders the real outcome (failed toast with error, amber paused-for-approval state, success only on actual completion) and the old free 'latency 450ms' style fakes are gone. 8 hermetic regression tests pin the behavior including a no-fabricated-template-strings check. | The Ops Agent presented invented execution results as real OS runs - fake artifacts with quality grades, fake audit telemetry, guaranteed success - corrupting the very run history the business inspects. | Updated: orchestrator runs in workflow_runs now come exclusively from real pipeline execution; run artifacts are created only by the agent runner's artifact extraction; audit telemetry for runs is written only by the pipeline. | Automation Impact: none removed; queue-processor, triggerRun, and the scheduler path are unchanged and now share one honest execution path; the endpoint remains synchronous like triggerRun, so long DAGs keep the client spinner until real completion. | Buffy (Codebuff) / pending Robert review | Active |
 | 2026-09-23 | CC-2026-09-23-012 | UI / Dashboard / Real Telemetry | `server/controllers/dashboard-telemetry.ts` (new); `server/controllers/dashboard-telemetry.test.ts` (new); `server/routes/api.ts`; `client/src/pages/Dashboard.tsx`; `docs/operations/honesty-audit-2026-09-23.md`; `docs/operations/change-control-register.md` | Made the Dashboard System Telemetry Console read real state via new GET /api/dashboard/telemetry: the HubSpot badge now reflects the vault-synced workspace_integrations row (running the same syncWorkspaceVaultSecrets call Settings uses, counting configured tools from the row config) instead of a hardcoded CONNECTED; the LLM badge reflects actual OPENAI_API_KEY presence with CONFIGURED / NOT CONFIGURED states and a pointer to Settings - Secrets when absent; latency comes from the most recent completed workflow_run_steps row (real per-step latencyMs) with 'not reported' when none exists; the spend tile shows the real cumulative cost summed from executed steps by SQL (or an honest empty-state) replacing the hardcoded $12.50 / ($443 saved) marketing fiction; the cockpit header readout drops the fake 'NOMINAL / 450ms' strip for real node count and last-step latency; vault-sync errors surface in the console without breaking it; also fixed the agents fallback that invented '6 active' when the list was empty. 7 hermetic regression tests including a check that the hardcoded fiction strings never reappear in the Dashboard source. | The page presenting itself as real-time health monitoring displayed hardcoded badges and invented financial numbers, contradicting the real vault state Settings shows. | Updated: dashboard telemetry is now computed from workflow_run_steps, workspace_integrations, and env state; no schema changes. | Automation Impact: none removed; read-only endpoint on the existing workspace-scoped apiRouter; polling every 30s. | Buffy (Codebuff) / pending Robert review | Active |
 | 2026-09-23 | CC-2026-09-23-013 | UI / Dashboard / Verified LLM Liveness | `server/controllers/dashboard-telemetry.ts`; `server/controllers/dashboard-telemetry.test.ts`; `server/routes/api.ts`; `client/src/pages/Dashboard.tsx`; `docs/operations/change-control-register.md` | Added a real LLM health-ping: new GET /api/dashboard/llm-ping performs a minimal round-trip through the app's actual invokeLLM path (single 'reply pong' prompt, 512 max tokens), measures wall latency, and distinguishes three honest states - LIVE with measured round-trip ms, NOT CONFIGURED when the API key is absent (matched on the not-configured error), and PING FAILED with the real error when the endpoint is reachable but failing; an empty model response is explicitly not liveness. The Dashboard LLM badge now shows verified liveness from this ping (fired on mount and every 5 minutes, deliberately separate from the cheap 30s telemetry poll so polling never triggers model calls) with the pipeline's last-step latency still shown alongside from the telemetry endpoint. 6 new hermetic tests cover round-trip success, prompt minimality, not-configured vs erroring distinction, empty-response rejection, and array-content flattening. | A CONFIGURED badge only proved a key existed, not that the model actually answers - the console claimed a subsystem was healthy without verifying it. | Updated: LLM liveness is now measured, not assumed; no schema changes. | Automation Impact: none removed; one lightweight model call per dashboard mount / 5 minutes per open dashboard. | Buffy (Codebuff) / pending Robert review | Active |
+| 2026-09-30 | CC-2026-09-30-001 | Marketing / Press Mention / Notable Men feature | `docs/operations/press-mentions/notable-men-feature-2026-09-30.md`; `docs/operations/change-control-register.md` | Captured Robert McCarthy's published Notable Men feature ("From Family Favor to Business Purpose", Notable Insights, live 2026-09-30) as a proof asset: verified canonical URL, facts table, bio accuracy check, publication due diligence (legitimate-but-promotional; no spend until Robert's money check), flags (byline says Agent Lab not URC — Robert's brand call; marketing-reuse rights unconfirmed; Agent Lab LinkedIn Content-Queue unreachable from this machine), and a funnel-aligned leverage plan (LinkedIn announcement, HubSpot nurture note, "featured in" proof lines, MKT-04 logging). | Live third-party proof must be captured, verified, and wired into the lead flow before it decays in an inbox; brand-hierarchy and spend questions require Robert's decisions. | None (new press-mention capture doc; no operating source-of-truth changed). | None. | Buffy (Codebuff) / pending Robert review | Active |
+| 2026-09-30 | CC-2026-09-30-002 | Marketing / Domain / Fundable Consulting domain lapsed and parked | `docs/operations/press-mentions/notable-men-feature-2026-09-30.md`; `docs/operations/change-control-register.md` | Verified fundableconsulting.online is dead after a renewal-price lapse: DNS still resolves but the site serves a GoDaddy domains-on-auction park page (HTTPS cert error), so the brand has no web destination and recovery is not a simple re-registration. Swept the repo: zero live references, only historical register entries (CC-2026-05-27-001 era). Amended the Notable Men capture doc with Flag 4 and a placement rule: no proof line, post, or funnel asset may route anyone to the dead domain until resolved. | The live Notable Men bio names Fundable Consulting; a reader searching the brand lands on an auction page, and unguarded funnel assets could route people to a parked domain. | None (capture-doc amendment only). | None. | Buffy (Codebuff) / pending Robert review | Active |
+| 2026-09-30 | CC-2026-09-30-003 | UI / Brand / URC Brand Family section + Notable Men proof card | `client/src/pages/Services.tsx`; `docs/operations/change-control-register.md` | Executed Robert's fold-into-owned-surface decision: new "One Family, Five Brands" section on the public Services page with cards for all five brands (URC, AgentLab, Tactix, Bootstrapper Capital, Fundable Consulting); Fundable's card — the brand that lost its domain — carries the only CTA, routing to the Bootstrapper.ai business_financing diagnostic intake as its owned destination; added an "As featured in Notable Men" proof card linking the canonical article. | Gives the site-less Fundable brand a working home (fixing the dead-search exposure from the published bio) and lands the first proof line from the Notable Men leverage plan at zero cost. | Updated: Services.tsx public marketing surface. | None. | Buffy (Codebuff) / executed on Robert's in-chat decision | Active |
+| 2026-09-30 | CC-2026-09-30-004 | Marketing / Press Mention / Notable Men money check + archive | `docs/operations/press-mentions/notable-men-feature-2026-09-30.md`; `docs/operations/press-mentions/notable-men-feature-2026-09-30-snapshot.md`; `docs/operations/change-control-register.md` | Money check resolved: Notable Men is an active $14.95/month feature membership (~$179/yr; re-evaluate against produced leads before renewal); byline is self-service correctable via Robert's Notable Men dashboard (suggested edit: "Founder, Uncle Robert Consulting LLC"); archived the verbatim article text as a snapshot file so the proof asset survives independent of the subscription-hosted platform. AMENDED same day by CC-2026-09-30-005: Diamond/Platinum upsells declined; 90% sponsorship negotiated, ~10% balance split across months. | The article lives behind a paid membership, so the proof must be protected against lapse and the recurring cost tracked in the finance picture. | None (capture-doc updates + snapshot only). | None. | Buffy (Codebuff) / pending Robert review | Active |
+| 2026-09-30 | CC-2026-09-30-006 | UI / Dashboard / Orchestrator LLM badge + ping rewired onto the real Gemini leg | `server/controllers/dashboard-telemetry.ts`; `client/src/pages/Dashboard.tsx`; `server/controllers/dashboard-telemetry.test.ts` | Fixed the NOT CONFIGURED Robert spotted on the live dashboard: the configured flag keyed on the never-configured OPENAI leg while the real orchestrator brain (Gemini) was live; telemetry now reports isGoogleAiConfigured(), the ping round-trips through createGoogleProvider()+generateText exactly as agent-runner does (no model call when unconfigured), card copy no longer points at OPENAI_API_KEY; two source-pin regression tests keep the ping off the Forge leg. | The badge was accurate about the wrong subsystem — honest telemetry must measure what its label names. | Updated: dashboard telemetry honesty (no schema changes). | None. | Buffy (Codebuff) / pending Robert review | Active |
+| 2026-09-30 | CC-2026-09-30-007 | UI / Approvals / Dispatch Decisions card workspace mismatch fixed | `server/actions/router.ts`; `server/actions/router.test.ts`; `docs/operations/change-control-register.md` | Admins now see and decide dispatches across the operator workspace set (user ∪ sentinel ...0001 ∪ god-mode ...0000): listDispatches/getDispatch use inArray unions, approve/reject resolve by id with explicit visibility checks and fail closed; 4 new tests pin sentinel visibility, cross-workspace approve/reject, out-of-set invisibility, and fail-closed approve. | The card showed zero awaiting items and every card approval failed the workspace match, forcing the script lane for the human decisions the gated design depends on. | Updated: actions router approval surface. | None (enables the existing human-gated flow from the UI). | Buffy (Codebuff) / executed on Robert's in-chat instruction | Active |
+| 2026-09-30 | CC-2026-09-30-005 | Marketing / Press Mention / Notable Men sponsorship negotiated | `docs/operations/press-mentions/notable-men-feature-2026-09-30.md`; `docs/operations/change-control-register.md` | Robert declined the Diamond and Platinum upsell tiers and negotiated a 90% sponsorship from Notable Men with the remaining ~10% split across several months; capture doc corrected with an AMENDED pointer left on the superseded CC-004 money details for the audit trail; open item: get final terms in writing (amount, installment schedule, coverage) for the finance tracker and the leads-based renewal review. | Down-selling the upsellers cuts the proof asset's cost to roughly a tenth of list and models the exact bootstrap behavior the published article preaches. | None (capture-doc update only). | None (future finance-tracker line once terms are confirmed). | Buffy (Codebuff) / pending Robert review | Active |
 | 2026-09-23 | CC-2026-09-23-014 | Fullstack / Agents / Honest Stats | `server/controllers/agents.ts`; `server/controllers/agents.test.ts` (new); `server/schema.ts`; `client/src/pages/Agents.tsx`; `client/src/pages/CommandCenter.tsx`; `docs/operations/honesty-audit-2026-09-23.md`; `docs/operations/change-control-register.md` | Swept the audit's remaining Agents/CommandCenter findings and found the fiction ran deeper than the UI: the agents controller seeded six default agents with entirely fabricated histories (tasksCompleted up to 3102, uptime strings 98.5-99.9%) on first boot, and the schema itself defaulted every new agent row to uptime 99.9%. Now: (1) seeding is identity-only - name, role, model, system prompt, status idle, stats at zero, real numbers accumulate from actual executions; (2) schema uptime default dropped (column nullable, no longer trusted or displayed); (3) per-agent tasksCompleted, successRate, and lastStepAt are computed from real workflow run history by joining workflow_run_steps to workflow_steps on agentId; (4) Agents.tsx replaced the hardcoded 'Average Uptime 99.7% - Cloud Run container SLA' card with a real Average Success Rate (or an honest no-runs-yet empty state) and per-agent cards show real success rate or an em dash; (5) CommandCenter's agent list shows real success rate or 'no steps yet' instead of the 99.9% fallback. 4 regression tests including a check that the fabricated seed values never reappear in the controller. | The swarm roster presented invented task counts and SLA uptimes as real operational history - the exact numbers an operator would use to judge whether the agents work. | Updated: agent stats are now derived from workflow_run_steps/workflow_steps; agents.uptime column is nullable and unused; no migrations required (self-heal DDL and existing rows tolerate the change; existing fabricated values in already-seeded rows are no longer displayed). | Automation Impact: none removed; getAgents response shape extended (successRate/lastStepAt added, uptime still present but no longer rendered). | Buffy (Codebuff) / pending Robert review | Active |
 | CC-2026-09-23-015 | 2026-09-23 | Honesty audit P3 fixes | Home.tsx, Documentation.tsx, honesty-audit-2026-09-23.md | Home DAG demo relabeled Interactive Demo, invented 14ms/$0.02 figures removed, toasts state no DAG was executed; Documentation replaced false 0-simulated-tools and 6/6-fleet claims with Descriptive Only wording | P3 wording fixes close the final findings from the 2026-09-23 honesty audit | Robert | Approved |
 | CC-2026-09-23-016 | 2026-09-23 | Fiction linter + workflow success-rate honesty | server/integrity/fiction-linter.ts, fiction-allowlist.ts, fiction-linter.test.ts, server/controllers/workflows.ts, workflows.test.ts, server/schema.ts, server/db.ts, drizzle/0007, client CommandCenter/Features/Pricing/DocVisualBlueprint | Added a static fiction linter (8 rules over the audit fiction classes) that runs as a vitest suite over client pages/components and server controllers/execution, failing on any unallowlisted fabricated-data site with a documented allowlist for exceptions; its first sweep caught a missed CommandCenter 99.4 percent fallback plus two 100 percent SLA marketing claims and a 99.9 percent uptime chip, all fixed; root cause found in workflows: dead fabricated DTO seeds deleted, per-workflow successRate and lastRunAt now computed from real workflow_runs history, and the success_rate column's NOT NULL DEFAULT 100.00 (every never-run workflow presented as perfect) dropped via schema, self-heal DDL, and migration 0007 |
@@ -1190,3 +1358,67 @@ Before ending a change session:
 - **Implementation**: resolveAdcUserCredentials (explicit GOOGLE_AI_ADC_FILE / GOOGLE_APPLICATION_CREDENTIALS short-circuit - an explicit pointer that is absent means NO ADC, never machine-default fallback; otherwise the standard gcloud ADC location) + mintAdcUserToken (refresh grant, Node fetch, no new deps). Precedence everywhere: service account (org policy) -> ADC user principal -> API-key fallback; the ADC path deliberately outranks API keys in createGoogleProvider because keys are PROVEN unusable on this gateway (a stale key must not shadow the working principal). isGoogleAiConfigured counts ADC unless GOOGLE_AI_ADC_DISABLED=1. Tokens cached with the same 5-min-early refresh as the SA path. The no-credential error now states the principal-only reality and prints the exact gcloud command.
 - **Tests**: google-ai.test.ts extended (ADC-configured true, hermetic no-credential case via explicit-absent override, GOOGLE_AI_ADC_DISABLED semantics); 13/13 in the file, _core 19/19, tsc clean. A test-caught real semantic bug: the first resolver draft fell back to machine ADC when an explicit override was absent - fixed to credential-isolation semantics before landing.
 - **Rollback**: revert google-ai.ts + test file; delete scripts/probe-adc-scope.mjs.
+
+## CC-2026-09-30-001 - Marketing / Press Mention / Notable Men feature captured as proof asset
+- **Date**: 2026-09-30
+- **Type**: operational capture (docs only, no code)
+- **Scope**: docs/operations/press-mentions/notable-men-feature-2026-09-30.md (new); docs/operations/change-control-register.md
+- **Trigger**: Robert forwarded the publication's HubSpot notification link: he is featured in Notable Men (notablemen.com, Notable Insights series), article "From Family Favor to Business Purpose", published 2026-09-30.
+- **Change**: Created the press-mention capture doc - verified canonical URL (tracking params stripped, HTTP 200), facts table (title/subtitle/published/byline/author page), bio accuracy check (all claims consistent with the 5-brand cluster; Fundable Consulting legitimately named as the financial arm per CC-2026-09-03-009; URC 2025 founding correct), publication due diligence (legitimate-but-promotional platform; scam variants of this category exist on BBB Scam Tracker; no spend until Robert confirms nothing was purchased or auto-enrolled), flags (byline says "Agent Lab" not URC - brand-hierarchy decision for Robert; marketing-reuse rights unconfirmed; Agent Lab LinkedIn Content-Queue folder unreachable from this machine so the open-slot routine could not run - gap flagged), and a funnel-aligned leverage plan (Robert LinkedIn announcement with one CTA, HubSpot nurture note, "featured in" proof lines on Services/FSS/MKT-05/roundtable invites, MKT-04 proof-asset logging; free podcast/masterclass exposure yes, paid upsells gated on the money/client-trust check).
+- **Verification**: canonical URL live (200); page text read in full; no spend occurred from this session; OneDrive Agent Lab folder absence confirmed by direct path check.
+- **Rollback**: delete the press-mentions capture doc; remove this entry and the 2026-09-30 (afternoon) narrative entry.
+
+## CC-2026-09-30-002 - Marketing / Domain / Fundable Consulting domain lapsed and parked; press capture amended
+- **Date**: 2026-09-30
+- **Type**: operational finding + doc amendment (no code)
+- **Scope**: docs/operations/press-mentions/notable-men-feature-2026-09-30.md; docs/operations/change-control-register.md
+- **Trigger**: Robert reported in-session that he lost fundableconsulting.online (they wanted too much to renew it) - same day the Notable Men feature went live with a bio naming Fundable Consulting as the financial arm.
+- **Change**: Verified the domain state live (DNS resolves; site serves a GoDaddy domains-on-auction park page; HTTPS cert error) - the domain has dropped into auction/third-party circulation, so recovery is not a simple re-registration. Swept the repo: zero live references (code/config/site); only historical register entries from the CC-2026-05-27-001 GoHighLevel-trial era. Amended the press-mention capture doc with Flag 4 and a placement rule: no asset may route anyone to the dead domain until resolved.
+- **Open decision (Robert, no spend authorized)**: (a) fold Fundable into an owned surface (free - preferred); (b) register a low-cost replacement domain; (c) leave the brand site-less.
+- **Rollback**: remove Flag 4 from the capture doc and this entry.
+
+## CC-2026-09-30-003 - UI / Brand / URC Brand Family section on Services + Notable Men proof card
+- **Date**: 2026-09-30
+- **Type**: feature (public marketing surface)
+- **Scope**: client/src/pages/Services.tsx
+- **Trigger**: Robert's CC-2026-09-30-002 decision - fold Fundable Consulting into an owned surface after losing fundableconsulting.online (parked at GoDaddy auction). Coincides with the Notable Men feature going live (CC-2026-09-30-001).
+- **Change**: New "One Family, Five Brands" section (#brand-family) on the public Services page between the IONOS infrastructure block and the CTA: five brand cards using existing /logos/ assets (URC main, AgentLab Agentic OS, Tactix fulfillment, Bootstrapper Capital founder funnel, Fundable Consulting financial arm). Fundable's card carries the section's only CTA - the Bootstrapper.ai business_financing diagnostic intake (https://bootstrapper.ai/@agentlab/leads/business_financing) - giving the site-less brand an owned, working destination. Added an "As featured in Notable Men" proof card in the same section linking the canonical article URL (tracking params stripped). Copy stays inside the honest-boundary rules: no invented numbers, brand roles only.
+- **Verification**: tsc clean in the touched file (no new errors); vitest 480/480; change-control green.
+- **Deploy note**: effective on next Cloud Build; stays uncommitted until Robert approves the commit plan.
+- **Rollback**: revert client/src/pages/Services.tsx.
+
+## CC-2026-09-30-004 - Marketing / Press Mention / Money check resolved ($14.95/mo), byline self-service, article snapshot archived
+- **Date**: 2026-09-30
+- **Type**: operational capture update (docs only, no code)
+- **Scope**: docs/operations/press-mentions/notable-men-feature-2026-09-30.md; docs/operations/press-mentions/notable-men-feature-2026-09-30-snapshot.md (new); docs/operations/change-control-register.md
+- **Trigger**: Robert answered the CC-2026-09-30-001 open items: (a) money check - he PAYS Notable Men $14.95/month for the service (feature membership); (b) byline - Notable Men gave him a self-edit dashboard, no correction request needed.
+- **Change**: Capture doc updated - money/upsell question RESOLVED (active ~$179/yr subscription; re-evaluate against produced leads before renewal; finance picture should carry it), byline flag marked self-service correctable (suggested edit: "Founder, Uncle Robert Consulting LLC"), leverage checklist and Ask Robert closed out. NEW snapshot file archives the verbatim article text as published (captured from the canonical URL before any byline self-edit) so the proof asset survives independent of the subscription-hosted platform - quoting in nurture/outreach never depends on the membership staying active.
+- **AMENDED 2026-09-30 (CC-2026-09-30-005)**: the "no separate upsell reported" and "$14.95/month full price" details above are superseded - Notable Men pitched Diamond and Platinum tiers; Robert declined both and negotiated a 90% sponsorship with the ~10% balance split across months. See CC-2026-09-30-005 for the corrected terms; exact final terms pending Robert's written confirmation.
+- **Rollback**: delete the snapshot file; revert the capture doc edits; remove this entry.
+
+## CC-2026-09-30-005 - Marketing / Press Mention / Notable Men upsells declined; 90% sponsorship negotiated
+- **Date**: 2026-09-30
+- **Type**: operational capture update + negotiation outcome (docs only, no code)
+- **Scope**: docs/operations/press-mentions/notable-men-feature-2026-09-30.md; docs/operations/change-control-register.md
+- **Trigger**: Robert reported the platform pitched Diamond and Platinum paid upgrade tiers; he declined both and negotiated Notable Men down to a 90% SPONSORSHIP of the service, with the remaining ~10% split across several months.
+- **Change**: Capture doc money section corrected (supersedes the earlier "$14.95/mo full price, no upsell" record - kept in CC-004 for the audit trail with an AMENDED pointer). Value assessment updated: the proof asset now costs roughly a tenth of list, materially improving the leads-per-dollar calculus for the renewal decision. Finance-tracker implication recorded: the Notable Men cost line changes from a flat subscription to a small installment plan; exact terms needed in writing.
+- **Open item (Robert)**: capture the final sponsorship terms in writing - exact effective amount, installment schedule and length, what the sponsorship covers and for how long - so the finance tracker carries the real obligation and the renewal review (CC-2026-09-30-004 renewal clause) has numbers to judge.
+- **Rollback**: revert the capture doc money section to the pre-005 state; remove this entry and the AMENDED pointer in CC-004.
+
+## CC-2026-09-30-006 - UI / Dashboard / Orchestrator LLM badge + ping rewired onto the real Gemini leg
+- **Date**: 2026-09-30
+- **Type**: bugfix (honest telemetry, wrong-subsystem measurement)
+- **Scope**: server/controllers/dashboard-telemetry.ts; client/src/pages/Dashboard.tsx; server/controllers/dashboard-telemetry.test.ts
+- **Trigger**: Robert read the production dashboard and asked why the Orchestrator LLM card showed NOT CONFIGURED. Root cause: the flag keyed on the never-configured OPENAI leg and the ping went through invokeLLM, while the actual orchestrator brain (Gemini via google-ai.ts) was live and invisible to the console.
+- **Change**: configured now reports isGoogleAiConfigured(); provider label updated to the live chain head (gemini-flash-latest); pingLlm short-circuits not-configured with no model call, else round-trips through createGoogleProvider() + generateText exactly as agent-runner.ts does; Dashboard copy no longer tells the operator to set OPENAI_API_KEY; tests re-pinned with two source-pin regressions against reintroduction.
+- **Verification**: targeted 15/15; full suite 482/482; tsc clean in touched files; change-control green.
+- **Rollback**: revert the three listed files.
+
+## CC-2026-09-30-007 - UI / Approvals / Dispatch Decisions card workspace mismatch fixed (cockpit approvals unblocked)
+- **Date**: 2026-09-30
+- **Type**: bugfix (admin approval surface)
+- **Scope**: server/actions/router.ts; server/actions/router.test.ts
+- **Trigger**: Robert instructed the fix (register finding from the small-hours entry: the Dispatch Decisions card cannot release dispatches because listDispatches filters on the signed-in workspace while seeded runs live in sentinel workspace ...0001).
+- **Change**: Router resolves dispatches across the operator workspace set (user ∪ sentinel ...0001 ∪ god-mode ...0000) for list/get/approve/reject; approve/reject verify visibility explicitly and fail closed; constants named and documented; visibility-not-re-ownership rationale recorded (sentinel remains an active write target). Tests: inArray-aware fake db; sentinel visibility, cross-workspace approve/reject, out-of-set invisibility, fail-closed approve — 11/11 in file, 487/487 full suite.
+- **Verification**: targeted 11/11; full suite 487/487; tsc clean; change-control green.
+- **Rollback**: revert the two listed files.
