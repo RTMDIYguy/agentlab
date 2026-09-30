@@ -102,7 +102,7 @@ export async function claimPendingRuns(limit = 20): Promise<ClaimedRunRow[]> {
         LIMIT ${limit}
       )
       RETURNING id, workspace_id, workflow_id, status, trigger_source,
-                initial_context, locked_at, locked_by, cancel_requested
+                initial_context, locked_at, locked_by, cancel_requested, created_at
     )
     SELECT * FROM claimed ORDER BY created_at
   `);

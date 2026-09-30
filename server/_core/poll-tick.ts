@@ -14,6 +14,7 @@
  *     seconds — the budget below is only a runaway guard.
  */
 import "./env";
+import { ensureDatabaseSchema } from "../db";
 import { processPendingRuns } from "../execution/queue-processor";
 
 const TICK_BUDGET_MS = Number(process.env.POLLER_TICK_BUDGET_MS || 50 * 60 * 1000);
@@ -23,6 +24,10 @@ async function main() {
   console.log(
     `[PollerTick] started (worker ${(process.env.POLLER_WORKER_ID || "job").slice(0, 32)})`
   );
+  // Self-sufficiency: the Job must not depend on a service boot having run
+  // the idempotent DDL (lease columns) first. First execution 2026-09-30
+  // proved the coupling failure mode.
+  await ensureDatabaseSchema();
   let passes = 0;
   let totalClaimed = 0;
   while (Date.now() - startedAt < TICK_BUDGET_MS) {
