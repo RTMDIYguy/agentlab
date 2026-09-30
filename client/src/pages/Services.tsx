@@ -485,6 +485,121 @@ export default function Services() {
         </div>
       </section>
 
+      {/* URC Brand Family — owned home for the five-brand cluster */}
+      <section id="brand-family" className="py-16 border-t border-border">
+        <div className="container max-w-6xl mx-auto space-y-10">
+          <div className="text-center space-y-2">
+            <h2 className="text-3xl font-extrabold text-foreground">
+              One Family, Five Brands
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+              Uncle Robert Consulting LLC is the main business brand; each arm
+              does one job inside the same operating standard.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {[
+              {
+                name: "Uncle Robert Consulting",
+                role: "Main brand",
+                desc: "Business development consulting and the operating backbone for the family.",
+                logo: "/logos/urc-logo-new.png",
+                financingCta: false,
+              },
+              {
+                name: "AgentLab",
+                role: "Agentic OS",
+                desc: "The AI operating system behind this site: 7-department playbooks and human-judgment checkpoints.",
+                logo: "/logos/agentlab-avatar.png",
+                financingCta: false,
+              },
+              {
+                name: "Tactix",
+                role: "Fulfillment arm",
+                desc: "Delivery and Upwork-based execution for client engagements.",
+                logo: "/logos/tactix-logo.jpg",
+                financingCta: false,
+              },
+              {
+                name: "Bootstrapper Capital",
+                role: "Founder funnel",
+                desc: "Founder community, roundtables, and Bootstrapper's Guide to the World.",
+                logo: "/logos/bootstrapper-capital-logo.svg",
+                financingCta: false,
+              },
+              {
+                name: "Fundable Consulting",
+                role: "Financial arm",
+                desc: "Financial solutions guidance for founders, delivered through the URC family.",
+                logo: "/logos/fundable-consulting-logo.png",
+                financingCta: true,
+              },
+            ].map(brand => (
+              <Card
+                key={brand.name}
+                className="p-5 flex flex-col items-center text-center gap-3 border-border/80 bg-card/80 hover:border-primary/50 transition-all shadow-sm"
+              >
+                <img
+                  src={brand.logo}
+                  alt={`${brand.name} logo`}
+                  className="h-12 w-12 object-contain rounded"
+                />
+                <div className="space-y-1">
+                  <h3 className="font-bold text-sm text-foreground">{brand.name}</h3>
+                  <span className="text-[10px] font-mono font-bold text-primary px-2 py-0.5 rounded bg-primary/10 inline-block">
+                    {brand.role}
+                  </span>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {brand.desc}
+                  </p>
+                </div>
+                {brand.financingCta && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full text-xs font-bold"
+                    onClick={() =>
+                      window.open(
+                        "https://bootstrapper.ai/@agentlab/leads/business_financing",
+                        "_blank"
+                      )
+                    }
+                  >
+                    Financing Intake <ArrowRight className="w-3.5 h-3.5" />
+                  </Button>
+                )}
+              </Card>
+            ))}
+          </div>
+
+          <Card className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-primary/30 bg-primary/5">
+            <div className="space-y-1 text-center sm:text-left">
+              <span className="text-[11px] uppercase font-bold tracking-wider text-primary">
+                As featured in Notable Men
+              </span>
+              <p className="text-sm text-foreground">
+                Robert McCarthy's essay{" "}
+                <em>"From Family Favor to Business Purpose"</em> (September
+                2026) tells the origin story behind Uncle Robert Consulting.
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              className="shrink-0 text-xs font-bold border-primary/40"
+              onClick={() =>
+                window.open(
+                  "https://notablemen.com/blog/from-family-favor-to-business-purpose",
+                  "_blank"
+                )
+              }
+            >
+              Read the feature <ArrowRight className="w-3.5 h-3.5" />
+            </Button>
+          </Card>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-primary to-primary/80 text-white">
         <div className="container text-center space-y-6">
