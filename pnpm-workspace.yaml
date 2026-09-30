@@ -36,12 +36,19 @@ overrides:
   protobufjs: ^7.6.3
   # low: stagehand's old @ai-sdk/* tree pins provider-utils 3.0.25 (dev-only path)
   '@ai-sdk/provider-utils@3.0.25': ^3.0.28
+  # 2026-09-30 correction (CC-2026-09-30-009): firebase RESTORED at root —
+  # standalone apps (agentlab/ etc.) resolve it upward from root node_modules.
+  # Its @grpc/grpc-js high is killed with a scoped override to the patched
+  # line (>=1.14.5 clears both advisories) instead of removing the dep.
+  '@grpc/grpc-js': ^1.14.5
 onlyBuiltDependencies:
+  - '@firebase/util'
   - '@google/genai'
   - bufferutil
   - esbuild
   - protobufjs
 allowBuilds:
+  '@firebase/util': true
   '@google/genai': true
   bufferutil: true
   esbuild: true

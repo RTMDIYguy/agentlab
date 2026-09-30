@@ -44,6 +44,13 @@ Date started: 2026-05-07
   487/487; tsc — the 4 remaining errors are the documented pre-existing
   cookie@2 noise in authRoutes/sdk.ts (untouched by this change; Cloud Build
   does not typecheck); change-control green.
+- **AMENDED 2026-09-30 (CC-2026-09-30-009):** the firebase removal was a
+  FALSE-POSITIVE diagnosis — Robert confirmed firebase IS used by standalone
+  and built-in apps (e.g. `agentlab/package.json` declares it and resolves it
+  UPWARD into root node_modules, which is why no root-level import exists).
+  Firebase was restored at root the same day with the @grpc/grpc-js high
+  killed via a pinned override (>=1.14.5) instead of removal. Audit remains
+  clean. tsoa removal stands (no correction). See CC-2026-09-30-009.
 - **Deploy note:** dependency change rides the next Cloud Build; the image
   gets smaller and the build simpler.
 - **Owner:** Buffy agent session, pending Robert review.
@@ -1464,3 +1471,13 @@ Before ending a change session:
 - **Change**: removed firebase + tsoa; the @grpc/grpc-js and ts-deepmerge findings died with them; cleaned workspace build-allow lists; lockfile-only audit fixes in the three agentlabhs sub-projects (all 0 now); pr-posse reduced to 2 findings requiring a breaking agentic-flow major — filed as a dated decision in scheduled-change-queue rather than forced.
 - **Verification**: pnpm audit clean ("No known vulnerabilities found"); vitest 487/487; tsc noise unchanged (pre-existing cookie@2); change-control green.
 - **Rollback**: `pnpm add firebase@^12.18.0 && pnpm add -D tsoa@7.0.0-alpha.0 && pnpm install`, or revert the three files.
+
+## CC-2026-09-30-009 - Security / Dependencies / CORRECTION: firebase restored at root; grpc high killed via override instead
+- **Date**: 2026-09-30
+- **Type**: correction to CC-2026-09-30-008 (dependency restore + override)
+- **Scope**: package.json; pnpm-workspace.yaml; pnpm-lock.yaml
+- **Trigger**: Robert corrected the 008 diagnosis: "Firebase is used in a couple of the built in and standalone apps."
+- **Evidence**: `agentlab/package.json` (standalone app, root workspace has NO `packages:` field so it installs independently) declares `firebase ^12.18.0`; with no node_modules of its own on this machine, its `require('firebase')` resolves UPWARD into root `node_modules` — the exact mechanism 008's import scan (server/ + client/src/ only) could not see. Post-restore proof: node resolution from `agentlab/` finds `<root>/node_modules/firebase`.
+- **Change**: firebase@^12.18.0 restored at root; '@firebase/util' restored to onlyBuiltDependencies/allowBuilds; NEW override '@grpc/grpc-js': ^1.14.5 kills BOTH grpc advisories at the patched line so the audit stays clean WITH firebase present (resolution verified 1.14.5 across the tree; pnpm audit still reports zero findings; suite 487/487). tsoa removal NOT reverted — it remains config-less, script-less, and import-less.
+- **Lesson recorded**: an import scan of the entrypoints is NOT proof a dependency is unused in a repo containing standalone apps that resolve upward; Robert's operational knowledge outranks a negative grep. Future dep removals need a consumer survey across ALL manifests + an upward-resolution check first.
+- **Rollback**: remove the firebase dep and the @grpc/grpc-js override; revert the three files.
