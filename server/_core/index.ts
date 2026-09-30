@@ -198,9 +198,22 @@ async function startServer() {
           issuer: "https://accounts.google.com",
           audience: expectedAud,
         });
-        authorized =
-          String(payload.email || "").toLowerCase() ===
-          schedulerSa.toLowerCase();
+        // Bind to the scheduler SA. Google SA ID tokens (Scheduler and IAM
+        // impersonation alike) may OMIT the email claim (observed 2026-09-30:
+        // iss/aud present, email undefined) — the stable unforgeable pin is
+        // `sub`, the SA's unique numeric id (POLLER_SCHEDULER_SA_ID). Email
+        // is checked only as a secondary signal when present.
+        const saId = process.env.POLLER_SCHEDULER_SA_ID || "";
+        const sub = String(payload.sub || "");
+        const email = String(payload.email || "").toLowerCase();
+        if (saId) {
+          authorized = sub === saId;
+        } else if (payload.email !== undefined) {
+          authorized = email === schedulerSa.toLowerCase();
+        }
+        // Without POLLER_SCHEDULER_SA_ID and without an email claim we do
+        // NOT accept — iss+aud alone would admit any Google user minting a
+        // token against our public URL.
       } catch {
         authorized = false;
       }
