@@ -53,7 +53,7 @@ export async function requeueExpiredLeases(): Promise<number> {
       AND locked_at < now() - interval '${sql.raw(String(LEASE_TTL_MINUTES))} minutes'
     RETURNING id
   `);
-  const rows = (result as unknown as { rows?: Array<{ id: string }> }).rows ?? [];
+  const rows = extractRows<{ id: string }>(result);
   if (rows.length > 0) {
     console.log(
       `[QueueProcessor] Requeued ${rows.length} run(s) after lease expiry:`,
@@ -61,6 +61,20 @@ export async function requeueExpiredLeases(): Promise<number> {
     );
   }
   return rows.length;
+}
+
+/**
+ * Extract rows from db.execute() regardless of driver shape: postgres-js
+ * returns the RowList array DIRECTLY (no .rows property — proven 2026-09-30
+ * via scripts probe), node-postgres returns { rows }. This is the actual
+ * root cause of the two stranded-run incidents: the claim/requeue statements
+ * executed correctly both times, but `.rows` access on an array returned
+ * undefined and the code reported zero rows.
+ */
+function extractRows<T>(result: unknown): T[] {
+  if (Array.isArray(result)) return result as T[];
+  const rows = (result as { rows?: T[] } | null)?.rows;
+  return Array.isArray(rows) ? rows : [];
 }
 
 interface ClaimedRunRow {
@@ -104,7 +118,7 @@ export async function claimPendingRuns(limit = 20): Promise<ClaimedRunRow[]> {
     RETURNING id, workspace_id, workflow_id, status, trigger_source,
               initial_context, locked_at, locked_by, cancel_requested, created_at
   `);
-  const rows = ((result as unknown as { rows?: ClaimedRunRow[] }).rows ?? []) as ClaimedRunRow[];
+  const rows = extractRows<ClaimedRunRow>(result);
   return rows.sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)));
 }
 
