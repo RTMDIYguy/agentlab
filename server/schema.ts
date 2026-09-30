@@ -317,6 +317,14 @@ export const workflowRuns = pgTable(
       .notNull()
       .default("manual"), // 'manual', 'webhook', 'schedule'
     startedAt: timestamp("started_at", { withTimezone: true }),
+    // Execution lease (2026-09-30 poller design): claim guard so concurrent
+    // lanes (inline sweeps, poller Job) can never double-execute a run.
+    // locked_by stamps the claiming worker; locked_at is heartbeat-bumped
+    // before each step. NULL = unclaimed. Terminal statuses keep any stale
+    // lease — it is inert because claim and recovery only touch
+    // 'pending'/'running' rows respectively.
+    lockedAt: timestamp("locked_at", { withTimezone: true }),
+    lockedBy: varchar("locked_by", { length: 128 }),
     completedAt: timestamp("completed_at", { withTimezone: true }),
     errorMessage: text("error_message"),
     cancelRequested: boolean("cancel_requested").notNull().default(false),
@@ -333,6 +341,7 @@ export const workflowRuns = pgTable(
     index("idx_workflow_runs_workspace").on(table.workspaceId),
     index("idx_workflow_runs_workflow").on(table.workflowId),
     index("idx_workflow_runs_status").on(table.workspaceId, table.status),
+    index("idx_workflow_runs_claim").on(table.status, table.lockedAt),
   ]
 );
 

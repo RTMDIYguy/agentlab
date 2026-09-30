@@ -582,6 +582,15 @@ export async function ensureDatabaseSchema(): Promise<void> {
       CREATE INDEX IF NOT EXISTS "idx_visitor_profiles_visitor_key" ON "visitor_profiles" ("visitor_key");
     `;
 
+    // Execution lease (2026-09-30 poller design): claim guard for
+    // workflow_runs so concurrent execution lanes can never double-execute
+    // a run. Columns are nullable — existing rows read as unclaimed.
+    await client`
+      ALTER TABLE "workflow_runs" ADD COLUMN IF NOT EXISTS "locked_at" timestamp with time zone;
+      ALTER TABLE "workflow_runs" ADD COLUMN IF NOT EXISTS "locked_by" varchar(128);
+      CREATE INDEX IF NOT EXISTS "idx_workflow_runs_claim" ON "workflow_runs" ("status", "locked_at");
+    `;
+
     console.log("[Database] Newsletter, contact, blog comments & messenger tables verified.");
   } catch (err: any) {
     console.warn("[Database] Schema ensure notice:", err.message);

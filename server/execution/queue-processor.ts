@@ -1,4 +1,4 @@
-import { eq, asc, and } from "drizzle-orm";
+import { eq, asc, and, sql } from "drizzle-orm";
 import { getDb } from "../db";
 import {
   workflowRuns,
@@ -17,28 +17,130 @@ import { draftActionPayload, parseActionDraft } from "./action-drafter";
 import { resolveStepPolicy, runWithStepPolicy, StepCancelledError } from "./step-policy";
 import { insertAuditLog } from "./audit-logger";
 
-export async function processPendingRuns() {
+// ---------------------------------------------------------------- lease -------
+// Execution lease (2026-09-30 poller design). Any lane that executes runs —
+// inline sweeps, the local executor, the Cloud Run poller Job — claims them
+// through the same guard, so concurrent invocations can never double-execute
+// a step (the previous "select all pending" shape had no such guard and was
+// only accidentally safe because at most one lane ran at a time).
+
+const LEASE_TTL_MINUTES = 10;
+
+const WORKER_ID =
+  (process.env.POLLER_WORKER_ID ||
+    `inline-${process.pid}-${Date.now().toString(36)}`).slice(0, 128);
+
+/**
+ * Re-queue runs whose worker died mid-flight: status 'running' with a lease
+ * older than the TTL. Completed steps are skipped on resume by the existing
+ * run-step logic, so the requeue is exactly the established resume semantics.
+ * Runs 'running' WITHOUT any lease are pre-lease legacy rows — recovery only
+ * adopts rows this system claimed, never unknown ones.
+ */
+export async function requeueExpiredLeases(): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const result = await db.execute(sql`
+    UPDATE workflow_runs
+    SET status = 'pending',
+        locked_at = NULL,
+        locked_by = NULL,
+        updated_at = now(),
+        error_message = COALESCE(error_message, '') ||
+          ' [lease expired — requeued for execution]'
+    WHERE status = 'running'
+      AND locked_at IS NOT NULL
+      AND locked_at < now() - interval '${sql.raw(String(LEASE_TTL_MINUTES))} minutes'
+    RETURNING id
+  `);
+  const rows = (result as unknown as { rows?: Array<{ id: string }> }).rows ?? [];
+  if (rows.length > 0) {
+    console.log(
+      `[QueueProcessor] Requeued ${rows.length} run(s) after lease expiry:`,
+      rows.map(r => r.id).join(", ")
+    );
+  }
+  return rows.length;
+}
+
+interface ClaimedRunRow {
+  id: string;
+  workspace_id: string;
+  workflow_id: string;
+  status: string;
+  trigger_source: string;
+  initial_context: Record<string, unknown> | null;
+  locked_at: string | null;
+  locked_by: string | null;
+  [key: string]: unknown;
+}
+
+/**
+ * Atomically claim up to $limit pending runs (unclaimed, or whose 10-minute
+ * lease expired). FOR UPDATE SKIP LOCKED makes concurrent claimers safe:
+ * each pending run is handed to exactly one worker. Returns raw snake_case
+ * rows mapped by the caller onto the workflowRuns shape (the insert-bearing
+ * queries below only read five columns).
+ */
+export async function claimPendingRuns(limit = 20): Promise<ClaimedRunRow[]> {
+  const db = await getDb();
+  if (!db) return [];
+  const result = await db.execute(sql`
+    WITH claimed AS (
+      UPDATE workflow_runs
+      SET status = 'running',
+          locked_at = now(),
+          locked_by = ${WORKER_ID},
+          updated_at = now(),
+          started_at = COALESCE(started_at, now())
+      WHERE id IN (
+        SELECT id FROM workflow_runs
+        WHERE status = 'pending'
+          AND (locked_at IS NULL OR locked_at < now() - interval '${sql.raw(String(LEASE_TTL_MINUTES))} minutes')
+        ORDER BY created_at
+        FOR UPDATE SKIP LOCKED
+        LIMIT ${limit}
+      )
+      RETURNING id, workspace_id, workflow_id, status, trigger_source,
+                initial_context, locked_at, locked_by, cancel_requested
+    )
+    SELECT * FROM claimed ORDER BY created_at
+  `);
+  return ((result as unknown as { rows?: ClaimedRunRow[] }).rows ?? []) as ClaimedRunRow[];
+}
+
+export async function processPendingRuns(limit = 20): Promise<number> {
   const db = await getDb();
   if (!db) {
     console.warn("[QueueProcessor] Database not available");
-    return;
+    return 0;
   }
 
+  let pendingRuns: ClaimedRunRow[] = [];
   try {
-    // 1. Query pending runs
-    console.log("[QueueProcessor] DB QUERY: Selecting pending runs from workflowRuns...");
-    const pendingRuns = await db
-      .select()
-      .from(workflowRuns)
-      .where(eq(workflowRuns.status, "pending"));
-    console.log(`[QueueProcessor] DB QUERY DONE: Found ${pendingRuns.length} pending runs.`);
+    // 1. Recover runs abandoned by dead workers (lease expired mid-flight),
+    // then atomically claim pending runs. FOR UPDATE SKIP LOCKED guarantees
+    // concurrent lanes (UI sweeps, the poller Job, local executors) never
+    // share a run — each is handed to exactly one worker.
+    await requeueExpiredLeases();
+    pendingRuns = await claimPendingRuns(limit);
+    console.log(`[QueueProcessor] Claimed ${pendingRuns.length} pending run(s) (worker ${WORKER_ID}).`);
 
-    if (pendingRuns.length > 0) {
-      console.log(`[QueueProcessor] Found ${pendingRuns.length} pending runs.`);
-    }
+    for (const raw of pendingRuns) {
+      // Claim rows return snake_case from the raw CTE; map onto the shape the
+      // step loop reads. The body below only uses: id, workspaceId,
+      // workflowId, initialContext, cancelRequested.
+      const run = {
+        id: raw.id,
+        workspaceId: raw.workspace_id,
+        workflowId: raw.workflow_id,
+        status: raw.status,
+        triggerSource: raw.trigger_source,
+        initialContext: raw.initial_context,
+        cancelRequested: Boolean(raw.cancel_requested),
+      };
 
-    for (const run of pendingRuns) {
-      console.log(`[QueueProcessor] Processing run ${run.id}...`);
+      console.log(`[QueueProcessor] Processing claimed run ${run.id}...`);
       
       let unlockedDepartments: string[] = [];
       if (run.workspaceId === "00000000-0000-0000-0000-000000000000") {
@@ -91,6 +193,20 @@ export async function processPendingRuns() {
 
       // 4. Iterate sequentially
       for (const step of steps) {
+        // Lease heartbeat: extend our claim before each step so long-running
+        // steps never look abandoned. Guarded by locked_by — if the run was
+        // recovered and re-claimed by another worker, a stale worker cannot
+        // re-stamp the lease (its updates simply match zero rows).
+        await db
+          .update(workflowRuns)
+          .set({ lockedAt: new Date() })
+          .where(
+            and(
+              eq(workflowRuns.id, run.id),
+              eq(workflowRuns.lockedBy, WORKER_ID)
+            )
+          );
+
         if (completedStepIds.has(step.id)) {
           // Skip already completed step
           const payload = existingStepPayloads.get(step.id);
@@ -526,4 +642,7 @@ export async function processPendingRuns() {
   } catch (err) {
     console.error("[QueueProcessor] Error processing runs:", err);
   }
+  // Callers (the poll-tick entrypoint) use the count to decide whether
+  // another drain iteration is worth doing within this tick.
+  return pendingRuns.length;
 }
