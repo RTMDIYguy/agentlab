@@ -180,7 +180,7 @@ export async function ingestRoamingData(req: Request, res: Response): Promise<vo
         await db.insert(auditLogs).values({
           workspaceId,
           actionType: `ROAMING_INGESTION:${dataType.toUpperCase()}`,
-          model: "gemini-2.5-flash",
+          model: "not-llm-dispatch",
           payloadIn: {
             ingestionId,
             source,
@@ -430,7 +430,7 @@ export async function triggerFullEcosystemSync(workspaceId: string = "00000000-0
       await db.insert(auditLogs).values({
         workspaceId,
         actionType: "ECOSYSTEM_FULL_SYNC",
-        model: "gemini-2.5-flash",
+        model: "not-llm-dispatch",
         payloadIn: { triggerSource: "ONE_CLICK_SYNC_OR_SCHEDULED" },
         payloadOut: { status: "SYNCED", scriptsRun, syncedAt },
         tokensPrompt: 0,

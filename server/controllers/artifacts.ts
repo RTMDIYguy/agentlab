@@ -7,7 +7,11 @@ import fs from "fs";
 import path from "path";
 import { evaluateArtifactQuality, buildRefinementPrompt } from "../execution/quality-evaluator";
 import { generateText } from "ai";
-import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
+import {
+  createGoogleProvider,
+  isGoogleAiConfigured,
+  withGoogleModelChain,
+} from "../_core/google-ai";
 
 /**
  * Create a workflow artifact for the active workspace.
@@ -577,19 +581,23 @@ export async function refineArtifact(req: Request, res: Response): Promise<void>
     if (isGoogleAiConfigured()) {
       try {
         const google = createGoogleProvider();
-        const model = google("gemini-2.5-flash");
         const prompt = buildRefinementPrompt(original.content, instructions, initialEval);
 
-        const aiResponse = await generateText({
-          model,
-          prompt,
-          system:
-            "You are an elite operational copywriter and agency strategist for URC & AgentLab. You produce crisp, authentic, high-impact copy with zero generic filler.",
-          temperature: 0.3,
-        });
+        // CC-2026-09-30-012: model chain instead of the retired pinned id.
+        // The existing catch below already degrades honestly (original content
+        // is kept — never fabricated refinement output).
+        const aiResponse = await withGoogleModelChain(model =>
+          generateText({
+            model: google(model) as any,
+            prompt,
+            system:
+              "You are an elite operational copywriter and agency strategist for URC & AgentLab. You produce crisp, authentic, high-impact copy with zero generic filler.",
+            temperature: 0.3,
+          })
+        );
 
-        if (aiResponse.text && aiResponse.text.trim()) {
-          refinedContent = aiResponse.text.trim();
+        if (aiResponse.value.text && aiResponse.value.text.trim()) {
+          refinedContent = aiResponse.value.text.trim();
         }
       } catch (aiErr) {
         console.warn("[RefineArtifact] AI generation fallback:", aiErr);

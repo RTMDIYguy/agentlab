@@ -137,10 +137,14 @@ apiRouter.get("/debug/llm", async (req, res) => {
     try {
       const { generateText } = await import("ai");
       const google = createGoogleProvider();
-      await generateText({
-        model: google("gemini-2.5-flash") as any,
-        prompt: "Say the word test.",
-      });
+      const { withGoogleModelChain } = await import("../_core/google-ai");
+      const probe = await withGoogleModelChain(model =>
+        generateText({
+          model: google(model) as any,
+          prompt: "Say the word test.",
+        })
+      );
+      errorMessage = `ok via ${probe.model}`; // surfaced in the debug payload
       success = true;
     } catch (e: any) {
       success = false;

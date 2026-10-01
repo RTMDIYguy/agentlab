@@ -100,7 +100,7 @@ export async function ingestCustomerPurchase(req: Request, res: Response): Promi
           agent: "Fulfillment-Swarm-Node",
           action: "FUL-01 Customer Onboarding & Retention Dispatch",
           status: "success",
-          model: "gemini-2.5-flash",
+          model: "not-llm-dispatch",
           latencyMs: 14,
           tokensTotal: 480,
           cost: "0.000480",

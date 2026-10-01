@@ -7,7 +7,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
  * deployment — no OPENAI_API_KEY was ever configured, so visitors were
  * unknowingly talking to the canned fallback script) onto the app's one Gemini
  * auth factory (server/_core/google-ai.ts). These hermetic tests pin:
- *   - the model fallback chain (2.5-flash → 2.0-flash → 1.5-flash)
+ *   - the model fallback chain (CC-2026-09-30-012: gemini-flash-latest →
+ *     gemini-3.8-flash → gemini-pro-latest — the pinned 2.x/1.x ids are
+ *     retired for new accounts)
  *   - markdown-fence tolerance on the JSON reply
  *   - the three honest llmStatus states (ok / llm_error / not_configured)
  *   - visitor-memory persistence on every path
@@ -25,7 +27,10 @@ vi.mock("ai", () => ({
   generateText: (...args: any[]) => generateTextMock(...args),
 }));
 
-vi.mock("../_core/google-ai", () => ({
+vi.mock("../_core/google-ai", async importOriginal => ({
+  // Keep the real module's shared chain (GOOGLE_MODEL_CHAIN) — the router
+  // iterates it; only the credential gate and provider are faked.
+  ...(await importOriginal<typeof import("../_core/google-ai")>()),
   createGoogleProvider: () => (modelId: string) => ({ modelId, __provider: "google" }),
   isGoogleAiConfigured: () =>
     Boolean(

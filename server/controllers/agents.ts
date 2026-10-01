@@ -29,7 +29,7 @@ const DEFAULT_WORKSPACE_AGENTS = [
   {
     name: "Alpha-Node-01",
     role: "Lead Enrichment Specialist",
-    baseModel: "gemini-1.5-pro",
+    baseModel: "gemini-pro-latest",
     systemPrompt:
       "Autonomous Lead Enrichment Specialist for URC & Bootstrapper audience discovery.",
   },
@@ -64,7 +64,7 @@ const DEFAULT_WORKSPACE_AGENTS = [
   {
     name: "Workflow-Planner-04",
     role: "Autonomous Task Router & DAG Synthesizer",
-    baseModel: "gemini-1.5-pro",
+    baseModel: "gemini-pro-latest",
     systemPrompt:
       "Master Task Router and DAG Synthesizer mapping business requests to URC 7-department SOPs.",
   },
@@ -276,7 +276,7 @@ export async function deployAgent(req: Request, res: Response): Promise<void> {
         workspaceId,
         name: name.trim().slice(0, 128),
         role: (role || "Autonomous Agent").toString().slice(0, 128),
-        baseModel: (baseModel || "gemini-1.5-pro").toString().slice(0, 64),
+        baseModel: (baseModel || "gemini-pro-latest").toString().slice(0, 64),
         systemPrompt:
           (systemPrompt || `Autonomous agent persona for ${role || "general operations"}`).toString(),
         status: "idle",

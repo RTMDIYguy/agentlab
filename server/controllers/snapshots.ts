@@ -78,8 +78,8 @@ let snapshotsStore: WorkspaceSnapshot[] = [
         temperature: 0.2,
         maxOutputTokens: 8192,
         topP: 0.95,
-        tier2Fallback: "gemini-2.5-flash",
-        tier3Fallback: "gemini-2.0-flash-lite",
+        tier2Fallback: "gemini-flash-latest",
+        tier3Fallback: "gemini-3.8-flash",
         zeroRefusalMode: true,
       },
       integrations: {
@@ -95,10 +95,10 @@ let snapshotsStore: WorkspaceSnapshot[] = [
       },
       activeAgents: [
         { id: "agent_ops_lead", name: "Ops Lead Orchestrator", role: "COO & System Architect", department: "OPS", status: "active", modelTier: "gemini-2.5-pro" },
-        { id: "agent_sdr_outbound", name: "SDR Autonomous Agent", role: "Outbound Enrichment & Prospecting", department: "SAL", status: "active", modelTier: "gemini-2.5-flash" },
+        { id: "agent_sdr_outbound", name: "SDR Autonomous Agent", role: "Outbound Enrichment & Prospecting", department: "SAL", status: "active", modelTier: "gemini-flash-latest" },
         { id: "agent_pamela_voice", name: "Pamela AI Receptionist", role: "24/7 Inbound Triage & Telephony", department: "OPS", status: "active", modelTier: "elevenlabs-multilingual-v2" },
-        { id: "agent_fin_auditor", name: "Financial Reconciliation Node", role: "M365 Ledger & Cash Flow Monitor", department: "FIN", status: "active", modelTier: "gemini-2.5-flash" },
-        { id: "agent_content_dist", name: "Pulse Social Syndicator", role: "Multi-Platform Content Dissemination", department: "MKT", status: "active", modelTier: "gemini-2.5-flash" },
+        { id: "agent_fin_auditor", name: "Financial Reconciliation Node", role: "M365 Ledger & Cash Flow Monitor", department: "FIN", status: "active", modelTier: "gemini-flash-latest" },
+        { id: "agent_content_dist", name: "Pulse Social Syndicator", role: "Multi-Platform Content Dissemination", department: "MKT", status: "active", modelTier: "gemini-flash-latest" },
       ],
       activeWorkflows: [
         { id: "mkt-01", name: "Inbound Lead Generation & Conversion", department: "Marketing" },
@@ -129,8 +129,8 @@ let snapshotsStore: WorkspaceSnapshot[] = [
         temperature: 0.1,
         maxOutputTokens: 4096,
         topP: 0.9,
-        tier2Fallback: "gemini-2.5-flash",
-        tier3Fallback: "gemini-2.0-flash-lite",
+        tier2Fallback: "gemini-flash-latest",
+        tier3Fallback: "gemini-3.8-flash",
         zeroRefusalMode: false,
       },
       integrations: {
@@ -145,8 +145,8 @@ let snapshotsStore: WorkspaceSnapshot[] = [
         pulseSocial: { enabled: false },
       },
       activeAgents: [
-        { id: "agent_ops_lite", name: "Branch Ops Assistant", role: "Branch Office Operations", department: "OPS", status: "active", modelTier: "gemini-2.5-flash" },
-        { id: "agent_sdr_lite", name: "Local Outbound SDR", role: "Regional Lead Intake", department: "SAL", status: "active", modelTier: "gemini-2.5-flash" },
+        { id: "agent_ops_lite", name: "Branch Ops Assistant", role: "Branch Office Operations", department: "OPS", status: "active", modelTier: "gemini-flash-latest" },
+        { id: "agent_sdr_lite", name: "Local Outbound SDR", role: "Regional Lead Intake", department: "SAL", status: "active", modelTier: "gemini-flash-latest" },
       ],
       activeWorkflows: [
         { id: "sal-01", name: "Regional Founder Diagnostic Outreach", department: "Sales" },
@@ -206,8 +206,8 @@ export async function saveSnapshot(req: Request, res: Response) {
           temperature: 0.2,
           maxOutputTokens: 8192,
           topP: 0.95,
-          tier2Fallback: "gemini-2.5-flash",
-          tier3Fallback: "gemini-2.0-flash-lite",
+          tier2Fallback: "gemini-flash-latest",
+          tier3Fallback: "gemini-3.8-flash",
           zeroRefusalMode: true,
         },
         integrations: {

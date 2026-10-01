@@ -10,6 +10,8 @@ import {
   isGoogleAiConfigured,
   clearGoogleTokenCache,
   GEMINI_OAUTH_SCOPE,
+  GOOGLE_MODEL_CHAIN,
+  withGoogleModelChain,
 } from "./google-ai";
 
 // Service-account handling is security-critical: these tests pin the
@@ -266,5 +268,42 @@ describe("isGoogleAiConfigured", () => {
     process.env.GOOGLE_SERVICE_ACCOUNT_FILE = path.join(tmpDir, "absent.json");
     process.env.GOOGLE_AI_ADC_DISABLED = "1";
     expect(isGoogleAiConfigured()).toBe(false);
+  });
+});
+
+describe("model chain (CC-2026-09-30-012)", () => {
+  it("leads with the -latest aliases; retired pinned 2.x ids never appear", () => {
+    // 2026-09-30 prod evidence: gemini-2.5-flash 404s "no longer available
+    // to new users". The chain must never send a caller back to a retired id.
+    for (const model of GOOGLE_MODEL_CHAIN) {
+      expect(model.startsWith("gemini-flash-latest") ||
+        model.startsWith("gemini-pro-latest") ||
+        /^gemini-[3-9]\./.test(model)).toBe(true);
+      expect(model).not.toMatch(/^gemini-[12]\./);
+    }
+    expect(GOOGLE_MODEL_CHAIN[0]).toBe("gemini-flash-latest");
+  });
+
+  it("withGoogleModelChain returns the first success with its model id", async () => {
+    const calls: string[] = [];
+    const { model, value } = await withGoogleModelChain(async m => {
+      calls.push(m);
+      if (m === "gemini-flash-latest") throw new Error("404 retired");
+      return `ok:${m}`;
+    });
+    expect(calls).toEqual(["gemini-flash-latest", "gemini-3.8-flash"]);
+    expect(model).toBe("gemini-3.8-flash");
+    expect(value).toBe("ok:gemini-3.8-flash");
+  });
+
+  it("withGoogleModelChain rethrows after the last model fails", async () => {
+    const calls: string[] = [];
+    await expect(
+      withGoogleModelChain(async m => {
+        calls.push(m);
+        throw new Error(`boom:${m}`);
+      })
+    ).rejects.toThrow("boom:gemini-pro-latest");
+    expect(calls).toEqual([...GOOGLE_MODEL_CHAIN]);
   });
 });

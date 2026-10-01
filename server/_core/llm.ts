@@ -285,7 +285,8 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
   } = params;
 
   const payload: Record<string, unknown> = {
-    model: "gemini-2.5-flash",
+    // CC-2026-09-30-012: alias instead of the retired pinned 2.5 id.
+    model: "gemini-flash-latest",
     messages: messages.map(normalizeMessage),
   };
 

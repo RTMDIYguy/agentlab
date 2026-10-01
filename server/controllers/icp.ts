@@ -4,7 +4,11 @@ import { db } from "../db";
 import { icpProfiles } from "../schema";
 import { eq, desc, and, or, isNull } from "drizzle-orm";
 import { generateText } from "ai";
-import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
+import {
+  createGoogleProvider,
+  isGoogleAiConfigured,
+  GOOGLE_MODEL_CHAIN,
+} from "../_core/google-ai";
 
 // Default seed ICP profiles for initial bootstrap
 export const defaultIcpSeed = [
@@ -211,7 +215,8 @@ Generate a comprehensive JSON response matching this EXACT schema:
 Respond ONLY with the valid JSON object. Do not include markdown codeblocks or surrounding conversational text.`;
 
     let rawResponse = "";
-    const models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
+    // CC-2026-09-30-012: pinned 2.x/1.x ids retired for new accounts.
+    const models: readonly string[] = GOOGLE_MODEL_CHAIN;
     let succeeded = false;
 
     for (const modelName of models) {

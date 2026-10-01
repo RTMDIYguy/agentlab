@@ -546,7 +546,7 @@ export async function mountPlaybook(req: Request, res: Response): Promise<void> 
             workspaceId,
             workflowId: targetWfId,
             actionType: "PLAYBOOK_MOUNT",
-            model: "gemini-1.5-pro",
+            model: "not-llm-dispatch",
             payloadIn: { packageId: id, triggeredAt: new Date().toISOString(), source: "Marketplace / FSS Portal" },
             payloadOut: { status: "active", workflowName: fssName, workflowId: targetWfId, totalSteps: 6 },
             tokensPrompt: 180,

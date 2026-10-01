@@ -393,3 +393,46 @@ export function createGoogleProvider() {
     apiKey ? { apiKey } : (undefined as unknown as { apiKey: string })
   );
 }
+
+/**
+ * Default model fallback chain for new Gemini calls (2026-09-30 evening,
+ * CC-2026-09-30-012).
+ *
+ * Google RETIRED the pinned 2.x ids ("gemini-2.5-flash" et al.) for new
+ * accounts: every call 404s with "no longer available to new users" while
+ * pointing at the 3.x family. This was invisible behind per-call try/catch
+ * fallbacks that let hallucinated/fabricated output quietly replace the
+ * model. The "-latest" aliases track the current GA model on every account
+ * (the same chain agent-runner has used since 2026-09-28), so they lead;
+ * a pinned 3.x id follows as a concrete fallback. IMPORTANT: never call
+ * google(...) with a pinned 2.x id again — new aliases replace old ones.
+ */
+export const GOOGLE_MODEL_CHAIN = [
+  "gemini-flash-latest",
+  "gemini-3.8-flash",
+  "gemini-pro-latest",
+] as const;
+
+export type GoogleModelChainEntry = (typeof GOOGLE_MODEL_CHAIN)[number];
+
+/**
+ * Iterate the model chain, invoking `fn` with the provider bound to each
+ * model until one succeeds. Returns { model, value } of the first success
+ * or rethrows the LAST model's error (preferring errors whose message names
+ * a credential problem, which no model id can fix). Never used silently:
+ * the caller's catch must degrade to an HONEST fallback (no fabricated
+ * content, no invented numbers), per the honesty-audit contract.
+ */
+export async function withGoogleModelChain<T>(
+  fn: (model: GoogleModelChainEntry) => Promise<T>
+): Promise<{ model: GoogleModelChainEntry; value: T }> {
+  let lastError: unknown;
+  for (const model of GOOGLE_MODEL_CHAIN) {
+    try {
+      return { model, value: await fn(model) };
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError;
+}

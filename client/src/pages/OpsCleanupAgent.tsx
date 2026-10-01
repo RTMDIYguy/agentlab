@@ -78,9 +78,11 @@ const PROMPT_CATEGORIES: PromptCategory[] = [
   },
 ];
 
+// CC-2026-09-30-012: pinned 2.x ids are retired for new Gemini accounts
+// (404 "no longer available to new users") — the aliases track the current GA model.
 const AVAILABLE_MODELS = [
-  { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash", badge: "Fastest / Realtime", provider: "Google" },
-  { id: "gemini-1.5-pro", name: "Gemini 1.5 Pro", badge: "Deep Reasoning", provider: "Google" },
+  { id: "gemini-flash-latest", name: "Gemini Flash (latest)", badge: "Fastest / Realtime", provider: "Google" },
+  { id: "gemini-pro-latest", name: "Gemini Pro (latest)", badge: "Deep Reasoning", provider: "Google" },
   { id: "claude-3-7-sonnet", name: "Claude 3.7 Sonnet", badge: "Code & Architecture", provider: "Anthropic" },
   { id: "gpt-4o", name: "GPT-4o", badge: "Universal", provider: "OpenAI" },
   { id: "urc-fallback", name: "URC Deterministic Model", badge: "Offline Fallback", provider: "AgentLab" },
@@ -130,7 +132,7 @@ export default function OpsCleanupAgent() {
   const { user, loading } = useAuth({ redirectOnUnauthenticated: true });
   const [activeCategory, setActiveCategory] = useState("build");
   const [task, setTask] = useState(PROMPT_CATEGORIES[0].prompts[0]);
-  const [selectedModel, setSelectedModel] = useState("gemini-2.5-flash");
+  const [selectedModel, setSelectedModel] = useState("gemini-flash-latest");
   const [attachedDocs, setAttachedDocs] = useState<Array<{ name: string; content: string }>>([]);
   const [showDocPicker, setShowDocPicker] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);

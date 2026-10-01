@@ -1,6 +1,11 @@
 import type { Request, Response } from "express";
 import { generateObject, generateText } from "ai";
-import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
+import {
+  createGoogleProvider,
+  isGoogleAiConfigured,
+  withGoogleModelChain,
+  GOOGLE_MODEL_CHAIN,
+} from "../_core/google-ai";
 import { eq, and, desc } from "drizzle-orm";
 import { getDb } from "../db";
 import {
@@ -406,7 +411,10 @@ export async function handleOrchestratorChat(
 ): Promise<void> {
   const startTime = Date.now();
   const rawPrompt = req.body.prompt || req.body.message;
-  const requestedModel = req.body.model || "gemini-2.5-flash";
+  // Display-only label (CC-2026-09-30-012): the old default was the now-retired
+  // pinned id "gemini-2.5-flash"; the variable itself was never used to call a
+  // model. The actual model that answers is reported per-request via modelUsed.
+  const requestedModel = req.body.model || GOOGLE_MODEL_CHAIN[0];
   const attachments = req.body.attachments as Array<{ name: string; content: string; type?: string }> | undefined;
 
   if (!rawPrompt || typeof rawPrompt !== "string") {
@@ -550,8 +558,11 @@ export async function handleOrchestratorChat(
 
   let proposal: WorkflowProposal | undefined;
   let reply = "";
-  let modelUsed = "gemini-2.5-flash";
+  let modelUsed: string = GOOGLE_MODEL_CHAIN[0];
   let tokensUsed: number | null = null;
+  // Hoisted so the honest-fallback catch (CC-2026-09-30-012) knows which mode
+  // failed and can degrade truthfully for that mode.
+  let wantsProposal = false;
 
   // Attempt dynamic LLM orchestration via Vercel AI SDK & Google Gemini / Vertex AI
   try {
@@ -583,7 +594,7 @@ export async function handleOrchestratorChat(
     // CC-2026-09-25-011: routing extracted into shouldProposeWorkflow with an
     // interrogative guard — "run that by me again", "what runs do we have?",
     // and other question forms are conversation, not build requests.
-    const wantsProposal = shouldProposeWorkflow(
+    wantsProposal = shouldProposeWorkflow(
       rawPrompt,
       req.body.forceProposal === true
     );
@@ -605,20 +616,27 @@ export async function handleOrchestratorChat(
     ];
 
     if (wantsProposal) {
-      const result = await generateObject({
-        model: google("gemini-2.5-flash") as any,
-        schema: workflowProposalSchema,
-        system: systemPrompt,
-        messages: baseMessages as any,
-      });
+      // Model-chain (CC-2026-09-30-012): pinned "gemini-2.5-flash" is retired
+      // for new accounts (404 "no longer available to new users"), which routed
+      // every chat into the canned fallback below. The "-latest" aliases track
+      // the current GA model — same chain agent-runner has used since 09-28.
+      const result = await withGoogleModelChain(model =>
+        generateObject({
+          model: google(model) as any,
+          schema: workflowProposalSchema,
+          system: systemPrompt,
+          messages: baseMessages as any,
+        })
+      );
 
-      proposal = result.object;
+      proposal = result.value.object;
+      modelUsed = result.model;
       reply =
         proposal.reply ||
         `Synthesized multi-agent DAG proposal for "${proposal.name}" governed by URC ${proposal.departmentCode.toUpperCase()} operations.`;
       // Honesty rule (honesty-audit P1-1): when the model does not report usage,
       // we record null — never a random number.
-      tokensUsed = result.usage?.totalTokens ?? null;
+      tokensUsed = result.value.usage?.totalTokens ?? null;
     } else {
       const conversationalSystem = `${systemPrompt}
 
@@ -630,28 +648,34 @@ Rules:
 - You may suggest that a workflow proposal COULD address the issue, and ask if they want one. Do not fabricate a proposal object in prose.
 - Keep the consultative COO voice: direct, evidence-based, no fluff.`;
 
-      const result = await generateText({
-        model: google("gemini-2.5-flash") as any,
-        system: conversationalSystem,
-        messages: baseMessages as any,
-      });
+      const result = await withGoogleModelChain(model =>
+        generateText({
+          model: google(model) as any,
+          system: conversationalSystem,
+          messages: baseMessages as any,
+        })
+      );
 
-      reply = result.text;
-      tokensUsed = result.usage?.totalTokens ?? null;
+      reply = result.value.text;
+      modelUsed = result.model;
+      tokensUsed = result.value.usage?.totalTokens ?? null;
     }
   } catch (llmError) {
-    console.warn(
-      "[Orchestrator] Vertex AI dynamic call returned exception, falling back to deterministic URC engine:",
-      llmError
-    );
-    const fallback = generateFallbackWorkflowProposal(
-      prompt,
-      unlockedDepartments
-    );
-    proposal = fallback.proposal;
-    reply = fallback.reply;
-    modelUsed = "urc-model-gemini-fallback";
-    tokensUsed = null; // deterministic fallback consumed no LLM tokens
+    // Mode-aware HONEST fallback (CC-2026-09-30-012): the previous catch-all
+    // ran generateFallbackWorkflowProposal for EVERY failure, so a conversational
+    // question died into a canned 4-step DAG — and that template spoke in the
+    // first person ("I have analyzed your request..."), reading as a real model
+    // answer. Fail loudly instead: log the error, tell the operator the truth,
+    // and never fabricate analysis or a proposal object.
+    console.error("[Orchestrator] Gemini model chain exhausted:", llmError);
+    modelUsed = "urc-model-unavailable";
+    tokensUsed = null; // no model answered
+    if (wantsProposal) {
+      proposal = undefined;
+      reply = `I could not reach the Gemini model just now, so I have NOT synthesized a DAG proposal — emitting the canned template would be a fabrication. Your request is preserved; please retry in a moment. (Tried: ${GOOGLE_MODEL_CHAIN.join(" → ")})`;
+    } else {
+      reply = `I could not reach the Gemini model just now, so I cannot answer from live telemetry. Please retry in a moment. (Tried: ${GOOGLE_MODEL_CHAIN.join(" → ")})`;
+    }
   }
 
   const latencyMs = Date.now() - startTime;

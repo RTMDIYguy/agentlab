@@ -2,7 +2,11 @@ import { getDb } from "../db";
 import { workspaces, auditLogs, workspacePackages, knowledgePackages } from "../schema";
 import { lt, eq, and, sql, gte } from "drizzle-orm";
 import { generateText } from "ai";
-import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
+import {
+  createGoogleProvider,
+  isGoogleAiConfigured,
+  withGoogleModelChain,
+} from "../_core/google-ai";
 
 /**
  * Smart Downgrade & Pay-As-You-Go Engine
@@ -56,18 +60,21 @@ export async function processTrialExpirations() {
       const google = createGoogleProvider();
       
       try {
-        const { text } = await generateText({
-          model: google("gemini-2.5-flash") as any,
+        // CC-2026-09-30-012: model chain (pinned 2.5 id retired for new accounts).
+        const { value } = await withGoogleModelChain(model =>
+          generateText({
+            model: google(model) as any,
           system: `You are the AgentLab billing orchestrator. 
 Analyze the provided audit logs of a workspace whose trial has ended.
 Based on the workflows they actually ran, decide which knowledge packages from the catalog they should keep.
 Respond with a JSON array of package IDs (e.g., ["mkt-playbook"]).
 Only recommend packages that directly support the workflows they used. If none, return [].`,
-          prompt: `Audit Logs: ${JSON.stringify(logs.map(l => ({ action: l.actionType, payload: l.payloadIn })))}\n\nCatalog: ${JSON.stringify(allPackages.map(p => ({ id: p.id, desc: p.description })))}`
-        });
+            prompt: `Audit Logs: ${JSON.stringify(logs.map(l => ({ action: l.actionType, payload: l.payloadIn })))}\n\nCatalog: ${JSON.stringify(allPackages.map(p => ({ id: p.id, desc: p.description })))}`
+          })
+        );
 
         // Parse JSON from LLM
-        const jsonMatch = text.match(/\[[\s\S]*\]/);
+        const jsonMatch = value.text.match(/\[[\s\S]*\]/);
         let recommendedIds: string[] = [];
 
         if (jsonMatch) {

@@ -194,7 +194,7 @@ export default function Settings() {
       personaRole: "Chief Systems Architect & Autonomous Swarm Director",
       toneStyle: "servant_leadership", // 'servant_leadership' | 'technical_architect' | 'executive_operator' | 'action_only'
       activeSopBrain: "canonical_7_dept", // 'canonical_7_dept' | 'cre_expansion' | 'medspa_intake' | 'founder_signal'
-      defaultModel: "gemini-2.5-flash",
+      defaultModel: "gemini-flash-latest",
       fallbackModel: "gemini-2.5-pro",
       temperature: 0.2,
       maxOutputTokens: 4096,
@@ -887,7 +887,7 @@ export default function Settings() {
                           onChange={e => setLlmForm({ ...llmForm, defaultModel: e.target.value })}
                           className="w-full px-3.5 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary text-xs font-mono"
                         >
-                          <option value="gemini-2.5-flash">Google Gemini 2.5 Flash (Ultra-Fast 14ms - Recommended)</option>
+                          <option value="gemini-flash-latest">Google Gemini Flash — latest (Recommended)</option>
                           <option value="gemini-2.5-pro">Google Gemini 2.5 Pro (Deep Reasoning & DAG Orchestration)</option>
                           <option value="gpt-4o">OpenAI GPT-4o (Multimodal Advanced)</option>
                           <option value="claude-3-5-sonnet">Anthropic Claude 3.5 Sonnet (Architecture & Diffs)</option>
@@ -902,7 +902,7 @@ export default function Settings() {
                           onChange={e => setLlmForm({ ...llmForm, fallbackModel: e.target.value })}
                           className="w-full px-3.5 py-2 border border-border rounded-lg bg-input focus:outline-none focus:ring-2 focus:ring-primary text-xs font-mono"
                         >
-                          <option value="gemini-2.5-flash">Google Gemini 2.5 Flash (High Availability)</option>
+                          <option value="gemini-flash-latest">Google Gemini Flash — latest (High Availability)</option>
                           <option value="gpt-4o-mini">OpenAI GPT-4o-mini (Cost-Optimized)</option>
                           <option value="gemini-2.5-pro">Google Gemini 2.5 Pro</option>
                           <option value="none">None (Strict Fail-fast)</option>

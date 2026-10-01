@@ -5,7 +5,11 @@ import { getDb } from "../db";
 import { contactSubmissions, visitorProfiles } from "../schema";
 import { syncContactSubmission } from "../hubspot/sync";
 import { generateText } from "ai";
-import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
+import {
+  createGoogleProvider,
+  isGoogleAiConfigured,
+  GOOGLE_MODEL_CHAIN,
+} from "../_core/google-ai";
 
 /**
  * Visitor memory ("the temp file", 2026-09-24):
@@ -301,7 +305,10 @@ async function callGemini(
   if (!isGoogleAiConfigured()) return null;
 
   const normalizedLead = normalizeCollectedLead(lead, messages);
-  const models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+  // CC-2026-09-30-012: pinned 2.x/1.x ids are RETIRED for new accounts (404
+  // "no longer available to new users") — this whole chain was dead, silently
+  // degrading the public intake chat to the scripted fallback. Aliases lead.
+  const models: readonly string[] = GOOGLE_MODEL_CHAIN;
 
   const prompt = `
 You are the Founder Intake Agent for Uncle Robert Consulting, Bootstrapper Capital, Tactix, and Ownable OS.

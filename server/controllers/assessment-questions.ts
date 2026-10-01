@@ -4,7 +4,11 @@ import { db } from "../db";
 import { assessmentQuestions, assessmentSessions } from "../schema";
 import { eq, and, desc, or, isNull } from "drizzle-orm";
 import { generateText } from "ai";
-import { createGoogleProvider, isGoogleAiConfigured } from "../_core/google-ai";
+import {
+  createGoogleProvider,
+  isGoogleAiConfigured,
+  GOOGLE_MODEL_CHAIN,
+} from "../_core/google-ai";
 
 // Default seed bank of 18 high-signal consulting questions
 export const defaultQuestionSeed = [
@@ -354,7 +358,8 @@ Required JSON format:
 Respond ONLY with valid JSON array containing the questions. Do not include markdown codeblocks or explanation.`;
 
     let rawResponse = "";
-    const models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
+    // CC-2026-09-30-012: pinned 2.x/1.x ids retired for new accounts.
+    const models: readonly string[] = GOOGLE_MODEL_CHAIN;
     let succeeded = false;
 
     for (const modelName of models) {

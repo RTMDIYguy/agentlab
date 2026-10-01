@@ -46,7 +46,7 @@ export default function Agents() {
   const [isDeployOpen, setIsDeployOpen] = useState(false);
   const [newAgentName, setNewAgentName] = useState("");
   const [newAgentRole, setNewAgentRole] = useState("Lead Enrichment Specialist");
-  const [newAgentModel, setNewAgentModel] = useState("gemini-2.5-flash");
+  const [newAgentModel, setNewAgentModel] = useState("gemini-flash-latest");
 
   // 1. Fetch live agents from backend
   const {
@@ -207,8 +207,8 @@ export default function Agents() {
                         <SelectValue placeholder="Select LLM" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="gemini-2.5-flash">Gemini 2.5 Flash (Ultra-Fast / Low Latency)</SelectItem>
-                        <SelectItem value="gemini-1.5-pro">Gemini 1.5 Pro (Deep Reasoning & DAG)</SelectItem>
+                        <SelectItem value="gemini-flash-latest">Gemini Flash — latest (Ultra-Fast / Low Latency)</SelectItem>
+                        <SelectItem value="gemini-pro-latest">Gemini Pro — latest (Deep Reasoning & DAG)</SelectItem>
                         <SelectItem value="claude-3-7-sonnet">Claude 3.7 Sonnet (Advanced Coding & SOP)</SelectItem>
                         <SelectItem value="gpt-4o-mini">GPT-4o Mini (Cost Optimized)</SelectItem>
                       </SelectContent>
