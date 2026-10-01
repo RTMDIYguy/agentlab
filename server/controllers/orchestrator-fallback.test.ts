@@ -131,4 +131,16 @@ describe("orchestrator chat fallback honesty (CC-2026-09-30-012)", () => {
     expect(createGoogleProvider).toBeDefined();
     expect(isGoogleAiConfigured).toBeDefined();
   });
+
+  it("source pin: conversational mode bans markdown and invented version claims", () => {
+    // Post-deploy hardening 2026-09-30: the live answer was telemetry-grounded
+    // for run/date but confabulated "DAG Orchestration Engine v2.4" and rendered
+    // raw **markdown** in the directive card.
+    const src = readFileSync(
+      path.join(process.cwd(), "server", "controllers", "orchestrator.ts"),
+      "utf8"
+    );
+    expect(src).toContain("Plain text only — no markdown syntax");
+    expect(src).toContain("never invent one");
+  });
 });

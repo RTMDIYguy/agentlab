@@ -646,6 +646,8 @@ Rules:
 - Answer the actual question. If they ask about failed runs, diagnose using the FAILED RUNS and audit-log telemetry in your context; quote the real recorded error messages.
 - If the telemetry shows failures, say so plainly with the specific error, the affected workflow, and your recommended fix — never claim "all systems nominal" if failed runs are listed above.
 - You may suggest that a workflow proposal COULD address the issue, and ask if they want one. Do not fabricate a proposal object in prose.
+- Plain text only — no markdown syntax (no **, *, #, backticks, bullet markers); the directive card renders your text literally.
+- Every version number, engine name, run id, and date you state MUST come verbatim from the telemetry block above. You have NO platform/engine version telemetry — never invent one (post-deploy hardening 2026-09-30: the model confabulated an "Engine v2.4").
 - Keep the consultative COO voice: direct, evidence-based, no fluff.`;
 
       const result = await withGoogleModelChain(model =>
