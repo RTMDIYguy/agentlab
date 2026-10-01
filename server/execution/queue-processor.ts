@@ -9,6 +9,8 @@ import {
   knowledgePackages,
   workflowArtifacts,
   actionDispatches,
+  workspaces,
+  auditLogs,
 } from "../schema";
 import { runAgentStep } from "./agent-runner";
 import { evaluateArtifactQuality } from "./quality-evaluator";
@@ -16,6 +18,89 @@ import { dispatchScheduledPosts } from "./social-dispatcher";
 import { draftActionPayload, parseActionDraft } from "./action-drafter";
 import { resolveStepPolicy, runWithStepPolicy, StepCancelledError } from "./step-policy";
 import { insertAuditLog } from "./audit-logger";
+
+/**
+ * Spend-governance gate (CC-2026-10-01-009): the workspaces row's real
+ * governance columns — hard_monthly_budget, auto_pause_threshold_enabled —
+ * now control execution. Monthly token spend is computed from real
+ * audit_logs rows (this calendar month); if a workspace with auto-pause
+ * enabled is at/over its hard budget, pending runs are left unclaimed and
+ * running runs are cancelled. Operator workspaces (the seeded defaults) are
+ * exempt — the OS must keep running while Robert is under budget.
+ */
+export interface SpendGovernanceResult {
+  exempt: boolean;
+  monthTokens: number;
+  budgetUsd: number;
+  paused: boolean;
+  reason: string;
+}
+
+const GOVERNANCE_EXEMPT_WORKSPACES = new Set([
+  "00000000-0000-0000-0000-000000000000",
+  "00000000-0000-0000-0000-000000000001",
+]);
+
+/**
+ * Estimated USD cost per 1M tokens. Honest estimate: Gemini Flash-class
+ * pricing (~$0.10/M in, $0.40/M out). The audit_logs rows carry token counts
+ * but per-token pricing is not recorded per model, so this is a declared
+ * estimate, not a fabricated invoice.
+ */
+export const GOVERNANCE_EST_USD_PER_MTOK = 0.25;
+
+export async function evaluateSpendGovernance(
+  workspaceId: string
+): Promise<SpendGovernanceResult> {
+  const db = await getDb();
+  const exempt = GOVERNANCE_EXEMPT_WORKSPACES.has(workspaceId);
+  const base = { exempt, monthTokens: 0, budgetUsd: 0, paused: false, reason: "" };
+  if (exempt || !db) return { ...base, reason: exempt ? "operator workspace (exempt)" : "db unavailable" };
+
+  const [ws] = await db
+    .select({
+      budget: workspaces.hardMonthlyBudget,
+      autoPause: workspaces.autoPauseThresholdEnabled,
+    })
+    .from(workspaces)
+    .where(eq(workspaces.id, workspaceId))
+    .limit(1);
+  if (!ws) return { ...base, reason: "workspace not found" };
+  const budgetUsd = Number(ws.budget ?? 0);
+  if (!ws.autoPause || !(budgetUsd > 0)) {
+    return { ...base, budgetUsd, reason: ws.autoPause ? "no budget set" : "auto-pause disabled" };
+  }
+
+  const [agg] = await db
+    .select({
+      tokens: sql<number>`coalesce(sum(${auditLogs.tokensTotal}), 0)`,
+    })
+    .from(auditLogs)
+    .where(
+      and(
+        eq(auditLogs.workspaceId, workspaceId),
+        sql`${auditLogs.createdAt} >= date_trunc('month', now())`
+      )
+    );
+  const monthTokens = Number(agg?.tokens ?? 0);
+  const estUsd = (monthTokens / 1_000_000) * GOVERNANCE_EST_USD_PER_MTOK;
+  if (estUsd >= budgetUsd) {
+    return {
+      exempt,
+      monthTokens,
+      budgetUsd,
+      paused: true,
+      reason: `monthly estimated spend $${estUsd.toFixed(2)} >= hard budget $${budgetUsd.toFixed(2)} (${monthTokens} tokens)`,
+    };
+  }
+  return {
+    exempt,
+    monthTokens,
+    budgetUsd,
+    paused: false,
+    reason: `within budget ($${estUsd.toFixed(2)} of $${budgetUsd.toFixed(2)}, ${monthTokens} tokens)`,
+  };
+}
 
 // ---------------------------------------------------------------- lease -------
 // Execution lease (2026-09-30 poller design). Any lane that executes runs —
@@ -139,6 +224,10 @@ export async function processPendingRuns(limit = 20): Promise<number> {
     pendingRuns = await claimPendingRuns(limit);
     console.log(`[QueueProcessor] Claimed ${pendingRuns.length} pending run(s) (worker ${WORKER_ID}).`);
 
+    // Spend-governance cache for this batch (CC-2026-10-01-009): one
+    // evaluation per workspace per sweep.
+    const governanceByWorkspace = new Map<string, SpendGovernanceResult>();
+
     for (const raw of pendingRuns) {
       // Claim rows return snake_case from the raw CTE; map onto the shape the
       // step loop reads. The body below only uses: id, workspaceId,
@@ -154,7 +243,40 @@ export async function processPendingRuns(limit = 20): Promise<number> {
       };
 
       console.log(`[QueueProcessor] Processing claimed run ${run.id}...`);
-      
+
+      // Spend-governance gate (CC-2026-10-01-009): honor the workspace row's
+      // hard_monthly_budget + auto_pause_threshold_enabled. A paused run is
+      // failed with the real reason (never silently dropped), and the pause
+      // event lands in audit_logs with the not-llm-dispatch label.
+      const gov =
+        governanceByWorkspace.get(run.workspaceId) ??
+        (await evaluateSpendGovernance(run.workspaceId));
+      governanceByWorkspace.set(run.workspaceId, gov);
+      if (gov.paused) {
+        await db
+          .update(workflowRuns)
+          .set({
+            status: "failed",
+            errorMessage: `Auto-paused by workspace budget governance: ${gov.reason}`,
+            updatedAt: new Date(),
+          })
+          .where(eq(workflowRuns.id, run.id));
+        await db.insert(auditLogs).values({
+          workspaceId: run.workspaceId,
+          actionType: "BUDGET_AUTOPAUSE",
+          model: "not-llm-dispatch",
+          payloadIn: {
+            runId: run.id,
+            reason: gov.reason,
+            monthTokens: gov.monthTokens,
+            budgetUsd: gov.budgetUsd,
+          },
+          status: "warning",
+        });
+        console.warn(`[QueueProcessor] Auto-paused run ${run.id}: ${gov.reason}`);
+        continue;
+      }
+
       let unlockedDepartments: string[] = [];
       if (run.workspaceId === "00000000-0000-0000-0000-000000000000") {
         unlockedDepartments = ["ALL"];

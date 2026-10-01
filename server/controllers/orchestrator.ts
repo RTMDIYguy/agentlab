@@ -4,6 +4,7 @@ import {
   createGoogleProvider,
   isGoogleAiConfigured,
   withGoogleModelChain,
+  withGoogleModelChainLeading,
   GOOGLE_MODEL_CHAIN,
 } from "../_core/google-ai";
 import { eq, and, desc } from "drizzle-orm";
@@ -93,7 +94,11 @@ export interface OrchestratorChatResponse {
 /**
  * Builds the system prompt injecting URC's proprietary agency structure, toolsets, doctrine, and brand guidelines.
  */
-function buildSystemPrompt(unlockedDepartments: string[], telemetry?: LiveSystemTelemetry): string {
+export function buildSystemPrompt(
+  unlockedDepartments: string[],
+  telemetry?: LiveSystemTelemetry,
+  workspacePersona?: { name?: string | null; customPrompt?: string | null }
+): string {
   let workflows = getAvailableWorkflows();
 
   if (!unlockedDepartments.includes("ALL")) {
@@ -126,7 +131,20 @@ PROSPECT CONTEXT (from this user's pre-signup intake conversations — use it to
 ` : ""}`
     : "";
 
-  return `You are the Ops Agent & Master Orchestrator for AgentLab, powered exclusively by the proprietary **AgentLab DAG Orchestration Engine v2.4**. You act as the consultative Chief Operating Officer (COO), Lead Systems Architect, and Technical Partner to the founder.
+  // Operator persona (CC-2026-10-01-009): the workspace row's stored prompt
+  // now leads the base identity. When none is stored, the built-in default
+  // below applies. The fake "DAG Orchestration Engine v2.4" string is gone —
+  // the same honesty rule the conversational tail enforces (no invented
+  // engine/version claims) now holds for the base prompt itself.
+  const personaLead = workspacePersona?.customPrompt?.trim()
+    ? workspacePersona.customPrompt.trim()
+    : `You are the Ops Agent & Master Orchestrator for AgentLab. You act as the consultative Chief Operating Officer (COO), Lead Systems Architect, and Technical Partner to the founder.`;
+
+  return `${personaLead}${
+    workspacePersona?.name?.trim()
+      ? ` You answer to the operator-assigned name "${workspacePersona.name.trim()}".`
+      : ""
+  }
 
 PERFECT PLATFORM & TECHNICAL KNOWLEDGE (CRITICAL):
 You have 360-degree knowledge of the AgentLab platform, database schemas, and multi-agent execution pipeline:
@@ -556,9 +574,53 @@ export async function handleOrchestratorChat(
     console.warn("[Orchestrator] Telemetry query note:", e);
   }
 
+  // Operator persona + preferred model (CC-2026-10-01-009): read the
+  // workspace row once. The stored orchestrator system prompt and name feed
+  // buildSystemPrompt; the stored default model LEADS the chat chain (when it
+  // is a real, current id — retired/fictional ids are skipped with a logged
+  // note instead of silently 404ing).
+  let personaConfig: { name?: string | null; customPrompt?: string | null } = {};
+  let preferredModel: string | null = null;
+  try {
+    const db2 = await getDb();
+    if (db2 && workspaceId) {
+      const [wsRow] = await db2
+        .select({
+          orchestratorName: workspaces.orchestratorName,
+          orchestratorSystemPrompt: workspaces.orchestratorSystemPrompt,
+          defaultModel: workspaces.defaultModel,
+        })
+        .from(workspaces)
+        .where(eq(workspaces.id, workspaceId))
+        .limit(1);
+      if (wsRow) {
+        personaConfig = {
+          name: wsRow.orchestratorName,
+          customPrompt: wsRow.orchestratorSystemPrompt,
+        };
+        const stored = (wsRow.defaultModel ?? "").trim();
+        if (
+          stored &&
+          !stored.includes("1.5") && // dormant-era id, never a live choice
+          !stored.includes("2.5-flash") && // retired 2026-09-30 (CC-2026-09-30-012)
+          !stored.includes("2.0") &&
+          GOOGLE_MODEL_CHAIN.includes(stored as any)
+        ) {
+          preferredModel = stored;
+        } else if (stored && stored !== "gemini-1.5-pro") {
+          console.warn(
+            `[Orchestrator] Stored defaultModel "${stored}" is not in the current chain — using the shared chain order instead.`
+          );
+        }
+      }
+    }
+  } catch {
+    // Persona/model preference is enrichment; the chat must not fail over it.
+  }
+
   let proposal: WorkflowProposal | undefined;
   let reply = "";
-  let modelUsed: string = GOOGLE_MODEL_CHAIN[0];
+  let modelUsed: string = preferredModel ?? GOOGLE_MODEL_CHAIN[0];
   let tokensUsed: number | null = null;
   // Hoisted so the honest-fallback catch (CC-2026-09-30-012) knows which mode
   // failed and can degrade truthfully for that mode.
@@ -572,7 +634,7 @@ export async function handleOrchestratorChat(
       );
     }
     const google = createGoogleProvider();
-    const systemPrompt = buildSystemPrompt(unlockedDepartments, telemetry);
+    const systemPrompt = buildSystemPrompt(unlockedDepartments, telemetry, personaConfig);
 
     // Conversation history (2026-09-24): the chat was single-turn — every
     // message started a fresh context. Pass prior turns through so the Ops
@@ -620,7 +682,9 @@ export async function handleOrchestratorChat(
       // for new accounts (404 "no longer available to new users"), which routed
       // every chat into the canned fallback below. The "-latest" aliases track
       // the current GA model — same chain agent-runner has used since 09-28.
-      const result = await withGoogleModelChain(model =>
+      // CC-2026-10-01-009: the operator's stored defaultModel LEADS the chain
+      // when it is a valid current id (see preferredModel above).
+      const result = await withGoogleModelChainLeading(model =>
         generateObject({
           model: google(model) as any,
           schema: workflowProposalSchema,
@@ -650,7 +714,7 @@ Rules:
 - Every version number, engine name, run id, and date you state MUST come verbatim from the telemetry block above. You have NO platform/engine version telemetry — never invent one (post-deploy hardening 2026-09-30: the model confabulated an "Engine v2.4").
 - Keep the consultative COO voice: direct, evidence-based, no fluff.`;
 
-      const result = await withGoogleModelChain(model =>
+      const result = await withGoogleModelChainLeading(model =>
         generateText({
           model: google(model) as any,
           system: conversationalSystem,

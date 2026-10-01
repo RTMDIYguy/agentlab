@@ -20,6 +20,17 @@ import {
 } from "../tools/hubspotEmail";
 import { eq } from "drizzle-orm";
 
+/**
+ * Lazy import guard: the MCP client stack is only loaded when an mcp_tool_call
+ * dispatch actually runs, so MCP plumbing never sits on the hot path of the
+ * established connectors.
+ */
+type McpCallOutcome = { ok: boolean; externalId?: string; error?: string; result?: unknown };
+async function dispatchMcpToolCall(payload: Record<string, unknown>): Promise<McpCallOutcome> {
+  const mod = await import("./mcp-tool-bridge");
+  return mod.dispatchMcpToolCall(payload);
+}
+
 export interface DispatchResult {
   ok: boolean;
   /** Real id from the external system (present only on success). */
@@ -241,6 +252,15 @@ export const CONNECTORS: Record<string, ConnectorDef> = {
       "event_id",
     ],
     dispatch: dispatchHubSpotMarketingEmail,
+  },
+  mcp_tool_call: {
+    name: "mcp_tool_call",
+    label: "MCP Tool Call",
+    description:
+      "Calls one tool on a connected MCP server through the OS's MCP runtime client (CC-2026-10-01-007). The payload names the integration (as registered in Settings), the tool, and its arguments; the bearer token resolves through the vault round-trip. Requires the integration to be connected first.",
+    requiredKeys: ["server", "tool", "arguments"],
+    optionalKeys: [],
+    dispatch: dispatchMcpToolCall,
   },
 };
 

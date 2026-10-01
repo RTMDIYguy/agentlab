@@ -197,9 +197,30 @@ export const actionsRouter = router({
         throw new Error(`Payload validation failed: ${validation.error}`);
       }
 
-      // 3. Real dispatch
-      const connector = CONNECTORS[dispatch.connector];
-      const result = await connector.dispatch(validation.cleaned);
+      // 3. Real dispatch — the actionDispatches.connector column is typed as
+      // a plain string, so the registry lookup decides which connector runs.
+      const connectorDef = CONNECTORS[dispatch.connector];
+      if (!connectorDef) {
+        await db
+          .update(actionDispatches)
+          .set({
+            status: "dispatch_failed",
+            saifPassed: true,
+            approvedBy: approverId,
+            approvedAt: new Date(),
+            dispatchError: `Unknown connector at approve time: ${dispatch.connector}`,
+            dispatchedAt: new Date(),
+            runOutcome: "failed",
+          })
+          .where(eq(actionDispatches.id, dispatch.id));
+        throw new Error(`Unknown connector: ${dispatch.connector}`);
+      }
+      // Inject the dispatching workspace AFTER validation so a draft can
+      // never smuggle a workspace id through the connector contract.
+      const result = await connectorDef.dispatch({
+        ...validation.cleaned,
+        __workspaceId: workspaceId,
+      });
 
       if (!result.ok) {
         await db

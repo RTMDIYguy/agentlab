@@ -1,6 +1,6 @@
 # MEMORY.md - Working Memory
 
-Last updated: 2026-06-04
+Last updated: 2026-10-01
 Owner: Robert
 Companion to: `AGENTS.md` (operating rules), `docs/operations/agency-command-center.md` (front door)
 
@@ -50,6 +50,13 @@ This is the working-memory layer. It is intentionally short. For rules, see
 - 2026-09-02: Google Cloud Build Docker pipeline upgraded to `node:22-alpine` with `.dockerignore` and `pnpm-workspace.yaml` approved native builds, achieving 100% green Cloud Run builds.
 - 2026-09-02: Commercial alignment: *Startup Operational Excellence* digital book reduced to $19.99 across registry and marketplace; Offer Ladder synchronized ($149/mo, $500/mo, $1k).
 - 2026-09-02: Hostinger architecture clarified and isolated: `unclerobertconsulting.com` restored with Xperio theme, `prodirectory.unclerobertconsulting.com` isolated in `/public_html/directory` with dedicated database for OneListing + Directorist.
+- 2026-10-01: First partner-visible Ops Agent session — Dheerendar (Virtusa / HAMARASHOPS.ai) watched a prompt → clarifying questions → DAG → run session end to end; evidence-backed same day: run `07b23d1c`, DAG "LinkedIn Lead Magnet Inbound to HubSpot Deal Creation", agent-authored (workflow born 333 ms before run), 3/3 steps completed; chat transcript does not persist (`ops_agent_messages` empty) (CC-2026-10-01-001).
+- 2026-10-01: Root-caused the empty chat table: persistence is client-driven and only the floating widget writes — the `/ops-agent` demo page never calls the thread endpoints. Decision: wire the page to the existing endpoints before the next partner demo (client-only, queued CC-2026-10-01-002).
+- 2026-10-01: Confirmed `workspace_integrations` is a catalog, not a runtime (no MCP client exists; all MCP rows inert). Decision: BUILD a generic metadata-driven MCP runtime client + OAuth PKCE connect flow; Upwork first, Hostinger likely second; Upwork OAuth metadata captured in register CC-2026-10-01-005.
+- 2026-10-01: MCP engine shipped — `server/execution/mcp-oauth.ts` (discovery/PKCE/exchange/refresh/revoke) + `mcp-client.ts` (streamable-HTTP JSON-RPC, tools list/call); 15 hermetic tests, suite 511/511; live discovery against Upwork's real server verified. Next slice: Settings connect UI + vault round-trip + Ops Agent exposure (CC-2026-10-01-006).
+- 2026-10-01: MCP wired end to end (CC-2026-10-01-007): Settings Connect/Disconnect/List-Tools + callback auto-complete; token bundles vaulted under MCP_<NAME>_TOKEN; `mcp_tool_call` connector = the only approval-to-MCP path (per-workspace, stdio-refusing, tool-verified); suite 534/534. Robert's next step: register the Upwork app → Connect → List Tools.
+- 2026-10-01: Settings wiring audit (CC-2026-10-01-008): Secrets + Integrations genuinely wired; LLM tab's 3 DB controls have no consumer (chat uses buildSystemPrompt, ignoring the stored prompt) + 12 localStorage decorations; workspaces governance columns (budget/auto-pause/PII/SAIF/retention) have zero consumers; Profile/Billing/Notifications/Security tabs fictional. Highest-leverage fix: wire the Orchestrator System Prompt into buildSystemPrompt. Dispositions pending Robert.
+- 2026-10-01: Audit dispositions EXECUTED (CC-2026-10-01-009): stored orchestrator prompt + name now lead the Ops Agent chat (v2.4 fiction deleted); defaultModel leads the chain when valid; queue processor auto-pauses over-budget workspaces (real budget governance, operator exempt); fictional tabs relabeled demo-only; Manage Auth → real Sign Out; suite 549/549.
 - 2026-08-21: Established revenue-sharing cross-promotional partnership with Dheerendar (HAMARASHOPS.ai).
 - 2026-08-21: Added `Lead / Campaign Source` custom property to Deals to enable single-pipeline tracking for multiple campaigns, bypassing free tier limits.
 - 2026-06-04: Daily Command Center moves to morning restart block (CC-2026-06-04-013).

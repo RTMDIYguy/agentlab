@@ -50,7 +50,7 @@ import {
 } from "lucide-react";
 
 export default function Settings() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState<
     | "profile"
@@ -108,7 +108,7 @@ export default function Settings() {
       utils.settings.getIntegrations.invalidate();
       setShowAddMcpModal(false);
       setShowAddIntegrationModal(false);
-      setNewMcpForm({ name: "", transport: "sse", endpoint: "", apiKey: "", capabilities: "tools,resources" });
+      setNewMcpForm({ name: "", transport: "sse", endpoint: "", apiKey: "", capabilities: "tools,resources", clientId: "", clientSecret: "" });
       setNewIntegrationForm({ name: "", type: "webhook", endpoint: "", portalUrl: "", apiKey: "" });
     },
     onError: () => toast.error("Failed to save integration."),
@@ -228,12 +228,68 @@ export default function Settings() {
   const [showAddIntegrationModal, setShowAddIntegrationModal] = useState(false);
   const [testingId, setTestingId] = useState<string | null>(null);
 
+  // ===== MCP OAuth connect (CC-2026-10-01-007) =====
+  const mcpStartConnectMut = trpc.settings.mcpStartConnect.useMutation({
+    onSuccess: (data) => {
+      if (data.ok && data.authorizeUrl) {
+        window.location.href = data.authorizeUrl; // leave for the provider round-trip
+      } else {
+        toast.error(data.error ?? "Could not start the OAuth connect flow.");
+      }
+    },
+    onError: (err) => toast.error(err.message || "OAuth connect failed to start."),
+  });
+  const mcpDisconnectMut = trpc.settings.mcpDisconnect.useMutation({
+    onSuccess: (data) => {
+      if (data.ok) {
+        toast.success("MCP server disconnected; stored token revoked and cleared.");
+        utils.settings.getIntegrations.invalidate();
+      } else {
+        toast.error(data.error ?? "Disconnect failed.");
+      }
+    },
+    onError: (err) => toast.error(err.message || "Disconnect failed."),
+  });
+  const mcpCompleteConnectMut = trpc.settings.mcpCompleteConnect.useMutation({
+    onSuccess: (data) => {
+      if (data.ok) {
+        toast.success(`MCP server connected (token ${data.maskedPreview ?? "stored"}). Tools can now be called through human-gated dispatch.`);
+      } else {
+        toast.error(data.error ?? "OAuth callback could not be completed.");
+      }
+      // Clean the URL on success or failure.
+      window.history.replaceState({}, "", "/settings?tab=integrations");
+      utils.settings.getIntegrations.invalidate();
+    },
+    onError: (err) => {
+      toast.error(err.message || "OAuth callback failed.");
+      window.history.replaceState({}, "", "/settings?tab=integrations");
+    },
+  });
+  const [mcpToolsProbe, setMcpToolsProbe] = useState<
+    Record<string, { loading: boolean; tools?: string[]; error?: string }>
+  >({});
+
+  // On mount: if the provider redirected back with ?code=&state=, complete the
+  // connect. Also auto-complete when returning to /settings afterward.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const state = params.get("state");
+    if (code && state) {
+      mcpCompleteConnectMut.mutate({ code, state });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [newMcpForm, setNewMcpForm] = useState({
     name: "",
     transport: "sse",
     endpoint: "",
     apiKey: "",
     capabilities: "tools,resources",
+    clientId: "",
+    clientSecret: "",
   });
 
   const [newIntegrationForm, setNewIntegrationForm] = useState({
@@ -433,6 +489,8 @@ export default function Settings() {
         transport: newMcpForm.transport,
         endpoint: newMcpForm.endpoint,
         apiKey: newMcpForm.apiKey,
+        clientId: newMcpForm.clientId,
+        clientSecret: newMcpForm.clientSecret,
         capabilities: newMcpForm.capabilities.split(",").map(c => c.trim()),
       },
       status: "active",
@@ -464,6 +522,24 @@ export default function Settings() {
     }, {
       onSettled: () => setTestingId(null)
     });
+  };
+
+  /** Runtime probe: open a REAL MCP session and list the server's tools. */
+  const probeMcpTools = async (name: string) => {
+    setMcpToolsProbe(p => ({ ...p, [name]: { loading: true } }));
+    try {
+      const data = await utils.settings.mcpListTools.fetch({ integrationName: name });
+      if (data.ok) {
+        setMcpToolsProbe(p => ({ ...p, [name]: { loading: false, tools: data.tools } }));
+        toast.success(`${name}: ${data.tools.length} tool(s) offered live`);
+      } else {
+        setMcpToolsProbe(p => ({ ...p, [name]: { loading: false, error: data.error } }));
+        toast.error(data.error ?? "MCP tool listing failed.");
+      }
+    } catch (err: any) {
+      setMcpToolsProbe(p => ({ ...p, [name]: { loading: false, error: err.message } }));
+      toast.error(err.message || "MCP tool listing failed.");
+    }
   };
 
   return (
@@ -619,6 +695,9 @@ export default function Settings() {
                   <p className="text-xs text-muted-foreground mt-0.5">
                     Your personal identity, company namespace, and primary business contacts.
                   </p>
+                  <p className="text-[11px] text-amber-500 mt-1 font-semibold">
+                    Demo only — these fields save to this browser and are not read by the OS. Real identity comes from your account. (Settings wiring audit CC-2026-10-01-008.)
+                  </p>
                 </div>
 
                 <div className="space-y-4 text-xs">
@@ -691,6 +770,9 @@ export default function Settings() {
                   <p className="text-xs text-muted-foreground mt-0.5">
                     Manage corporate legal entity, tax ID, payment method, and billing receipt recipients.
                   </p>
+                  <p className="text-[11px] text-amber-500 mt-1 font-semibold">
+                    Demo only — these fields save to this browser and do not touch Stripe or invoicing. Real spend governance lives on the LLM tab (monthly budget). (CC-2026-10-01-008.)
+                  </p>
                 </div>
 
                 <div className="space-y-4 text-xs">
@@ -731,6 +813,9 @@ export default function Settings() {
                   <h2 className="text-xl font-bold text-foreground">Notification Preferences</h2>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     Configure automated alert triggers for DAG execution, budget limits, and security events.
+                  </p>
+                  <p className="text-[11px] text-amber-500 mt-1 font-semibold">
+                    Demo only — no dispatcher reads these toggles yet; they save to this browser. Ops Agent watchdog alerts are active regardless of these settings. (CC-2026-10-01-008.)
                   </p>
                 </div>
 
@@ -780,7 +865,7 @@ export default function Settings() {
                       <div className="font-bold text-foreground">Session Isolation & SAIF Guardrails</div>
                       <p className="text-[11px] text-muted-foreground">Tenant boundaries enforced across all DAG executions with zero data leakage.</p>
                     </div>
-                    <Badge className="bg-emerald-500 text-black font-bold text-[10px]">Active & Enforced</Badge>
+                    <Badge className="bg-emerald-500 text-black font-bold text-[10px]" title="Verified: SAIF checks and multi-tenant workspace isolation run in the dispatch and execution pipeline (see the Settings wiring audit, CC-2026-10-01-008).">Active & Enforced</Badge>
                   </div>
 
                   <div className="p-4 rounded-xl bg-muted/40 border border-border flex items-center justify-between">
@@ -788,7 +873,7 @@ export default function Settings() {
                       <div className="font-bold text-foreground">Authentication Provider</div>
                       <p className="text-[11px] text-muted-foreground">Signed in as {user?.email}</p>
                     </div>
-                    <Button size="sm" variant="outline" className="text-xs">Manage Auth</Button>
+                    <Button size="sm" variant="outline" className="text-xs" onClick={() => logout()}>Sign Out</Button>
                   </div>
                 </div>
               </Card>
@@ -1283,12 +1368,33 @@ export default function Settings() {
                                   <Badge variant="outline" className="text-[10px] uppercase font-mono">
                                     {mcp.config?.transport || "SSE"}
                                   </Badge>
+                                  <Badge
+                                    variant="outline"
+                                    className={`text-[10px] uppercase font-mono ${mcp.status === "active" ? "text-emerald-500 border-emerald-500/40" : "text-muted-foreground"}`}
+                                  >
+                                    {mcp.status === "active" ? "connected" : "not connected"}
+                                  </Badge>
                                 </div>
                                 <div className="text-[11px] font-mono text-muted-foreground">
                                   {mcp.config?.endpoint}
                                 </div>
+                                {mcpToolsProbe[mcp.name]?.tools?.length ? (
+                                  <div className="text-[11px] text-emerald-500 font-mono">
+                                    tools: {mcpToolsProbe[mcp.name].tools!.join(", ")}
+                                  </div>
+                                ) : mcpToolsProbe[mcp.name]?.error ? (
+                                  <div className="text-[11px] text-amber-500 max-w-md">{mcpToolsProbe[mcp.name].error}</div>
+                                ) : null}
                               </div>
                               <div className="flex items-center gap-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-7 text-xs"
+                                  onClick={() => probeMcpTools(mcp.name)}
+                                >
+                                  {mcpToolsProbe[mcp.name]?.loading ? "Probing…" : "List Tools"}
+                                </Button>
                                 <Button
                                   size="sm"
                                   variant="outline"
@@ -1297,6 +1403,29 @@ export default function Settings() {
                                 >
                                   Test Ping
                                 </Button>
+                                {mcp.status === "active" ? (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-7 text-xs text-amber-500"
+                                    onClick={() => mcpDisconnectMut.mutate({ integrationId: mcp.id })}
+                                  >
+                                    Disconnect
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    size="sm"
+                                    className="h-7 text-xs font-bold"
+                                    onClick={() =>
+                                      mcpStartConnectMut.mutate({
+                                        integrationId: mcp.id,
+                                        redirectUri: `${window.location.origin}/settings`,
+                                      })
+                                    }
+                                  >
+                                    Connect
+                                  </Button>
+                                )}
                                 <Button
                                   size="sm"
                                   variant="ghost"
@@ -1338,6 +1467,9 @@ export default function Settings() {
                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider block">
                           ⚡ 1-Click Popular MCP Presets:
                         </span>
+                        <span className="text-[10px] text-amber-500 block">
+                          stdio presets register local-command servers that the OS runtime cannot execute yet (HTTP-borne servers only) — they will save but stay unreachable. (CC-2026-10-01-006/008.)
+                        </span>
                         <div className="flex flex-wrap gap-1.5">
                           {[
                             { name: "PostgreSQL Database MCP", transport: "stdio", endpoint: "npx -y @modelcontextprotocol/server-postgres postgresql://user:pass@localhost:5432/agentlab", capabilities: "tools,resources", badge: "Postgres DB" },
@@ -1356,6 +1488,8 @@ export default function Settings() {
                                 endpoint: preset.endpoint,
                                 apiKey: "",
                                 capabilities: preset.capabilities,
+                                clientId: "",
+                                clientSecret: "",
                               })}
                               className="px-2 py-1 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 rounded text-[10px] font-semibold transition-colors flex items-center gap-1 cursor-pointer"
                             >
@@ -1425,6 +1559,32 @@ export default function Settings() {
                             className="w-full px-3 py-2 border border-border rounded-lg bg-input text-xs"
                           />
                         </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block font-semibold text-foreground mb-1">OAuth Client ID (for Connect)</label>
+                            <input
+                              type="text"
+                              placeholder="From the provider's developer app"
+                              value={newMcpForm.clientId}
+                              onChange={e => setNewMcpForm({ ...newMcpForm, clientId: e.target.value })}
+                              className="w-full px-3 py-2 border border-border rounded-lg bg-input text-xs"
+                            />
+                          </div>
+                          <div>
+                            <label className="block font-semibold text-foreground mb-1">OAuth Client Secret</label>
+                            <input
+                              type="password"
+                              placeholder="Stored encrypted-at-rest on the row"
+                              value={newMcpForm.clientSecret}
+                              onChange={e => setNewMcpForm({ ...newMcpForm, clientSecret: e.target.value })}
+                              className="w-full px-3 py-2 border border-border rounded-lg bg-input text-xs"
+                            />
+                          </div>
+                        </div>
+                        <p className="text-[10px] text-muted-foreground">
+                          OAuth servers (like the Upwork MCP): register the app with redirect URI <span className="font-mono">{typeof window !== "undefined" ? window.location.origin : ""}/settings</span>, save the client id/secret here, then press <strong>Connect</strong> on the server row.
+                        </p>
                       </div>
 
                       <div className="pt-3 border-t border-border flex justify-end gap-2">

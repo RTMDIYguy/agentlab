@@ -436,3 +436,32 @@ export async function withGoogleModelChain<T>(
   }
   throw lastError;
 }
+
+/**
+ * Chain variant with an operator-preferred model leading (CC-2026-10-01-009):
+ * the stored defaultModel is tried FIRST when valid, then the shared chain
+ * order fills in. Callers must validate the preferred id before passing it —
+ * this helper trusts its input.
+ */
+export async function withGoogleModelChainLeading<T>(
+  fn: (model: GoogleModelChainEntry) => Promise<T>,
+  preferred?: string | null
+): Promise<{ model: GoogleModelChainEntry; value: T }> {
+  const chain: GoogleModelChainEntry[] = preferred
+    ? [
+        ...(GOOGLE_MODEL_CHAIN.includes(preferred as GoogleModelChainEntry)
+          ? [preferred as GoogleModelChainEntry]
+          : []),
+        ...GOOGLE_MODEL_CHAIN,
+      ].filter((m, i, a) => a.indexOf(m) === i)
+    : [...GOOGLE_MODEL_CHAIN];
+  let lastError: unknown;
+  for (const model of chain) {
+    try {
+      return { model, value: await fn(model) };
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError;
+}

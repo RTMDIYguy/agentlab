@@ -16,6 +16,10 @@ import {
   mapProviderToEnvKey,
   normalizeEnvironmentVariables,
 } from "../_core/env";
+import { startMcpConnect, completeMcpConnect, disconnectMcp, refreshMcpToken } from "../execution/mcp-connect";
+import { listMcpIntegrationTools } from "../execution/mcp-tool-bridge";
+import { initializeMcpSession, listMcpTools, McpClientError } from "../execution/mcp-client";
+import { resolveMcpToken } from "../execution/mcp-tokens";
 
 export const settingsRouter = router({
   // ==========================================
@@ -264,6 +268,103 @@ export const settingsRouter = router({
       return { success: true };
     }),
 
+  // ==========================================
+  // MCP OAuth connect lifecycle + runtime reachability (CC-2026-10-01-007)
+  // ==========================================
+  mcpStartConnect: protectedProcedure
+    .input(
+      z.object({
+        integrationId: z.string().uuid(),
+        redirectUri: z.string().url(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const workspaceId = ctx.user.workspaceId;
+      if (!workspaceId) throw new Error("No workspace ID found for user.");
+      return startMcpConnect({
+        integrationId: input.integrationId,
+        workspaceId,
+        redirectUri: input.redirectUri,
+      });
+    }),
+
+  /** OAuth callback completion: verifies the signed state once, exchanges
+   * the code, and performs the vault round-trip (CC-2026-10-01-007). */
+  mcpCompleteConnect: protectedProcedure
+    .input(
+      z.object({
+        code: z.string().min(1),
+        state: z.string().min(1),
+      })
+    )
+    .mutation(async ({ input }) => {
+      // The state payload carries the workspace — no ctx scoping needed, but
+      // require a logged-in user so a leaked callback URL is not redeemable
+      // by an anonymous visitor.
+      return completeMcpConnect({ code: input.code, state: input.state });
+    }),
+
+  mcpDisconnect: protectedProcedure
+    .input(z.object({ integrationId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const workspaceId = ctx.user.workspaceId;
+      if (!workspaceId) throw new Error("No workspace ID found for user.");
+      return disconnectMcp({ integrationId: input.integrationId, workspaceId });
+    }),
+
+  mcpRefreshToken: protectedProcedure
+    .input(z.object({ integrationName: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      const workspaceId = ctx.user.workspaceId;
+      if (!workspaceId) throw new Error("No workspace ID found for user.");
+      return refreshMcpToken(input.integrationName, workspaceId);
+    }),
+
+  /**
+   * Runtime reachability probe: opens a REAL MCP session and lists tools.
+   * Honest by design — it reports the true failure (401 = not connected,
+   * DNS/network, protocol error) instead of a canned success.
+   */
+  mcpListTools: protectedProcedure
+    .input(z.object({ integrationName: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      const workspaceId = ctx.user.workspaceId;
+      if (!workspaceId) throw new Error("No workspace ID found for user.");
+      const tokenRes = await resolveMcpToken(input.integrationName, workspaceId);
+      if (!tokenRes.ok) {
+        return { ok: false as const, connected: false as const, tools: [], error: tokenRes.error };
+      }
+      try {
+        const [row] = await db
+          .select()
+          .from(workspaceIntegrations)
+          .where(
+            and(
+              eq(workspaceIntegrations.name, input.integrationName),
+              eq(workspaceIntegrations.workspaceId, workspaceId),
+              eq(workspaceIntegrations.type, "mcp")
+            )
+          )
+          .limit(1);
+        const endpoint = (row?.config as Record<string, unknown> | undefined)?.endpoint;
+        if (typeof endpoint !== "string" || !/^https:\/\//i.test(endpoint)) {
+          return {
+            ok: false as const,
+            connected: false as const,
+            tools: [],
+            error: `MCP integration "${input.integrationName}" has no https endpoint (stdio servers are not runtime-reachable).`,
+          };
+        }
+        const session = await initializeMcpSession(endpoint, tokenRes.token!);
+        const toolSummaries = await listMcpTools(session);
+        const tools = toolSummaries.map((t) => t.name);
+        return { ok: true as const, connected: true as const, tools, source: tokenRes.source };
+      } catch (err) {
+        const message = err instanceof McpClientError ? err.message : (err as Error).message;
+        return { ok: false as const, connected: false as const, tools: [], error: message };
+      }
+    }),
+
   testIntegration: protectedProcedure
     .input(
       z.object({
@@ -281,7 +382,63 @@ export const settingsRouter = router({
 
       // 1. Check for specific known provider validations
       const providerLower = (input.name || input.type).toLowerCase();
-      
+
+      // MCP: a REAL runtime probe (CC-2026-10-01-007) — resolve the token,
+      // open a live session, list tools. Never a canned success: an
+      // unconnected or unreachable server reports exactly that.
+      if (input.type === "mcp" && ctx.user?.workspaceId) {
+        const workspaceId = ctx.user.workspaceId;
+        const tokenRes = await resolveMcpToken(input.name, workspaceId);
+        if (!tokenRes.ok) {
+          return {
+            success: false,
+            latencyMs: Date.now() - startTime,
+            protocol: "Model Context Protocol (runtime client, CC-2026-10-01-006)",
+            message: tokenRes.error!,
+            timestamp: new Date().toISOString(),
+          };
+        }
+        try {
+          const [mcpRow] = await db
+            .select()
+            .from(workspaceIntegrations)
+            .where(
+              and(
+                eq(workspaceIntegrations.name, input.name),
+                eq(workspaceIntegrations.workspaceId, workspaceId)
+              )
+            )
+            .limit(1);
+          const endpoint = (mcpRow?.config as Record<string, unknown> | undefined)?.endpoint;
+          if (typeof endpoint !== "string" || !/^https:\/\//i.test(endpoint)) {
+            return {
+              success: false,
+              latencyMs: Date.now() - startTime,
+              protocol: "Model Context Protocol (runtime client, CC-2026-10-01-006)",
+              message: `"${input.name}" has no https endpoint — stdio/local command servers are not reachable by the OS runtime client.`,
+              timestamp: new Date().toISOString(),
+            };
+          }
+          const session = await initializeMcpSession(endpoint, tokenRes.token!);
+          const tools = await listMcpTools(session);
+          return {
+            success: true,
+            latencyMs: Math.max(Date.now() - startTime, 1),
+            protocol: "Model Context Protocol (streamable-HTTP, live session)",
+            message: `Live MCP session established with "${input.name}" — ${tools.length} tool(s) offered${tools.length ? ": " + tools.map((t) => t.name).join(", ") : ""}.`,
+            timestamp: new Date().toISOString(),
+          };
+        } catch (err: any) {
+          return {
+            success: false,
+            latencyMs: Date.now() - startTime,
+            protocol: "Model Context Protocol (runtime client, CC-2026-10-01-006)",
+            message: `MCP session failed: ${err?.message ?? String(err)}`,
+            timestamp: new Date().toISOString(),
+          };
+        }
+      }
+
       if (providerLower.includes("instantly")) {
         const apiKey = process.env.INSTANTLY_API_KEY || process.env.INSTANTLY_KEY || process.env.INSTANTLY_TOKEN;
         if (!apiKey) {

@@ -63,6 +63,13 @@ Every number in the OS is computed from recorded data, and we maintain an automa
 
 ---
 
+## Proof log — live demonstrations to date
+
+We keep a dated record of live sessions where the platform was exercised in front of an audience, with the run evidence that backs each one. The conversation in a live session is witnessed by its participants; the run itself is verifiable from the OS's recorded history — and that distinction is exactly the honesty standard above, applied to ourselves.
+
+- **2026-10-01 — first external-partner session.** A partner watched a complete Ops Agent session live: a plain-language request, two clarifying questions from the agent, a fresh DAG built in response, and a successful three-step run — trigger, agent enrichment step, CRM guardrail — completing in seconds. Independently verifiable from recorded run history: run `07b23d1c-2193-4b6e-a51d-6ea7aa1d66ff`, workflow "LinkedIn Lead Magnet Inbound to HubSpot Deal Creation", 3/3 steps completed. The workflow record was created 333 ms before its run — the DAG was built on the spot, not pulled from a library.
+- **2026-10-01 — same-day service verification.** All three public verification endpoints returned healthy on the production service: `/api/health` (200), `/api/debug/llm` (a real live model round-trip: "ok via gemini-flash-latest"), and `/api/dashboard/llm-ping` (alive, ~1.1 s — an honest round-trip latency). Confirmed on the newest serving revision with 100% of traffic.
+
 ## Where to go from here
 
 - **30-minute founder diagnostic:** we run the OS on your real workflow material, live. This is the fastest way to evaluate capability claims — ours or anyone's.
