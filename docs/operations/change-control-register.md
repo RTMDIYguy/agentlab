@@ -16,6 +16,12 @@ version: "1.0.0"
 
 Date started: 2026-05-07
 
+## 2026-10-01 (evening) — DEPLOYED `113190ea` via the manual Cloud Build path: revision agentlab-00207-bwt Ready @ 100% traffic, free endpoints green
+
+- **Deploy record:** Robert approved commit-then-deploy. Commit `113190ea` (29 files, +3,611/−16 — the full MCP stack, settings audit execution, ops records; the deliberately-unstaged 2026-09-30 command brief edit stayed out). `gcloud builds submit --config cloudbuild.yaml --substitutions COMMIT_SHA=113190eace23b57ed45c411809492959aa8e640b .` → build `f36c83cb` **SUCCESS 5m18s**; new revision **agentlab-00207-bwt** Ready (all conditions True) serving **100%** of traffic.
+- **Post-deploy verification (free endpoints):** `/api/health` 200 healthy; `/api/debug/llm` real chain call → success:true "ok via gemini-flash-latest"; `/api/dashboard/llm-ping` alive:true 1180ms. Revision confirmed latestCreated = latestReady = 100% traffic.
+- **Feature-level checks (auth-gated — Robert's 3-step UI list):** (1) PERSONA: Settings → LLM → set a distinctive orchestrator name, save, ask the Ops Agent its name in /ops-agent — the stored prompt/name now lead the base identity; (2) MODEL PREFERENCE: set default model to gemini-pro-latest, save, chat — the reply badge should report "Model: gemini-pro-latest" (currently stored value equals the chain head, so no visible change until he picks a different valid id); (3) MCP: Upwork MCP row → Test Ping must return the HONEST "no bearer token — complete the OAuth connect" failure (never the old canned success), then Connect after the Upwork app registration → List Tools.
+
 ## 2026-10-01 (night, fourth) — EXECUTED: audit dispositions wired in order — operator persona + default model now drive the Ops Agent chat, real budget governance in the queue processor, fictional tabs relabeled (suite 549/549)
 
 - **Trigger:** Robert approved the audit's recommended order (CC-2026-10-01-008): "I like and agree with that order. Please execute."
@@ -1782,3 +1788,4 @@ Before ending a change session:
 - **Tests (15, hermetic)**: persona lead/fallback/name-omission/v2.4-ban (4); chain-leading preferred-first/fallback-dedup/plain-order/foreign-id (4); governance over-budget/within/disabled/zero-budget/operator-exempt/db-unavailable/estimate-constant (7).
 - **Verification**: full suite 549/549 across 59 files; tsc at the documented 4-error cookie@2 baseline; change-control green.
 - **Rollback**: orchestrator.ts persona block + chain-leading calls revert to withGoogleModelChain and the built-in lead (single-file revert); queue-processor governance gate is additive (remove the block); Settings changes are label-only; google-ai helper is additive.
+- **Deploy note (2026-10-01 evening)**: DEPLOYED via the manual path per Robert's commit-then-deploy decision — commit `113190ea`, build `f36c83cb` SUCCESS 5m18s, revision **agentlab-00207-bwt** Ready @ 100% traffic; free endpoints verified (health 200, real chain call ok via gemini-flash-latest, llm-ping alive 1180ms). Feature-level (persona/model/MCP) checks are the auth-gated 3-step UI list in the narrative entry above.
