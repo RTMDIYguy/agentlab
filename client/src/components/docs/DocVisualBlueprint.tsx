@@ -659,6 +659,242 @@ function renderMockContent(type: DocPageEntry["mockLayoutType"]) {
         </div>
       );
 
+    case "dashboard":
+      return (
+        <div className="space-y-4 opacity-90 pointer-events-none">
+          <div className="flex items-center justify-between bg-card p-3 rounded-xl border border-border">
+            <div className="flex items-center gap-2">
+              <Activity className="h-4 w-4 text-primary" />
+              <span className="text-xs font-bold text-foreground">Operations Dashboard</span>
+            </div>
+            <span className="text-[10px] bg-amber-500/10 text-amber-600 px-2 py-0.5 rounded font-mono font-bold">MANUAL MODE</span>
+          </div>
+
+          <div className="grid grid-cols-4 gap-3">
+            <div className="bg-card p-2.5 rounded-xl border border-border text-center">
+              <div className="text-[10px] text-muted-foreground uppercase font-mono">Swarm Nodes</div>
+              <div className="text-base font-bold text-foreground">5</div>
+            </div>
+            <div className="bg-card p-2.5 rounded-xl border border-border text-center">
+              <div className="text-[10px] text-muted-foreground uppercase font-mono">Active Tasks</div>
+              <div className="text-base font-bold text-foreground">2</div>
+            </div>
+            <div className="bg-card p-2.5 rounded-xl border border-border text-center">
+              <div className="text-[10px] text-muted-foreground uppercase font-mono">Total DAG Runs</div>
+              <div className="text-base font-bold text-foreground">148</div>
+            </div>
+            <div className="bg-card p-2.5 rounded-xl border border-border text-center">
+              <div className="text-[10px] text-muted-foreground uppercase font-mono">Compute Spend</div>
+              <div className="text-base font-bold text-foreground">$12.40</div>
+            </div>
+          </div>
+
+          <div className="bg-card p-3 rounded-xl border border-border space-y-1.5">
+            <div className="flex justify-between border-b border-border pb-1.5">
+              <span className="text-xs font-bold text-foreground">System Telemetry Console</span>
+              <span className="text-[10px] text-emerald-600 font-bold font-mono">LLM PING OK</span>
+            </div>
+            <div className="flex justify-between p-1.5 bg-muted/40 rounded text-[11px] font-mono">
+              <span>Google model chain</span>
+              <span className="text-emerald-600">CONNECTED</span>
+            </div>
+            <div className="flex justify-between p-1.5 bg-muted/40 rounded text-[11px] font-mono">
+              <span>Scheduler (armed workflows)</span>
+              <span className="text-amber-600">0 armed</span>
+            </div>
+          </div>
+
+          <div className="bg-card p-3 rounded-xl border border-border space-y-1.5">
+            <div className="text-xs font-bold text-foreground">Recent Runs</div>
+            <div className="flex justify-between p-1.5 bg-muted/40 rounded text-[11px] font-mono">
+              <span>revenue-lead-to-sale</span>
+              <span className="text-emerald-600">completed</span>
+            </div>
+            <div className="flex justify-between p-1.5 bg-muted/40 rounded text-[11px] font-mono">
+              <span>delivery-to-retention</span>
+              <span className="text-amber-600">paused_for_approval</span>
+            </div>
+          </div>
+        </div>
+      );
+
+    case "ops-agent":
+      return (
+        <div className="space-y-4 opacity-90 pointer-events-none">
+          <div className="bg-card p-3 rounded-xl border border-border flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span className="text-xs font-bold text-foreground">Ops & Architecture Agent</span>
+            </div>
+            <span className="text-[10px] text-muted-foreground font-mono">Ctrl+Enter to run</span>
+          </div>
+
+          <div className="bg-card p-3 rounded-xl border border-border space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] uppercase font-mono text-muted-foreground font-semibold">Situational Next-Step Prompts</span>
+              <div className="flex gap-1.5">
+                <span className="px-2 py-0.5 bg-primary text-primary-foreground text-[9px] font-bold rounded">Workspace Docs</span>
+                <span className="px-2 py-0.5 bg-muted text-muted-foreground text-[9px] rounded">Plans & Handoffs</span>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border bg-background p-3 text-[11px] text-muted-foreground min-h-[48px]">
+              Describe your operational requirement, SOP standardization task, or multi-agent workflow request…
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono text-muted-foreground">Model: gemini-flash-latest</span>
+              <span className="text-[10px] font-mono text-amber-600 font-bold">DISPLAY-ONLY — server chain decides, modelUsed reported back</span>
+            </div>
+          </div>
+
+          <div className="bg-card p-3 rounded-xl border border-border space-y-1.5">
+            <div className="flex justify-between border-b border-border pb-1.5">
+              <span className="text-xs font-bold text-foreground">Live Step Execution & Verification Tracker</span>
+              <span className="text-[10px] text-muted-foreground font-mono">GET /api/runs/:id</span>
+            </div>
+            <div className="flex justify-between p-1.5 bg-muted/40 rounded text-[11px] font-mono">
+              <span>1 · Load SOP context</span>
+              <span className="text-emerald-600">completed</span>
+            </div>
+            <div className="flex justify-between p-1.5 bg-muted/40 rounded text-[11px] font-mono">
+              <span>2 · Sample workspace files</span>
+              <span className="text-blue-600">running</span>
+            </div>
+            <div className="flex justify-between p-1.5 bg-muted/40 rounded text-[11px] font-mono">
+              <span>3 · Propose DAG</span>
+              <span className="text-slate-500">pending</span>
+            </div>
+          </div>
+        </div>
+      );
+
+    case "playbooks":
+      return (
+        <div className="space-y-4 opacity-90 pointer-events-none">
+          <div className="bg-card p-3 rounded-xl border border-border flex items-center gap-2">
+            <Layers className="h-4 w-4 text-primary" />
+            <span className="text-xs font-bold text-foreground">Operating Playbooks</span>
+            <span className="ml-auto text-[10px] text-muted-foreground font-mono">GET /api/playbooks</span>
+          </div>
+
+          <div className="bg-card p-3 rounded-xl border border-border space-y-2">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="text-xs font-bold text-foreground">Sale to Delivery</div>
+                <div className="flex flex-wrap gap-2 pt-1.5 text-[10px] text-muted-foreground">
+                  <span className="px-1.5 py-0.5 border border-border rounded">SAL</span>
+                  <span>Owner: Sales Lead</span>
+                  <span>Approval: Robert</span>
+                </div>
+              </div>
+              <span className="text-[10px] bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded font-mono font-bold">active</span>
+            </div>
+            <div className="rounded-lg bg-muted/40 p-2.5 text-[11px]">
+              <strong>Trigger:</strong> contract signed
+              <br />
+              <strong>Complete when:</strong> kickoff delivered and accepted
+            </div>
+            <div className="rounded-lg border border-border p-2.5 space-y-1">
+              <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium">
+                <span className="px-1.5 py-0.5 border border-border rounded font-mono text-[9px]">SAL-01</span>
+                <span className="text-muted-foreground">→</span>
+                <span className="px-1.5 py-0.5 border border-border rounded font-mono text-[9px]">FUL-02</span>
+                <span className="text-amber-500 text-[10px] font-bold">approval required</span>
+              </div>
+              <div className="text-[10px] text-muted-foreground">Trigger signal: signed agreement filed</div>
+              <div className="text-[10px] text-muted-foreground">Receiver: Fulfillment. Fallback: retry after 24h, escalate to Robert.</div>
+            </div>
+          </div>
+        </div>
+      );
+
+    case "vault":
+      return (
+        <div className="space-y-4 opacity-90 pointer-events-none">
+          <div className="bg-card p-3 rounded-xl border border-border space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-foreground">Artifact Vault</span>
+              <span className="text-[10px] text-muted-foreground font-mono">GET /api/artifacts?limit=200</span>
+            </div>
+            <div className="rounded-md border border-border bg-background px-3 py-2 text-[11px] text-muted-foreground">
+              Search titles and summaries…
+            </div>
+            <div className="flex gap-1.5">
+              <span className="px-2 py-0.5 bg-primary text-primary-foreground text-[9px] font-bold rounded border">All</span>
+              <span className="px-2 py-0.5 bg-muted text-muted-foreground text-[9px] rounded border border-border">brief</span>
+              <span className="px-2 py-0.5 bg-muted text-muted-foreground text-[9px] rounded border border-border">dossier</span>
+              <span className="px-2 py-0.5 bg-muted text-muted-foreground text-[9px] rounded border border-border">runbook</span>
+            </div>
+          </div>
+
+          <div className="bg-card p-3 rounded-xl border border-border space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-foreground">Weekly Client Brief</span>
+              <span className="text-[9px] px-1.5 py-0.5 rounded border border-border text-muted-foreground font-mono">brief · final</span>
+            </div>
+            <div className="text-[10px] text-muted-foreground">via revenue-lead-to-sale · quality A</div>
+            <p className="text-[11px] text-muted-foreground">Summary of the artifact as stored… content loads on demand (GET /api/artifacts/:id).</p>
+            <div className="flex gap-2 pt-1 text-[9px] font-semibold">
+              <span className="px-2 py-1 rounded bg-muted text-muted-foreground">View</span>
+              <span className="px-2 py-1 rounded bg-muted text-muted-foreground">Edit</span>
+              <span className="px-2 py-1 rounded bg-destructive/10 text-destructive">Delete</span>
+            </div>
+          </div>
+
+          <div className="bg-card p-3 rounded-xl border border-border space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-foreground">Q3 Diagnostic Dossier</span>
+              <span className="text-[9px] px-1.5 py-0.5 rounded border border-border text-muted-foreground font-mono">dossier · draft</span>
+            </div>
+            <div className="text-[10px] text-muted-foreground">via founder-intake · confirm-delete step required</div>
+          </div>
+        </div>
+      );
+
+    case "run-console":
+      return (
+        <div className="space-y-4 opacity-90 pointer-events-none">
+          <div className="bg-card p-3 rounded-xl border border-border flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Share2 className="h-4 w-4 text-primary" />
+              <span className="text-xs font-bold text-foreground">Run Console</span>
+            </div>
+            <span className="text-[10px] text-muted-foreground font-mono">read-only client sharing</span>
+          </div>
+
+          <div className="bg-card p-3 rounded-xl border border-border space-y-2">
+            <div className="text-xs font-bold text-foreground">Create a share link</div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-3 py-2 rounded-md border border-border bg-background text-[11px] text-muted-foreground">Label (e.g. Acme Co — weekly report)</span>
+              <span className="px-3 py-2 rounded-md border border-border bg-background text-[11px]">All runs ▾</span>
+              <span className="px-3 py-2 rounded-md bg-primary text-primary-foreground text-[11px] font-semibold">Create link</span>
+            </div>
+          </div>
+
+          <div className="bg-card p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/5 space-y-1.5">
+            <div className="text-[10px] font-bold text-emerald-600 uppercase font-mono">Share link created — secret shown only once</div>
+            <div className="block rounded bg-background p-2 text-[10px] font-mono text-foreground overflow-x-auto whitespace-nowrap">
+              https://agentlab-718497644379.us-central1.run.app/shared/runs?token=••••••••
+            </div>
+            <div className="flex gap-2 text-[9px] font-semibold">
+              <span className="px-2 py-1 rounded bg-primary text-primary-foreground">Copy link</span>
+              <span className="px-2 py-1 rounded border border-border text-muted-foreground">Done</span>
+            </div>
+          </div>
+
+          <div className="bg-card p-3 rounded-xl border border-border space-y-1.5">
+            <div className="text-xs font-bold text-foreground">Active links</div>
+            <div className="flex justify-between p-1.5 bg-muted/40 rounded text-[11px] font-mono">
+              <span>Acme Co — weekly report <span className="text-[9px] border border-border rounded px-1">all runs</span></span>
+              <span className="text-muted-foreground">last opened · Revoke</span>
+            </div>
+            <div className="flex justify-between p-1.5 bg-muted/40 rounded text-[11px] font-mono">
+              <span>Untitled link <span className="text-[9px] border border-border rounded px-1">single run</span></span>
+              <span className="text-muted-foreground">never opened · Revoke</span>
+            </div>
+          </div>
+        </div>
+      );
+
     default:
       return (
         <div className="space-y-4 opacity-90 pointer-events-none">

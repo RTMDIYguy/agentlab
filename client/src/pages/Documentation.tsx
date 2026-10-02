@@ -56,6 +56,11 @@ const ICON_MAP: Record<string, any> = {
   Tv,
   Target,
   ClipboardList,
+  Activity,
+  Sparkles,
+  Layers,
+  FileCode2,
+  ExternalLink,
 };
 
 export default function Documentation() {
@@ -460,7 +465,7 @@ export default function Documentation() {
               Owner's Manual & Operational Directory
             </h1>
             <p className="text-muted-foreground text-sm md:text-base mt-2 max-w-3xl">
-              A deep-dive directory for 13 core modules of Uncle Robert Consulting, Bootstrapper Capital, and Tactix.
+              A deep-dive directory for {DOCS_REGISTRY.length} core modules of Uncle Robert Consulting, Bootstrapper Capital, and Tactix.
               Click any module to open its interactive visual blueprint, control walkthrough, telemetry guide, and troubleshooting runbook.
             </p>
             <p className="text-xs text-muted-foreground mt-3 max-w-3xl">

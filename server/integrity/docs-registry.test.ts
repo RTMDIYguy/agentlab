@@ -96,6 +96,11 @@ describe("docs registry — truth-pass contract", () => {
       "screen-recorder": "ScreenRecorder.tsx",
       "icp-generator": "IcpGenerator.tsx",
       "assessment-generator": "AssessmentQuestionGenerator.tsx",
+      dashboard: "Dashboard.tsx",
+      "ops-agent": "OpsCleanupAgent.tsx",
+      playbooks: "Playbooks.tsx",
+      vault: "ArtifactVault.tsx",
+      "run-console": "RunConsole.tsx",
     };
     for (const doc of DOCS_REGISTRY as Array<DocPageEntry & { _page?: string }>) {
       const page = expectedPages[doc.slug];
