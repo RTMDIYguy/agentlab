@@ -1,9 +1,27 @@
 name: Build and Deploy to Artifact Registry
 
+# DISABLED as a push trigger — 2026-10-02, register CC-2026-10-02-005.
+#
+# Why (evidence):
+#   1. It failed on EVERY push at the auth step: `secrets.GCP_SA_KEY` is
+#      not defined in this repo, so google-github-actions/auth aborts in
+#      ~15s ("must specify exactly one of workload_identity_provider or
+#      credentials_json") — it never built and never deployed, just red
+#      runs on every commit.
+#   2. Its deploy path diverges from production: it pushes to the
+#      `workflow-registry` image repo, while every live revision
+#      (00205…00209) came from `gcloud run deploy --source .`
+#      (cloud-run-source-deploy) — the proven path, per register
+#      CC-2026-10-02-004.
+#
+# Production deploys:
+#   gcloud run deploy agentlab --source . --region us-central1
+#
+# To re-enable: prefer Workload Identity Federation (no stored key) over
+# GCP_SA_KEY, reconcile the image repo with the live path, and decide
+# deliberately whether pushes should auto-deploy production (today: no).
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 env:
   PROJECT_ID: project-36330a6c-5e91-4901-9dd
