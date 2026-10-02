@@ -227,20 +227,25 @@ candidate path rather than a chosen route.
 
 This is the priority order while live outreach is turning into revenue motion.
 
-| Priority | Workflow                             | Why It Comes Now                                                                   | Current Mode                   | Next SOP / Automation Target                                              |
-| -------- | ------------------------------------ | ---------------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
-| 1        | MKT-05 Outreach & Engagement         | Live Reach testing is producing real data and must stay controlled                 | Manual / Reach-assisted        | Outreach batch setup, tracking, and reply handling                        |
-| 2        | MKT-02 Email/SMS Nurture             | Follow-up must be consistent once replies and interest arrive                      | Manual / scheduled campaigns   | Nurture sequence rules, stop conditions, handoff rules                    |
-| 3        | MKT-01 Lead Generation & Conversion  | Fresh lead sourcing must avoid duplicates and bad-fit drift                        | Manual CSV review              | Lead qualification, dedupe, and bridge-tracker import                     |
-| 4        | SAL-02 OnBoarding                    | Signed proposals already trigger folder creation; the second half needs automation | Zapier + manual gap            | Google Drive packet copy, folder population, sharing                      |
-| 5        | SAL-01 Proposals & Contracts         | Revenue conversations need a clean path into signed work                           | Manual / template-driven       | Proposal prep, review, send, and status tracking                          |
-| 6        | FUL-02 Client Success                | New clients need visible health and next actions                                   | Manual                         | Client success tracker and check-in cadence                               |
-| 7        | FUL-03 Customer Service              | Inbound questions need triage before they become hidden work                       | Manual                         | Issue intake, tiering, and escalation                                     |
-| 8        | FIN-03 Accounts Receivable & Payable | Money tasks need clear invoice and payment status                                  | Manual / owned finance tracker | Invoice creation, receivables review, payment status, SKU/account mapping |
-| 9        | MKT-04 Reviews & Referrals           | Positive outcomes should become proof loops                                        | Manual                         | Testimonial request, referral ask, proof capture                          |
-| 10       | MKT-09 Event & Webinar Marketing     | Independence Chapter needs a repeatable event lane                                 | v0 runnable slice              | RoundTable invite, RSVP/assessment response tracking, event follow-up     |
+| Priority | Workflow                             | Why It Comes Now                                                                   | Current Mode                   | Next SOP / Automation Target                                              | Status |
+| -------- | ------------------------------------ | ---------------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------- | ---------- |
+| 1        | MKT-05 Outreach & Engagement         | Live Reach testing is producing real data and must stay controlled                 | Manual / Reach-assisted        | Outreach batch setup, tracking, and reply handling                        | Addressed |
+| 2        | MKT-02 Email/SMS Nurture             | Follow-up must be consistent once replies and interest arrive                      | Manual / scheduled campaigns   | Nurture sequence rules, stop conditions, handoff rules                    | Addressed |
+| 3        | MKT-01 Lead Generation & Conversion  | Fresh lead sourcing must avoid duplicates and bad-fit drift                        | Manual CSV review              | Lead qualification, dedupe, and bridge-tracker import                     | Active |
+| 4        | SAL-02 OnBoarding                    | Signed proposals already trigger folder creation; the second half needs automation | Zapier + manual gap            | Google Drive packet copy, folder population, sharing                      | Active |
+| 5        | SAL-01 Proposals & Contracts         | Revenue conversations need a clean path into signed work                           | Manual / template-driven       | Proposal prep, review, send, and status tracking                          | Active |
+| 6        | FUL-02 Client Success                | New clients need visible health and next actions                                   | Manual                         | Client success tracker and check-in cadence                               | Active |
+| 7        | FUL-03 Customer Service              | Inbound questions need triage before they become hidden work                       | Manual                         | Issue intake, tiering, and escalation                                     | Active |
+| 8        | FIN-03 Accounts Receivable & Payable | Money tasks need clear invoice and payment status                                  | Manual / owned finance tracker | Invoice creation, receivables review, payment status, SKU/account mapping | Active |
+| 9        | MKT-04 Reviews & Referrals           | Positive outcomes should become proof loops                                        | Manual                         | Testimonial request, referral ask, proof capture                          | Active |
+| 10       | MKT-09 Event & Webinar Marketing     | Independence Chapter needs a repeatable event lane                                 | v0 runnable slice              | RoundTable invite, RSVP/assessment response tracking, event follow-up     | Active |
 
 This queue is not permanent. It should change when live evidence changes.
+
+The **Status** column drives the daily command brief: rows marked
+`Addressed` or `Done` stop appearing in Top 3 Actions, Marketing And Sales
+Moves, and Follow-Ups And Handoffs, and surface under "Recently Addressed"
+instead. Mark a row `Active` again if it needs attention.
 
 Run `docs/operations/weekly-workflow-audit-bank.md` against this queue weekly.
 Start with `MKT-09` until its event type, invite path, RSVP/registration path,

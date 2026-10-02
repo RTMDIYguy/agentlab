@@ -72,13 +72,22 @@ function getActiveQueue(agencyManual) {
     .map(tableRowCells)
     .filter(cells => cells.length >= 5 && cells[0] !== "Priority");
 
-  return rows.map(([priority, workflow, why, mode, target]) => ({
+  // Status column (added 2026-10-02): rows marked Addressed/Done are
+  // parked out of today's action lists but stay visible in the brief.
+  return rows.map(([priority, workflow, why, mode, target, status]) => ({
     priority,
     workflow,
     why,
     mode,
     target,
+    status: (status || "Active").trim(),
   }));
+}
+
+const CLOSED_STATUS = /^(addressed|done|complete|completed|resolved|shipped|closed)/i;
+
+function isOpenQueueItem(item) {
+  return !CLOSED_STATUS.test((item.status || "").trim());
 }
 
 function getOpenBuildItems(agencyManual) {
@@ -122,7 +131,8 @@ function getMkt09Checklist(workflowAuditBank) {
 }
 
 function topActions(activeQueue, openBuildItems) {
-  const queueActions = activeQueue.slice(0, 3).map(item => {
+  const openQueue = activeQueue.filter(isOpenQueueItem);
+  const queueActions = openQueue.slice(0, 3).map(item => {
     return `${item.workflow}: ${item.target}`;
   });
 
@@ -146,6 +156,7 @@ function topActions(activeQueue, openBuildItems) {
 
 function marketingAndSalesMoves(activeQueue) {
   return activeQueue
+    .filter(isOpenQueueItem)
     .filter(item => /MKT-|SAL-/.test(item.workflow))
     .slice(0, 5)
     .map(item => `${item.workflow} (${item.mode}): ${item.why}`);
@@ -153,6 +164,7 @@ function marketingAndSalesMoves(activeQueue) {
 
 function followUpsAndHandoffs(activeQueue) {
   return activeQueue
+    .filter(isOpenQueueItem)
     .filter(item => /SAL-|FUL-|FIN-|AFC-/.test(item.workflow))
     .slice(0, 5)
     .map(item => `${item.workflow}: ${item.target}`);
@@ -190,6 +202,9 @@ function renderBrief({
   const actions = topActions(activeQueue, openBuildItems);
   const marketingSales = marketingAndSalesMoves(activeQueue);
   const handoffs = followUpsAndHandoffs(activeQueue);
+  const addressed = activeQueue
+    .filter(item => !isOpenQueueItem(item))
+    .map(item => `${item.workflow} — marked ${item.status}; was: ${item.target}`);
   const bootstrapperTasks = getBootstrapperTasks().map(t => `${t.title}: ${t.desc}`);
   const openNeeded = openBuildItems
     .filter(item => /Needed|Pending|Deferred/i.test(item.status))
@@ -206,6 +221,10 @@ Status: generated
 ## Top 3 Actions
 
 ${renderList(actions, "No items found in current source scan.", true)}
+
+## Recently Addressed
+
+${renderList(addressed, "Nothing marked addressed yet — every queue row is still live.", false)}
 
 ## Bootstrapper.ai & Ownable OS Daily Operating Routine
 
@@ -255,11 +274,15 @@ ${renderList(changes, "No items found in current source scan.", false)}
 }
 
 async function main() {
-  console.log("Synchronizing Excel activities from Desktop...");
-  try {
-    execSync("python scripts/incorporate_records.py", { stdio: "inherit" });
-  } catch (error) {
-    console.error("Warning: Excel synchronization failed:", error.message);
+  const briefOnly = process.argv.includes("--brief-only");
+
+  if (!briefOnly) {
+    console.log("Synchronizing Excel activities from Desktop...");
+    try {
+      execSync("python scripts/incorporate_records.py", { stdio: "inherit" });
+    } catch (error) {
+      console.error("Warning: Excel synchronization failed:", error.message);
+    }
   }
 
   const [
@@ -295,6 +318,9 @@ async function main() {
   console.log(`Daily command brief written: ${path.relative(root, outPath)}`);
 
   // --- UPDATE HTML COMMAND CENTER ---
+  if (briefOnly) {
+    console.log("Brief-only mode: desktop HTML dashboard and Excel sync skipped.");
+  } else {
   const htmlPath =
     "E:/OneDrive - Uncle Robert Consulting LLC/Desktop/command-center-html.html";
   try {
@@ -457,6 +483,7 @@ async function main() {
       "Warning: Could not update HTML Command Center:",
       error.message
     );
+  }
   }
 }
 
