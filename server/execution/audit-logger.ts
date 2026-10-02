@@ -14,6 +14,15 @@
 //   3. On any other failure (missing column, connection blip, malformed jsonb),
 //      logs a warning and returns false. The workflow run continues.
 
+// CC-2026-10-02-013 (disposition 5): insertAuditLog must receive the real
+// drizzle table object. Passing the string "audit_logs" made the query
+// builder dereference undefined table symbols and throw
+// "Cannot read properties of undefined (reading 'workspaceId')" — the
+// helper swallowed it into `return false`, so NOT ONE agent_step_execution
+// row had ever been written in production (confirmed by Cloud Run logs and
+// a live q=step probe returning 0 of 563 rows).
+import { auditLogs } from "../schema";
+
 export interface AuditLogValues {
   workspaceId: string | null;
   workflowId: string | null;
@@ -95,7 +104,7 @@ export async function insertAuditLog(
   log: AuditLogValues
 ): Promise<boolean> {
   try {
-    await db.insert("audit_logs").values(log as unknown as Record<string, unknown>);
+    await db.insert(auditLogs).values(log as unknown as Record<string, unknown>);
     return true;
   } catch (err) {
     const fk = findAgentIdFkViolation(err);
@@ -104,7 +113,7 @@ export async function insertAuditLog(
       // synced before CC-2026-09-25-007). Retry with the agent reference
       // dropped, and say so in policy_checks instead of losing the event.
       try {
-        await db.insert("audit_logs").values({
+        await db.insert(auditLogs).values({
           ...(log as unknown as Record<string, unknown>),
           agentId: null,
           policyChecks: {

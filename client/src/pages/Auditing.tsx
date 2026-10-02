@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,8 +28,6 @@ import {
   Coins,
   ShieldCheck,
   Eye,
-  Check,
-  X,
   Lock,
   FileSpreadsheet,
   Terminal,
@@ -49,16 +47,17 @@ interface AuditLogItem {
   timestamp: string;
   agent: string;
   action: string;
-  status: "success" | "requires_approval" | "warning" | "error";
+  status: "success" | "warning" | "error";
   model: string;
   latencyMs: number | null;
   tokensTotal: number | null;
   cost: string;
   message: string;
   policyChecks?: {
-    saifPassed: boolean;
-    piiDetected: number;
-    budgetThresholdPassed: boolean;
+    saifPassed?: boolean | null;
+    piiDetected?: number | null;
+    budgetThresholdPassed?: boolean | null;
+    evaluated?: boolean;
   };
   details?: any;
 }
@@ -73,7 +72,6 @@ interface AuditStats {
 }
 
 export default function Auditing() {
-  const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedLog, setSelectedLog] = useState<AuditLogItem | null>(null);
@@ -168,51 +166,11 @@ export default function Auditing() {
     }
   };
 
-  // 3. Approve Mutation
-  const approveMutation = useMutation({
-    mutationFn: async (logId: string) => {
-      const res = await fetch(`/api/audit-logs/${logId}/approve`, {
-        method: "POST",
-      });
-      if (!res.ok) throw new Error("Failed to approve action");
-      return res.json();
-    },
-    onSuccess: (_, logId) => {
-      toast.success(`Action ${logId} approved successfully`, {
-        description: "Workflow execution has resumed.",
-      });
-      queryClient.invalidateQueries({ queryKey: ["audit-logs"] });
-      queryClient.invalidateQueries({ queryKey: ["audit-stats"] });
-    },
-    onError: (err: any) => {
-      toast.error("Failed to approve action", {
-        description: err.message,
-      });
-    },
-  });
-
-  // 4. Reject Mutation
-  const rejectMutation = useMutation({
-    mutationFn: async (logId: string) => {
-      const res = await fetch(`/api/audit-logs/${logId}/reject`, {
-        method: "POST",
-      });
-      if (!res.ok) throw new Error("Failed to reject action");
-      return res.json();
-    },
-    onSuccess: (_, logId) => {
-      toast.warning(`Action ${logId} rejected`, {
-        description: "The proposed mutation was safely halted.",
-      });
-      queryClient.invalidateQueries({ queryKey: ["audit-logs"] });
-      queryClient.invalidateQueries({ queryKey: ["audit-stats"] });
-    },
-    onError: (err: any) => {
-      toast.error("Failed to reject action", {
-        description: err.message,
-      });
-    },
-  });
+  // CC-2026-10-02-013 (disposition 1): the approve/reject mutations were
+  // removed — their endpoints were console.log stubs while the toasts claimed
+  // "Workflow execution has resumed." / "The proposed mutation was safely
+  // halted." Real Human-in-the-Loop approvals live in Command Center's
+  // Approval Queue (paused_for_approval runs).
 
   // 5. Handle Export CSV
   const handleExport = () => {
@@ -226,8 +184,6 @@ export default function Auditing() {
     switch (status) {
       case "success":
         return <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />;
-      case "requires_approval":
-        return <AlertTriangle className="w-5 h-5 text-amber-400 animate-pulse shrink-0" />;
       case "warning":
         return <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />;
       case "error":
@@ -243,12 +199,6 @@ export default function Auditing() {
         return (
           <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">
             Success
-          </Badge>
-        );
-      case "requires_approval":
-        return (
-          <Badge variant="outline" className="bg-amber-500/10 text-amber-400 border-amber-500/20 text-xs">
-            Requires Approval
           </Badge>
         );
       case "warning":
@@ -270,6 +220,29 @@ export default function Auditing() {
 
   const logs = logsData?.logs || [];
 
+  // CC-2026-10-02-013 (disposition 4): tri-state SAIF/PII display — absent,
+  // null, or evaluated:false policy checks must NOT render as PASSED / 0
+  // items. Only rows that actually recorded a check get a verdict.
+  const pc = selectedLog?.policyChecks;
+  const policyEvaluated = pc?.evaluated !== false && pc?.saifPassed != null;
+  const saifLabel = !policyEvaluated ? "Not evaluated" : pc?.saifPassed ? "PASSED" : "FLAGGED";
+  const piiLabel = !policyEvaluated ? "not evaluated" : `${pc?.piiDetected ?? 0} items`;
+
+  // CC-2026-10-02-013 (disposition 8): time-only rendering made rows from
+  // different days indistinguishable — show the date unless it's today.
+  const formatTimestamp = (ts: string) => {
+    const d = new Date(ts);
+    if (Number.isNaN(d.getTime())) return ts;
+    const time = d.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+    return d.toDateString() === new Date().toDateString()
+      ? time
+      : `${d.toLocaleDateString()} ${time}`;
+  };
+
   return (
     <DashboardLayout>
       <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-8">
@@ -285,7 +258,7 @@ export default function Auditing() {
                   System Auditing & Governance
                 </h1>
                 <p className="text-sm text-muted-foreground mt-0.5">
-                  SAIF policy enforcement, agent telemetry traces, and Human-in-the-Loop review log.
+                  SAIF policy enforcement, agent telemetry traces, and the compliance event log.
                 </p>
               </div>
             </div>
@@ -329,7 +302,7 @@ export default function Auditing() {
                 {isStatsLoading ? "..." : (statsData?.totalEvents24h ?? 0).toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                <span className="text-muted-foreground font-medium">events recorded</span>
+                <span className="text-muted-foreground font-medium">events in the last 24 hours</span>
               </p>
             </CardContent>
           </Card>
@@ -379,7 +352,7 @@ export default function Auditing() {
               <div className="text-2xl font-bold text-foreground">
                 {isStatsLoading ? "..." : statsData?.securityAlerts ?? 0}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Zero unhandled breaches</p>
+              <p className="text-xs text-muted-foreground mt-1">Error events in the last 24 hours</p>
             </CardContent>
           </Card>
         </div>
@@ -390,7 +363,6 @@ export default function Auditing() {
           <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-muted/40 border border-border/40">
             {[
               { id: "all", label: "All Events" },
-              { id: "requires_approval", label: "Pending Approval" },
               { id: "success", label: "Successful" },
               { id: "warning", label: "Warnings" },
               { id: "error", label: "Errors" },
@@ -413,13 +385,22 @@ export default function Auditing() {
           <div className="relative w-full md:w-72">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search agent, action, prompt..."
+              placeholder="Search action, agent, or message..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="pl-9 bg-card/40 border-border/60 text-xs h-9 focus-visible:ring-primary/40"
             />
           </div>
         </div>
+
+        {/* Approvals pointer — the approve/reject theater was removed with
+            CC-2026-10-02-013; real approvals live in Command Center. */}
+        <p className="text-xs text-muted-foreground">
+          Approvals for paused runs:{" "}
+          <a href="/command-center" className="text-primary hover:underline font-medium">
+            Command Center → Approval Queue
+          </a>
+        </p>
 
         {/* Audit Log Table with Top Horizontal Slider Bar */}
         <Card className="bg-card/40 backdrop-blur-md border-border/60 overflow-hidden shadow-sm flex flex-col">
@@ -551,13 +532,7 @@ export default function Auditing() {
                       <td className="px-6 py-4 whitespace-nowrap text-xs text-muted-foreground font-mono">
                         <div className="flex items-center gap-1.5">
                           <Clock className="w-3.5 h-3.5 text-muted-foreground/70" />
-                          {log.timestamp.includes("T")
-                            ? new Date(log.timestamp).toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                second: "2-digit",
-                              })
-                            : log.timestamp}
+                          {formatTimestamp(log.timestamp)}
                         </div>
                       </td>
 
@@ -592,40 +567,15 @@ export default function Auditing() {
                       </td>
 
                       <td className="px-6 py-4 text-right whitespace-nowrap sticky right-0 bg-card/95 backdrop-blur border-l border-border/40 shadow-[-6px_0_12px_rgba(0,0,0,0.08)] z-10 group-hover:bg-muted/40">
-                        {log.status === "requires_approval" ? (
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => approveMutation.mutate(log.id)}
-                              disabled={approveMutation.isPending}
-                              className="h-7 px-2.5 text-xs bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 hover:text-emerald-300"
-                            >
-                              <Check className="w-3.5 h-3.5 mr-1" />
-                              Approve
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => rejectMutation.mutate(log.id)}
-                              disabled={rejectMutation.isPending}
-                              className="h-7 px-2.5 text-xs bg-rose-500/10 border-rose-500/30 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300"
-                            >
-                              <X className="w-3.5 h-3.5 mr-1" />
-                              Reject
-                            </Button>
-                          </div>
-                        ) : (
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            onClick={() => setSelectedLog(log)}
-                            className="h-7 text-xs bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 gap-1.5 font-medium shadow-xs"
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                            Details
-                          </Button>
-                        )}
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => setSelectedLog(log)}
+                          className="h-7 text-xs bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 gap-1.5 font-medium shadow-xs"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          Details
+                        </Button>
                       </td>
                     </tr>
                   ))
@@ -697,14 +647,22 @@ export default function Auditing() {
                   <div className="grid grid-cols-2 gap-3 text-muted-foreground text-[11px]">
                     <div>
                       SAIF Guardrails:{" "}
-                      <span className="text-emerald-400 font-bold">
-                        {selectedLog.policyChecks?.saifPassed !== false ? "PASSED" : "FLAGGED"}
+                      <span
+                        className={`font-bold ${
+                          !policyEvaluated
+                            ? "text-muted-foreground"
+                            : pc?.saifPassed
+                              ? "text-emerald-400"
+                              : "text-rose-500"
+                        }`}
+                      >
+                        {saifLabel}
                       </span>
                     </div>
                     <div>
                       PII Detected:{" "}
-                      <span className="text-foreground font-bold">
-                        {selectedLog.policyChecks?.piiDetected || 0} items
+                      <span className={policyEvaluated ? "text-foreground font-bold" : "text-muted-foreground font-bold"}>
+                        {piiLabel}
                       </span>
                     </div>
                   </div>

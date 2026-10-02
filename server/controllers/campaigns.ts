@@ -8,6 +8,7 @@ import { workflowArtifacts, auditLogs } from "../schema";
  * Connected to SAL-01 Proposals & Contracts pipeline.
  */
 export async function dispatchCreBrief(req: Request, res: Response): Promise<void> {
+  const startedAt = Date.now();
   try {
     const { name, email, firm, territory = "Southern Nevada (Henderson / Apex / North Las Vegas)", notes } = req.body;
 
@@ -16,7 +17,7 @@ export async function dispatchCreBrief(req: Request, res: Response): Promise<voi
       return;
     }
 
-    const workspaceId = (req as any).workspaceId || "default-workspace";
+    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
     const briefId = `cre-brief-${Date.now()}`;
     
     // Generate Rich CRE Expansion Intelligence Brief
@@ -81,20 +82,32 @@ We have isolated 3 high-probability industrial and cleanroom expansion signals a
         } as any);
 
         await db.insert(auditLogs).values({
-          id: `aud_cre_${Date.now()}`,
           workspaceId,
-          agent: "Market-Marksman-CRE",
-          action: "SAL-01 CRE Brief Dispatch",
+          actionType: "SAL-01 CRE Brief Dispatch",
+          payloadIn: { source: "Market-Marksman-CRE", trigger: "cre_landing_page" },
+          payloadOut: {
+            message: `Dispatched Nevada CRE sample expansion brief to ${email} (${firm || "Independent"}).`,
+            briefId,
+            territory,
+            checksum,
+          },
           status: "success",
           model: "not-llm-dispatch",
-          latencyMs: 180,
-          tokensTotal: 740,
-          cost: "0.000740",
-          message: `Dispatched Nevada CRE sample expansion brief to ${email} (${firm || "Independent"}).`,
-          policyChecks: { saifPassed: true, piiDetected: 0, budgetThresholdPassed: true },
-          details: { briefId, territory, checksum },
+          // Measured handler wall time (was a hardcoded 180ms); the brief is
+          // a static template, so tokens/cost are honestly zero (were
+          // 740 / 0.000740 on a row claiming no LLM dispatch).
+          latencyMs: Date.now() - startedAt,
+          tokensTotal: 0,
+          cost: "0.000000",
+          policyChecks: {
+            evaluated: false,
+            saifPassed: null,
+            piiDetected: null,
+            budgetThresholdPassed: null,
+            note: "not-llm-dispatch",
+          },
           createdAt: new Date()
-        } as any);
+        });
       } catch (dbErr) {
         console.warn("[CRE Dispatch DB Warning]:", dbErr);
       }
@@ -120,6 +133,7 @@ We have isolated 3 high-probability industrial and cleanroom expansion signals a
  * Connected to SAL-01 Proposals & Contracts pipeline.
  */
 export async function dispatchMedSpaDiagnostic(req: Request, res: Response): Promise<void> {
+  const startedAt = Date.now();
   try {
     const { name, email, practiceName, monthlyInquiries = "50–150 leads/mo", phone } = req.body;
 
@@ -128,7 +142,7 @@ export async function dispatchMedSpaDiagnostic(req: Request, res: Response): Pro
       return;
     }
 
-    const workspaceId = (req as any).workspaceId || "default-workspace";
+    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001"; // uuid fallback — "default-workspace" cannot cast to workspace_id (CC-2026-10-02-013)
     const diagnosticId = `medspa-diag-${Date.now()}`;
 
     // Calculate Estimated Recovered Inquiries & Revenue
@@ -193,20 +207,31 @@ export async function dispatchMedSpaDiagnostic(req: Request, res: Response): Pro
         } as any);
 
         await db.insert(auditLogs).values({
-          id: `aud_medspa_${Date.now()}`,
           workspaceId,
-          agent: "MedSpa-Growth-Diagnostic",
-          action: "SAL-01 MedSpa Audit Dispatch",
+          actionType: "SAL-01 MedSpa Audit Dispatch",
+          payloadIn: { source: "MedSpa-Growth-Diagnostic", trigger: "medspa_landing_page" },
+          payloadOut: {
+            message: `Generated MedSpa speed-to-lead blueprint for ${practiceName || name} (${email}). Estimated recovery: $${estimatedMonthlyRecoveredRev}/mo.`,
+            diagnosticId,
+            practiceName,
+            checksum,
+          },
           status: "success",
           model: "not-llm-dispatch",
-          latencyMs: 195,
-          tokensTotal: 820,
-          cost: "0.000820",
-          message: `Generated MedSpa speed-to-lead blueprint for ${practiceName || name} (${email}). Estimated recovery: $${estimatedMonthlyRecoveredRev}/mo.`,
-          policyChecks: { saifPassed: true, piiDetected: 0, budgetThresholdPassed: true },
-          details: { diagnosticId, practiceName, checksum },
+          // Measured handler wall time (was a hardcoded 195ms); static
+          // blueprint — tokens/cost honestly zero (were 820 / 0.000820).
+          latencyMs: Date.now() - startedAt,
+          tokensTotal: 0,
+          cost: "0.000000",
+          policyChecks: {
+            evaluated: false,
+            saifPassed: null,
+            piiDetected: null,
+            budgetThresholdPassed: null,
+            note: "not-llm-dispatch",
+          },
           createdAt: new Date()
-        } as any);
+        });
       } catch (dbErr) {
         console.warn("[MedSpa Dispatch DB Warning]:", dbErr);
       }
@@ -232,6 +257,7 @@ export async function dispatchMedSpaDiagnostic(req: Request, res: Response): Pro
  * Books and initializes the Founder Signal System 5-Day Sprint Diagnostic.
  */
 export async function bookFounderSprint(req: Request, res: Response): Promise<void> {
+  const startedAt = Date.now();
   try {
     const { name, email, company, icp, primaryGoal } = req.body;
 
@@ -240,7 +266,7 @@ export async function bookFounderSprint(req: Request, res: Response): Promise<vo
       return;
     }
 
-    const workspaceId = (req as any).workspaceId || "default-workspace";
+    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001"; // uuid fallback — "default-workspace" cannot cast to workspace_id (CC-2026-10-02-013)
     const sprintId = `sprint-intake-${Date.now()}`;
 
     const sprintDossier = `# Founder Signal System 5-Day Sprint Intake
@@ -293,20 +319,31 @@ export async function bookFounderSprint(req: Request, res: Response): Promise<vo
         } as any);
 
         await db.insert(auditLogs).values({
-          id: `aud_sprint_${Date.now()}`,
           workspaceId,
-          agent: "Founder-Signal-Concierge",
-          action: "SAL-01 Founder Sprint Intake",
+          actionType: "SAL-01 Founder Sprint Intake",
+          payloadIn: { source: "Founder-Signal-Concierge", trigger: "sprint_landing_page" },
+          payloadOut: {
+            message: `Founder Signal System 5-Day Sprint diagnostic booked by ${name} (${email}, ${company || "Founder"}).`,
+            sprintId,
+            company,
+            checksum,
+          },
           status: "success",
           model: "not-llm-dispatch",
-          latencyMs: 160,
-          tokensTotal: 690,
-          cost: "0.000690",
-          message: `Founder Signal System 5-Day Sprint diagnostic booked by ${name} (${email}, ${company || "Founder"}).`,
-          policyChecks: { saifPassed: true, piiDetected: 0, budgetThresholdPassed: true },
-          details: { sprintId, company, checksum },
+          // Measured handler wall time (was a hardcoded 160ms); static intake
+          // — tokens/cost honestly zero (were 690 / 0.000690).
+          latencyMs: Date.now() - startedAt,
+          tokensTotal: 0,
+          cost: "0.000000",
+          policyChecks: {
+            evaluated: false,
+            saifPassed: null,
+            piiDetected: null,
+            budgetThresholdPassed: null,
+            note: "not-llm-dispatch",
+          },
           createdAt: new Date()
-        } as any);
+        });
       } catch (dbErr) {
         console.warn("[Sprint Intake DB Warning]:", dbErr);
       }

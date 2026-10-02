@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { desc, eq, and, sql } from "drizzle-orm";
+import { desc, eq, and, gte, sql } from "drizzle-orm";
 import { getDb } from "../db";
 import { auditLogs, workflowRuns } from "../schema";
 
@@ -82,6 +82,10 @@ export async function getAuditStats(req: Request, res: Response): Promise<void> 
 
     // Honest defaults: zero means zero. No invented events, alerts, cost, or
     // compliance percentage when the database has nothing to count.
+    // CC-2026-10-02-013 (dispositions 2, 3, 7): the 24h fields are now
+    // computed over a real 24-hour window — previously totalEvents24h counted
+    // ALL time, securityAlerts was a never-assigned constant, and
+    // totalCost24h was a hardcoded "0.000000".
     let totalEvents24h = 0;
     let pendingReviews = 0;
     let securityAlerts = 0;
@@ -104,13 +108,40 @@ export async function getAuditStats(req: Request, res: Response): Promise<void> 
           pendingReviews = Number(pendingRunsCount.count);
         }
 
+        const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const eventsWindow = and(
+          eq(auditLogs.workspaceId, workspaceId),
+          gte(auditLogs.createdAt, dayAgo)
+        );
+
         const [eventsCount] = await db
           .select({ count: sql<number>`count(*)` })
           .from(auditLogs)
-          .where(eq(auditLogs.workspaceId, workspaceId));
+          .where(eventsWindow);
 
         if (eventsCount) {
           totalEvents24h = Number(eventsCount.count);
+        }
+
+        // Real security alerts: error-status audit rows in the same 24h
+        // window (was a constant 0 captioned "Zero unhandled breaches").
+        const [alertsCount] = await db
+          .select({ count: sql<number>`count(*)` })
+          .from(auditLogs)
+          .where(and(eventsWindow, eq(auditLogs.status, "error")));
+
+        if (alertsCount) {
+          securityAlerts = Number(alertsCount.count);
+        }
+
+        // Real 24h cost from persisted per-row costs.
+        const [costRow] = await db
+          .select({ total: sql<string>`coalesce(sum(${auditLogs.cost}), 0)` })
+          .from(auditLogs)
+          .where(eventsWindow);
+
+        if (costRow) {
+          totalCost24h = String(costRow.total);
         }
 
         // SAIF compliance rate computed from real policy checks; null (rendered
@@ -217,24 +248,8 @@ export async function exportAuditLogs(req: Request, res: Response): Promise<void
   }
 }
 
-export async function approveAuditAction(req: Request, res: Response): Promise<void> {
-  try {
-    const { id } = req.params;
-    // Log approval or resume run
-    console.log(`[Audit] Approved audit item / run: ${id}`);
-    res.status(200).json({ success: true, message: `Action ${id} approved by operator.` });
-  } catch (error: any) {
-    res.status(500).json({ error: "Failed to approve action" });
-  }
-}
-
-export async function rejectAuditAction(req: Request, res: Response): Promise<void> {
-  try {
-    const { id } = req.params;
-    // Log rejection or cancel run
-    console.log(`[Audit] Rejected audit item / run: ${id}`);
-    res.status(200).json({ success: true, message: `Action ${id} rejected by operator.` });
-  } catch (error: any) {
-    res.status(500).json({ error: "Failed to reject action" });
-  }
-}
+// CC-2026-10-02-013 (disposition 1): approveAuditAction / rejectAuditAction
+// were removed — they were console.log stubs that returned success while the
+// UI claimed "Workflow execution has resumed." The real Human-in-the-Loop
+// approval surface is Command Center's Approval Queue (paused_for_approval
+// runs), which is wired end to end.

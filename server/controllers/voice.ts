@@ -3,6 +3,10 @@ import { convertTextToSpeech, buildPamelaOutboundScript } from "../tools/elevenl
 import { getDb } from "../db";
 import { auditLogs } from "../schema";
 
+// Non-uuid fallbacks like "default-workspace" cannot cast to the uuid
+// workspace_id column — inserts silently failed (CC-2026-10-02-013).
+const DEFAULT_WORKSPACE_ID = "00000000-0000-0000-0000-000000000001";
+
 export interface VoiceBookingPayload {
   callerName: string;
   callerPhone: string;
@@ -78,6 +82,7 @@ export async function getAvailableVoiceSlots(_req: Request, res: Response) {
  * Enables Pamela / ElevenLabs Agent to confirm and lock in a meeting live with the caller.
  */
 export async function bookVoiceAppointment(req: Request, res: Response) {
+  const startedAt = Date.now();
   try {
     const body: VoiceBookingPayload = req.body;
     if (!body.callerPhone || !body.scheduledSlot) {
@@ -91,24 +96,30 @@ export async function bookVoiceAppointment(req: Request, res: Response) {
       const db = await getDb();
       if (db) {
         await db.insert(auditLogs).values({
-          id: `aud_vbk_${Date.now()}`,
-          workspaceId: (req as any).workspaceId || "default-workspace",
-          agent: "voice-agent:pamela",
-          action: "MID_CALL_APPOINTMENT_BOOKED",
-          status: "success",
-          model: "eleven_multilingual_v2",
-          latencyMs: 120,
-          tokensTotal: 0,
-          cost: "0.00",
-          message: `Mid-call appointment booked for ${body.callerPhone} on ${body.scheduledSlot}.`,
-          details: {
+          workspaceId: (req as any).workspaceId || DEFAULT_WORKSPACE_ID,
+          actionType: "MID_CALL_APPOINTMENT_BOOKED",
+          payloadIn: { source: "voice-agent:pamela" },
+          payloadOut: {
+            message: `Mid-call appointment booked for ${body.callerPhone} on ${body.scheduledSlot}.`,
             bookingRef,
             callerPhone: body.callerPhone,
             serviceInterest: body.serviceInterest,
             scheduledSlot: body.scheduledSlot,
           },
-          createdAt: new Date(),
-        } as any);
+          status: "success",
+          model: "eleven_multilingual_v2",
+          // Measured handler wall time (was a hardcoded 120ms).
+          latencyMs: Date.now() - startedAt,
+          tokensTotal: 0,
+          cost: "0.000000",
+          policyChecks: {
+            evaluated: false,
+            saifPassed: null,
+            piiDetected: null,
+            budgetThresholdPassed: null,
+            note: "voice-event-not-llm",
+          },
+        });
       }
     } catch (auditErr) {
       console.warn("[Voice Booking Audit Warning]:", auditErr);
@@ -131,6 +142,7 @@ export async function bookVoiceAppointment(req: Request, res: Response) {
  * Ingests call recordings, transcripts, and sentiment analysis from Pamela / ElevenLabs into the Results Vault & CRM.
  */
 export async function handleVoiceCallWebhook(req: Request, res: Response) {
+  const startedAt = Date.now();
   try {
     const payload: VoiceCallWebhookPayload = req.body;
     if (!payload.callId) {
@@ -141,17 +153,11 @@ export async function handleVoiceCallWebhook(req: Request, res: Response) {
       const db = await getDb();
       if (db) {
         await db.insert(auditLogs).values({
-          id: `aud_vwh_${Date.now()}`,
-          workspaceId: (req as any).workspaceId || "default-workspace",
-          agent: "voice-agent:webhook",
-          action: "CALL_TRANSCRIPT_INGESTED",
-          status: "success",
-          model: "eleven_multilingual_v2",
-          latencyMs: 80,
-          tokensTotal: 0,
-          cost: "0.00",
-          message: `Call transcript and recording ingested for call ${payload.callId} (${payload.durationSeconds}s).`,
-          details: {
+          workspaceId: (req as any).workspaceId || DEFAULT_WORKSPACE_ID,
+          actionType: "CALL_TRANSCRIPT_INGESTED",
+          payloadIn: { source: "voice-agent:webhook" },
+          payloadOut: {
+            message: `Call transcript and recording ingested for call ${payload.callId} (${payload.durationSeconds}s).`,
             callId: payload.callId,
             callerNumber: payload.callerNumber,
             durationSeconds: payload.durationSeconds,
@@ -159,8 +165,20 @@ export async function handleVoiceCallWebhook(req: Request, res: Response) {
             sentiment: payload.sentiment,
             summary: payload.summary,
           },
-          createdAt: new Date(),
-        } as any);
+          status: "success",
+          model: "eleven_multilingual_v2",
+          // Measured handler wall time (was a hardcoded 80ms).
+          latencyMs: Date.now() - startedAt,
+          tokensTotal: 0,
+          cost: "0.000000",
+          policyChecks: {
+            evaluated: false,
+            saifPassed: null,
+            piiDetected: null,
+            budgetThresholdPassed: null,
+            note: "voice-event-not-llm",
+          },
+        });
       }
     } catch (auditErr) {
       console.warn("[Voice Webhook Audit Warning]:", auditErr);
@@ -183,6 +201,7 @@ export async function handleVoiceCallWebhook(req: Request, res: Response) {
  * Triggers Pamela or ElevenLabs Agent to initiate an outbound call sequence
  */
 export async function dispatchOutboundVoiceCall(req: Request, res: Response) {
+  const startedAt = Date.now();
   try {
     const { recipientPhone, leadName, companyName, campaignType } = req.body;
     if (!recipientPhone) {
@@ -201,24 +220,30 @@ export async function dispatchOutboundVoiceCall(req: Request, res: Response) {
       const db = await getDb();
       if (db) {
         await db.insert(auditLogs).values({
-          id: `aud_vout_${Date.now()}`,
-          workspaceId: (req as any).workspaceId || "default-workspace",
-          agent: "orchestrator:sal01",
-          action: "OUTBOUND_VOICE_CALL_DISPATCHED",
-          status: "success",
-          model: "eleven_multilingual_v2",
-          latencyMs: 95,
-          tokensTotal: 0,
-          cost: "0.00",
-          message: `Outbound call queued for ${recipientPhone} via Pamela voice engine.`,
-          details: {
+          workspaceId: (req as any).workspaceId || DEFAULT_WORKSPACE_ID,
+          actionType: "OUTBOUND_VOICE_CALL_DISPATCHED",
+          payloadIn: { source: "orchestrator:sal01" },
+          payloadOut: {
+            message: `Outbound call queued for ${recipientPhone} via Pamela voice engine.`,
             dispatchId,
             recipientPhone,
             campaignType,
             scriptPreview: script.substring(0, 100),
           },
-          createdAt: new Date(),
-        } as any);
+          status: "success",
+          model: "eleven_multilingual_v2",
+          // Measured handler wall time (was a hardcoded 95ms).
+          latencyMs: Date.now() - startedAt,
+          tokensTotal: 0,
+          cost: "0.000000",
+          policyChecks: {
+            evaluated: false,
+            saifPassed: null,
+            piiDetected: null,
+            budgetThresholdPassed: null,
+            note: "voice-event-not-llm",
+          },
+        });
       }
     } catch (auditErr) {
       console.warn("[Voice Dispatch Audit Warning]:", auditErr);

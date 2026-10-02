@@ -267,7 +267,7 @@ export const auditLogs = pgTable(
       onDelete: "set null",
     }),
     actionType: varchar("action_type", { length: 64 }).notNull(),
-    model: varchar("model", { length: 64 }).notNull().default("gemini-1.5-pro"),
+    model: varchar("model", { length: 64 }).notNull().default("not-llm-dispatch"),
     payloadIn: jsonb("payload_in").notNull(),
     payloadOut: jsonb("payload_out"),
     tokensPrompt: integer("tokens_prompt").notNull().default(0),
@@ -282,10 +282,15 @@ export const auditLogs = pgTable(
     cancelRequested: boolean("cancel_requested").notNull().default(false),
     cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
     billed: boolean("billed").notNull().default(false),
+    // CC-2026-10-02-013 (disposition 6): the default used to be an all-true
+    // pass ({saifPassed: true, piiDetected: 0, budgetThresholdPassed: true})
+    // — any writer omitting policy_checks recorded an unaudited "pass".
+    // The honest default is "not evaluated".
     policyChecks: jsonb("policy_checks").notNull().default({
-      saifPassed: true,
-      piiDetected: 0,
-      budgetThresholdPassed: true,
+      evaluated: false,
+      saifPassed: null,
+      piiDetected: null,
+      budgetThresholdPassed: null,
     }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()

@@ -482,6 +482,17 @@ export async function ensureDatabaseSchema(): Promise<void> {
       ALTER TABLE "workflow_share_tokens" ALTER COLUMN "last_accessed_at" SET NOT NULL;
     `;
 
+    // CC-2026-10-02-013 (disposition 6): audit_logs column defaults must not
+    // pre-install a pass. model used to default to the retired
+    // gemini-1.5-pro; policy_checks used to default to an all-true
+    // {saifPassed: true, piiDetected: 0, budgetThresholdPassed: true}, so any
+    // writer omitting the column recorded an unaudited "pass" in the
+    // compliance trail. The honest default is "not evaluated".
+    await client`
+      ALTER TABLE "audit_logs" ALTER COLUMN "model" SET DEFAULT 'not-llm-dispatch';
+      ALTER TABLE "audit_logs" ALTER COLUMN "policy_checks" SET DEFAULT '{"evaluated":false,"saifPassed":null,"piiDetected":null,"budgetThresholdPassed":null}'::jsonb;
+    `;
+
     // CC-2026-09-25-011: Ops Agent chat persistence. The conversation lived
     // in React state only and died on every refresh; messages are now
     // workspace-scoped rows keyed by a client-generated thread id.

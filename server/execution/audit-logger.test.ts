@@ -1,20 +1,27 @@
 import { describe, it, expect, vi } from "vitest";
 import { insertAuditLog, type AuditLogValues } from "./audit-logger";
+import { auditLogs } from "../schema";
 
 type Call = Record<string, unknown>;
 
 // Minimal drizzle-shaped db double: insert(table).values(row) with a
-// scripted error sequence, recording every attempted row.
+// scripted error sequence, recording every attempted row AND table.
 function makeDb(errors: unknown[]) {
   const calls: Call[] = [];
+  const tables: unknown[] = [];
   const values = vi.fn(async (v: Call) => {
     calls.push(v);
     const err = errors[calls.length - 1];
     if (err) throw err;
     return undefined;
   });
-  const db = { insert: vi.fn(() => ({ values })) };
-  return { db, calls };
+  const db = {
+    insert: vi.fn((table: unknown) => {
+      tables.push(table);
+      return { values };
+    }),
+  };
+  return { db, calls, tables };
 }
 
 const baseLog: AuditLogValues = {
@@ -41,6 +48,23 @@ const rawFkError = Object.assign(
 );
 
 describe("insertAuditLog", () => {
+  it("inserts against the real audit_logs table object — never a string (CC-2026-10-02-013)", async () => {
+    // Production bug this pins: db.insert("audit_logs") made drizzle
+    // dereference undefined table symbols and throw "Cannot read properties
+    // of undefined (reading 'workspaceId')" — swallowed into `return false`,
+    // so no agent_step_execution row was ever written. The string form is
+    // invisible to a mock that accepts any argument; this asserts identity.
+    const { db, tables } = makeDb([rawFkError, null]);
+
+    const ok = await insertAuditLog(db as any, baseLog);
+
+    expect(ok).toBe(true);
+    expect(tables).toHaveLength(2);
+    expect(tables[0]).toBe(auditLogs);
+    expect(tables[1]).toBe(auditLogs);
+    expect(tables[0]).not.toBe("audit_logs");
+  });
+
   it("returns true and forwards values on a clean insert", async () => {
     const { db, calls } = makeDb([null]);
     const ok = await insertAuditLog(db, baseLog);

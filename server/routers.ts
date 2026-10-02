@@ -7,7 +7,6 @@ import { stripeRouter, adminRouter } from "./stripe/router";
 import { opsCleanupRouter } from "./ops-cleanup/router";
 import { hubspotRouter } from "./hubspot/router";
 import { settingsRouter } from "./settings/router";
-import { auditingRouter } from "./auditing/router";
 import { founderIntakeRouter } from "./founder-intake/router";
 import { discountRouter } from "./discounts/router";
 import { newsletterRouter } from "./newsletter/router";
@@ -39,7 +38,6 @@ export const appRouter = router({
   opsCleanup: opsCleanupRouter,
   hubspot: hubspotRouter,
   settings: settingsRouter,
-  auditing: auditingRouter,
   founderIntake: founderIntakeRouter,
   newsletter: newsletterRouter,
   blog: blogRouter,

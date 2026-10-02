@@ -66,8 +66,6 @@ import {
   getAuditLogs,
   getAuditStats,
   exportAuditLogs,
-  approveAuditAction,
-  rejectAuditAction,
 } from "../controllers/audit";
 import {
   listArtifacts,
@@ -263,8 +261,9 @@ apiRouter.post("/sync/all", handleManualSync);
 apiRouter.get("/audit-logs", getAuditLogs);
 apiRouter.get("/audit-logs/stats", getAuditStats);
 apiRouter.get("/audit-logs/export", exportAuditLogs);
-apiRouter.post("/audit-logs/:id/approve", approveAuditAction);
-apiRouter.post("/audit-logs/:id/reject", rejectAuditAction);
+// CC-2026-10-02-013: POST /audit-logs/:id/approve|reject removed — they were
+// stubs that logged to console and returned success without touching any
+// run. Approvals live in Command Center's Approval Queue.
 
 // ==============================================================================
 // Workflow Artifacts, Output Assets & Content Calendar

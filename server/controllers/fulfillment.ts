@@ -20,6 +20,7 @@ export interface CustomerPurchasePayload {
  * and enrolls the customer into an authenticated M365/HubSpot retention flow.
  */
 export async function ingestCustomerPurchase(req: Request, res: Response): Promise<void> {
+  const startedAt = Date.now();
   try {
     const {
       customerName,
@@ -37,7 +38,7 @@ export async function ingestCustomerPurchase(req: Request, res: Response): Promi
       return;
     }
 
-    const workspaceId = (req as any).workspaceId || "default-workspace";
+    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001"; // uuid fallback — "default-workspace" cannot cast to workspace_id (CC-2026-10-02-013)
     const onboardingId = `onb_${Date.now().toString(36)}_${crypto.randomBytes(3).toString("hex")}`;
     const txId = transactionId || `tx_${Date.now().toString(36)}`;
 
@@ -95,20 +96,33 @@ export async function ingestCustomerPurchase(req: Request, res: Response): Promi
         } as any);
 
         await db.insert(auditLogs).values({
-          id: `aud_onb_${Date.now()}`,
           workspaceId,
-          agent: "Fulfillment-Swarm-Node",
-          action: "FUL-01 Customer Onboarding & Retention Dispatch",
+          actionType: "FUL-01 Customer Onboarding & Retention Dispatch",
+          payloadIn: { source: "Fulfillment-Swarm-Node", trigger: "purchase_ingest" },
+          payloadOut: {
+            message: `Autonomous onboarding completed for ${customerEmail} ($${amount} ${currency} via ${source}).`,
+            onboardingId,
+            txId,
+            customerEmail,
+            productPurchased,
+            checksum,
+          },
           status: "success",
           model: "not-llm-dispatch",
-          latencyMs: 14,
-          tokensTotal: 480,
-          cost: "0.000480",
-          message: `Autonomous onboarding completed for ${customerEmail} ($${amount} ${currency} via ${source}).`,
-          policyChecks: { saifPassed: true, piiDetected: 0, budgetThresholdPassed: true },
-          details: { onboardingId, txId, customerEmail, productPurchased, checksum },
+          // Measured handler wall time (was a hardcoded 14ms); onboarding is
+          // deterministic — tokens/cost honestly zero (were 480 / 0.000480).
+          latencyMs: Date.now() - startedAt,
+          tokensTotal: 0,
+          cost: "0.000000",
+          policyChecks: {
+            evaluated: false,
+            saifPassed: null,
+            piiDetected: null,
+            budgetThresholdPassed: null,
+            note: "not-llm-dispatch",
+          },
           createdAt: new Date()
-        } as any);
+        });
       }
     } catch (dbErr) {
       console.warn("[Onboarding Ingest DB Warning]:", dbErr);
