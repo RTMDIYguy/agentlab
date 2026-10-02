@@ -1,6 +1,6 @@
 import { param } from "./params";
 import type { Request, Response } from "express";
-import { eq, desc, and, asc } from "drizzle-orm";
+import { eq, desc, and, asc, sql } from "drizzle-orm";
 import { getDb } from "../db";
 import {
   workflowRuns,
@@ -92,7 +92,15 @@ export async function listRuns(req: Request, res: Response): Promise<void> {
       .orderBy(desc(workflowRuns.createdAt))
       .limit(50);
 
-    res.status(200).json({ runs });
+    // Additive total: the rows above are capped at 50, so any "total" derived
+    // from runs.length silently froze past 50 (Dashboard audit finding,
+    // CC-2026-10-02-007 disposition 12). Existing consumers read `runs` only.
+    const [countRow] = await db
+      .select({ total: sql<number>`count(*)::int` })
+      .from(workflowRuns)
+      .where(eq(workflowRuns.workspaceId, workspaceId));
+
+    res.status(200).json({ runs, total: countRow?.total ?? runs.length });
   } catch (error) {
     console.error("[Runs Controller Error]:", error);
     res.status(500).json({ error: "Failed to list runs" });

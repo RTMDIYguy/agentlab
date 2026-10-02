@@ -20,9 +20,7 @@ import {
   GitMerge, 
   Clock, 
   CheckCircle2, 
-  Sparkles, 
-  ShieldAlert, 
-  Calendar,
+  Sparkles,  ShieldAlert,
   HelpCircle,
   ArrowRight,
   Info,
@@ -49,10 +47,9 @@ import {
   MessageSquare,
   Film
 } from "lucide-react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { useAuth } from "@/_core/hooks/useAuth";
 import { RunInspectorModal } from "@/components/RunInspectorModal";
 
 type ViewportTheme = "cyber" | "tropical" | "space" | "tron";
@@ -60,12 +57,7 @@ type ViewportTheme = "cyber" | "tropical" | "space" | "tron";
 export default function Dashboard() {
   const [, navigate] = useLocation();
   const setLocation = navigate;
-  const [activeTab, setActiveTab] = useState("overview");
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
-  const [showExtensionModal, setShowExtensionModal] = useState(false);
   const [showDowngradePolicy, setShowDowngradePolicy] = useState(false);
-  const [extensionReason, setExtensionReason] = useState("Testing autonomous swarm DAGs & Beta Apps");
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
   
   // Cockpit Viewport Theme (persisted in localStorage)
@@ -79,7 +71,7 @@ export default function Dashboard() {
     toast.success(`Cockpit Viewport switched to ${theme.toUpperCase()}`);
   };
 
-  const { data: runsData, isLoading: isLoadingRuns } = useQuery<{ runs: any[] }>({
+  const { data: runsData, isLoading: isLoadingRuns } = useQuery<{ runs: any[]; total?: number }>({
     queryKey: ["runs"],
     queryFn: async () => {
       const res = await fetch("/api/runs");
@@ -89,7 +81,7 @@ export default function Dashboard() {
     refetchInterval: 5000,
   });
 
-  const { data: workflowsData, isLoading: isLoadingWorkflows } = useQuery<{ workflows: any[] }>({
+  const { data: workflowsData, isLoading: isLoadingWorkflows, isError: isErrorWorkflows } = useQuery<{ workflows: any[] }>({
     queryKey: ["workflows"],
     queryFn: async () => {
       const res = await fetch("/api/workflows");
@@ -109,18 +101,13 @@ export default function Dashboard() {
     refetchInterval: 5000,
   });
 
-  // Fetch 30-day Trial Status
+  // Trial status (DEMO — the card carries a demo marker until the
+  // entitlements rollout makes trials real; audit CC-2026-10-02-007 item 11).
   const { data: trialData } = useQuery<{
-    success: boolean;
     plan: string;
     totalTrialDays: number;
     daysRemaining: number;
     trialEndDate: string;
-    canExtend: boolean;
-    downgradePolicy: {
-      retained: string[];
-      paused: string[];
-    };
   }>({
     queryKey: ["trial-status"],
     queryFn: async () => {
@@ -131,34 +118,36 @@ export default function Dashboard() {
     refetchInterval: 30000,
   });
 
-  // Extend Trial Mutation
-  const extendTrialMutation = useMutation({
-    mutationFn: async (reason: string) => {
-      const res = await fetch("/api/trials/extend", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reason }),
-      });
-      if (!res.ok) throw new Error("Failed to extend trial");
-      return res.json();
-    },
-    onSuccess: (data) => {
-      toast.success("Trial Extended by +14 Days! 🎉", {
-        description: `Your trial is now active until ${data.daysRemaining} days from now.`,
-      });
-      setShowExtensionModal(false);
-      queryClient.invalidateQueries({ queryKey: ["trial-status"] });
-    },
-    onError: () => {
-      toast.error("Failed to extend trial period");
-    }
-  });
+  // NOTE: the Extend-Trial mutation/modal was removed (CC-2026-10-02-007,
+  // disposition 11-B): its backend kept extensions in a process-local Map
+  // wiped on every deploy. The demo card shows status only.
 
-  const totalRuns = runsData?.runs?.length || 0;
-  const activeRuns = runsData?.runs?.filter(r => r.status === "running" || r.status === "pending_approval")?.length || 0;
+  // Real total from the server — rows are capped at LIMIT 50, so runs.length
+  // silently froze this number past 50 runs (audit finding, disposition 12).
+  const totalRuns = runsData?.total ?? runsData?.runs?.length ?? 0;
+  // "paused_for_approval" is the real schema vocabulary; the previous
+  // "pending_approval" matched nothing, hiding approval-waiting runs.
+  const activeRuns = runsData?.runs?.filter(r => r.status === "running" || r.status === "paused_for_approval")?.length || 0;
   const totalWorkflows = workflowsData?.workflows?.length || 0;
   const agentsList = agentsData?.agents || [];
   const activeAgents = agentsList.filter(a => a.status === "active")?.length || 0;
+  const workflowNameById = new Map(
+    (workflowsData?.workflows || []).map((w: any) => [w.id, w.name])
+  );
+  // "Autopilot" is real iff at least one workflow is armed on the schedule
+  // trigger — execution/scheduler.ts polls exactly those rows.
+  const autopilotArmed = (workflowsData?.workflows || []).some(
+    (w: any) => w.triggerType === "schedule"
+  );
+  // Live status breakdown for the Swarm Nodes gauge caption.
+  const agentStatusSummary =
+    (["active", "idle", "error", "paused"] as const)
+      .map((s) => {
+        const n = agentsList.filter((a: any) => a.status === s).length;
+        return n > 0 ? `${n} ${s}` : null;
+      })
+      .filter(Boolean)
+      .join(" · ") || "no nodes";
 
   const daysRemaining = trialData?.daysRemaining ?? 18;
   const totalTrialDays = trialData?.totalTrialDays ?? 30;
@@ -327,9 +316,17 @@ export default function Dashboard() {
       color: "text-primary bg-primary/10 border-primary/20",
       icon: Plug,
       category: "Custom Tool",
+      connected: dbItem.status === "active",
     }));
 
   const allDisplayIntegrations = [...canonicalIntegrationList, ...customIntegrations];
+
+  // Badge honesty (CC-2026-10-02-007, disposition 7): only states we
+  // actually track may say CONNECTED — HubSpot comes from live telemetry,
+  // custom rows from their DB status. Everything else is a launch link,
+  // not a claimed live connection.
+  const integrationConnected = (item: any) =>
+    item.id === "hubspot" ? !!telemetry?.hubspot.connected : !!item.connected;
 
   // Dynamic Viewport Background Styles
   const getViewportBackground = () => {
@@ -397,10 +394,25 @@ export default function Dashboard() {
                   <h1 className="text-xl font-black tracking-tight gradient-heading">
                     COMMAND FLIGHT DECK
                   </h1>
-                  <Badge className="bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 text-[10px] font-mono tracking-widest uppercase gap-1 px-2 py-0.5">
-                    <Radio className="w-3 h-3 animate-ping text-cyan-400" />
-                    AUTOPILOT ENGAGED
-                  </Badge>
+                  {!isLoadingWorkflows && (
+                    autopilotArmed ? (
+                      <Badge
+                        className="bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 text-[10px] font-mono tracking-widest uppercase gap-1 px-2 py-0.5"
+                        title="At least one workflow is armed on the schedule trigger"
+                      >
+                        <Radio className="w-3 h-3 animate-ping text-cyan-400" />
+                        AUTOPILOT ENGAGED
+                      </Badge>
+                    ) : (
+                      <Badge
+                        className="bg-zinc-500/20 text-muted-foreground border border-border/60 text-[10px] font-mono tracking-widest uppercase gap-1 px-2 py-0.5"
+                        title="No workflow is armed on the schedule trigger — runs are dispatched manually"
+                      >
+                        <Radio className="w-3 h-3 text-muted-foreground" />
+                        MANUAL MODE
+                      </Badge>
+                    )
+                  )}
                 </div>
                 <p className="text-xs text-muted-foreground font-mono mt-0.5">
                   Nodes Online: <span className="text-foreground font-bold">{activeAgents}</span> • Last Step Latency: <span className="text-cyan-400 font-semibold">{telemetry?.llm.lastStepLatencyMs != null ? `${telemetry.llm.lastStepLatencyMs}ms` : "not reported"}</span>
@@ -487,7 +499,9 @@ export default function Dashboard() {
                   </h2>
                 </div>
                 <p className="text-xs text-muted-foreground font-mono mt-0.5">
-                  6 active intelligence nodes synchronized via PostgreSQL state machine & Drizzle ORM
+                  {isLoadingAgents
+                    ? "Loading node roster…"
+                    : `${agentsList.length} intelligence node${agentsList.length === 1 ? "" : "s"} synchronized via PostgreSQL state machine & Drizzle ORM`}
                 </p>
               </div>
 
@@ -512,36 +526,59 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* 6 Swarm Pods Visualizer */}
+            {/* Swarm Pods Visualizer — real roster from the agents table
+                (name, role, live status; task counts computed from run
+                history by getAgents — CC-2026-09-23-014) */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pt-4">
-              {[
-                { name: "Alpha-Node-01", role: "Master Orchestrator", status: "Active", tasks: 24, glow: "border-cyan-400/50 text-cyan-400" },
-                { name: "Coder-Agent-07", role: "Full-Stack Tech 1", status: "Active", tasks: 19, glow: "border-indigo-400/50 text-indigo-400" },
-                { name: "Tech-Node-08", role: "Infrastructure Tech 2", status: "Active", tasks: 14, glow: "border-purple-400/50 text-purple-400" },
-                { name: "SDR-Writer-02", role: "Lead Gen & SDR", status: "Active", tasks: 31, glow: "border-emerald-400/50 text-emerald-400" },
-                { name: "Auditor-Bot-9", role: "Compliance Auditor", status: "Active", tasks: 42, glow: "border-amber-400/50 text-amber-400" },
-                { name: "Workflow-Planner-04", role: "Schema Architect", status: "Active", tasks: 16, glow: "border-blue-400/50 text-blue-400" },
-              ].map((node, i) => (
-                <div 
-                  key={node.name}
-                  className="relative p-3 rounded-xl bg-card/60 border border-white/10 hover:border-cyan-400/60 transition-all duration-300 group hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,243,255,0.15)]"
-                >
-                  <div className="flex items-center justify-between pb-1.5">
-                    <span className="text-[10px] font-mono text-muted-foreground">NODE 0{i+1}</span>
-                    <div className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
-                  </div>
-                  <div className="font-bold text-xs text-foreground tracking-tight truncate group-hover:text-cyan-300 transition-colors">
-                    {node.name}
-                  </div>
-                  <div className="text-[11px] text-muted-foreground truncate font-sans">
-                    {node.role}
-                  </div>
-                  <div className="mt-2 pt-2 border-t border-border/40 flex items-center justify-between text-[10px] font-mono">
-                    <span className="text-muted-foreground">Tasks:</span>
-                    <span className="text-cyan-300 font-bold">{node.tasks}</span>
-                  </div>
+              {isLoadingAgents ? (
+                <div className="col-span-full py-4 text-center text-xs text-muted-foreground font-mono">
+                  Querying node roster…
                 </div>
-              ))}
+              ) : agentsList.length === 0 ? (
+                <div className="col-span-full py-4 text-center text-xs text-muted-foreground">
+                  No compute nodes registered for this workspace yet.
+                </div>
+              ) : (
+                agentsList.map((node: any, i: number) => {
+                  const statusDot: Record<string, string> = {
+                    active: "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse",
+                    idle: "bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.6)]",
+                    error: "bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]",
+                    paused: "bg-zinc-500",
+                  };
+                  const statusGlow: Record<string, string> = {
+                    active: "hover:border-cyan-400/60",
+                    idle: "hover:border-cyan-400/40",
+                    error: "hover:border-rose-400/60",
+                    paused: "hover:border-zinc-400/60",
+                  };
+                  const s = node.status || "idle";
+                  return (
+                    <div
+                      key={node.id}
+                      className={`relative p-3 rounded-xl bg-card/60 border border-white/10 ${statusGlow[s] || ""} transition-all duration-300 group hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,243,255,0.15)]`}
+                    >
+                      <div className="flex items-center justify-between pb-1.5">
+                        <span className="text-[10px] font-mono text-muted-foreground">NODE 0{i + 1}</span>
+                        <div
+                          className={`h-2 w-2 rounded-full ${statusDot[s] || "bg-zinc-500"}`}
+                          title={s}
+                        />
+                      </div>
+                      <div className="font-bold text-xs text-foreground tracking-tight truncate group-hover:text-cyan-300 transition-colors">
+                        {node.name}
+                      </div>
+                      <div className="text-[11px] text-muted-foreground truncate font-sans">
+                        {node.role}
+                      </div>
+                      <div className="mt-2 pt-2 border-t border-border/40 flex items-center justify-between text-[10px] font-mono">
+                        <span className="text-muted-foreground">Tasks:</span>
+                        <span className="text-cyan-300 font-bold">{node.tasksCompleted ?? 0}</span>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
 
@@ -557,10 +594,17 @@ export default function Dashboard() {
                 <div className="flex flex-wrap items-center gap-2.5">
                   <Badge variant="default" className="bg-primary hover:bg-primary text-primary-foreground gap-1.5 px-2.5 py-0.5 text-xs font-semibold shadow-[0_0_12px_rgba(59,130,246,0.4)]">
                     <Sparkles className="w-3.5 h-3.5" />
-                    {trialData?.plan || "Ownable OS Pro Trial"}
+                    {trialData?.plan || "AgentLab OS Pro Trial"}
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className="gap-1 bg-amber-500/10 text-amber-400 border-amber-500/40 text-[10px] font-mono uppercase"
+                    title="Demo element: trial tracking is not yet enforced — dates are illustrative until the entitlements rollout."
+                  >
+                    Demo
                   </Badge>
                   <span className="text-xs font-mono text-muted-foreground">
-                    Trial ends on: <strong className="text-foreground">{trialData?.trialEndDate || "2026-09-21"}</strong>
+                    Trial ends on: <strong className="text-foreground">{trialData?.trialEndDate || "—"}</strong>
                   </span>
                 </div>
 
@@ -585,6 +629,9 @@ export default function Dashboard() {
                       style={{ width: `${progressPercent}%` }}
                     />
                   </div>
+                  <p className="text-[11px] text-muted-foreground font-mono pt-0.5">
+                    Demo data: trial dates are illustrative — entitlement enforcement ships with the billing/entitlements rollout.
+                  </p>
                 </div>
               </div>
 
@@ -597,14 +644,6 @@ export default function Dashboard() {
                   className="text-xs border-border/70 hover:bg-muted/60 font-mono"
                 >
                   Downgrade Policy
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => setShowExtensionModal(true)}
-                  className="text-xs bg-primary hover:bg-primary/90 text-primary-foreground font-semibold gap-1.5 shadow-[0_0_15px_rgba(59,130,246,0.4)]"
-                >
-                  <Calendar className="w-3.5 h-3.5" />
-                  Extend Trial (+14 Days)
                 </Button>
               </div>
             </div>
@@ -655,10 +694,10 @@ export default function Dashboard() {
                 <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Swarm Nodes</span>
                 <Cpu className="h-4 w-4 text-cyan-400" />
               </div>
-              <div className="text-3xl font-black text-cyan-300 tracking-tight font-mono">{activeAgents} <span className="text-sm font-normal text-muted-foreground">/ 6</span></div>
+              <div className="text-3xl font-black text-cyan-300 tracking-tight font-mono">{isLoadingAgents ? "-" : activeAgents} <span className="text-sm font-normal text-muted-foreground">/ {isLoadingAgents ? "-" : agentsList.length}</span></div>
               <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                2 Techs, 1 SDR, 1 Auditor, 1 Planner
+                {isLoadingAgents ? "Loading roster…" : agentStatusSummary}
               </p>
             </div>
 
@@ -793,11 +832,29 @@ export default function Dashboard() {
                 <div className="flex items-center justify-between p-3 rounded-xl bg-card/60 border border-white/5">
                   <div>
                     <p className="text-xs font-bold font-mono text-foreground">Active Workflows & DAG Queues</p>
-                    <p className="text-[11px] text-muted-foreground">Available packages: {isLoadingWorkflows ? "-" : totalWorkflows} • Active runs: {activeRuns}</p>
+                    <p className="text-[11px] text-muted-foreground">Workflows: {isLoadingWorkflows ? "-" : totalWorkflows} • Active runs: {activeRuns}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge className="bg-cyan-500/20 text-cyan-400 text-[10px] font-mono">SYNCED</Badge>
-                    <div className="h-2.5 w-2.5 bg-cyan-500 rounded-full shadow-[0_0_8px_rgba(0,243,255,0.8)]" />
+                    <Badge
+                      className={`text-[10px] font-mono ${
+                        isErrorWorkflows
+                          ? "bg-rose-500/20 text-rose-400"
+                          : isLoadingWorkflows
+                            ? "bg-zinc-500/20 text-muted-foreground"
+                            : "bg-cyan-500/20 text-cyan-400"
+                      }`}
+                    >
+                      {isErrorWorkflows ? "FETCH ERROR" : isLoadingWorkflows ? "SYNCING" : "SYNCED"}
+                    </Badge>
+                    <div
+                      className={`h-2.5 w-2.5 rounded-full ${
+                        isErrorWorkflows
+                          ? "bg-rose-500"
+                          : isLoadingWorkflows
+                            ? "bg-zinc-500"
+                            : "bg-cyan-500 shadow-[0_0_8px_rgba(0,243,255,0.8)]"
+                      }`}
+                    />
                   </div>
                   </div>
               </div>
@@ -823,7 +880,7 @@ export default function Dashboard() {
                   <PlayCircle className="mr-2 h-4 w-4 text-cyan-400" /> Command Center (Active DAGs)
                 </Button>
                 <Button className="w-full justify-start text-xs h-10 font-mono bg-card/80 border border-indigo-500/30 hover:border-indigo-400/60 hover:bg-indigo-500/10 text-indigo-300" variant="outline" onClick={() => navigate("/agents")}>
-                  <Cpu className="mr-2 h-4 w-4 text-indigo-400" /> Swarm Compute Nodes (6 Nodes)
+                  <Cpu className="mr-2 h-4 w-4 text-indigo-400" /> Swarm Compute Nodes ({agentsList.length} Nodes)
                 </Button>
                 <Button className="w-full justify-start text-xs h-10 font-mono bg-card/80 border border-border/80 hover:border-primary/50 hover:bg-primary/10" variant="outline" onClick={() => navigate("/marketplace")}>
                   <GitMerge className="mr-2 h-4 w-4 text-primary" /> Ecosystem Marketplace & Apps
@@ -991,9 +1048,18 @@ export default function Dashboard() {
                         <p className="text-[10px] text-muted-foreground font-mono">{item.type}</p>
                       </div>
                     </div>
-                    <Badge className="bg-emerald-500/20 text-emerald-400 text-[9px] font-mono border-emerald-500/30 shrink-0">
-                      CONNECTED
-                    </Badge>
+                    {integrationConnected(item) ? (
+                      <Badge className="bg-emerald-500/20 text-emerald-400 text-[9px] font-mono border-emerald-500/30 shrink-0">
+                        CONNECTED
+                      </Badge>
+                    ) : (
+                      <Badge
+                        className="bg-zinc-500/20 text-muted-foreground text-[9px] font-mono border-border/60 shrink-0"
+                        title="Saved launch link — the OS does not track this tool's live connection state."
+                      >
+                        LINK
+                      </Badge>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-2 pt-1 border-t border-border/40">
@@ -1102,7 +1168,7 @@ export default function Dashboard() {
                         </Badge>
                         <div>
                           <div className="font-semibold text-xs text-foreground group-hover:text-cyan-300 transition-colors">
-                            {run.workflow?.name || run.workflowId || `Workflow Run ${run.id.slice(0, 8)}`}
+                            {run.workflow?.name || workflowNameById.get(run.workflowId) || run.workflowId || `Workflow Run ${run.id.slice(0, 8)}`}
                           </div>
                           <div className="text-[11px] text-muted-foreground font-mono mt-0.5">
                             Run ID: {run.id.slice(0, 12)}... • Started: {new Date(run.startedAt || run.createdAt || Date.now()).toLocaleTimeString()}
@@ -1134,75 +1200,7 @@ export default function Dashboard() {
           runId={selectedRunId}
           open={Boolean(selectedRunId)}
           onOpenChange={(open) => !open && setSelectedRunId(null)}
-        />
-
-        {/* Trial Extension Modal */}
-        <Dialog open={showExtensionModal} onOpenChange={setShowExtensionModal}>
-          <DialogContent className="max-w-md bg-card border-border/80">
-            <DialogHeader>
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-primary/15 border border-primary/30 flex items-center justify-center text-primary">
-                  <Calendar className="w-4 h-4" />
-                </div>
-                <div>
-                  <DialogTitle className="text-base font-bold">
-                    Extend Your Pro Trial (+14 Days)
-                  </DialogTitle>
-                  <DialogDescription className="text-xs">
-                    Continue building and testing your autonomous workflows with full Pro entitlements.
-                  </DialogDescription>
-                </div>
-              </div>
-            </DialogHeader>
-
-            <div className="space-y-3 pt-2 text-xs">
-              <div className="p-3 rounded-lg bg-muted/40 border border-border/60">
-                <span className="font-semibold text-foreground">Why are you extending?</span>
-                <div className="mt-2 space-y-1.5">
-                  {[
-                    "Testing autonomous swarm DAGs & Beta Apps",
-                    "Evaluating 7-Department knowledge playbooks with team",
-                    "Participating in Founder Beta feedback program"
-                  ].map((reason) => (
-                    <label key={reason} className="flex items-center gap-2 text-muted-foreground hover:text-foreground cursor-pointer">
-                      <input 
-                        type="radio" 
-                        name="extensionReason" 
-                        value={reason} 
-                        checked={extensionReason === reason} 
-                        onChange={() => setExtensionReason(reason)} 
-                        className="accent-primary" 
-                      />
-                      <span>{reason}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 shrink-0" />
-                <span>Instant 1-click activation. No credit card required.</span>
-              </div>
-            </div>
-
-            <DialogFooter className="gap-2 sm:gap-0">
-              <Button variant="ghost" size="sm" onClick={() => setShowExtensionModal(false)} className="text-xs">
-                Cancel
-              </Button>
-              <Button
-                size="sm"
-                disabled={extendTrialMutation.isPending}
-                onClick={() => extendTrialMutation.mutate(extensionReason)}
-                className="text-xs bg-primary hover:bg-primary/90 text-primary-foreground font-semibold gap-1.5 shadow"
-              >
-                <Calendar className="w-3.5 h-3.5" />
-                {extendTrialMutation.isPending ? "Extending..." : "Activate +14 Days"}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {/* Graceful Downgrade Policy Modal */}
+        />        {/* Graceful Downgrade Policy Modal */}
         <Dialog open={showDowngradePolicy} onOpenChange={setShowDowngradePolicy}>
           <DialogContent className="max-w-lg bg-card border-border/80">
             <DialogHeader>
@@ -1223,7 +1221,7 @@ export default function Dashboard() {
 
             <div className="space-y-4 pt-2 text-xs">
               <p className="text-muted-foreground leading-relaxed">
-                If your 30-day Pro Trial ends and you choose not to subscribe to the <strong>Ownable OS ($500/mo)</strong>, your workspace is <strong>never locked or deleted</strong>. Instead, it transitions smoothly to the Free Tier:
+                If your 30-day Pro Trial ends and you choose not to subscribe to the <strong>Ownable OS ($149/mo)</strong>, your workspace is <strong>never locked or deleted</strong>. Instead, it transitions smoothly to the Free Tier:
               </p>
 
               <div className="space-y-2">
@@ -1250,6 +1248,10 @@ export default function Dashboard() {
                   <li>Live Beta Ecosystem App integration connectors.</li>
                 </ul>
               </div>
+
+              <p className="text-[11px] text-muted-foreground border-t border-border/40 pt-2">
+                Policy note: the free-tier limits above are our stated downgrade policy and are not yet technically enforced — enforcement ships with the billing/entitlements rollout.
+              </p>
             </div>
 
             <DialogFooter className="gap-2 sm:gap-0">
