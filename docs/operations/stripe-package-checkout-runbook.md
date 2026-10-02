@@ -65,7 +65,9 @@ Unknown subscription ids are a logged no-op — never a guess.
 
 ## Production checklist
 
-- [ ] `STRIPE_SECRET_KEY` (live) + endpoint `https://<host>/api/stripe/webhook` registered in the Stripe dashboard with the five events above (or CLI forward for smoke)
-- [ ] `STRIPE_WEBHOOK_SECRET` for that endpoint in Infisical (prod env)
-- [ ] First real purchase of one package → confirm product/price auto-created and reused on the second purchase
-- [ ] Confirm `past_due`/`canceled` transitions in the Stripe test before relying on them live
+- [x] Endpoint `https://agentlab-ckkstfvrea-uc.a.run.app/api/stripe/webhook` registered in Stripe (endpoint `we_1UM9XtKAbfp5cgEr2uNOUkbc`, 2026-10-02) with all six events: the five below plus `checkout.session.completed`.
+- [x] `STRIPE_WEBHOOK_SECRET` set — note: **prod Infisical env is EMPTY**; prod secrets live as Cloud Run service env vars (set via `gcloud run deploy --update-env-vars`).
+- [x] First catalog creation proven live (2026-10-02): `prod_sal_456` + one active $149/mo price, created by a real subscribe call — zero manual cataloging, no duplicates.
+- [ ] Second purchase reuses the active price (happens on the next organic purchase; verify in Stripe dashboard → Products).
+- [ ] Confirm `past_due`/`canceled` transitions on a real subscription (test clock + failing card per event map above).
+- [ ] One organic Stripe→app delivery observed in the dashboard (endpoint enabled + signature path proven by self-signed probe; first real event closes the loop).
