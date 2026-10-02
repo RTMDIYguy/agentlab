@@ -14,6 +14,9 @@ import { serveStatic, setupVite } from "./vite";
 import {
   constructWebhookEvent,
   handleCheckoutSessionCompleted,
+  handleInvoicePaymentFailed,
+  handleInvoicePaymentSucceeded,
+  handleSubscriptionDeleted,
 } from "../stripe/webhook";
 import { registerAICoachesWebhookRoutes } from "../aicoaches/webhook";
 import { apiRouter } from "../routes/api";
@@ -134,6 +137,29 @@ async function startServer() {
         switch (event.type) {
           case "checkout.session.completed":
             await handleCheckoutSessionCompleted(event.data.object as any);
+            break;
+          // Delayed payment methods (bank transfer, card later): the session
+          // completes unpaid and provisioning happens only when the money
+          // actually lands — same handler, payment_status now "paid".
+          case "checkout.session.async_payment_succeeded":
+            await handleCheckoutSessionCompleted(event.data.object as any);
+            break;
+          case "checkout.session.async_payment_failed":
+            console.error(
+              `[Webhook] Async payment FAILED for session ${(event.data.object as any)?.id}; package not unlocked.`
+            );
+            break;
+          // Subscription lifecycle (CC-2026-10-02-003): keep
+          // workspace_packages.status truthful — renewal paid → active,
+          // renewal failed → past_due, subscription ended → canceled.
+          case "invoice.payment_failed":
+            await handleInvoicePaymentFailed(event.data.object as any);
+            break;
+          case "invoice.payment_succeeded":
+            await handleInvoicePaymentSucceeded(event.data.object as any);
+            break;
+          case "customer.subscription.deleted":
+            await handleSubscriptionDeleted(event.data.object as any);
             break;
           default:
             console.log(`[Webhook] Unhandled event type: ${event.type}`);

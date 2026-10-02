@@ -4,6 +4,87 @@ import { eq, and } from "drizzle-orm";
 import { getDb } from "../db";
 import { knowledgePackages, workspacePackages, workflows, workflowSteps, auditLogs } from "../schema";
 import Stripe from "stripe";
+import { createPackageCheckoutSession } from "../stripe/checkout";
+
+type Db = Awaited<ReturnType<typeof getDb>>;
+
+/**
+ * Ensure the knowledge_packages row exists before any workspace_packages
+ * insert (FK: workspace_packages.package_id → knowledge_packages.id).
+ * Seeds from the canonical catalog when the entry is known but the row
+ * was never persisted. No-op for unknown ids — the caller decides what
+ * to do with those.
+ */
+export async function ensureKnowledgePackage(db: Db, packageId: string): Promise<void> {
+  const existing = await db
+    .select()
+    .from(knowledgePackages)
+    .where(eq(knowledgePackages.id, packageId))
+    .limit(1);
+  if (existing.length > 0) return;
+
+  const match = CANONICAL_KNOWLEDGE_PACKAGES.find(p => p.id === packageId);
+  if (!match) return;
+
+  await db.insert(knowledgePackages).values({
+    id: match.id,
+    name: match.name,
+    description: match.description,
+    departmentCode: match.departmentCode,
+    monthlyPrice: match.monthlyPrice,
+    stripeProductId: match.stripeProductId,
+  });
+}
+
+/**
+ * Price context for a package: live DB row first, canonical catalog
+ * fallback. monthlyPrice 0 (or unknown id) = free.
+ */
+export async function getPackageCommerceContext(
+  db: Db | null | undefined,
+  packageId: string
+): Promise<{
+  productName: string;
+  monthlyPrice: number;
+  stripeProductId: string | null;
+}> {
+  let pkgRow:
+    | { name: string; monthlyPrice: string; stripeProductId: string | null }
+    | undefined;
+  if (db) {
+    try {
+      const rows = await db
+        .select()
+        .from(knowledgePackages)
+        .where(eq(knowledgePackages.id, packageId))
+        .limit(1);
+      pkgRow = rows[0];
+    } catch (err) {
+      console.warn("[Marketplace] Package lookup failed, using canonical catalog:", err);
+    }
+  }
+  const canonical = CANONICAL_KNOWLEDGE_PACKAGES.find(p => p.id === packageId);
+  return {
+    productName: pkgRow?.name || canonical?.name || packageId,
+    monthlyPrice: Number(pkgRow?.monthlyPrice ?? canonical?.monthlyPrice ?? 0),
+    stripeProductId: pkgRow?.stripeProductId || canonical?.stripeProductId || null,
+  };
+}
+
+/**
+ * Who may grant a paid package without paying when Stripe is configured:
+ * the godmode workspace, admin role, or the operator identity — the
+ * comp/partner grant path. Everyone else goes through /subscribe.
+ */
+function isPrivilegedGranter(req: Request, workspaceId: string): boolean {
+  const user = (req as any).user;
+  return (
+    workspaceId === "00000000-0000-0000-0000-000000000000" ||
+    user?.role === "admin" ||
+    user?.name === "Thebossrob" ||
+    user?.username === "bossrob"
+  );
+}
 
 export const CANONICAL_KNOWLEDGE_PACKAGES = [
   {
@@ -442,6 +523,27 @@ export async function mountPlaybook(req: Request, res: Response): Promise<void> 
     const id = param(req, "id");
 
     const db = await getDb();
+
+    // Payment gate (CC-2026-10-02-003): with Stripe configured, paid
+    // packages no longer activate through mount — buyers go
+    // /subscribe → Checkout Session → webhook provisioning. Free
+    // packages, local dev (no STRIPE_SECRET_KEY), and privileged grants
+    // (admin/godmode comps) are exempt.
+    const commerce = await getPackageCommerceContext(db, id);
+    if (
+      process.env.STRIPE_SECRET_KEY &&
+      commerce.monthlyPrice > 0 &&
+      !isPrivilegedGranter(req, workspaceId)
+    ) {
+      res.status(402).json({
+        error: "payment_required",
+        message: `${commerce.productName} is a paid package ($${commerce.monthlyPrice}/mo). Subscribe to unlock it.`,
+        packageId: id,
+        checkoutEndpoint: `/api/marketplace/packages/${id}/subscribe`,
+      });
+      return;
+    }
+
     if (db) {
       try {
         const existing = await db
@@ -622,8 +724,85 @@ export async function getPackages(req: Request, res: Response): Promise<void> {
   return getMarketplaceItems(req, res);
 }
 
+/**
+ * POST /marketplace/packages/:packageId/subscribe
+ *
+ * Paid packages with STRIPE_SECRET_KEY configured go through a real Stripe
+ * Checkout Session carrying { workspaceId, packageId } in metadata — the
+ * webhook (server/stripe/webhook.ts) provisions on payment. Free packages
+ * and local dev (no Stripe key) keep the Phase 11 direct-activation path.
+ * A checkout failure NEVER falls back to a free grant: that would be a
+ * payment bypass, so it returns an honest 502 instead.
+ */
 export async function subscribeToPackage(req: Request, res: Response): Promise<void> {
-  return mountPlaybook(req, res);
+  try {
+    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
+    const packageId = param(req, "packageId");
+    if (!packageId) {
+      res.status(400).json({ error: "packageId is required" });
+      return;
+    }
+
+    // Price context: live DB row first, canonical catalog as fallback.
+    const db = await getDb();
+    const { productName, monthlyPrice, stripeProductId } = await getPackageCommerceContext(
+      db,
+      packageId
+    );
+
+    // Local dev (no key) and free packages activate directly — no money path.
+    if (!process.env.STRIPE_SECRET_KEY || !(monthlyPrice > 0)) {
+      if (!process.env.STRIPE_SECRET_KEY) {
+        console.warn(
+          `[Marketplace] STRIPE_SECRET_KEY not set — activating ${packageId} directly (local dev path).`
+        );
+      }
+      // mountPlaybook reads param(req, "id"); this route names it packageId.
+      req.params.id = packageId;
+      return mountPlaybook(req, res);
+    }
+
+    // Pre-create the catalog row so the webhook's FK insert cannot fail.
+    // Non-fatal: the webhook re-runs the same ensure on delivery.
+    if (db) {
+      try {
+        await ensureKnowledgePackage(db, packageId);
+      } catch (err) {
+        console.warn("[Marketplace] Could not pre-create package row; webhook will retry:", err);
+      }
+    }
+
+    const body = (req.body || {}) as Record<string, unknown>;
+    const user = (req as any).user;
+    const origin =
+      (req.headers.origin as string) || process.env.APP_ORIGIN || "https://agentlab.manus.space";
+
+    const checkoutUrl = await createPackageCheckoutSession({
+      workspaceId,
+      packageId,
+      productName,
+      monthlyPrice,
+      stripeProductId,
+      priceId: typeof body.priceId === "string" && body.priceId ? body.priceId : undefined,
+      customerEmail: user?.email || undefined,
+      successUrl: `${origin}/marketplace?checkout=success&packageId=${encodeURIComponent(packageId)}`,
+      cancelUrl: `${origin}/marketplace?checkout=canceled&packageId=${encodeURIComponent(packageId)}`,
+    });
+
+    res.status(200).json({
+      success: true,
+      mode: "stripe",
+      checkoutUrl,
+      packageId,
+      workspaceId,
+    });
+  } catch (error: any) {
+    console.error("[Marketplace] Subscribe checkout error:", error);
+    res.status(502).json({
+      error: "Failed to create checkout session",
+      detail: error?.message || "unknown error",
+    });
+  }
 }
 
 // In-memory store for beta enrollments & trial extensions

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/DashboardLayout";
@@ -183,6 +183,68 @@ export default function Marketplace() {
       });
     },
   });
+
+  // 4b. Subscribe (paid packages → Stripe Checkout; free/dev → direct activation)
+  const subscribeMutation = useMutation({
+    mutationFn: async (playbookId: string) => {
+      const res = await fetch(`/api/marketplace/packages/${playbookId}/subscribe`, {
+        method: "POST",
+      });
+      const data = await res.json().catch(() => ({} as any));
+      if (!res.ok) {
+        throw new Error(
+          data?.detail || data?.message || data?.error || "Failed to start checkout"
+        );
+      }
+      return data as { success?: boolean; checkoutUrl?: string; mode?: string };
+    },
+    onSuccess: (data, playbookId) => {
+      if (data?.checkoutUrl) {
+        // Hand the buyer to Stripe; provisioning happens via webhook on payment.
+        window.location.href = data.checkoutUrl;
+        return;
+      }
+      // No Stripe key (local dev) or free package: server activated directly.
+      toast.success("Playbook activated", {
+        description: `${playbookId} is now active in your workspace.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["marketplace-items"] });
+    },
+    onError: (err: any) => {
+      toast.error("Could not start checkout", {
+        description: err.message,
+      });
+    },
+  });
+
+  // Route an unmounted playbook: paid → Stripe checkout, free → direct mount.
+  const activatePlaybook = (item: MarketplaceItem) => {
+    if (Number(item.monthlyPrice ?? 0) > 0) {
+      subscribeMutation.mutate(item.id);
+    } else {
+      mountMutation.mutate(item.id);
+    }
+  };
+
+  // Return from Stripe Checkout (?checkout=success|canceled&packageId=...)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get("checkout");
+    if (!status) return;
+    const pkgId = params.get("packageId") || "Your package";
+    if (status === "success") {
+      toast.success("Payment received", {
+        description: `${pkgId} activates as soon as Stripe confirms the payment — this page refreshes automatically.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["marketplace-items"] });
+    } else if (status === "canceled") {
+      toast.info("Checkout canceled", {
+        description: "No charge was made and your workspace is unchanged.",
+      });
+    }
+    window.history.replaceState({}, "", window.location.pathname);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 5. Unmount Playbook Mutation
   const unmountMutation = useMutation({
@@ -477,6 +539,26 @@ export default function Marketplace() {
                         </Button>
                       )}
 
+                      {/* Godmode test purchase: the owner must be able to
+                          exercise the buyer journey even though godmode
+                          already owns every package. */}
+                      {isGodmode &&
+                        item.category === "playbooks" &&
+                        Number(item.monthlyPrice ?? 0) > 0 && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            disabled={
+                              subscribeMutation.isPending || mountMutation.isPending
+                            }
+                            className="h-8 text-xs text-muted-foreground hover:text-foreground px-2 gap-1"
+                            onClick={() => subscribeMutation.mutate(item.id)}
+                            title="Stripe test-mode purchase path (godmode only)"
+                          >
+                            🧪 Test Buy
+                          </Button>
+                        )}
+
                       {item.category === "books" && (
                         <Button
                           size="sm"
@@ -492,7 +574,11 @@ export default function Marketplace() {
 
                       <Button
                         size="sm"
-                        disabled={mountMutation.isPending || unmountMutation.isPending}
+                        disabled={
+                          mountMutation.isPending ||
+                          unmountMutation.isPending ||
+                          subscribeMutation.isPending
+                        }
                         className={`h-8 text-xs font-medium gap-1.5 shadow-sm ${
                           item.isMounted
                             ? "bg-emerald-600 hover:bg-emerald-700 text-white"
@@ -514,7 +600,7 @@ export default function Marketplace() {
                               });
                               setLocation("/command-center");
                             } else {
-                              mountMutation.mutate(item.id);
+                              activatePlaybook(item);
                             }
                           }
                         }}
@@ -543,8 +629,17 @@ export default function Marketplace() {
                           </>
                         ) : (
                           <>
-                            <Layers className="w-3.5 h-3.5" />
-                            Mount to Workspace
+                            {Number(item.monthlyPrice ?? 0) > 0 ? (
+                              <>
+                                <ShoppingBag className="w-3.5 h-3.5" />
+                                Subscribe · {item.price}
+                              </>
+                            ) : (
+                              <>
+                                <Layers className="w-3.5 h-3.5" />
+                                Mount to Workspace
+                              </>
+                            )}
                           </>
                         )}
                       </Button>
@@ -793,12 +888,14 @@ export default function Marketplace() {
                 <Button
                   size="sm"
                   onClick={() => {
-                    if (selectedPlaybook) mountMutation.mutate(selectedPlaybook.id);
+                    if (selectedPlaybook) activatePlaybook(selectedPlaybook);
                     setSelectedPlaybook(null);
                   }}
                   className="text-xs bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
                 >
-                  Mount to Workspace
+                  {Number(selectedPlaybook?.monthlyPrice ?? 0) > 0
+                    ? `Subscribe · ${selectedPlaybook?.price}`
+                    : "Mount to Workspace"}
                 </Button>
               )}
               <Button variant="ghost" size="sm" onClick={() => setSelectedPlaybook(null)} className="text-xs">
@@ -847,10 +944,10 @@ export default function Marketplace() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => mountMutation.mutate(p.id)}
+                        onClick={() => activatePlaybook(p)}
                         className="h-6 text-[10px] px-2 border-primary/40 text-primary hover:bg-primary/10"
                       >
-                        Mount
+                        {Number(p.monthlyPrice ?? 0) > 0 ? "Subscribe" : "Mount"}
                       </Button>
                     )}
                   </div>
