@@ -79,6 +79,16 @@ interface MarketplaceItem {
   gumroadUrl?: string;
 }
 
+// Mounts that really provision the 6-step Founder Signal workflow
+// (server: mountPlaybook FSS branch). Everything else only flips entitlement.
+const FSS_MOUNT_IDS = ["pkg-founder-signal", "mkt-playbook", "fss-playbook"];
+
+// CC-017 (disposition 6): roadmap apps have no live launch target — they
+// render inert instead of navigating to "#".
+function isRoadmapItem(item: MarketplaceItem): boolean {
+  return item.status?.startsWith("Roadmap") || item.launchUrl === "#";
+}
+
 export default function Marketplace() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
@@ -89,8 +99,6 @@ export default function Marketplace() {
   const [showEntitlementsModal, setShowEntitlementsModal] = useState(false);
   const [showBetaOverviewModal, setShowBetaOverviewModal] = useState(false);
   const [betaEnrollApp, setBetaEnrollApp] = useState<MarketplaceItem | null>(null);
-
-  const isGodmode = user?.role === "admin" || (user as any)?.name === "Thebossrob" || (user as any)?.username === "bossrob";
 
   // 1. Fetch live marketplace items
   const { data: marketplaceData, isLoading, refetch, isRefetching } = useQuery<{
@@ -133,12 +141,22 @@ export default function Marketplace() {
     },
   });
 
+  // CC-017 (disposition 7): godmode criteria now come from the server's real
+  // check (god workspace / authenticated admin) instead of client-side name
+  // matching that disagreed with the API. Falls back to the auth role while
+  // the beta query is still loading.
+  const isGodmode = betaData?.isGodmode ?? user?.role === "admin";
+
   // 3. Beta Enrollment Mutation
   const enrollBetaMutation = useMutation({
     mutationFn: async (appId: string) => {
       const res = await fetch(`/api/beta/enroll/${appId}`, { method: "POST" });
-      if (!res.ok) throw new Error("Failed to enroll in beta");
-      return res.json();
+      const data = await res.json().catch(() => ({} as any));
+      if (!res.ok) {
+        // Surface the server's real reason (e.g. the 403 tier gate with tier/XP context).
+        throw new Error(data?.message || "Failed to enroll in beta");
+      }
+      return data;
     },
     onSuccess: (data) => {
       toast.success("Enrolled in Beta Program! 🎉", {
@@ -157,8 +175,10 @@ export default function Marketplace() {
         }
       }
     },
-    onError: () => {
-      toast.error("Failed to enroll in beta program");
+    onError: (err: any) => {
+      toast.error("Could not enroll in beta program", {
+        description: err?.message,
+      });
     }
   });
 
@@ -172,8 +192,13 @@ export default function Marketplace() {
       return res.json();
     },
     onSuccess: (_, playbookId) => {
-      toast.success("Playbook Mounted Successfully", {
-        description: `DAG workflows for ${playbookId} are now unlocked and active in Command Center.`,
+      // CC-017 (disposition 2): say what mount actually does — an
+      // entitlement unlock; workflow provisioning is named only for the
+      // FSS family, which is the only mount that creates workflows.
+      toast.success("Playbook Entitlement Activated", {
+        description: FSS_MOUNT_IDS.includes(playbookId)
+          ? `${playbookId} unlocked — the 6-step Founder Signal workflow was provisioned in Command Center.`
+          : `${playbookId} unlocked as a workspace entitlement — Command Center now gates this department's steps.`,
       });
       queryClient.invalidateQueries({ queryKey: ["marketplace-items"] });
     },
@@ -302,6 +327,13 @@ export default function Marketplace() {
       return;
     }
 
+    // 1b. CC-017 (disposition 6): roadmap apps are inert — no
+    // enroll-then-navigate-to-"#" dead end.
+    if (isRoadmapItem(item)) {
+      toast.info(`${item.name} is on the roadmap — coming soon.`);
+      return;
+    }
+
     // 2. Check Beta Entitlement for beta-only apps
     const isEnrolled = betaData?.enrolledApps?.includes(item.id);
     if (item.isBetaOnly && !isGodmode && !isEnrolled) {
@@ -356,9 +388,9 @@ export default function Marketplace() {
               className="gap-1.5 border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10 text-amber-500 text-xs shadow-sm"
             >
               <Award className="w-3.5 h-3.5" />
-              <span>{betaData?.currentTier || "Contributor (Tier 2)"}</span>
+              <span>{betaData?.currentTier || "Beta Tier…"}</span>
               <span className="ml-1 px-1.5 py-0.2 rounded bg-amber-500/20 text-[10px] font-mono">
-                {betaData?.betaPoints || 350} pts
+                {betaData ? `${betaData.betaPoints} pts` : "…"}
               </span>
             </Button>
 
@@ -366,6 +398,7 @@ export default function Marketplace() {
               variant="outline"
               size="sm"
               onClick={() => setLocation("/dashboard")}
+              title="Demo element: base trial dates are illustrative until the entitlements rollout (CC-008); beta reward extensions are real ledgered grants."
               className="gap-1.5 border-primary/30 text-primary text-xs hover:bg-primary/5"
             >
               <Clock className="w-3.5 h-3.5" />
@@ -423,6 +456,7 @@ export default function Marketplace() {
             {filteredItems.map((item) => {
               const isEnrolled = betaData?.enrolledApps?.includes(item.id);
               const isLockedBeta = item.isBetaOnly && !isGodmode && !isEnrolled;
+              const isRoadmap = isRoadmapItem(item);
 
               return (
                 <Card
@@ -496,11 +530,11 @@ export default function Marketplace() {
                       <div className="grid grid-cols-2 gap-2 p-2 rounded-lg bg-muted/40 border border-border/40 text-[11px] font-mono">
                         <div>
                           <span className="text-muted-foreground block text-[10px]">Automation</span>
-                          <span className="font-semibold text-emerald-400">{item.automationRate || "90%"}</span>
+                          <span className="font-semibold text-emerald-400">{item.automationRate || "—"}</span>
                         </div>
                         <div>
                           <span className="text-muted-foreground block text-[10px]">Time Saved</span>
-                          <span className="font-semibold text-foreground">{item.cycleTimeReduction || "5.0 hrs/wk"}</span>
+                          <span className="font-semibold text-foreground">{item.cycleTimeReduction || "—"}</span>
                         </div>
                       </div>
                     )}
@@ -577,7 +611,8 @@ export default function Marketplace() {
                         disabled={
                           mountMutation.isPending ||
                           unmountMutation.isPending ||
-                          subscribeMutation.isPending
+                          subscribeMutation.isPending ||
+                          (item.category === "apps" && isRoadmap)
                         }
                         className={`h-8 text-xs font-medium gap-1.5 shadow-sm ${
                           item.isMounted
@@ -611,7 +646,12 @@ export default function Marketplace() {
                             Read Book
                           </>
                         ) : item.category === "apps" ? (
-                          isLockedBeta ? (
+                          isRoadmap ? (
+                            <>
+                              <Clock className="w-3.5 h-3.5" />
+                              Roadmap — Coming Soon
+                            </>
+                          ) : isLockedBeta ? (
                             <>
                               <Lock className="w-3.5 h-3.5" />
                               Join Beta Access
@@ -659,15 +699,15 @@ export default function Marketplace() {
               Ownable OS Continuity & Workspace Tenancy
             </h3>
             <p className="text-xs text-muted-foreground max-w-2xl leading-relaxed">
-              All live applications and modular knowledge playbooks mount directly into your isolated client workspace (`workspace_id` tenancy).
-              Mounted DAG workflows immediately surface in the Command Center for automated dispatch and swarm execution.
+              Playbooks mount as isolated workspace entitlements (`workspace_id` tenancy) that gate department execution in Command Center.
+              The Founder Signal family additionally provisions its 6-step workflow for dispatch and swarm execution.
             </p>
           </div>
           <div className="flex items-center gap-3 shrink-0">
             <div className="text-right hidden sm:block">
               <span className="text-xs text-muted-foreground block">Active Entitlements</span>
               <span className="text-sm font-bold text-primary">
-                {marketplaceData?.mountedCount || 2} of {playbooks.length} Playbooks
+                {marketplaceData ? `${marketplaceData.mountedCount} of ${playbooks.length} Playbooks` : "…"}
               </span>
             </div>
             <Button
@@ -706,13 +746,19 @@ export default function Marketplace() {
               <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] uppercase font-mono tracking-wider text-amber-500/80 block">Your Current Status</span>
-                  <div className="text-base font-black text-amber-500">{betaData?.currentTier || "Contributor (Tier 2)"}</div>
+                  <div className="text-base font-black text-amber-500">{betaData?.currentTier || "—"}</div>
                   <div className="text-[11px] text-muted-foreground mt-0.5">
-                    {isGodmode ? "Full unfiltered access across all experimental apps and raw Python SDK nodes." : "You have access to Tier 1 and Tier 2 beta applications."}
+                    {isGodmode
+                      ? "Full unfiltered access across all experimental apps and raw Python SDK nodes."
+                      : (betaData?.tierLevel ?? 1) >= 3
+                      ? "Access to all beta application tiers."
+                      : (betaData?.tierLevel ?? 1) >= 2
+                      ? "You have access to Tier 1 and Tier 2 beta applications."
+                      : "You have access to Tier 1 (Explorer) beta applications."}
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-2xl font-black text-foreground">{betaData?.betaPoints || 350}</span>
+                  <span className="text-2xl font-black text-foreground">{betaData?.betaPoints ?? 0}</span>
                   <span className="text-[10px] text-muted-foreground block">Beta XP</span>
                 </div>
               </div>
@@ -727,7 +773,7 @@ export default function Marketplace() {
                   </div>
                   <div className="p-2.5 rounded-lg bg-card/60 border border-amber-500/30">
                     <span className="text-amber-500 font-bold block">2. Contributor</span>
-                    <span className="text-[10px] text-muted-foreground">Market Marksman, +14 Trial days on 5 tests</span>
+                    <span className="text-[10px] text-muted-foreground">Market Marksman, +14 Trial days at 5 enrollments</span>
                   </div>
                   <div className="p-2.5 rounded-lg bg-card/60 border border-purple-500/30">
                     <span className="text-purple-400 font-bold block">3. Alpha Insider</span>
@@ -796,7 +842,7 @@ export default function Marketplace() {
                   Beta Rewards & XP
                 </span>
                 <p className="text-muted-foreground text-[11px]">
-                  Testing this app and providing feedback automatically awards <strong>+50 Beta XP</strong> and unlocks <strong>+14 Days Pro Trial Extension</strong>!
+                  Enrolling awards <strong>+50 Beta XP</strong> on your workspace XP ledger. Some programs grant Pro Trial days on enrollment, and reaching <strong>5 enrolled programs</strong> unlocks a <strong>+14-day Pro Trial extension</strong>.
                 </p>
               </div>
             </div>
@@ -846,16 +892,16 @@ export default function Marketplace() {
 
                 <div className="grid grid-cols-3 gap-3 p-3 rounded-lg bg-card/60 border border-border/60 font-mono text-[11px]">
                   <div>
-                    <span className="text-muted-foreground block">DAG Workflows</span>
-                    <span className="font-bold text-foreground">{selectedPlaybook.workflowsCount || 8} Workflows</span>
+                    <span className="text-muted-foreground block">Entitlement</span>
+                    <span className="font-bold text-foreground">{selectedPlaybook.isMounted ? "Mounted" : "Not mounted"}</span>
                   </div>
                   <div>
                     <span className="text-muted-foreground block">Automation</span>
-                    <span className="font-bold text-emerald-400">{selectedPlaybook.automationRate || "90%"}</span>
+                    <span className="font-bold text-emerald-400">{selectedPlaybook.automationRate || "—"}</span>
                   </div>
                   <div>
                     <span className="text-muted-foreground block">Time Saved</span>
-                    <span className="font-bold text-foreground">{selectedPlaybook.cycleTimeReduction || "5.0 hrs/wk"}</span>
+                    <span className="font-bold text-foreground">{selectedPlaybook.cycleTimeReduction || "—"}</span>
                   </div>
                 </div>
 
@@ -865,7 +911,9 @@ export default function Marketplace() {
                     Command Center Integration
                   </div>
                   <p className="text-[11px] text-muted-foreground">
-                    Mounting this playbook provisions all associated DAG steps, human-in-the-loop review triggers, and model prompts directly into your workspace.
+                    {FSS_MOUNT_IDS.includes(selectedPlaybook.id)
+                      ? "Mounting provisions the 6-step Founder Signal workflow (with human-in-the-loop review triggers) directly into your workspace and unlocks the department entitlement."
+                      : "Mounting unlocks this playbook's department entitlement: Command Center gates that department's steps for this workspace. No new workflows are provisioned for this playbook."}
                   </p>
                 </div>
               </div>

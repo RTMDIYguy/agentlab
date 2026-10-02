@@ -1,12 +1,122 @@
 import { param } from "./params";
 import type { Request, Response } from "express";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { getDb } from "../db";
-import { knowledgePackages, workspacePackages, workflows, workflowSteps, auditLogs } from "../schema";
+import {
+  knowledgePackages,
+  workspacePackages,
+  workflows,
+  workflowSteps,
+  auditLogs,
+  betaEnrollments,
+  betaXpEvents,
+} from "../schema";
 import Stripe from "stripe";
 import { createPackageCheckoutSession } from "../stripe/checkout";
 
 type Db = Awaited<ReturnType<typeof getDb>>;
+
+// CC-2026-10-02-017 (dispositions 1 + 3): real identity and economy
+// constants for the beta subsystem.
+const GOD_WORKSPACE_ID = "00000000-0000-0000-0000-000000000000";
+const DEFAULT_WORKSPACE_ID = "00000000-0000-0000-0000-000000000001";
+// tenantMiddleware's legacy (no-Bearer) fallback assigns this placeholder
+// email — it must never count as an authenticated identity.
+const ANONYMOUS_EMAIL_PLACEHOLDER = "operator@agentlab.local";
+// Real XP economy: enrolling in a beta awards a persisted, ledgered grant.
+const BETA_XP_PER_ENROLLMENT = 50;
+// Tier thresholds derived from accumulated XP (was: the constants
+// 9999/350 returned unconditionally by getBetaStatus).
+// Contributor sits at 100 XP — exactly the two Tier-1 public betas
+// (50 XP each). The old fictional constant of 350 was unreachable for any
+// honest workspace: only ~4 catalog apps are enrollable below Tier 2, so
+// no real progression could ever cross it. Alpha Insider stays
+// aspirational (1500) — no live Tier-3 program exists yet.
+const BETA_TIERS = [
+  { level: 1, name: "Explorer (Tier 1)", minPoints: 0 },
+  { level: 2, name: "Contributor (Tier 2)", minPoints: 100 },
+  { level: 3, name: "Alpha Insider (Tier 3)", minPoints: 1500 },
+] as const;
+
+// Program catalog surfaced by getBetaStatus. Statuses are DERIVED at
+// request time (Active/Available/Locked) from the real ledger — never
+// hardcoded here.
+const BETA_PROGRAMS = [
+  {
+    id: "app-market-marksman-std",
+    name: "Market Marksman (Standard Beta)",
+    tierRequired: "Contributor (Tier 2)",
+    // Reworded: the old "+14 … on 5 Signal Tests" referenced a signal-test
+    // tracker that does not exist. The milestone now fires on 5 enrollments.
+    reward: "+14 Pro Trial Days at 5 Beta Enrollments",
+  },
+  {
+    id: "app-market-marksman-nv",
+    name: "Market Marksman (Nevada Edition)",
+    tierRequired: "Contributor (Tier 2)",
+    reward: "Nevada Corporate & Regulatory Signal Access",
+  },
+  {
+    id: "app-leadpulse",
+    name: "LeadPulse Beta",
+    tierRequired: "Explorer (Tier 1)",
+    // Reworded: no feedback channel is tracked; the +7 days now fire on
+    // enrollment (ENROLLMENT_TRIAL_DAY_GRANTS below).
+    reward: "+7 Pro Trial Days on enrollment",
+  },
+  {
+    id: "app-pulse-social",
+    name: "Pulse Social Beta",
+    tierRequired: "Explorer (Tier 1)",
+    reward: "Priority Generation Rate Limits",
+  },
+  {
+    id: "agentic-os-v2",
+    name: "Agentic OS v2 (Autonomous Swarms)",
+    tierRequired: "Alpha Insider (Tier 3)",
+    reward: "Direct Access to Multi-Agent Python SDK",
+  },
+] as const;
+
+// Trial-day rewards that actually extend trials (CC-017 Q1): granted as
+// beta_xp_events rows the moment the triggering enrollment happens.
+const ENROLLMENT_TRIAL_DAY_GRANTS: Record<string, number> = {
+  "app-leadpulse": 7,
+};
+const MILESTONE_ENROLLMENTS_FOR_TRIAL = 5;
+const MILESTONE_TRIAL_DAYS = 14;
+const MILESTONE_REASON = "Milestone: 5 beta program enrollments";
+const TRIAL_BASE_DAYS_REMAINING = 18; // illustrative base — see getTrialStatus note
+const TRIAL_EXTENSION_MAX_EXTRA_DAYS = 28;
+
+function tierForPoints(points: number) {
+  return [...BETA_TIERS].reverse().find(t => points >= t.minPoints) ?? BETA_TIERS[0];
+}
+
+/** Parse a catalog betaTierRequired string into a required tier level (0 = ungated). */
+function requiredTierLevel(betaTierRequired?: string): number {
+  if (!betaTierRequired) return 0;
+  if (betaTierRequired.includes("Tier 3")) return 3;
+  if (betaTierRequired.includes("Tier 2")) return 2;
+  if (betaTierRequired.includes("Tier 1")) return 1;
+  return 0; // "Public …" / ungated labels
+}
+
+/**
+ * Real godmode: the god workspace (GOD_MODE_EMAILS bearer tokens) or an
+ * authenticated admin from the tenant middleware. CC-2026-10-02-016 found the
+ * old `req.user?.role || "admin"` defaulted EVERY caller to admin because
+ * nothing in the server ever assigns req.user — live probes returned godmode
+ * to anonymous requests.
+ */
+function isBetaGodmode(req: Request, workspaceId: string): boolean {
+  return (
+    workspaceId === GOD_WORKSPACE_ID ||
+    (req.userRole === "admin" &&
+      !!req.userEmail &&
+      req.userEmail !== ANONYMOUS_EMAIL_PLACEHOLDER)
+  );
+}
 
 /**
  * Ensure the knowledge_packages row exists before any workspace_packages
@@ -77,12 +187,19 @@ export async function getPackageCommerceContext(
  * comp/partner grant path. Everyone else goes through /subscribe.
  */
 function isPrivilegedGranter(req: Request, workspaceId: string): boolean {
-  const user = (req as any).user;
+  // CC-2026-10-02-017 (disposition 3/Q3 fix): the old reads used
+  // (req as any).user — a field NOTHING in the server ever assigns — so all
+  // three identity checks were dead code and the effective gate was
+  // workspace-only. Now reads the tenant middleware's real fields. The
+  // anonymous placeholder email never counts, so unauthenticated callers
+  // remain non-privileged exactly as before.
+  const userRole = req.userRole;
+  const userEmail = req.userEmail;
   return (
-    workspaceId === "00000000-0000-0000-0000-000000000000" ||
-    user?.role === "admin" ||
-    user?.name === "Thebossrob" ||
-    user?.username === "bossrob"
+    workspaceId === GOD_WORKSPACE_ID ||
+    (userRole === "admin" &&
+      !!userEmail &&
+      userEmail !== ANONYMOUS_EMAIL_PLACEHOLDER)
   );
 }
 
@@ -488,12 +605,15 @@ export async function getMarketplaceItems(req: Request, res: Response): Promise<
       id: pkg.id,
       category: "playbooks",
       name: pkg.name,
-      department: `Dept ${pkg.departmentCode.toUpperCase()} • ${pkg.workflowsCount} DAG Workflows`,
+      department: `Dept ${pkg.departmentCode.toUpperCase()}`,
       departmentCode: pkg.departmentCode,
       price: `$${pkg.monthlyPrice}/mo`,
       monthlyPrice: pkg.monthlyPrice,
       description: pkg.description,
-      workflowsCount: pkg.workflowsCount,
+      // CC-017 (disposition 2): static per-department "N DAG Workflows"
+      // claims dropped — no per-department workflow table exists, and only
+      // the FSS family provisions workflows on mount. The client shows the
+      // real mount/entitlement state instead.
       automationRate: pkg.automationRate,
       cycleTimeReduction: pkg.cycleTimeReduction,
       iconName: "Layers",
@@ -518,6 +638,7 @@ export async function getMarketplaceItems(req: Request, res: Response): Promise<
 }
 
 export async function mountPlaybook(req: Request, res: Response): Promise<void> {
+  const mountStartedAt = Date.now(); // CC-017: measured latency for the audit row
   try {
     const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
     const id = param(req, "id");
@@ -643,7 +764,10 @@ export async function mountPlaybook(req: Request, res: Response): Promise<void> 
             await db.insert(workflowSteps).values(stepValues);
           }
 
-          // Record formal audit trail
+          // Record formal audit trail. CC-2026-10-02-017 (disposition 3):
+          // this is a non-LLM entitlement write — measured wall time, zero
+          // tokens/cost, and policy checks recorded as NOT evaluated (was
+          // hardcoded 270 tokens / $0.000150 / 120 ms on a not-llm row).
           await db.insert(auditLogs).values({
             workspaceId,
             workflowId: targetWfId,
@@ -651,13 +775,19 @@ export async function mountPlaybook(req: Request, res: Response): Promise<void> 
             model: "not-llm-dispatch",
             payloadIn: { packageId: id, triggeredAt: new Date().toISOString(), source: "Marketplace / FSS Portal" },
             payloadOut: { status: "active", workflowName: fssName, workflowId: targetWfId, totalSteps: 6 },
-            tokensPrompt: 180,
-            tokensCompletion: 90,
-            tokensTotal: 270,
-            cost: "0.000150",
-            latencyMs: 120,
+            tokensPrompt: 0,
+            tokensCompletion: 0,
+            tokensTotal: 0,
+            cost: "0.000000",
+            latencyMs: Date.now() - mountStartedAt,
             status: "success",
-            policyChecks: { saifPassed: true, piiDetected: 0, budgetThresholdPassed: true },
+            policyChecks: {
+              evaluated: false,
+              saifPassed: null,
+              piiDetected: null,
+              budgetThresholdPassed: null,
+              note: "not-llm-dispatch",
+            },
           });
         }
       } catch (dbErr) {
@@ -773,9 +903,20 @@ export async function subscribeToPackage(req: Request, res: Response): Promise<v
     }
 
     const body = (req.body || {}) as Record<string, unknown>;
-    const user = (req as any).user;
+    // CC-017 (disposition 8): read the tenant middleware's real identity —
+    // req.user is never assigned anywhere in the server, so this Stripe
+    // receipt email was silently undefined for every caller. The anonymous
+    // placeholder never reaches Stripe.
+    const customerEmail =
+      req.userEmail && req.userEmail !== ANONYMOUS_EMAIL_PLACEHOLDER
+        ? req.userEmail
+        : undefined;
     const origin =
-      (req.headers.origin as string) || process.env.APP_ORIGIN || "https://agentlab.manus.space";
+      (req.headers.origin as string) ||
+      process.env.APP_ORIGIN ||
+      // CC-017 (disposition 7): was the stale "https://agentlab.manus.space".
+      // Fall back to the host that actually served this request.
+      `${req.protocol}://${req.get("host")}`;
 
     const checkoutUrl = await createPackageCheckoutSession({
       workspaceId,
@@ -784,7 +925,7 @@ export async function subscribeToPackage(req: Request, res: Response): Promise<v
       monthlyPrice,
       stripeProductId,
       priceId: typeof body.priceId === "string" && body.priceId ? body.priceId : undefined,
-      customerEmail: user?.email || undefined,
+      customerEmail,
       successUrl: `${origin}/marketplace?checkout=success&packageId=${encodeURIComponent(packageId)}`,
       cancelUrl: `${origin}/marketplace?checkout=canceled&packageId=${encodeURIComponent(packageId)}`,
     });
@@ -805,70 +946,86 @@ export async function subscribeToPackage(req: Request, res: Response): Promise<v
   }
 }
 
-// In-memory store for beta enrollments & trial extensions
-const inMemoryBetaEnrollments = new Map<string, Set<string>>();
-const inMemoryTrialExtensions = new Map<string, number>();
+/**
+ * Sum a workspace's real beta state from the two ledger tables.
+ * XP = Σ points, trial days = Σ trial_days, memberships = enrollment rows.
+ * (CC-017 disposition 1: these were process-local Map constants before.)
+ */
+async function readBetaLedger(db: Db, workspaceId: string): Promise<{
+  xp: number;
+  trialDays: number;
+  enrolled: string[];
+}> {
+  const [enrollRows, xpRows] = await Promise.all([
+    db.select().from(betaEnrollments).where(eq(betaEnrollments.workspaceId, workspaceId)),
+    db.select().from(betaXpEvents).where(eq(betaXpEvents.workspaceId, workspaceId)),
+  ]);
+  return {
+    xp: xpRows.reduce((sum, r) => sum + (r.points ?? 0), 0),
+    trialDays: xpRows.reduce((sum, r) => sum + (r.trialDays ?? 0), 0),
+    enrolled: enrollRows.map(r => r.appId),
+  };
+}
 
 export async function getBetaStatus(req: Request, res: Response): Promise<void> {
   try {
-    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
-    const userRole = (req as any).user?.role || "admin";
-    const isGodmode = userRole === "admin" || (req as any).user?.name === "Thebossrob";
+    const workspaceId = req.workspaceId || DEFAULT_WORKSPACE_ID;
+    const isGodmode = isBetaGodmode(req, workspaceId);
 
-    const enrolled = Array.from(inMemoryBetaEnrollments.get(workspaceId) || ["app-leadpulse", "app-pulse-social"]);
+    let xp = 0;
+    let enrolled: string[] = [];
+    const db = await getDb();
+    if (db) {
+      try {
+        const ledger = await readBetaLedger(db, workspaceId);
+        xp = ledger.xp;
+        enrolled = ledger.enrolled;
+      } catch (err) {
+        // Honest failure mode: report the real zero rather than fabricated constants.
+        console.warn("[Beta Status] ledger read failed; reporting 0 XP / no enrollments:", err);
+      }
+    }
+
+    const tier = isGodmode
+      ? { level: 3, name: "Alpha Insider (Tier 3 - Godmode)" }
+      : tierForPoints(xp);
+
+    // Godmode owns every catalog program; everyone else gets their real memberships.
+    const enrolledApps = isGodmode
+      ? CANONICAL_ECOSYSTEM_APPS.map(a => a.id)
+      : enrolled;
+
+    const availablePrograms = BETA_PROGRAMS.map(prog => {
+      const enrollable = CANONICAL_ECOSYSTEM_APPS.some(a => a.id === prog.id);
+      let status: string;
+      if (isGodmode || enrolledApps.includes(prog.id)) {
+        status = "Active";
+      } else if (enrollable && tier.level >= requiredTierLevel(prog.tierRequired)) {
+        status = "Available";
+      } else {
+        status = "Locked";
+      }
+      return { ...prog, status };
+    });
 
     res.status(200).json({
       success: true,
       isGodmode,
-      currentTier: isGodmode ? "Alpha Insider (Tier 3 - Godmode)" : "Contributor (Tier 2)",
-      tierLevel: isGodmode ? 3 : 2,
-      betaPoints: isGodmode ? 9999 : 350,
-      enrolledApps: isGodmode ? CANONICAL_ECOSYSTEM_APPS.map(a => a.id) : enrolled,
+      currentTier: tier.name,
+      tierLevel: tier.level,
+      betaPoints: xp, // real ledger sum — was a constant 9999/350
+      enrolledApps,
       freeBookPerk: {
         title: "Startup Operational Excellence",
         author: "Robert McCarthy (Uncle Robert)",
         value: "$19.99",
-        status: "Unlocked & Complimentary",
+        // CC-017 disposition 7: no unlock event is ever verified, so state
+        // the offer instead of claiming an unlock we cannot see.
+        status: "Included with Beta participation",
         downloadUrl: "https://bossrob.gumroad.com/l/soe",
         description: "Complimentary operational doctrine included for all Beta participants and Pro subscribers to provide clear direction for your endeavors.",
       },
-      availablePrograms: [
-        {
-          id: "app-market-marksman-std",
-          name: "Market Marksman (Standard Beta)",
-          tierRequired: "Contributor (Tier 2)",
-          reward: "+14 Pro Trial Days on 5 Signal Tests",
-          status: isGodmode || enrolled.includes("app-market-marksman-std") ? "Active" : "Available",
-        },
-        {
-          id: "app-market-marksman-nv",
-          name: "Market Marksman (Nevada Edition)",
-          tierRequired: "Contributor (Tier 2)",
-          reward: "Nevada Corporate & Regulatory Signal Access",
-          status: isGodmode || enrolled.includes("app-market-marksman-nv") ? "Active" : "Available",
-        },
-        {
-          id: "app-leadpulse",
-          name: "LeadPulse Beta",
-          tierRequired: "Explorer (Tier 1)",
-          reward: "+7 Pro Trial Days on Feedback",
-          status: isGodmode || enrolled.includes("app-leadpulse") ? "Active" : "Available",
-        },
-        {
-          id: "app-pulse-social",
-          name: "Pulse Social Beta",
-          tierRequired: "Explorer (Tier 1)",
-          reward: "Priority Generation Rate Limits",
-          status: isGodmode || enrolled.includes("app-pulse-social") ? "Active" : "Available",
-        },
-        {
-          id: "agentic-os-v2",
-          name: "Agentic OS v2 (Autonomous Swarms)",
-          tierRequired: "Alpha Insider (Tier 3)",
-          reward: "Direct Access to Multi-Agent Python SDK",
-          status: isGodmode ? "Active" : "Locked",
-        }
-      ]
+      availablePrograms,
     });
   } catch (error: any) {
     console.error("[Beta Status Error]:", error);
@@ -878,19 +1035,135 @@ export async function getBetaStatus(req: Request, res: Response): Promise<void> 
 
 export async function enrollBeta(req: Request, res: Response): Promise<void> {
   try {
-    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
+    const workspaceId = req.workspaceId || DEFAULT_WORKSPACE_ID;
     const appId = param(req, "appId");
-
-    if (!inMemoryBetaEnrollments.has(workspaceId)) {
-      inMemoryBetaEnrollments.set(workspaceId, new Set<string>(["app-leadpulse", "app-pulse-social"]));
+    if (!appId) {
+      res.status(400).json({ error: "appId is required" });
+      return;
     }
-    inMemoryBetaEnrollments.get(workspaceId)!.add(appId);
+
+    const app = CANONICAL_ECOSYSTEM_APPS.find(a => a.id === appId);
+    if (!app) {
+      res.status(404).json({
+        error: "unknown_beta_app",
+        message: `${appId} is not a beta program in this catalog.`,
+        appId,
+      });
+      return;
+    }
+
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({
+        error: "beta_storage_unavailable",
+        message: "Beta enrollment requires the database.",
+      });
+      return;
+    }
+
+    const ledger = await readBetaLedger(db, workspaceId);
+    const isGodmode = isBetaGodmode(req, workspaceId);
+    const tier = isGodmode
+      ? { level: 3, name: "Alpha Insider (Tier 3 - Godmode)" }
+      : tierForPoints(ledger.xp);
+
+    // Tier gate: enrollment below the program's required tier is refused
+    // with the real numbers (was: everyone could enroll in everything).
+    const requiredLevel = requiredTierLevel(app.betaTierRequired);
+    if (requiredLevel > tier.level) {
+      res.status(403).json({
+        error: "tier_requirement_not_met",
+        message: `${app.name} requires ${app.betaTierRequired}; this workspace is at ${tier.name} (${ledger.xp} XP).`,
+        appId,
+        requiredTier: app.betaTierRequired,
+        currentTier: tier.name,
+        tierLevel: tier.level,
+        betaPoints: ledger.xp,
+      });
+      return;
+    }
+
+    const alreadyEnrolled = ledger.enrolled.includes(appId);
+    let xpAwarded = 0;
+    let trialDaysAwarded = 0;
+
+    if (!alreadyEnrolled) {
+      // The unique index makes this race-safe: returning() yields a row only
+      // on a genuine first enrollment, so XP can never double-award.
+      const inserted = await db
+        .insert(betaEnrollments)
+        .values({ workspaceId, appId, xpGranted: BETA_XP_PER_ENROLLMENT })
+        .onConflictDoNothing()
+        .returning();
+
+      if (inserted.length > 0) {
+        xpAwarded = BETA_XP_PER_ENROLLMENT;
+        await db.insert(betaXpEvents).values({
+          workspaceId,
+          eventType: "enrollment",
+          appId,
+          points: xpAwarded,
+          reason: `Enrolled in ${app.name} beta program`,
+        });
+
+        // Reward that actually extends trials: per-app enrollment grants.
+        const grantDays = ENROLLMENT_TRIAL_DAY_GRANTS[appId] ?? 0;
+        if (grantDays > 0) {
+          trialDaysAwarded = grantDays;
+          await db.insert(betaXpEvents).values({
+            workspaceId,
+            eventType: "trial_extension",
+            appId,
+            trialDays: grantDays,
+            reason: `${app.name} enrollment reward (+${grantDays} Pro Trial days)`,
+          });
+        }
+
+        // Milestone reward: +14 Pro Trial days once at 5 enrolled programs.
+        // Idempotent via the reason marker (enrollments only ever grow).
+        const enrollCount = ledger.enrolled.length + 1;
+        if (enrollCount >= MILESTONE_ENROLLMENTS_FOR_TRIAL) {
+          const prior = await db
+            .select()
+            .from(betaXpEvents)
+            .where(
+              and(
+                eq(betaXpEvents.workspaceId, workspaceId),
+                eq(betaXpEvents.eventType, "trial_extension"),
+                eq(betaXpEvents.reason, MILESTONE_REASON)
+              )
+            )
+            .limit(1);
+          if (prior.length === 0) {
+            trialDaysAwarded += MILESTONE_TRIAL_DAYS;
+            await db.insert(betaXpEvents).values({
+              workspaceId,
+              eventType: "trial_extension",
+              trialDays: MILESTONE_TRIAL_DAYS,
+              reason: MILESTONE_REASON,
+            });
+          }
+        }
+      }
+    }
+
+    const refreshed = await readBetaLedger(db, workspaceId);
 
     res.status(200).json({
       success: true,
-      message: `Successfully enrolled in ${appId} Beta Program!`,
+      message: alreadyEnrolled
+        ? `Already enrolled in ${app.name} Beta Program.`
+        : `Successfully enrolled in ${app.name} Beta Program! +${xpAwarded} Beta XP${
+            trialDaysAwarded ? `, +${trialDaysAwarded} Pro Trial days` : ""
+          } awarded.`,
       appId,
       workspaceId,
+      alreadyEnrolled,
+      xpAwarded,
+      trialDaysAwarded,
+      betaPoints: refreshed.xp,
+      trialDaysGranted: refreshed.trialDays,
+      enrolledApps: refreshed.enrolled,
     });
   } catch (error: any) {
     console.error("[Beta Enroll Error]:", error);
@@ -900,23 +1173,39 @@ export async function enrollBeta(req: Request, res: Response): Promise<void> {
 
 export async function getTrialStatus(req: Request, res: Response): Promise<void> {
   try {
-    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
-    const extraDays = inMemoryTrialExtensions.get(workspaceId) || 0;
-    const baseDaysRemaining = 18;
-    const totalDaysRemaining = baseDaysRemaining + extraDays;
+    const workspaceId = req.workspaceId || DEFAULT_WORKSPACE_ID;
+
+    let extraDays = 0;
+    const db = await getDb();
+    if (db) {
+      try {
+        const ledger = await readBetaLedger(db, workspaceId);
+        extraDays = ledger.trialDays;
+      } catch (err) {
+        console.warn("[Trial Status] ledger read failed; reporting base trial only:", err);
+      }
+    }
+
+    const totalDaysRemaining = TRIAL_BASE_DAYS_REMAINING + extraDays;
 
     res.status(200).json({
       success: true,
       plan: "AgentLab OS Pro Trial",
+      // CC-017 (Q1): extension days come from the real beta_xp_events ledger.
+      // The base 30-day window remains illustrative until the entitlements
+      // rollout — stated explicitly instead of implied (CC-008 demo labeling).
+      tracking: "demo-base-real-extensions",
+      note: "Base trial dates are illustrative (CC-008); extension days are real ledgered grants.",
       totalTrialDays: 30 + extraDays,
       daysRemaining: totalDaysRemaining,
       trialEndDate: new Date(Date.now() + totalDaysRemaining * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-      canExtend: extraDays < 28,
+      canExtend: extraDays < TRIAL_EXTENSION_MAX_EXTRA_DAYS,
+      extensionDaysGranted: extraDays,
       freeBookPerk: {
         title: "Startup Operational Excellence",
         author: "Robert McCarthy (Uncle Robert)",
         value: "$19.99",
-        status: "Unlocked & Included",
+        status: "Included with Beta participation",
         downloadUrl: "https://bossrob.gumroad.com/l/soe",
         description: "Complimentary copy included for all active Betas & Pro trial accounts.",
       },
@@ -942,19 +1231,57 @@ export async function getTrialStatus(req: Request, res: Response): Promise<void>
 
 export async function extendTrial(req: Request, res: Response): Promise<void> {
   try {
-    const workspaceId = (req as any).workspaceId || "00000000-0000-0000-0000-000000000001";
-    const { reason } = req.body || {};
-    const currentExtra = inMemoryTrialExtensions.get(workspaceId) || 0;
-    const newExtra = currentExtra + 14;
-    inMemoryTrialExtensions.set(workspaceId, newExtra);
+    const workspaceId = req.workspaceId || DEFAULT_WORKSPACE_ID;
+    const { reason } = (req.body || {}) as { reason?: string };
 
+    // CC-017: this endpoint used to hand +14 days to ANY caller from a
+    // process-local Map (and had zero callers). It is now a real ledger
+    // write, gated to the founder/admin grant path — ordinary workspaces
+    // earn extensions through the enrollment milestone instead.
+    if (!isPrivilegedGranter(req, workspaceId)) {
+      res.status(403).json({
+        error: "forbidden",
+        message: "Trial extensions are granted by the beta enrollment milestone or an admin.",
+      });
+      return;
+    }
+
+    const db = await getDb();
+    if (!db) {
+      res.status(503).json({ error: "beta_storage_unavailable" });
+      return;
+    }
+
+    const ledger = await readBetaLedger(db, workspaceId);
+    const remaining = TRIAL_EXTENSION_MAX_EXTRA_DAYS - ledger.trialDays;
+    if (remaining <= 0) {
+      res.status(409).json({
+        error: "extension_cap_reached",
+        message: `Workspace already holds ${ledger.trialDays} of ${TRIAL_EXTENSION_MAX_EXTRA_DAYS} extension days.`,
+        extensionDaysGranted: ledger.trialDays,
+      });
+      return;
+    }
+
+    // Capped grant: never push the total past the published 28-day ceiling.
+    const granted = Math.min(14, remaining);
+    const appliedReason =
+      typeof reason === "string" && reason.trim() ? reason.trim() : "Founder Beta Extension";
+    await db.insert(betaXpEvents).values({
+      workspaceId,
+      eventType: "trial_extension",
+      trialDays: granted,
+      reason: appliedReason,
+    });
+
+    const refreshed = await readBetaLedger(db, workspaceId);
     res.status(200).json({
       success: true,
-      message: "Trial successfully extended by 14 days!",
-      addedDays: 14,
-      totalExtensionDays: newExtra,
-      daysRemaining: 18 + newExtra,
-      reason: reason || "Founder Beta Extension",
+      message: `Trial successfully extended by ${granted} days!`,
+      addedDays: granted,
+      totalExtensionDays: refreshed.trialDays,
+      daysRemaining: TRIAL_BASE_DAYS_REMAINING + refreshed.trialDays,
+      reason: appliedReason,
     });
   } catch (error: any) {
     console.error("[Extend Trial Error]:", error);

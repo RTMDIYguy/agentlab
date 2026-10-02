@@ -10,6 +10,8 @@ import {
   messengerThreads,
   messengerMessages,
   teardownSessions,
+  betaEnrollments,
+  betaXpEvents,
 } from "../../schema";
 import { getUserByOpenId, upsertUser, getDb } from "../../db";
 
@@ -201,6 +203,66 @@ const TeardownSession = defineFactory({
     deleteById(teardownSessions, record.id as string),
 });
 
+// betaEnrollments — CC-2026-10-02-017's durable beta membership. Requires a
+// workspaceId (seed a user/workspace first). Inserts the same row shape
+// POST /api/beta/enroll writes; the unique (workspace, app) index makes a
+// duplicate seed a hard error, matching real enrollment behavior.
+const BetaEnrollment = defineFactory({
+  inputSchema: z.object({
+    workspaceId: z.string(),
+    appId: z.string(),
+    xpGranted: z.number().int().optional(),
+  }),
+  create: async data => {
+    const db = await getDb();
+    const [row] = await db
+      .insert(betaEnrollments)
+      .values({
+        workspaceId: data.workspaceId,
+        appId: data.appId,
+        xpGranted: data.xpGranted ?? 50,
+      })
+      .onConflictDoNothing()
+      .returning();
+    if (!row)
+      throw new Error(
+        `beta_enrollments already contains appId=${data.appId} for workspace ${data.workspaceId}`
+      );
+    return row as unknown as Record<string, unknown> & { id: string };
+  },
+  teardown: async record => deleteById(betaEnrollments, record.id as string),
+});
+
+// betaXpEvents — XP / trial-day ledger row (event_type: enrollment |
+// trial_extension | manual). getBetaStatus and getTrialStatus sum these,
+// so a seeded event must behave exactly like a controller-written one.
+const BetaXpEvent = defineFactory({
+  inputSchema: z.object({
+    workspaceId: z.string(),
+    eventType: z.enum(["enrollment", "trial_extension", "manual"]).optional(),
+    appId: z.string().optional(),
+    points: z.number().int().optional(),
+    trialDays: z.number().int().optional(),
+    reason: z.string().optional(),
+  }),
+  create: async data => {
+    const db = await getDb();
+    const [row] = await db
+      .insert(betaXpEvents)
+      .values({
+        workspaceId: data.workspaceId,
+        eventType: data.eventType ?? "manual",
+        appId: data.appId ?? null,
+        points: data.points ?? 0,
+        trialDays: data.trialDays ?? 0,
+        reason: data.reason ?? "autonoma-test",
+      })
+      .returning();
+    return row as unknown as Record<string, unknown> & { id: string };
+  },
+  teardown: async record => deleteById(betaXpEvents, record.id as string),
+});
+
 export const factories = {
   users: User,
   newsletterSubscribers: NewsletterSubscriber,
@@ -208,4 +270,6 @@ export const factories = {
   messengerThreads: MessengerThread,
   messengerMessages: MessengerMessage,
   teardownSessions: TeardownSession,
+  betaEnrollments: BetaEnrollment,
+  betaXpEvents: BetaXpEvent,
 };

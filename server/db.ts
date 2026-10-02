@@ -510,6 +510,31 @@ export async function ensureDatabaseSchema(): Promise<void> {
       );
       CREATE INDEX IF NOT EXISTS "idx_ops_agent_messages_thread"
         ON "ops_agent_messages" ("workspace_id", "thread_id", "created_at");
+
+      -- CC-2026-10-02-017: real beta subsystem. Enrollments and the XP /
+      -- trial-day ledger were process-local Maps that died on every deploy.
+      CREATE TABLE IF NOT EXISTS "beta_enrollments" (
+        "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        "workspace_id" uuid NOT NULL REFERENCES "workspaces"("id") ON DELETE CASCADE,
+        "app_id" varchar(128) NOT NULL,
+        "xp_granted" integer NOT NULL DEFAULT 0,
+        "enrolled_at" timestamp with time zone NOT NULL DEFAULT now(),
+        CONSTRAINT "uq_beta_enrollments_workspace_app" UNIQUE ("workspace_id", "app_id")
+      );
+      CREATE INDEX IF NOT EXISTS "idx_beta_enrollments_workspace"
+        ON "beta_enrollments" ("workspace_id");
+      CREATE TABLE IF NOT EXISTS "beta_xp_events" (
+        "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        "workspace_id" uuid NOT NULL REFERENCES "workspaces"("id") ON DELETE CASCADE,
+        "event_type" varchar(64) NOT NULL,
+        "app_id" varchar(128),
+        "points" integer NOT NULL DEFAULT 0,
+        "trial_days" integer NOT NULL DEFAULT 0,
+        "reason" text,
+        "created_at" timestamp with time zone NOT NULL DEFAULT now()
+      );
+      CREATE INDEX IF NOT EXISTS "idx_beta_xp_events_workspace"
+        ON "beta_xp_events" ("workspace_id");
     `;
 
     // CC-2026-09-25-008: workflow_steps rows synced before CC-2026-09-25-007

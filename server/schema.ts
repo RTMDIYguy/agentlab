@@ -1504,3 +1504,57 @@ export const opsAgentMessages = pgTable(
 
 export type OpsAgentMessage = InferSelectModel<typeof opsAgentMessages>;
 export type NewOpsAgentMessage = InferInsertModel<typeof opsAgentMessages>;
+
+// CC-2026-10-02-016/017 (disposition 1 — "build it for real"): the beta
+// subsystem previously kept enrollments and XP in process-local Maps with
+// constant values. These two tables make enrollment state and the XP /
+// trial-day ledger durable, queryable, and honest.
+export const betaEnrollments = pgTable(
+  "beta_enrollments",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: uuid("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    appId: varchar("app_id", { length: 128 }).notNull(),
+    xpGranted: integer("xp_granted").notNull().default(0),
+    enrolledAt: timestamp("enrolled_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [
+    uniqueIndex("uq_beta_enrollments_workspace_app").on(
+      table.workspaceId,
+      table.appId
+    ),
+    index("idx_beta_enrollments_workspace").on(table.workspaceId),
+  ]
+);
+
+// One ledger for both beta currencies: XP points and granted trial days.
+// getBetaStatus sums `points`; getTrialStatus sums `trialDays` — so an
+// awarded reward is real the moment it is written here, and it survives
+// every deploy/restart (the old Maps did not).
+export const betaXpEvents = pgTable(
+  "beta_xp_events",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    workspaceId: uuid("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    eventType: varchar("event_type", { length: 64 }).notNull(), // 'enrollment' | 'trial_extension' | 'manual'
+    appId: varchar("app_id", { length: 128 }), // null for manual/trial grants
+    points: integer("points").notNull().default(0),
+    trialDays: integer("trial_days").notNull().default(0),
+    reason: text("reason"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [index("idx_beta_xp_events_workspace").on(table.workspaceId)]
+);
+
+export type BetaEnrollment = InferSelectModel<typeof betaEnrollments>;
+export type NewBetaEnrollment = InferInsertModel<typeof betaEnrollments>;
+export type BetaXpEvent = InferSelectModel<typeof betaXpEvents>;
+export type NewBetaXpEvent = InferInsertModel<typeof betaXpEvents>;

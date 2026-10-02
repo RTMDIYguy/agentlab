@@ -52,7 +52,7 @@ function setup(overrides: Record<string, unknown> = {}) {
     headers: { origin: "http://localhost:5173" },
     body: {},
     workspaceId: "ws-1",
-    user: { email: "founder@example.com" },
+    userEmail: "founder@example.com", // CC-017: real tenant identity field (req.user was never set server-side)
     ...overrides,
   };
   const res: any = { statusCode: 0, body: undefined as unknown };
@@ -221,7 +221,10 @@ describe("mountPlaybook payment gate (CC-2026-10-02-003)", () => {
     process.env.STRIPE_SECRET_KEY = "sk_test_xyz";
     const { req, res } = setup({
       params: { id: "sal-playbook" },
-      user: { role: "admin" },
+      // CC-017: privileged identity is the tenant middleware's real shape —
+      // req.userRole/req.userEmail (the old req.user read was dead code).
+      userRole: "admin",
+      userEmail: "founder@example.com",
     });
 
     await mountPlaybook(req, res);
