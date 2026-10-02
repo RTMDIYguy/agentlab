@@ -1,6 +1,6 @@
 import { param } from "./params";
 import type { Request, Response } from "express";
-import { eq, desc, and, asc } from "drizzle-orm";
+import { eq, desc, and, asc, sql } from "drizzle-orm";
 import { getDb } from "../db";
 import { workflowArtifacts, workflowRuns, workflows } from "../schema";
 import fs from "fs";
@@ -127,10 +127,27 @@ export async function listArtifacts(req: Request, res: Response): Promise<void> 
       .orderBy(desc(workflowArtifacts.createdAt))
       .limit(parseInt(limit as string, 10));
 
+    // Additive true count: totalCount above is the returned rows, which is
+    // capped by `limit` (the UI's "N Assets" badge froze at 30 — Command
+    // Center audit CC-2026-10-02-009, disposition 12). Existing consumers
+    // read `artifacts`/`totalCount` only. A failing count must never take
+    // the endpoint down with it.
+    let total: number | null = null;
+    try {
+      const [countRow] = await db
+        .select({ total: sql<number>`count(*)::int` })
+        .from(workflowArtifacts)
+        .where(and(...conditions));
+      total = countRow?.total ?? null;
+    } catch {
+      total = null;
+    }
+
     res.status(200).json({
       workspaceId,
       artifacts,
       totalCount: artifacts.length,
+      total: total ?? artifacts.length,
     });
   } catch (error) {
     console.error("[Artifacts Controller Error]:", error);

@@ -368,6 +368,17 @@ export async function createCustomWorkflow(req: Request, res: Response): Promise
       return;
     }
 
+    // A scheduled workflow with no cron is inert: the scheduler selects on
+    // lte(nextRunAt, now), which never matches a NULL — the row would sit
+    // there armed and never fire (Command Center audit CC-2026-10-02-009,
+    // disposition 10). Refuse instead of persisting a dead schedule.
+    if (triggerType === "schedule" && !String(cronExpression || "").trim()) {
+      res
+        .status(400)
+        .json({ error: "A cron expression is required for a scheduled workflow." });
+      return;
+    }
+
     let nextRunAt: Date | null = null;
     if (triggerType === "schedule" && cronExpression) {
       try {
@@ -422,6 +433,17 @@ export async function updateWorkflowSchedule(req: Request, res: Response): Promi
     const db = await getDb();
     if (!db) {
       res.status(503).json({ error: "Database unavailable" });
+      return;
+    }
+
+    // A scheduled workflow with no cron is inert: the scheduler selects on
+    // lte(nextRunAt, now), which never matches a NULL — the row would sit
+    // there armed and never fire (Command Center audit CC-2026-10-02-009,
+    // disposition 10). Refuse instead of persisting a dead schedule.
+    if (triggerType === "schedule" && !String(cronExpression || "").trim()) {
+      res
+        .status(400)
+        .json({ error: "A cron expression is required for a scheduled workflow." });
       return;
     }
 

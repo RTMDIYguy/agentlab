@@ -134,10 +134,16 @@ export default function Dashboard() {
   const workflowNameById = new Map(
     (workflowsData?.workflows || []).map((w: any) => [w.id, w.name])
   );
-  // "Autopilot" is real iff at least one workflow is armed on the schedule
-  // trigger — execution/scheduler.ts polls exactly those rows.
+  // "Autopilot" is real iff at least one workflow is fully armed for the
+  // scheduler: triggerType "schedule" AND a cron AND status active — the
+  // scheduler selects on status/triggerType/nextRunAt (set from the cron),
+  // so triggerType alone would count inert rows (CC-2026-10-02-009,
+  // cross-page correction to the CC-008 badge).
   const autopilotArmed = (workflowsData?.workflows || []).some(
-    (w: any) => w.triggerType === "schedule"
+    (w: any) =>
+      w.triggerType === "schedule" &&
+      !!w.cronExpression &&
+      w.status === "active"
   );
   // Live status breakdown for the Swarm Nodes gauge caption.
   const agentStatusSummary =

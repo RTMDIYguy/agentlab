@@ -297,11 +297,15 @@ export default function CommandCenter() {
   >([
     {
       sender: "orchestrator",
-      text: "AgentLab Ops Orchestrator initialized. All swarms, SAIF guardrails, and AI Studio mobile sync endpoints are active. How can I assist today's operations?",
+      text: "AgentLab Ops Orchestrator initialized. Send an operational task or ask for a DAG proposal. How can I assist today's operations?",
       time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
   const [isSendingPrompt, setIsSendingPrompt] = useState(false);
+  // Model that actually answered the last orchestrator request, as reported
+  // by the server (executionMetrics.model) — replaces the hardcoded retired
+  // "Gemini 2.5 Flash" badge (CC-2026-10-02-009, disposition 3).
+  const [lastModel, setLastModel] = useState<string | null>(null);
 
   // Expanded Workflow Cards State (Accordion)
   const [expandedWorkflows, setExpandedWorkflows] = useState<Record<string, boolean>>({});
@@ -311,6 +315,7 @@ export default function CommandCenter() {
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editTriggerType, setEditTriggerType] = useState("manual");
+  const [editCron, setEditCron] = useState("");
   const [editSteps, setEditSteps] = useState<WorkflowStepItem[]>([]);
   const [isSavingWorkflow, setIsSavingWorkflow] = useState(false);
   const [inspectingRunId, setInspectingRunId] = useState<string | null>(null);
@@ -365,6 +370,20 @@ export default function CommandCenter() {
     refetchInterval: 5000,
   });
 
+  // AI Studio bridge liveness: GET /api/aistudio/state existed but was never
+  // called — the header hardcoded "Connected" (CC-2026-10-02-009, dispositions 6).
+  const bridgeState = useQuery({
+    queryKey: ["aistudio-state", user?.openId],
+    queryFn: async () => {
+      const res = await fetch("/api/aistudio/state", { headers: { Accept: "application/json" } });
+      if (!res.ok) throw new Error("Bridge state unavailable");
+      return res.json();
+    },
+    enabled: !!user,
+    refetchInterval: 60000,
+    retry: false,
+  });
+
   // 4. Fetch Content Calendar & Scheduled Posts
   const {
     data: calendarData,
@@ -392,7 +411,7 @@ export default function CommandCenter() {
     data: artifactsData,
     isLoading: isLoadingArtifacts,
     refetch: refetchArtifacts,
-  } = useQuery<{ artifacts: any[]; totalCount: number }>({
+  } = useQuery<{ artifacts: any[]; totalCount: number; total?: number }>({
     queryKey: ["workflow-artifacts", user?.openId],
     queryFn: async () => {
       const res = await fetch("/api/artifacts?limit=30", { headers: { Accept: "application/json" } });
@@ -664,8 +683,12 @@ export default function CommandCenter() {
     setEditName(wf.name);
     setEditDescription(wf.description || "");
     setEditTriggerType(wf.triggerType || "manual");
+    setEditCron(wf.cronExpression || "");
 
-    // If steps exist, clone them; otherwise generate default step template
+    // If steps exist, clone them; otherwise generate default step template.
+    // Assignments start UNASSIGNED: the legacy seed names (Alpha-Node-01 …)
+    // resolve to NULL on the server for any roster without them, while the UI
+    // displayed them as assigned (CC-2026-10-02-009, disposition 9).
     if (wf.steps && wf.steps.length > 0) {
       setEditSteps(wf.steps.map((s, idx) => ({ ...s, orderIndex: idx })));
     } else {
@@ -675,21 +698,21 @@ export default function CommandCenter() {
           stepType: "trigger",
           title: "Ingestion & Trigger",
           actionPrompt: "Ingest task context and validate inputs against SAIF guardrails.",
-          agentId: "Workflow-Planner-04",
+          agentId: null,
         },
         {
           orderIndex: 1,
           stepType: "agent",
           title: "Core Execution Node",
           actionPrompt: wf.description || "Execute proprietary SOP protocol.",
-          agentId: "Alpha-Node-01",
+          agentId: null,
         },
         {
           orderIndex: 2,
           stepType: "destination",
           title: "M365 & Audit Commit",
           actionPrompt: "Record verified outcome in M365 ledger and log audit telemetry.",
-          agentId: "Auditor-Bot-9",
+          agentId: null,
         },
       ]);
     }
@@ -730,18 +753,35 @@ export default function CommandCenter() {
     setIsSavingWorkflow(true);
 
     try {
-      // 1. Update workflow metadata
+      // 1. Update workflow metadata (name/description)
       await fetch(`/api/workflows/${editingWorkflow.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: editName,
           description: editDescription,
-          triggerType: editTriggerType,
         }),
       });
 
-      // 2. Update workflow steps
+      // 2. Trigger + schedule via the validated endpoint: it rejects a
+      //    schedule trigger with no/invalid cron (previously the modal saved
+      //    triggerType=schedule with a null cron → an inert workflow the
+      //    scheduler never selects — CC-2026-10-02-009, disposition 10) and
+      //    computes nextRunAt so the schedule actually arms.
+      const schedRes = await fetch(`/api/workflows/${editingWorkflow.id}/schedule`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          triggerType: editTriggerType,
+          cronExpression: editTriggerType === "schedule" ? editCron.trim() : "",
+        }),
+      });
+      if (!schedRes.ok) {
+        const schedErr = await schedRes.json().catch(() => ({}));
+        throw new Error(schedErr.error || "Failed to save the trigger schedule");
+      }
+
+      // 3. Update workflow steps
       const stepsRes = await fetch(`/api/workflows/${editingWorkflow.id}/steps`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -778,7 +818,7 @@ export default function CommandCenter() {
         stepType: "agent",
         title: `Step ${prev.length + 1}: Custom Action`,
         actionPrompt: "Define action details for this autonomous swarm step.",
-        agentId: "Alpha-Node-01",
+        agentId: null,
       },
     ]);
   };
@@ -829,7 +869,10 @@ export default function CommandCenter() {
         data.reply ||
         data.message ||
         data.response ||
-        "Task acknowledged and synthesized across agent swarms.";
+        "The orchestrator returned no reply text.";
+      if (data.executionMetrics?.model) {
+        setLastModel(data.executionMetrics.model);
+      }
 
       setChatMessages((prev) => [
         ...prev,
@@ -845,7 +888,7 @@ export default function CommandCenter() {
         ...prev,
         {
           sender: "orchestrator",
-          text: `[Error executing command]: ${err.message}. Operating in fallback autonomy mode.`,
+          text: `[Orchestrator request failed]: ${err.message}. No reply was received — try again.`,
           time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         },
       ]);
@@ -872,6 +915,10 @@ export default function CommandCenter() {
   const pendingApprovals = runsData?.runs?.filter((r: any) => r.status === "paused_for_approval") || [];
   const workflows = workflowsData?.workflows || [];
   const agents = agentsData?.agents || [];
+  // Name lookups so cards render labels, not raw UUIDs / legacy seed names
+  // (CC-2026-10-02-009, dispositions 9 & 11).
+  const workflowNameById = new Map(workflows.map((w: any) => [w.id, w.name]));
+  const agentNameById = new Map(agents.map((a: any) => [a.id, a.name]));
 
   return (
     <DashboardLayout>
@@ -884,9 +931,6 @@ export default function CommandCenter() {
                 <TerminalSquare className="w-6 h-6" />
               </div>
               <h1 className="text-2xl font-bold text-foreground">Agency Command Center</h1>
-              <Badge variant="outline" className="border-green-500/30 text-green-500 bg-green-500/10 font-mono text-xs">
-                Live Runtime
-              </Badge>
             </div>
             <p className="text-sm text-muted-foreground mt-1">
               Central operations cockpit, DAG workflow dispatch, swarm telemetry, and mobile ingestion bridge.
@@ -901,10 +945,23 @@ export default function CommandCenter() {
               <Bot className="w-3.5 h-3.5" />
               <span>Open Ops Agent</span>
             </button>
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-muted/60 rounded-md border border-border text-xs text-muted-foreground">
+            <div
+              className="flex items-center gap-2 px-3 py-1.5 bg-muted/60 rounded-md border border-border text-xs text-muted-foreground"
+              title="GET /api/aistudio/state — live bridge liveness, polled every 60s"
+            >
               <Smartphone className="w-3.5 h-3.5 text-blue-500" />
-              <span>AI Studio Mobile:</span>
-              <span className="font-semibold text-foreground">Connected</span>
+              <span>AI Studio Bridge:</span>
+              <span
+                className={`font-semibold ${
+                  bridgeState.isSuccess
+                    ? "text-foreground"
+                    : bridgeState.isError
+                      ? "text-red-400"
+                      : "text-muted-foreground"
+                }`}
+              >
+                {bridgeState.isSuccess ? "Online" : bridgeState.isError ? "Offline" : "Checking…"}
+              </span>
             </div>
             <Button
               variant="outline"
@@ -1255,7 +1312,9 @@ export default function CommandCenter() {
                   {pendingApprovals.map((run: any) => (
                     <div key={run.id} className="p-3 bg-muted/40 rounded-lg border border-border text-xs space-y-2">
                       <div className="flex justify-between items-center font-mono">
-                        <span className="truncate max-w-[140px] font-semibold">{run.workflowId}</span>
+                        <span className="truncate max-w-[140px] font-semibold">
+                          {workflowNameById.get(run.workflowId) || run.workflowId}
+                        </span>
                         <Badge variant="outline" className="text-[10px]">
                           PAUSED
                         </Badge>
@@ -1539,7 +1598,11 @@ export default function CommandCenter() {
                                       </div>
                                     </div>
                                     <div className="shrink-0 flex items-center gap-2 text-[11px] font-mono text-muted-foreground">
-                                      <span className="text-primary font-medium">{step.agentId || "Alpha-Node-01"}</span>
+                                      <span className={step.agentId ? "text-primary font-medium" : ""}>
+                                        {step.agentId
+                                          ? agentNameById.get(step.agentId) || step.agentId
+                                          : "Unassigned"}
+                                      </span>
                                     </div>
                                   </div>
                                 ))}
@@ -1564,11 +1627,11 @@ export default function CommandCenter() {
                   <CardTitle className="text-lg">Swarm Agents</CardTitle>
                 </div>
                 <Badge variant="secondary" className="text-xs font-mono">
-                  {agents.length} Online Nodes
+                  {agents.filter((a: any) => a.status === "active").length} Active / {agents.length} Nodes
                 </Badge>
               </div>
               <CardDescription>
-                5 Autonomous compute nodes executing across 6 active DAGs (M:N Swarm Runtime)
+                {agents.length} compute node{agents.length === 1 ? "" : "s"} executing across {workflows.length} listed DAG{workflows.length === 1 ? "" : "s"} (M:N Swarm Runtime)
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1608,10 +1671,10 @@ export default function CommandCenter() {
               <div className="mt-4 p-3 rounded-lg bg-primary/5 border border-primary/20 text-xs text-muted-foreground space-y-1">
                 <p className="font-semibold text-foreground flex items-center gap-1.5">
                   <Layers className="w-3.5 h-3.5 text-primary" />
-                  Why 6 DAGs vs 5 Swarm Nodes?
+                  Why DAGs vs Swarm Nodes?
                 </p>
                 <p className="text-[11px] leading-relaxed">
-                  Agents are independent workers assigned to specific steps inside DAGs. A single agent (e.g. Workflow-Planner)
+                  Agents are independent workers assigned to specific steps inside DAGs. A single agent
                   runs tasks across multiple DAGs simultaneously without state overlap.
                 </p>
               </div>
@@ -1627,12 +1690,12 @@ export default function CommandCenter() {
                 <Sparkles className="w-5 h-5 text-primary" />
                 <CardTitle className="text-lg">Ops Orchestrator Natural Language Terminal</CardTitle>
               </div>
-              <Badge variant="outline" className="text-xs font-mono">
-                Google Gemini 2.5 Flash
+              <Badge variant="outline" className="text-xs font-mono" title="The model that actually answered the last request, as reported by the server">
+                {lastModel ? `Model: ${lastModel}` : "Gemini (chain)"}
               </Badge>
             </div>
             <CardDescription>
-              Direct agent command line: Dispatch cross-department tasks, synthesize new DAGs, or query real-time OS state.
+              Direct agent command line: Dispatch cross-department tasks, synthesize new DAGs, or query real-time OS state. Session-only — this thread is not persisted; reloading clears it.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0">
@@ -1818,7 +1881,7 @@ export default function CommandCenter() {
                                     : "bg-rose-500/10 text-rose-400 border-rose-500/30"
                                 }`}
                               >
-                                Grade {item.qualityGrade} • {item.qualityScore ?? 90}%
+                                Grade {item.qualityGrade}{item.qualityScore != null ? ` • ${item.qualityScore}%` : ""}
                               </Badge>
                             )}
                             <span className="text-[11px] font-mono text-muted-foreground flex items-center gap-1">
@@ -1930,7 +1993,7 @@ export default function CommandCenter() {
                     AI Studio
                   </Button>
                   <Badge variant="secondary" className="text-xs font-mono">
-                    {artifactsData?.totalCount ?? 0} Assets
+                    {artifactsData?.total ?? artifactsData?.totalCount ?? 0} Assets
                   </Badge>
                 </div>
               </div>
@@ -1979,7 +2042,7 @@ export default function CommandCenter() {
                                 variant="outline"
                                 className="text-[9px] font-mono px-1.5 py-0 bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
                               >
-                                {asset.qualityGrade} ({asset.qualityScore ?? 90}%)
+                                {asset.qualityGrade}{asset.qualityScore != null ? ` (${asset.qualityScore}%)` : ""}
                               </Badge>
                             )}
                             <Badge variant="outline" className="text-[10px] uppercase font-mono">
@@ -2002,12 +2065,12 @@ export default function CommandCenter() {
                     <BookOpen className="w-4 h-4 text-primary" />
                     Agent Lab LinkedIn Repo Queue
                   </span>
-                  <Badge variant="outline" className="text-[10px] text-emerald-400 bg-emerald-500/10 border-emerald-500/30">
-                    Linked
+                  <Badge variant="outline" className="text-[10px] text-muted-foreground bg-muted/40 border-border/60">
+                    External
                   </Badge>
                 </div>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Artifacts synced with <code className="text-primary font-mono text-[10px]">Agent Lab LinkedIn/Content-Queue.md</code> and verified evidence logs.
+                  <code className="text-primary font-mono text-[10px]">Content-Queue.md</code> lives in the OneDrive workspace, not in this service — artifacts here are <span className="text-foreground font-semibold">not</span> synced to it automatically.
                 </p>
               </div>
             </CardContent>
@@ -2054,6 +2117,21 @@ export default function CommandCenter() {
                   <option value="event">Event Stream</option>
                 </select>
               </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-foreground">
+                CRON Expression{" "}
+                <span className="text-muted-foreground font-normal">
+                  (required when the trigger is a schedule — without one the workflow never fires)
+                </span>
+              </label>
+              <Input
+                value={editCron}
+                onChange={(e) => setEditCron(e.target.value)}
+                placeholder="e.g. 0 9 * * 1-5  (weekdays at 09:00)"
+                className="text-xs font-mono"
+              />
             </div>
 
             <div className="space-y-1.5">
@@ -2184,21 +2262,11 @@ export default function CommandCenter() {
                             className="w-full h-9 rounded-md border border-border bg-background px-2 text-xs font-mono"
                           >
                             <option value="">-- No Assigned Agent --</option>
-                            {agentsData?.agents && agentsData.agents.length > 0 ? (
-                              agentsData.agents.map((ag: any) => (
-                                <option key={ag.id} value={ag.id}>
-                                  {ag.name} ({ag.role})
-                                </option>
-                              ))
-                            ) : (
-                              <>
-                                <option value="Alpha-Node-01">Alpha-Node-01 (Lead Enrichment)</option>
-                                <option value="Coder-Agent-07">Coder-Agent-07 (SWE)</option>
-                                <option value="SDR-Writer-02">SDR-Writer-02 (Copywriter)</option>
-                                <option value="Auditor-Bot-9">Auditor-Bot-9 (Reconciliation)</option>
-                                <option value="Workflow-Planner-04">Workflow-Planner-04 (Task Router)</option>
-                              </>
-                            )}
+                            {(agentsData?.agents || []).map((ag: any) => (
+                              <option key={ag.id} value={ag.id}>
+                                {ag.name} ({ag.role})
+                              </option>
+                            ))}
                           </select>
                         </div>
                       </div>
@@ -2251,22 +2319,32 @@ export default function CommandCenter() {
               <div className="p-3.5 rounded-xl bg-muted/40 border border-border space-y-2.5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <Badge
-                      variant="outline"
-                      className={`text-xs font-mono font-bold ${
-                        (selectedArtifact.qualityGrade || "A") === "A"
-                          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                          : (selectedArtifact.qualityGrade || "A") === "B"
-                          ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/30"
-                          : (selectedArtifact.qualityGrade || "A") === "C"
-                          ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
-                          : "bg-rose-500/10 text-rose-400 border-rose-500/30"
-                      }`}
-                    >
-                      Grade {selectedArtifact.qualityGrade || "A"} • {selectedArtifact.qualityScore ?? 90}% Quality
-                    </Badge>
+                    {selectedArtifact.qualityGrade ? (
+                      <Badge
+                        variant="outline"
+                        className={`text-xs font-mono font-bold ${
+                          selectedArtifact.qualityGrade === "A"
+                            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                            : selectedArtifact.qualityGrade === "B"
+                            ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/30"
+                            : selectedArtifact.qualityGrade === "C"
+                            ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                            : "bg-rose-500/10 text-rose-400 border-rose-500/30"
+                        }`}
+                      >
+                        Grade {selectedArtifact.qualityGrade}{selectedArtifact.qualityScore != null ? ` • ${selectedArtifact.qualityScore}% Quality` : ""}
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-xs font-mono text-muted-foreground bg-muted/40 border-border/60">
+                        Not evaluated
+                      </Badge>
+                    )}
                     <span className="text-[11px] text-muted-foreground font-medium">
-                      {selectedArtifact.verificationNotes?.passed !== false ? "✓ Passed Brand & Fact Checks" : "⚠ Quality Review Suggested"}
+                      {selectedArtifact.verificationNotes?.passed === true
+                        ? "✓ Passed Brand & Fact Checks"
+                        : selectedArtifact.verificationNotes?.passed === false
+                          ? "⚠ Quality Review Suggested"
+                          : "Not yet verified — run Re-evaluate"}
                     </span>
                     {selectedArtifact.revisionVersion > 1 && (
                       <Badge variant="secondary" className="text-[10px] font-mono">
@@ -2341,7 +2419,7 @@ export default function CommandCenter() {
                         AI Graphic Studio
                         {selectedArtifact.metadata?.imageEngine && (
                           <Badge variant="outline" className="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
-                            {selectedArtifact.metadata.imageEngine.includes("Imagen") ? "Imagen 3" : "Flux Schnell"}
+                            {selectedArtifact.metadata.imageEngine}
                           </Badge>
                         )}
                       </h4>
@@ -2538,7 +2616,7 @@ export default function CommandCenter() {
                   AI Graphic Studio & Visual Generator
                 </DialogTitle>
                 <DialogDescription className="text-xs">
-                  Generate high-resolution brand visuals, Midjourney/Flux renders, and social graphics powered by Google Imagen 3.
+                  Generate high-resolution brand visuals and social graphics through the server's image engine — the result badge names the engine that actually answered (Imagen 3, Flux, or a neural fallback).
                 </DialogDescription>
               </div>
             </div>
@@ -2649,7 +2727,7 @@ export default function CommandCenter() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <Badge variant="outline" className="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
-                      {studioResult.engine.includes("Imagen") ? "Imagen 3" : "Flux Schnell"}
+                      {studioResult.engine}
                     </Badge>
                     <span className="text-[11px] text-muted-foreground font-mono">{studioResult.aspectRatio}</span>
                   </div>
