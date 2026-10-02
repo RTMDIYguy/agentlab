@@ -1,6 +1,22 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import express from "express";
 import { apiRouter } from "./routes/api";
+
+/**
+ * The full ecosystem sync spawns the REAL daily-command-center generator,
+ * which regenerates today's brief, attempts the Desktop HTML rewrite, and
+ * runs the Python Excel sync — tracked-file mutation and out-of-repo writes
+ * as a side effect of `pnpm test`. Stub spawnSync (child_process otherwise
+ * untouched: exec/spawn/fork stay real) and assert the interception.
+ */
+const spawnSyncMock = vi.fn(() => ({ status: 0, stdout: "", stderr: "" }));
+vi.mock("node:child_process", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("node:child_process")>();
+  return {
+    ...actual,
+    spawnSync: (...args: unknown[]) => spawnSyncMock(...args),
+  };
+});
 
 describe("AI Studio Mobile Sync & Roaming Ingestion Bridge", () => {
   const app = express();
@@ -131,12 +147,19 @@ describe("AI Studio Mobile Sync & Roaming Ingestion Bridge", () => {
     } as any;
 
     const { handleManualSync } = await import("./controllers/aiStudioSync");
+    spawnSyncMock.mockClear();
     await handleManualSync(req, res);
 
     expect(statusCode).toBe(200);
     expect(responseData.success).toBe(true);
     expect(responseData.syncedAt).toBeDefined();
     expect(responseData.message).toContain("Full ecosystem sync complete");
+    // The sync still REPORTS the script step as run — via the stub, not by
+    // actually executing the generator.
+    expect(responseData.stats.scriptsRun).toBe(true);
+    expect(spawnSyncMock).toHaveBeenCalledTimes(1);
+    const [, scriptArgs] = spawnSyncMock.mock.calls[0];
+    expect(String(scriptArgs)).toContain("daily-command-center.mjs");
   }, 15000);
 });
 
