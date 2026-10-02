@@ -191,6 +191,24 @@ export function Footer() {
                   className="h-7 w-auto"
                 />
               </a>
+
+              {/* Buffy (Freebuff) Partner */}
+              <div
+                title="Buffy - AI coding agent by Freebuff"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/70 bg-card/60 hover:bg-card hover:border-primary/40 transition-all hover:scale-105 shadow-sm"
+              >
+                <span className="text-xs font-medium text-foreground/80">
+                  I <span className="text-red-500">&hearts;</span>{" "}
+                  <a
+                    href="https://freebuff.com/?ref=ref-557cb184-701d-4214-a75e-140528080364"
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                    className="text-primary font-semibold hover:underline"
+                  >
+                    Buffy
+                  </a>
+                </span>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground shrink-0">
