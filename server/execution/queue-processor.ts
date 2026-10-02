@@ -207,6 +207,24 @@ export async function claimPendingRuns(limit = 20): Promise<ClaimedRunRow[]> {
   return rows.sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)));
 }
 
+/**
+ * Pause gate (CC-2026-10-02-011, disposition 3-A): `agents.status` had zero
+ * readers — "Pause Node" on the Agents page was display-only and a paused
+ * agent kept executing. A paused agent now refuses its steps loudly; the
+ * step catch marks the step/failed run with this message and writes the
+ * honest failure audit row.
+ */
+export function assertAgentRunnable(agent: {
+  name: string;
+  status?: string | null;
+}): void {
+  if (agent.status === "paused") {
+    throw new Error(
+      `Agent "${agent.name}" is paused by operator — activate the node on the Agents page to run this step.`
+    );
+  }
+}
+
 export async function processPendingRuns(limit = 20): Promise<number> {
   const db = await getDb();
   if (!db) {
@@ -484,6 +502,9 @@ export async function processPendingRuns(limit = 20): Promise<number> {
                 .limit(1);
               console.log(`[QueueProcessor] DB QUERY DONE: Found agent ${step.agentId}.`);
               if (agentData.length > 0) {
+                // Pause gate (CC-2026-10-02-011, disposition 3-A): agents.status
+                // previously had zero readers — "Pause Node" was display-only.
+                assertAgentRunnable(agentData[0]);
                 systemPrompt = agentData[0].systemPrompt;
               }
             }

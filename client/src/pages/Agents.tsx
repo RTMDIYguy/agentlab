@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import {
@@ -35,6 +36,7 @@ interface AgentDto {
   successRate: number | null;
   lastStepAt: string | null;
   baseModel: string;
+  systemPrompt?: string | null;
 }
 
 export default function Agents() {
@@ -47,6 +49,8 @@ export default function Agents() {
   const [newAgentName, setNewAgentName] = useState("");
   const [newAgentRole, setNewAgentRole] = useState("Lead Enrichment Specialist");
   const [newAgentModel, setNewAgentModel] = useState("gemini-flash-latest");
+  const [newAgentInstructions, setNewAgentInstructions] = useState("");
+  const [detailAgent, setDetailAgent] = useState<AgentDto | null>(null);
 
   // 1. Fetch live agents from backend
   const {
@@ -61,6 +65,22 @@ export default function Agents() {
         headers: { Accept: "application/json" },
       });
       if (!res.ok) throw new Error("Failed to fetch swarm agents");
+      return res.json();
+    },
+    enabled: !!user,
+  });
+
+  // Live SAIF compliance from real policy checks (this tile previously
+  // hardcoded 100% and never called the stats route).
+  const { data: auditStats, isLoading: isAuditStatsLoading } = useQuery<{
+    saifComplianceRate: string | null;
+  }>({
+    queryKey: ["audit-stats"],
+    queryFn: async () => {
+      const res = await fetch("/api/audit-logs/stats", {
+        headers: { Accept: "application/json" },
+      });
+      if (!res.ok) throw new Error("Failed to fetch audit stats");
       return res.json();
     },
     enabled: !!user,
@@ -89,7 +109,12 @@ export default function Agents() {
 
   // 3. Deploy New Agent Mutation
   const deployAgentMutation = useMutation({
-    mutationFn: async (payload: { name: string; role: string; baseModel: string }) => {
+    mutationFn: async (payload: {
+      name: string;
+      role: string;
+      baseModel: string;
+      systemPrompt?: string;
+    }) => {
       const res = await fetch("/api/agents/deploy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -102,6 +127,7 @@ export default function Agents() {
       toast.success(`Agent ${data.agent.name} successfully deployed to swarm!`);
       setIsDeployOpen(false);
       setNewAgentName("");
+      setNewAgentInstructions("");
       queryClient.invalidateQueries({ queryKey: ["agents"] });
     },
     onError: (err: any) => {
@@ -171,7 +197,8 @@ export default function Agents() {
                     Deploy Agent to Swarm
                   </DialogTitle>
                   <DialogDescription>
-                    Configure a specialized agent node with domain instructions and model boundaries.
+                    Creates an agent record with a name, role, and optional instructions. Every step
+                    executes on the fixed Gemini model chain regardless of the badge below.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
@@ -201,18 +228,34 @@ export default function Agents() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="agent-model">Base LLM Backbone</Label>
+                    <Label htmlFor="agent-model">Model Badge (metadata)</Label>
                     <Select value={newAgentModel} onValueChange={setNewAgentModel}>
                       <SelectTrigger id="agent-model">
-                        <SelectValue placeholder="Select LLM" />
+                        <SelectValue placeholder="Select badge" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="gemini-flash-latest">Gemini Flash — latest (Ultra-Fast / Low Latency)</SelectItem>
-                        <SelectItem value="gemini-pro-latest">Gemini Pro — latest (Deep Reasoning & DAG)</SelectItem>
-                        <SelectItem value="claude-3-7-sonnet">Claude 3.7 Sonnet (Advanced Coding & SOP)</SelectItem>
-                        <SelectItem value="gpt-4o-mini">GPT-4o Mini (Cost Optimized)</SelectItem>
+                        <SelectItem value="gemini-flash-latest">Gemini Flash — latest (fast path)</SelectItem>
+                        <SelectItem value="gemini-pro-latest">Gemini Pro — latest (reasoning fallback)</SelectItem>
                       </SelectContent>
                     </Select>
+                    <p className="text-xs text-muted-foreground">
+                      Stored on the agent record and shown as a badge only — all steps run the Gemini
+                      chain (flash → 3.8-flash → pro), so this does not change the runtime model.
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="agent-instructions">System Instructions (optional)</Label>
+                    <Textarea
+                      id="agent-instructions"
+                      placeholder="e.g. Enrich inbound leads against HubSpot, then draft a short intro email."
+                      value={newAgentInstructions}
+                      onChange={(e) => setNewAgentInstructions(e.target.value)}
+                      rows={4}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Saved as the agent's system prompt and used on every step. Left blank, the
+                      server generates a one-line persona from the role.
+                    </p>
                   </div>
                 </div>
                 <div className="flex justify-end gap-2">
@@ -227,6 +270,7 @@ export default function Agents() {
                         name: newAgentName.trim(),
                         role: newAgentRole,
                         baseModel: newAgentModel,
+                        systemPrompt: newAgentInstructions.trim() || undefined,
                       })
                     }
                   >
@@ -294,9 +338,13 @@ export default function Agents() {
               </span>
               <Shield className="w-4 h-4 text-purple-500" />
             </div>
-            <div className="mt-2 text-2xl font-bold text-foreground">100%</div>
+            <div className="mt-2 text-2xl font-bold text-foreground">
+              {isAuditStatsLoading ? "…" : auditStats?.saifComplianceRate ?? "—"}
+            </div>
             <p className="text-xs text-muted-foreground mt-1">
-              PII Redaction & RLS Boundary Active
+              {auditStats?.saifComplianceRate != null
+                ? "Audited events passing SAIF policy checks"
+                : "Not reported yet — no evaluated policy checks"}
             </p>
           </Card>
         </div>
@@ -376,7 +424,11 @@ export default function Agents() {
                           </div>
                         </div>
                       </div>
-                      <Badge variant="outline" className="font-mono text-[10px]">
+                      <Badge
+                        variant="outline"
+                        className="font-mono text-[10px]"
+                        title="Recorded model badge — steps execute on the fixed Gemini chain"
+                      >
                         {agent.baseModel}
                       </Badge>
                     </div>
@@ -441,12 +493,8 @@ export default function Agents() {
                       variant="outline"
                       size="icon"
                       className="shrink-0 border-border"
-                      title="Agent Parameters & Tools"
-                      onClick={() =>
-                        toast.info(
-                          `${agent.name} is running under SAIF guardrails on ${agent.baseModel}.`
-                        )
-                      }
+                      title="Agent Details"
+                      onClick={() => setDetailAgent(agent)}
                     >
                       <Settings className="w-4 h-4 text-muted-foreground" />
                     </Button>
@@ -456,6 +504,72 @@ export default function Agents() {
             })}
           </div>
         )}
+
+        {/* Agent detail dialog — replaces the canned SAIF toast the gear used to show. */}
+        <Dialog open={!!detailAgent} onOpenChange={(open) => !open && setDetailAgent(null)}>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Settings className="w-5 h-5 text-primary" />
+                {detailAgent?.name}
+              </DialogTitle>
+              <DialogDescription>
+                {detailAgent?.role} · status {detailAgent?.status}
+              </DialogDescription>
+            </DialogHeader>
+            {detailAgent && (
+              <div className="space-y-4 py-2">
+                <div className="space-y-1">
+                  <Label>System Instructions</Label>
+                  <p className="text-sm text-foreground bg-muted/40 border border-border/50 rounded-md p-3 whitespace-pre-wrap">
+                    {detailAgent.systemPrompt?.trim()
+                      ? detailAgent.systemPrompt
+                      : "No system instructions stored for this agent."}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <Label>Model Badge (metadata)</Label>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="font-mono text-[10px]">
+                      {detailAgent.baseModel}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                      Steps execute on the fixed Gemini chain (flash → 3.8-flash → pro).
+                    </span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-3 p-3 bg-muted/40 rounded-lg border border-border/50">
+                  <div>
+                    <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+                      Success Rate
+                    </div>
+                    <div className="font-bold text-sm text-foreground mt-0.5">
+                      {detailAgent.successRate != null ? `${detailAgent.successRate}%` : "—"}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+                      Tasks Run
+                    </div>
+                    <div className="font-bold text-sm text-foreground mt-0.5">
+                      {detailAgent.tasksCompleted.toLocaleString()}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+                      Last Step
+                    </div>
+                    <div className="font-bold text-sm text-foreground mt-0.5">
+                      {detailAgent.lastStepAt
+                        ? new Date(detailAgent.lastStepAt).toLocaleString()
+                        : "—"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );

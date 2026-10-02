@@ -18,6 +18,28 @@ vi.mock("node:child_process", async (importOriginal) => {
   };
 });
 
+// Production-data isolation (CC-2026-10-02-011, disposition 6): these tests
+// previously called the REAL controllers against the live DATABASE_URL —
+// every `pnpm test` run wrote an ECOSYSTEM_FULL_SYNC audit row and a duplicate
+// "Alex Vance" roaming-ingest row into the production compliance trail (the
+// spawnSync mock from CC-2026-10-02-006 covered only the script step).
+// getDb now returns null: each controller skips its DB branch while still
+// exercising its contract (status codes, payload shape, id formats), and
+// nothing is written anywhere.
+vi.mock("./db", () => ({
+  db: {},
+  getDb: vi.fn(async () => null),
+  startDatabaseKeepalive: vi.fn(),
+  upsertUser: vi.fn(async () => {}),
+  getUserByOpenId: vi.fn(async () => null),
+  ensureDatabaseSchema: vi.fn(async () => {}),
+}));
+
+// The webhook-registration test stores an external endpoint in the module's
+// in-memory subscriber list; the later sync fires dispatchMobileWebhooks at
+// it. Stub fetch so the suite never makes real outbound calls.
+vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, status: 200 })));
+
 describe("AI Studio Mobile Sync & Roaming Ingestion Bridge", () => {
   const app = express();
   app.use(express.json());

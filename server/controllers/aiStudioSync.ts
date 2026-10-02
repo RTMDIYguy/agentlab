@@ -5,9 +5,10 @@ import {
   agents,
   workflows,
   workflowRuns,
+  workflowRunSteps,
   auditLogs,
 } from "../schema";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, gte, sql } from "drizzle-orm";
 import { randomUUID } from "crypto";
 import { processPendingRuns } from "../execution/queue-processor";
 
@@ -50,6 +51,11 @@ export async function getSyncState(req: Request, res: Response): Promise<void> {
     let recentRuns: any[] = [];
     let pendingApprovals: any[] = [];
     let recentAuditLogs: any[] = [];
+    let workspaceAgents: any[] = [];
+    let lastStepLatencyMs: number | null = null;
+    let monthSpend: string | null = null;
+    const nowTs = new Date();
+    const monthStart = new Date(nowTs.getFullYear(), nowTs.getMonth(), 1);
 
     if (db) {
       try {
@@ -75,6 +81,38 @@ export async function getSyncState(req: Request, res: Response): Promise<void> {
           .where(eq(auditLogs.workspaceId, workspaceId))
           .orderBy(desc(auditLogs.createdAt))
           .limit(15);
+
+        // Real-state fields (CC-2026-10-02-011, disposition 9): the phone
+        // was still being shown the 450ms / $12.50 / 5-agents / saif:true
+        // fiction removed from the web Dashboard in CC-2026-09-23-012.
+        workspaceAgents = await db
+          .select()
+          .from(agents)
+          .where(eq(agents.workspaceId, workspaceId));
+
+        const [lastStep] = await db
+          .select({ latencyMs: workflowRunSteps.latencyMs })
+          .from(workflowRunSteps)
+          .where(
+            and(
+              eq(workflowRunSteps.workspaceId, workspaceId),
+              eq(workflowRunSteps.status, "completed")
+            )
+          )
+          .orderBy(desc(workflowRunSteps.completedAt))
+          .limit(1);
+        lastStepLatencyMs = lastStep?.latencyMs ?? null;
+
+        const [spendRow] = await db
+          .select({ total: sql<string | null>`sum(${workflowRunSteps.cost})` })
+          .from(workflowRunSteps)
+          .where(
+            and(
+              eq(workflowRunSteps.workspaceId, workspaceId),
+              gte(workflowRunSteps.completedAt, monthStart)
+            )
+          );
+        monthSpend = spendRow?.total ?? null;
       } catch (dbErr) {
         console.warn("[AI Studio Sync] Database query error while compiling state:", dbErr);
       }
@@ -93,19 +131,29 @@ export async function getSyncState(req: Request, res: Response): Promise<void> {
       version: "2.0.0-mobile-sync",
       syncedAt: new Date().toISOString(),
       workspaceId,
+      // Unknowns are null — never invented. `status` is derived from real
+      // pending approvals and recent failures instead of a static claim.
       systemHealth: {
-        status: "nominal",
-        orchestratorLatencyMs: 450,
-        saifGuardrailsActive: true,
+        status:
+          pendingApprovals.length > 0 ||
+          recentRuns.some((r: any) => r.status === "failed")
+            ? "attention"
+            : "nominal",
+        orchestratorLatencyMs: lastStepLatencyMs,
+        saifGuardrailsActive:
+          recentAuditLogs.find(
+            (l: any) => l.policyChecks?.saifPassed !== undefined
+          )?.policyChecks?.saifPassed ?? null,
         queueLoad: activeRuns,
       },
       metrics: {
-        activeSwarmAgents: 5,
+        activeSwarmAgents: workspaceAgents.filter((a: any) => a.status === "active")
+          .length,
         activeTasks: activeRuns,
         pendingApprovalsCount: pendingApprovals.length,
         totalWorkflows: workspaceWorkflows.length,
         totalHistoricalRuns: recentRuns.length,
-        estimatedSpendMonthly: "12.50",
+        estimatedSpendMonthly: monthSpend,
       },
       workflows: workspaceWorkflows.map((wf) => ({
         id: wf.id,
@@ -144,6 +192,7 @@ export async function getSyncState(req: Request, res: Response): Promise<void> {
  * Ingests roaming & mobile data (leads, voice transcripts, observations, quick tasks) from AI Studio.
  */
 export async function ingestRoamingData(req: Request, res: Response): Promise<void> {
+  const ingestStartedAt = Date.now();
   try {
     const workspaceId = req.workspaceId || "00000000-0000-0000-0000-000000000001";
     const {
@@ -191,17 +240,24 @@ export async function ingestRoamingData(req: Request, res: Response): Promise<vo
             status: "SUCCESS_INGESTED",
             ingestionId,
           },
-          tokensPrompt: 50,
-          tokensCompletion: 25,
-          tokensTotal: 75,
-          cost: "0.000010",
-          latencyMs: 120,
+          // Honest telemetry (CC-2026-10-02-011, disposition 9): no LLM ran
+          // here, so tokens/cost are genuinely zero, latency is measured,
+          // and the guardrail checks are marked NOT evaluated — the previous
+          // invented all-true checks (on a payload containing a person's
+          // name) were inflating the SAIF compliance rate with non-events.
+          tokensPrompt: 0,
+          tokensCompletion: 0,
+          tokensTotal: 0,
+          cost: "0.000000",
+          latencyMs: Date.now() - ingestStartedAt,
           status: "success",
           billed: false,
           policyChecks: {
-            saifPassed: true,
-            piiDetected: 0,
-            budgetThresholdPassed: true,
+            saifPassed: null,
+            piiDetected: null,
+            budgetThresholdPassed: null,
+            evaluated: false,
+            note: "not-llm-dispatch: no guardrail evaluation performed",
           },
         });
       } catch (auditErr) {
@@ -405,6 +461,7 @@ export async function triggerFullEcosystemSync(workspaceId: string = "00000000-0
   message: string;
   stats: Record<string, any>;
 }> {
+  const syncStartedAt = Date.now();
   const syncedAt = new Date().toISOString();
   let scriptsRun = false;
 
@@ -437,10 +494,18 @@ export async function triggerFullEcosystemSync(workspaceId: string = "00000000-0
         tokensCompletion: 0,
         tokensTotal: 0,
         cost: "0.000000",
-        latencyMs: 150,
+        // Measured wall time instead of the invented 150ms; guardrail checks
+        // marked NOT evaluated (CC-2026-10-02-011, disposition 9).
+        latencyMs: Date.now() - syncStartedAt,
         status: "success",
         billed: false,
-        policyChecks: { saifPassed: true, piiDetected: 0, budgetThresholdPassed: true },
+        policyChecks: {
+          saifPassed: null,
+          piiDetected: null,
+          budgetThresholdPassed: null,
+          evaluated: false,
+          note: "not-llm-dispatch: no guardrail evaluation performed",
+        },
       });
     } catch (auditErr) {
       console.warn("[Ecosystem Sync] Failed to record audit log:", auditErr);

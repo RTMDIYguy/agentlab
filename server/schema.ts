@@ -152,7 +152,10 @@ export const agents = pgTable(
     role: varchar("role", { length: 128 }).notNull(),
     baseModel: varchar("base_model", { length: 64 })
       .notNull()
-      .default("gemini-1.5-pro"),
+      // Retired id was the default until CC-2026-10-02-011 (disposition 7);
+      // the deploy path always passes an explicit value, this only affects
+      // inserts that omit baseModel.
+      .default("gemini-flash-latest"),
     systemPrompt: text("system_prompt").notNull(),
     status: varchar("status", { length: 32 }).notNull().default("idle"), // 'active' | 'idle' | 'error' | 'paused'
     // Fabricated at seed time in the pre-honesty-audit controller; retained

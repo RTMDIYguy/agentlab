@@ -115,9 +115,14 @@ export async function getAuditStats(req: Request, res: Response): Promise<void> 
 
         // SAIF compliance rate computed from real policy checks; null (rendered
         // as "not reported") when no audited events exist yet.
+        // CC-2026-10-02-011 (disposition 9): non-LLM events (syncs,
+        // ingestions) now record evaluated:false instead of the all-true
+        // default — counting those as "passed" would inflate compliance with
+        // non-events, so they are excluded from the denominator. Legacy rows
+        // (no `evaluated` key) keep counting as before.
         const [saifRow] = await db
           .select({
-            total: sql<number>`count(*)`,
+            total: sql<number>`count(*) filter (where (${auditLogs.policyChecks} ->> 'evaluated') is distinct from 'false')`,
             passed: sql<number>`count(*) filter (where (${auditLogs.policyChecks} -> 'saifPassed')::text = 'true')`,
           })
           .from(auditLogs)
