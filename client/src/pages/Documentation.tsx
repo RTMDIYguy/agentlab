@@ -81,7 +81,13 @@ export default function Documentation() {
         doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         doc.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
         doc.overview.purpose.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.troubleshooting.some(t => t.symptom.toLowerCase().includes(searchQuery.toLowerCase()));
+        doc.troubleshooting.some(
+          t =>
+            t.symptom.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            t.cause.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            t.resolution.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (t.command || "").toLowerCase().includes(searchQuery.toLowerCase())
+        );
       return matchesCategory && matchesSearch;
     });
   }, [selectedCategory, searchQuery]);
@@ -115,9 +121,6 @@ export default function Documentation() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="font-mono text-xs bg-muted/40">
-                {currentDoc.version}
-              </Badge>
               <Badge className="bg-primary/10 text-primary border-primary/20 text-xs font-medium">
                 {currentDoc.category}
               </Badge>
@@ -457,8 +460,20 @@ export default function Documentation() {
               Owner's Manual & Operational Directory
             </h1>
             <p className="text-muted-foreground text-sm md:text-base mt-2 max-w-3xl">
-              Complete architectural transparency for Uncle Robert Consulting, Bootstrapper Capital, and Tactix. 
-              Click any module to open its interactive visual blueprint, live control walkthrough, telemetry guide, and troubleshooting runbook.
+              A deep-dive directory for 13 core modules of Uncle Robert Consulting, Bootstrapper Capital, and Tactix.
+              Click any module to open its interactive visual blueprint, control walkthrough, telemetry guide, and troubleshooting runbook.
+            </p>
+            <p className="text-xs text-muted-foreground mt-3 max-w-3xl">
+              This directory documents the in-app modules. The canonical narrative manual — covering the whole business — lives in the repository as{" "}
+              <a
+                href="https://github.com/RTMDIYguy/agentlab/blob/main/docs/operations/agency-owners-manual.md"
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary hover:underline font-medium"
+              >
+                agency-owners-manual.md
+              </a>
+              .
             </p>
           </div>
         </div>
@@ -497,7 +512,7 @@ export default function Documentation() {
           </div>
         </div>
 
-        {/* Live System Operational Health Card */}
+        {/* Directory Stats Card (derived from DOCS_REGISTRY) */}
         <div className="p-5 bg-muted/30 border border-border rounded-2xl grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="space-y-1">
             <span className="text-[11px] text-muted-foreground uppercase font-mono font-semibold">Documented Modules</span>
@@ -514,10 +529,10 @@ export default function Documentation() {
             </div>
           </div>
           <div className="space-y-1">
-            <span className="text-[11px] text-muted-foreground uppercase font-mono font-semibold">Active Cloud Fleet</span>
+            <span className="text-[11px] text-muted-foreground uppercase font-mono font-semibold">Content Source</span>
             <div className="text-2xl font-bold text-foreground flex items-center gap-2">
-              <Cpu className="w-5 h-5 text-blue-500" />
-              Docs Layer
+              <FileCode2 className="w-5 h-5 text-blue-500" />
+              docsRegistry.ts
             </div>
           </div>
           <div className="space-y-1">

@@ -35,6 +35,7 @@ strategy doc. Read it when you want to know where the controls are, why a decisi
 made, or how to orient a new agent, collaborator, or operator.
 
 - **New to the business?** Start at [Section 1](#1-start-here), then read [Section 2](#2-business-map).
+- **Want the in-app module blueprints?** Open the live Owner's Manual directory at `/docs` in AgentLab — interactive blueprints, controls, telemetry meanings, and runbooks for 13 core modules (registered as DOC-APP-OWNERS-MANUAL-DIRECTORY).
 - **Running a workflow?** Go to [Section 4](#4-workflow-map), then [Section 5](#5-sop-library).
 - **Handling money or accounts?** [Section 7](#7-finance-control-layer).
 - **Handling a credential or secret?** [Section 8](#8-secret-and-credential-handling) — mandatory before acting.

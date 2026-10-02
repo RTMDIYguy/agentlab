@@ -22,6 +22,16 @@ documents:
     canonical_sources: ["governance/registry/"]
     last_reviewed: "2026-08-28"
 
+  - document_id: DOC-APP-OWNERS-MANUAL-DIRECTORY
+    title: "Owner's Manual & Operational Directory (in-app /docs)"
+    path: "client/src/pages/Documentation.tsx"
+    document_type: in_app_module_directory
+    authority_level: operational
+    status: active
+    owner: "Robert T. McCarthy / OPS"
+    canonical_sources: ["client/src/data/docsRegistry.ts"]
+    last_reviewed: "2026-10-02"
+
   - document_id: DOC-URC-OPERATING-ARCHITECTURE
     title: "URC V1 Operating Architecture"
     path: "docs/operations/urc-v1-operating-architecture.md"

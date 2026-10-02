@@ -46,8 +46,6 @@ export interface DocPageEntry {
   iconName: string;
   summary: string;
   targetRoute: string;
-  version: string;
-  estimatedReadTime: string;
   /**
    * Honesty status (docs truth pass, CC-2026-09-23-020): does the documented
    * capability exist in shipped behavior today?
@@ -76,14 +74,12 @@ export interface DocPageEntry {
     | "client-messenger"
     | "screen-recorder"
     | "icp-generator"
-    | "assessment-generator"
-    | "help";
+    | "assessment-generator";
   hotspots: DocHotspot[];
   controls: DocControlItem[];
   outputs: DocOutputItem[];
   troubleshooting: DocTroubleshootingItem[];
   architecture: DocArchitectureItem[];
-  relatedDocs: string[];
 }
 
 export const DOCS_REGISTRY: DocPageEntry[] = [
@@ -94,14 +90,12 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     iconName: "TerminalSquare",
     summary: "Mission control for all active AI agents, live telemetry, execution logs, and instant operational sync.",
     targetRoute: "/command-center",
-    version: "v1.4.2",
-    estimatedReadTime: "4 min read",
     status: "live",
     overview: {
       purpose: "The Command Center provides a single pane of glass into the entire agency runtime. It monitors background workers, autonomous agents, trigger queues, and live system health across Google Cloud Run and local runtimes.",
       businessValue: "Eliminates operational blindness by consolidating cloud fleet telemetry, recent agent runs, cost counters, and automated scheduled sync status in real time.",
       keyWorkflows: [
-        "One-click 'Run Real-time Sync' to aggregate cloud logs, lead queues, and agent heartbeats",
+        "One-click '1-Click Sync All' to refresh the synced ecosystem state (POST /api/sync/all)",
         "Live inspection of running agents and background execution logs",
         "Instant drill-down into failed workflow runs with payload debugging",
       ],
@@ -112,10 +106,10 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         id: 1,
         x: 18,
         y: 18,
-        title: "Fleet Health & Live Status Badge",
-        description: "Displays real-time operational status (Operational, Degraded, or Outage) with active worker counts.",
-        actionPrompt: "Inspect this badge first upon opening to confirm all background runtimes and API connectors are healthy.",
-        outputMeaning: "🟢 Green = All cloud services reporting 200 OK. 🟡 Yellow = Minor latency or 1 worker retrying. 🔴 Red = Container failure or credential expiry.",
+        title: "Header: Model Badge & Approval Counters",
+        description: "Header shows the last response's real engine (executionMetrics.model), the greeting, and pending-approval / dispatch-queue counters — there is no aggregate fleet-health badge.",
+        actionPrompt: "Check the pending-approval badge first — paused runs are waiting in Command Center → Approval Queue.",
+        outputMeaning: "Model badge reports the actual engine used by the last response; queue badges count paused_for_approval runs and awaiting dispatches.",
         badgeType: "status",
       },
       {
@@ -124,8 +118,8 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         y: 18,
         title: "Sync All & Live Refresh Trigger",
         description: "Executes an immediate sync across all API connectors, Instantly campaigns, audit logs, and Cloud Run backends.",
-        actionPrompt: "Click 'Sync All' to force a fresh pull of lead metrics, audit logs, and agent activity immediately.",
-        outputMeaning: "Dispatches POST /api/sync/all and streams updated JSON telemetry directly into the dashboard state.",
+        actionPrompt: "Click '1-Click Sync All' to trigger a fresh ecosystem sync (POST /api/sync/all) immediately.",
+        outputMeaning: "Runs the manual sync handler (server/controllers/aiStudioSync.ts) and refreshes the synced state on the page.",
         badgeType: "action",
       },
       {
@@ -151,9 +145,9 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     ],
     controls: [
       {
-        name: "Sync All Button",
+        name: "1-Click Sync All Button",
         type: "Button",
-        purpose: "Triggers full backend synchronization across database, Instantly, ElevenLabs, and Cloud Run.",
+        purpose: "Triggers the manual ecosystem sync endpoint (POST /api/sync/all) to refresh synced lead/content state.",
         defaultState: "Idle (Active on click)",
         permissions: "All Users",
       },
@@ -165,10 +159,10 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         permissions: "All Users",
       },
       {
-        name: "Agent Quick-Pause Toggle",
-        type: "Toggle",
-        purpose: "Immediately pauses automatic execution triggers for a specific agent without deleting configuration.",
-        defaultState: "Active (Enabled)",
+        name: "Run Approve / Reject Buttons",
+        type: "Button",
+        purpose: "Approves or rejects paused workflow runs and dispatches — the real human-in-the-loop gate (this page hosts it; the Auditing page only links here).",
+        defaultState: "Enabled when runs are paused_for_approval",
         permissions: "Admin Only",
       },
       {
@@ -244,7 +238,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
       {
         layer: "Database Schema",
         component: "auditLogs & workflowRunSteps",
-        filePath: "drizzle/schema.ts",
+        filePath: "server/schema.ts",
         description: "Stores persistent step traces, payload snippets, latencies, and execution costs.",
       },
       {
@@ -254,21 +248,18 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         description: "Canonical operating blueprint for fleet orchestration and human-in-the-loop triggers.",
       },
     ],
-    relatedDocs: ["agents", "auditing", "settings"],
   },
   {
     slug: "agents",
     title: "AI Agents Hub",
     category: "Fleet & Agents",
     iconName: "Cpu",
-    summary: "Configure autonomous agents, tool permissions, system prompts, model selections, and task assignments.",
+    summary: "Configure autonomous agents, tool permissions, system prompts, and task assignments; review each agent's displayed model backbone (display-only until the model-choice pass ships).",
     targetRoute: "/agents",
-    version: "v1.3.0",
-    estimatedReadTime: "5 min read",
     status: "live",
     overview: {
       purpose: "The AI Agents Hub provides granular management of all specialized autonomous agents operating within Uncle Robert Consulting and Bootstrapper Capital.",
-      businessValue: "Empowers operators to tune prompt boundaries, bind specific execution tools, adjust temperature, and restrict write permissions with zero code deployments.",
+      businessValue: "Empowers operators to tune prompt boundaries, bind specific execution tools, and restrict write permissions with zero code deployments.",
       keyWorkflows: [
         "Configuring agent roles (Ops Cleanup Agent, Founder Intake Agent, Content Strategist)",
         "Assigning live tools (Web Scraping, Filesystem Audit, DB Query, Instantly Lead Pusher)",
@@ -291,10 +282,10 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         id: 2,
         x: 55,
         y: 22,
-        title: "Model & Hyperparameter Selector",
-        description: "Sets the underlying LLM engine (Gemini 2.5 Flash, Gemini 1.5 Pro, Claude 3.7 Sonnet) and temperature.",
-        actionPrompt: "Adjust temperature lower (0.1 - 0.3) for deterministic auditing, or higher (0.6 - 0.8) for creative content.",
-        outputMeaning: "Configures token limit, context window allocation, and reasoning budget for the selected agent.",
+        title: "Model Backbone Display",
+        description: "Shows the agent's configured LLM backbone. Display-only today: every step runs the server's fixed Google model chain regardless of this setting (CC-011).",
+        actionPrompt: "Treat the backbone and temperature fields as informational until the model-choice pass ships — changing them updates the badge, not execution.",
+        outputMeaning: "The badge reflects stored configuration (baseModel); the execution model is chosen by the server's chain per response.",
         badgeType: "control",
       },
       {
@@ -329,8 +320,8 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
       {
         name: "Model Dropdown",
         type: "Dropdown",
-        purpose: "Selects the LLM provider and model variant for this agent's inference engine.",
-        defaultState: "Gemini 2.5 Flash",
+        purpose: "Displays the agent's configured backbone (badge-only — execution always uses the server's fixed model chain).",
+        defaultState: "Server chain head (gemini-flash-latest)",
         permissions: "Operator",
       },
       {
@@ -350,10 +341,10 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     ],
     outputs: [
       {
-        field: "Total Steps Run",
-        interpretation: "Cumulative number of tool and thought iterations completed by this agent.",
-        normalRange: "100 - 50,000 steps",
-        alertThreshold: "N/A",
+        field: "Tasks Completed",
+        interpretation: "Cumulative completed tasks recorded for this agent in run history.",
+        normalRange: "Grows with dispatched work",
+        alertThreshold: "Flat while runs are active",
       },
       {
         field: "Average Success Rate",
@@ -362,10 +353,10 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         alertThreshold: "< 90.0%",
       },
       {
-        field: "Context Window Utilization",
-        interpretation: "Average tokens utilized per invocation relative to maximum model limit.",
-        normalRange: "5% - 40%",
-        alertThreshold: "> 85%",
+        field: "Base Model Badge",
+        interpretation: "Stored backbone for the agent — informational only; execution uses the server's fixed model chain (CC-011).",
+        normalRange: "Any stored id",
+        alertThreshold: "N/A (not consumed)",
       },
     ],
     troubleshooting: [
@@ -377,8 +368,8 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
       },
       {
         symptom: "Agent hallucinates or fails to follow structured format",
-        cause: "Temperature is set too high, or prompt guardrails lack explicit schema examples.",
-        resolution: "Lower temperature to 0.2 and add concrete JSON or Markdown schema specifications to the System Prompt.",
+        cause: "Prompt guardrails lack explicit schema examples (temperature is not yet consumed at execution time).",
+        resolution: "Add concrete JSON or Markdown schema specifications and tighter guardrails to the System Prompt; temperature adjustments do not change execution yet.",
         severity: "Medium",
       },
     ],
@@ -402,17 +393,14 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         description: "Checklist for certifying, testing, and packaging autonomous agent workflows.",
       },
     ],
-    relatedDocs: ["command-center", "auditing", "marketplace"],
   },
   {
     slug: "auditing",
     title: "Auditing & Compliance",
     category: "Security & Governance",
     iconName: "ShieldAlert",
-    summary: "Review agent decision traces, inspect real audit evidence, approve human-in-the-loop actions and dispatches, and run the change-control drift scanner.",
+    summary: "Review agent decision traces, inspect real audit evidence, and follow paused-run approvals to their Command Center queue; change-control drift is verified with the CLI scanner.",
     targetRoute: "/auditing",
-    version: "v1.2.1",
-    estimatedReadTime: "4 min read",
     status: "partial",
     availabilityNote:
       "Artifact integrity hashing is on the roadmap; today the Auditing page shows the real audit-log trail, run-step evidence, and artifact verification notes. SHA-256 checksums currently apply to campaign briefs and diagnostic dossiers.",
@@ -420,9 +408,9 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
       purpose: "Auditing & Compliance enforces strict human-in-the-loop governance and evidence-based verification across all autonomous actions.",
       businessValue: "Ensures that outbound agent actions require explicit human approval and that every run leaves a real audit trail — the change-control scanner verifies operational documents against the canonical registry on every build.",
       keyWorkflows: [
-        "Reviewing and approving human-in-the-loop execution gates and action dispatches",
+        "Reviewing paused-run approvals via the pointer to Command Center → Approval Queue",
         "Inspecting real audit logs, run-step evidence, and artifact verification notes",
-        "Running the Change Control & Operational Drift Scanner across all 81 SOP documents",
+        "Verifying change-control status with the CLI scanner (`pnpm change-control:check`)",
       ],
     },
     mockLayoutType: "auditing",
@@ -431,20 +419,20 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         id: 1,
         x: 22,
         y: 20,
-        title: "Pending Human-in-the-Loop Approvals",
-        description: "Queue of high-impact agent actions (e.g. sending batch emails, modifying core files) awaiting human sign-off.",
-        actionPrompt: "Review the proposed payload and click 'Approve Action' or 'Reject with Feedback'.",
-        outputMeaning: "Agents pause execution safely until an authorized operator approves or modifies the step.",
+        title: "Paused-Run Approval Pointer",
+        description: "This page no longer hosts approvals — it links paused high-impact actions (batch emails, core-file edits) to the live queue.",
+        actionPrompt: "Follow 'Command Center → Approval Queue' to approve a run or send feedback (the old on-page approve/reject buttons were removed in CC-013/015).",
+        outputMeaning: "Agents pause execution safely until an authorized operator approves the run in Command Center.",
         badgeType: "control",
       },
       {
         id: 2,
         x: 78,
         y: 20,
-        title: "Drift Scanner & Change Control Status",
-        description: "Displays result of the automated drift verification against the Canonical Operations Register.",
-        actionPrompt: "Click 'Run Drift Check' to scan all 81 operational SOPs against active system behavior.",
-        outputMeaning: "0 Critical / 0 High findings confirms complete alignment between documentation and codebase.",
+        title: "Change-Control Verification (CLI)",
+        description: "Drift verification runs from the repository, not from this page — the scanner checks the governance register and required operational docs.",
+        actionPrompt: "Run `pnpm change-control:check` in the repo to scan for drift against the canonical registry.",
+        outputMeaning: "The CLI reports findings by severity (Critical/High/Medium); a green run means documentation and codebase agree.",
         badgeType: "status",
       },
       {
@@ -470,18 +458,18 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     ],
     controls: [
       {
-        name: "Approve / Reject Action Buttons",
+        name: "Export CSV Button",
         type: "Button",
-        purpose: "Grants or denies permission for a pending human-in-the-loop workflow gate.",
-        defaultState: "Pending review",
-        permissions: "Admin Only",
+        purpose: "Downloads the audit ledger as a compliance CSV from GET /api/audit-logs/export.",
+        defaultState: "Enabled",
+        permissions: "All Users",
       },
       {
-        name: "Run Drift Scanner Button",
+        name: "Approvals Pointer Link",
         type: "Button",
-        purpose: "Executes `pnpm change-control:check` to detect any drift across the 81 operational SOPs.",
-        defaultState: "Enabled",
-        permissions: "Operator",
+        purpose: "Routes to Command Center → Approval Queue, where paused runs are actually approved (the on-page approve/reject controls were removed in CC-013/015).",
+        defaultState: "Always visible",
+        permissions: "All Users",
       },
       {
         name: "Date Range Filter",
@@ -493,22 +481,28 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     ],
     outputs: [
       {
-        field: "Pending Approvals",
-        interpretation: "Number of workflows paused waiting for human validation.",
-        normalRange: "0 - 3 items",
-        alertThreshold: "> 5 items",
+        field: "Total Events (24h)",
+        interpretation: "Audit-log rows written in the last 24 hours (true rolling window).",
+        normalRange: "Scales with run activity",
+        alertThreshold: "0 for a full day — the trail is not being written",
       },
       {
-        field: "Drift Findings",
-        interpretation: "Number of inconsistencies detected between documentation and live system state.",
-        normalRange: "0 findings",
-        alertThreshold: "> 0 findings",
+        field: "Total Cost (24h)",
+        interpretation: "Sum of recorded token costs across audit rows in the last 24 hours (not-llm-dispatch rows record 0).",
+        normalRange: "Within the workspace hard budget",
+        alertThreshold: "Over the workspace hard monthly budget",
       },
       {
-        field: "Human Decision Coverage",
-        interpretation: "Percentage of outbound action dispatches that were resolved by an explicit human approval or rejection.",
-        normalRange: "100.0%",
-        alertThreshold: "Any undecided dispatch older than 24h",
+        field: "Security Alerts (24h)",
+        interpretation: "Error-status audit rows in the last 24 hours.",
+        normalRange: "0",
+        alertThreshold: "> 0 — inspect the failing step",
+      },
+      {
+        field: "SAIF Compliance Rate",
+        interpretation: "Share of evaluated rows passing SAIF policy checks; unevaluated rows render as N/A rather than a pass.",
+        normalRange: "100% or N/A",
+        alertThreshold: "< 100% on evaluated rows",
       },
     ],
     troubleshooting: [
@@ -522,7 +516,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
       {
         symptom: "Workflow stuck in 'PAUSED_FOR_APPROVAL' state",
         cause: "An automated trigger required human approval, but no operator has reviewed the audit item.",
-        resolution: "Visit the Auditing page, inspect the pending approval card, and click 'Approve Action'.",
+        resolution: "Open Command Center → Approval Queue (linked from the Auditing page) and approve or reject the paused run.",
         severity: "Low",
       },
     ],
@@ -531,12 +525,12 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         layer: "Frontend Component",
         component: "Auditing.tsx",
         filePath: "client/src/pages/Auditing.tsx",
-        description: "Renders approvals queue, artifact hash ledger, and compliance scanner controls.",
+        description: "Renders the audit-log ledger, real stats tiles, CSV export, and the pointer to Command Center's approval queue.",
       },
       {
         layer: "Database Schema",
         component: "auditLogs table",
-        filePath: "drizzle/schema.ts",
+        filePath: "server/schema.ts",
         description: "Immutable audit log records recording user/agent actions, IP addresses, and payloads.",
       },
       {
@@ -546,7 +540,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         description: "Canonical source of truth for all architectural, operational, and schema changes.",
       },
     ],
-    relatedDocs: ["command-center", "agents", "settings"],
   },
   {
     slug: "founder-signal-system",
@@ -555,8 +548,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     iconName: "ShoppingBag",
     summary: "Outbound lead capture, Instantly.ai email sequence orchestration, diagnostic sprint scheduling, and pipeline analytics.",
     targetRoute: "/founder-signal-system",
-    version: "v1.1.0",
-    estimatedReadTime: "4 min read",
     status: "live",
     overview: {
       purpose: "The Founder Signal System automates the discovery, qualification, and outbound outreach for founders needing Microsoft 365 diagnostics and Agentic OS migrations.",
@@ -688,25 +679,24 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         description: "Tracks lead batches, qualification criteria, and outbound sequence copy.",
       },
     ],
-    relatedDocs: ["command-center", "settings", "blog-manager"],
   },
   {
     slug: "settings",
     title: "Settings & Integrations",
     category: "Infrastructure & System",
     iconName: "Settings",
-    summary: "Manage API credentials (OpenAI, Vertex AI, Instantly, ElevenLabs), workspace parameters, and live connectivity health checks.",
+    summary: "Manage API credentials (OpenAI, Vertex AI, Instantly, ElevenLabs) and live connectivity health checks.",
     targetRoute: "/dashboard/settings",
-    version: "v1.2.0",
-    estimatedReadTime: "3 min read",
-    status: "live",
+    status: "partial",
+    availabilityNote:
+      "Secrets, integrations, and live test probes are real today; Profile/Billing/Notifications tabs save to browser storage only (the page carries demo banners) and workspace governance parameters are not yet consumed by the runtime.",
     overview: {
-      purpose: "Settings provides centralized secret management, integration diagnostics, and workspace parameter tuning.",
+      purpose: "Settings provides centralized secret management and integration diagnostics; workspace parameter tuning is not yet consumed by the runtime.",
       businessValue: "Enables instant live health checks for third-party APIs without exposing secrets in logs or plaintext files.",
       keyWorkflows: [
         "Testing live connectivity to Google Cloud, Instantly.ai, and ElevenLabs APIs",
         "Updating API keys and model credentials securely",
-        "Managing workspace metadata and notification preferences",
+        "Reviewing the page's honest demo labels for tabs not yet wired (Profile, Billing, Notifications)",
       ],
     },
     mockLayoutType: "settings",
@@ -735,10 +725,10 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         id: 3,
         x: 50,
         y: 65,
-        title: "Workspace & Agency Configuration",
-        description: "Defines primary agency brand (URC / Bootstrapper Capital / Tactix), timezone, and currency.",
-        actionPrompt: "Set agency parameters and click 'Save Changes'.",
-        outputMeaning: "Propagates company identity across reports, generated blueprints, and email templates.",
+        title: "Profile & Preferences (demo tabs)",
+        description: "Profile, Billing, and Notifications tabs currently save to browser storage only — the page marks them with demo banners.",
+        actionPrompt: "Use the Secrets and Integrations tabs for real configuration; treat demo-tab values as local previews.",
+        outputMeaning: "Local-only values do not affect server behavior until the entitlements rollout.",
         badgeType: "data",
       },
     ],
@@ -800,7 +790,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         description: "Security protocols for storing, rotating, and managing API keys.",
       },
     ],
-    relatedDocs: ["command-center", "agents", "billing"],
   },
   {
     slug: "marketplace",
@@ -809,8 +798,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     iconName: "ShoppingBag",
     summary: "Browse, certify, and install pre-packaged autonomous workflows, lead engines, and operational modules.",
     targetRoute: "/marketplace",
-    version: "v1.2.0",
-    estimatedReadTime: "3 min read",
     status: "partial",
     availabilityNote:
       "Playbook mounting and beta enrollment are live today; the workflow certification and one-click install pipeline is on the roadmap.",
@@ -818,9 +805,9 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
       purpose: "The Marketplace houses certified, reusable agent workflow packages ready for one-click installation into any workspace.",
       businessValue: "Accelerates time-to-value by providing pre-built, tested operating recipes for lead generation, content syndication, and compliance.",
       keyWorkflows: [
-        "Browsing available workflow bundles (e.g. M365 Diagnostic Sprint, Ops Cleanup Suite)",
-        "Reviewing certification status, required API dependencies, and estimated cost per run",
-        "Installing and activating workflows into the active Command Center queue",
+        "Browsing the live catalog (e.g. Founder Signal System, Sales Playbook)",
+        "Reviewing price, department, and mount status per playbook (certification pipeline is on the roadmap)",
+        "Mounting free playbooks or subscribing via Stripe to unlock department entitlements in Command Center",
       ],
     },
     mockLayoutType: "marketplace",
@@ -829,38 +816,38 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         id: 1,
         x: 30,
         y: 20,
-        title: "Workflow Catalog & Category Filter",
-        description: "Explore workflows filtered by domain (Lead Gen, Content, Ops, Compliance, Security).",
-        actionPrompt: "Filter by category to find the exact workflow recipe needed.",
-        outputMeaning: "Displays certified packages with version numbers, author tags, and difficulty badges.",
+        title: "Catalog & Category Tabs",
+        description: "Explore the catalog filtered by category (Playbooks, Live Apps, Books) with free-text search.",
+        actionPrompt: "Filter by category or search to find the exact playbook or app.",
+        outputMeaning: "Displays packages with price, mount status, and category tags (certification badges are roadmap).",
         badgeType: "control",
       },
       {
         id: 2,
         x: 75,
         y: 45,
-        title: "Workflow Specification & Cost Estimator",
-        description: "Detailed card showing workflow steps, required tools, token requirements, and expected runtime.",
-        actionPrompt: "Review prerequisites (e.g. requires Instantly API key) before installing.",
-        outputMeaning: "Ensures operator is aware of tool dependencies and compute footprint before activation.",
+        title: "Playbook Card & Blueprint",
+        description: "Card shows department, price, automation, and time-saved figures; the blueprint modal shows scope and real mount state.",
+        actionPrompt: "Open the Blueprint to review scope, then Mount (free) or Subscribe (paid).",
+        outputMeaning: "Honest catalog figures — no per-department workflow counts are claimed (CC-017).",
         badgeType: "data",
       },
       {
         id: 3,
         x: 75,
         y: 80,
-        title: "Install & Activate Bundle Trigger",
-        description: "One-click deployment that scaffolds the workflow into your workspace execution registry.",
-        actionPrompt: "Click 'Install Workflow' to mount the recipe to your active Command Center schedule.",
-        outputMeaning: "Creates database records and binds assigned agents to the workflow steps immediately.",
+        title: "Mount / Subscribe Trigger",
+        description: "Free playbooks mount in one click; paid playbooks go through Stripe Checkout and provision on payment.",
+        actionPrompt: "Click 'Mount to Workspace' (free) or 'Subscribe' (paid) — mounting flips a workspace_packages entitlement.",
+        outputMeaning: "Command Center gates that department's steps on the entitlement; the Founder Signal family additionally provisions its 6-step workflow. Nothing is added to a schedule automatically.",
         badgeType: "action",
       },
     ],
     controls: [
       {
-        name: "Install Workflow Button",
+        name: "Mount / Subscribe Button",
         type: "Button",
-        purpose: "Installs the selected workflow bundle into the current workspace.",
+        purpose: "Mounts a free playbook as a workspace entitlement, or starts Stripe checkout for a paid one (mount returns 402 without payment).",
         defaultState: "Enabled",
         permissions: "Operator",
       },
@@ -874,18 +861,18 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     ],
     outputs: [
       {
-        field: "Installed Workflows",
-        interpretation: "Number of active workflow recipes currently provisioned in this workspace.",
-        normalRange: "3 - 15 workflows",
+        field: "Mounted Playbooks",
+        interpretation: "Number of playbook entitlements active in this workspace (mountedCount).",
+        normalRange: "0 - 8 (catalog size)",
         alertThreshold: "N/A",
       },
     ],
     troubleshooting: [
       {
-        symptom: "Workflow installation fails with 'Missing Required Integration'",
-        cause: "The workflow requires an integration (e.g., ElevenLabs) that is not configured in Settings.",
-        resolution: "Visit Settings > Integrations, configure the required API key, and retry the installation.",
-        severity: "Medium",
+        symptom: "Mount refused with 402 payment_required",
+        cause: "The playbook is a paid package and Stripe is configured — mount no longer grants paid packages for free.",
+        resolution: "Click 'Subscribe' to open Stripe Checkout; the webhook provisions the entitlement on payment (no free fallback exists by design).",
+        severity: "Low",
       },
     ],
     architecture: [
@@ -902,7 +889,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         description: "Official registry of all certified autonomous workflow packages.",
       },
     ],
-    relatedDocs: ["command-center", "agents", "founder-signal-system"],
   },
   {
     slug: "blog-manager",
@@ -911,8 +897,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     iconName: "BookOpen",
     summary: "Autonomous article drafting, SEO keyword optimization, publishing queues, and newsletter manager.",
     targetRoute: "/blog-manager",
-    version: "v1.3.0",
-    estimatedReadTime: "3 min read",
     status: "live",
     overview: {
       purpose: "The Blog Manager orchestrates autonomous thought leadership, article generation, and newsletter distribution.",
@@ -949,10 +933,10 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         id: 3,
         x: 50,
         y: 65,
-        title: "Live SEO & Readability Score Card",
-        description: "Evaluates keyword density, reading level, heading structure, and meta tags.",
-        actionPrompt: "Review recommendations to improve organic search ranking before publishing.",
-        outputMeaning: "Calculates score from 0-100 based on modern search engine best practices.",
+        title: "Publish & Draft Status Controls",
+        description: "Promote a draft to the live public blog or keep it in the queue (no SEO/readability scoring exists on this page).",
+        actionPrompt: "Open an article and click Publish Now to push it live.",
+        outputMeaning: "Published and Draft counts on the page update immediately after the status change.",
         badgeType: "control",
       },
     ],
@@ -980,10 +964,10 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         alertThreshold: "N/A",
       },
       {
-        field: "SEO Score",
-        interpretation: "Algorithmic assessment of search engine optimization quality.",
-        normalRange: "85 - 100",
-        alertThreshold: "< 70",
+        field: "Draft Queue Count",
+        interpretation: "Number of articles waiting in the draft queue (shown live on the page).",
+        normalRange: "Grows between publish cycles",
+        alertThreshold: "N/A",
       },
     ],
     troubleshooting: [
@@ -1003,12 +987,11 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
       },
       {
         layer: "Backend Controller",
-        component: "blog.ts",
-        filePath: "server/controllers/blog.ts",
+        component: "router.ts (blog)",
+        filePath: "server/blog/router.ts",
         description: "Handles article CRUD, slug generation, and database persistence.",
       },
     ],
-    relatedDocs: ["command-center", "founder-signal-system", "marketplace"],
   },
   {
     slug: "billing",
@@ -1017,8 +1000,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     iconName: "CreditCard",
     summary: "Monitor cloud infrastructure costs, API token consumption, compute resource spending, and bootstrap thresholds.",
     targetRoute: "/billing",
-    version: "v1.1.0",
-    estimatedReadTime: "3 min read",
     status: "roadmap",
     availabilityNote:
       "Cloud-infrastructure billing monitoring is not built yet. Real cost visibility today: the Dashboard telemetry console computes actual LLM spend from executed run steps, and Settings shows live vault/integration status.",
@@ -1116,7 +1097,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         description: "Canonical policy governing low-cost operating ceilings and cloud cost controls.",
       },
     ],
-    relatedDocs: ["command-center", "settings", "auditing"],
   },
   {
     slug: "meeting-room",
@@ -1125,8 +1105,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     iconName: "Video",
     summary: "Zero-install WebRTC client video conferencing, screen sharing, live agenda scratchpad, and AI meeting summary generator.",
     targetRoute: "/meeting",
-    version: "v1.0.0",
-    estimatedReadTime: "3 min read",
     status: "live",
     overview: {
       purpose: "The Live Video War Room turns AgentLab into an all-in-one virtual office where agency operators can jump into high-definition video calls and screen-shares with clients and team members without paying for Zoom or Google Meet seats.",
@@ -1188,7 +1166,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
       {
         name: "AI Summary Generator Button",
         type: "Button",
-        purpose: "Dispatches scratchpad text to Gemini 2.5 Flash for instant structured synthesis.",
+        purpose: "Dispatches scratchpad text to the server's Gemini model chain for instant structured synthesis.",
         defaultState: "Enabled",
         permissions: "All Users",
       },
@@ -1229,7 +1207,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         description: "Operating rules for zero-friction client video onboarding and meeting synthesis.",
       },
     ],
-    relatedDocs: ["client-messenger", "screen-recorder", "command-center"],
   },
   {
     slug: "client-messenger",
@@ -1238,8 +1215,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     iconName: "MessageSquare",
     summary: "Unified team communication channels, direct client messaging threads, and AI-assisted response drafting.",
     targetRoute: "/messages",
-    version: "v1.0.0",
-    estimatedReadTime: "3 min read",
     status: "live",
     overview: {
       purpose: "Client Messenger provides an integrated messaging hub inside AgentLab, replacing disparate Slack/Teams tools with direct client message threads, departmental channels, and an AI co-pilot for rapid consultative replies.",
@@ -1308,16 +1283,10 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     ],
     outputs: [
       {
-        field: "Unread Thread Count",
-        interpretation: "Total pending client communications requiring operator attention.",
-        normalRange: "0 - 3 unread messages",
-        alertThreshold: "> 5 unread messages > 2 hours",
-      },
-      {
-        field: "AI Response Quality Score",
-        interpretation: "Degree of alignment with URC servant leadership tone and clarity guidelines.",
-        normalRange: "90% - 100% Brand Compliant",
-        alertThreshold: "< 85% Brand Score",
+        field: "AI Draft Status",
+        interpretation: "State of the AI Draft Reply co-pilot (drafting / inserted into composer / unavailable toast).",
+        normalRange: "Available when a thread is selected",
+        alertThreshold: "'AI draft unavailable' toast — the draft service errored",
       },
     ],
     troubleshooting: [
@@ -1342,7 +1311,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         description: "Standard operating procedures for client response times and tone of voice.",
       },
     ],
-    relatedDocs: ["meeting-room", "screen-recorder", "command-center"],
   },
   {
     slug: "screen-recorder",
@@ -1351,8 +1319,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     iconName: "Tv",
     summary: "Browser-native screen and webcam recording for Loom-style client audits, async proposals, and AI teardown briefs.",
     targetRoute: "/screen-recorder",
-    version: "v1.0.0",
-    estimatedReadTime: "4 min read",
     status: "live",
     overview: {
       purpose: "The Screen Teardown Studio provides instant video recording directly in the browser using the HTML5 MediaRecorder API. Operators can record high-resolution screen teardowns, technical walkthroughs, and async client proposals without paid Loom or Vidyard accounts.",
@@ -1462,7 +1428,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         description: "Standard methodology for recording high-converting 5-minute video audits for prospective clients.",
       },
     ],
-    relatedDocs: ["meeting-room", "founder-signal-system", "command-center"],
   },
   {
     slug: "icp-generator",
@@ -1471,8 +1436,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     iconName: "Target",
     summary: "Synthesize precision ICP dossiers, firmographic parameters, acute pain triggers, and high-converting message hooks.",
     targetRoute: "/icp-generator",
-    version: "v1.0.0",
-    estimatedReadTime: "4 min read",
     status: "live",
     overview: {
       purpose: "The ICP Generator operationalizes MKT-01 (Ideal Customer Profile definition) into an interactive software tool. Operators enter target market parameters to synthesize deep buyer personas, acute operational pain points, buying triggers, and objection-handling scripts.",
@@ -1581,7 +1544,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         description: "Canonical procedure for identifying high-margin agency buyer archetypes.",
       },
     ],
-    relatedDocs: ["assessment-generator", "founder-signal-system", "marketplace"],
   },
   {
     slug: "assessment-generator",
@@ -1590,15 +1552,13 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     iconName: "ClipboardList",
     summary: "Dynamic diagnostic question bank, category filters, custom question editor, and 1-click AI question generation.",
     targetRoute: "/assessment-generator",
-    version: "v1.0.0",
-    estimatedReadTime: "4 min read",
     status: "live",
     overview: {
       purpose: "The Assessment Question Generator powers the agency's discovery and diagnostic consultations (SAL-01). It maintains a compounding database of high-signal interview questions across 7 departments, with 1-click AI generation for vertical-specific inquiries.",
       businessValue: "Transforms discovery calls from awkward interrogations into authoritative strategic diagnostics that uncover high-ticket workflow automation opportunities.",
       keyWorkflows: [
         "Filter questions by department category (Strategy, Operations, Marketing, Sales, Finance, Delivery, Retention)",
-        "Generate custom diagnostic questions targeting specific client niches using Gemini 2.5 Flash",
+        "Generate custom diagnostic questions targeting specific client niches using the server's Gemini model chain",
         "Add, edit, or delete custom questions with real-time PostgreSQL database persistence",
         "Export clean interview scripts for founder intake and diagnostic sessions",
       ],
@@ -1707,7 +1667,6 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         description: "Standard operating procedure for conducting 30-minute founder diagnostic sessions.",
       },
     ],
-    relatedDocs: ["icp-generator", "meeting-room", "founder-signal-system"],
   },
 ];
 

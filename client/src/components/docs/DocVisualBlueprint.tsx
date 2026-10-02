@@ -150,7 +150,7 @@ export function DocVisualBlueprint({ doc }: DocVisualBlueprintProps) {
               <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
               <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
               <span className="ml-3 text-xs font-mono text-muted-foreground bg-background px-3 py-0.5 rounded border border-border">
-                https://agentlab.urc.internal{doc.targetRoute}
+                https://agentlab-718497644379.us-central1.run.app{doc.targetRoute}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -410,27 +410,29 @@ function renderMockContent(type: DocPageEntry["mockLayoutType"]) {
         <div className="space-y-4 opacity-90 pointer-events-none">
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-card p-3 rounded-xl border border-amber-500/30 bg-amber-500/5 space-y-1">
-              <span className="text-[10px] uppercase font-mono text-amber-600 font-bold">Human-in-the-Loop</span>
-              <div className="text-sm font-bold text-foreground">1 Pending Approval</div>
-              <div className="text-[10px] text-muted-foreground">Action: Dispatch Batch Outreach</div>
+              <span className="text-[10px] uppercase font-mono text-amber-600 font-bold">Human-in-the-Loop — lives in Command Center</span>
+              <div className="text-sm font-bold text-foreground">1 Run Awaiting Approval</div>
+              <div className="text-[10px] text-muted-foreground">Approve in Command Center → Approval Queue</div>
             </div>
             <div className="bg-card p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/5 space-y-1">
-              <span className="text-[10px] uppercase font-mono text-emerald-600 font-bold">Drift Scanner</span>
-              <div className="text-sm font-bold text-foreground">81 / 81 SOPs Passing</div>
-              <div className="text-[10px] text-emerald-600">0 Critical • 0 High</div>
+              <span className="text-[10px] uppercase font-mono text-emerald-600 font-bold">Change-Control Check — CLI</span>
+              <div className="text-sm font-bold text-foreground">pnpm change-control:check</div>
+              <div className="text-[10px] text-emerald-600">Findings reported in the repo</div>
             </div>
           </div>
 
           <div className="bg-card p-3 rounded-xl border border-border space-y-2">
-            <div className="text-xs font-bold text-foreground">Cryptographic SHA-256 Hash Ledger</div>
+            <div className="text-xs font-bold text-foreground">
+              Artifact Verification <span className="text-amber-600">(full SHA-256 ledger — roadmap)</span>
+            </div>
             <div className="space-y-1 text-[11px] font-mono">
               <div className="flex justify-between p-1.5 bg-muted/40 rounded">
-                <span>lead-inventory-registry.md</span>
-                <span className="text-emerald-600">sha256:e3b0c44... (VERIFIED)</span>
+                <span>campaign briefs / diagnostic dossiers</span>
+                <span className="text-emerald-600">SHA-256 applied today</span>
               </div>
               <div className="flex justify-between p-1.5 bg-muted/40 rounded">
-                <span>change-control-register.md</span>
-                <span className="text-emerald-600">sha256:9f83a01... (VERIFIED)</span>
+                <span>full artifact ledger</span>
+                <span className="text-amber-600">Roadmap</span>
               </div>
             </div>
           </div>
