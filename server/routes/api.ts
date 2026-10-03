@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { apiAuthGate } from "../middleware/apiAuth";
 import { handleOrchestratorChat, listOrchestratorModels } from "../controllers/orchestrator";
 import { executeOrchestratorWorkflow } from "../controllers/orchestrator-execute";
 import {
@@ -102,6 +103,12 @@ import {
 } from "../controllers/instantly";
 
 export const apiRouter = Router();
+
+// CC-2026-10-03-003 — every route under /api is denied unless it is listed in
+// middleware/apiAuth.ts as public, is an authenticated session, or presents
+// WEBHOOK_INGEST_SECRET. Registered first so routes below inherit it without
+// opting in; see that file for the justification of each public entry.
+apiRouter.use(apiAuthGate);
 
 // Health Check
 apiRouter.get("/health", (_req, res) => {

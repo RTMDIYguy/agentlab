@@ -1,12 +1,25 @@
 import { eq } from "drizzle-orm";
 import { db } from "../server/db";
-import { auditLogs, workspaces, workspacePackages, workflows } from "../server/schema";
+import { sdk } from "../server/_core/sdk";
+import { COOKIE_NAME } from "../shared/const";
+import {
+  auditLogs,
+  users,
+  workspaces,
+  workspacePackages,
+  workflows,
+} from "../server/schema";
 
 const API_URL = "http://127.0.0.1:3000/api";
-const HEADERS = {
+// CC-2026-10-03-003: /api requires a verified session now, and the
+// `x-workspace-id` header it used to trust is no longer read anywhere. The
+// session cookie is attached in run() once the local driver user exists.
+const HEADERS: Record<string, string> = {
   "Content-Type": "application/json",
-  "x-workspace-id": "00000000-0000-0000-0000-000000000001",
 };
+
+const E2E_WORKSPACE_ID = "00000000-0000-0000-0000-000000000001";
+const E2E_OPEN_ID = "usr_e2e_local_driver";
 
 async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -29,6 +42,21 @@ async function run() {
       name: "E2E Test Workflow",
       triggerType: "manual"
     }).onConflictDoNothing();
+
+    // Authenticate the way the app does: a real user row plus the session
+    // token the login routes sign. The old header-based tenant selection is
+    // gone, so this harness has to prove identity like any other caller.
+    await db.insert(users).values({
+      openId: E2E_OPEN_ID,
+      email: "e2e-local-driver@agentlab.test",
+      name: "E2E Driver",
+      workspaceId: E2E_WORKSPACE_ID,
+      role: "owner",
+    }).onConflictDoNothing();
+    const e2eSession = await sdk.createSessionToken(E2E_OPEN_ID, {
+      name: "E2E Driver",
+    });
+    HEADERS.cookie = `${COOKIE_NAME}=${e2eSession}`;
 
     console.log("1. Fetching Marketplace Packages...");
     let res = await fetch(`${API_URL}/marketplace/packages`, { headers: HEADERS });

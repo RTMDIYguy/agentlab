@@ -52,7 +52,13 @@ export function computeUserRoleAndTier(
   };
 }
 
-function getSessionTokenFromRequest(req: Request): string | undefined {
+/**
+ * The one place that decides how a caller presents a session: the httpOnly
+ * session cookie first, then that same value in an Authorization: Bearer
+ * header. Exported for server/middleware/tenant.ts (CC-2026-10-03-003) so the
+ * REST surface reads a session exactly the way the login routes write one.
+ */
+export function getSessionTokenFromRequest(req: Request): string | undefined {
   const cookieHeader = req.headers.cookie;
   if (cookieHeader) {
     const parsed = parseCookieHeader(cookieHeader);

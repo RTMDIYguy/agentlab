@@ -78,6 +78,13 @@ export function PamelaVoiceWidget() {
         body: JSON.stringify({ text }),
       });
 
+      if (res.status === 401) {
+        // CC-2026-10-03-003: /api/voice/tts now requires a session so an
+        // anonymous visitor cannot spend ElevenLabs quota. Say what actually
+        // happened instead of reporting a synthesis failure that never ran.
+        throw new Error("Sign in to hear Pamela's voice.");
+      }
+
       if (!res.ok) {
         throw new Error("Failed to synthesize voice with Pamela.");
       }

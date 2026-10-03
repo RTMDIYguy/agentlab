@@ -331,6 +331,20 @@ export function OpsAgentChat() {
         body: JSON.stringify({ prompt: content, history }),
       });
 
+      if (res.status === 401) {
+        // CC-2026-10-03-003: /api/orchestrator/* requires a session now. Tell
+        // the visitor the truth rather than blaming the connection.
+        setMessages((current) => [
+          ...current,
+          {
+            id: `asst_err_${Date.now()}`,
+            role: "assistant",
+            content:
+              "You're not signed in — the Ops Agent needs a session before it can consult the orchestrator.",
+          },
+        ]);
+        return;
+      }
       if (!res.ok) throw new Error("Failed to get orchestrator response");
       const data = await res.json();
 

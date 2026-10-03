@@ -95,12 +95,20 @@ function getWebhookToken(req: Request): string | null {
 
 export function registerAICoachesWebhookRoutes(app: Express): void {
   app.post("/api/aicoaches/webhook", async (req: Request, res: Response) => {
+    // CC-2026-10-03-003: fail CLOSED. This used to be "check the token if one
+    // is configured, otherwise accept anything" — an unset env var silently
+    // meant an open lead-writing endpoint (audit finding F-08). Same contract
+    // as /api/internal/poller-kick: not configured is honest 503, not open.
     const requiredToken = process.env.AICOACHES_WEBHOOK_TOKEN?.trim();
-    if (requiredToken) {
-      const token = getWebhookToken(req);
-      if (!token || token !== requiredToken) {
-        return res.status(401).json({ ok: false, error: "unauthorized" });
-      }
+    if (!requiredToken) {
+      return res.status(503).json({
+        ok: false,
+        error: "webhook not configured",
+      });
+    }
+    const token = getWebhookToken(req);
+    if (!token || token !== requiredToken) {
+      return res.status(401).json({ ok: false, error: "unauthorized" });
     }
 
     const baseDir = path.resolve(process.cwd(), "output", "aicoaches-webhook");
