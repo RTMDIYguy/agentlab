@@ -742,7 +742,7 @@ function renderMockContent(type: DocPageEntry["mockLayoutType"]) {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-mono text-muted-foreground">Model: gemini-flash-latest</span>
-              <span className="text-[10px] font-mono text-amber-600 font-bold">DISPLAY-ONLY — server chain decides, modelUsed reported back</span>
+              <span className="text-[10px] font-mono text-emerald-600 font-bold">REQUESTED MODEL LEADS — metrics report who answered</span>
             </div>
           </div>
 

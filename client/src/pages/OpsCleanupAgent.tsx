@@ -25,7 +25,7 @@ import {
 import { PageLayout } from "@/components/PageLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 interface PromptCategory {
@@ -77,16 +77,12 @@ const PROMPT_CATEGORIES: PromptCategory[] = [
     ],
   },
 ];
-
-// CC-2026-09-30-012: pinned 2.x ids are retired for new Gemini accounts
-// (404 "no longer available to new users") — the aliases track the current GA model.
-const AVAILABLE_MODELS = [
-  { id: "gemini-flash-latest", name: "Gemini Flash (latest)", badge: "Fastest / Realtime", provider: "Google" },
-  { id: "gemini-pro-latest", name: "Gemini Pro (latest)", badge: "Deep Reasoning", provider: "Google" },
-  { id: "claude-3-7-sonnet", name: "Claude 3.7 Sonnet", badge: "Code & Architecture", provider: "Anthropic" },
-  { id: "gpt-4o", name: "GPT-4o", badge: "Universal", provider: "OpenAI" },
-  { id: "urc-fallback", name: "URC Deterministic Model", badge: "Offline Fallback", provider: "AgentLab" },
-];
+// CC-2026-10-02-021: the selector is DATA-DRIVEN — options come from
+// GET /api/orchestrator/models, which returns only what this deployment can
+// actually run (Google chain, Claude only when a key exists, deterministic
+// mode). GPT-4o had no provider behind it and is never offered; the retired
+// pinned 2.x Gemini ids (CC-2026-09-30-012) are not offered either.
+type ModelOption = { id: string; name: string; provider: string; badge?: string };
 
 const DOCUMENT_PRESETS = [
   { name: "WORKSPACE-STANDARD.md", path: "Working Docs/WORKSPACE-STANDARD.md", size: "3.8 KB" },
@@ -116,6 +112,7 @@ type OrchestratorChatResponse = {
     model: string;
     latencyMs?: number | null;
     tokensUsed?: number | null;
+    modelNote?: string;
   };
 };
 
@@ -155,6 +152,31 @@ export default function OpsCleanupAgent() {
 
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
+
+  // Model options come from the server (CC-2026-10-02-021) — the selector can
+  // only offer models this deployment can actually run.
+  const { data: modelsData, isLoading: modelsLoading, isError: modelsError } =
+    useQuery<{
+      models: ModelOption[];
+    }>({
+      queryKey: ["orchestrator-models"],
+      queryFn: async () => {
+        const res = await fetch("/api/orchestrator/models");
+        if (!res.ok) throw new Error(`Failed to load model options (${res.status})`);
+        return res.json();
+      },
+      staleTime: 5 * 60 * 1000,
+      retry: 1,
+    });
+  const modelOptions = modelsData?.models ?? [];
+
+  // Keep the selection valid: fall to the first available option when the
+  // server's list loads or changes (e.g. no Google credential → deterministic only).
+  useEffect(() => {
+    if (modelOptions.length > 0 && !modelOptions.some(m => m.id === selectedModel)) {
+      setSelectedModel(modelOptions[0].id);
+    }
+  }, [modelOptions, selectedModel]);
 
   // Voice Recognition setup
   useEffect(() => {
@@ -577,17 +599,27 @@ export default function OpsCleanupAgent() {
                 <div className="flex items-center gap-2">
                   {/* Model Selector */}
                   <div className="relative">
-                    <select
-                      value={selectedModel}
-                      onChange={(e) => setSelectedModel(e.target.value)}
-                      className="text-xs bg-muted/60 border border-border rounded-xl px-3 py-1.5 text-foreground outline-none focus:border-primary font-medium cursor-pointer"
-                    >
-                      {AVAILABLE_MODELS.map((m) => (
-                        <option key={m.id} value={m.id}>
-                          {m.name} ({m.provider})
-                        </option>
-                      ))}
-                    </select>
+                    {modelOptions.length > 0 ? (
+                      <select
+                        value={selectedModel}
+                        onChange={(e) => setSelectedModel(e.target.value)}
+                        className="text-xs bg-muted/60 border border-border rounded-xl px-3 py-1.5 text-foreground outline-none focus:border-primary font-medium cursor-pointer"
+                      >
+                        {modelOptions.map((m) => (
+                          <option key={m.id} value={m.id}>
+                            {m.name} ({m.provider})
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <span className="text-xs bg-muted/60 border border-border rounded-xl px-3 py-1.5 text-muted-foreground font-medium">
+                        {modelsLoading
+                          ? "Loading models…"
+                          : modelsError
+                            ? "Model list unavailable — server default will be used"
+                            : "No models available on this deployment"}
+                      </span>
+                    )}
                   </div>
 
                   {/* Document Attachment Button */}
@@ -821,7 +853,10 @@ export default function OpsCleanupAgent() {
                 </div>
                 {agentResponse?.executionMetrics && (
                   <span className="text-[11px] font-mono text-muted-foreground">
-                    Model: {agentResponse.executionMetrics.model} | {" "}
+                    Model: {agentResponse.executionMetrics.model}
+                    {agentResponse.executionMetrics.modelNote
+                      ? ` — ${agentResponse.executionMetrics.modelNote}`
+                      : ""} | {" "}
                     {agentResponse.executionMetrics.tokensUsed != null
                       ? `${agentResponse.executionMetrics.tokensUsed} tokens`
                       : "token usage not reported"}

@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { generateObject, generateText } from "ai";
+import { createAnthropic } from "@ai-sdk/anthropic";
 import {
   createGoogleProvider,
   isGoogleAiConfigured,
@@ -88,6 +89,8 @@ export interface OrchestratorChatResponse {
     latencyMs: number | null;
     tokensUsed: number | null;
     model: string;
+    /** Honest note when the requested model did not (or could not) answer. */
+    modelNote?: string;
   };
 }
 
@@ -382,6 +385,109 @@ export function generateFallbackWorkflowProposal(
 }
 
 /**
+ * Selector catalog behind GET /api/orchestrator/models (CC-2026-10-02-021).
+ *
+ * The ops-agent model selector is DATA-DRIVEN: the endpoint returns only what
+ * this deployment can actually run — Google chain entries when a credential
+ * exists, Claude only when ANTHROPIC_API_KEY is set, and the deterministic
+ * offline mode that needs no provider. GPT-4o was never wired server-side
+ * (no OpenAI provider is installed), so it is never offered — the honest
+ * version of the chip that used to pretend.
+ */
+export interface OrchestratorModelOption {
+  id: string;
+  name: string;
+  provider: string;
+  badge: string;
+}
+
+const CHAT_MODEL_CATALOG: Array<
+  OrchestratorModelOption & { requires: "google" | "anthropic" | "none" }
+> = [
+  {
+    id: "gemini-flash-latest",
+    name: "Gemini Flash (latest)",
+    provider: "Google",
+    badge: "Fastest / Realtime",
+    requires: "google",
+  },
+  {
+    id: "gemini-pro-latest",
+    name: "Gemini Pro (latest)",
+    provider: "Google",
+    badge: "Deep Reasoning",
+    requires: "google",
+  },
+  {
+    id: "claude-haiku-4-5",
+    name: "Claude Haiku 4.5",
+    provider: "Anthropic",
+    badge: "Code & Architecture",
+    requires: "anthropic",
+  },
+  {
+    id: "urc-fallback",
+    name: "URC Deterministic Model",
+    provider: "AgentLab",
+    badge: "Offline Fallback",
+    requires: "none",
+  },
+];
+
+/** Models this deployment can run right now — exported pure for tests. */
+export function listAvailableChatModels(deps: {
+  googleConfigured: boolean;
+  anthropicKey: string | null;
+}): OrchestratorModelOption[] {
+  return CHAT_MODEL_CATALOG.filter(m => {
+    if (m.requires === "none") return true;
+    if (m.requires === "google") return deps.googleConfigured;
+    return !!deps.anthropicKey;
+  }).map(m => ({ id: m.id, name: m.name, provider: m.provider, badge: m.badge }));
+}
+
+export type ChatModelRequest =
+  | { kind: "deterministic" }
+  | { kind: "google"; lead: string | null }
+  | { kind: "anthropic"; id: string; key: string }
+  | { kind: "unsupported"; requested: string };
+
+/**
+ * Resolve the model the operator asked for (req.body.model) into a request
+ * the server can actually honor — exported pure for tests (CC-2026-10-02-021).
+ *
+ * - a current Google chain id leads the chain
+ * - "urc-fallback" is the EXPLICIT deterministic mode (no model consulted)
+ * - the Claude id routes to Anthropic only when a key exists
+ * - anything else (gpt-4o, retired ids, junk) is honestly unsupported: the
+ *   chain answers and the response says so via modelNote
+ */
+export function resolveChatModelRequest(
+  raw: unknown,
+  deps: { anthropicKey: string | null }
+): ChatModelRequest {
+  const requested = typeof raw === "string" ? raw.trim() : "";
+  if (!requested) return { kind: "google", lead: null };
+  if (requested === "urc-fallback") return { kind: "deterministic" };
+  if ((GOOGLE_MODEL_CHAIN as readonly string[]).includes(requested)) {
+    return { kind: "google", lead: requested };
+  }
+  if (requested === "claude-haiku-4-5" && deps.anthropicKey) {
+    return { kind: "anthropic", id: requested, key: deps.anthropicKey };
+  }
+  return { kind: "unsupported", requested };
+}
+
+/** GET /api/orchestrator/models — what this deployment can actually run. */
+export function listOrchestratorModels(_req: Request, res: Response): void {
+  const models = listAvailableChatModels({
+    googleConfigured: isGoogleAiConfigured(),
+    anthropicKey: process.env.ANTHROPIC_API_KEY?.trim() || null,
+  });
+  res.status(200).json({ models });
+}
+
+/**
  * Controller endpoint: POST /api/orchestrator/chat
  */
 /**
@@ -429,10 +535,15 @@ export async function handleOrchestratorChat(
 ): Promise<void> {
   const startTime = Date.now();
   const rawPrompt = req.body.prompt || req.body.message;
-  // Display-only label (CC-2026-09-30-012): the old default was the now-retired
-  // pinned id "gemini-2.5-flash"; the variable itself was never used to call a
-  // model. The actual model that answers is reported per-request via modelUsed.
-  const requestedModel = req.body.model || GOOGLE_MODEL_CHAIN[0];
+  // Model request resolution (CC-2026-10-02-021): this used to be a
+  // display-only label — req.body.model was read and never used. It now
+  // resolves to a request the server can honor: a Google chain id leads the
+  // chain, urc-fallback is the explicit deterministic mode, Claude routes to
+  // Anthropic when a key exists, and anything else answers honestly via
+  // modelNote instead of pretending the choice was honored.
+  const modelRequest = resolveChatModelRequest(req.body.model, {
+    anthropicKey: process.env.ANTHROPIC_API_KEY?.trim() || null,
+  });
   const attachments = req.body.attachments as Array<{ name: string; content: string; type?: string }> | undefined;
 
   if (!rawPrompt || typeof rawPrompt !== "string") {
@@ -622,18 +733,86 @@ export async function handleOrchestratorChat(
   let reply = "";
   let modelUsed: string = preferredModel ?? GOOGLE_MODEL_CHAIN[0];
   let tokensUsed: number | null = null;
+  let modelNote: string | undefined;
+  let anthropicFailed = false;
   // Hoisted so the honest-fallback catch (CC-2026-09-30-012) knows which mode
   // failed and can degrade truthfully for that mode.
   let wantsProposal = false;
 
-  // Attempt dynamic LLM orchestration via Vercel AI SDK & Google Gemini / Vertex AI
-  try {
+  const buildPayload = (): OrchestratorChatResponse => ({
+    reply,
+    proposal,
+    timestamp: new Date().toISOString(),
+    executionMetrics: {
+      latencyMs: Date.now() - startTime,
+      tokensUsed,
+      model: modelUsed,
+      ...(modelNote ? { modelNote } : {}),
+    },
+  });
+
+  // Explicit deterministic mode (CC-2026-10-02-021, Robert-approved): the
+  // "URC Deterministic Model" runs only when the operator actively selects it.
+  // Proposals come from the canonical playbook matcher; conversation gets an
+  // honest "no model consulted" refusal. CC-2026-09-30-012's ban on SILENT
+  // canned fallback is untouched — this path is never taken implicitly.
+  if (modelRequest.kind === "deterministic") {
+    wantsProposal = shouldProposeWorkflow(rawPrompt, req.body.forceProposal === true);
+    modelUsed = "urc-deterministic";
+    tokensUsed = null;
+    modelNote = "Deterministic offline mode — no model was consulted.";
+    if (wantsProposal) {
+      const deterministic = generateFallbackWorkflowProposal(prompt, unlockedDepartments);
+      proposal = deterministic.proposal;
+      reply = deterministic.reply;
+    } else {
+      reply =
+        "Deterministic offline mode is selected, so no model was consulted and I cannot answer questions from live telemetry. Pick a Gemini or Claude model in the selector for real answers — deterministic mode only synthesizes workflow proposals from the canonical playbook list.";
+    }
+    res.status(200).json(buildPayload());
+    return;
+  }
+
+  // Provider dispatch (CC-2026-10-02-021): honors the operator's requested
+  // model. Claude is tried first ONLY when explicitly requested (and a key
+  // exists), falling back to the Google chain with a logged note; Google
+  // requests and the stored defaultModel lead the chain via its second
+  // argument — the wire CC-2026-10-01-009 documented but never connected.
+  async function dispatchModelRun<R>(
+    run: (buildModel: () => any) => Promise<R>
+  ): Promise<{ value: R; model: string }> {
+    if (modelRequest.kind === "anthropic") {
+      try {
+        const anthropic = createAnthropic({ apiKey: modelRequest.key });
+        const value = await run(() => anthropic(modelRequest.id));
+        return { value, model: `anthropic:${modelRequest.id}` };
+      } catch (err) {
+        anthropicFailed = true;
+        console.warn(
+          "[Orchestrator] Claude request failed — falling back to the Google chain:",
+          err
+        );
+      }
+    }
     if (!isGoogleAiConfigured()) {
       throw new Error(
         "LLM_NOT_CONFIGURED: no Gemini credential (service-account key or API key) is available. Place the service-account JSON at secrets/gemini-service-account.json."
       );
     }
     const google = createGoogleProvider();
+    const chainLead =
+      modelRequest.kind === "google" && modelRequest.lead
+        ? modelRequest.lead
+        : preferredModel;
+    const result = await withGoogleModelChainLeading(
+      model => run(() => google(model)),
+      chainLead
+    );
+    return { value: result.value, model: result.model };
+  }
+
+  // Attempt dynamic LLM orchestration via Vercel AI SDK & Google Gemini / Vertex AI
+  try {
     const systemPrompt = buildSystemPrompt(unlockedDepartments, telemetry, personaConfig);
 
     // Conversation history (2026-09-24): the chat was single-turn — every
@@ -682,25 +861,26 @@ export async function handleOrchestratorChat(
       // for new accounts (404 "no longer available to new users"), which routed
       // every chat into the canned fallback below. The "-latest" aliases track
       // the current GA model — same chain agent-runner has used since 09-28.
-      // CC-2026-10-01-009: the operator's stored defaultModel LEADS the chain
-      // when it is a valid current id (see preferredModel above).
-      const result = await withGoogleModelChainLeading(model =>
+      // CC-2026-10-02-021: dispatchModelRun honors the operator's requested
+      // model and passes the stored defaultModel as the chain lead — the wire
+      // CC-2026-10-01-009 documented but never connected.
+      const outcome = await dispatchModelRun(buildModel =>
         generateObject({
-          model: google(model) as any,
+          model: buildModel(),
           schema: workflowProposalSchema,
           system: systemPrompt,
           messages: baseMessages as any,
         })
       );
 
-      proposal = result.value.object;
-      modelUsed = result.model;
+      proposal = outcome.value.object;
+      modelUsed = outcome.model;
       reply =
         proposal.reply ||
         `Synthesized multi-agent DAG proposal for "${proposal.name}" governed by URC ${proposal.departmentCode.toUpperCase()} operations.`;
       // Honesty rule (honesty-audit P1-1): when the model does not report usage,
       // we record null — never a random number.
-      tokensUsed = result.value.usage?.totalTokens ?? null;
+      tokensUsed = outcome.value.usage?.totalTokens ?? null;
     } else {
       const conversationalSystem = `${systemPrompt}
 
@@ -714,17 +894,17 @@ Rules:
 - Every version number, engine name, run id, and date you state MUST come verbatim from the telemetry block above. You have NO platform/engine version telemetry — never invent one (post-deploy hardening 2026-09-30: the model confabulated an "Engine v2.4").
 - Keep the consultative COO voice: direct, evidence-based, no fluff.`;
 
-      const result = await withGoogleModelChainLeading(model =>
+      const outcome = await dispatchModelRun(buildModel =>
         generateText({
-          model: google(model) as any,
+          model: buildModel(),
           system: conversationalSystem,
           messages: baseMessages as any,
         })
       );
 
-      reply = result.value.text;
-      modelUsed = result.model;
-      tokensUsed = result.value.usage?.totalTokens ?? null;
+      reply = outcome.value.text;
+      modelUsed = outcome.model;
+      tokensUsed = outcome.value.usage?.totalTokens ?? null;
     }
   } catch (llmError) {
     // Mode-aware HONEST fallback (CC-2026-09-30-012): the previous catch-all
@@ -744,18 +924,19 @@ Rules:
     }
   }
 
-  const latencyMs = Date.now() - startTime;
+  // Honest model reporting (CC-2026-10-02-021): when the requested model was
+  // not the one that answered (or none did), say so instead of staying silent.
+  if (modelRequest.kind === "unsupported") {
+    modelNote =
+      modelUsed === "urc-model-unavailable"
+        ? `Requested model "${modelRequest.requested}" is not available on this deployment, and no model answered.`
+        : `Requested model "${modelRequest.requested}" is not available on this deployment — ${modelUsed} answered.`;
+  } else if (anthropicFailed) {
+    modelNote =
+      modelUsed === "urc-model-unavailable"
+        ? "Claude request failed, and the Google chain did not answer either."
+        : "Claude request failed — the Google chain answered instead.";
+  }
 
-  const responsePayload: OrchestratorChatResponse = {
-    reply,
-    proposal,
-    timestamp: new Date().toISOString(),
-    executionMetrics: {
-      latencyMs,
-      tokensUsed,
-      model: modelUsed,
-    },
-  };
-
-  res.status(200).json(responsePayload);
+  res.status(200).json(buildPayload());
 }

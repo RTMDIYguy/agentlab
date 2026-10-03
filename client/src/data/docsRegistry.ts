@@ -1832,7 +1832,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     title: "Ops & Architecture Agent",
     category: "Fleet & Agents",
     iconName: "Sparkles",
-    summary: "Internal co-pilot console: situational prompt presets, a display-only model picker, a live execution step tracker fed by real run data, and a proposed-DAG review card.",
+    summary: "Internal co-pilot console: situational prompt presets, a data-driven model selector (only models this deployment can run), a live execution step tracker fed by real run data, and a proposed-DAG review card.",
     targetRoute: "/ops-agent",
     status: "live",
     overview: {
@@ -1880,10 +1880,10 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         id: 4,
         x: 74,
         y: 52,
-        title: "Model Selector (display-only today)",
-        description: "Dropdown defaults to gemini-flash-latest and lists Gemini, Claude, GPT-4o, and URC fallback options — but the server never reads the selection: orchestrator.ts declares requestedModel and never uses it.",
-        actionPrompt: "Treat the choice as a UI preference; trust the model the server reports back after the run.",
-        outputMeaning: "The real model is chosen by the server-side chain (withGoogleModelChainLeading) and reported in executionMetrics.model.",
+        title: "Model Selector (data-driven)",
+        description: "Options load from GET /api/orchestrator/models — only models this deployment can actually run: the Gemini chain, Claude when a key exists, and the deterministic offline mode. GPT-4o had no provider behind it and is never offered.",
+        actionPrompt: "Pick a model and send — the requested id leads the model chain; metrics report the model that actually answered.",
+        outputMeaning: "A modelNote appears when the requested model could not answer (unavailable or failed) and names what answered instead.",
         badgeType: "status",
       },
       {
@@ -1915,7 +1915,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
       {
         name: "Model Selector",
         type: "Dropdown",
-        purpose: "Preferred model for the request — display-only until the server consumes requestedModel.",
+        purpose: "Chooses the model for the next request — served from GET /api/orchestrator/models and honored by the orchestrator (the requested id leads the chain).",
         defaultState: "gemini-flash-latest",
         permissions: "All Users",
       },
@@ -1930,9 +1930,9 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     outputs: [
       {
         field: "Reported Model (executionMetrics.model)",
-        interpretation: "The model the server chain actually used — the dropdown selection is never honored by the server.",
-        normalRange: "Any model in the server chain",
-        alertThreshold: "A mismatch with the selector is expected today, not an error",
+        interpretation: "The model that actually answered — the requested id leads the chain, Claude reports as anthropic:<id>, deterministic mode reports urc-deterministic.",
+        normalRange: "Matches the selector's choice",
+        alertThreshold: "Differs from the selector — read modelNote: the requested model was unavailable or failed, and the note names what answered",
       },
       {
         field: "Run ID",
@@ -1955,9 +1955,9 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
     ],
     troubleshooting: [
       {
-        symptom: "Model selected in the dropdown differs from the model reported after the run",
-        cause: "The server never uses the requested model — orchestrator.ts reads requestedModel but no code consumes it, so its own chain decides.",
-        resolution: "Trust executionMetrics.model; treat the selector as cosmetic until server wiring lands.",
+        symptom: "Reported model differs from the one selected in the dropdown",
+        cause: "The requested model was not runnable on this deployment (no key or provider) or failed — the chain answered instead and modelNote records the substitution.",
+        resolution: "Read executionMetrics.modelNote for what happened; pick a model the selector actually offers (it lists only runnable models — see GET /api/orchestrator/models).",
         severity: "Low",
       },
       {
@@ -1984,7 +1984,7 @@ export const DOCS_REGISTRY: DocPageEntry[] = [
         layer: "Backend Controller",
         component: "orchestrator.ts",
         filePath: "server/controllers/orchestrator.ts",
-        description: "POST /api/orchestrator/chat — dispatches the prompt onto the server-side model chain (requestedModel currently unused).",
+        description: "POST /api/orchestrator/chat — resolves the requested model, dispatches onto the provider chain, and reports the model that answered (GET /api/orchestrator/models backs the selector).",
       },
       {
         layer: "Operational SOP",

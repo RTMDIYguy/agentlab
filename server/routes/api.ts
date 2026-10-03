@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { handleOrchestratorChat } from "../controllers/orchestrator";
+import { handleOrchestratorChat, listOrchestratorModels } from "../controllers/orchestrator";
 import { executeOrchestratorWorkflow } from "../controllers/orchestrator-execute";
 import {
   getOpsAgentThread,
@@ -162,6 +162,7 @@ apiRouter.get("/debug/llm", async (req, res) => {
 });
 
 // Orchestrator Synthesis Engine
+apiRouter.get("/orchestrator/models", listOrchestratorModels);
 apiRouter.post("/orchestrator/chat", handleOrchestratorChat);
 apiRouter.post("/orchestrator/execute", executeOrchestratorWorkflow);
 
