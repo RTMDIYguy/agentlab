@@ -20,6 +20,7 @@ import {
 } from "../stripe/webhook";
 import { registerAICoachesWebhookRoutes } from "../aicoaches/webhook";
 import { apiRouter } from "../routes/api";
+import { intakeRouter } from "../routes/intake";
 import { tenantMiddleware } from "../middleware/tenant";
 import { securityMiddleware } from "../middleware/security";
 import { triggerFullEcosystemSync } from "../controllers/aiStudioSync";
@@ -332,6 +333,22 @@ async function startServer() {
       res.status(500).json({ error: "kick failed" });
     }
   });
+
+  // Public lead intake (CC-2026-10-03-002). ANONYMOUS BY DESIGN: the five
+  // marketing forms (Book free chapter, Careers, Community, HelpCenter,
+  // Bootcamp) post from visitors who have no session to authenticate with.
+  // Mounted OUTSIDE the tenant chain on purpose, ahead of the /api mount, so a
+  // future requireAuth on apiRouter (see rest-auth-posture-audit-2026-10-03.md)
+  // cannot strand it and silently drop leads again.
+  //
+  // Why this line exists: the handler in routes/intake.ts was complete but was
+  // mounted only in server/index.ts — a second entry point the build never
+  // emitted (build = esbuild this file, CMD = node dist/index.js). The live
+  // server therefore had no /api/intake at all, and all five forms received
+  // the SPA shell and showed an error toast on every submission. That dead
+  // entry point has since been deleted (CC-2026-10-03-003, audit finding
+  // F-12) so there is exactly one mount chain.
+  app.use("/api/intake", intakeRouter);
 
   // tRPC API
   app.use(

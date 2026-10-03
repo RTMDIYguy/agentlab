@@ -6,9 +6,6 @@ import { ensureLeadDmThread } from "../messenger/leadThread";
 
 export const intakeRouter = Router();
 
-// n8n Webhook URL for the Intake Workflow
-const N8N_WEBHOOK_URL = process.env.N8N_INTAKE_WEBHOOK_URL || "";
-
 intakeRouter.post("/", async (req, res) => {
   try {
     const { contactName, email, serviceLine, source, notes, dealValue, company } = req.body;
@@ -40,7 +37,8 @@ intakeRouter.post("/", async (req, res) => {
     }
 
     // DM thread in the messenger for this lead. Best-effort: fires only when
-    // persistence succeeded (submissionId exists) and never blocks the CRM    // relay or the response.
+    // persistence succeeded (submissionId exists) and never blocks the CRM
+    // relay or the response.
     if (submissionId) {
       await ensureLeadDmThread({
         submissionId,
@@ -55,9 +53,13 @@ intakeRouter.post("/", async (req, res) => {
 
     // Forward the lead data to n8n CRM pipeline
     let crmSynced = false;
-    if (N8N_WEBHOOK_URL) {
+    // Read per request, not at import time — matches contact/router.ts's
+    // relayToN8nIfConfigured. Pinning it at module scope meant the relay path
+    // could never be exercised twice in one process.
+    const n8nWebhookUrl = process.env.N8N_INTAKE_WEBHOOK_URL || "";
+    if (n8nWebhookUrl) {
       try {
-        const response = await fetch(N8N_WEBHOOK_URL, {
+        const response = await fetch(n8nWebhookUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
