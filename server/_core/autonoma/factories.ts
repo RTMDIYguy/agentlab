@@ -1,6 +1,7 @@
 import { defineFactory } from "@autonoma-ai/sdk";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+import { nanoid } from "nanoid";
 import {
   users,
   workspaces,
@@ -12,6 +13,7 @@ import {
   teardownSessions,
   betaEnrollments,
   betaXpEvents,
+  workspaceSnapshots,
 } from "../../schema";
 import { getUserByOpenId, upsertUser, getDb } from "../../db";
 
@@ -263,6 +265,47 @@ const BetaXpEvent = defineFactory({
   teardown: async record => deleteById(betaXpEvents, record.id as string),
 });
 
+// workspaceSnapshots — F-14 / CC-2026-10-03-004: configuration snapshot row.
+// Mirrors the snapshots controller's write path: workspaceId null = built-in
+// template (global, non-deletable), set = private to that workspace. Ids use
+// the same snap_<nanoid(10)> shape the API generates.
+const WorkspaceSnapshot = defineFactory({
+  inputSchema: z.object({
+    workspaceId: z.string().optional(),
+    name: z.string(),
+    officeName: z.string(),
+    description: z.string().optional(),
+    version: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    scope: z.record(z.string(), z.boolean()).optional(),
+    configuration: z.record(z.string(), z.any()).optional(),
+    createdBy: z.string().optional(),
+  }),
+  create: async data => {
+    const db = await getDb();
+    const now = new Date();
+    const [row] = await db
+      .insert(workspaceSnapshots)
+      .values({
+        id: `snap_${nanoid(10)}`,
+        workspaceId: data.workspaceId ?? null,
+        name: data.name,
+        officeName: data.officeName,
+        description: data.description ?? null,
+        version: data.version ?? "1.0.0",
+        tags: data.tags ?? [],
+        scope: data.scope ?? {},
+        configuration: data.configuration ?? {},
+        createdBy: data.createdBy ?? "autonoma-test",
+        createdAt: now,
+        updatedAt: now,
+      })
+      .returning();
+    return row as unknown as Record<string, unknown> & { id: string };
+  },
+  teardown: async record => deleteById(workspaceSnapshots, record.id as string),
+});
+
 export const factories = {
   users: User,
   newsletterSubscribers: NewsletterSubscriber,
@@ -272,4 +315,5 @@ export const factories = {
   teardownSessions: TeardownSession,
   betaEnrollments: BetaEnrollment,
   betaXpEvents: BetaXpEvent,
+  workspaceSnapshots: WorkspaceSnapshot,
 };

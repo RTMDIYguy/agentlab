@@ -535,6 +535,28 @@ export async function ensureDatabaseSchema(): Promise<void> {
       );
       CREATE INDEX IF NOT EXISTS "idx_beta_xp_events_workspace"
         ON "beta_xp_events" ("workspace_id");
+
+      -- CC-2026-10-03-004 (audit finding F-14): workspace snapshots were a
+      -- process-local array shared by every tenant — cross-workspace
+      -- read/clone/restore/delete, and gone on every deploy. workspace_id
+      -- NULL means a built-in template: visible and clonable everywhere,
+      -- deletable nowhere.
+      CREATE TABLE IF NOT EXISTS "workspace_snapshots" (
+        "id" varchar(64) PRIMARY KEY,
+        "workspace_id" uuid REFERENCES "workspaces"("id") ON DELETE CASCADE,
+        "name" varchar(128) NOT NULL,
+        "office_name" varchar(128) NOT NULL,
+        "description" text,
+        "version" varchar(32) NOT NULL DEFAULT '1.0.0',
+        "tags" jsonb NOT NULL DEFAULT '[]'::jsonb,
+        "scope" jsonb NOT NULL DEFAULT '{}'::jsonb,
+        "configuration" jsonb NOT NULL DEFAULT '{}'::jsonb,
+        "created_by" varchar(255),
+        "created_at" timestamp with time zone NOT NULL DEFAULT now(),
+        "updated_at" timestamp with time zone NOT NULL DEFAULT now()
+      );
+      CREATE INDEX IF NOT EXISTS "idx_workspace_snapshots_workspace"
+        ON "workspace_snapshots" ("workspace_id");
     `;
 
     // CC-2026-09-25-008: workflow_steps rows synced before CC-2026-09-25-007

@@ -830,6 +830,41 @@ export const newsletterCampaigns = pgTable("newsletter_campaigns", {
 // ==============================================================================
 // 23. CONTACT SUBMISSIONS (Every lead captured on the site in one place)
 // ==============================================================================
+// CC-2026-10-03-004 (audit finding F-14): workspace configuration snapshots
+// lived in a process-local array with no workspace column at all, so every
+// signed-in workspace read, cloned, restored and deleted the same rows — and a
+// deploy silently wiped whatever a user had saved. Now a real table.
+//
+// `workspace_id IS NULL` marks a BUILT-IN TEMPLATE: globally visible and
+// clonable (Settings hardcodes snap_kc_hq_primary and snap_franchise_starter),
+// but never deletable through the API. Any other row belongs to exactly one
+// workspace and is invisible — and undeletable — everywhere else.
+export const workspaceSnapshots = pgTable(
+  "workspace_snapshots",
+  {
+    // varchar, not uuid: template ids are human-readable (snap_franchise_starter)
+    id: varchar("id", { length: 64 }).primaryKey(),
+    workspaceId: uuid("workspace_id").references(() => workspaces.id, {
+      onDelete: "cascade",
+    }),
+    name: varchar("name", { length: 128 }).notNull(),
+    officeName: varchar("office_name", { length: 128 }).notNull(),
+    description: text("description"),
+    version: varchar("version", { length: 32 }).notNull().default("1.0.0"),
+    tags: jsonb("tags").notNull().default([]),
+    scope: jsonb("scope").notNull().default({}),
+    configuration: jsonb("configuration").notNull().default({}),
+    createdBy: varchar("created_by", { length: 255 }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  table => [index("idx_workspace_snapshots_workspace").on(table.workspaceId)]
+);
+
 export const contactSubmissions = pgTable(
   "contact_submissions",
   {
